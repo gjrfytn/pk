@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="TUID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="200"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TStatusOrUID">
+		<xs:choice>
+			<xs:element name="UID" type="TUID">
+				<xs:annotation>
+					<xs:documentation>Идентификатор в ИС ОУ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StatusID" type="xs:unsignedInt">
+				<xs:annotation>
+					<xs:documentation>Статус заявления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="PackageData">
+		<xs:annotation>
+			<xs:documentation>Пакет с импортируемыми данными</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="8">
+				<xs:element name="InstitutionDetails">
+					<xs:annotation>
+						<xs:documentation>Сведения об ОУ</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AllowedDirections">
+					<xs:annotation>
+						<xs:documentation>Разрешенные направления подготовки</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Campaigns">
+					<xs:annotation>
+						<xs:documentation>Приемные кампании</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CampaignUID" type="TUID" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>UID приемной кампании</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AdmissionVolume">
+					<xs:annotation>
+						<xs:documentation>Объемы приема</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="DistributedAdmissionVolume">
+					<xs:annotation>
+						<xs:documentation>Объем приема, распределенный по уровню бюджета</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="InstitutionAchievements">
+					<xs:annotation>
+						<xs:documentation>Индивидуальные достижения, учитываемые образовательной организацией</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="TargetOrganizations">
+					<xs:annotation>
+						<xs:documentation>Целевые организации</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="CompetitiveGroups">
+					<xs:annotation>
+						<xs:documentation>Конкурсы</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Applications">
+					<xs:annotation>
+						<xs:documentation>Заявления</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="StatusOrUID" type="TStatusOrUID" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Признак заявления</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Orders">
+					<xs:annotation>
+						<xs:documentation>Приказы</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ApplicationsInOrders">
+					<xs:annotation>
+						<xs:documentation>Заявления, включенные в приказы</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ApplicationUID" type="TUID" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Идентификатор заявления в приказе</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Structure">
+					<xs:annotation>
+						<xs:documentation>Структура ОУ</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Root">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="AuthData">
+					<xs:annotation>
+						<xs:documentation>Блок авторизации</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Login">
+								<xs:annotation>
+									<xs:documentation>Номер заявления ОУ</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Pass">
+								<xs:annotation>
+									<xs:documentation>Пароль</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="InstitutionID" type="xs:int" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Идентификатор ВУЗа</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="PackageData"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:simpleType name="TUID">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="200"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="AuthData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Login"/>
+				<xs:element ref="Pass"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Login">
+		<xs:annotation>
+			<xs:documentation>Логин пользователя</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Pass">
+		<xs:annotation>
+			<xs:documentation>Пароль пользователя</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="DataForDelete">
+		<xs:annotation>
+			<xs:documentation>Удаляемые данные</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="Campaigns" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Приемные кампании</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="CampaignID" type="xs:unsignedInt" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>ИД приемной кампании</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="CampaignUID" type="TUID" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>UID приемной кампании</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CompetitiveGroups" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Кокнурсы</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="CompetitiveGroupID" type="xs:unsignedInt" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>ИД конкурса</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="CompetitiveGroupUID" type="TUID" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>UID конкурса</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="InstitutionAchievements" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Индивидуальные достижения, учитываемые образовательной организацией</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="InstitutionAchievementUID" type="TUID" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Идентификатор индивидуального достижения</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="TargetOrganizations" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Целевые организации</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TargetOrganizationUID" type="TUID" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Идентификатор целевой организации</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Applications" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Заявления</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Application" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Заявление</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="ApplicationNumber" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Номер заявления</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="RegistrationDate" type="xs:dateTime">
+											<xs:annotation>
+												<xs:documentation>Дата регистрации заявления</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="EntranceTestResults" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Результаты вступительных испытаний</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="EntranceTestsResultID" type="xs:unsignedInt" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>ИД вступительного испытания</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EntranceTestsResultUID" type="TUID" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>UID вступительного испытания</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ApplicationCommonBenefits" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Общие льготы, предоставленные абитуриентам</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="ApplicationCommonBenefitID" type="xs:unsignedInt" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>ИД общей льготы</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="ApplicationCommonBenefitUID" type="TUID" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>UID общей льготы</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Orders" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Приказы</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="OrdersOfAdmission" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Приказ о зачислении</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="OrderOfAdmissionUID" type="TUID" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Идентификатор в ИС ОО</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="OrdersOfException" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Приказы об исключении из приказа о зачислении</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="OrderOfExceptionUID" type="TUID" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Идентификатор в ИС ОО</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ApplicationsInOrders" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Заявления, включенные в приказ</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Application" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Заявление, включенное в приказ</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="ApplicationNumber">
+											<xs:annotation>
+												<xs:documentation>Номер заявления</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="RegistrationDate">
+											<xs:annotation>
+												<xs:documentation>Дата регистрации заявления</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:dateTime"/>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="UID" type="TUID">
+											<xs:annotation>
+												<xs:documentation>Идентификатор в ИС ОО</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="OrderUID" type="TUID">
+											<xs:annotation>
+												<xs:documentation>Идентификатор приказа</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Root">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="AuthData"/>
+				<xs:element ref="DataForDelete"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

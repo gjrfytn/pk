@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+  <xs:complexType name="TError">
+    <xs:all>
+      <xs:element name="ErrorCode" minOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Код ошибки</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string" />
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ErrorText" minOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Текст ошибки</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string" />
+        </xs:simpleType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="ValidationResultPackage">
+    <xs:annotation>
+      <xs:documentation>Результат проверки</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="StatusCode">
+          <xs:annotation>
+            <xs:documentation>Код статуса проверки пакета</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:unsignedInt" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Message" minOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Информация о проверке</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string" />
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Error" type="TError">
+    <xs:annotation>
+      <xs:documentation>Сведения об ошибке</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>

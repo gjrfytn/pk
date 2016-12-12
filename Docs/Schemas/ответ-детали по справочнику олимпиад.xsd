@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="TError">
+		<xs:all>
+			<xs:element name="ErrorCode">
+				<xs:annotation>
+					<xs:documentation>Код ошибки</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ErrorText">
+				<xs:annotation>
+					<xs:documentation>Текст ошибки</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:element name="DictionaryData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Code">
+					<xs:annotation>
+						<xs:documentation>Код справочника</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:unsignedInt"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Name">
+					<xs:annotation>
+						<xs:documentation>Наименование справочника</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DictionaryItems">
+					<xs:annotation>
+						<xs:documentation>Записи справочника</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DictionaryItem" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Запись справочника</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="OlympicID">
+											<xs:annotation>
+												<xs:documentation>ИД олимпиады</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:unsignedInt"/>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="OlympicNumber" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Номер олимпиады</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:unsignedInt"/>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="OlympicName">
+											<xs:annotation>
+												<xs:documentation>Имя олимпиады</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string"/>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Profiles">
+											<xs:annotation>
+												<xs:documentation>Профили</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Profile">
+														<xs:annotation>
+															<xs:documentation>Профили</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:all>
+																<xs:element name="ProfileID">
+																	<xs:annotation>
+																		<xs:documentation>ИД профиля олимпиады (справочник №39)</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:unsignedInt"/>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="Subjects">
+																	<xs:annotation>
+																		<xs:documentation>Предметы олимпиады</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="SubjectID" maxOccurs="unbounded">
+																				<xs:annotation>
+																					<xs:documentation>ИД предмета    (справочник №1)</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:unsignedInt"/>
+																				</xs:simpleType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="LevelID" type="xs:unsignedInt" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>ИД уровня олимпиады (справочник №3) </xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Error" type="TError">
+		<xs:annotation>
+			<xs:documentation>Сведения об ошибке</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

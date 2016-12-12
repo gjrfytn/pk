@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="AuthData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Login" />
+        <xs:element ref="Pass" />
+        <xs:element name="InstitutionID" type="xs:int" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Идентификатор ВУЗа</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Login">
+    <xs:annotation>
+      <xs:documentation>Логин пользователя</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="YOUR LOGIN" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="Pass">
+    <xs:annotation>
+      <xs:documentation>Пароль пользователя</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="YOUR PASS" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="Root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AuthData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
