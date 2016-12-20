@@ -18,13 +18,13 @@ USE `PK_DB` ;
 -- Table `PK_DB`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`users` (
-  `login` VARCHAR(20) NOT NULL COMMENT 'Уникальный логин.',
-  `password` VARCHAR(20) NOT NULL COMMENT 'Пароль.',
-  `name` VARCHAR(50) NOT NULL COMMENT 'Полное имя.',
-  `phone_number` VARCHAR(12) NOT NULL COMMENT 'Телефонный номер.',
-  `role` ENUM('registrator', 'inspector', 'administrator') NOT NULL COMMENT 'Уровень доступа.',
-  `comment` VARCHAR(140) NULL COMMENT 'Дополнительная информация.',
-  PRIMARY KEY (`login`))
+  `user_login` VARCHAR(20) NOT NULL COMMENT 'Уникальный логин.',
+  `user_password` VARCHAR(20) NOT NULL COMMENT 'Пароль.',
+  `user_name` VARCHAR(50) NOT NULL COMMENT 'Полное имя.',
+  `user_phone_number` VARCHAR(12) NOT NULL COMMENT 'Телефонный номер.',
+  `user_role` ENUM('registrator', 'inspector', 'administrator') NOT NULL COMMENT 'Уровень доступа.',
+  `user_comment` VARCHAR(140) NULL COMMENT 'Дополнительная информация.',
+  PRIMARY KEY (`user_login`))
 ENGINE = InnoDB;
 
 
