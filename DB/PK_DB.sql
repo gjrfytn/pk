@@ -34,7 +34,7 @@ COMMENT = 'Пользователи ИС ПК МАДИ.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionaries` (
   `id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор справочника.',
-  `name` VARCHAR(50) NOT NULL COMMENT 'Наименование справочника.',
+  `name` VARCHAR(100) NOT NULL COMMENT 'Наименование справочника.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB
@@ -490,9 +490,9 @@ COMMENT = 'common_benefits:\nOlympicDiplomTypes.OlympicDiplomTypeID[1..n] - ИД
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`benefit_olympics_levels`
+-- Table `PK_DB`.`benefits_olympics_levels`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`benefit_olympics_levels` (
+CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_olympics_levels` (
   `benefit_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор льготы.',
   `olympic_id` INT UNSIGNED NOT NULL COMMENT 'ИД олимпиады (справочник №19).',
   `level_id` INT UNSIGNED NOT NULL COMMENT 'Уровни олимпиады (справочник №3).',
@@ -526,18 +526,18 @@ COMMENT = 'Параметры олимпиад, определяющие льг�
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`_benefit_olympics_levels_has_dictionaries_items`
+-- Table `PK_DB`.`_benefits_olympics_levels_has_dictionaries_items`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`_benefit_olympics_levels_has_dictionaries_items` (
+CREATE TABLE IF NOT EXISTS `PK_DB`.`_benefits_olympics_levels_has_dictionaries_items` (
   `benefit_olympics_levels_olympic_id` INT UNSIGNED NOT NULL,
   `benefit_olympics_levels_common_benefit_uid` INT UNSIGNED NOT NULL,
   `dictionaries_items_item_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`benefit_olympics_levels_olympic_id`, `benefit_olympics_levels_common_benefit_uid`, `dictionaries_items_item_id`),
   INDEX `fk_olympics_levels_has_dictionaries_items_dictionaries_item_idx` (`dictionaries_items_item_id` ASC),
   INDEX `fk_olympics_levels_has_dictionaries_items_olympics_levels1_idx` (`benefit_olympics_levels_olympic_id` ASC, `benefit_olympics_levels_common_benefit_uid` ASC),
-  CONSTRAINT `fk_benefit_olympics_levels_has_dictionaries_items_olympics_levels1`
+  CONSTRAINT `fk_benefits_olympics_levels_has_dictionaries_items_olympics_levels1`
     FOREIGN KEY (`benefit_olympics_levels_olympic_id` , `benefit_olympics_levels_common_benefit_uid`)
-    REFERENCES `PK_DB`.`benefit_olympics_levels` (`olympic_id` , `benefit_uid`)
+    REFERENCES `PK_DB`.`benefits_olympics_levels` (`olympic_id` , `benefit_uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_olympics_levels_has_dictionaries_items_dictionaries_items1`
@@ -550,9 +550,9 @@ COMMENT = 'olympics_levels:\nProfiles.ProfileID[1..n] - ИД профиля ол
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`benefit_min_ege_marks`
+-- Table `PK_DB`.`benefits_min_ege_marks`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`benefit_min_ege_marks` (
+CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_min_ege_marks` (
   `benefit_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор льготы.',
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
   `min_mark` INT UNSIGNED NOT NULL COMMENT 'Минимальная оценка по предмету.',
@@ -570,6 +570,511 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`benefit_min_ege_marks` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Минимальная оценка по предметам для льготы.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`documents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`documents` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'phd_diploma', 'post_graduate_diploma', 'school_certificate', 'sport', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nphd_diploma\npost_graduate_diploma\nschool_certificate\nsport\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent',
+  `document_series` VARCHAR(20) NULL COMMENT 'Серия документа.',
+  `document_number` VARCHAR(100) NULL COMMENT 'Номер документа.',
+  `document_date` DATE NULL COMMENT 'Дата выдачи документа.',
+  `document_organization` VARCHAR(500) NULL COMMENT 'Организация, выдавшая документ.',
+  `original_recieved_date` DATE NULL COMMENT 'Дата предоставления оригиналов документов.',
+  PRIMARY KEY (`uid`))
+ENGINE = InnoDB
+COMMENT = 'Документы.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`entrants`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `last_name` VARCHAR(250) NOT NULL COMMENT 'Фамилия.',
+  `first_name` VARCHAR(250) NOT NULL COMMENT 'Имя.',
+  `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
+  `gender_id` INT UNSIGNED NOT NULL COMMENT 'Пол (справочник №5).',
+  `custom_information` VARCHAR(4000) NULL COMMENT 'Дополнительные сведения, предоставленные абитуриентом.',
+  `email` VARCHAR(150) NULL COMMENT 'Электронный адрес.',
+  `mail_region_id` INT UNSIGNED NULL COMMENT 'Почтовый адрес - Регион (справочник № 8)',
+  `mail_town_type_id` INT UNSIGNED NULL COMMENT 'Почтовый адрес - Тип населенного пункта (справочник № 41).',
+  `mail_adress` VARCHAR(500) NULL COMMENT 'Почтовый адрес - Адрес.',
+  `is_from_krym` INT UNSIGNED NULL COMMENT 'UID подтверждающего документа.\nЕсли абитуриент - гражданин Крыма, иначе - NULL.',
+  PRIMARY KEY (`uid`),
+  UNIQUE INDEX `is_for_krym_UNIQUE` (`is_from_krym` ASC),
+  INDEX `corresponds_gend_id_idx` (`gender_id` ASC),
+  INDEX `corresponds_mail_region_idx` (`mail_region_id` ASC),
+  INDEX `corresponds_mail_town_type_idx` (`mail_town_type_id` ASC),
+  CONSTRAINT `corresponds_gender`
+    FOREIGN KEY (`gender_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_mail_region`
+    FOREIGN KEY (`mail_region_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_mail_town_type`
+    FOREIGN KEY (`mail_town_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `has_krym_doc`
+    FOREIGN KEY (`is_from_krym`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Абитуриенты.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`applications`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `application_number` VARCHAR(50) NOT NULL COMMENT 'Номер заявления ОО.',
+  `entrant_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор абитуриента.',
+  `registration_time` DATETIME NOT NULL COMMENT 'Дата и время регистрации заявления.',
+  `need_hostel` TINYINT(1) NOT NULL COMMENT 'Признак необходимости общежития.',
+  `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус заявления (справочник №4).',
+  `status_comment` VARCHAR(4000) NULL COMMENT 'Комментарий к статусу заявления.',
+  PRIMARY KEY (`uid`),
+  UNIQUE INDEX `application_number_UNIQUE` (`application_number` ASC),
+  INDEX `has_idx` (`entrant_uid` ASC),
+  INDEX `corresponds_idx` (`status_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`entrant_uid`)
+    REFERENCES `PK_DB`.`entrants` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds`
+    FOREIGN KEY (`status_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Заявления.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`applications_entrances`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
+  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
+  `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'UID конкурсной группы.',
+  `target_organization_uid` INT UNSIGNED NULL COMMENT 'UID организации целевого приема.',
+  `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
+  `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
+  `is_for_spo_and_vo` TINYINT(1) NOT NULL COMMENT 'Абитуриент поступает с профильным СПО/ВО.',
+  PRIMARY KEY (`application_uid`, `competitive_group_uid`),
+  INDEX `enters_idx` (`competitive_group_uid` ASC),
+  INDEX `targets_idx` (`target_organization_uid` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`application_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `enters`
+    FOREIGN KEY (`competitive_group_uid`)
+    REFERENCES `PK_DB`.`competitive_groups` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `targets`
+    FOREIGN KEY (`target_organization_uid`)
+    REFERENCES `PK_DB`.`target_organizations` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Условия приёма заявления.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`diploma_docs_additional_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`diploma_docs_additional_data` (
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентфикатор документа.',
+  `registration_number` VARCHAR(100) NULL COMMENT 'Регистрационный номер.',
+  `speciality_id` INT UNSIGNED NULL COMMENT 'Код направления подготовки (справочник №10).',
+  `end_year` INT UNSIGNED NULL COMMENT 'Год окончания.',
+  `gpa` FLOAT UNSIGNED NULL COMMENT 'Средний балл.',
+  PRIMARY KEY (`document_uid`),
+  INDEX `corresponds_idx` (`speciality_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds`
+    FOREIGN KEY (`speciality_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Дополнительная информация для документов-дипломов об образовании.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`identity_docs_additional_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`identity_docs_additional_data` (
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
+  `last_name` VARCHAR(250) NULL COMMENT 'Фамилия.',
+  `first_name` VARCHAR(250) NULL COMMENT 'Имя.',
+  `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
+  `gender_id` INT UNSIGNED NULL COMMENT 'Пол (справочник №5).',
+  `subdivision_code` VARCHAR(7) NULL COMMENT 'Код подразделения.',
+  `identity_document_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа документа, удостоверяющего личность (справочник №22).',
+  `nationality_type_id` INT UNSIGNED NULL COMMENT 'ИД гражданства (справочник №7).',
+  `birth_date` DATE NOT NULL COMMENT 'Дата рождения.',
+  `birth_place` VARCHAR(250) NULL COMMENT 'Место рождения.',
+  PRIMARY KEY (`document_uid`),
+  INDEX `corresponds_gender_idx` (`gender_id` ASC),
+  INDEX `corresponds_type_idx` (`identity_document_type_id` ASC),
+  INDEX `corresponds_nation_idx` (`nationality_type_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_gender`
+    FOREIGN KEY (`gender_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_type`
+    FOREIGN KEY (`identity_document_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_nation`
+    FOREIGN KEY (`nationality_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Дополнительная информация для документов, удостоверяющих личность.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`olympic_docs_additional_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_additional_data` (
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
+  `diploma_type_id` INT UNSIGNED NULL COMMENT 'Тип диплома (справочник №18).',
+  `olympic_id` INT UNSIGNED NULL COMMENT 'ИД олимпиады (справочник №19).',
+  `class_number` INT UNSIGNED NULL COMMENT 'Класс обучения (7,8,9,10 или 11).',
+  `olympic_name` VARCHAR(255) NULL COMMENT 'Наименование олимпиады.',
+  `olympic_profile` VARCHAR(255) NULL COMMENT 'Профиль олимпиады.',
+  `olympic_date` DATE NULL COMMENT 'Дата проведения олимпиады.',
+  `olympic_place` VARCHAR(255) NULL COMMENT 'Место проведения олимпиады.',
+  `country_id` INT UNSIGNED NULL COMMENT 'Член сборной команды (справочник № 7).',
+  `profile_id` INT UNSIGNED NULL COMMENT 'ИД профиля олимпиады (справочник №39).',
+  `olympic_subject_id` INT UNSIGNED NULL COMMENT 'ИД предмета олимпиады  (должен соответствовать профилю олимпиады) (справочник № 1).',
+  `ege_subject_id` INT UNSIGNED NULL COMMENT 'ИД предмета, по которому будет осуществляться проверка ЕГЭ (справочник № 1).',
+  PRIMARY KEY (`document_uid`),
+  INDEX `corresponds_dip_type_idx` (`diploma_type_id` ASC),
+  INDEX `corresponds_olympic_idx` (`olympic_id` ASC),
+  INDEX `corresponds_country_idx` (`country_id` ASC),
+  INDEX `corresponds_profile_idx` (`profile_id` ASC),
+  INDEX `corresponds_ol_subj_idx` (`olympic_subject_id` ASC),
+  INDEX `corresponds_ege_subj_idx` (`ege_subject_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_dip_type`
+    FOREIGN KEY (`diploma_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_olympic`
+    FOREIGN KEY (`olympic_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_country`
+    FOREIGN KEY (`country_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_profile`
+    FOREIGN KEY (`profile_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_ol_subj`
+    FOREIGN KEY (`olympic_subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_ege_subj`
+    FOREIGN KEY (`ege_subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Дополнительная информация для документов по олимпиадам.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`other_docs_additional_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`other_docs_additional_data` (
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентфикатор документа.',
+  `document_name` VARCHAR(1000) NULL COMMENT 'Наименование документа.',
+  `dictionary_item_id` INT UNSIGNED NULL COMMENT 'ИД элемента справочника. Для разных документов:\nveteran - VeteranCategoryID - Тип документа, подтверждающего принадлежность к ветеранам боевых действий (справочник № 45).\ninstitution: DocumentTypeID - Тип документа (справочник №33).\nsport: SportCategoryID - Тип диплома в области спорта (справочник № 43).\norphan: OrphanCategoryID - Тип документа, подтверждающего сиротство (справочник № 42).\ndisability: DisabilityTypeID - Группа инвалидности (справочник №23).\ncompatriot: CompariotCategoryID - Тип документа, подтверждающего принадлежность к соотечественникам (справочник № 44).',
+  `text_data` VARCHAR(4000) NULL COMMENT 'Текстовые данные. Для разных документов:\ncustom, sport: AdditionalInfo - Дополнительные сведения.\nedu_custom: DocumentTypeNameText - Наименование документа.',
+  `document_year` INT UNSIGNED NULL COMMENT 'Для документа типа ege - Год выдачи свидетельства.',
+  PRIMARY KEY (`document_uid`),
+  INDEX `corresponds_idx` (`dictionary_item_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds`
+    FOREIGN KEY (`dictionary_item_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Дополнительная информация для остальных документов.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`olympic_docs_subjects`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_subjects` (
+  `olympic_docs_ad_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД профильной дисциплины  (справочник №39).',
+  PRIMARY KEY (`olympic_docs_ad_id`, `subject_id`),
+  INDEX `fk_olympic_docs_additional_data_has_dictionaries_items_dict_idx` (`subject_id` ASC),
+  INDEX `fk_olympic_docs_additional_data_has_dictionaries_items_olym_idx` (`olympic_docs_ad_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`olympic_docs_ad_id`)
+    REFERENCES `PK_DB`.`olympic_docs_additional_data` (`document_uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds`
+    FOREIGN KEY (`subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Профильные предметы олимпиады.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`documents_subjects_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`documents_subjects_data` (
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентфикатор документа.',
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
+  `value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
+  PRIMARY KEY (`document_uid`, `subject_id`),
+  INDEX `corresponds_idx` (`subject_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds`
+    FOREIGN KEY (`subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Дисциплины документов.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`application_common_benefits`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`application_common_benefits` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентифиактор заявления.',
+  `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'UID конкурса для льготы.',
+  `document_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа документа-основания (справочник №31).',
+  `document_reason_uid` INT UNSIGNED NOT NULL COMMENT 'Сведения о документе-основании (идентификатор документа).',
+  `allow_education_document_uid` INT UNSIGNED NULL COMMENT 'Заключение об отсутствии противопоказаний для обучения (идентфикатор документа).\nЕсли в качестве основания выступает документ типа disability или medical, иначе NULL.',
+  `benefit_kind_id` INT UNSIGNED NULL COMMENT 'ИД вида льготы (справочник №30).',
+  PRIMARY KEY (`uid`),
+  INDEX `has_idx` (`application_uid` ASC),
+  INDEX `applies_idx` (`competitive_group_uid` ASC),
+  INDEX `corresponds_doc_type_idx` (`document_type_id` ASC),
+  INDEX `confirms_idx` (`document_reason_uid` ASC),
+  INDEX `allows_education_idx` (`allow_education_document_uid` ASC),
+  INDEX `corresponds_bnf_kind_idx` (`benefit_kind_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`application_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `applies`
+    FOREIGN KEY (`competitive_group_uid`)
+    REFERENCES `PK_DB`.`competitive_groups` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_doc_type`
+    FOREIGN KEY (`document_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `confirms`
+    FOREIGN KEY (`document_reason_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `allows_education`
+    FOREIGN KEY (`allow_education_document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_bnf_kind`
+    FOREIGN KEY (`benefit_kind_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Льготы, предоставленные абитуриенту.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`applications_documents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_documents` (
+  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
+  PRIMARY KEY (`application_uid`, `document_uid`),
+  CONSTRAINT `has`
+    FOREIGN KEY (`application_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Документы, приложенные к заявлениям.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`_applications_has_documents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`_applications_has_documents` (
+  `applications_uid` INT UNSIGNED NOT NULL,
+  `documents_uid` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`applications_uid`, `documents_uid`),
+  INDEX `fk_applications_has_documents_documents1_idx` (`documents_uid` ASC),
+  INDEX `fk_applications_has_documents_applications1_idx` (`applications_uid` ASC),
+  CONSTRAINT `fk_applications_has_documents_applications1`
+    FOREIGN KEY (`applications_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_applications_has_documents_documents1`
+    FOREIGN KEY (`documents_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Документы, приложенные к заявлению.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`entrance_tests_results`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests_results` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
+  `result_value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
+  `result_source_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД основания для оценки (справочник №6).',
+  `entrance_test_subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
+  `entrance_test_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа вступительного испытания (справочник №11).',
+  `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'UID конкурсной группы.',
+  `result_document_uid` INT UNSIGNED NULL COMMENT 'Сведения об основании для оценки (идентификатор документа).',
+  `is_distant` VARCHAR(200) NULL COMMENT 'ВИ с использованием дистанционных технологий.\nМесто сдачи ВИ, если использовались, иначе NULL.',
+  `is_disabled` INT UNSIGNED NULL COMMENT 'ВИ с созданием специальных условий.\nUID подтверждающего документа, если создавались, иначе NULL.',
+  PRIMARY KEY (`uid`),
+  INDEX `corresponds_src_type_idx` (`result_source_type_id` ASC),
+  INDEX `corresponds_subject_idx` (`entrance_test_subject_id` ASC),
+  INDEX `corresponds_test_type_idx` (`entrance_test_type_id` ASC),
+  INDEX `applies_idx` (`competitive_group_uid` ASC),
+  INDEX `confirms_idx` (`result_document_uid` ASC),
+  INDEX `confirms_disabled_idx` (`is_disabled` ASC),
+  INDEX `has_idx` (`application_uid` ASC),
+  CONSTRAINT `corresponds_src_type`
+    FOREIGN KEY (`result_source_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_subject`
+    FOREIGN KEY (`entrance_test_subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_test_type`
+    FOREIGN KEY (`entrance_test_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `applies`
+    FOREIGN KEY (`competitive_group_uid`)
+    REFERENCES `PK_DB`.`competitive_groups` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `confirms`
+    FOREIGN KEY (`result_document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `confirms_disabled`
+    FOREIGN KEY (`is_disabled`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `has`
+    FOREIGN KEY (`application_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Результаты вступительных испытаний.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`individual_achievements`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`individual_achievements` (
+  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор индивидуального достижения, учитываемого в заявлении.',
+  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
+  `institution_achievement_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор достижения, указанный в приемной кампании.',
+  `mark` INT UNSIGNED NULL COMMENT 'Балл за достижение.',
+  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа, подтверждающего индивидуальное достижение.',
+  PRIMARY KEY (`uid`),
+  INDEX `has_idx` (`application_uid` ASC),
+  INDEX `gets_idx` (`institution_achievement_uid` ASC),
+  INDEX `confirms_idx` (`document_uid` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`application_uid`)
+    REFERENCES `PK_DB`.`applications` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `gets`
+    FOREIGN KEY (`institution_achievement_uid`)
+    REFERENCES `PK_DB`.`institution_achievements` (`institution_achievement_uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `confirms`
+    FOREIGN KEY (`document_uid`)
+    REFERENCES `PK_DB`.`documents` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Индивидуальные достижения.';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
