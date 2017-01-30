@@ -71,8 +71,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns` (
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   INDEX `corresponds_idx` (`campaign_type_id` ASC),
-  CONSTRAINT `corresponds`
+  INDEX `corresponds_status_idx` (`status_id` ASC),
+  CONSTRAINT `corresponds_camp_type`
     FOREIGN KEY (`campaign_type_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_status`
+    FOREIGN KEY (`status_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -102,6 +108,22 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`_campaigns_has_dictionaries_items` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'campaigns:\nEducationForms.EducationFormID[1..n] - ИД формы обучения (справочник №14).\nEducationLevels.EducationLevelID[1..n] - ИД Уровня образования (справочник №2).';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`dictionary_10_items`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_10_items` (
+  `id` INT UNSIGNED NOT NULL COMMENT 'ИД направления.',
+  `name` VARCHAR(75) NOT NULL COMMENT 'Наименование направления.',
+  `code` VARCHAR(14) NOT NULL COMMENT 'Код направления.',
+  `qualification_code` VARCHAR(14) NULL COMMENT 'Код квалификации.',
+  `period` VARCHAR(23) NULL COMMENT 'Период обучения.',
+  `ugs_code` VARCHAR(14) NULL COMMENT 'Код укрупненной группы.',
+  `ugs_name` VARCHAR(75) NULL COMMENT 'Наименование укрупненной группы.',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+COMMENT = 'Справочник №10 \"Направления подготовки\".';
 
 
 -- -----------------------------------------------------
@@ -140,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`admission_volumes` (
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds_dir`
     FOREIGN KEY (`direction_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -304,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`competitive_groups` (
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds_direction`
     FOREIGN KEY (`direction_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -490,6 +512,18 @@ COMMENT = 'common_benefits:\nOlympicDiplomTypes.OlympicDiplomTypeID[1..n] - ИД
 
 
 -- -----------------------------------------------------
+-- Table `PK_DB`.`dictionary_19_items`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_19_items` (
+  `olympic_id` INT UNSIGNED NOT NULL COMMENT 'ИД олимпиады.',
+  `olympic_number` INT UNSIGNED NULL COMMENT 'Номер олимпиады.',
+  `olympic_name` VARCHAR(50) NOT NULL COMMENT 'Имя олимпиады.',
+  PRIMARY KEY (`olympic_id`))
+ENGINE = InnoDB
+COMMENT = 'Справочник №19 \"Олимпиады\".';
+
+
+-- -----------------------------------------------------
 -- Table `PK_DB`.`benefits_olympics_levels`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_olympics_levels` (
@@ -503,7 +537,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_olympics_levels` (
   INDEX `has_idx` (`benefit_uid` ASC),
   CONSTRAINT `corresponds_olymp`
     FOREIGN KEY (`olympic_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds_lvl`
@@ -711,7 +745,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`diploma_docs_additional_data` (
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds`
     FOREIGN KEY (`speciality_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -778,11 +812,11 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_additional_data` (
   `ege_subject_id` INT UNSIGNED NULL COMMENT 'ИД предмета, по которому будет осуществляться проверка ЕГЭ (справочник № 1).',
   PRIMARY KEY (`document_uid`),
   INDEX `corresponds_dip_type_idx` (`diploma_type_id` ASC),
-  INDEX `corresponds_olympic_idx` (`olympic_id` ASC),
   INDEX `corresponds_country_idx` (`country_id` ASC),
   INDEX `corresponds_profile_idx` (`profile_id` ASC),
   INDEX `corresponds_ol_subj_idx` (`olympic_subject_id` ASC),
   INDEX `corresponds_ege_subj_idx` (`ege_subject_id` ASC),
+  INDEX `corresponds_olympic_idx` (`olympic_id` ASC),
   CONSTRAINT `has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
@@ -795,7 +829,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_additional_data` (
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds_olympic`
     FOREIGN KEY (`olympic_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `corresponds_country`
@@ -1075,6 +1109,59 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`individual_achievements` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Индивидуальные достижения.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`dictionary_olympic_profiles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_olympic_profiles` (
+  `olympic_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор.',
+  `profile_id` INT UNSIGNED NOT NULL COMMENT 'ИД профиля олимпиады (справочник №39).',
+  `level_id` INT UNSIGNED NULL COMMENT 'ИД уровня олимпиады (справочник №3).',
+  PRIMARY KEY (`olympic_id`, `profile_id`),
+  INDEX `corresponds_profile_idx` (`profile_id` ASC),
+  INDEX `corresponds_level_idx` (`level_id` ASC),
+  CONSTRAINT `has`
+    FOREIGN KEY (`olympic_id`)
+    REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_profile`
+    FOREIGN KEY (`profile_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `corresponds_level`
+    FOREIGN KEY (`level_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Профили олимпиады из справочника №10.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`_dictionary_olympic_profiles_has_dictionaries_items`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`_dictionary_olympic_profiles_has_dictionaries_items` (
+  `dictionary_olympic_profiles_olympic_id` INT UNSIGNED NOT NULL,
+  `dictionary_olympic_profiles_profile_id` INT UNSIGNED NOT NULL,
+  `dictionaries_items_item_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`dictionary_olympic_profiles_olympic_id`, `dictionary_olympic_profiles_profile_id`, `dictionaries_items_item_id`),
+  INDEX `fk_dictionary_olympic_profiles_has_dictionaries_items_dicti_idx` (`dictionaries_items_item_id` ASC),
+  INDEX `fk_dictionary_olympic_profiles_has_dictionaries_items_dicti_idx1` (`dictionary_olympic_profiles_olympic_id` ASC, `dictionary_olympic_profiles_profile_id` ASC),
+  CONSTRAINT `fk_dictionary_olympic_profiles_has_dictionaries_items_diction1`
+    FOREIGN KEY (`dictionary_olympic_profiles_olympic_id` , `dictionary_olympic_profiles_profile_id`)
+    REFERENCES `PK_DB`.`dictionary_olympic_profiles` (`olympic_id` , `profile_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_dictionary_olympic_profiles_has_dictionaries_items_diction2`
+    FOREIGN KEY (`dictionaries_items_item_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'dictionary_olympic_profiles:\nSubjects.SubjectID[1..n] - ИД предмета (справочник №1).';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
