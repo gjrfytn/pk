@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionaries_items` (
   `item_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор элемента.',
   `name` VARCHAR(75) NOT NULL COMMENT 'Наименование элемента.',
   PRIMARY KEY (`dictionary_id`, `item_id`),
+  INDEX `has_idx` (`dictionary_id` ASC),
+  INDEX `item_id_IDX` (`item_id` ASC),
   CONSTRAINT `dictionaries_items_has`
     FOREIGN KEY (`dictionary_id`)
     REFERENCES `PK_DB`.`dictionaries` (`id`)
@@ -570,14 +572,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`_benefits_olympics_levels_has_dictionaries_i
   `benefit_olympics_levels_common_benefit_uid` INT UNSIGNED NOT NULL,
   `dictionaries_items_item_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`benefit_olympics_levels_olympic_id`, `benefit_olympics_levels_common_benefit_uid`, `dictionaries_items_item_id`),
-  INDEX `fk_olympics_levels_has_dictionaries_items_dictionaries_item_idx` (`dictionaries_items_item_id` ASC),
-  INDEX `fk_olympics_levels_has_dictionaries_items_olympics_levels1_idx` (`benefit_olympics_levels_olympic_id` ASC, `benefit_olympics_levels_common_benefit_uid` ASC),
-  CONSTRAINT `fk_benefits_olympics_levels_has_dictionaries_items_olympics_levels1`
+  INDEX `fk_olymps_lvls_has_dicts_items_dicts_items1_idx` (`dictionaries_items_item_id` ASC),
+  INDEX `fk_bnfs_olymps_lvls_has_dicts_items_olymps_lvls1_idx` (`benefit_olympics_levels_olympic_id` ASC, `benefit_olympics_levels_common_benefit_uid` ASC),
+  CONSTRAINT `fk_bnfs_olymps_lvls_has_dicts_items_olymps_lvls1`
     FOREIGN KEY (`benefit_olympics_levels_olympic_id` , `benefit_olympics_levels_common_benefit_uid`)
     REFERENCES `PK_DB`.`benefits_olympics_levels` (`olympic_id` , `benefit_uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_olympics_levels_has_dictionaries_items_dictionaries_items1`
+  CONSTRAINT `fk_olymps_lvls_has_dicts_items_dicts_items1`
     FOREIGN KEY (`dictionaries_items_item_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
