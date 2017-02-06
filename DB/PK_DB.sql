@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionaries_items` (
   `item_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор элемента.',
   `name` VARCHAR(75) NOT NULL COMMENT 'Наименование элемента.',
   PRIMARY KEY (`dictionary_id`, `item_id`),
-  CONSTRAINT `has`
+  CONSTRAINT `dictionaries_items_has`
     FOREIGN KEY (`dictionary_id`)
     REFERENCES `PK_DB`.`dictionaries` (`id`)
     ON DELETE NO ACTION
@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns` (
   `campaign_type_id` INT UNSIGNED NOT NULL COMMENT 'Тип приёмной кампании (справочник №38)',
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  INDEX `corresponds_idx` (`campaign_type_id` ASC),
-  INDEX `corresponds_status_idx` (`status_id` ASC),
-  CONSTRAINT `corresponds_camp_type`
+  INDEX `corresp_camp_type_idx` (`campaign_type_id` ASC),
+  INDEX `corresp_status_idx` (`status_id` ASC),
+  CONSTRAINT `campaigns_corresp_camp_type`
     FOREIGN KEY (`campaign_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_status`
+  CONSTRAINT `campaigns_corresp_status`
     FOREIGN KEY (`status_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -148,19 +148,19 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`admission_volumes` (
   `number_quota_z` INT UNSIGNED NOT NULL COMMENT 'Места приёма по квоте лиц, имеющих особые права, заочное обучение.',
   PRIMARY KEY (`uid`),
   INDEX `has_idx` (`campaign_uid` ASC),
-  INDEX `corresponds_idx` (`education_level_id` ASC),
-  INDEX `corresponds_dir_idx` (`direction_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_edu_l_idx` (`education_level_id` ASC),
+  INDEX `corresp_dir_idx` (`direction_id` ASC),
+  CONSTRAINT `admission_volumes_has`
     FOREIGN KEY (`campaign_uid`)
     REFERENCES `PK_DB`.`campaigns` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_l`
+  CONSTRAINT `admission_volumes_corresp_edu_l`
     FOREIGN KEY (`education_level_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_dir`
+  CONSTRAINT `admission_volumes_corresp_dir`
     FOREIGN KEY (`direction_id`)
     REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
@@ -186,12 +186,13 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`distributed_admission_volumes` (
   `number_quota_z` INT UNSIGNED NOT NULL COMMENT 'Места приёма по квоте лиц, имеющих особые права, заочное обучение.',
   PRIMARY KEY (`admission_volume_uid`, `level_budget`),
   INDEX `fund_idx` (`level_budget` ASC),
-  CONSTRAINT `has`
+  INDEX `has_idx` (`admission_volume_uid` ASC),
+  CONSTRAINT `distributed_admission_volumes_has`
     FOREIGN KEY (`admission_volume_uid`)
     REFERENCES `PK_DB`.`admission_volumes` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `distributed_admission_volumes_corresp`
     FOREIGN KEY (`level_budget`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -210,14 +211,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`institution_achievements` (
   `max_value` SMALLINT UNSIGNED NOT NULL COMMENT 'Максимальный балл, начисляемый за индивидуальное достижение.',
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приемной кампании.',
   PRIMARY KEY (`institution_achievement_uid`, `campaign_uid`),
-  INDEX `corresponds_idx` (`id_category` ASC),
+  INDEX `corresp_idx` (`id_category` ASC),
   INDEX `has_idx` (`campaign_uid` ASC),
-  CONSTRAINT `corresponds`
+  CONSTRAINT `institution_achievements_corresp`
     FOREIGN KEY (`id_category`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has`
+  CONSTRAINT `institution_achievements_has`
     FOREIGN KEY (`campaign_uid`)
     REFERENCES `PK_DB`.`campaigns` (`uid`)
     ON DELETE NO ACTION
@@ -255,25 +256,25 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
   `type` ENUM('admission', 'exception') NOT NULL COMMENT 'Тип приказа (зачисление или исключение).',
   PRIMARY KEY (`uid`),
   INDEX `has_idx` (`campaign_uid` ASC),
-  INDEX `corresponds_edu_f_idx` (`education_form_id` ASC),
-  INDEX `corresponds_fin_s_idx` (`finance_source_id` ASC),
-  INDEX `corresponds_edu_l_idx` (`education_level_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_edu_f_idx` (`education_form_id` ASC),
+  INDEX `corresp_fin_s_idx` (`finance_source_id` ASC),
+  INDEX `corresp_edu_l_idx` (`education_level_id` ASC),
+  CONSTRAINT `orders_has`
     FOREIGN KEY (`campaign_uid`)
     REFERENCES `PK_DB`.`campaigns` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_f`
+  CONSTRAINT `orders_corresp_edu_f`
     FOREIGN KEY (`education_form_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_fin_s`
+  CONSTRAINT `orders_corresp_fin_s`
     FOREIGN KEY (`finance_source_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_l`
+  CONSTRAINT `orders_corresp_edu_l`
     FOREIGN KEY (`education_level_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -300,31 +301,31 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`competitive_groups` (
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   INDEX `has_idx` (`campaign_uid` ASC),
-  INDEX `corresponds_edu_lvl_idx` (`education_level_id` ASC),
-  INDEX `corresponds_edu_src_idx` (`education_source_id` ASC),
-  INDEX `corresponds_edu_form_idx` (`education_form_id` ASC),
-  INDEX `corresponds_direction_idx` (`direction_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_edu_lvl_idx` (`education_level_id` ASC),
+  INDEX `corresp_edu_src_idx` (`education_source_id` ASC),
+  INDEX `corresp_edu_form_idx` (`education_form_id` ASC),
+  INDEX `corresp_direction_idx` (`direction_id` ASC),
+  CONSTRAINT `competitive_groups_has`
     FOREIGN KEY (`campaign_uid`)
     REFERENCES `PK_DB`.`campaigns` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_lvl`
+  CONSTRAINT `competitive_groups_corresp_edu_lvl`
     FOREIGN KEY (`education_level_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_src`
+  CONSTRAINT `competitive_groups_corresp_edu_src`
     FOREIGN KEY (`education_source_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_form`
+  CONSTRAINT `competitive_groups_corresp_edu_form`
     FOREIGN KEY (`education_form_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_direction`
+  CONSTRAINT `competitive_groups_corresp_direction`
     FOREIGN KEY (`direction_id`)
     REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
@@ -378,18 +379,19 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`target_organizations_adm_volumes` (
   `places_number` INT UNSIGNED NOT NULL COMMENT 'Количество мест.',
   PRIMARY KEY (`target_organization_uid`, `competitive_group_uid`),
   INDEX `has_idx` (`competitive_group_uid` ASC),
-  INDEX `corresponds_edu_form_idx` (`edu_form_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_edu_f_idx` (`edu_form_id` ASC),
+  INDEX `corresp_t_org_idx` (`target_organization_uid` ASC),
+  CONSTRAINT `target_organizations_adm_volumes_has`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_t_org`
+  CONSTRAINT `target_organizations_adm_volumes_corresp_t_org`
     FOREIGN KEY (`target_organization_uid`)
     REFERENCES `PK_DB`.`target_organizations` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_edu_form`
+  CONSTRAINT `target_organizations_adm_volumes_corresp_edu_f`
     FOREIGN KEY (`edu_form_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -410,26 +412,26 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests` (
   `is_for_spo_and_vo` INT UNSIGNED NULL COMMENT 'UID заменяемого испытания.\nЕсли испытание для поступающих на основании профильного СПО/ВО, иначе - NULL.',
   `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор конкурсной группы.',
   PRIMARY KEY (`uid`),
-  INDEX `corresponds_test_type_idx` (`entrance_test_type_id` ASC),
-  INDEX `corresponds_test_subject_idx` (`entrance_test_subject_id` ASC),
+  INDEX `corresp_test_type_idx` (`entrance_test_type_id` ASC),
+  INDEX `corresp_test_subject_idx` (`entrance_test_subject_id` ASC),
   INDEX `replaces_test_idx` (`is_for_spo_and_vo` ASC),
   INDEX `has_idx` (`competitive_group_uid` ASC),
-  CONSTRAINT `corresponds_test_type`
+  CONSTRAINT `entrance_tests_corresp_test_type`
     FOREIGN KEY (`entrance_test_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_test_subject`
+  CONSTRAINT `entrance_tests_corresp_test_subject`
     FOREIGN KEY (`entrance_test_subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `replaces_test`
+  CONSTRAINT `entrance_tests_replaces_test`
     FOREIGN KEY (`is_for_spo_and_vo`)
     REFERENCES `PK_DB`.`entrance_tests` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has`
+  CONSTRAINT `entrance_tests_has`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
@@ -453,32 +455,32 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_benefits` (
   `min_ege_mark` INT UNSIGNED NULL COMMENT 'Минимальный балл ЕГЭ, при котором можно использовать льготу.\nNULL, если льгота относится к конкурсной группе.',
   `entrance_test_id` INT UNSIGNED NULL COMMENT 'Идентификатор вступительного испытания.\nNULL, если льгота относится к конкурсной группе.',
   PRIMARY KEY (`uid`),
-  INDEX `corresponds_bnf_kind_idx` (`benefit_kind_id` ASC),
-  INDEX `corresponds_lvl_for_all_idx` (`level_for_all_olympics` ASC),
-  INDEX `corresponds_cls_for_all_idx` (`class_for_all_olympics` ASC),
-  INDEX `has_idx` (`competitive_group_uid` ASC),
+  INDEX `corresp_bnf_kind_idx` (`benefit_kind_id` ASC),
+  INDEX `corresp_lvl_for_all_idx` (`level_for_all_olympics` ASC),
+  INDEX `corresp_cls_for_all_idx` (`class_for_all_olympics` ASC),
+  INDEX `has_comp_gr_idx` (`competitive_group_uid` ASC),
   INDEX `has_entr_test_idx` (`entrance_test_id` ASC),
-  CONSTRAINT `corresponds_bnf_kind`
+  CONSTRAINT `entrance_benefits_corresp_bnf_kind`
     FOREIGN KEY (`benefit_kind_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_lvl_for_all`
+  CONSTRAINT `entrance_benefits_corresp_lvl_for_all`
     FOREIGN KEY (`level_for_all_olympics`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_cls_for_all`
+  CONSTRAINT `entrance_benefits_corresp_cls_for_all`
     FOREIGN KEY (`class_for_all_olympics`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has_comp_gr`
+  CONSTRAINT `entrance_benefits_has_comp_gr`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has_entr_test`
+  CONSTRAINT `entrance_benefits_has_entr_test`
     FOREIGN KEY (`entrance_test_id`)
     REFERENCES `PK_DB`.`entrance_tests` (`uid`)
     ON DELETE NO ACTION
@@ -532,25 +534,26 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_olympics_levels` (
   `level_id` INT UNSIGNED NOT NULL COMMENT 'Уровни олимпиады (справочник №3).',
   `class_id` INT UNSIGNED NOT NULL COMMENT 'Классы олимпиады (справочник №40).',
   PRIMARY KEY (`olympic_id`, `benefit_uid`),
-  INDEX `corresponds_lvl_id_idx` (`level_id` ASC),
-  INDEX `corresponds_class_id_idx` (`class_id` ASC),
+  INDEX `corresp_lvl_idx` (`level_id` ASC),
+  INDEX `corresp_class_idx` (`class_id` ASC),
   INDEX `has_idx` (`benefit_uid` ASC),
-  CONSTRAINT `corresponds_olymp`
+  INDEX `corresp_olymp` (`olympic_id` ASC),
+  CONSTRAINT `benefits_olympics_levels_corresp_olymp`
     FOREIGN KEY (`olympic_id`)
     REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_lvl`
+  CONSTRAINT `benefits_olympics_levels_corresp_lvl`
     FOREIGN KEY (`level_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_class`
+  CONSTRAINT `benefits_olympics_levels_corresp_class`
     FOREIGN KEY (`class_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has`
+  CONSTRAINT `benefits_olympics_levels_has`
     FOREIGN KEY (`benefit_uid`)
     REFERENCES `PK_DB`.`entrance_benefits` (`uid`)
     ON DELETE NO ACTION
@@ -591,13 +594,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`benefits_min_ege_marks` (
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
   `min_mark` INT UNSIGNED NOT NULL COMMENT 'Минимальная оценка по предмету.',
   PRIMARY KEY (`benefit_uid`, `subject_id`),
-  INDEX `corresponds_idx` (`subject_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_idx` (`subject_id` ASC),
+  INDEX `has_idx` (`benefit_uid` ASC),
+  CONSTRAINT `benefits_min_ege_marks_has`
     FOREIGN KEY (`benefit_uid`)
     REFERENCES `PK_DB`.`entrance_benefits` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `benefits_min_ege_marks_corresp`
     FOREIGN KEY (`subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -638,26 +642,27 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
   `mail_adress` VARCHAR(500) NULL COMMENT 'Почтовый адрес - Адрес.',
   `is_from_krym` INT UNSIGNED NULL COMMENT 'UID подтверждающего документа.\nЕсли абитуриент - гражданин Крыма, иначе - NULL.',
   PRIMARY KEY (`uid`),
-  UNIQUE INDEX `is_for_krym_UNIQUE` (`is_from_krym` ASC),
-  INDEX `corresponds_gend_id_idx` (`gender_id` ASC),
-  INDEX `corresponds_mail_region_idx` (`mail_region_id` ASC),
-  INDEX `corresponds_mail_town_type_idx` (`mail_town_type_id` ASC),
-  CONSTRAINT `corresponds_gender`
+  UNIQUE INDEX `is_from_krym_UNIQUE` (`is_from_krym` ASC),
+  INDEX `corresp_gend_id_idx` (`gender_id` ASC),
+  INDEX `corresp_mail_region_idx` (`mail_region_id` ASC),
+  INDEX `corresp_mail_town_type_idx` (`mail_town_type_id` ASC),
+  INDEX `has_krym_doc_idx` (`is_from_krym` ASC),
+  CONSTRAINT `entrants_corresp_gender`
     FOREIGN KEY (`gender_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_mail_region`
+  CONSTRAINT `entrants_corresp_mail_region`
     FOREIGN KEY (`mail_region_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_mail_town_type`
+  CONSTRAINT `entrants_corresp_mail_town_type`
     FOREIGN KEY (`mail_town_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has_krym_doc`
+  CONSTRAINT `entrants_has_krym_doc`
     FOREIGN KEY (`is_from_krym`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
@@ -680,13 +685,13 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `application_number_UNIQUE` (`application_number` ASC),
   INDEX `has_idx` (`entrant_uid` ASC),
-  INDEX `corresponds_idx` (`status_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_idx` (`status_id` ASC),
+  CONSTRAINT `applications_has`
     FOREIGN KEY (`entrant_uid`)
     REFERENCES `PK_DB`.`entrants` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `applications_corresp`
     FOREIGN KEY (`status_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -708,17 +713,18 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   PRIMARY KEY (`application_uid`, `competitive_group_uid`),
   INDEX `enters_idx` (`competitive_group_uid` ASC),
   INDEX `targets_idx` (`target_organization_uid` ASC),
-  CONSTRAINT `has`
+  INDEX `has_idx` (`application_uid` ASC),
+  CONSTRAINT `applications_entrances_has`
     FOREIGN KEY (`application_uid`)
     REFERENCES `PK_DB`.`applications` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `enters`
+  CONSTRAINT `applications_entrances_enters`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `targets`
+  CONSTRAINT `applications_entrances_targets`
     FOREIGN KEY (`target_organization_uid`)
     REFERENCES `PK_DB`.`target_organizations` (`uid`)
     ON DELETE NO ACTION
@@ -737,13 +743,13 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`diploma_docs_additional_data` (
   `end_year` INT UNSIGNED NULL COMMENT 'Год окончания.',
   `gpa` FLOAT UNSIGNED NULL COMMENT 'Средний балл.',
   PRIMARY KEY (`document_uid`),
-  INDEX `corresponds_idx` (`speciality_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_idx` (`speciality_id` ASC),
+  CONSTRAINT `diploma_docs_additional_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `diploma_docs_additional_data_corresp`
     FOREIGN KEY (`speciality_id`)
     REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
@@ -767,25 +773,25 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`identity_docs_additional_data` (
   `birth_date` DATE NOT NULL COMMENT 'Дата рождения.',
   `birth_place` VARCHAR(250) NULL COMMENT 'Место рождения.',
   PRIMARY KEY (`document_uid`),
-  INDEX `corresponds_gender_idx` (`gender_id` ASC),
-  INDEX `corresponds_type_idx` (`identity_document_type_id` ASC),
-  INDEX `corresponds_nation_idx` (`nationality_type_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_gender_idx` (`gender_id` ASC),
+  INDEX `corresp_type_idx` (`identity_document_type_id` ASC),
+  INDEX `corresp_nation_idx` (`nationality_type_id` ASC),
+  CONSTRAINT `identity_docs_additional_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_gender`
+  CONSTRAINT `identity_docs_additional_data_corresp_gender`
     FOREIGN KEY (`gender_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_type`
+  CONSTRAINT `identity_docs_additional_data_corresp_type`
     FOREIGN KEY (`identity_document_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_nation`
+  CONSTRAINT `identity_docs_additional_data_corresp_nation`
     FOREIGN KEY (`nationality_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -811,43 +817,43 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_additional_data` (
   `olympic_subject_id` INT UNSIGNED NULL COMMENT 'ИД предмета олимпиады  (должен соответствовать профилю олимпиады) (справочник № 1).',
   `ege_subject_id` INT UNSIGNED NULL COMMENT 'ИД предмета, по которому будет осуществляться проверка ЕГЭ (справочник № 1).',
   PRIMARY KEY (`document_uid`),
-  INDEX `corresponds_dip_type_idx` (`diploma_type_id` ASC),
-  INDEX `corresponds_country_idx` (`country_id` ASC),
-  INDEX `corresponds_profile_idx` (`profile_id` ASC),
-  INDEX `corresponds_ol_subj_idx` (`olympic_subject_id` ASC),
-  INDEX `corresponds_ege_subj_idx` (`ege_subject_id` ASC),
-  INDEX `corresponds_olympic_idx` (`olympic_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_dip_type_idx` (`diploma_type_id` ASC),
+  INDEX `corresp_country_idx` (`country_id` ASC),
+  INDEX `corresp_profile_idx` (`profile_id` ASC),
+  INDEX `corresp_ol_subj_idx` (`olympic_subject_id` ASC),
+  INDEX `corresp_ege_subj_idx` (`ege_subject_id` ASC),
+  INDEX `corresp_olympic_idx` (`olympic_id` ASC),
+  CONSTRAINT `olympic_docs_additional_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_dip_type`
+  CONSTRAINT `olympic_docs_additional_data_corresp_dip_type`
     FOREIGN KEY (`diploma_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_olympic`
+  CONSTRAINT `olympic_docs_additional_data_corresp_olympic`
     FOREIGN KEY (`olympic_id`)
     REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_country`
+  CONSTRAINT `olympic_docs_additional_data_corresp_country`
     FOREIGN KEY (`country_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_profile`
+  CONSTRAINT `olympic_docs_additional_data_corresp_profile`
     FOREIGN KEY (`profile_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_ol_subj`
+  CONSTRAINT `olympic_docs_additional_data_corresp_ol_subj`
     FOREIGN KEY (`olympic_subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_ege_subj`
+  CONSTRAINT `olympic_docs_additional_data_corresp_ege_subj`
     FOREIGN KEY (`ege_subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -866,13 +872,13 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`other_docs_additional_data` (
   `text_data` VARCHAR(4000) NULL COMMENT 'Текстовые данные. Для разных документов:\ncustom, sport: AdditionalInfo - Дополнительные сведения.\nedu_custom: DocumentTypeNameText - Наименование документа.',
   `document_year` INT UNSIGNED NULL COMMENT 'Для документа типа ege - Год выдачи свидетельства.',
   PRIMARY KEY (`document_uid`),
-  INDEX `corresponds_idx` (`dictionary_item_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_idx` (`dictionary_item_id` ASC),
+  CONSTRAINT `other_docs_additional_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `other_docs_additional_data_corresp`
     FOREIGN KEY (`dictionary_item_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -888,14 +894,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_subjects` (
   `olympic_docs_ad_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД профильной дисциплины  (справочник №39).',
   PRIMARY KEY (`olympic_docs_ad_id`, `subject_id`),
-  INDEX `fk_olympic_docs_additional_data_has_dictionaries_items_dict_idx` (`subject_id` ASC),
-  INDEX `fk_olympic_docs_additional_data_has_dictionaries_items_olym_idx` (`olympic_docs_ad_id` ASC),
-  CONSTRAINT `has`
+  INDEX `has_idx` (`subject_id` ASC),
+  INDEX `corresp_idx` (`olympic_docs_ad_id` ASC),
+  CONSTRAINT `olympic_docs_subjects_has`
     FOREIGN KEY (`olympic_docs_ad_id`)
     REFERENCES `PK_DB`.`olympic_docs_additional_data` (`document_uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `olympic_docs_subjects_corresp`
     FOREIGN KEY (`subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -912,13 +918,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`documents_subjects_data` (
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
   `value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
   PRIMARY KEY (`document_uid`, `subject_id`),
-  INDEX `corresponds_idx` (`subject_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_idx` (`subject_id` ASC),
+  INDEX `has_idx` (`document_uid` ASC),
+  CONSTRAINT `documents_subjects_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds`
+  CONSTRAINT `documents_subjects_data_corresp`
     FOREIGN KEY (`subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
@@ -941,58 +948,42 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`application_common_benefits` (
   PRIMARY KEY (`uid`),
   INDEX `has_idx` (`application_uid` ASC),
   INDEX `applies_idx` (`competitive_group_uid` ASC),
-  INDEX `corresponds_doc_type_idx` (`document_type_id` ASC),
+  INDEX `corresp_doc_type_idx` (`document_type_id` ASC),
   INDEX `confirms_idx` (`document_reason_uid` ASC),
   INDEX `allows_education_idx` (`allow_education_document_uid` ASC),
   INDEX `corresponds_bnf_kind_idx` (`benefit_kind_id` ASC),
-  CONSTRAINT `has`
+  CONSTRAINT `application_common_benefits_has`
     FOREIGN KEY (`application_uid`)
     REFERENCES `PK_DB`.`applications` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `applies`
+  CONSTRAINT `application_common_benefits_applies`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_doc_type`
+  CONSTRAINT `application_common_benefits_corresp_doc_type`
     FOREIGN KEY (`document_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `confirms`
+  CONSTRAINT `application_common_benefits_confirms`
     FOREIGN KEY (`document_reason_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `allows_education`
+  CONSTRAINT `application_common_benefits_allows_education`
     FOREIGN KEY (`allow_education_document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_bnf_kind`
+  CONSTRAINT `application_common_benefits_corresp_bnf_kind`
     FOREIGN KEY (`benefit_kind_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Льготы, предоставленные абитуриенту.';
-
-
--- -----------------------------------------------------
--- Table `PK_DB`.`applications_documents`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_documents` (
-  `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
-  `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор документа.',
-  PRIMARY KEY (`application_uid`, `document_uid`),
-  CONSTRAINT `has`
-    FOREIGN KEY (`application_uid`)
-    REFERENCES `PK_DB`.`applications` (`uid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Документы, приложенные к заявлениям.';
 
 
 -- -----------------------------------------------------
@@ -1015,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`_applications_has_documents` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'Документы, приложенные к заявлению.';
+COMMENT = 'applications:\nApplicationDocuments - Документы, приложенные к заявлению.';
 
 
 -- -----------------------------------------------------
@@ -1033,44 +1024,44 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests_results` (
   `is_distant` VARCHAR(200) NULL COMMENT 'ВИ с использованием дистанционных технологий.\nМесто сдачи ВИ, если использовались, иначе NULL.',
   `is_disabled` INT UNSIGNED NULL COMMENT 'ВИ с созданием специальных условий.\nUID подтверждающего документа, если создавались, иначе NULL.',
   PRIMARY KEY (`uid`),
-  INDEX `corresponds_src_type_idx` (`result_source_type_id` ASC),
-  INDEX `corresponds_subject_idx` (`entrance_test_subject_id` ASC),
-  INDEX `corresponds_test_type_idx` (`entrance_test_type_id` ASC),
+  INDEX `corresp_src_type_idx` (`result_source_type_id` ASC),
+  INDEX `corresp_subject_idx` (`entrance_test_subject_id` ASC),
+  INDEX `corresp_test_type_idx` (`entrance_test_type_id` ASC),
   INDEX `applies_idx` (`competitive_group_uid` ASC),
   INDEX `confirms_idx` (`result_document_uid` ASC),
   INDEX `confirms_disabled_idx` (`is_disabled` ASC),
   INDEX `has_idx` (`application_uid` ASC),
-  CONSTRAINT `corresponds_src_type`
+  CONSTRAINT `entrance_tests_results_corresp_src_type`
     FOREIGN KEY (`result_source_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_subject`
+  CONSTRAINT `entrance_tests_results_corresp_subject`
     FOREIGN KEY (`entrance_test_subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_test_type`
+  CONSTRAINT `entrance_tests_results_corresp_test_type`
     FOREIGN KEY (`entrance_test_type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `applies`
+  CONSTRAINT `entrance_tests_results_applies`
     FOREIGN KEY (`competitive_group_uid`)
     REFERENCES `PK_DB`.`competitive_groups` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `confirms`
+  CONSTRAINT `entrance_tests_results_confirms`
     FOREIGN KEY (`result_document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `confirms_disabled`
+  CONSTRAINT `entrance_tests_results_confirms_disabled`
     FOREIGN KEY (`is_disabled`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `has`
+  CONSTRAINT `entrance_tests_results_has`
     FOREIGN KEY (`application_uid`)
     REFERENCES `PK_DB`.`applications` (`uid`)
     ON DELETE NO ACTION
@@ -1092,17 +1083,17 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`individual_achievements` (
   INDEX `has_idx` (`application_uid` ASC),
   INDEX `gets_idx` (`institution_achievement_uid` ASC),
   INDEX `confirms_idx` (`document_uid` ASC),
-  CONSTRAINT `has`
+  CONSTRAINT `individual_achievements_has`
     FOREIGN KEY (`application_uid`)
     REFERENCES `PK_DB`.`applications` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `gets`
+  CONSTRAINT `individual_achievements_gets`
     FOREIGN KEY (`institution_achievement_uid`)
     REFERENCES `PK_DB`.`institution_achievements` (`institution_achievement_uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `confirms`
+  CONSTRAINT `individual_achievements_confirms`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
@@ -1119,19 +1110,20 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_olympic_profiles` (
   `profile_id` INT UNSIGNED NOT NULL COMMENT 'ИД профиля олимпиады (справочник №39).',
   `level_id` INT UNSIGNED NULL COMMENT 'ИД уровня олимпиады (справочник №3).',
   PRIMARY KEY (`olympic_id`, `profile_id`),
-  INDEX `corresponds_profile_idx` (`profile_id` ASC),
-  INDEX `corresponds_level_idx` (`level_id` ASC),
-  CONSTRAINT `has`
+  INDEX `corresp_profile_idx` (`profile_id` ASC),
+  INDEX `corresp_level_idx` (`level_id` ASC),
+  INDEX `has_idx` (`olympic_id` ASC),
+  CONSTRAINT `dictionary_olympic_profiles_has`
     FOREIGN KEY (`olympic_id`)
     REFERENCES `PK_DB`.`dictionary_19_items` (`olympic_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_profile`
+  CONSTRAINT `dictionary_olympic_profiles_corresp_profile`
     FOREIGN KEY (`profile_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `corresponds_level`
+  CONSTRAINT `dictionary_olympic_profiles_corresp_level`
     FOREIGN KEY (`level_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
