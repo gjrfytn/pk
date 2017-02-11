@@ -47,7 +47,7 @@ COMMENT = 'Справочники из ФИС.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionaries_items` (
   `dictionary_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор справочника.',
   `item_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор элемента.',
-  `name` VARCHAR(75) NOT NULL COMMENT 'Наименование элемента.',
+  `name` VARCHAR(300) NOT NULL COMMENT 'Наименование элемента.',
   PRIMARY KEY (`dictionary_id`, `item_id`),
   INDEX `has_idx` (`dictionary_id` ASC),
   INDEX `item_id_IDX` (`item_id` ASC),
@@ -64,18 +64,18 @@ COMMENT = 'Элементы справочников ФИС.';
 -- Table `PK_DB`.`campaigns`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `name` VARCHAR(100) NOT NULL COMMENT 'Название.',
-  `year_start` INT UNSIGNED NOT NULL COMMENT 'Год начала.',
-  `year_end` INT UNSIGNED NOT NULL COMMENT 'Год окончания.',
+  `start_year` INT UNSIGNED NOT NULL COMMENT 'Год начала.',
+  `end_year` INT UNSIGNED NOT NULL COMMENT 'Год окончания.',
   `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус (справочник №34)',
-  `campaign_type_id` INT UNSIGNED NOT NULL COMMENT 'Тип приёмной кампании (справочник №38)',
+  `type_id` INT UNSIGNED NOT NULL COMMENT 'Тип приёмной кампании (справочник №38)',
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  INDEX `corresp_camp_type_idx` (`campaign_type_id` ASC),
+  INDEX `corresp_type_idx` (`type_id` ASC),
   INDEX `corresp_status_idx` (`status_id` ASC),
-  CONSTRAINT `campaigns_corresp_camp_type`
-    FOREIGN KEY (`campaign_type_id`)
+  CONSTRAINT `campaigns_corresp_type`
+    FOREIGN KEY (`type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -132,7 +132,7 @@ COMMENT = 'Справочник №10 \"Направления подготов�
 -- Table `PK_DB`.`admission_volumes`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`admission_volumes` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приёмной кампании (UID).',
   `education_level_id` INT UNSIGNED NOT NULL COMMENT 'ИД уровня образования (справочник №2).',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'ИД направления подготовки (справочник №10).',
@@ -176,7 +176,7 @@ COMMENT = 'Объёмы приёма по направлению подгото�
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`distributed_admission_volumes` (
   `admission_volume_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор объема приема по направлению подготовки.',
-  `level_budget` INT UNSIGNED NOT NULL COMMENT 'ИД уровня бюджета (справочник №35).',
+  `budget_level` INT UNSIGNED NOT NULL COMMENT 'ИД уровня бюджета (справочник №35).',
   `number_budget_o` INT UNSIGNED NOT NULL COMMENT 'Бюджетные места очной формы.',
   `number_budget_oz` INT UNSIGNED NOT NULL COMMENT 'Бюджетные места очно-заочной формы.',
   `number_budget_z` INT UNSIGNED NOT NULL COMMENT 'Бюджетные места заочной формы.',
@@ -186,8 +186,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`distributed_admission_volumes` (
   `number_quota_o` INT UNSIGNED NOT NULL COMMENT 'Места приёма по квоте лиц, имеющих особые права, очное обучение.',
   `number_quota_oz` INT UNSIGNED NOT NULL COMMENT 'Места приёма по квоте лиц, имеющих особые права, очно-заочное (вечернее) обучение.',
   `number_quota_z` INT UNSIGNED NOT NULL COMMENT 'Места приёма по квоте лиц, имеющих особые права, заочное обучение.',
-  PRIMARY KEY (`admission_volume_uid`, `level_budget`),
-  INDEX `fund_idx` (`level_budget` ASC),
+  PRIMARY KEY (`admission_volume_uid`, `budget_level`),
+  INDEX `corresp_idx` (`budget_level` ASC),
   INDEX `has_idx` (`admission_volume_uid` ASC),
   CONSTRAINT `distributed_admission_volumes_has`
     FOREIGN KEY (`admission_volume_uid`)
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`distributed_admission_volumes` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `distributed_admission_volumes_corresp`
-    FOREIGN KEY (`level_budget`)
+    FOREIGN KEY (`budget_level`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -207,16 +207,17 @@ COMMENT = 'Объемы приема распределенные по уров�
 -- Table `PK_DB`.`institution_achievements`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`institution_achievements` (
-  `institution_achievement_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `institution_achievement_uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `name` VARCHAR(500) NOT NULL COMMENT 'Наименование индивидуального достижения.',
-  `id_category` INT UNSIGNED NOT NULL COMMENT 'ИД индивидуального достижения (справочник №36).',
+  `category_id` INT UNSIGNED NOT NULL COMMENT 'ИД индивидуального достижения (справочник №36).',
   `max_value` SMALLINT UNSIGNED NOT NULL COMMENT 'Максимальный балл, начисляемый за индивидуальное достижение.',
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приемной кампании.',
-  PRIMARY KEY (`institution_achievement_uid`, `campaign_uid`),
-  INDEX `corresp_idx` (`id_category` ASC),
+  PRIMARY KEY (`institution_achievement_uid`),
+  INDEX `corresp_idx` (`category_id` ASC),
   INDEX `has_idx` (`campaign_uid` ASC),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   CONSTRAINT `institution_achievements_corresp`
-    FOREIGN KEY (`id_category`)
+    FOREIGN KEY (`category_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -233,7 +234,7 @@ COMMENT = 'Индивидуальные достижения, учитываем
 -- Table `PK_DB`.`target_organizations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`target_organizations` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `name` VARCHAR(250) NOT NULL COMMENT 'Наименование целевой организации.',
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
@@ -245,12 +246,12 @@ COMMENT = 'Целевые организации.';
 -- Table `PK_DB`.`orders`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'UID приемной кампании.',
-  `order_name` VARCHAR(200) NOT NULL COMMENT 'Наименование (текстовое описание) приказа.',
-  `order_number` VARCHAR(50) NOT NULL COMMENT 'Номер приказа.',
-  `order_date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
-  `order_date_published` DATE NOT NULL COMMENT 'Дата фактической публикации приказа.',
+  `name` VARCHAR(200) NOT NULL COMMENT 'Наименование (текстовое описание) приказа.',
+  `number` VARCHAR(50) NOT NULL COMMENT 'Номер приказа.',
+  `registration_date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
+  `publication_date` DATE NOT NULL COMMENT 'Дата фактической публикации приказа.',
   `education_form_id` INT UNSIGNED NOT NULL COMMENT 'ИД Формы обучения(Справочник 14 \"Форма обучения\").',
   `finance_source_id` INT UNSIGNED NOT NULL COMMENT 'ИД источника финансирования (Справочник 15 \"Источник финансирования\").',
   `education_level_id` INT UNSIGNED NOT NULL COMMENT 'ИД Уровня образования(Справочник 2 \"Уровень образования\").',
@@ -289,7 +290,7 @@ COMMENT = 'Приказы.';
 -- Table `PK_DB`.`competitive_groups`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`competitive_groups` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приемной кампании (UID).',
   `name` VARCHAR(250) NOT NULL COMMENT 'Наименование конкурса.',
   `education_level_id` INT UNSIGNED NOT NULL COMMENT 'ИД уровня образования (справочник №2).',
@@ -298,7 +299,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`competitive_groups` (
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'ИД направления подготовки (справочник №10).',
   `is_for_krym` TINYINT(1) NOT NULL COMMENT 'Конкурс для граждан Крыма.',
   `is_additional` TINYINT(1) NOT NULL COMMENT 'Конкурс для дополнительного набора.',
-  `places_type` ENUM('budget_o', 'budget_oz', 'budget_z', 'paid_o', 'paid_oz', 'paid_z', 'quota_o', 'quota_oz', 'quota_z', 'target_o', 'target_oz', 'target_z') NOT NULL COMMENT 'Тип мест в конкурсной группе.',
   `places_number` INT UNSIGNED NOT NULL COMMENT 'Количество мест в конкурсной группе.',
   PRIMARY KEY (`uid`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
@@ -340,7 +340,7 @@ COMMENT = 'Конкурсные группы (конкурсы).';
 -- Table `PK_DB`.`edu_programs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`edu_programs` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `name` VARCHAR(200) NOT NULL COMMENT 'Наименование ОП.',
   `code` VARCHAR(10) NOT NULL COMMENT 'Код ОП.',
   PRIMARY KEY (`uid`))
@@ -406,25 +406,25 @@ COMMENT = 'Сведения о целевом наборе от организа
 -- Table `PK_DB`.`entrance_tests`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
-  `entrance_test_type_id` INT UNSIGNED NOT NULL COMMENT 'Тип вступительного испытания (справочник №11).',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
+  `type_id` INT UNSIGNED NOT NULL COMMENT 'Тип вступительного испытания (справочник №11).',
   `min_score` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальное количество баллов.',
-  `entrance_test_priority` INT UNSIGNED NOT NULL COMMENT 'Приоритет вступительного испытания.',
-  `entrance_test_subject_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор дисциплины вступительного испытания (справочник №1).',
+  `priority` INT UNSIGNED NOT NULL COMMENT 'Приоритет вступительного испытания.',
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор дисциплины вступительного испытания (справочник №1).',
   `is_for_spo_and_vo` INT UNSIGNED NULL COMMENT 'UID заменяемого испытания.\nЕсли испытание для поступающих на основании профильного СПО/ВО, иначе - NULL.',
   `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор конкурсной группы.',
   PRIMARY KEY (`uid`),
-  INDEX `corresp_test_type_idx` (`entrance_test_type_id` ASC),
-  INDEX `corresp_test_subject_idx` (`entrance_test_subject_id` ASC),
+  INDEX `corresp_type_idx` (`type_id` ASC),
+  INDEX `corresp_subject_idx` (`subject_id` ASC),
   INDEX `replaces_test_idx` (`is_for_spo_and_vo` ASC),
   INDEX `has_idx` (`competitive_group_uid` ASC),
-  CONSTRAINT `entrance_tests_corresp_test_type`
-    FOREIGN KEY (`entrance_test_type_id`)
+  CONSTRAINT `entrance_tests_corresp_type`
+    FOREIGN KEY (`type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `entrance_tests_corresp_test_subject`
-    FOREIGN KEY (`entrance_test_subject_id`)
+  CONSTRAINT `entrance_tests_corresp_subject`
+    FOREIGN KEY (`subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -446,7 +446,7 @@ COMMENT = 'Вступительные испытания конкурсов.';
 -- Table `PK_DB`.`entrance_benefits`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_benefits` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `benefit_kind_id` INT UNSIGNED NOT NULL COMMENT 'Вид льготы (справочник №30).',
   `is_for_all_olympics` TINYINT(1) NOT NULL COMMENT 'Флаг действия льготы для всех олимпиад.',
   `is_creative` TINYINT(1) NULL COMMENT 'Творческие олимпиады.\nNULL, если льгота относится к вступительному испытанию.',
@@ -616,12 +616,12 @@ COMMENT = 'Минимальная оценка по предметам для л
 -- Table `PK_DB`.`documents`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`documents` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'phd_diploma', 'post_graduate_diploma', 'school_certificate', 'sport', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nphd_diploma\npost_graduate_diploma\nschool_certificate\nsport\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent',
-  `document_series` VARCHAR(20) NULL COMMENT 'Серия документа.',
-  `document_number` VARCHAR(100) NULL COMMENT 'Номер документа.',
-  `document_date` DATE NULL COMMENT 'Дата выдачи документа.',
-  `document_organization` VARCHAR(500) NULL COMMENT 'Организация, выдавшая документ.',
+  `series` VARCHAR(20) NULL COMMENT 'Серия документа.',
+  `number` VARCHAR(100) NULL COMMENT 'Номер документа.',
+  `date` DATE NULL COMMENT 'Дата выдачи документа.',
+  `organization` VARCHAR(500) NULL COMMENT 'Организация, выдавшая документ.',
   `original_recieved_date` DATE NULL COMMENT 'Дата предоставления оригиналов документов.',
   PRIMARY KEY (`uid`))
 ENGINE = InnoDB
@@ -632,7 +632,7 @@ COMMENT = 'Документы.';
 -- Table `PK_DB`.`entrants`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `last_name` VARCHAR(250) NOT NULL COMMENT 'Фамилия.',
   `first_name` VARCHAR(250) NOT NULL COMMENT 'Имя.',
   `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
@@ -677,15 +677,15 @@ COMMENT = 'Абитуриенты.';
 -- Table `PK_DB`.`applications`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
-  `application_number` VARCHAR(50) NOT NULL COMMENT 'Номер заявления ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
+  `number` VARCHAR(50) NOT NULL COMMENT 'Номер заявления ОО.',
   `entrant_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор абитуриента.',
   `registration_time` DATETIME NOT NULL COMMENT 'Дата и время регистрации заявления.',
-  `need_hostel` TINYINT(1) NOT NULL COMMENT 'Признак необходимости общежития.',
+  `needs_hostel` TINYINT(1) NOT NULL COMMENT 'Признак необходимости общежития.',
   `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус заявления (справочник №4).',
   `status_comment` VARCHAR(4000) NULL COMMENT 'Комментарий к статусу заявления.',
   PRIMARY KEY (`uid`),
-  UNIQUE INDEX `application_number_UNIQUE` (`application_number` ASC),
+  UNIQUE INDEX `application_number_UNIQUE` (`number` ASC),
   INDEX `has_idx` (`entrant_uid` ASC),
   INDEX `corresp_idx` (`status_id` ASC),
   CONSTRAINT `applications_has`
@@ -770,14 +770,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`identity_docs_additional_data` (
   `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
   `gender_id` INT UNSIGNED NULL COMMENT 'Пол (справочник №5).',
   `subdivision_code` VARCHAR(7) NULL COMMENT 'Код подразделения.',
-  `identity_document_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа документа, удостоверяющего личность (справочник №22).',
-  `nationality_type_id` INT UNSIGNED NULL COMMENT 'ИД гражданства (справочник №7).',
+  `type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа документа, удостоверяющего личность (справочник №22).',
+  `nationality_id` INT UNSIGNED NULL COMMENT 'ИД гражданства (справочник №7).',
   `birth_date` DATE NOT NULL COMMENT 'Дата рождения.',
   `birth_place` VARCHAR(250) NULL COMMENT 'Место рождения.',
   PRIMARY KEY (`document_uid`),
   INDEX `corresp_gender_idx` (`gender_id` ASC),
-  INDEX `corresp_type_idx` (`identity_document_type_id` ASC),
-  INDEX `corresp_nation_idx` (`nationality_type_id` ASC),
+  INDEX `corresp_type_idx` (`type_id` ASC),
+  INDEX `corresp_nation_idx` (`nationality_id` ASC),
   CONSTRAINT `identity_docs_additional_data_has`
     FOREIGN KEY (`document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
@@ -789,12 +789,12 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`identity_docs_additional_data` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `identity_docs_additional_data_corresp_type`
-    FOREIGN KEY (`identity_document_type_id`)
+    FOREIGN KEY (`type_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `identity_docs_additional_data_corresp_nation`
-    FOREIGN KEY (`nationality_type_id`)
+    FOREIGN KEY (`nationality_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -869,10 +869,10 @@ COMMENT = 'Дополнительная информация для докуме
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`other_docs_additional_data` (
   `document_uid` INT UNSIGNED NOT NULL COMMENT 'Идентфикатор документа.',
-  `document_name` VARCHAR(1000) NULL COMMENT 'Наименование документа.',
+  `name` VARCHAR(1000) NULL COMMENT 'Наименование документа.',
   `dictionary_item_id` INT UNSIGNED NULL COMMENT 'ИД элемента справочника. Для разных документов:\nveteran - VeteranCategoryID - Тип документа, подтверждающего принадлежность к ветеранам боевых действий (справочник № 45).\ninstitution: DocumentTypeID - Тип документа (справочник №33).\nsport: SportCategoryID - Тип диплома в области спорта (справочник № 43).\norphan: OrphanCategoryID - Тип документа, подтверждающего сиротство (справочник № 42).\ndisability: DisabilityTypeID - Группа инвалидности (справочник №23).\ncompatriot: CompariotCategoryID - Тип документа, подтверждающего принадлежность к соотечественникам (справочник № 44).',
   `text_data` VARCHAR(4000) NULL COMMENT 'Текстовые данные. Для разных документов:\ncustom, sport: AdditionalInfo - Дополнительные сведения.\nedu_custom: DocumentTypeNameText - Наименование документа.',
-  `document_year` INT UNSIGNED NULL COMMENT 'Для документа типа ege - Год выдачи свидетельства.',
+  `year` INT UNSIGNED NULL COMMENT 'Для документа типа ege - Год выдачи свидетельства.',
   PRIMARY KEY (`document_uid`),
   INDEX `corresp_idx` (`dictionary_item_id` ASC),
   CONSTRAINT `other_docs_additional_data_has`
@@ -940,18 +940,18 @@ COMMENT = 'Дисциплины документов.';
 -- Table `PK_DB`.`application_common_benefits`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`application_common_benefits` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентифиактор заявления.',
   `competitive_group_uid` INT UNSIGNED NOT NULL COMMENT 'UID конкурса для льготы.',
   `document_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД типа документа-основания (справочник №31).',
-  `document_reason_uid` INT UNSIGNED NOT NULL COMMENT 'Сведения о документе-основании (идентификатор документа).',
+  `reason_document_uid` INT UNSIGNED NOT NULL COMMENT 'Сведения о документе-основании (идентификатор документа).',
   `allow_education_document_uid` INT UNSIGNED NULL COMMENT 'Заключение об отсутствии противопоказаний для обучения (идентфикатор документа).\nЕсли в качестве основания выступает документ типа disability или medical, иначе NULL.',
   `benefit_kind_id` INT UNSIGNED NULL COMMENT 'ИД вида льготы (справочник №30).',
   PRIMARY KEY (`uid`),
   INDEX `has_idx` (`application_uid` ASC),
   INDEX `applies_idx` (`competitive_group_uid` ASC),
   INDEX `corresp_doc_type_idx` (`document_type_id` ASC),
-  INDEX `confirms_idx` (`document_reason_uid` ASC),
+  INDEX `confirms_idx` (`reason_document_uid` ASC),
   INDEX `allows_education_idx` (`allow_education_document_uid` ASC),
   INDEX `corresponds_bnf_kind_idx` (`benefit_kind_id` ASC),
   CONSTRAINT `application_common_benefits_has`
@@ -970,7 +970,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`application_common_benefits` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `application_common_benefits_confirms`
-    FOREIGN KEY (`document_reason_uid`)
+    FOREIGN KEY (`reason_document_uid`)
     REFERENCES `PK_DB`.`documents` (`uid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -1015,7 +1015,7 @@ COMMENT = 'applications:\nApplicationDocuments - Документы, прило�
 -- Table `PK_DB`.`entrance_tests_results`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests_results` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
   `result_value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
   `result_source_type_id` INT UNSIGNED NOT NULL COMMENT 'ИД основания для оценки (справочник №6).',
@@ -1076,7 +1076,7 @@ COMMENT = 'Результаты вступительных испытаний.';
 -- Table `PK_DB`.`individual_achievements`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`individual_achievements` (
-  `uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор индивидуального достижения, учитываемого в заявлении.',
+  `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор индивидуального достижения, учитываемого в заявлении.',
   `application_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор заявления.',
   `institution_achievement_uid` INT UNSIGNED NOT NULL COMMENT 'Идентификатор достижения, указанный в приемной кампании.',
   `mark` INT UNSIGNED NULL COMMENT 'Балл за достижение.',
