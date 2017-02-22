@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PK
 {
-    public partial class NewPriemCompForm : Form
+    public partial class NewCampaignForm : Form
     {
-        public NewPriemCompForm()
+        public NewCampaignForm()
         {
             InitializeComponent();
         }

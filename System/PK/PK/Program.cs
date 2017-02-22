@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PK
@@ -11,13 +8,15 @@ namespace PK
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
-        public static byte UsersRole = 0;
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);            
-            Application.Run(new MainForm());
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            AuthorizationForm form = new AuthorizationForm();
+            if (form.ShowDialog() == DialogResult.OK)
+                Application.Run(new MainForm(form.UsersRole));
         }
     }
 }

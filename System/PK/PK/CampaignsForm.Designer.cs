@@ -1,6 +1,6 @@
 ﻿namespace PK
 {
-    partial class PriemCompForm
+    partial class CampaignsForm
     {
         /// <summary>
         /// Required designer variable.

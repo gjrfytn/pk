@@ -2,18 +2,132 @@
 {
     partial class MainForm
     {
+        /// <summary>
+        /// Обязательная переменная конструктора.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Освободить все используемые ресурсы.
+        /// </summary>
+        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         #region Код, автоматически созданный конструктором форм Windows
 
+        /// <summary>
+        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// содержимое этого метода с помощью редактора кода.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_CreateApplication = new System.Windows.Forms.ToolStripButton();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip.SuspendLayout();
+            this.menuStrip.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_CreateApplication});
+            this.toolStrip.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(682, 25);
+            this.toolStrip.TabIndex = 0;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolStrip_CreateApplication
+            // 
+            this.toolStrip_CreateApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_CreateApplication.Image")));
+            this.toolStrip_CreateApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_CreateApplication.Name = "toolStrip_CreateApplication";
+            this.toolStrip_CreateApplication.Size = new System.Drawing.Size(129, 22);
+            this.toolStrip_CreateApplication.Text = "Создать заявление";
+            this.toolStrip_CreateApplication.Click += new System.EventHandler(this.toolStrip_CreateApplication_Click);
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_Campaign,
+            this.menuStrip_Entrants});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(682, 24);
+            this.menuStrip.TabIndex = 1;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // menuStrip_Campaign
+            // 
+            this.menuStrip_Campaign.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_Campaign_Campaigns});
+            this.menuStrip_Campaign.Name = "menuStrip_Campaign";
+            this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 20);
+            this.menuStrip_Campaign.Text = "Приемная кампания";
+            // 
+            // menuStrip_Campaign_Campaigns
+            // 
+            this.menuStrip_Campaign_Campaigns.Name = "menuStrip_Campaign_Campaigns";
+            this.menuStrip_Campaign_Campaigns.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Campaigns.Text = "Приемные кампании";
+            this.menuStrip_Campaign_Campaigns.Click += new System.EventHandler(this.menuStrip_Campaign_Campaigns_Click);
+            // 
+            // menuStrip_Entrants
+            // 
+            this.menuStrip_Entrants.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_CreateApplication});
+            this.menuStrip_Entrants.Name = "menuStrip_Entrants";
+            this.menuStrip_Entrants.Size = new System.Drawing.Size(93, 20);
+            this.menuStrip_Entrants.Text = "Абитуриенты";
+            // 
+            // menuStrip_CreateApplication
+            // 
+            this.menuStrip_CreateApplication.Name = "menuStrip_CreateApplication";
+            this.menuStrip_CreateApplication.Size = new System.Drawing.Size(176, 22);
+            this.menuStrip_CreateApplication.Text = "Создать заявление";
+            this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(682, 461);
+            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
+            this.Name = "MainForm";
+            this.Text = "ИС \"Приемная комиссия\"";
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tsbCreateApplication;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem приемнаяКампанияToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem приемныеКампанииToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem абитуриентыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem создатьЗаявлениеToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.ToolStripButton toolStrip_CreateApplication;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Campaigns;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Entrants;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateApplication;
     }
 }
 

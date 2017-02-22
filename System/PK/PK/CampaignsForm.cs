@@ -10,16 +10,16 @@ using System.Windows.Forms;
 
 namespace PK
 {
-    public partial class PriemCompForm : Form
+    public partial class CampaignsForm : Form
     {
-        public PriemCompForm()
+        public CampaignsForm()
         {
             InitializeComponent();
         }
 
         private void btCreatePriemComp_Click(object sender, EventArgs e)
         {
-            NewPriemCompForm NPCForm = new NewPriemCompForm();
+            NewCampaignForm NPCForm = new NewCampaignForm();
             NPCForm.Show();
         }
     }

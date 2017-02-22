@@ -1,6 +1,6 @@
 ﻿namespace PK
 {
-    partial class NewPriemCompForm
+    partial class NewCampaignForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,15 +37,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.gbEduForm = new System.Windows.Forms.GroupBox();
-            this.rbOchForm = new System.Windows.Forms.RadioButton();
-            this.rbOchZForm = new System.Windows.Forms.RadioButton();
             this.rbZaochForm = new System.Windows.Forms.RadioButton();
+            this.rbOchZForm = new System.Windows.Forms.RadioButton();
+            this.rbOchForm = new System.Windows.Forms.RadioButton();
             this.gbEduLevel = new System.Windows.Forms.GroupBox();
-            this.rbBac = new System.Windows.Forms.RadioButton();
-            this.rbMag = new System.Windows.Forms.RadioButton();
-            this.rabSpec = new System.Windows.Forms.RadioButton();
-            this.rabSPO = new System.Windows.Forms.RadioButton();
             this.rbQual = new System.Windows.Forms.RadioButton();
+            this.rabSPO = new System.Windows.Forms.RadioButton();
+            this.rabSpec = new System.Windows.Forms.RadioButton();
+            this.rbMag = new System.Windows.Forms.RadioButton();
+            this.rbBac = new System.Windows.Forms.RadioButton();
             this.gbEduForm.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             this.SuspendLayout();
@@ -129,16 +129,16 @@
             this.gbEduForm.TabStop = false;
             this.gbEduForm.Text = "Форма обучения";
             // 
-            // rbOchForm
+            // rbZaochForm
             // 
-            this.rbOchForm.AutoSize = true;
-            this.rbOchForm.Location = new System.Drawing.Point(6, 19);
-            this.rbOchForm.Name = "rbOchForm";
-            this.rbOchForm.Size = new System.Drawing.Size(93, 17);
-            this.rbOchForm.TabIndex = 0;
-            this.rbOchForm.TabStop = true;
-            this.rbOchForm.Text = "Очная форма";
-            this.rbOchForm.UseVisualStyleBackColor = true;
+            this.rbZaochForm.AutoSize = true;
+            this.rbZaochForm.Location = new System.Drawing.Point(7, 67);
+            this.rbZaochForm.Name = "rbZaochForm";
+            this.rbZaochForm.Size = new System.Drawing.Size(104, 17);
+            this.rbZaochForm.TabIndex = 2;
+            this.rbZaochForm.TabStop = true;
+            this.rbZaochForm.Text = "Заочная форма";
+            this.rbZaochForm.UseVisualStyleBackColor = true;
             // 
             // rbOchZForm
             // 
@@ -151,16 +151,16 @@
             this.rbOchZForm.Text = "Очно-заочная форма";
             this.rbOchZForm.UseVisualStyleBackColor = true;
             // 
-            // rbZaochForm
+            // rbOchForm
             // 
-            this.rbZaochForm.AutoSize = true;
-            this.rbZaochForm.Location = new System.Drawing.Point(7, 67);
-            this.rbZaochForm.Name = "rbZaochForm";
-            this.rbZaochForm.Size = new System.Drawing.Size(104, 17);
-            this.rbZaochForm.TabIndex = 2;
-            this.rbZaochForm.TabStop = true;
-            this.rbZaochForm.Text = "Заочная форма";
-            this.rbZaochForm.UseVisualStyleBackColor = true;
+            this.rbOchForm.AutoSize = true;
+            this.rbOchForm.Location = new System.Drawing.Point(6, 19);
+            this.rbOchForm.Name = "rbOchForm";
+            this.rbOchForm.Size = new System.Drawing.Size(93, 17);
+            this.rbOchForm.TabIndex = 0;
+            this.rbOchForm.TabStop = true;
+            this.rbOchForm.Text = "Очная форма";
+            this.rbOchForm.UseVisualStyleBackColor = true;
             // 
             // gbEduLevel
             // 
@@ -176,38 +176,16 @@
             this.gbEduLevel.TabStop = false;
             this.gbEduLevel.Text = "Уровень образования";
             // 
-            // rbBac
+            // rbQual
             // 
-            this.rbBac.AutoSize = true;
-            this.rbBac.Location = new System.Drawing.Point(7, 20);
-            this.rbBac.Name = "rbBac";
-            this.rbBac.Size = new System.Drawing.Size(91, 17);
-            this.rbBac.TabIndex = 0;
-            this.rbBac.TabStop = true;
-            this.rbBac.Text = "Бакалавриат";
-            this.rbBac.UseVisualStyleBackColor = true;
-            // 
-            // rbMag
-            // 
-            this.rbMag.AutoSize = true;
-            this.rbMag.Location = new System.Drawing.Point(7, 44);
-            this.rbMag.Name = "rbMag";
-            this.rbMag.Size = new System.Drawing.Size(96, 17);
-            this.rbMag.TabIndex = 1;
-            this.rbMag.TabStop = true;
-            this.rbMag.Text = "Магистратура";
-            this.rbMag.UseVisualStyleBackColor = true;
-            // 
-            // rabSpec
-            // 
-            this.rabSpec.AutoSize = true;
-            this.rabSpec.Location = new System.Drawing.Point(7, 68);
-            this.rabSpec.Name = "rabSpec";
-            this.rabSpec.Size = new System.Drawing.Size(90, 17);
-            this.rabSpec.TabIndex = 2;
-            this.rabSpec.TabStop = true;
-            this.rabSpec.Text = "Специалитет";
-            this.rabSpec.UseVisualStyleBackColor = true;
+            this.rbQual.AutoSize = true;
+            this.rbQual.Location = new System.Drawing.Point(7, 115);
+            this.rbQual.Name = "rbQual";
+            this.rbQual.Size = new System.Drawing.Size(178, 17);
+            this.rbQual.TabIndex = 4;
+            this.rbQual.TabStop = true;
+            this.rbQual.Text = "Кадры высшей квалификации";
+            this.rbQual.UseVisualStyleBackColor = true;
             // 
             // rabSPO
             // 
@@ -220,18 +198,40 @@
             this.rabSPO.Text = "СПО";
             this.rabSPO.UseVisualStyleBackColor = true;
             // 
-            // rbQual
+            // rabSpec
             // 
-            this.rbQual.AutoSize = true;
-            this.rbQual.Location = new System.Drawing.Point(7, 115);
-            this.rbQual.Name = "rbQual";
-            this.rbQual.Size = new System.Drawing.Size(178, 17);
-            this.rbQual.TabIndex = 4;
-            this.rbQual.TabStop = true;
-            this.rbQual.Text = "Кадры высшей квалификации";
-            this.rbQual.UseVisualStyleBackColor = true;
+            this.rabSpec.AutoSize = true;
+            this.rabSpec.Location = new System.Drawing.Point(7, 68);
+            this.rabSpec.Name = "rabSpec";
+            this.rabSpec.Size = new System.Drawing.Size(90, 17);
+            this.rabSpec.TabIndex = 2;
+            this.rabSpec.TabStop = true;
+            this.rabSpec.Text = "Специалитет";
+            this.rabSpec.UseVisualStyleBackColor = true;
             // 
-            // NewPriemComp
+            // rbMag
+            // 
+            this.rbMag.AutoSize = true;
+            this.rbMag.Location = new System.Drawing.Point(7, 44);
+            this.rbMag.Name = "rbMag";
+            this.rbMag.Size = new System.Drawing.Size(96, 17);
+            this.rbMag.TabIndex = 1;
+            this.rbMag.TabStop = true;
+            this.rbMag.Text = "Магистратура";
+            this.rbMag.UseVisualStyleBackColor = true;
+            // 
+            // rbBac
+            // 
+            this.rbBac.AutoSize = true;
+            this.rbBac.Location = new System.Drawing.Point(7, 20);
+            this.rbBac.Name = "rbBac";
+            this.rbBac.Size = new System.Drawing.Size(91, 17);
+            this.rbBac.TabIndex = 0;
+            this.rbBac.TabStop = true;
+            this.rbBac.Text = "Бакалавриат";
+            this.rbBac.UseVisualStyleBackColor = true;
+            // 
+            // NewCampaignForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -246,7 +246,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Name = "NewPriemComp";
+            this.Name = "NewCampaignForm";
             this.Text = "Создание приемной кампании";
             this.gbEduForm.ResumeLayout(false);
             this.gbEduForm.PerformLayout();
