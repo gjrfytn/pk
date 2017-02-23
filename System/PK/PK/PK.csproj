@@ -75,6 +75,12 @@
     </Compile>
     <Compile Include="DB_Connector.cs" />
     <Compile Include="DB_TableEnum.cs" />
+    <Compile Include="DictionariesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DictionariesForm.Designer.cs">
+      <DependentUpon>DictionariesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +109,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AuthorizationForm.resx">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DictionariesForm.resx">
+      <DependentUpon>DictionariesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
