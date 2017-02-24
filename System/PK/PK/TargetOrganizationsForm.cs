@@ -23,7 +23,7 @@ namespace PK
             dgvTargetOrganizations.Rows.Clear();
             _DB_Connection = new DB_Connector();
             List<object[]> tOList = new List<object[]>();
-            tOList = _DB_Connection.Select("target_organizations", "name");
+            tOList = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "name");
             foreach (var v in tOList)
                 dgvTargetOrganizations.Rows.Add(v);
         }

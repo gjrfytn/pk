@@ -14,13 +14,13 @@ namespace PK
             InitializeComponent();
 
             _DB_Connection = new DB_Connector();
-            foreach (var v in _DB_Connection.Select("users", "login"))
+            foreach (var v in _DB_Connection.Select(DB_Table.USERS, "login"))
                 cbLogin.Items.Add(v[0]);
         }
 
         private void bAuth_Click(object sender, EventArgs e)
         {
-            List<object[]> usersdata = _DB_Connection.Select("users", "login", "password");
+            List<object[]> usersdata = _DB_Connection.Select(DB_Table.USERS, "login", "password");
             object[] logpass = usersdata.Find(x => x[0].ToString() == cbLogin.Text);
 
             if (logpass == null)

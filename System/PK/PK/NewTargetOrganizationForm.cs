@@ -21,7 +21,7 @@ namespace PK
         private void btSave_Click(object sender, EventArgs e)
         {
             _DB_Connection = new DB_Connector();
-            uint organizationUID =_DB_Connection.Insert("target_organizations", new Dictionary<string, object> { { "name", rtbOrganizationName.Text } });
+            uint organizationUID =_DB_Connection.Insert(DB_Table.TARGET_ORGANIZATIONS, new Dictionary<string, object> { { "name", rtbOrganizationName.Text } });
             Close();
         }
     }

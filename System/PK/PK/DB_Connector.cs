@@ -3,12 +3,6 @@ using MySql.Data.MySqlClient;
 
 namespace PK
 {
-    static class DB_Tables
-    {
-        public const string DICTIONARIES = "dictionaries";
-        public const string DICTIONARIES_ITEMS = "dictionaries_items";
-    }
-
     class DB_Connector
     {
         MySqlConnection _Connection;
@@ -33,7 +27,7 @@ namespace PK
 
         public Dictionary<uint, string> GetDictionaries()
         {
-            MySqlCommand cmd = new MySqlCommand(DB_Tables.DICTIONARIES, _Connection);
+            MySqlCommand cmd = new MySqlCommand(GetTableName(DB_Table.DICTIONARIES), _Connection);
             cmd.CommandType = System.Data.CommandType.TableDirect;
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -47,27 +41,27 @@ namespace PK
 
         public void InsertDictionary(uint id, string name)
         {
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO " + DB_Tables.DICTIONARIES + " (id, name) VALUES (" + id + ", @name);", _Connection);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO " + GetTableName(DB_Table.DICTIONARIES) + " (id, name) VALUES (" + id + ", @name);", _Connection);
             cmd.Parameters.AddWithValue("name", name);
             cmd.ExecuteNonQuery();
         }
 
         public void UpdateDictionary(uint id, string newname)
         {
-            MySqlCommand cmd = new MySqlCommand("UPDATE " + DB_Tables.DICTIONARIES + " SET name= @newname WHERE id= " + id + ";", _Connection);
+            MySqlCommand cmd = new MySqlCommand("UPDATE " + GetTableName(DB_Table.DICTIONARIES) + " SET name= @newname WHERE id= " + id + ";", _Connection);
             cmd.Parameters.AddWithValue("newname", newname);
             cmd.ExecuteNonQuery();
         }
 
         public void DeleteDictionary(uint id)
         {
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM " + DB_Tables.DICTIONARIES + " WHERE id=" + id + ";", _Connection);
+            MySqlCommand cmd = new MySqlCommand("DELETE FROM " + GetTableName(DB_Table.DICTIONARIES) + " WHERE id=" + id + ";", _Connection);
             cmd.ExecuteNonQuery();
         }
 
         public Dictionary<uint, string> GetDictionaryItems(uint dictionaryID)
         {
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM " + DB_Tables.DICTIONARIES_ITEMS + " WHERE dictionary_id=" + dictionaryID + ";", _Connection);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM " + GetTableName(DB_Table.DICTIONARIES_ITEMS) + " WHERE dictionary_id=" + dictionaryID + ";", _Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 Dictionary<uint, string> dictionaryItems = new Dictionary<uint, string>();
@@ -85,7 +79,7 @@ namespace PK
              cmd.Parameters.AddWithValue("itemName", itemName);
              cmd.ExecuteNonQuery();*/
 
-            Insert(DB_Tables.DICTIONARIES_ITEMS, new Dictionary<string, object> {
+            Insert(DB_Table.DICTIONARIES_ITEMS, new Dictionary<string, object> {
                 {"dictionary_id" ,dictionaryID},
                 {"item_id",itemID },
                 { "name",itemName}
@@ -99,7 +93,7 @@ namespace PK
             cmd.Parameters.AddWithValue("newname", newname);
             cmd.ExecuteNonQuery();*/
 
-            Update(DB_Tables.DICTIONARIES_ITEMS, new Dictionary<string, object> {
+            Update(DB_Table.DICTIONARIES_ITEMS, new Dictionary<string, object> {
                 { "name" ,newname} }, new Dictionary<string, object> {
                     { "dictionary_id",dictionaryID },
                     { "item_id" ,itemID}
@@ -112,18 +106,18 @@ namespace PK
             /*MySqlCommand cmd = new MySqlCommand("DELETE FROM "+DB_Tables.DICTIONARIES_ITEMS+" WHERE dictionary_id= " + dictionaryID + " AND item_id= " + itemID + ";", _Connection);
             cmd.ExecuteNonQuery();*/
 
-            Delete(DB_Tables.DICTIONARIES_ITEMS, new Dictionary<string, object> {
+            Delete(DB_Table.DICTIONARIES_ITEMS, new Dictionary<string, object> {
                 { "dictionary_id", dictionaryID },
                 { "item_id", itemID }
             });
         }
 
-        public List<object[]> Select(string table, params string[] fields) //TODO Добавить WHERE?
+        public List<object[]> Select(DB_Table table, params string[] fields) //TODO Добавить WHERE?
         {
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             if (fields.Length == 0)
             {
-                cmd.CommandText = table;
+                cmd.CommandText = GetTableName(table);
                 cmd.CommandType = System.Data.CommandType.TableDirect;
             }
             else
@@ -133,7 +127,7 @@ namespace PK
                     queryFields += field + ", ";
                 queryFields = queryFields.Remove(queryFields.Length - 2);
 
-                cmd.CommandText = "SELECT " + queryFields + " FROM " + table + ";";
+                cmd.CommandText = "SELECT " + queryFields + " FROM " + GetTableName(table) + ";";
             }
 
             using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -153,7 +147,7 @@ namespace PK
             }
         }
 
-        public uint Insert(string table, Dictionary<string, object> columnsValues)
+        public uint Insert(DB_Table table, Dictionary<string, object> columnsValues)
         {
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             string columns = "", values = "";
@@ -169,12 +163,12 @@ namespace PK
             columns = columns.Remove(columns.Length - 2);
             values = values.Remove(values.Length - 2);
 
-            cmd.CommandText = "INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ");";
+            cmd.CommandText = "INSERT INTO " + GetTableName(table) + " (" + columns + ") VALUES (" + values + ");";
             cmd.ExecuteNonQuery();
             return (uint)cmd.LastInsertedId;
         }
 
-        public void Update(string table, Dictionary<string, object> columnsValues, Dictionary<string, object> whereColumnValues)
+        public void Update(DB_Table table, Dictionary<string, object> columnsValues, Dictionary<string, object> whereColumnValues)
         {
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             string set = "";
@@ -198,11 +192,11 @@ namespace PK
             set = set.Remove(set.Length - 2);
             where = where.Remove(where.Length - 5);
 
-            cmd.CommandText = "UPDATE " + table + " SET " + set + " WHERE " + where + ";";
+            cmd.CommandText = "UPDATE " + GetTableName(table) + " SET " + set + " WHERE " + where + ";";
             cmd.ExecuteNonQuery();
         }
 
-        public void Delete(string table, Dictionary<string, object> whereColumnValues)
+        public void Delete(DB_Table table, Dictionary<string, object> whereColumnValues)
         {
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             byte count = 1;
@@ -216,8 +210,10 @@ namespace PK
             }
             where = where.Remove(where.Length - 5);
 
-            cmd.CommandText = "DELETE FROM " + table + " WHERE " + where + ";";
+            cmd.CommandText = "DELETE FROM " + GetTableName(table) + " WHERE " + where + ";";
             cmd.ExecuteNonQuery();
         }
+
+        static string GetTableName(DB_Table table) => System.Enum.GetName(typeof(DB_Table), table).ToLower();
     }
 }
