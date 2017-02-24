@@ -63,6 +63,8 @@
             // 
             // cbLogin
             // 
+            this.cbLogin.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbLogin.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbLogin.FormattingEnabled = true;
             this.cbLogin.Location = new System.Drawing.Point(69, 45);
             this.cbLogin.Name = "cbLogin";

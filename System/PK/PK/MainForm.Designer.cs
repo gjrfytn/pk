@@ -36,6 +36,10 @@
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
+            this.университетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.факультетыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.направленияПодготовкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.целевыеОрганизацииToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -63,7 +67,8 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Campaign,
-            this.menuStrip_Entrants});
+            this.menuStrip_Entrants,
+            this.университетToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(682, 24);
@@ -100,6 +105,35 @@
             this.menuStrip_CreateApplication.Text = "Создать заявление";
             this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
             // 
+            // университетToolStripMenuItem
+            // 
+            this.университетToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.факультетыToolStripMenuItem,
+            this.направленияПодготовкиToolStripMenuItem,
+            this.целевыеОрганизацииToolStripMenuItem});
+            this.университетToolStripMenuItem.Name = "университетToolStripMenuItem";
+            this.университетToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.университетToolStripMenuItem.Text = "Университет";
+            // 
+            // факультетыToolStripMenuItem
+            // 
+            this.факультетыToolStripMenuItem.Name = "факультетыToolStripMenuItem";
+            this.факультетыToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.факультетыToolStripMenuItem.Text = "Факультеты";
+            // 
+            // направленияПодготовкиToolStripMenuItem
+            // 
+            this.направленияПодготовкиToolStripMenuItem.Name = "направленияПодготовкиToolStripMenuItem";
+            this.направленияПодготовкиToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.направленияПодготовкиToolStripMenuItem.Text = "Направления подготовки";
+            // 
+            // целевыеОрганизацииToolStripMenuItem
+            // 
+            this.целевыеОрганизацииToolStripMenuItem.Name = "целевыеОрганизацииToolStripMenuItem";
+            this.целевыеОрганизацииToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.целевыеОрганизацииToolStripMenuItem.Text = "Целевые организации";
+            this.целевыеОрганизацииToolStripMenuItem.Click += new System.EventHandler(this.целевыеОрганизацииToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -110,6 +144,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "ИС \"Приемная комиссия\"";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
@@ -128,6 +163,10 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Campaigns;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Entrants;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateApplication;
+        private System.Windows.Forms.ToolStripMenuItem университетToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem факультетыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem направленияПодготовкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem целевыеОрганизацииToolStripMenuItem;
     }
 }
 

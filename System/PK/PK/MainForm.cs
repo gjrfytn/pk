@@ -27,5 +27,11 @@ namespace PK
             NewApplicForm form = new NewApplicForm();
             form.ShowDialog();
         }
+
+        private void целевыеОрганизацииToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TargetOrganizationsForm form = new TargetOrganizationsForm();
+            form.ShowDialog();
+        }
     }
 }
