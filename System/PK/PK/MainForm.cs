@@ -41,5 +41,11 @@ namespace PK
             DictionariesForm form = new DictionariesForm(_DB_Connection);
             form.ShowDialog();
         }
+
+        private void menuStrip_DirDictionary_Click(object sender, EventArgs e)
+        {
+            DirectionsDictionaryForm form = new DirectionsDictionaryForm(_DB_Connection);
+            form.ShowDialog();
+        }
     }
 }

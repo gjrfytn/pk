@@ -102,7 +102,7 @@ namespace PK
            XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
             //
 
-            XDocument doc = XDocument.Load(".\\dic\\dicn" + 10);
+            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 10 + ".xml");
             Dictionary<uint, string[]> dictionaryItems = new Dictionary<uint, string[]>();
 
             foreach (var item in doc.Root.Element("DictionaryItems").Elements())

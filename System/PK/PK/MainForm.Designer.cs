@@ -42,6 +42,7 @@
             this.целевыеОрганизацииToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -107,7 +108,7 @@
             this.menuStrip_CreateApplication.Size = new System.Drawing.Size(176, 22);
             this.menuStrip_CreateApplication.Text = "Создать заявление";
             this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
-            //
+            // 
             // университетToolStripMenuItem
             // 
             this.университетToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -136,10 +137,12 @@
             this.целевыеОрганизацииToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.целевыеОрганизацииToolStripMenuItem.Text = "Целевые организации";
             this.целевыеОрганизацииToolStripMenuItem.Click += new System.EventHandler(this.целевыеОрганизацииToolStripMenuItem_Click);
+            // 
             // menuStrip_Help
             // 
             this.menuStrip_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuStrip_Dictionaries});
+            this.menuStrip_Dictionaries,
+            this.menuStrip_DirDictionary});
             this.menuStrip_Help.Name = "menuStrip_Help";
             this.menuStrip_Help.Size = new System.Drawing.Size(65, 20);
             this.menuStrip_Help.Text = "Справка";
@@ -147,9 +150,16 @@
             // menuStrip_Dictionaries
             // 
             this.menuStrip_Dictionaries.Name = "menuStrip_Dictionaries";
-            this.menuStrip_Dictionaries.Size = new System.Drawing.Size(178, 22);
+            this.menuStrip_Dictionaries.Size = new System.Drawing.Size(247, 22);
             this.menuStrip_Dictionaries.Text = "Справочники ФИС";
             this.menuStrip_Dictionaries.Click += new System.EventHandler(this.menuStrip_Dictionaries_Click);
+            // 
+            // menuStrip_DirDictionary
+            // 
+            this.menuStrip_DirDictionary.Name = "menuStrip_DirDictionary";
+            this.menuStrip_DirDictionary.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_DirDictionary.Text = "Справочник направлений ФИС";
+            this.menuStrip_DirDictionary.Click += new System.EventHandler(this.menuStrip_DirDictionary_Click);
             // 
             // MainForm
             // 
@@ -186,6 +196,7 @@
         private System.Windows.Forms.ToolStripMenuItem целевыеОрганизацииToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Help;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Dictionaries;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_DirDictionary;
     }
 }
 
