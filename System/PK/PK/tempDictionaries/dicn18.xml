@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>18</Code>
+  <Name>Тип диплома</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>победитель</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>призер</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>8</Code>
+  <Name>Регион</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>22</ID>
+      <Name>Алтайский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>28</ID>
+      <Name>Амурская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>29</ID>
+      <Name>Архангельская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>30</ID>
+      <Name>Астраханская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>31</ID>
+      <Name>Белгородская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>32</ID>
+      <Name>Брянская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>33</ID>
+      <Name>Владимирская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>34</ID>
+      <Name>Волгоградская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>35</ID>
+      <Name>Вологодская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>36</ID>
+      <Name>Воронежская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>92</ID>
+      <Name>г. Севастополь</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>79</ID>
+      <Name>Еврейская автономная область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>75</ID>
+      <Name>Забайкальский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>37</ID>
+      <Name>Ивановская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>38</ID>
+      <Name>Иркутская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>Кабардино-Балкарская Республика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>39</ID>
+      <Name>Калининградская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>40</ID>
+      <Name>Калужская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>41</ID>
+      <Name>Камчатская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>Карачаево-Черкесская Республика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>42</ID>
+      <Name>Кемеровская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>43</ID>
+      <Name>Кировская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>44</ID>
+      <Name>Костромская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>23</ID>
+      <Name>Краснодарский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>24</ID>
+      <Name>Красноярский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>45</ID>
+      <Name>Курганская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>46</ID>
+      <Name>Курская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>47</ID>
+      <Name>Ленинградская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>48</ID>
+      <Name>Липецкая область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>49</ID>
+      <Name>Магаданская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>77</ID>
+      <Name>Москва</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>50</ID>
+      <Name>Московская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>51</ID>
+      <Name>Мурманская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1000</ID>
+      <Name>Не назначено</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>83</ID>
+      <Name>Ненецкий автономный округ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>52</ID>
+      <Name>Нижегородская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>53</ID>
+      <Name>Новгородская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>54</ID>
+      <Name>Новосибирская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1001</ID>
+      <Name>Образовательные учреждения, находящиеся за пределами Российской Федерации</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>55</ID>
+      <Name>Омская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>56</ID>
+      <Name>Оренбургская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>57</ID>
+      <Name>Орловская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>90</ID>
+      <Name>Отсутствует</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>58</ID>
+      <Name>Пензенская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>59</ID>
+      <Name>Пермский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>25</ID>
+      <Name>Приморский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>60</ID>
+      <Name>Псковская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Республика Адыгея (Адыгея)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Республика Алтай</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Республика Башкортостан</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Республика Бурятия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Республика Дагестан</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Республика Ингушетия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Республика Калмыкия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Республика Карелия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>Республика Коми</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>82</ID>
+      <Name>Республика Крым</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>Республика Марий Эл</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>Республика Мордовия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>Республика Саха (Якутия)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>Республика Северная Осетия-Алания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>Республика Татарстан (Татарстан)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>Республика Тыва</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>19</ID>
+      <Name>Республика Хакасия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>61</ID>
+      <Name>Ростовская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>62</ID>
+      <Name>Рязанская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>63</ID>
+      <Name>Самарская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>78</ID>
+      <Name>Санкт-Петербург</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>64</ID>
+      <Name>Саратовская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>65</ID>
+      <Name>Сахалинская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>66</ID>
+      <Name>Свердловская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>67</ID>
+      <Name>Смоленская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>26</ID>
+      <Name>Ставропольский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>68</ID>
+      <Name>Тамбовская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>69</ID>
+      <Name>Тверская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>70</ID>
+      <Name>Томская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>71</ID>
+      <Name>Тульская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>72</ID>
+      <Name>Тюменская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>Удмуртская Республика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>73</ID>
+      <Name>Ульяновская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>27</ID>
+      <Name>Хабаровский край</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>86</ID>
+      <Name>Ханты-Мансийский автономный округ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>74</ID>
+      <Name>Челябинская область</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>Чеченская Республика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>21</ID>
+      <Name>Чувашская Республика - Чувашия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>87</ID>
+      <Name>Чукотский автономный округ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>89</ID>
+      <Name>Ямало-Ненецкий автономный округ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>76</ID>
+      <Name>Ярославская область</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

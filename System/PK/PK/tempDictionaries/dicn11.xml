@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>11</Code>
+  <Name>Тип вступительных испытаний</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Вступительные испытания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Вступительные испытания профильной направленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Вступительные испытания творческой и (или) профессиональной направленности</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

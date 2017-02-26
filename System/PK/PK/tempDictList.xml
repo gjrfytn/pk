@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dictionaries xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Dictionary>
+    <Code>1</Code>
+    <Name>Общеобразовательные предметы</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>2</Code>
+    <Name>Уровень образования</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>3</Code>
+    <Name>Уровень олимпиады</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>4</Code>
+    <Name>Статус заявления</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>5</Code>
+    <Name>Пол</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>6</Code>
+    <Name>Основание для оценки</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>7</Code>
+    <Name>Страна</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>8</Code>
+    <Name>Регион</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>9</Code>
+    <Name>Коды направлений подготовки</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>10</Code>
+    <Name>Направления подготовки</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>11</Code>
+    <Name>Тип вступительных испытаний</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>12</Code>
+    <Name>Статус проверки заявлений</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>13</Code>
+    <Name>Статус проверки документа</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>14</Code>
+    <Name>Форма обучения</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>15</Code>
+    <Name>Источник финансирования</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>17</Code>
+    <Name>Сообщения об ошибках</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>18</Code>
+    <Name>Тип диплома</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>19</Code>
+    <Name>Олимпиады</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>21</Code>
+    <Name>Гражданство</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>22</Code>
+    <Name>Тип документа, удостоверяющего личность</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>23</Code>
+    <Name>Группа инвалидности</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>24</Code>
+    <Name>Коды профессий</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>25</Code>
+    <Name>Профессия</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>26</Code>
+    <Name>Коды квалификаций</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>27</Code>
+    <Name>Квалификация</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>28</Code>
+    <Name>Коды специальностей</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>29</Code>
+    <Name>Специальности</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>30</Code>
+    <Name>Вид льготы</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>31</Code>
+    <Name>Тип документа</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>32</Code>
+    <Name>Иностранные языки</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>33</Code>
+    <Name>Тип документа для вступительного испытания ОУ</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>34</Code>
+    <Name>Статус приемной кампании</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>35</Code>
+    <Name>Уровень бюджета</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>36</Code>
+    <Name>Категории индивидуальных достижений</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>37</Code>
+    <Name>Статус апелляции, перепроверки</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>38</Code>
+    <Name>Тип приемной кампании</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>39</Code>
+    <Name>Профили олимпиад</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>40</Code>
+    <Name>Классы олимпиад</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>41</Code>
+    <Name>Тип населенного пункта</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>42</Code>
+    <Name>Тип документа, подтверждающего сиротство</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>43</Code>
+    <Name>Тип диплома в области спорта</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>44</Code>
+    <Name>Тип документа, подтверждающего принадлежность к соотечественникам</Name>
+  </Dictionary>
+  <Dictionary>
+    <Code>45</Code>
+    <Name>Тип документа, подтверждающего принадлежность к ветеранам боевых действий</Name>
+  </Dictionary>
+</Dictionaries>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>15</Code>
+  <Name>Источник финансирования</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>Бюджетные места</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>Квота приема лиц, имеющих особое право</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>С оплатой обучения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>Целевой прием</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

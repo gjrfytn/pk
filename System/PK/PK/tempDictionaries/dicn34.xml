@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>34</Code>
+  <Name>Статус приемной кампании</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>0</ID>
+      <Name>Набор не начался</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Идет набор</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Завершена</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

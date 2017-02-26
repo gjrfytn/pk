@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>41</Code>
+  <Name>Тип населенного пункта</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Город федерального значения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Город</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Населенный пункт городского типа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Населенный пункт сельского типа</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

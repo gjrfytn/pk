@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>10</Code>
+  <Name>Направления подготовки</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <NewCode>13.03.02</NewCode>
+      <ID>16999</ID>
+      <Name>Электроэнергетика и электротехника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>13.00.00</UGSCode>
+      <UGSName>Электро- и теплоэнергетика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>13.04.03</NewCode>
+      <ID>17057</ID>
+      <Name>Энергетическое машиностроение</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>13.00.00</UGSCode>
+      <UGSName>Электро- и теплоэнергетика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.03.01</NewCode>
+      <ID>17106</ID>
+      <Name>Машиностроение</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.05.02</NewCode>
+      <ID>17186</ID>
+      <Name>Таможенное дело</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.05.01</NewCode>
+      <ID>17222</ID>
+      <Name>Наземные транспортно-технологические средства</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.03.02</NewCode>
+      <ID>17229</ID>
+      <Name>Наземные транспортно-технологические комплексы</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>09.03.01</NewCode>
+      <ID>17270</ID>
+      <Name>Информатика и вычислительная техника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>09.00.00</UGSCode>
+      <UGSName>Информатика и вычислительная техника</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>09.04.01</NewCode>
+      <ID>17301</ID>
+      <Name>Информатика и вычислительная техника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>09.00.00</UGSCode>
+      <UGSName>Информатика и вычислительная техника</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.04.02</NewCode>
+      <ID>17369</ID>
+      <Name>Менеджмент</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.03.01</NewCode>
+      <ID>17403</ID>
+      <Name>Экономика</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.05.02</NewCode>
+      <ID>17407</ID>
+      <Name>Транспортные средства специального назначения</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.04.02</NewCode>
+      <ID>17411</ID>
+      <Name>Технологические машины и оборудование</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>13.03.03</NewCode>
+      <ID>17412</ID>
+      <Name>Энергетическое машиностроение</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>13.00.00</UGSCode>
+      <UGSName>Электро- и теплоэнергетика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>09.03.02</NewCode>
+      <ID>17424</ID>
+      <Name>Информационные системы и технологии</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>09.00.00</UGSCode>
+      <UGSName>Информатика и вычислительная техника</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>09.06.01</NewCode>
+      <ID>17436</ID>
+      <Name>Информатика и вычислительная техника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>09.00.00</UGSCode>
+      <UGSName>Информатика и вычислительная техника</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.06.01</NewCode>
+      <ID>17441</ID>
+      <Name>Техника и технологии наземного транспорта</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>24.06.01</NewCode>
+      <ID>17442</ID>
+      <Name>Авиационная и ракетно-космическая техника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>24.00.00</UGSCode>
+      <UGSName>Авиационная и ракетно-космическая техника</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>27.06.01</NewCode>
+      <ID>17461</ID>
+      <Name>Управление в технических системах</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>27.00.00</UGSCode>
+      <UGSName>Управление в технических системах</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.06.01</NewCode>
+      <ID>17479</ID>
+      <Name>Машиностроение</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>08.06.01</NewCode>
+      <ID>17480</ID>
+      <Name>Техника и технологии строительства</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>08.00.00</UGSCode>
+      <UGSName>Техника и технологии строительства</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.06.01</NewCode>
+      <ID>17484</ID>
+      <Name>Экономика</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.03.02</NewCode>
+      <ID>17491</ID>
+      <Name>Менеджмент</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.03.03</NewCode>
+      <ID>17494</ID>
+      <Name>Управление персоналом</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>20.04.01</NewCode>
+      <ID>17512</ID>
+      <Name>Техносферная безопасность</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>20.00.00</UGSCode>
+      <UGSName>Техносферная безопасность и природообустройство</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.04.01</NewCode>
+      <ID>17536</ID>
+      <Name>Технология транспортных процессов</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.03.01</NewCode>
+      <ID>17554</ID>
+      <Name>Технология транспортных процессов</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>43.03.01</NewCode>
+      <ID>17582</ID>
+      <Name>Сервис</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>43.00.00</UGSCode>
+      <UGSName>Сервис и туризм</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.04.01</NewCode>
+      <ID>17598</ID>
+      <Name>Экономика</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>08.03.01</NewCode>
+      <ID>17599</ID>
+      <Name>Строительство</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>08.00.00</UGSCode>
+      <UGSName>Техника и технологии строительства</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>20.03.01</NewCode>
+      <ID>17631</ID>
+      <Name>Техносферная безопасность</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>20.00.00</UGSCode>
+      <UGSName>Техносферная безопасность и природообустройство</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.04.02</NewCode>
+      <ID>17637</ID>
+      <Name>Наземные транспортно-технологические комплексы</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.04.01</NewCode>
+      <ID>17638</ID>
+      <Name>Машиностроение</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>38.04.03</NewCode>
+      <ID>17641</ID>
+      <Name>Управление персоналом</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>38.00.00</UGSCode>
+      <UGSName>Экономика и управление</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.03.03</NewCode>
+      <ID>17679</ID>
+      <Name>Эксплуатация транспортно-технологических машин и комплексов</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.03.04</NewCode>
+      <ID>17682</ID>
+      <Name>Автоматизация технологических процессов и производств</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.03.02</NewCode>
+      <ID>17728</ID>
+      <Name>Технологические машины и оборудование</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>15.04.04</NewCode>
+      <ID>17738</ID>
+      <Name>Автоматизация технологических процессов и производств</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>15.00.00</UGSCode>
+      <UGSName>Машиностроение</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>23.04.03</NewCode>
+      <ID>17751</ID>
+      <Name>Эксплуатация транспортно-технологических машин и комплексов</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>23.00.00</UGSCode>
+      <UGSName>Техника и технологии наземного транспорта</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>08.04.01</NewCode>
+      <ID>17764</ID>
+      <Name>Строительство</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>08.00.00</UGSCode>
+      <UGSName>Техника и технологии строительства</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>01.04.04</NewCode>
+      <ID>17778</ID>
+      <Name>Прикладная математика</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>01.00.00</UGSCode>
+      <UGSName>Математика и механика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>22.06.01</NewCode>
+      <ID>17805</ID>
+      <Name>Технологии материалов</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>22.00.00</UGSCode>
+      <UGSName>Технологии материалов</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>08.05.01</NewCode>
+      <ID>17893</ID>
+      <Name>Строительство уникальных зданий и сооружений</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>08.00.00</UGSCode>
+      <UGSName>Техника и технологии строительства</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>13.04.02</NewCode>
+      <ID>17936</ID>
+      <Name>Электроэнергетика и электротехника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>13.00.00</UGSCode>
+      <UGSName>Электро- и теплоэнергетика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>05.06.01</NewCode>
+      <ID>17962</ID>
+      <Name>Науки о земле</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>05.00.00</UGSCode>
+      <UGSName>Науки о земле</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>13.06.01</NewCode>
+      <ID>18037</ID>
+      <Name>Электро- и теплотехника</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>13.00.00</UGSCode>
+      <UGSName>Электро- и теплоэнергетика</UGSName>
+    </DictionaryItem>
+    <DictionaryItem>
+      <NewCode>01.03.04</NewCode>
+      <ID>18098</ID>
+      <Name>Прикладная математика</Name>
+      <QualificationCode>null</QualificationCode>
+      <UGSCode>01.00.00</UGSCode>
+      <UGSName>Математика и механика</UGSName>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

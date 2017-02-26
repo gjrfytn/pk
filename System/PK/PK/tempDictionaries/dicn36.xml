@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>36</Code>
+  <Name>Категории индивидуальных достижений</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Статус чемпиона и призера Олимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Статус чемпиона и призера Паралимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Статус чемпиона и призера Сурдлимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Чемпион мира</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Чемпион Европы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Победитель первенства мира</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>Победитель первенства Европы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Золотой знак отличия ГТО</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>Аттестат о среднем общем образовании с отличием</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Осуществление волонтерской деятельности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>Участие в олимпиадах и иных конкурсах</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>Итоговое сочинение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>Иное</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>Аттестат о среднем (полном) общем образовании, золотая медаль</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>Аттестат о среднем (полном) общем образовании, серебряная медаль</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>Диплом о среднем профессиональном образовании с отличием</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

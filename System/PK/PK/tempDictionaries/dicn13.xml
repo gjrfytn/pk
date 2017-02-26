@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>13</Code>
+  <Name>Статус проверки документа</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>0</ID>
+      <Name>Проверен</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Общая ошибка</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Ошибка в предметах</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

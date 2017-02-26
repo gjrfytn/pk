@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>42</Code>
+  <Name>Тип документа, подтверждающего сиротство</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Свидетельство о смерти обоих или единственного родителя</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Справка учреждения ЗАГСа о внесении сведений об отце со слов матери</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Обвинительный приговор суда с назначением наказания в виде лишения свободы обеих или единственного родителя</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Письменный отказ одного или обоих родителей</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Решение суда о лишении обоих или единственного родителя родительских прав</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Решение суда о признании обоих или единственного родителя безвестно отсутствующими</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>Справка из органов социальной защиты населения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Иной документ</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

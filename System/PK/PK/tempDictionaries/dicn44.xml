@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>44</Code>
+  <Name>Тип документа, подтверждающего принадлежность к соотечественникам</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Документ, подтверждающий наличие гражданства СССР</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Документ, подтверждающий проживание в прошлом на территории Российского государства, Российской республики, РСФСР, СССР или РФ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Документ, подтверждающий родство по прямой восходящей линии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Документ, подтверждающий проживание за рубежом</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Иной документ</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

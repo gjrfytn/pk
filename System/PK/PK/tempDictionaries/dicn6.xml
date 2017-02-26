@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>6</Code>
+  <Name>Основание для оценки</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Вступительное испытание ОО</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Диплом победителя/призера олимпиады</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Свидетельство ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Справка ГИА</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

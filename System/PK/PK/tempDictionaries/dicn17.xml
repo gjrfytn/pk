@@ -1,0 +1,979 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>17</Code>
+  <Name>Сообщения об ошибках</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>В конкурсe указан уровень образования, недопустимый в данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>В конкурсe указана форму обучения, недопустимая в данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>В пакете имеется конкурс с такими же параметрами и такой же программой обучения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>В системе уже имеется конкурс с такими же параметрами и такой же программой обучения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>В конкурсе недопустимы испытания профильной направленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Превышена длина {1} символов для поля {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>В конкурсе недопустимы испытания творческой направленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>В конкурсе нельзя одновременно задавать тэги CompetitiveGroupItem и TargetOrganizations</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>Объем приема для данного направления не импортирован.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>Имеются связанные данные в целевой системе, которые необходимо удалить для выполнения импорта {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>В БД найден конкурс с тем же наименованием ({0}), но другим UID ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>У другой ПК имеется объем приема с таким же UID</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>Название конкурса ({0}) должно быть уникальным в рамках приёмной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>UID для объектов одного типа в рамках одной коллекции должны быть уникальны.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>19</ID>
+      <Name>UID ({1}) должно быть уникальным в разрезе всех импортируемых коллекций объектов данного типа ({0}).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>Объект содержит коллекцию элементов ({0}), у которых есть дубликаты по UID ({1}).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>21</ID>
+      <Name>Наименования объектов одного типа в рамках одной коллекции должны быть уникальны.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>22</ID>
+      <Name>Наименование ({1}) должно быть уникальным в разрезе всех импортируемых коллекций объектов данного типа ({0}).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>24</ID>
+      <Name>Номер заявления не уникален.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>26</ID>
+      <Name>Предмет не найден для кода {0}.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>27</ID>
+      <Name>Результат испытания (значение {0}) должен принимать значения от 0 до {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>33</ID>
+      <Name>Недопустимый тип общей льготы: возможные значения "Без вступ. испытаний", "Вне Конкурса", "Преимущественное право на поступление"</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>36</ID>
+      <Name>У свойства {0} объекта указано некорректное справочное значение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>37</ID>
+      <Name>Направление указанное для объема приема не разрешено для института</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>39</ID>
+      <Name>У объема приема дублирующиеся направления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>40</ID>
+      <Name>Количество мест ({4}) по направлению ({0}) в разрезе источника финансирования ({1}) и формы обучения ({2}) {3}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>43</ID>
+      <Name>У свойства {0} объекта указаны повторяющиеся справочное значение.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>44</ID>
+      <Name>Льгота содержит указание на все олимпиады и список олимпиад.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>45</ID>
+      <Name>Льгота не содержит указания на все олимпиады и сами олимпиады.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>46</ID>
+      <Name>Вступительное испытание имеет балл ниже, чем минимальный, указанный для данного предмета.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>47</ID>
+      <Name>В конкурсе имеются направления не разрешенные для института.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>48</ID>
+      <Name>У вступительного испытания указан некорректный данный тип льготы.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>52</ID>
+      <Name>В заявлении указан несуществующий идентификатор конкурса. UID: {0}.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>53</ID>
+      <Name>В качестве основания для льготы указан некорректный документ.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>54</ID>
+      <Name>Заявление содержит некорректный UID организации целевого приема.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>55</ID>
+      <Name>В БД существует заявление с тем же номером но другим UID'ом.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>58</ID>
+      <Name>В БД существует приемная кампания с таким же типом и годом начала.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>59</ID>
+      <Name>В пакете уже имеется приемная кампания с таким же типом и годом начала.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>60</ID>
+      <Name>В БД существует приемная кампания с таким же именем.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>61</ID>
+      <Name>Приемная кампания содержит некорректные данные.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>63</ID>
+      <Name>Объем приема указывает на отсутствующую кампанию.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>64</ID>
+      <Name>Объем приема указывает на уровень образования, отсутствующий у приемной кампании.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>65</ID>
+      <Name>Объем приема указывает на форму обучения, отсутствующую у приемной кампании.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>66</ID>
+      <Name>Конкурс указывает на отсутствующую кампанию.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>69</ID>
+      <Name>Для указанного типа документа должно быть российское гражданство.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>75</ID>
+      <Name>Для данного предмета не разрешено указывать Свидетельство ЕГЭ в качестве основания для оценки.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>78</ID>
+      <Name>У абитуриента отсутствует UID.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>80</ID>
+      <Name>Приемная кампания содержит уровни образования, которые неразрешены для данного ОУ ({0}).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>81</ID>
+      <Name>Документ с данным UID'ом ({0}) уже существует в базе или пакете, при этом имеет другой тип.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>83</ID>
+      <Name>В свидетельстве ЕГЭ одновременно указан год и дата свидетельства, при этом они не совпадают друг с другом.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>84</ID>
+      <Name>Заявление должно содержать один из следующих документов об образовании: {0}.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>85</ID>
+      <Name>В БД существует заявление с тем же UID'ом но другим номером.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>86</ID>
+      <Name>В БД существует заявление с тем же UID'ом и номером, но с другой датой регистрации.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>87</ID>
+      <Name>Допускается импортировать заявления только со статусами "Новое", "Принято" или "Отозвано".</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>89</ID>
+      <Name>Для данного типа документа, удостоверяющего личность, необходимо указать серию.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>90</ID>
+      <Name>Невозможно импортировать заявление для приёмной кампании со статусом отличным от "Идет набор".</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>92</ID>
+      <Name>Невозможно импортировать заявление, содержащее конкурс без вступительных испытаний.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>93</ID>
+      <Name>Для данного предмета не разрешено указывать Справку ГИА в качестве основания для оценки.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>94</ID>
+      <Name>Уже существует организация целевого приема с данным наименованием, но другим UID'ом.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>95</ID>
+      <Name>В свидетельстве ЕГЭ необходимо передать год или дату.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>97</ID>
+      <Name>В данном конкурсе ({2}) уже существует целевой набор, UID которого ({0}) отличается от UID'а, передаваемого в пакете ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>98</ID>
+      <Name>В приказ можно включить только заявления, для которых предоставлены оригиналы документов или справка об обучении в другом ВУЗе</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>99</ID>
+      <Name>В приказ на бюджетные можно включить только заявления, для которых предоставлены оригиналы документов об образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>100</ID>
+      <Name>Конкурс не может быть удален, так как существуют связанные с ним заявления UID ({0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>104</ID>
+      <Name>В БД найдены вступительные испытания конкурса с UID ({0}), принадлежащие другому конкурсу UID ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>105</ID>
+      <Name>В БД найдена льгота с UID ({0}), принадлежащая другим вступительным испытаниям конкурса UID ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>106</ID>
+      <Name>В БД найдена льгота с UID ({0}), принадлежащая другому конкурсу UID ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>107</ID>
+      <Name>У льготы должен быть задан UID</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>113</ID>
+      <Name>Заявление ({0}) включено в приказ. Невозможно обновить заявление в приказе.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>115</ID>
+      <Name>Вступительное испытание (UID:{0}) относится к конкурсу, не указанному в данном заявлении</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>116</ID>
+      <Name>Для вступительного испытания {0} указан некорректный приоритет</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>117</ID>
+      <Name>Квота приёма лиц, имеющих особое право, может быть указана только для бакалавриата или специалитета</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>118</ID>
+      <Name>Для вступительных испытаний в конкурсах по кадрам высшей квалификации должен быть задан приоритет (не 0) хотя бы у одного испытания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>120</ID>
+      <Name>Для индивидуального достижения не задана ссылка на подтверждающий документ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>121</ID>
+      <Name>Для индивидуального достижения не найден подтверждающий документ с типом "иные документы" (CustomDocuments)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>127</ID>
+      <Name>У распределенного объема приема дублируются AdmissionVolumeUID: {0} и LevelBudget: {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>128</ID>
+      <Name>Для распределенного объема приема не импортирован объем приема UID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>130</ID>
+      <Name>Сумма распределенных объемов приема превышает исходный объем приема ({1}) AdmissionVolumeUID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>131</ID>
+      <Name>У индивидуальных достижений, учитываемых образовательной организацией, дублируются IAUID: {0} и CampaignUID: {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>133</ID>
+      <Name>Недопустимое значение в поле: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>135</ID>
+      <Name>Заявление ({0}) включено в списки рекомендованных. Невозможно обновить заявление в списках</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>136</ID>
+      <Name>Невозможно импортировать заявление для нескольких приёмной кампаний</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>138</ID>
+      <Name>В формах обучения и источниках финансирования указан несуществующий конкурс (UID: {0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>140</ID>
+      <Name>В перечне льгот указан конкурс (UID: {0}), который не указан в перечне конкурсов заявления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>141</ID>
+      <Name>Для индивидуального достижения не задан идентификатор - обязательный атрибут</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>142</ID>
+      <Name>У индивидуального достижения (IAUID: {0}) указан несуществующий идентификатор достижения приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>143</ID>
+      <Name>У индивидуального достижения (IAUID: {0}) указана приемная кампания, отличная от приемной кампании заявления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>144</ID>
+      <Name>У индивидуального достижения (IAUID: {0}) балл за достижение ({1}) превышает максимально возможный ({2})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>145</ID>
+      <Name>Идентификаторы предметов дублируются</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>146</ID>
+      <Name>Идентификатор индивидуального достижения (IAUID: {0}) должен быть уникален в рамках ОО</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>147</ID>
+      <Name>Идентификатор индивидуального достижения (IAUID: {0}) должен быть уникален в пакете</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>148</ID>
+      <Name>Для индивидуального достижения не задан идентификатор ИД ОО</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>149</ID>
+      <Name>Льгота для всех олимпиад должна содержать уровни олимпиад</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>150</ID>
+      <Name>Льгота для всех олимпиад должна содержать классы олимпиад</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>151</ID>
+      <Name>Льгота для всех олимпиад должна содержать профили олимпиад</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>153</ID>
+      <Name>Передаваемый профиль олимпиады ProfileID={0} не соответствует олимпиаде OlympicID={1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>154</ID>
+      <Name>Передаваемый профиль олимпиады ProfileID={0} не соответствует передаваемому уровню LevelID={1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>155</ID>
+      <Name>Документ гражданина Крыма с UID {0} не найден ни в пакете, ни в базе данных</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>156</ID>
+      <Name>Не допускается импортировать заявления, которые уже имеются в системе со статусами "Редактируется" или "В приказе"</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>158</ID>
+      <Name>Документ для ВИ с созданием специальных условий с UID {0} не найден ни в пакете, ни в базе данных</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>159</ID>
+      <Name>Заявление со статусом "Новое" не может содержать FinSourceEduForm.IsAgreedDate</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>160</ID>
+      <Name>Абитуриент не может иметь более 1 согласия на зачисление при отстутствии отказа или более 2 согласий при наличии отказов по уровню обучения: бакалавриат, специалитет, форме: очная, очно-заочная</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>161</ID>
+      <Name>У конкурса нет ВИ с IsForSPOandVO = 1</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>162</ID>
+      <Name>Льгота типа 4 должна быть в конкурсе с источником "Квота" (SourceID = 20)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>163</ID>
+      <Name>Фамилия, Имя, Отчество и пол абитуриента должны совпадать с данными в Документах, удостоверяющих личность</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>164</ID>
+      <Name>Дата рождения абитуриента должна совпадать с данными в Документах, удостоверяющих личность</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>165</ID>
+      <Name>Данные по олимпиаде, в результатах ВИ UID={0} не соответствуют льготам конкурса: {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>166</ID>
+      <Name>У абитуриента должен быть указан email и/или почтовый адрес</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>167</ID>
+      <Name>В адресе абитуриента должно быть заполнено поле Address</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>168</ID>
+      <Name>Общая льгота с UID = {0} должна либо содержать минимальный балл по предмету, либо иметь признак олимпиады творческой или в области спорта</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>169</ID>
+      <Name>Нельзя одновременно указывать места на каждую целевую организацию и на весь конкурс</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>170</ID>
+      <Name>Диплом победителя или призера олимпиады с UID = {0} не может быть использован дважды в одном заявлении в качестве льготы </Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>171</ID>
+      <Name>Льгота с UID = {0} указана в конкурсе с UID = {1}, однако конкурс не содержит такой льготы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>172</ID>
+      <Name>Eсли в OlympicDocument.OlympicSubjectID передан предмет, не являющийся общеобразовательным, то должен быть заполнен EgeSubjectID</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>173</ID>
+      <Name>OlympicDocument.OlympicSubjectID - должен соответствовать профилю олимпиады</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>174</ID>
+      <Name>Допускается проставлять согласие только если у заявления получены оригиналы документов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>175</ID>
+      <Name>Сумма баллов индивидуальных достижений по одному заявлению не должна превышать 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1001</ID>
+      <Name>Изменен конкурс у заявления, у которого имеются результаты вступительных испытаний</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1002</ID>
+      <Name>Отредактированы результаты ВИ. Связанные данные: приказ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1003</ID>
+      <Name>Изменился РВИ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1004</ID>
+      <Name>Изменилось свидетельство ЕГЭ для РВИ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1005</ID>
+      <Name>Изменился документ для олимпиады для РВИ.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1006</ID>
+      <Name>В БД указан РВИ, который отсутствует в данных импорта</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1007</ID>
+      <Name>В списке документов заявления не найдено указанного ЕГЭ документа {0} для вступительного испытания {1}.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1008</ID>
+      <Name>Изменился документ-основание для общей льготы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1009</ID>
+      <Name>Не найдено соответствующего вступительного испытания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1010</ID>
+      <Name>Для вступительного испытания {0} уже проимпортирован результат {1}. </Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1011</ID>
+      <Name>Не приложен документ - основание для оценки.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1012</ID>
+      <Name>Повторяются предметы в свидетельстве ЕГЭ.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1013</ID>
+      <Name>Вступительное испытание указано более одного раза.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1014</ID>
+      <Name>Повторяются предметы в справке ГИА.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1015</ID>
+      <Name>Приложено свидетельство ЕГЭ к результату ВИ, не позволяющего использовать свидетельство ЕГЭ в качестве основания для оценки.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1016</ID>
+      <Name>Для указанного года олимпиады не задан общий минимальный балл ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1017</ID>
+      <Name>Для олимпиад 2014 года и более поздних должен быть указан минимальный балл ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1018</ID>
+      <Name>Минимальный балл ЕГЭ для использования льготы ({0}) не может быть меньше общесистемного минимального балла ЕГЭ ({1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1019</ID>
+      <Name>Для олимпиад 2014 года и более поздних должен быть задан хотя бы один предмет, минимально необходимый балл по которому даст право на использование льготы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1020</ID>
+      <Name>Один или несколько конкурсов содержат льготы с некорректными минимальными баллаим ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1021</ID>
+      <Name>Баллы по предмету должны быть от 1 до 999. Указано значение {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1022</ID>
+      <Name>Тип вступительного испытания {0} не найден.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1023</ID>
+      <Name>Изменение предмета ВИ невозможно, поскольку имеются заявления с документами по ВИ c UID = {0}.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1024</ID>
+      <Name>В конкурсе уже имеется ВИ с таким же типом {0} и предметом {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1025</ID>
+      <Name>Не найдено заменяемое ВИ с UID = {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3000</ID>
+      <Name>Не допускается в одном пакете осуществлять импорт заявления (UID: {0}) и его включение в приказ (UID: {1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3001</ID>
+      <Name>Заявление, включённое в приказ не найдено</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3002</ID>
+      <Name>В приказ включено заявление c отсутствующим конкурсом</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3003</ID>
+      <Name>В приказ включено заявление c некорректным направлением</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3004</ID>
+      <Name>В приказе заявление c некорректной формой обучения и источником финансирования</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3005</ID>
+      <Name>В приказ включено заявление, у которого результаты экзамена не совпадают с соответствующими результатами в свидетельстве ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3006</ID>
+      <Name>В приказ включены дублирующиеся заявления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3007</ID>
+      <Name>В приёмной кампании не разрешены приказы данного типа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3008</ID>
+      <Name>Заявление, включаемое в приказ, не содержит ни одного подходящего условия приема в указанном конкурсе (уточните значения CompetitiveGroupUID, DirectionID, EducationFormID, FinanceSourceID, EducationLevelID)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3108</ID>
+      <Name>Заявление, включаемое в приказ, содержит несколько подходящих условий приема в указанном конкурсе. Невозможно определить требуемое условие приема (уточните значения CompetitiveGroupUID, DirectionID, EducationFormID, FinanceSourceID, EducationLevelID)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3009</ID>
+      <Name>Количество заявлений на данное направление превышает разрешённое количество.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3010</ID>
+      <Name>Заявление невозможно включить в льготный приказ.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3011</ID>
+      <Name>Заявление не может быть включено в данный приказ, так как в заявлении не выбрана данная форма обучения.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3012</ID>
+      <Name>Невозможно включить в приказ заявление для приёмной кампании со статусом отличным от "Идет набор".</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3013</ID>
+      <Name>Для заявления необходимо указать этап приемной кампании (1 или 2).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3014</ID>
+      <Name>Этап приемной кампании для данного приказа недопустим.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3015</ID>
+      <Name>Зачислять в приказ можно заявления только со статусом "Принято"</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3016</ID>
+      <Name>В заявлении не указаны необходимые результаты вступительных испытаний. Необходимо добавить результаты вступительных испытаний или исключить группу из заявления.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3017</ID>
+      <Name>Минимальный балл, указанный для вступительного испытания, не должен быть меньше {0} (минимального количества баллов  по результатам ЕГЭ по предмету).</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3018</ID>
+      <Name>В заявлении не указаны конкурсы, на которые происходит включение в приказ. Необходимо добавить конкурсы в условия приема заявления.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3019</ID>
+      <Name>Не обнаружен явно указанный в приказе конкурс (UID приказа = {0}, UID группы = {1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3020</ID>
+      <Name>Заявление уже включено в приказ о зачислении</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3021</ID>
+      <Name>У приказа со статусом, отличным от "Нет заявлений", нельзя менять значение поля {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3022</ID>
+      <Name>У приказа о со статусом "Опубликован" должно быть задано поле {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3023</ID>
+      <Name>Для приказа с номером {0} должен быть передан UID {1}{2}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3024</ID>
+      <Name>Признак приказа по межправительственным соглашениям не соответствует типу документа, удостоверяющего личность абитуриента</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3025</ID>
+      <Name>Не представлены оригиналы документов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3026</ID>
+      <Name>Одно из заявлений данного абитуриента уже включено в приказ о зачислении</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3027</ID>
+      <Name>Нельзя добавлять заявления в приказ со статусом "Опубликован"</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3028</ID>
+      <Name>Заявление не может быть включено в приказ в связи с ошибками при проверке результатов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3029</ID>
+      <Name>У приказа не могут быть одновременно заданы платный источник финансирования и этап</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3030</ID>
+      <Name>Нельзя изменить приемную кампанию у приказа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3031</ID>
+      <Name>Нельзя опубликовать приказ, не содержащий заявлений</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3032</ID>
+      <Name>UID приказа должен быть задан</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3033</ID>
+      <Name>Номер приказа {0} не должен встречаться в одном пакете у разных приказов (UID: {1})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3034</ID>
+      <Name>Приказ с UID: {0} не найден</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3035</ID>
+      <Name>Приказ с UID: {0} уже имеется в Системе с другим типом приказа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3036</ID>
+      <Name>Приказ с UID: {0} имеется в пакете с другим типом приказа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3037</ID>
+      <Name>При включении заявления в приказ указан несуществующий конкурсе с UID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3038</ID>
+      <Name>Заявление уже включено в приказ о зачислении по данному конкурсу</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3039</ID>
+      <Name>Заявление уже включено в 2 или более приказа о зачислении (UID: {0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3040</ID>
+      <Name>Заявление уже включено в приказ о зачислении (UID: {0}) и не исключено из него</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3041</ID>
+      <Name>Заявление не может быть включено в приказ об исключении по данному конкурсу, поскольку оно не включено в приказ о зачислении по нему</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3042</ID>
+      <Name>Заявление уже было включено в приказ об исключении по данному конкурсу</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3043</ID>
+      <Name>Заявление уже было включено в приказ(ы) об исключении (UID: {0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3044</ID>
+      <Name>При включении в приказ об исключении должна быть указана дата отказа от зачисления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3045</ID>
+      <Name>Не допускается включать в приказ заявление, если у него есть согласие и отказ по данному конкурсу</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4001</ID>
+      <Name>Не найдено заявление</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4002</ID>
+      <Name>Не найдено направление</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4102</ID>
+      <Name>Найдено более одного направления, неовзможно однозначно определить объект для удаления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4003</ID>
+      <Name>Не найден результат вступительных испытаний в заявлении (Application\EntranceTestResults\EntranceTestResult\UID)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4103</ID>
+      <Name>Найдено более одного результата вступительных испытаний, невозможно однозначно определить объект для удаления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4004</ID>
+      <Name>Не найдена льгота, подтверждающая результат  вступительных испытаний в заявлении (Application\EntranceTestResults\EntranceTestResult\UID)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4104</ID>
+      <Name>Найдено более одной льготы, подтверждающей результат вступительных испытаний, невозможно однозначно определить объект для удаления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4005</ID>
+      <Name>Заявление не найдено или отcутствует в приказе.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4006</ID>
+      <Name>Заявление включено в приказ. Для удаления заявления необходимо сначала исключить его из приказа</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4007</ID>
+      <Name>Невозможно удалить направление, так как по нему есть заявления в приказе</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4008</ID>
+      <Name>Невозможно удалить направление, так как это последнее направление в конкурсе и существуют заявления на эту группу</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4009</ID>
+      <Name>Невозможно удалить результат ВИ, потому что есть заявления в приказе с данным результатом</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4010</ID>
+      <Name>Невозможно удалить общую льготу, потому что есть заявления в приказе с данной льготой</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4011</ID>
+      <Name>Не найдена приемная кампания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4111</ID>
+      <Name>Найдено более одной кампании, неовзможно однозначно определить объект для удаления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4012</ID>
+      <Name>Существуют конкурсы, привязанные к данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4013</ID>
+      <Name>Невозможно удалить направление, так как существуют заявления, поданные на данное направление.</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4014</ID>
+      <Name>Невозможно удалить группу, так как существуют заявления, относящиеся к данной группе</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4015</ID>
+      <Name>Невозможно удалить группу, так как существуют направления, относящиеся к данной группе</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4016</ID>
+      <Name>Группа не найдена</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4116</ID>
+      <Name>Найдено более одной группы, неовзможно однозначно определить объект для удаления</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4017</ID>
+      <Name>Не найдена привязка заявления к указанному направлению {0} или уровню образования {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4018</ID>
+      <Name>Заявление c некорректной формой обучения {0} или источником финансирования {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4019</ID>
+      <Name>Заявление для целевого приема не может быть добавлено в список рассматриваемых</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4020</ID>
+      <Name>Вы пытаетесь включить в список рассматриваемых абитуриента, у которого статус заявления не Принято</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4021</ID>
+      <Name>Заявление не найдено в расматриваемых</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4022</ID>
+      <Name>Абитуриент не может быть включен в список Рекомендованных, так как для мест целевого приема не формируется список рекомендованных к зачислению</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4023</ID>
+      <Name>Этот абитуриент не прошел успешно вступительные испытания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4024</ID>
+      <Name>Кол-во рекомендуемых заявлений больше чем доступное кол-во мест</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4025</ID>
+      <Name>Ошибка во вступительных испытаниях ({0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4026</ID>
+      <Name>Ошибка в документах</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4027</ID>
+      <Name>Заявление не импортировано из-за наличия связанных данных в системе. Связанные данные: приказ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4028</ID>
+      <Name>Существуют индивидуальные достижения, учитываемые образовательной организацией, привязанные к данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4029</ID>
+      <Name>Существуют списки рекомендованных к зачислению, привязанные к данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4031</ID>
+      <Name>Существуют приказы о зачислении, привязанные к данной приемной кампании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4030</ID>
+      <Name>Не найдены индивидуальные достижения, учитываемые образовательной организацией</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4032</ID>
+      <Name>Индивидуальное достижение не может быть удалено, поскольку имеются в заявлениях</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4033</ID>
+      <Name>Заявление включено в cписки рекомендованных к зачислению. Для удаления заявления необходимо сначала исключить его из списков</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4040</ID>
+      <Name>Объем приема не может быть удален, так как существуют связанные с ним заявления c UID: ({0})</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4041</ID>
+      <Name>В пакете имеются не все данные импорта по кампании с UID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4050</ID>
+      <Name>В пакете имеются не все данные импорта по кампании с UID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4051</ID>
+      <Name>Невозможно импортировать группу, так как в пакет не включеные все ее данные, удаление которых невозмоно, так как с ними связаны заявления с UID: {0}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4052</ID>
+      <Name>Заявление не может быть исключено из приказа со статусом "Опубликован"</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4053</ID>
+      <Name>Приказ не найден</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4054</ID>
+      <Name>Удаление приказа, содержащего заявления, невозможно</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4055</ID>
+      <Name>Заявление включено в приказ об исключении по данному конкурсу и не может быть удалено из приказа о зачислении</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4056</ID>
+      <Name>Найдено более одной целевой организации с указанным UID</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4057</ID>
+      <Name>Целевая организация не найдена</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4058</ID>
+      <Name>Имеются конкурсы, в которых указана данная целевая организация</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4059</ID>
+      <Name>Имеются заявления, в которых указана данная целевая организация</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5001</ID>
+      <Name>Указан некорректный или недопустимый этап приема</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5002</ID>
+      <Name>Заявление не может быть включено в льготный приказ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5003</ID>
+      <Name>В приказ по межправительственным соглашениям могут быть включены только иностранные граждане, претендующие на бюджетные места</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9001</ID>
+      <Name>Для одного абитуриента указаны разные паспортные данные</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

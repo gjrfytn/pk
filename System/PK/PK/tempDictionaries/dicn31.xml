@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>31</Code>
+  <Name>Тип документа</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Документ, удостоверяющий личность</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Свидетельство о результатах ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Аттестат о среднем (полном) общем образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Диплом о высшем профессиональном образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Диплом о среднем профессиональном образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Диплом о начальном профессиональном образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>Диплом о неполном высшем профессиональном образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Академическая справка</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>Диплом победителя/призера олимпиады школьников</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Диплом победителя/призера всероссийской олимпиады школьников</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>Справка об установлении инвалидности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>Заключение психолого-медико-педагогической комиссии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>Заключение об отсутствии противопоказаний для обучения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>Военный билет</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>Иной документ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>Аттестат об основном общем образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>Справка ГИА</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>Справка об обучении в другом ВУЗе</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>19</ID>
+      <Name>Иной документ об образовании</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>Диплом чемпиона/призера Олимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>21</ID>
+      <Name>Диплом чемпиона/призера Паралимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>22</ID>
+      <Name>Диплом чемпиона/призера Сурдлимпийских игр</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>23</ID>
+      <Name>Диплом чемпиона мира</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>24</ID>
+      <Name>Диплом чемпиона Европы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>25</ID>
+      <Name>Диплом об окончании аспирантуры (адъюнкатуры)</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>26</ID>
+      <Name>Диплом кандидата наук</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>27</ID>
+      <Name>Диплом победителя/призера IV этапа всеукраинской ученической олимпиады</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>28</ID>
+      <Name>Документ об участии в международной олимпиаде</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>29</ID>
+      <Name>Документ, подтверждающий принадлежность к соотечественникам за рубежом</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>30</ID>
+      <Name>Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>31</ID>
+      <Name>Документ, подтверждающий принадлежность к ветеранам боевых действий</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

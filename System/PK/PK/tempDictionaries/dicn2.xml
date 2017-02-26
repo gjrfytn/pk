@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>2</Code>
+  <Name>Уровень образования</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Бакалавриат</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Специалитет</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Магистратура</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>СПО</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>Кадры высшей квалификации</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>14</Code>
+  <Name>Форма обучения</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Заочная форма</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>Очная форма</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>Очно-заочная (вечерняя)</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

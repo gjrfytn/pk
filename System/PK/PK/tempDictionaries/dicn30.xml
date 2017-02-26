@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>30</Code>
+  <Name>Вид льготы</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Зачисление без вступительных испытаний</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Приравнивание к лицам, успешно прошедшим дополнительные вступительные испытания</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Приравнивание к лицам, набравшим максимальное количество баллов по ЕГЭ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>По квоте приёма лиц, имеющих особое право</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Преимущественное право на поступление</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

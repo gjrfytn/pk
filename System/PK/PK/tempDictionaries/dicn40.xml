@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>40</Code>
+  <Name>Классы олимпиад</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>7</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>8</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>7, 8</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>9</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>7, 9</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>8, 9</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>7, 8, 9</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>7, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>8, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>7, 8, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>9, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>7, 9, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>8, 9, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>7, 8, 9, 10</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>7, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>8, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>19</ID>
+      <Name>7, 8, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>9, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>21</ID>
+      <Name>7, 9, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>22</ID>
+      <Name>8, 9, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>23</ID>
+      <Name>7, 8, 9, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>24</ID>
+      <Name>10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>25</ID>
+      <Name>7, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>26</ID>
+      <Name>8, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>27</ID>
+      <Name>7, 8, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>28</ID>
+      <Name>9, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>29</ID>
+      <Name>7, 9, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>30</ID>
+      <Name>8, 9, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>31</ID>
+      <Name>7, 8, 9, 10, 11</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>255</ID>
+      <Name>все классы</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

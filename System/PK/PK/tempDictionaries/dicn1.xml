@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>1</Code>
+  <Name>Общеобразовательные предметы</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Русский язык</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Математика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Информатика и ИКТ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Биология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>География</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Иностранный язык</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>История</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Литература</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>Обществознание</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Физика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>11</ID>
+      <Name>Химия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>12</ID>
+      <Name>Иностранный язык - немецкий</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>13</ID>
+      <Name>Иностранный язык - французский</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>14</ID>
+      <Name>Иностранный язык - испанский</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>15</ID>
+      <Name>Астрономия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>16</ID>
+      <Name>Искусство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>17</ID>
+      <Name>Лингвистика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>18</ID>
+      <Name>Основы безопасности жизнедеятельности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>19</ID>
+      <Name>Право</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>20</ID>
+      <Name>Технология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>21</ID>
+      <Name>Физическая культура</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>22</ID>
+      <Name>Экология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>23</ID>
+      <Name>Экономика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>24</ID>
+      <Name>Иностранный язык - английский</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>25</ID>
+      <Name>Основы православной культуры</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>26</ID>
+      <Name>Востоковедение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>27</ID>
+      <Name>Дизайн</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>28</ID>
+      <Name>Журналистика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>29</ID>
+      <Name>психология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>30</ID>
+      <Name>Родной язык</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>31</ID>
+      <Name>Граждановедение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>32</ID>
+      <Name>Краеведение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>33</ID>
+      <Name>ОБЖ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>35</ID>
+      <Name>Черчение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>36</ID>
+      <Name>Алгебра</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>37</ID>
+      <Name>Геометрия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>38</ID>
+      <Name>Естествознание</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>39</ID>
+      <Name>Крымско-татарский язык</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>53</ID>
+      <Name>История России</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>54</ID>
+      <Name>Всеобщая история</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>55</ID>
+      <Name>Музыкальное искусство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>56</ID>
+      <Name>Изобразительное искусство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>57</ID>
+      <Name>Информатика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>58</ID>
+      <Name>Компьютерная безопасность</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>59</ID>
+      <Name>Востоковедение и африканистика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>60</ID>
+      <Name>Инфокоммуникационные технологии и системы связи</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>61</ID>
+      <Name>Геология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>62</ID>
+      <Name>Теология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>63</ID>
+      <Name>Фундаментальные математика и механика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>64</ID>
+      <Name>Фундаментальные математика, механика и информатика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>65</ID>
+      <Name>Юриспруденция</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>66</ID>
+      <Name>Архитектура</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>67</ID>
+      <Name>Робототехника</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>68</ID>
+      <Name>Градостроительство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>69</ID>
+      <Name>Машиностроение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>70</ID>
+      <Name>Технологии материалов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>71</ID>
+      <Name>Авиационная и ракетно-космическая техника</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>72</ID>
+      <Name>Ядерная энергетика и технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>73</ID>
+      <Name>Техника и технологии кораблестроения и водного транспорта</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>74</ID>
+      <Name>Электроника, радиотехника и система связи</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>75</ID>
+      <Name>Техника и технологии наземного транспорта</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>76</ID>
+      <Name>Почвоведение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>77</ID>
+      <Name>Экология и природопользование</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>78</ID>
+      <Name>Зарубежное регионоведение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>79</ID>
+      <Name>Международные отношения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>80</ID>
+      <Name>Политология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>81</ID>
+      <Name>Реклама и связи с общественностью</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>82</ID>
+      <Name>Иностранный язык - китайский</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

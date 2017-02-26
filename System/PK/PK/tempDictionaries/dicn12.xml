@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>12</Code>
+  <Name>Статус проверки заявлений</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>0</ID>
+      <Name>Не проверен</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Найдены заявления для проверки</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Не найдены заявления для проверки</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>
