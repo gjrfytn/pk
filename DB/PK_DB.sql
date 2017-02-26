@@ -1219,16 +1219,9 @@ COMMENT = 'Факультеты.';
 -- Table `PK_DB`.`directions`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`directions` (
-  `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Краткое название факультета.',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления подготовки (справочник №10).',
-  PRIMARY KEY (`faculty_short_name`, `direction_id`),
+  PRIMARY KEY (`direction_id`),
   INDEX `corresponds_idx` (`direction_id` ASC),
-  INDEX `has_idx` (`faculty_short_name` ASC),
-  CONSTRAINT `directions_has`
-    FOREIGN KEY (`faculty_short_name`)
-    REFERENCES `PK_DB`.`faculties` (`short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `directions_corresponds`
     FOREIGN KEY (`direction_id`)
     REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
@@ -1248,8 +1241,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
   PRIMARY KEY (`direction_faculty`, `direction_dir_id`, `name`),
   INDEX `has_idx` (`direction_faculty` ASC, `direction_dir_id` ASC),
   CONSTRAINT `profiles_has`
-    FOREIGN KEY (`direction_faculty` , `direction_dir_id`)
-    REFERENCES `PK_DB`.`directions` (`faculty_short_name` , `direction_id`)
+    FOREIGN KEY (`direction_dir_id`)
+    REFERENCES `PK_DB`.`directions` (`direction_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -1300,8 +1293,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_data` (
   INDEX `fk_directions_has_campaigns_campaigns1_idx` (`campaign_uid` ASC),
   INDEX `fk_directions_has_campaigns_directions1_idx` (`direction_faculty` ASC, `direction_dir_id` ASC),
   CONSTRAINT `fk_directions_has_campaigns_directions1`
-    FOREIGN KEY (`direction_faculty` , `direction_dir_id`)
-    REFERENCES `PK_DB`.`directions` (`faculty_short_name` , `direction_id`)
+    FOREIGN KEY (`direction_dir_id`)
+    REFERENCES `PK_DB`.`directions` (`direction_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_directions_has_campaigns_campaigns1`
@@ -1339,6 +1332,28 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Данные кампаний по профилям.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`_faculties_has_directions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`_faculties_has_directions` (
+  `faculties_short_name` VARCHAR(5) NOT NULL,
+  `directions_direction_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`faculties_short_name`, `directions_direction_id`),
+  INDEX `fk_faculties_has_directions_directions1_idx` (`directions_direction_id` ASC),
+  INDEX `fk_faculties_has_directions_faculties1_idx` (`faculties_short_name` ASC),
+  CONSTRAINT `fk_faculties_has_directions_faculties1`
+    FOREIGN KEY (`faculties_short_name`)
+    REFERENCES `PK_DB`.`faculties` (`short_name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_faculties_has_directions_directions1`
+    FOREIGN KEY (`directions_direction_id`)
+    REFERENCES `PK_DB`.`directions` (`direction_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
