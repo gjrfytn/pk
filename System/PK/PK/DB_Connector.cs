@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 
 namespace PK
 {
-    class DB_Connector
+    class DB_Connector : System.IDisposable
     {
         MySqlConnection _Connection;
 
@@ -20,10 +20,27 @@ namespace PK
             _Connection.Open();
         }
 
-        ~DB_Connector()
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
         {
-            _Connection.Close();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _Connection.Close();
+                }
+
+                disposedValue = true;
+            }
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
 
         public List<object[]> Select(DB_Table table, params string[] fields)
         {

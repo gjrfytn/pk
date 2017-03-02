@@ -18,6 +18,25 @@ namespace PK
                 cbLogin.Items.Add(v[0]);
         }
 
+        #region IDisposable Support
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _DB_Connection.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        #endregion
+
         private void bAuth_Click(object sender, EventArgs e)
         {
             List<object[]> usersdata = _DB_Connection.Select(DB_Table.USERS, "login", "password");

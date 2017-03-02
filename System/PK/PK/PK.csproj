@@ -89,6 +89,7 @@
       <DependentUpon>DirectionsDictionaryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FIS_Connector.cs" />
+    <Compile Include="KLADR.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,6 +223,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tempDictionaries\dicn18.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tempDictionaries\dicn19.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tempDictionaries\dicn2.xml">
