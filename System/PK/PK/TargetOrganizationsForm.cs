@@ -16,12 +16,12 @@ namespace PK
         public TargetOrganizationsForm()
         {
             InitializeComponent();
+            _DB_Connection = new DB_Connector();
         }
 
         private void UpdateTable ()
         {
             dgvTargetOrganizations.Rows.Clear();
-            _DB_Connection = new DB_Connector();
             List<object[]> tOList = new List<object[]>();
             tOList = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "name");
             foreach (var v in tOList)

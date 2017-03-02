@@ -124,6 +124,7 @@
             this.факультетыToolStripMenuItem.Name = "факультетыToolStripMenuItem";
             this.факультетыToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.факультетыToolStripMenuItem.Text = "Факультеты";
+            this.факультетыToolStripMenuItem.Click += new System.EventHandler(this.факультетыToolStripMenuItem_Click);
             // 
             // направленияПодготовкиToolStripMenuItem
             // 
