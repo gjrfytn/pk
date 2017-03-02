@@ -1216,33 +1216,16 @@ COMMENT = 'Факультеты.';
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`directions`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`directions` (
-  `direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления подготовки (справочник №10).',
-  PRIMARY KEY (`direction_id`),
-  INDEX `corresponds_idx` (`direction_id` ASC),
-  CONSTRAINT `directions_corresponds`
-    FOREIGN KEY (`direction_id`)
-    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Направления подготовки.';
-
-
--- -----------------------------------------------------
 -- Table `PK_DB`.`profiles`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
-  `direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
-  `direction_dir_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления (Справочник №10).',
   `name` VARCHAR(100) NOT NULL COMMENT 'Название профиля.',
-  PRIMARY KEY (`direction_faculty`, `direction_dir_id`, `name`),
-  INDEX `has_idx` (`direction_faculty` ASC, `direction_dir_id` ASC),
+  PRIMARY KEY (`direction_id`, `name`),
+  INDEX `has_idx` (`direction_id` ASC),
   CONSTRAINT `profiles_has`
-    FOREIGN KEY (`direction_dir_id`)
-    REFERENCES `PK_DB`.`directions` (`direction_id`)
+    FOREIGN KEY (`direction_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -1279,7 +1262,7 @@ COMMENT = 'Данные кампаний по факультетам.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_data` (
   `campaign_uid` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
   `direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
-  `direction_dir_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления (Справочник №10).',
   `places_budget_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество бюджетных очных мест.',
   `places_budget_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество бюджетных вечерних мест.',
   `places_budget_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество бюджетных заочных мест.',
@@ -1289,12 +1272,12 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_data` (
   `places_quota_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество квотированных очных мест.',
   `places_quota_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество квотированных вечерних мест.',
   `places_quota_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество квотированных заочных мест.',
-  PRIMARY KEY (`campaign_uid`, `direction_faculty`, `direction_dir_id`),
+  PRIMARY KEY (`campaign_uid`, `direction_faculty`, `direction_id`),
   INDEX `fk_directions_has_campaigns_campaigns1_idx` (`campaign_uid` ASC),
-  INDEX `fk_directions_has_campaigns_directions1_idx` (`direction_faculty` ASC, `direction_dir_id` ASC),
+  INDEX `fk_directions_has_campaigns_directions1_idx` (`direction_id` ASC),
   CONSTRAINT `fk_directions_has_campaigns_directions1`
-    FOREIGN KEY (`direction_dir_id`)
-    REFERENCES `PK_DB`.`directions` (`direction_id`)
+    FOREIGN KEY (`direction_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_directions_has_campaigns_campaigns1`
@@ -1321,8 +1304,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
   INDEX `fk_profiles_has_campaigns_campaigns1_idx` (`campaigns_uid` ASC),
   INDEX `fk_profiles_has_campaigns_profiles1_idx` (`profiles_direction_faculty` ASC, `profiles_direction_id` ASC, `profiles_name` ASC),
   CONSTRAINT `fk_profiles_has_campaigns_profiles1`
-    FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_name`)
-    REFERENCES `PK_DB`.`profiles` (`direction_faculty` , `direction_dir_id` , `name`)
+    FOREIGN KEY (`profiles_direction_id` , `profiles_name`)
+    REFERENCES `PK_DB`.`profiles` (`direction_id` , `name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_profiles_has_campaigns_campaigns1`
@@ -1335,25 +1318,50 @@ COMMENT = 'Данные кампаний по профилям.';
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`_faculties_has_directions`
+-- Table `PK_DB`.`faculties_has_dictionary_10_items`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`_faculties_has_directions` (
+CREATE TABLE IF NOT EXISTS `PK_DB`.`faculties_has_dictionary_10_items` (
   `faculties_short_name` VARCHAR(5) NOT NULL,
-  `directions_direction_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`faculties_short_name`, `directions_direction_id`),
-  INDEX `fk_faculties_has_directions_directions1_idx` (`directions_direction_id` ASC),
-  INDEX `fk_faculties_has_directions_faculties1_idx` (`faculties_short_name` ASC),
-  CONSTRAINT `fk_faculties_has_directions_faculties1`
+  `dictionary_10_items_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`faculties_short_name`, `dictionary_10_items_id`),
+  INDEX `fk_faculties_has_dictionary_10_items_dictionary_10_items1_idx` (`dictionary_10_items_id` ASC),
+  INDEX `fk_faculties_has_dictionary_10_items_faculties1_idx` (`faculties_short_name` ASC),
+  CONSTRAINT `fk_faculties_has_dictionary_10_items_faculties1`
     FOREIGN KEY (`faculties_short_name`)
     REFERENCES `PK_DB`.`faculties` (`short_name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_faculties_has_directions_directions1`
-    FOREIGN KEY (`directions_direction_id`)
-    REFERENCES `PK_DB`.`directions` (`direction_id`)
+  CONSTRAINT `fk_faculties_has_dictionary_10_items_dictionary_10_items1`
+    FOREIGN KEY (`dictionary_10_items_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`dir_entrance_tests`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`dir_entrance_tests` (
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления (Справочник №10).',
+  `subject_dict_id` INT UNSIGNED NOT NULL,
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ID дисциплины (Справочник №1).',
+  `priority` SMALLINT UNSIGNED NOT NULL COMMENT 'Приоритет.',
+  PRIMARY KEY (`direction_id`, `subject_dict_id`, `subject_id`),
+  INDEX `has_idx` (`direction_id` ASC),
+  INDEX `corresp_idx` (`subject_dict_id` ASC, `subject_id` ASC),
+  CONSTRAINT `dir_entrance_tests_has`
+    FOREIGN KEY (`direction_id`)
+    REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `dir_entrance_tests_corresp`
+    FOREIGN KEY (`subject_dict_id` , `subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Вступительные испытания по направлениям.';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
