@@ -6,6 +6,9 @@ namespace PK
         DICTIONARIES,
         DICTIONARIES_ITEMS,
         USERS,
-        TARGET_ORGANIZATIONS
+        TARGET_ORGANIZATIONS,
+        DICTIONARY_10_ITEMS,
+        FACULTIES,
+        PROFILES
     }
 }

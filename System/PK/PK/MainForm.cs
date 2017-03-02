@@ -47,5 +47,11 @@ namespace PK
             DirectionsDictionaryForm form = new DirectionsDictionaryForm(_DB_Connection);
             form.ShowDialog();
         }
+
+        private void факультетыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FacultiesForm form = new FacultiesForm();
+            form.ShowDialog();
+        }
     }
 }

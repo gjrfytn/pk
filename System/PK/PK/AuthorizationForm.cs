@@ -33,5 +33,10 @@ namespace PK
             else
                 MessageBox.Show("Неверный пароль");
         }
+
+        private void AuthorizationForm_Load(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
     }
 }

@@ -93,6 +93,7 @@
             this.Controls.Add(this.bAuth);
             this.Name = "AuthorizationForm";
             this.Text = "Авторизация";
+            this.Load += new System.EventHandler(this.AuthorizationForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
