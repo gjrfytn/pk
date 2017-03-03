@@ -6,16 +6,16 @@ namespace PK
 {
     class KLADR : System.IDisposable
     {
-        const string _RawRegionCode = "SUBSTRING(code,1,2)";
-        const string _RawDistrictCode = "SUBSTRING(code,3,3)";
-        const string _RawTownCode = "SUBSTRING(code,6,3)";
-        const string _RawSettlementCode = "SUBSTRING(code,9,3)";
-        const string _RawStreetCode = "SUBSTRING(code,12,4)";
+        const string _RawRegionCode = "SUBSTR(code,1,2)";
+        const string _RawDistrictCode = "SUBSTR(code,3,3)";
+        const string _RawTownCode = "SUBSTR(code,6,3)";
+        const string _RawSettlementCode = "SUBSTR(code,9,3)";
+        const string _RawStreetCode = "SUBSTR(code,12,4)";
 
-        const string _WhereRegion = "SUBSTRING(code, 3) = '00000000000'";
-        const string _WhereDistrict = "SUBSTRING(code, 6) = '00000000' AND " + _RawDistrictCode + " != '000'";
-        const string _WhereTown = "SUBSTRING(code, 9) = '00000' AND " + _RawTownCode + " != '000'";
-        const string _WhereSettlement = "SUBSTRING(code, 12) = '00' AND " + _RawSettlementCode + " != '000'";
+        const string _WhereRegion = "SUBSTR(code, 3) = '00000000000'";
+        const string _WhereDistrict = "SUBSTR(code, 6) = '00000000' AND " + _RawDistrictCode + " != '000'";
+        const string _WhereTown = "SUBSTR(code, 9) = '00000' AND " + _RawTownCode + " != '000'";
+        const string _WhereSettlement = "SUBSTR(code, 12) = '00' AND " + _RawSettlementCode + " != '000'";
 
         MySqlConnection _Connection;
 
@@ -95,29 +95,9 @@ namespace PK
 
         public List<string> GetSettlements(string region, string district, string town)
         {
-            string regCode = GetRegionCode(region);
-            if (regCode == "")
+            string regCode, distrCode, townCode;
+            if (!GetCodes(region, district, town, out regCode, out distrCode, out townCode))
                 return new List<string>();
-
-            string distrCode;
-            if (district != "")
-            {
-                distrCode = GetDistrictCode(regCode, district);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                distrCode = "000";
-
-            string townCode;
-            if (town != "")
-            {
-                townCode = GetTownCode(regCode, distrCode, town);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                townCode = "000";
 
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr, `index` FROM subjects WHERE " + _WhereSettlement + " AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "' AND " + _RawTownCode + "='" + townCode + "';", _Connection);
 
@@ -153,77 +133,54 @@ namespace PK
 
         public List<string> GetStreets(string region, string district, string town, string settlement)
         {
-            string regCode = GetRegionCode(region);
-            if (regCode == "")
+            string regCode, distrCode, townCode;
+            if (!GetCodes(region, district, town, out regCode, out distrCode, out townCode))
                 return new List<string>();
 
-            string distrCode;
-            if (district != "")
-            {
-                distrCode = GetDistrictCode(regCode, district);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                distrCode = "000";
-
-            string townCode;
-            if (town != "")
-            {
-                townCode = GetTownCode(regCode, distrCode, town);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                townCode = "000";
-
-            string settlementsCodes = "";
+            string settlCodesExpr = "";
+            List<string> settlementsCodes = new List<string>();
             if (settlement != "")
             {
-                List<string> codes = GetSettlementCodes(regCode, distrCode, townCode, settlement);
-                if (codes.Count == 0)
+                settlementsCodes = GetSettlementCodes(regCode, distrCode, townCode, settlement);
+                if (settlementsCodes.Count == 0)
                     return new List<string>();
 
-                settlementsCodes += "(";
-                foreach (string code in codes)
-                    settlementsCodes += _RawSettlementCode + "='" + code + "' OR ";
+                settlCodesExpr += "(";
+                foreach (string code in settlementsCodes)
+                    settlCodesExpr += _RawSettlementCode + "='" + code + "' OR ";
 
-                settlementsCodes = settlementsCodes.Remove(settlementsCodes.Length - 4);
-                settlementsCodes += ")";
+                settlCodesExpr = settlCodesExpr.Remove(settlCodesExpr.Length - 4);
+                settlCodesExpr += ")";
             }
             else
-                settlementsCodes = _RawSettlementCode + "= '000'";
+                settlCodesExpr = _RawSettlementCode + "= '000'";
 
-            MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM streets WHERE " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "' AND " + _RawTownCode + "='" + townCode + "' AND " + settlementsCodes + ";", _Connection);
+            string expr = "";
+            if (settlementsCodes.Count != 0)
+            {
+                foreach (string code in settlementsCodes)
+                {
+                    string commonCode = regCode + distrCode + townCode + code;
+                    expr += "code BETWEEN '" + commonCode + "0000' AND '" + commonCode + "9999' OR ";
+                }
+                expr = expr.Remove(expr.Length - 4);
+            }
+            else
+            {
+                string commonCode = regCode + distrCode + townCode + "000";
+                expr += "code BETWEEN '" + commonCode + "0000' AND '" + commonCode + "9999'";
+            }
+
+            MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM streets WHERE " + expr + ";", _Connection);
 
             return SelectNameSocr(cmd);
         }
 
         public List<string> GetHouses(string region, string district, string town, string settlement, string street)
         {
-            string regCode = GetRegionCode(region);
-            if (regCode == "")
+            string regCode, distrCode, townCode;
+            if (!GetCodes(region, district, town, out regCode, out distrCode, out townCode))
                 return new List<string>();
-
-            string distrCode;
-            if (district != "")
-            {
-                distrCode = GetDistrictCode(regCode, district);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                distrCode = "000";
-
-            string townCode;
-            if (town != "")
-            {
-                townCode = GetTownCode(regCode, distrCode, town);
-                if (distrCode == "")
-                    return new List<string>();
-            }
-            else
-                townCode = "000";
 
             string settlCodesExpr = "";
             List<string> settlementsCodes = new List<string>();
@@ -260,7 +217,23 @@ namespace PK
             else
                 streetCode = "0000";
 
-            MySqlCommand cmd = new MySqlCommand("SELECT name FROM houses WHERE " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "' AND " + _RawTownCode + "='" + townCode + settlCodesExpr + "' AND " + _RawStreetCode + "='" + streetCode + "';", _Connection);
+            string expr = "";
+            if (settlementsCodes.Count != 0)
+            {
+                foreach (string code in settlementsCodes)
+                {
+                    string commonCode = regCode + distrCode + townCode + code + streetCode;
+                    expr += "code BETWEEN '" + commonCode + "0000' AND '" + commonCode + "9999' OR ";
+                }
+                expr = expr.Remove(expr.Length - 4);
+            }
+            else
+            {
+                string commonCode = regCode + distrCode + townCode + "000" + streetCode;
+                expr += "code BETWEEN '" + commonCode + "0000' AND '" + commonCode + "9999'";
+            }
+
+            MySqlCommand cmd = new MySqlCommand("SELECT name FROM houses WHERE " + expr + ";", _Connection);
 
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -273,6 +246,40 @@ namespace PK
 
                 return results;
             };
+        }
+
+        bool GetCodes(string region, string district, string town, out string regCode, out string distrCode, out string townCode)
+        {
+            regCode = GetRegionCode(region);
+            if (regCode == "")
+            {
+                distrCode = "";
+                townCode = "";
+                return false;
+            }
+
+            if (district != "")
+            {
+                distrCode = GetDistrictCode(regCode, district);
+                if (distrCode == "")
+                {
+                    townCode = "";
+                    return false;
+                }
+            }
+            else
+                distrCode = "000";
+
+            if (town != "")
+            {
+                townCode = GetTownCode(regCode, distrCode, town);
+                if (townCode == "")
+                    return false;
+            }
+            else
+                townCode = "000";
+
+            return true;
         }
 
         string GetRegionCode(string region)
