@@ -53,5 +53,11 @@ namespace PK
             FacultiesForm form = new FacultiesForm();
             form.ShowDialog();
         }
+
+        private void направленияПодготовкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DirectionsProfilesForm form = new DirectionsProfilesForm();
+            form.ShowDialog();
+        }
     }
 }

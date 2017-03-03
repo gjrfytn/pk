@@ -65,13 +65,16 @@ namespace PK
                 dgvExams.Rows[j].Cells[1].Value = DateTime.Now.Year.ToString();
             }
 
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS,"name"))
-                foreach (var r in tbDirections.Controls)
-                    foreach (Control f in (r as TabPage).Controls)
-                {
-                        if (f.GetType()==typeof(ComboBox))
-                            (f as ComboBox).Items.Add(v[0].ToString());
-                }
+            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name","code"))
+            {
+                if ((v[1].ToString().Substring(3,2) == "03")||(v[1].ToString().Substring(3, 2) == "05"))
+                    foreach (var r in tbDirections.Controls)
+                        foreach (Control f in (r as TabPage).Controls)
+                        {
+                            if (f.GetType() == typeof(ComboBox))
+                                (f as ComboBox).Items.Add(v[0].ToString());
+                        }
+            }
         }
 
         private void btAddDir1_Click(object sender, EventArgs e)

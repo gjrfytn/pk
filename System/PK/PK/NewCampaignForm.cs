@@ -50,10 +50,10 @@ namespace PK
         {
         }
 
-        void FillPrifiliesTable ()
+        void FillProfiliesTable ()
         {
             //List<string> directions = new List<string>();
-            //    foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "ugs_code", "ugs_name", "code", "name"))
+            //foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "ugs_code", "ugs_name", "code", "name"))
             //{
             //    if (!(directions.Contains(v[0].ToString())))
             //    {
