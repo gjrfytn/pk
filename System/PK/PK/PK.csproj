@@ -83,6 +83,12 @@
     <Compile Include="DictionariesForm.Designer.cs">
       <DependentUpon>DictionariesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DirectionsProfilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectionsProfilesForm.Designer.cs">
+      <DependentUpon>DirectionsProfilesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DirectionsDictionaryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DictionariesForm.resx">
       <DependentUpon>DictionariesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DirectionsProfilesForm.resx">
+      <DependentUpon>DirectionsProfilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DirectionsDictionaryForm.resx">
       <DependentUpon>DirectionsDictionaryForm.cs</DependentUpon>

@@ -37,12 +37,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
+            this.btUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).BeginInit();
             this.SuspendLayout();
             // 
             // btNewFaculty
             // 
-            this.btNewFaculty.Location = new System.Drawing.Point(235, 384);
+            this.btNewFaculty.Location = new System.Drawing.Point(109, 384);
             this.btNewFaculty.Name = "btNewFaculty";
             this.btNewFaculty.Size = new System.Drawing.Size(136, 23);
             this.btNewFaculty.TabIndex = 0;
@@ -58,9 +59,11 @@
             this.cShortName,
             this.cName});
             this.dgvFaculties.Location = new System.Drawing.Point(13, 12);
+            this.dgvFaculties.MultiSelect = false;
             this.dgvFaculties.Name = "dgvFaculties";
             this.dgvFaculties.ReadOnly = true;
             this.dgvFaculties.RowHeadersVisible = false;
+            this.dgvFaculties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvFaculties.Size = new System.Drawing.Size(559, 316);
             this.dgvFaculties.TabIndex = 1;
             // 
@@ -131,11 +134,22 @@
             this.btSave.Visible = false;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
+            // btUpdate
+            // 
+            this.btUpdate.Location = new System.Drawing.Point(327, 384);
+            this.btUpdate.Name = "btUpdate";
+            this.btUpdate.Size = new System.Drawing.Size(145, 23);
+            this.btUpdate.TabIndex = 7;
+            this.btUpdate.Text = "Изменить выделенный";
+            this.btUpdate.UseVisualStyleBackColor = true;
+            this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
+            // 
             // FacultiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 419);
+            this.Controls.Add(this.btUpdate);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -163,5 +177,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.Button btUpdate;
     }
 }

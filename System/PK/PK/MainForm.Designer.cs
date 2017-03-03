@@ -131,6 +131,7 @@
             this.направленияПодготовкиToolStripMenuItem.Name = "направленияПодготовкиToolStripMenuItem";
             this.направленияПодготовкиToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.направленияПодготовкиToolStripMenuItem.Text = "Направления подготовки";
+            this.направленияПодготовкиToolStripMenuItem.Click += new System.EventHandler(this.направленияПодготовкиToolStripMenuItem_Click);
             // 
             // целевыеОрганизацииToolStripMenuItem
             // 

@@ -1101,6 +1101,7 @@
             // 
             // btRemoveDir13
             // 
+            this.btRemoveDir13.Enabled = false;
             this.btRemoveDir13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir13.Location = new System.Drawing.Point(428, 156);
             this.btRemoveDir13.Name = "btRemoveDir13";
@@ -1108,9 +1109,11 @@
             this.btRemoveDir13.TabIndex = 23;
             this.btRemoveDir13.Text = "-";
             this.btRemoveDir13.UseVisualStyleBackColor = true;
+            this.btRemoveDir13.Visible = false;
             // 
             // btRemoveDir12
             // 
+            this.btRemoveDir12.Enabled = false;
             this.btRemoveDir12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir12.Location = new System.Drawing.Point(428, 104);
             this.btRemoveDir12.Name = "btRemoveDir12";
@@ -1118,9 +1121,11 @@
             this.btRemoveDir12.TabIndex = 22;
             this.btRemoveDir12.Text = "-";
             this.btRemoveDir12.UseVisualStyleBackColor = true;
+            this.btRemoveDir12.Visible = false;
             // 
             // btRemoveDir11
             // 
+            this.btRemoveDir11.Enabled = false;
             this.btRemoveDir11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir11.Location = new System.Drawing.Point(428, 54);
             this.btRemoveDir11.Name = "btRemoveDir11";
@@ -1128,6 +1133,7 @@
             this.btRemoveDir11.TabIndex = 21;
             this.btRemoveDir11.Text = "-";
             this.btRemoveDir11.UseVisualStyleBackColor = true;
+            this.btRemoveDir11.Visible = false;
             // 
             // btAddDir1
             // 
@@ -1142,19 +1148,23 @@
             // 
             // cbDirection13
             // 
+            this.cbDirection13.Enabled = false;
             this.cbDirection13.FormattingEnabled = true;
             this.cbDirection13.Location = new System.Drawing.Point(18, 165);
             this.cbDirection13.Name = "cbDirection13";
             this.cbDirection13.Size = new System.Drawing.Size(386, 21);
             this.cbDirection13.TabIndex = 19;
+            this.cbDirection13.Visible = false;
             // 
             // cbDirection12
             // 
+            this.cbDirection12.Enabled = false;
             this.cbDirection12.FormattingEnabled = true;
             this.cbDirection12.Location = new System.Drawing.Point(18, 113);
             this.cbDirection12.Name = "cbDirection12";
             this.cbDirection12.Size = new System.Drawing.Size(386, 21);
             this.cbDirection12.TabIndex = 18;
+            this.cbDirection12.Visible = false;
             // 
             // cbDirection11
             // 
