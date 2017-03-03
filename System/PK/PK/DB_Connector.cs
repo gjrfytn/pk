@@ -70,25 +70,25 @@ namespace PK
                 switch (expr.Item2)
                 {
                     case Relation.EQUAL:
-                        whereClause += "=";
+                        whereClause += " = '";
                         break;
                     case Relation.LESS:
-                        whereClause += "<";
+                        whereClause += " < '";
                         break;
                     case Relation.GREATER:
-                        whereClause += ">";
+                        whereClause += " > '";
                         break;
                     case Relation.LESS_EQUAL:
-                        whereClause += "<=";
+                        whereClause += " <= '";
                         break;
                     case Relation.GREATER_EQUAL:
-                        whereClause += ">=";
+                        whereClause += " >= '";
                         break;
                     default:
                         throw new System.Exception("Reached unreachable.");
                 }
 
-                whereClause += expr.Item3 + " AND ";
+                whereClause += expr.Item3 + "' AND ";
             }
             whereClause = whereClause.Remove(whereClause.Length - 5);
 

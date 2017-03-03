@@ -1318,9 +1318,9 @@ COMMENT = 'Данные кампаний по профилям.';
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`faculties_has_dictionary_10_items`
+-- Table `PK_DB`.`_faculties_has_dictionary_10_items`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`faculties_has_dictionary_10_items` (
+CREATE TABLE IF NOT EXISTS `PK_DB`.`_faculties_has_dictionary_10_items` (
   `faculties_short_name` VARCHAR(5) NOT NULL,
   `dictionary_10_items_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`faculties_short_name`, `dictionary_10_items_id`),
