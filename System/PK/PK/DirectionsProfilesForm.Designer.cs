@@ -28,12 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
-            this.cName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cFacultity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btAddPrifile = new System.Windows.Forms.Button();
+            this.btAddProfile = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cbDirections = new System.Windows.Forms.ComboBox();
             this.gbType = new System.Windows.Forms.GroupBox();
@@ -45,6 +42,12 @@
             this.btSave = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.cbFaculties = new System.Windows.Forms.ComboBox();
+            this.btDelete = new System.Windows.Forms.Button();
+            this.cID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cT = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
             this.gbType.SuspendLayout();
             this.SuspendLayout();
@@ -55,11 +58,21 @@
             this.dgvDirections.AllowUserToDeleteRows = false;
             this.dgvDirections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirections.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cID,
+            this.cT,
             this.cName,
             this.cCode,
-            this.cType,
-            this.cFacultity});
+            this.cType});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDirections.Location = new System.Drawing.Point(13, 13);
+            this.dgvDirections.MultiSelect = false;
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.ReadOnly = true;
             this.dgvDirections.RowHeadersVisible = false;
@@ -67,46 +80,15 @@
             this.dgvDirections.Size = new System.Drawing.Size(679, 272);
             this.dgvDirections.TabIndex = 0;
             // 
-            // cName
+            // btAddProfile
             // 
-            this.cName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cName.HeaderText = "Направление подготовки/специальность";
-            this.cName.Name = "cName";
-            this.cName.ReadOnly = true;
-            // 
-            // cCode
-            // 
-            this.cCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.cCode.HeaderText = "Код направления/ специальности";
-            this.cCode.Name = "cCode";
-            this.cCode.ReadOnly = true;
-            this.cCode.Width = 186;
-            // 
-            // cType
-            // 
-            this.cType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.cType.HeaderText = "Программа обучения";
-            this.cType.Name = "cType";
-            this.cType.ReadOnly = true;
-            this.cType.Width = 128;
-            // 
-            // cFacultity
-            // 
-            this.cFacultity.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.cFacultity.HeaderText = "Факультет";
-            this.cFacultity.Name = "cFacultity";
-            this.cFacultity.ReadOnly = true;
-            this.cFacultity.Width = 88;
-            // 
-            // btAddPrifile
-            // 
-            this.btAddPrifile.Location = new System.Drawing.Point(297, 302);
-            this.btAddPrifile.Name = "btAddPrifile";
-            this.btAddPrifile.Size = new System.Drawing.Size(118, 23);
-            this.btAddPrifile.TabIndex = 1;
-            this.btAddPrifile.Text = "Добавить профиль";
-            this.btAddPrifile.UseVisualStyleBackColor = true;
-            this.btAddPrifile.Click += new System.EventHandler(this.btAddPrifile_Click);
+            this.btAddProfile.Location = new System.Drawing.Point(297, 302);
+            this.btAddProfile.Name = "btAddProfile";
+            this.btAddProfile.Size = new System.Drawing.Size(118, 23);
+            this.btAddProfile.TabIndex = 1;
+            this.btAddProfile.Text = "Добавить профиль";
+            this.btAddProfile.UseVisualStyleBackColor = true;
+            this.btAddProfile.Click += new System.EventHandler(this.btAddProfile_Click);
             // 
             // label1
             // 
@@ -198,7 +180,7 @@
             // btSave
             // 
             this.btSave.Enabled = false;
-            this.btSave.Location = new System.Drawing.Point(321, 417);
+            this.btSave.Location = new System.Drawing.Point(320, 423);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 8;
@@ -225,11 +207,61 @@
             this.cbFaculties.Size = new System.Drawing.Size(84, 21);
             this.cbFaculties.TabIndex = 10;
             // 
+            // btDelete
+            // 
+            this.btDelete.Location = new System.Drawing.Point(489, 302);
+            this.btDelete.Name = "btDelete";
+            this.btDelete.Size = new System.Drawing.Size(131, 23);
+            this.btDelete.TabIndex = 11;
+            this.btDelete.Text = "Удалить выделенный";
+            this.btDelete.UseVisualStyleBackColor = true;
+            this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
+            // 
+            // cID
+            // 
+            this.cID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cID.HeaderText = "ID";
+            this.cID.Name = "cID";
+            this.cID.ReadOnly = true;
+            this.cID.Width = 43;
+            // 
+            // cT
+            // 
+            this.cT.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cT.HeaderText = "";
+            this.cT.Name = "cT";
+            this.cT.ReadOnly = true;
+            this.cT.Width = 19;
+            // 
+            // cName
+            // 
+            this.cName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cName.HeaderText = "Направление подготовки/специальность";
+            this.cName.Name = "cName";
+            this.cName.ReadOnly = true;
+            // 
+            // cCode
+            // 
+            this.cCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cCode.HeaderText = "Код направления/ специальности";
+            this.cCode.Name = "cCode";
+            this.cCode.ReadOnly = true;
+            this.cCode.Width = 186;
+            // 
+            // cType
+            // 
+            this.cType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cType.HeaderText = "Программа обучения";
+            this.cType.Name = "cType";
+            this.cType.ReadOnly = true;
+            this.cType.Width = 128;
+            // 
             // DirectionsProfilesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 450);
+            this.ClientSize = new System.Drawing.Size(704, 458);
+            this.Controls.Add(this.btDelete);
             this.Controls.Add(this.cbFaculties);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btSave);
@@ -238,7 +270,7 @@
             this.Controls.Add(this.gbType);
             this.Controls.Add(this.cbDirections);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btAddPrifile);
+            this.Controls.Add(this.btAddProfile);
             this.Controls.Add(this.dgvDirections);
             this.Name = "DirectionsProfilesForm";
             this.Text = "DictionaryProfilesForm";
@@ -253,7 +285,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvDirections;
-        private System.Windows.Forms.Button btAddPrifile;
+        private System.Windows.Forms.Button btAddProfile;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbDirections;
         private System.Windows.Forms.GroupBox gbType;
@@ -265,9 +297,11 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbFaculties;
+        private System.Windows.Forms.Button btDelete;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cT;
         private System.Windows.Forms.DataGridViewTextBoxColumn cName;
         private System.Windows.Forms.DataGridViewTextBoxColumn cCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn cType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cFacultity;
     }
 }

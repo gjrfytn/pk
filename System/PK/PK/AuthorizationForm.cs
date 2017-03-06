@@ -55,7 +55,7 @@ namespace PK
 
         private void AuthorizationForm_Load(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            //DialogResult = DialogResult.OK;
         }
     }
 }

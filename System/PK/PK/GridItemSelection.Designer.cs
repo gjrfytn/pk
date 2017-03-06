@@ -91,7 +91,6 @@
             this.Controls.Add(this.btSelect);
             this.Name = "GridItemSelection";
             this.Text = "GridItemSelection";
-            this.Load += new System.EventHandler(this.GridItemSelection_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

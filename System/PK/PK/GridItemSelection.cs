@@ -11,27 +11,27 @@ namespace PK
 {
     public partial class GridItemSelection : Form
     {
-        List<string> _All_Items;
+        List<string[]> _All_Items;
         List<string> _Displayed_Items;
         DB_Connector _DB_Connection;
         public string organizationName;
+        public string organizationCode;
         
         public GridItemSelection()
         {
             InitializeComponent();
             _DB_Connection = new DB_Connector();
-            _All_Items = new List<string>();
+            _All_Items = new List<string[]>();
             _Displayed_Items = new List<string>();
-        }
 
-        private void GridItemSelection_Load(object sender, EventArgs e)
-        {
             List<object[]> tOList = new List<object[]>();
-            tOList = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "name");
+            tOList = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "uid", "name");
             foreach (var v in tOList)
-                _All_Items.Add(v[0].ToString());
+                _All_Items.Add(new string[] { v[0].ToString(), v[1].ToString() });
 
-            _Displayed_Items.AddRange(_All_Items);
+            foreach (var v in _All_Items)
+                _Displayed_Items.Add(v[1].ToString());
+
             lbSelection.DataSource = _Displayed_Items;
 
             tbSearchString.Select();
@@ -42,8 +42,8 @@ namespace PK
             _Displayed_Items.Clear();
             foreach (var v in _All_Items)
             {
-                if (v.Contains(tbSearchString.Text))
-                    _Displayed_Items.Add(v);
+                if (v[1].Contains(tbSearchString.Text))
+                    _Displayed_Items.Add(v[1]);
             }
             lbSelection.DataSource = null;
             lbSelection.DataSource = _Displayed_Items;
@@ -56,6 +56,7 @@ namespace PK
             else
             {
                 organizationName = lbSelection.SelectedItem.ToString();
+                organizationCode = _All_Items.Find(x => x[1].ToString() == organizationName)[0];
                 DialogResult = DialogResult.OK;
             }
         }

@@ -52,5 +52,17 @@ namespace PK
                 UpdateTable();
             }                
         }
+
+        private void btDelete_Click(object sender, EventArgs e)
+        {
+            if (dgvTargetOrganizations.SelectedRows.Count == 0)
+                MessageBox.Show("Выберите строку");
+            else
+            {
+                _DB_Connection.Delete(DB_Table.TARGET_ORGANIZATIONS, new Dictionary<string, object>
+                { { "uid", Convert.ToInt32(dgvTargetOrganizations.SelectedRows[0].Cells[0].Value.ToString()) }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value.ToString()} });
+                UpdateTable();
+            }
+        }
     }
 }

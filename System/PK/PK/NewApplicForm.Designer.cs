@@ -30,6 +30,11 @@
         {
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbPostcode = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tbAppartment = new System.Windows.Forms.TextBox();
@@ -88,21 +93,36 @@
             this.cbFirstTime = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.gbAttributes = new System.Windows.Forms.GroupBox();
+            this.cbPrerogative = new System.Windows.Forms.CheckBox();
+            this.cbTarget = new System.Windows.Forms.CheckBox();
+            this.cbOlympiad = new System.Windows.Forms.CheckBox();
+            this.cbExams = new System.Windows.Forms.CheckBox();
+            this.cbSpecial = new System.Windows.Forms.CheckBox();
+            this.cbChernobyl = new System.Windows.Forms.CheckBox();
+            this.cbMCDAO = new System.Windows.Forms.CheckBox();
+            this.chHostleNeeded = new System.Windows.Forms.CheckBox();
             this.btClose = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
+            this.gbOther = new System.Windows.Forms.GroupBox();
+            this.mtbEMail = new System.Windows.Forms.MaskedTextBox();
+            this.mtbHomePhone = new System.Windows.Forms.MaskedTextBox();
+            this.mtbMobilePhone = new System.Windows.Forms.MaskedTextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
+            this.cbMADIOlympiad = new System.Windows.Forms.CheckBox();
+            this.cbSport = new System.Windows.Forms.CheckBox();
+            this.cbMedal = new System.Windows.Forms.CheckBox();
             this.btSave = new System.Windows.Forms.Button();
-            this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
-            this.cbAppEnrollment = new System.Windows.Forms.CheckBox();
-            this.cbPhotos = new System.Windows.Forms.CheckBox();
-            this.cbMedCertificate = new System.Windows.Forms.CheckBox();
-            this.cbDirectionDoc = new System.Windows.Forms.CheckBox();
-            this.cbCertificateHRD = new System.Windows.Forms.CheckBox();
-            this.cbDiplomaCopy = new System.Windows.Forms.CheckBox();
-            this.cCertificateCopy = new System.Windows.Forms.CheckBox();
-            this.cbPassportCopy = new System.Windows.Forms.CheckBox();
-            this.cbAppAdmission = new System.Windows.Forms.CheckBox();
             this.gbExamsDoc = new System.Windows.Forms.GroupBox();
             this.dgvExams = new System.Windows.Forms.DataGridView();
+            this.cSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cYear = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.cExam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cEGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cMin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tbExamsDocNumber = new System.Windows.Forms.TextBox();
             this.tbExamsDocSeries = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -192,42 +212,23 @@
             this.cbDirection92 = new System.Windows.Forms.ComboBox();
             this.cbDirection91 = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
-            this.gbOther = new System.Windows.Forms.GroupBox();
-            this.mtbEMail = new System.Windows.Forms.MaskedTextBox();
-            this.mtbHomePhone = new System.Windows.Forms.MaskedTextBox();
-            this.mtbMobilePhone = new System.Windows.Forms.MaskedTextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
-            this.cbMADIOlympiad = new System.Windows.Forms.CheckBox();
-            this.cbSport = new System.Windows.Forms.CheckBox();
-            this.cbMedal = new System.Windows.Forms.CheckBox();
-            this.gbAttributes = new System.Windows.Forms.GroupBox();
-            this.cbPrerogative = new System.Windows.Forms.CheckBox();
-            this.cbTarget = new System.Windows.Forms.CheckBox();
-            this.cbOlympiad = new System.Windows.Forms.CheckBox();
-            this.cbExams = new System.Windows.Forms.CheckBox();
-            this.cbSpecial = new System.Windows.Forms.CheckBox();
-            this.cbChernobyl = new System.Windows.Forms.CheckBox();
-            this.cbMCDAO = new System.Windows.Forms.CheckBox();
-            this.chHostleNeeded = new System.Windows.Forms.CheckBox();
-            this.cSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cYear = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.cExam = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cEGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cMin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
+            this.cbAppEnrollment = new System.Windows.Forms.CheckBox();
+            this.cbPhotos = new System.Windows.Forms.CheckBox();
+            this.cbMedCertificate = new System.Windows.Forms.CheckBox();
+            this.cbDirectionDoc = new System.Windows.Forms.CheckBox();
+            this.cbCertificateHRD = new System.Windows.Forms.CheckBox();
+            this.cbDiplomaCopy = new System.Windows.Forms.CheckBox();
+            this.cCertificateCopy = new System.Windows.Forms.CheckBox();
+            this.cbPassportCopy = new System.Windows.Forms.CheckBox();
+            this.cbAppAdmission = new System.Windows.Forms.CheckBox();
             this.gbPassport.SuspendLayout();
             this.gbAdress.SuspendLayout();
             this.gbCertificate.SuspendLayout();
             this.gbEduDocument.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.gbWithdrawDocs.SuspendLayout();
+            this.gbAttributes.SuspendLayout();
+            this.gbOther.SuspendLayout();
             this.gbExamsDoc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).BeginInit();
             this.tbDirections.SuspendLayout();
@@ -240,8 +241,7 @@
             this.tpDirPage7.SuspendLayout();
             this.tpDirPage8.SuspendLayout();
             this.tpDirPage9.SuspendLayout();
-            this.gbOther.SuspendLayout();
-            this.gbAttributes.SuspendLayout();
+            this.gbWithdrawDocs.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbPassport
@@ -302,6 +302,41 @@
             this.gbAdress.TabIndex = 26;
             this.gbAdress.TabStop = false;
             this.gbAdress.Text = "Адрес регистрации";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(387, 53);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(70, 20);
+            this.textBox5.TabIndex = 18;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(585, 23);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(191, 20);
+            this.textBox4.TabIndex = 17;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(330, 23);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(188, 20);
+            this.textBox3.TabIndex = 16;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(71, 53);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(248, 20);
+            this.textBox2.TabIndex = 15;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(71, 23);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(187, 20);
+            this.textBox1.TabIndex = 14;
             // 
             // tbPostcode
             // 
@@ -834,6 +869,103 @@
             this.panel1.Size = new System.Drawing.Size(984, 806);
             this.panel1.TabIndex = 2;
             // 
+            // gbAttributes
+            // 
+            this.gbAttributes.Controls.Add(this.cbPrerogative);
+            this.gbAttributes.Controls.Add(this.cbTarget);
+            this.gbAttributes.Controls.Add(this.cbOlympiad);
+            this.gbAttributes.Controls.Add(this.cbExams);
+            this.gbAttributes.Controls.Add(this.cbSpecial);
+            this.gbAttributes.Controls.Add(this.cbChernobyl);
+            this.gbAttributes.Controls.Add(this.cbMCDAO);
+            this.gbAttributes.Controls.Add(this.chHostleNeeded);
+            this.gbAttributes.Location = new System.Drawing.Point(805, 146);
+            this.gbAttributes.Name = "gbAttributes";
+            this.gbAttributes.Size = new System.Drawing.Size(173, 213);
+            this.gbAttributes.TabIndex = 18;
+            this.gbAttributes.TabStop = false;
+            this.gbAttributes.Text = "Признаки";
+            // 
+            // cbPrerogative
+            // 
+            this.cbPrerogative.AutoSize = true;
+            this.cbPrerogative.Location = new System.Drawing.Point(6, 186);
+            this.cbPrerogative.Name = "cbPrerogative";
+            this.cbPrerogative.Size = new System.Drawing.Size(160, 17);
+            this.cbPrerogative.TabIndex = 7;
+            this.cbPrerogative.Text = "Преимущественное право";
+            this.cbPrerogative.UseVisualStyleBackColor = true;
+            // 
+            // cbTarget
+            // 
+            this.cbTarget.AutoSize = true;
+            this.cbTarget.Location = new System.Drawing.Point(7, 163);
+            this.cbTarget.Name = "cbTarget";
+            this.cbTarget.Size = new System.Drawing.Size(105, 17);
+            this.cbTarget.TabIndex = 6;
+            this.cbTarget.Text = "Целевой прием";
+            this.cbTarget.UseVisualStyleBackColor = true;
+            // 
+            // cbOlympiad
+            // 
+            this.cbOlympiad.AutoSize = true;
+            this.cbOlympiad.Location = new System.Drawing.Point(6, 139);
+            this.cbOlympiad.Name = "cbOlympiad";
+            this.cbOlympiad.Size = new System.Drawing.Size(84, 17);
+            this.cbOlympiad.TabIndex = 5;
+            this.cbOlympiad.Text = "Олимпиада";
+            this.cbOlympiad.UseVisualStyleBackColor = true;
+            // 
+            // cbExams
+            // 
+            this.cbExams.AutoSize = true;
+            this.cbExams.Location = new System.Drawing.Point(6, 116);
+            this.cbExams.Name = "cbExams";
+            this.cbExams.Size = new System.Drawing.Size(111, 17);
+            this.cbExams.TabIndex = 4;
+            this.cbExams.Text = "Сдает экзамены";
+            this.cbExams.UseVisualStyleBackColor = true;
+            // 
+            // cbSpecial
+            // 
+            this.cbSpecial.AutoSize = true;
+            this.cbSpecial.Location = new System.Drawing.Point(6, 92);
+            this.cbSpecial.Name = "cbSpecial";
+            this.cbSpecial.Size = new System.Drawing.Size(96, 17);
+            this.cbSpecial.TabIndex = 3;
+            this.cbSpecial.Text = "Особая квота";
+            this.cbSpecial.UseVisualStyleBackColor = true;
+            // 
+            // cbChernobyl
+            // 
+            this.cbChernobyl.AutoSize = true;
+            this.cbChernobyl.Location = new System.Drawing.Point(7, 68);
+            this.cbChernobyl.Name = "cbChernobyl";
+            this.cbChernobyl.Size = new System.Drawing.Size(135, 17);
+            this.cbChernobyl.TabIndex = 2;
+            this.cbChernobyl.Text = "Чернобыльская зона";
+            this.cbChernobyl.UseVisualStyleBackColor = true;
+            // 
+            // cbMCDAO
+            // 
+            this.cbMCDAO.AutoSize = true;
+            this.cbMCDAO.Location = new System.Drawing.Point(6, 44);
+            this.cbMCDAO.Name = "cbMCDAO";
+            this.cbMCDAO.Size = new System.Drawing.Size(67, 17);
+            this.cbMCDAO.TabIndex = 1;
+            this.cbMCDAO.Text = "МЦДАО";
+            this.cbMCDAO.UseVisualStyleBackColor = true;
+            // 
+            // chHostleNeeded
+            // 
+            this.chHostleNeeded.AutoSize = true;
+            this.chHostleNeeded.Location = new System.Drawing.Point(6, 19);
+            this.chHostleNeeded.Name = "chHostleNeeded";
+            this.chHostleNeeded.Size = new System.Drawing.Size(152, 17);
+            this.chHostleNeeded.TabIndex = 0;
+            this.chHostleNeeded.Text = "Нуждается в общежитии";
+            this.chHostleNeeded.UseVisualStyleBackColor = true;
+            // 
             // btClose
             // 
             this.btClose.Location = new System.Drawing.Point(798, 782);
@@ -852,6 +984,116 @@
             this.btPrint.Text = "Распечатать документы";
             this.btPrint.UseVisualStyleBackColor = true;
             // 
+            // gbOther
+            // 
+            this.gbOther.Controls.Add(this.mtbEMail);
+            this.gbOther.Controls.Add(this.mtbHomePhone);
+            this.gbOther.Controls.Add(this.mtbMobilePhone);
+            this.gbOther.Controls.Add(this.label31);
+            this.gbOther.Controls.Add(this.label30);
+            this.gbOther.Controls.Add(this.label29);
+            this.gbOther.Controls.Add(this.cbSpecialConditions);
+            this.gbOther.Controls.Add(this.cbMADIOlympiad);
+            this.gbOther.Controls.Add(this.cbSport);
+            this.gbOther.Controls.Add(this.cbMedal);
+            this.gbOther.Controls.Add(this.cbFirstTime);
+            this.gbOther.Controls.Add(this.label21);
+            this.gbOther.Controls.Add(this.cbForeignLanguage);
+            this.gbOther.Controls.Add(this.label28);
+            this.gbOther.Location = new System.Drawing.Point(0, 356);
+            this.gbOther.Name = "gbOther";
+            this.gbOther.Size = new System.Drawing.Size(984, 102);
+            this.gbOther.TabIndex = 19;
+            this.gbOther.TabStop = false;
+            // 
+            // mtbEMail
+            // 
+            this.mtbEMail.Location = new System.Drawing.Point(610, 71);
+            this.mtbEMail.Name = "mtbEMail";
+            this.mtbEMail.Size = new System.Drawing.Size(144, 20);
+            this.mtbEMail.TabIndex = 30;
+            // 
+            // mtbHomePhone
+            // 
+            this.mtbHomePhone.Location = new System.Drawing.Point(414, 71);
+            this.mtbHomePhone.Name = "mtbHomePhone";
+            this.mtbHomePhone.Size = new System.Drawing.Size(138, 20);
+            this.mtbHomePhone.TabIndex = 29;
+            // 
+            // mtbMobilePhone
+            // 
+            this.mtbMobilePhone.Location = new System.Drawing.Point(139, 71);
+            this.mtbMobilePhone.Name = "mtbMobilePhone";
+            this.mtbMobilePhone.Size = new System.Drawing.Size(139, 20);
+            this.mtbMobilePhone.TabIndex = 28;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(565, 74);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(38, 13);
+            this.label31.TabIndex = 26;
+            this.label31.Text = "E-mail:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(296, 74);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(111, 13);
+            this.label30.TabIndex = 24;
+            this.label30.Text = "Домашний телефон:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(18, 74);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(115, 13);
+            this.label29.TabIndex = 22;
+            this.label29.Text = "Мобильный телефон:";
+            // 
+            // cbSpecialConditions
+            // 
+            this.cbSpecialConditions.AutoSize = true;
+            this.cbSpecialConditions.Location = new System.Drawing.Point(329, 45);
+            this.cbSpecialConditions.Name = "cbSpecialConditions";
+            this.cbSpecialConditions.Size = new System.Drawing.Size(360, 17);
+            this.cbSpecialConditions.TabIndex = 21;
+            this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
+            this.cbSpecialConditions.UseVisualStyleBackColor = true;
+            // 
+            // cbMADIOlympiad
+            // 
+            this.cbMADIOlympiad.AutoSize = true;
+            this.cbMADIOlympiad.Location = new System.Drawing.Point(764, 20);
+            this.cbMADIOlympiad.Name = "cbMADIOlympiad";
+            this.cbMADIOlympiad.Size = new System.Drawing.Size(202, 17);
+            this.cbMADIOlympiad.TabIndex = 20;
+            this.cbMADIOlympiad.Text = "Олимпиады и конференции МАДИ";
+            this.cbMADIOlympiad.UseVisualStyleBackColor = true;
+            // 
+            // cbSport
+            // 
+            this.cbSport.AutoSize = true;
+            this.cbSport.Location = new System.Drawing.Point(585, 20);
+            this.cbSport.Name = "cbSport";
+            this.cbSport.Size = new System.Drawing.Size(152, 17);
+            this.cbSport.TabIndex = 19;
+            this.cbSport.Text = "Спортивные достижения";
+            this.cbSport.UseVisualStyleBackColor = true;
+            // 
+            // cbMedal
+            // 
+            this.cbMedal.AutoSize = true;
+            this.cbMedal.Location = new System.Drawing.Point(17, 45);
+            this.cbMedal.Name = "cbMedal";
+            this.cbMedal.Size = new System.Drawing.Size(284, 17);
+            this.cbMedal.TabIndex = 18;
+            this.cbMedal.Text = "Аттестат/Диплом с отлицием или золотая медаль";
+            this.cbMedal.UseVisualStyleBackColor = true;
+            // 
             // btSave
             // 
             this.btSave.Location = new System.Drawing.Point(764, 724);
@@ -860,114 +1102,6 @@
             this.btSave.TabIndex = 23;
             this.btSave.Text = "Сохранить заявление";
             this.btSave.UseVisualStyleBackColor = true;
-            // 
-            // gbWithdrawDocs
-            // 
-            this.gbWithdrawDocs.Controls.Add(this.cbAppEnrollment);
-            this.gbWithdrawDocs.Controls.Add(this.cbPhotos);
-            this.gbWithdrawDocs.Controls.Add(this.cbMedCertificate);
-            this.gbWithdrawDocs.Controls.Add(this.cbDirectionDoc);
-            this.gbWithdrawDocs.Controls.Add(this.cbCertificateHRD);
-            this.gbWithdrawDocs.Controls.Add(this.cbDiplomaCopy);
-            this.gbWithdrawDocs.Controls.Add(this.cCertificateCopy);
-            this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
-            this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
-            this.gbWithdrawDocs.Location = new System.Drawing.Point(0, 724);
-            this.gbWithdrawDocs.Name = "gbWithdrawDocs";
-            this.gbWithdrawDocs.Size = new System.Drawing.Size(707, 81);
-            this.gbWithdrawDocs.TabIndex = 22;
-            this.gbWithdrawDocs.TabStop = false;
-            this.gbWithdrawDocs.Text = "Забираемые документы";
-            // 
-            // cbAppEnrollment
-            // 
-            this.cbAppEnrollment.AutoSize = true;
-            this.cbAppEnrollment.Location = new System.Drawing.Point(187, 28);
-            this.cbAppEnrollment.Name = "cbAppEnrollment";
-            this.cbAppEnrollment.Size = new System.Drawing.Size(217, 17);
-            this.cbAppEnrollment.TabIndex = 8;
-            this.cbAppEnrollment.Text = "Заявление о согласии на зачисление";
-            this.cbAppEnrollment.UseVisualStyleBackColor = true;
-            // 
-            // cbPhotos
-            // 
-            this.cbPhotos.AutoSize = true;
-            this.cbPhotos.Location = new System.Drawing.Point(546, 51);
-            this.cbPhotos.Name = "cbPhotos";
-            this.cbPhotos.Size = new System.Drawing.Size(117, 17);
-            this.cbPhotos.TabIndex = 7;
-            this.cbPhotos.Text = "4 фотографии 3х4";
-            this.cbPhotos.UseVisualStyleBackColor = true;
-            // 
-            // cbMedCertificate
-            // 
-            this.cbMedCertificate.AutoSize = true;
-            this.cbMedCertificate.Location = new System.Drawing.Point(546, 28);
-            this.cbMedCertificate.Name = "cbMedCertificate";
-            this.cbMedCertificate.Size = new System.Drawing.Size(140, 17);
-            this.cbMedCertificate.TabIndex = 6;
-            this.cbMedCertificate.Text = "Медицинская справка";
-            this.cbMedCertificate.UseVisualStyleBackColor = true;
-            // 
-            // cbDirectionDoc
-            // 
-            this.cbDirectionDoc.AutoSize = true;
-            this.cbDirectionDoc.Location = new System.Drawing.Point(419, 28);
-            this.cbDirectionDoc.Name = "cbDirectionDoc";
-            this.cbDirectionDoc.Size = new System.Drawing.Size(112, 17);
-            this.cbDirectionDoc.TabIndex = 5;
-            this.cbDirectionDoc.Text = "Направление ПК";
-            this.cbDirectionDoc.UseVisualStyleBackColor = true;
-            // 
-            // cbCertificateHRD
-            // 
-            this.cbCertificateHRD.AutoSize = true;
-            this.cbCertificateHRD.Location = new System.Drawing.Point(379, 52);
-            this.cbCertificateHRD.Name = "cbCertificateHRD";
-            this.cbCertificateHRD.Size = new System.Drawing.Size(146, 17);
-            this.cbCertificateHRD.TabIndex = 4;
-            this.cbCertificateHRD.Text = "Справка отдела кадров";
-            this.cbCertificateHRD.UseVisualStyleBackColor = true;
-            // 
-            // cbDiplomaCopy
-            // 
-            this.cbDiplomaCopy.AutoSize = true;
-            this.cbDiplomaCopy.Location = new System.Drawing.Point(259, 52);
-            this.cbDiplomaCopy.Name = "cbDiplomaCopy";
-            this.cbDiplomaCopy.Size = new System.Drawing.Size(104, 17);
-            this.cbDiplomaCopy.TabIndex = 3;
-            this.cbDiplomaCopy.Text = "Копия диплома";
-            this.cbDiplomaCopy.UseVisualStyleBackColor = true;
-            // 
-            // cCertificateCopy
-            // 
-            this.cCertificateCopy.AutoSize = true;
-            this.cCertificateCopy.Location = new System.Drawing.Point(132, 53);
-            this.cCertificateCopy.Name = "cCertificateCopy";
-            this.cCertificateCopy.Size = new System.Drawing.Size(110, 17);
-            this.cCertificateCopy.TabIndex = 2;
-            this.cCertificateCopy.Text = "Копия аттестата";
-            this.cCertificateCopy.UseVisualStyleBackColor = true;
-            // 
-            // cbPassportCopy
-            // 
-            this.cbPassportCopy.AutoSize = true;
-            this.cbPassportCopy.Location = new System.Drawing.Point(14, 52);
-            this.cbPassportCopy.Name = "cbPassportCopy";
-            this.cbPassportCopy.Size = new System.Drawing.Size(107, 17);
-            this.cbPassportCopy.TabIndex = 1;
-            this.cbPassportCopy.Text = "Копия паспорта";
-            this.cbPassportCopy.UseVisualStyleBackColor = true;
-            // 
-            // cbAppAdmission
-            // 
-            this.cbAppAdmission.AutoSize = true;
-            this.cbAppAdmission.Location = new System.Drawing.Point(14, 29);
-            this.cbAppAdmission.Name = "cbAppAdmission";
-            this.cbAppAdmission.Size = new System.Drawing.Size(163, 17);
-            this.cbAppAdmission.TabIndex = 0;
-            this.cbAppAdmission.Text = "Заявление на поступление";
-            this.cbAppAdmission.UseVisualStyleBackColor = true;
             // 
             // gbExamsDoc
             // 
@@ -1003,6 +1137,41 @@
             this.dgvExams.RowHeadersVisible = false;
             this.dgvExams.Size = new System.Drawing.Size(451, 134);
             this.dgvExams.TabIndex = 7;
+            // 
+            // cSubject
+            // 
+            this.cSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cSubject.FillWeight = 200F;
+            this.cSubject.HeaderText = "Предмет";
+            this.cSubject.Name = "cSubject";
+            this.cSubject.ReadOnly = true;
+            // 
+            // cYear
+            // 
+            this.cYear.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cYear.HeaderText = "Год";
+            this.cYear.Name = "cYear";
+            this.cYear.Width = 31;
+            // 
+            // cExam
+            // 
+            this.cExam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cExam.HeaderText = "Экзамен";
+            this.cExam.Name = "cExam";
+            this.cExam.ReadOnly = true;
+            // 
+            // cEGE
+            // 
+            this.cEGE.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cEGE.HeaderText = "ЕГЭ";
+            this.cEGE.Name = "cEGE";
+            // 
+            // cMin
+            // 
+            this.cMin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cMin.HeaderText = "Минимум";
+            this.cMin.Name = "cMin";
+            this.cMin.ReadOnly = true;
             // 
             // tbExamsDocNumber
             // 
@@ -2000,282 +2169,113 @@
             this.label43.TabIndex = 8;
             this.label43.Text = "Направление подготовки:";
             // 
-            // gbOther
+            // gbWithdrawDocs
             // 
-            this.gbOther.Controls.Add(this.mtbEMail);
-            this.gbOther.Controls.Add(this.mtbHomePhone);
-            this.gbOther.Controls.Add(this.mtbMobilePhone);
-            this.gbOther.Controls.Add(this.label31);
-            this.gbOther.Controls.Add(this.label30);
-            this.gbOther.Controls.Add(this.label29);
-            this.gbOther.Controls.Add(this.cbSpecialConditions);
-            this.gbOther.Controls.Add(this.cbMADIOlympiad);
-            this.gbOther.Controls.Add(this.cbSport);
-            this.gbOther.Controls.Add(this.cbMedal);
-            this.gbOther.Controls.Add(this.cbFirstTime);
-            this.gbOther.Controls.Add(this.label21);
-            this.gbOther.Controls.Add(this.cbForeignLanguage);
-            this.gbOther.Controls.Add(this.label28);
-            this.gbOther.Location = new System.Drawing.Point(0, 356);
-            this.gbOther.Name = "gbOther";
-            this.gbOther.Size = new System.Drawing.Size(984, 102);
-            this.gbOther.TabIndex = 19;
-            this.gbOther.TabStop = false;
+            this.gbWithdrawDocs.Controls.Add(this.cbAppEnrollment);
+            this.gbWithdrawDocs.Controls.Add(this.cbPhotos);
+            this.gbWithdrawDocs.Controls.Add(this.cbMedCertificate);
+            this.gbWithdrawDocs.Controls.Add(this.cbDirectionDoc);
+            this.gbWithdrawDocs.Controls.Add(this.cbCertificateHRD);
+            this.gbWithdrawDocs.Controls.Add(this.cbDiplomaCopy);
+            this.gbWithdrawDocs.Controls.Add(this.cCertificateCopy);
+            this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
+            this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
+            this.gbWithdrawDocs.Location = new System.Drawing.Point(0, 724);
+            this.gbWithdrawDocs.Name = "gbWithdrawDocs";
+            this.gbWithdrawDocs.Size = new System.Drawing.Size(707, 81);
+            this.gbWithdrawDocs.TabIndex = 22;
+            this.gbWithdrawDocs.TabStop = false;
+            this.gbWithdrawDocs.Text = "Забираемые документы";
             // 
-            // mtbEMail
+            // cbAppEnrollment
             // 
-            this.mtbEMail.Location = new System.Drawing.Point(610, 71);
-            this.mtbEMail.Name = "mtbEMail";
-            this.mtbEMail.Size = new System.Drawing.Size(144, 20);
-            this.mtbEMail.TabIndex = 30;
+            this.cbAppEnrollment.AutoSize = true;
+            this.cbAppEnrollment.Location = new System.Drawing.Point(187, 28);
+            this.cbAppEnrollment.Name = "cbAppEnrollment";
+            this.cbAppEnrollment.Size = new System.Drawing.Size(217, 17);
+            this.cbAppEnrollment.TabIndex = 8;
+            this.cbAppEnrollment.Text = "Заявление о согласии на зачисление";
+            this.cbAppEnrollment.UseVisualStyleBackColor = true;
             // 
-            // mtbHomePhone
+            // cbPhotos
             // 
-            this.mtbHomePhone.Location = new System.Drawing.Point(414, 71);
-            this.mtbHomePhone.Name = "mtbHomePhone";
-            this.mtbHomePhone.Size = new System.Drawing.Size(138, 20);
-            this.mtbHomePhone.TabIndex = 29;
+            this.cbPhotos.AutoSize = true;
+            this.cbPhotos.Location = new System.Drawing.Point(546, 51);
+            this.cbPhotos.Name = "cbPhotos";
+            this.cbPhotos.Size = new System.Drawing.Size(117, 17);
+            this.cbPhotos.TabIndex = 7;
+            this.cbPhotos.Text = "4 фотографии 3х4";
+            this.cbPhotos.UseVisualStyleBackColor = true;
             // 
-            // mtbMobilePhone
+            // cbMedCertificate
             // 
-            this.mtbMobilePhone.Location = new System.Drawing.Point(139, 71);
-            this.mtbMobilePhone.Name = "mtbMobilePhone";
-            this.mtbMobilePhone.Size = new System.Drawing.Size(139, 20);
-            this.mtbMobilePhone.TabIndex = 28;
+            this.cbMedCertificate.AutoSize = true;
+            this.cbMedCertificate.Location = new System.Drawing.Point(546, 28);
+            this.cbMedCertificate.Name = "cbMedCertificate";
+            this.cbMedCertificate.Size = new System.Drawing.Size(140, 17);
+            this.cbMedCertificate.TabIndex = 6;
+            this.cbMedCertificate.Text = "Медицинская справка";
+            this.cbMedCertificate.UseVisualStyleBackColor = true;
             // 
-            // label31
+            // cbDirectionDoc
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(565, 74);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(38, 13);
-            this.label31.TabIndex = 26;
-            this.label31.Text = "E-mail:";
+            this.cbDirectionDoc.AutoSize = true;
+            this.cbDirectionDoc.Location = new System.Drawing.Point(419, 28);
+            this.cbDirectionDoc.Name = "cbDirectionDoc";
+            this.cbDirectionDoc.Size = new System.Drawing.Size(112, 17);
+            this.cbDirectionDoc.TabIndex = 5;
+            this.cbDirectionDoc.Text = "Направление ПК";
+            this.cbDirectionDoc.UseVisualStyleBackColor = true;
             // 
-            // label30
+            // cbCertificateHRD
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(296, 74);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(111, 13);
-            this.label30.TabIndex = 24;
-            this.label30.Text = "Домашний телефон:";
+            this.cbCertificateHRD.AutoSize = true;
+            this.cbCertificateHRD.Location = new System.Drawing.Point(379, 52);
+            this.cbCertificateHRD.Name = "cbCertificateHRD";
+            this.cbCertificateHRD.Size = new System.Drawing.Size(146, 17);
+            this.cbCertificateHRD.TabIndex = 4;
+            this.cbCertificateHRD.Text = "Справка отдела кадров";
+            this.cbCertificateHRD.UseVisualStyleBackColor = true;
             // 
-            // label29
+            // cbDiplomaCopy
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(18, 74);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(115, 13);
-            this.label29.TabIndex = 22;
-            this.label29.Text = "Мобильный телефон:";
+            this.cbDiplomaCopy.AutoSize = true;
+            this.cbDiplomaCopy.Location = new System.Drawing.Point(259, 52);
+            this.cbDiplomaCopy.Name = "cbDiplomaCopy";
+            this.cbDiplomaCopy.Size = new System.Drawing.Size(104, 17);
+            this.cbDiplomaCopy.TabIndex = 3;
+            this.cbDiplomaCopy.Text = "Копия диплома";
+            this.cbDiplomaCopy.UseVisualStyleBackColor = true;
             // 
-            // cbSpecialConditions
+            // cCertificateCopy
             // 
-            this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(329, 45);
-            this.cbSpecialConditions.Name = "cbSpecialConditions";
-            this.cbSpecialConditions.Size = new System.Drawing.Size(360, 17);
-            this.cbSpecialConditions.TabIndex = 21;
-            this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
-            this.cbSpecialConditions.UseVisualStyleBackColor = true;
+            this.cCertificateCopy.AutoSize = true;
+            this.cCertificateCopy.Location = new System.Drawing.Point(132, 53);
+            this.cCertificateCopy.Name = "cCertificateCopy";
+            this.cCertificateCopy.Size = new System.Drawing.Size(110, 17);
+            this.cCertificateCopy.TabIndex = 2;
+            this.cCertificateCopy.Text = "Копия аттестата";
+            this.cCertificateCopy.UseVisualStyleBackColor = true;
             // 
-            // cbMADIOlympiad
+            // cbPassportCopy
             // 
-            this.cbMADIOlympiad.AutoSize = true;
-            this.cbMADIOlympiad.Location = new System.Drawing.Point(764, 20);
-            this.cbMADIOlympiad.Name = "cbMADIOlympiad";
-            this.cbMADIOlympiad.Size = new System.Drawing.Size(202, 17);
-            this.cbMADIOlympiad.TabIndex = 20;
-            this.cbMADIOlympiad.Text = "Олимпиады и конференции МАДИ";
-            this.cbMADIOlympiad.UseVisualStyleBackColor = true;
+            this.cbPassportCopy.AutoSize = true;
+            this.cbPassportCopy.Location = new System.Drawing.Point(14, 52);
+            this.cbPassportCopy.Name = "cbPassportCopy";
+            this.cbPassportCopy.Size = new System.Drawing.Size(107, 17);
+            this.cbPassportCopy.TabIndex = 1;
+            this.cbPassportCopy.Text = "Копия паспорта";
+            this.cbPassportCopy.UseVisualStyleBackColor = true;
             // 
-            // cbSport
+            // cbAppAdmission
             // 
-            this.cbSport.AutoSize = true;
-            this.cbSport.Location = new System.Drawing.Point(585, 20);
-            this.cbSport.Name = "cbSport";
-            this.cbSport.Size = new System.Drawing.Size(152, 17);
-            this.cbSport.TabIndex = 19;
-            this.cbSport.Text = "Спортивные достижения";
-            this.cbSport.UseVisualStyleBackColor = true;
-            // 
-            // cbMedal
-            // 
-            this.cbMedal.AutoSize = true;
-            this.cbMedal.Location = new System.Drawing.Point(17, 45);
-            this.cbMedal.Name = "cbMedal";
-            this.cbMedal.Size = new System.Drawing.Size(284, 17);
-            this.cbMedal.TabIndex = 18;
-            this.cbMedal.Text = "Аттестат/Диплом с отлицием или золотая медаль";
-            this.cbMedal.UseVisualStyleBackColor = true;
-            // 
-            // gbAttributes
-            // 
-            this.gbAttributes.Controls.Add(this.cbPrerogative);
-            this.gbAttributes.Controls.Add(this.cbTarget);
-            this.gbAttributes.Controls.Add(this.cbOlympiad);
-            this.gbAttributes.Controls.Add(this.cbExams);
-            this.gbAttributes.Controls.Add(this.cbSpecial);
-            this.gbAttributes.Controls.Add(this.cbChernobyl);
-            this.gbAttributes.Controls.Add(this.cbMCDAO);
-            this.gbAttributes.Controls.Add(this.chHostleNeeded);
-            this.gbAttributes.Location = new System.Drawing.Point(805, 146);
-            this.gbAttributes.Name = "gbAttributes";
-            this.gbAttributes.Size = new System.Drawing.Size(173, 213);
-            this.gbAttributes.TabIndex = 18;
-            this.gbAttributes.TabStop = false;
-            this.gbAttributes.Text = "Признаки";
-            // 
-            // cbPrerogative
-            // 
-            this.cbPrerogative.AutoSize = true;
-            this.cbPrerogative.Location = new System.Drawing.Point(6, 186);
-            this.cbPrerogative.Name = "cbPrerogative";
-            this.cbPrerogative.Size = new System.Drawing.Size(160, 17);
-            this.cbPrerogative.TabIndex = 7;
-            this.cbPrerogative.Text = "Преимущественное право";
-            this.cbPrerogative.UseVisualStyleBackColor = true;
-            // 
-            // cbTarget
-            // 
-            this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(7, 163);
-            this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(105, 17);
-            this.cbTarget.TabIndex = 6;
-            this.cbTarget.Text = "Целевой прием";
-            this.cbTarget.UseVisualStyleBackColor = true;
-            // 
-            // cbOlympiad
-            // 
-            this.cbOlympiad.AutoSize = true;
-            this.cbOlympiad.Location = new System.Drawing.Point(6, 139);
-            this.cbOlympiad.Name = "cbOlympiad";
-            this.cbOlympiad.Size = new System.Drawing.Size(84, 17);
-            this.cbOlympiad.TabIndex = 5;
-            this.cbOlympiad.Text = "Олимпиада";
-            this.cbOlympiad.UseVisualStyleBackColor = true;
-            // 
-            // cbExams
-            // 
-            this.cbExams.AutoSize = true;
-            this.cbExams.Location = new System.Drawing.Point(6, 116);
-            this.cbExams.Name = "cbExams";
-            this.cbExams.Size = new System.Drawing.Size(111, 17);
-            this.cbExams.TabIndex = 4;
-            this.cbExams.Text = "Сдает экзамены";
-            this.cbExams.UseVisualStyleBackColor = true;
-            // 
-            // cbSpecial
-            // 
-            this.cbSpecial.AutoSize = true;
-            this.cbSpecial.Location = new System.Drawing.Point(6, 92);
-            this.cbSpecial.Name = "cbSpecial";
-            this.cbSpecial.Size = new System.Drawing.Size(96, 17);
-            this.cbSpecial.TabIndex = 3;
-            this.cbSpecial.Text = "Особая квота";
-            this.cbSpecial.UseVisualStyleBackColor = true;
-            // 
-            // cbChernobyl
-            // 
-            this.cbChernobyl.AutoSize = true;
-            this.cbChernobyl.Location = new System.Drawing.Point(7, 68);
-            this.cbChernobyl.Name = "cbChernobyl";
-            this.cbChernobyl.Size = new System.Drawing.Size(135, 17);
-            this.cbChernobyl.TabIndex = 2;
-            this.cbChernobyl.Text = "Чернобыльская зона";
-            this.cbChernobyl.UseVisualStyleBackColor = true;
-            // 
-            // cbMCDAO
-            // 
-            this.cbMCDAO.AutoSize = true;
-            this.cbMCDAO.Location = new System.Drawing.Point(6, 44);
-            this.cbMCDAO.Name = "cbMCDAO";
-            this.cbMCDAO.Size = new System.Drawing.Size(67, 17);
-            this.cbMCDAO.TabIndex = 1;
-            this.cbMCDAO.Text = "МЦДАО";
-            this.cbMCDAO.UseVisualStyleBackColor = true;
-            // 
-            // chHostleNeeded
-            // 
-            this.chHostleNeeded.AutoSize = true;
-            this.chHostleNeeded.Location = new System.Drawing.Point(6, 19);
-            this.chHostleNeeded.Name = "chHostleNeeded";
-            this.chHostleNeeded.Size = new System.Drawing.Size(152, 17);
-            this.chHostleNeeded.TabIndex = 0;
-            this.chHostleNeeded.Text = "Нуждается в общежитии";
-            this.chHostleNeeded.UseVisualStyleBackColor = true;
-            // 
-            // cSubject
-            // 
-            this.cSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cSubject.FillWeight = 200F;
-            this.cSubject.HeaderText = "Предмет";
-            this.cSubject.Name = "cSubject";
-            this.cSubject.ReadOnly = true;
-            // 
-            // cYear
-            // 
-            this.cYear.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.cYear.HeaderText = "Год";
-            this.cYear.Name = "cYear";
-            this.cYear.Width = 31;
-            // 
-            // cExam
-            // 
-            this.cExam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cExam.HeaderText = "Экзамен";
-            this.cExam.Name = "cExam";
-            this.cExam.ReadOnly = true;
-            // 
-            // cEGE
-            // 
-            this.cEGE.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cEGE.HeaderText = "ЕГЭ";
-            this.cEGE.Name = "cEGE";
-            // 
-            // cMin
-            // 
-            this.cMin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cMin.HeaderText = "Минимум";
-            this.cMin.Name = "cMin";
-            this.cMin.ReadOnly = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(71, 23);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(187, 20);
-            this.textBox1.TabIndex = 14;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(71, 53);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(248, 20);
-            this.textBox2.TabIndex = 15;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(330, 23);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(188, 20);
-            this.textBox3.TabIndex = 16;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(585, 23);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(191, 20);
-            this.textBox4.TabIndex = 17;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(387, 53);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(70, 20);
-            this.textBox5.TabIndex = 18;
+            this.cbAppAdmission.AutoSize = true;
+            this.cbAppAdmission.Location = new System.Drawing.Point(14, 29);
+            this.cbAppAdmission.Name = "cbAppAdmission";
+            this.cbAppAdmission.Size = new System.Drawing.Size(163, 17);
+            this.cbAppAdmission.TabIndex = 0;
+            this.cbAppAdmission.Text = "Заявление на поступление";
+            this.cbAppAdmission.UseVisualStyleBackColor = true;
             // 
             // NewApplicForm
             // 
@@ -2285,6 +2285,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "NewApplicForm";
             this.Text = "Заявление";
+            this.Load += new System.EventHandler(this.NewApplicForm_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
             this.gbAdress.ResumeLayout(false);
@@ -2294,8 +2295,10 @@
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.gbWithdrawDocs.ResumeLayout(false);
-            this.gbWithdrawDocs.PerformLayout();
+            this.gbAttributes.ResumeLayout(false);
+            this.gbAttributes.PerformLayout();
+            this.gbOther.ResumeLayout(false);
+            this.gbOther.PerformLayout();
             this.gbExamsDoc.ResumeLayout(false);
             this.gbExamsDoc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).EndInit();
@@ -2318,10 +2321,8 @@
             this.tpDirPage8.PerformLayout();
             this.tpDirPage9.ResumeLayout(false);
             this.tpDirPage9.PerformLayout();
-            this.gbOther.ResumeLayout(false);
-            this.gbOther.PerformLayout();
-            this.gbAttributes.ResumeLayout(false);
-            this.gbAttributes.PerformLayout();
+            this.gbWithdrawDocs.ResumeLayout(false);
+            this.gbWithdrawDocs.PerformLayout();
             this.ResumeLayout(false);
 
         }

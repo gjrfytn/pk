@@ -12,19 +12,21 @@ namespace PK
     public partial class DirectionSelect : Form
     {
         DB_Connector _DB_Connection;
-        public string DirectionName;
-        public string DirectionCode;
+        public string directionName;
+        public string directionCode;
+        public string directionID;
+        List <string> codeFilters;
 
-        public DirectionSelect()
+        public DirectionSelect(List<string> filters)
         {
             InitializeComponent();
             _DB_Connection = new DB_Connector();
-        }
-
-        private void DirectionSelect_Load(object sender, EventArgs e)
-        {
-            foreach (var item in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS,"code","name","ugs_name"))
-                dgvDirectionSelection.Rows.Add(item[0], item[1], item[2]);
+            codeFilters = new List<string>();
+            codeFilters.AddRange(filters);
+            foreach (var item in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS,"id", "code","name")) 
+                foreach (var v in codeFilters)
+                    if (item[1].ToString().Substring(3,2)==v)
+                        dgvDirectionSelection.Rows.Add(item[0], item[1], item[2]);
         }
 
         private void btSelect_Click(object sender, EventArgs e)
@@ -33,8 +35,9 @@ namespace PK
                 MessageBox.Show("Выберите направление в таблице.");
             else
             {
-                DirectionCode = dgvDirectionSelection.SelectedRows[0].Cells[0].Value.ToString();
-                DirectionName = dgvDirectionSelection.SelectedRows[0].Cells[1].Value.ToString();
+                directionID = dgvDirectionSelection.SelectedRows[0].Cells[0].Value.ToString();
+                directionCode = dgvDirectionSelection.SelectedRows[0].Cells[1].Value.ToString();
+                directionName = dgvDirectionSelection.SelectedRows[0].Cells[2].Value.ToString();
                 DialogResult = DialogResult.OK;
             }
         }

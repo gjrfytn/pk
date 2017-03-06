@@ -29,21 +29,23 @@
         private void InitializeComponent()
         {
             this.dgvDirectionSelection = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btSelect = new System.Windows.Forms.Button();
+            this.cID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cName1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cName2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btSelect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirectionSelection)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvDirectionSelection
             // 
+            this.dgvDirectionSelection.AllowUserToAddRows = false;
+            this.dgvDirectionSelection.AllowUserToDeleteRows = false;
             this.dgvDirectionSelection.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirectionSelection.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cID,
             this.cCode,
-            this.cName1,
-            this.cName2});
+            this.cName1});
             this.dgvDirectionSelection.Location = new System.Drawing.Point(13, 31);
             this.dgvDirectionSelection.MultiSelect = false;
             this.dgvDirectionSelection.Name = "dgvDirectionSelection";
@@ -52,6 +54,28 @@
             this.dgvDirectionSelection.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDirectionSelection.Size = new System.Drawing.Size(612, 353);
             this.dgvDirectionSelection.TabIndex = 0;
+            // 
+            // cID
+            // 
+            this.cID.HeaderText = "ID";
+            this.cID.Name = "cID";
+            this.cID.ReadOnly = true;
+            this.cID.Visible = false;
+            // 
+            // cCode
+            // 
+            this.cCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cCode.HeaderText = "Код";
+            this.cCode.Name = "cCode";
+            this.cCode.ReadOnly = true;
+            this.cCode.Width = 51;
+            // 
+            // cName1
+            // 
+            this.cName1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cName1.HeaderText = "Наименование";
+            this.cName1.Name = "cName1";
+            this.cName1.ReadOnly = true;
             // 
             // label1
             // 
@@ -72,28 +96,6 @@
             this.btSelect.UseVisualStyleBackColor = true;
             this.btSelect.Click += new System.EventHandler(this.btSelect_Click);
             // 
-            // cCode
-            // 
-            this.cCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.cCode.HeaderText = "Код";
-            this.cCode.Name = "cCode";
-            this.cCode.ReadOnly = true;
-            this.cCode.Width = 51;
-            // 
-            // cName1
-            // 
-            this.cName1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cName1.HeaderText = "Наименование";
-            this.cName1.Name = "cName1";
-            this.cName1.ReadOnly = true;
-            // 
-            // cName2
-            // 
-            this.cName2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cName2.HeaderText = "Наименование УГС";
-            this.cName2.Name = "cName2";
-            this.cName2.ReadOnly = true;
-            // 
             // DirectionSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -104,7 +106,6 @@
             this.Controls.Add(this.dgvDirectionSelection);
             this.Name = "DirectionSelect";
             this.Text = "Выбор направления";
-            this.Load += new System.EventHandler(this.DirectionSelect_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirectionSelection)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -116,8 +117,8 @@
         private System.Windows.Forms.DataGridView dgvDirectionSelection;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btSelect;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn cName1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cName2;
     }
 }

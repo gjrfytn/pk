@@ -33,6 +33,7 @@
             this.cOrgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btNewTargetOrganization = new System.Windows.Forms.Button();
             this.btRename = new System.Windows.Forms.Button();
+            this.btDelete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizations)).BeginInit();
             this.SuspendLayout();
             // 
@@ -67,7 +68,7 @@
             // 
             // btNewTargetOrganization
             // 
-            this.btNewTargetOrganization.Location = new System.Drawing.Point(63, 22);
+            this.btNewTargetOrganization.Location = new System.Drawing.Point(12, 22);
             this.btNewTargetOrganization.Name = "btNewTargetOrganization";
             this.btNewTargetOrganization.Size = new System.Drawing.Size(183, 23);
             this.btNewTargetOrganization.TabIndex = 1;
@@ -77,7 +78,7 @@
             // 
             // btRename
             // 
-            this.btRename.Location = new System.Drawing.Point(271, 22);
+            this.btRename.Location = new System.Drawing.Point(219, 22);
             this.btRename.Name = "btRename";
             this.btRename.Size = new System.Drawing.Size(166, 23);
             this.btRename.TabIndex = 2;
@@ -85,11 +86,22 @@
             this.btRename.UseVisualStyleBackColor = true;
             this.btRename.Click += new System.EventHandler(this.btRename_Click);
             // 
+            // btDelete
+            // 
+            this.btDelete.Location = new System.Drawing.Point(406, 22);
+            this.btDelete.Name = "btDelete";
+            this.btDelete.Size = new System.Drawing.Size(75, 23);
+            this.btDelete.TabIndex = 3;
+            this.btDelete.Text = "Удалить";
+            this.btDelete.UseVisualStyleBackColor = true;
+            this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
+            // 
             // TargetOrganizationsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(495, 458);
+            this.Controls.Add(this.btDelete);
             this.Controls.Add(this.btRename);
             this.Controls.Add(this.btNewTargetOrganization);
             this.Controls.Add(this.dgvTargetOrganizations);
@@ -108,5 +120,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOrgName;
         private System.Windows.Forms.Button btRename;
+        private System.Windows.Forms.Button btDelete;
     }
 }

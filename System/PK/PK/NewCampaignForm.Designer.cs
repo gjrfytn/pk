@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,18 +44,17 @@
             this.lbEduFormsChoosen = new System.Windows.Forms.ListBox();
             this.lbEduFormsAll = new System.Windows.Forms.ListBox();
             this.gbEduLevel = new System.Windows.Forms.GroupBox();
-            this.cbEduLevelQual = new System.Windows.Forms.CheckBox();
-            this.cbEduLevelSPO = new System.Windows.Forms.CheckBox();
             this.cbEduLevelSpec = new System.Windows.Forms.CheckBox();
             this.cbEduLevelMag = new System.Windows.Forms.CheckBox();
             this.cbEduLevelBacc = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.cbState = new System.Windows.Forms.ComboBox();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
+            this.cDirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.сSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.сName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.сCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.сFac = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -64,16 +64,35 @@
             this.cCPOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cCPOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.dgvDist = new System.Windows.Forms.DataGridView();
+            this.cIDDir = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cDirNameDist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cDirCodeDist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cFirst = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.cSecond = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.cThird = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.label9 = new System.Windows.Forms.Label();
             this.dgvPaidPlaces = new System.Windows.Forms.DataGridView();
+            this.cProfileSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.cDirProfType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cDirProfName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cProfCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cFac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cOFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cOZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.dgvFacultities = new System.Windows.Forms.DataGridView();
             this.cShortFacName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cFacName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cHostelPlaces = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons = new System.Windows.Forms.DataGridView();
+            this.cOrgID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOrgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cOrgSelect = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.cOrgDirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cDirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cDirSelect = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -81,18 +100,12 @@
             this.cOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.cProfileSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cDirProfType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cDirProfName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cProfCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cOFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cOZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btSave = new System.Windows.Forms.Button();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDist)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaidPlaces)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFacultities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizatons)).BeginInit();
@@ -164,9 +177,7 @@
             this.cbType.Items.AddRange(new object[] {
             "Прием на обучение на бакалавриат/специалитет",
             "Прием на обучение в магистратуру",
-            "Прием на обучение в СПО",
-            "Прием на подготовку кадров высшей квалификации",
-            "Прием иностранце по направлениям Минобрнауки"});
+            "Прием иностранцев по направлениям Минобрнауки"});
             this.cbType.Location = new System.Drawing.Point(178, 57);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(272, 21);
@@ -181,7 +192,7 @@
             this.gbEduForms.Controls.Add(this.lbEduFormsAll);
             this.gbEduForms.Location = new System.Drawing.Point(34, 91);
             this.gbEduForms.Name = "gbEduForms";
-            this.gbEduForms.Size = new System.Drawing.Size(315, 89);
+            this.gbEduForms.Size = new System.Drawing.Size(466, 89);
             this.gbEduForms.TabIndex = 10;
             this.gbEduForms.TabStop = false;
             this.gbEduForms.Text = "Форма обучения";
@@ -189,7 +200,7 @@
             // btRemoveEduLevel
             // 
             this.btRemoveEduLevel.Font = new System.Drawing.Font("ESSTIXOne", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btRemoveEduLevel.Location = new System.Drawing.Point(133, 48);
+            this.btRemoveEduLevel.Location = new System.Drawing.Point(212, 52);
             this.btRemoveEduLevel.Name = "btRemoveEduLevel";
             this.btRemoveEduLevel.Size = new System.Drawing.Size(46, 23);
             this.btRemoveEduLevel.TabIndex = 3;
@@ -200,7 +211,7 @@
             // btAddEduLevel
             // 
             this.btAddEduLevel.Font = new System.Drawing.Font("ESSTIXOne", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btAddEduLevel.Location = new System.Drawing.Point(133, 24);
+            this.btAddEduLevel.Location = new System.Drawing.Point(212, 19);
             this.btAddEduLevel.Name = "btAddEduLevel";
             this.btAddEduLevel.Size = new System.Drawing.Size(46, 23);
             this.btAddEduLevel.TabIndex = 2;
@@ -211,71 +222,44 @@
             // lbEduFormsChoosen
             // 
             this.lbEduFormsChoosen.FormattingEnabled = true;
-            this.lbEduFormsChoosen.Location = new System.Drawing.Point(185, 19);
+            this.lbEduFormsChoosen.Location = new System.Drawing.Point(270, 19);
             this.lbEduFormsChoosen.Name = "lbEduFormsChoosen";
-            this.lbEduFormsChoosen.Size = new System.Drawing.Size(120, 56);
+            this.lbEduFormsChoosen.Size = new System.Drawing.Size(190, 56);
             this.lbEduFormsChoosen.Sorted = true;
             this.lbEduFormsChoosen.TabIndex = 1;
             // 
             // lbEduFormsAll
             // 
             this.lbEduFormsAll.FormattingEnabled = true;
-            this.lbEduFormsAll.Items.AddRange(new object[] {
-            "Заочная форма",
-            "Очная форма",
-            "Очно-заочная форма"});
             this.lbEduFormsAll.Location = new System.Drawing.Point(6, 19);
             this.lbEduFormsAll.Name = "lbEduFormsAll";
-            this.lbEduFormsAll.Size = new System.Drawing.Size(120, 56);
+            this.lbEduFormsAll.Size = new System.Drawing.Size(190, 56);
             this.lbEduFormsAll.Sorted = true;
             this.lbEduFormsAll.TabIndex = 0;
             // 
             // gbEduLevel
             // 
-            this.gbEduLevel.Controls.Add(this.cbEduLevelQual);
-            this.gbEduLevel.Controls.Add(this.cbEduLevelSPO);
             this.gbEduLevel.Controls.Add(this.cbEduLevelSpec);
             this.gbEduLevel.Controls.Add(this.cbEduLevelMag);
             this.gbEduLevel.Controls.Add(this.cbEduLevelBacc);
-            this.gbEduLevel.Location = new System.Drawing.Point(376, 91);
+            this.gbEduLevel.Location = new System.Drawing.Point(509, 91);
             this.gbEduLevel.Name = "gbEduLevel";
-            this.gbEduLevel.Size = new System.Drawing.Size(284, 89);
+            this.gbEduLevel.Size = new System.Drawing.Size(151, 89);
             this.gbEduLevel.TabIndex = 11;
             this.gbEduLevel.TabStop = false;
             this.gbEduLevel.Text = "Уровень образования";
-            // 
-            // cbEduLevelQual
-            // 
-            this.cbEduLevelQual.AutoSize = true;
-            this.cbEduLevelQual.Enabled = false;
-            this.cbEduLevelQual.Location = new System.Drawing.Point(6, 67);
-            this.cbEduLevelQual.Name = "cbEduLevelQual";
-            this.cbEduLevelQual.Size = new System.Drawing.Size(179, 17);
-            this.cbEduLevelQual.TabIndex = 4;
-            this.cbEduLevelQual.Text = "Кадры высшей квалификации";
-            this.cbEduLevelQual.UseVisualStyleBackColor = true;
-            // 
-            // cbEduLevelSPO
-            // 
-            this.cbEduLevelSPO.AutoSize = true;
-            this.cbEduLevelSPO.Enabled = false;
-            this.cbEduLevelSPO.Location = new System.Drawing.Point(191, 44);
-            this.cbEduLevelSPO.Name = "cbEduLevelSPO";
-            this.cbEduLevelSPO.Size = new System.Drawing.Size(49, 17);
-            this.cbEduLevelSPO.TabIndex = 3;
-            this.cbEduLevelSPO.Text = "СПО";
-            this.cbEduLevelSPO.UseVisualStyleBackColor = true;
             // 
             // cbEduLevelSpec
             // 
             this.cbEduLevelSpec.AutoSize = true;
             this.cbEduLevelSpec.Enabled = false;
-            this.cbEduLevelSpec.Location = new System.Drawing.Point(191, 20);
+            this.cbEduLevelSpec.Location = new System.Drawing.Point(7, 66);
             this.cbEduLevelSpec.Name = "cbEduLevelSpec";
             this.cbEduLevelSpec.Size = new System.Drawing.Size(91, 17);
             this.cbEduLevelSpec.TabIndex = 2;
             this.cbEduLevelSpec.Text = "Специалитет";
             this.cbEduLevelSpec.UseVisualStyleBackColor = true;
+            this.cbEduLevelSpec.CheckedChanged += new System.EventHandler(this.cbEduLevelSpec_CheckedChanged);
             // 
             // cbEduLevelMag
             // 
@@ -287,6 +271,7 @@
             this.cbEduLevelMag.TabIndex = 1;
             this.cbEduLevelMag.Text = "Магистратура";
             this.cbEduLevelMag.UseVisualStyleBackColor = true;
+            this.cbEduLevelMag.CheckedChanged += new System.EventHandler(this.cbEduLevelMag_CheckedChanged);
             // 
             // cbEduLevelBacc
             // 
@@ -298,6 +283,7 @@
             this.cbEduLevelBacc.TabIndex = 0;
             this.cbEduLevelBacc.Text = "Бакалавриат";
             this.cbEduLevelBacc.UseVisualStyleBackColor = true;
+            this.cbEduLevelBacc.CheckedChanged += new System.EventHandler(this.cbEduLevelBacc_CheckedChanged);
             // 
             // label5
             // 
@@ -327,10 +313,11 @@
             this.dgvDirections.AllowUserToDeleteRows = false;
             this.dgvDirections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirections.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cDirID,
             this.сSelected,
-            this.cType,
             this.сName,
             this.сCode,
+            this.сFac,
             this.cOOOF,
             this.cOOOZF,
             this.cOOZF,
@@ -339,6 +326,14 @@
             this.cOKZF,
             this.cCPOF,
             this.cCPOZF});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDirections.Location = new System.Drawing.Point(0, 19);
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.RowHeadersVisible = false;
@@ -346,7 +341,15 @@
             this.dgvDirections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDirections.Size = new System.Drawing.Size(790, 296);
             this.dgvDirections.TabIndex = 1;
-            this.dgvDirections.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellEndEdit);
+            this.dgvDirections.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellValueChanged);
+            // 
+            // cDirID
+            // 
+            this.cDirID.Frozen = true;
+            this.cDirID.HeaderText = "ID";
+            this.cDirID.Name = "cDirID";
+            this.cDirID.ReadOnly = true;
+            this.cDirID.Visible = false;
             // 
             // сSelected
             // 
@@ -356,22 +359,13 @@
             this.сSelected.Name = "сSelected";
             this.сSelected.Width = 5;
             // 
-            // cType
-            // 
-            this.cType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.cType.Frozen = true;
-            this.cType.HeaderText = "Тип";
-            this.cType.Name = "cType";
-            this.cType.Visible = false;
-            this.cType.Width = 30;
-            // 
             // сName
             // 
             this.сName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.сName.Frozen = true;
             this.сName.HeaderText = "Направление";
             this.сName.Name = "сName";
-            this.сName.Width = 300;
+            this.сName.Width = 250;
             // 
             // сCode
             // 
@@ -379,7 +373,17 @@
             this.сCode.Frozen = true;
             this.сCode.HeaderText = "Код направления";
             this.сCode.Name = "сCode";
+            this.сCode.ReadOnly = true;
             this.сCode.Width = 80;
+            // 
+            // сFac
+            // 
+            this.сFac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.сFac.Frozen = true;
+            this.сFac.HeaderText = "Факультет";
+            this.сFac.Name = "сFac";
+            this.сFac.ReadOnly = true;
+            this.сFac.Width = 70;
             // 
             // cOOOF
             // 
@@ -440,6 +444,8 @@
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.dgvDist);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.dgvPaidPlaces);
             this.panel1.Controls.Add(this.label8);
@@ -452,12 +458,80 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(808, 320);
             this.panel1.TabIndex = 15;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(346, 1171);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(143, 13);
+            this.label10.TabIndex = 19;
+            this.label10.Text = "Вступительные испытания";
+            // 
+            // dgvDist
+            // 
+            this.dgvDist.AllowUserToAddRows = false;
+            this.dgvDist.AllowUserToDeleteRows = false;
+            this.dgvDist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cIDDir,
+            this.cDirNameDist,
+            this.cDirCodeDist,
+            this.cFirst,
+            this.cSecond,
+            this.cThird});
+            this.dgvDist.Location = new System.Drawing.Point(0, 1190);
+            this.dgvDist.Name = "dgvDist";
+            this.dgvDist.RowHeadersVisible = false;
+            this.dgvDist.Size = new System.Drawing.Size(788, 296);
+            this.dgvDist.TabIndex = 18;
+            // 
+            // cIDDir
+            // 
+            this.cIDDir.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cIDDir.HeaderText = "ID";
+            this.cIDDir.Name = "cIDDir";
+            this.cIDDir.ReadOnly = true;
+            this.cIDDir.Visible = false;
+            // 
+            // cDirNameDist
+            // 
+            this.cDirNameDist.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cDirNameDist.HeaderText = "Направление подготовки";
+            this.cDirNameDist.Name = "cDirNameDist";
+            this.cDirNameDist.ReadOnly = true;
+            this.cDirNameDist.Width = 300;
+            // 
+            // cDirCodeDist
+            // 
+            this.cDirCodeDist.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cDirCodeDist.HeaderText = "Код направления";
+            this.cDirCodeDist.Name = "cDirCodeDist";
+            this.cDirCodeDist.ReadOnly = true;
+            this.cDirCodeDist.Width = 110;
+            // 
+            // cFirst
+            // 
+            this.cFirst.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cFirst.HeaderText = "Первая дисциплина";
+            this.cFirst.Name = "cFirst";
+            // 
+            // cSecond
+            // 
+            this.cSecond.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cSecond.HeaderText = "Вторая дисциплина";
+            this.cSecond.Name = "cSecond";
+            // 
+            // cThird
+            // 
+            this.cThird.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cThird.HeaderText = "Третья дисциплина";
+            this.cThird.Name = "cThird";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(308, 844);
+            this.label9.Location = new System.Drawing.Point(284, 844);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(246, 13);
             this.label9.TabIndex = 17;
@@ -465,29 +539,97 @@
             // 
             // dgvPaidPlaces
             // 
+            this.dgvPaidPlaces.AllowUserToAddRows = false;
+            this.dgvPaidPlaces.AllowUserToDeleteRows = false;
             this.dgvPaidPlaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPaidPlaces.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.cProfileSelect,
             this.cDirProfType,
+            this.cID,
             this.cDirProfName,
             this.cProfCode,
+            this.cFac,
             this.cOFPM,
             this.cOZFPM,
             this.cZFPM});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvPaidPlaces.Location = new System.Drawing.Point(0, 860);
             this.dgvPaidPlaces.Name = "dgvPaidPlaces";
             this.dgvPaidPlaces.RowHeadersVisible = false;
             this.dgvPaidPlaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPaidPlaces.Size = new System.Drawing.Size(788, 298);
             this.dgvPaidPlaces.TabIndex = 16;
+            this.dgvPaidPlaces.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaidPlaces_CellEndEdit);
+            // 
+            // cProfileSelect
+            // 
+            this.cProfileSelect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cProfileSelect.HeaderText = "Выбрать";
+            this.cProfileSelect.Name = "cProfileSelect";
+            this.cProfileSelect.Width = 57;
+            // 
+            // cDirProfType
+            // 
+            this.cDirProfType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.cDirProfType.HeaderText = "Тип";
+            this.cDirProfType.Name = "cDirProfType";
+            this.cDirProfType.ReadOnly = true;
+            this.cDirProfType.Visible = false;
+            // 
+            // cID
+            // 
+            this.cID.HeaderText = "ID";
+            this.cID.Name = "cID";
+            this.cID.ReadOnly = true;
+            this.cID.Visible = false;
+            // 
+            // cDirProfName
+            // 
+            this.cDirProfName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cDirProfName.HeaderText = "Название направления/профиля";
+            this.cDirProfName.Name = "cDirProfName";
+            this.cDirProfName.ReadOnly = true;
+            // 
+            // cProfCode
+            // 
+            this.cProfCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cProfCode.HeaderText = "Код";
+            this.cProfCode.Name = "cProfCode";
+            this.cProfCode.ReadOnly = true;
+            this.cProfCode.Width = 51;
+            // 
+            // cFac
+            // 
+            this.cFac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cFac.HeaderText = "Факультет";
+            this.cFac.Name = "cFac";
+            this.cFac.ReadOnly = true;
+            this.cFac.Width = 70;
+            // 
+            // cOFPM
+            // 
+            this.cOFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cOFPM.HeaderText = "Платные места очная форма";
+            this.cOFPM.Name = "cOFPM";
+            // 
+            // cOZFPM
+            // 
+            this.cOZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cOZFPM.HeaderText = "Платные места очно-заочная форма";
+            this.cOZFPM.Name = "cOZFPM";
+            // 
+            // cZFPM
+            // 
+            this.cZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.cZFPM.HeaderText = "Платные места заочная форма";
+            this.cZFPM.Name = "cZFPM";
             // 
             // label8
             // 
@@ -540,8 +682,10 @@
             // 
             this.dgvTargetOrganizatons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTargetOrganizatons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cOrgID,
             this.cOrgName,
             this.cOrgSelect,
+            this.cOrgDirID,
             this.cDirName,
             this.cCode,
             this.cDirSelect,
@@ -555,6 +699,13 @@
             this.dgvTargetOrganizatons.TabIndex = 4;
             this.dgvTargetOrganizatons.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTargetOrganizatons_CellContentClick);
             this.dgvTargetOrganizatons.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvTargetOrganizatons_RowsAdded);
+            // 
+            // cOrgID
+            // 
+            this.cOrgID.HeaderText = "ID";
+            this.cOrgID.Name = "cOrgID";
+            this.cOrgID.ReadOnly = true;
+            this.cOrgID.Visible = false;
             // 
             // cOrgName
             // 
@@ -571,6 +722,13 @@
             this.cOrgSelect.HeaderText = "";
             this.cOrgSelect.Name = "cOrgSelect";
             this.cOrgSelect.Width = 21;
+            // 
+            // cOrgDirID
+            // 
+            this.cOrgDirID.HeaderText = "ID";
+            this.cOrgDirID.Name = "cOrgDirID";
+            this.cOrgDirID.ReadOnly = true;
+            this.cOrgDirID.Visible = false;
             // 
             // cDirName
             // 
@@ -632,53 +790,6 @@
             this.label6.TabIndex = 2;
             this.label6.Text = "Объем и структура приема";
             // 
-            // cProfileSelect
-            // 
-            this.cProfileSelect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.cProfileSelect.HeaderText = "Выбрать";
-            this.cProfileSelect.Name = "cProfileSelect";
-            this.cProfileSelect.Width = 57;
-            // 
-            // cDirProfType
-            // 
-            this.cDirProfType.HeaderText = "";
-            this.cDirProfType.Name = "cDirProfType";
-            this.cDirProfType.ReadOnly = true;
-            this.cDirProfType.Visible = false;
-            // 
-            // cDirProfName
-            // 
-            this.cDirProfName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cDirProfName.HeaderText = "Название направления/профиля";
-            this.cDirProfName.Name = "cDirProfName";
-            this.cDirProfName.ReadOnly = true;
-            // 
-            // cProfCode
-            // 
-            this.cProfCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.cProfCode.HeaderText = "Код";
-            this.cProfCode.Name = "cProfCode";
-            this.cProfCode.ReadOnly = true;
-            this.cProfCode.Width = 51;
-            // 
-            // cOFPM
-            // 
-            this.cOFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.cOFPM.HeaderText = "Платные места очная форма";
-            this.cOFPM.Name = "cOFPM";
-            // 
-            // cOZFPM
-            // 
-            this.cOZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.cOZFPM.HeaderText = "Платные места очно-заочная форма";
-            this.cOZFPM.Name = "cOZFPM";
-            // 
-            // cZFPM
-            // 
-            this.cZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.cZFPM.HeaderText = "Платные места заочная форма";
-            this.cZFPM.Name = "cZFPM";
-            // 
             // btSave
             // 
             this.btSave.Location = new System.Drawing.Point(703, 87);
@@ -687,6 +798,7 @@
             this.btSave.TabIndex = 16;
             this.btSave.Text = "Сохранить";
             this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // NewCampaignForm
             // 
@@ -707,14 +819,17 @@
             this.Controls.Add(this.gbEduLevel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gbEduForms);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "NewCampaignForm";
-            this.Text = "Создание приемной кампании";
+            this.Text = "Приемная кампания";
+            this.Load += new System.EventHandler(this.NewCampaignForm_Load);
             this.gbEduForms.ResumeLayout(false);
             this.gbEduLevel.ResumeLayout(false);
             this.gbEduLevel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDist)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaidPlaces)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFacultities)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizatons)).EndInit();
@@ -739,8 +854,6 @@
         private System.Windows.Forms.ListBox lbEduFormsChoosen;
         private System.Windows.Forms.ListBox lbEduFormsAll;
         private System.Windows.Forms.GroupBox gbEduLevel;
-        private System.Windows.Forms.CheckBox cbEduLevelQual;
-        private System.Windows.Forms.CheckBox cbEduLevelSPO;
         private System.Windows.Forms.CheckBox cbEduLevelSpec;
         private System.Windows.Forms.CheckBox cbEduLevelMag;
         private System.Windows.Forms.CheckBox cbEduLevelBacc;
@@ -751,17 +864,30 @@
         private System.Windows.Forms.DataGridView dgvTargetOrganizatons;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DataGridView dgvPaidPlaces;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.DataGridView dgvFacultities;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cShortFacName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cFacName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cHostelPlaces;
+        private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.DataGridView dgvDist;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cOrgID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOrgName;
         private System.Windows.Forms.DataGridViewButtonColumn cOrgSelect;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cOrgDirID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cDirName;
         private System.Windows.Forms.DataGridViewTextBoxColumn cCode;
         private System.Windows.Forms.DataGridViewButtonColumn cDirSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOF;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cDirID;
         private System.Windows.Forms.DataGridViewCheckBoxColumn сSelected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cType;
         private System.Windows.Forms.DataGridViewTextBoxColumn сName;
         private System.Windows.Forms.DataGridViewTextBoxColumn сCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn сFac;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOOOF;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOOOZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOOZF;
@@ -770,20 +896,20 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cOKZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn cCPOF;
         private System.Windows.Forms.DataGridViewTextBoxColumn cCPOZF;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.DataGridView dgvPaidPlaces;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.DataGridView dgvFacultities;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cShortFacName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cFacName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cHostelPlaces;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cIDDir;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cDirNameDist;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cDirCodeDist;
+        private System.Windows.Forms.DataGridViewComboBoxColumn cFirst;
+        private System.Windows.Forms.DataGridViewComboBoxColumn cSecond;
+        private System.Windows.Forms.DataGridViewComboBoxColumn cThird;
         private System.Windows.Forms.DataGridViewCheckBoxColumn cProfileSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn cDirProfType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cDirProfName;
         private System.Windows.Forms.DataGridViewTextBoxColumn cProfCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cFac;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn cOZFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn cZFPM;
-        private System.Windows.Forms.Button btSave;
     }
 }

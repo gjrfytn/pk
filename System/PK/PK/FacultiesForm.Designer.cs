@@ -38,12 +38,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
             this.btUpdate = new System.Windows.Forms.Button();
+            this.btEditDirections = new System.Windows.Forms.Button();
+            this.btDelete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).BeginInit();
             this.SuspendLayout();
             // 
             // btNewFaculty
             // 
-            this.btNewFaculty.Location = new System.Drawing.Point(109, 384);
+            this.btNewFaculty.Location = new System.Drawing.Point(16, 384);
             this.btNewFaculty.Name = "btNewFaculty";
             this.btNewFaculty.Size = new System.Drawing.Size(136, 23);
             this.btNewFaculty.TabIndex = 0;
@@ -89,7 +91,6 @@
             this.tbFacultyShortName.Name = "tbFacultyShortName";
             this.tbFacultyShortName.Size = new System.Drawing.Size(47, 20);
             this.tbFacultyShortName.TabIndex = 2;
-            this.tbFacultyShortName.Visible = false;
             // 
             // tbFacultyName
             // 
@@ -98,7 +99,6 @@
             this.tbFacultyName.Name = "tbFacultyName";
             this.tbFacultyName.Size = new System.Drawing.Size(248, 20);
             this.tbFacultyName.TabIndex = 3;
-            this.tbFacultyName.Visible = false;
             // 
             // label1
             // 
@@ -109,7 +109,6 @@
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Название:";
-            this.label1.Visible = false;
             // 
             // label2
             // 
@@ -120,7 +119,6 @@
             this.label2.Size = new System.Drawing.Size(103, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Краткое название:";
-            this.label2.Visible = false;
             // 
             // btSave
             // 
@@ -131,12 +129,11 @@
             this.btSave.TabIndex = 6;
             this.btSave.Text = "Сохранить";
             this.btSave.UseVisualStyleBackColor = true;
-            this.btSave.Visible = false;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // btUpdate
             // 
-            this.btUpdate.Location = new System.Drawing.Point(327, 384);
+            this.btUpdate.Location = new System.Drawing.Point(167, 384);
             this.btUpdate.Name = "btUpdate";
             this.btUpdate.Size = new System.Drawing.Size(145, 23);
             this.btUpdate.TabIndex = 7;
@@ -144,11 +141,33 @@
             this.btUpdate.UseVisualStyleBackColor = true;
             this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
             // 
+            // btEditDirections
+            // 
+            this.btEditDirections.Location = new System.Drawing.Point(426, 384);
+            this.btEditDirections.Name = "btEditDirections";
+            this.btEditDirections.Size = new System.Drawing.Size(147, 23);
+            this.btEditDirections.TabIndex = 8;
+            this.btEditDirections.Text = "Направления факультета";
+            this.btEditDirections.UseVisualStyleBackColor = true;
+            this.btEditDirections.Click += new System.EventHandler(this.btEditDirections_Click);
+            // 
+            // btDelete
+            // 
+            this.btDelete.Location = new System.Drawing.Point(330, 384);
+            this.btDelete.Name = "btDelete";
+            this.btDelete.Size = new System.Drawing.Size(75, 23);
+            this.btDelete.TabIndex = 9;
+            this.btDelete.Text = "Удалить";
+            this.btDelete.UseVisualStyleBackColor = true;
+            this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
+            // 
             // FacultiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 419);
+            this.Controls.Add(this.btDelete);
+            this.Controls.Add(this.btEditDirections);
             this.Controls.Add(this.btUpdate);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.label2);
@@ -158,7 +177,7 @@
             this.Controls.Add(this.dgvFaculties);
             this.Controls.Add(this.btNewFaculty);
             this.Name = "FacultiesForm";
-            this.Text = "FacultiesForm";
+            this.Text = "Факультеты";
             this.Load += new System.EventHandler(this.FacultiesForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).EndInit();
             this.ResumeLayout(false);
@@ -178,5 +197,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Button btUpdate;
+        private System.Windows.Forms.Button btEditDirections;
+        private System.Windows.Forms.Button btDelete;
     }
 }

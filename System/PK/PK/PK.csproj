@@ -76,7 +76,13 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="DB_Connector.cs" />
     <Compile Include="DB_TableEnum.cs" />
-	<Compile Include="KLADR.cs" />
+    <Compile Include="FaculityDirectionsSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FaculityDirectionsSelect.Designer.cs">
+      <DependentUpon>FaculityDirectionsSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KLADR.cs" />
     <Compile Include="DictionariesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DirectionSelect.resx">
       <DependentUpon>DirectionSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FaculityDirectionsSelect.resx">
+      <DependentUpon>FaculityDirectionsSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FacultiesForm.resx">
       <DependentUpon>FacultiesForm.cs</DependentUpon>

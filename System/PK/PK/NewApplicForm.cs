@@ -124,5 +124,19 @@ namespace PK
             //    (this.Parent.Controls.Find(("btRemoveDir" + parentNumber + "3"), false)[0] as Control).Enabled = true;
             //}
         }
+
+        private void NewApplicForm_Load(object sender, EventArgs e)
+        {
+            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+        }
     }
 }

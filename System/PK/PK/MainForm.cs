@@ -31,7 +31,7 @@ namespace PK
             NewApplicForm form = new NewApplicForm();
             form.ShowDialog();
         }
-        private void целевыеОрганизацииToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
         {
             TargetOrganizationsForm form = new TargetOrganizationsForm();
             form.ShowDialog();
@@ -48,13 +48,13 @@ namespace PK
             form.ShowDialog();
         }
 
-        private void факультетыToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuStrip_Faculties_Click(object sender, EventArgs e)
         {
             FacultiesForm form = new FacultiesForm();
             form.ShowDialog();
         }
 
-        private void направленияПодготовкиToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuStrip_Directions_Click(object sender, EventArgs e)
         {
             DirectionsProfilesForm form = new DirectionsProfilesForm();
             form.ShowDialog();

@@ -36,10 +36,10 @@
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.университетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.факультетыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.направленияПодготовкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.целевыеОрганизацииToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Univesity = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,7 +71,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Campaign,
             this.menuStrip_Entrants,
-            this.университетToolStripMenuItem,
+            this.menuStrip_Univesity,
             this.menuStrip_Help});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -109,36 +109,36 @@
             this.menuStrip_CreateApplication.Text = "Создать заявление";
             this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
             // 
-            // университетToolStripMenuItem
+            // menuStrip_Univesity
             // 
-            this.университетToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.факультетыToolStripMenuItem,
-            this.направленияПодготовкиToolStripMenuItem,
-            this.целевыеОрганизацииToolStripMenuItem});
-            this.университетToolStripMenuItem.Name = "университетToolStripMenuItem";
-            this.университетToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.университетToolStripMenuItem.Text = "Университет";
+            this.menuStrip_Univesity.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_Faculties,
+            this.menuStrip_Directions,
+            this.menuStrip_TargetOrganizations});
+            this.menuStrip_Univesity.Name = "menuStrip_Univesity";
+            this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 20);
+            this.menuStrip_Univesity.Text = "Университет";
             // 
-            // факультетыToolStripMenuItem
+            // menuStrip_Faculties
             // 
-            this.факультетыToolStripMenuItem.Name = "факультетыToolStripMenuItem";
-            this.факультетыToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.факультетыToolStripMenuItem.Text = "Факультеты";
-            this.факультетыToolStripMenuItem.Click += new System.EventHandler(this.факультетыToolStripMenuItem_Click);
+            this.menuStrip_Faculties.Name = "menuStrip_Faculties";
+            this.menuStrip_Faculties.Size = new System.Drawing.Size(214, 22);
+            this.menuStrip_Faculties.Text = "Факультеты";
+            this.menuStrip_Faculties.Click += new System.EventHandler(this.menuStrip_Faculties_Click);
             // 
-            // направленияПодготовкиToolStripMenuItem
+            // menuStrip_Directions
             // 
-            this.направленияПодготовкиToolStripMenuItem.Name = "направленияПодготовкиToolStripMenuItem";
-            this.направленияПодготовкиToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.направленияПодготовкиToolStripMenuItem.Text = "Направления подготовки";
-            this.направленияПодготовкиToolStripMenuItem.Click += new System.EventHandler(this.направленияПодготовкиToolStripMenuItem_Click);
+            this.menuStrip_Directions.Name = "menuStrip_Directions";
+            this.menuStrip_Directions.Size = new System.Drawing.Size(214, 22);
+            this.menuStrip_Directions.Text = "Направления подготовки";
+            this.menuStrip_Directions.Click += new System.EventHandler(this.menuStrip_Directions_Click);
             // 
-            // целевыеОрганизацииToolStripMenuItem
+            // menuStrip_TargetOrganizations
             // 
-            this.целевыеОрганизацииToolStripMenuItem.Name = "целевыеОрганизацииToolStripMenuItem";
-            this.целевыеОрганизацииToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.целевыеОрганизацииToolStripMenuItem.Text = "Целевые организации";
-            this.целевыеОрганизацииToolStripMenuItem.Click += new System.EventHandler(this.целевыеОрганизацииToolStripMenuItem_Click);
+            this.menuStrip_TargetOrganizations.Name = "menuStrip_TargetOrganizations";
+            this.menuStrip_TargetOrganizations.Size = new System.Drawing.Size(214, 22);
+            this.menuStrip_TargetOrganizations.Text = "Целевые организации";
+            this.menuStrip_TargetOrganizations.Click += new System.EventHandler(this.menuStrip_TargetOrganizations_Click);
             // 
             // menuStrip_Help
             // 
@@ -192,10 +192,10 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Campaigns;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Entrants;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateApplication;
-        private System.Windows.Forms.ToolStripMenuItem университетToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem факультетыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem направленияПодготовкиToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem целевыеОрганизацииToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Univesity;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Faculties;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Directions;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_TargetOrganizations;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Help;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Dictionaries;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_DirDictionary;
