@@ -107,7 +107,6 @@
             this.Controls.Add(this.dgvTargetOrganizations);
             this.Name = "TargetOrganizationsForm";
             this.Text = "Целевые организации";
-            this.Load += new System.EventHandler(this.TargetOrganizationsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizations)).EndInit();
             this.ResumeLayout(false);
 

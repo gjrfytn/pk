@@ -178,7 +178,6 @@
             this.Controls.Add(this.btNewFaculty);
             this.Name = "FacultiesForm";
             this.Text = "Факультеты";
-            this.Load += new System.EventHandler(this.FacultiesForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

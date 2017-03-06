@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PK
@@ -13,14 +9,12 @@ namespace PK
     public partial class NewCampaignForm : Form
     {
         DB_Connector _DB_Connection;
-        bool _NewCampaign;
-        uint _CampaignUid;
+        uint? _CampaignUid;
 
-        public NewCampaignForm(bool newC, uint campUid)
+        public NewCampaignForm(uint? campUid)
         {
             InitializeComponent();
             _DB_Connection = new DB_Connector();
-            _NewCampaign = newC;
             _CampaignUid = campUid;
            
             cbState.SelectedIndex = 0;
@@ -43,7 +37,7 @@ namespace PK
             }))
                 lbEduFormsAll.Items.Add(v[0].ToString());
 
-            if (!_NewCampaign)
+            if (_CampaignUid.HasValue)
             {
                 LoadCampaign();
                 LoadTables();
@@ -812,8 +806,8 @@ namespace PK
                 case 2:
                     GridItemSelection form1 = new GridItemSelection();
                     form1.ShowDialog();
-                    dgvTargetOrganizatons.CurrentRow.Cells[0].Value = form1.organizationCode;
-                    dgvTargetOrganizatons.CurrentRow.Cells[1].Value = form1.organizationName;
+                    dgvTargetOrganizatons.CurrentRow.Cells[0].Value = form1.OrganizationID;
+                    dgvTargetOrganizatons.CurrentRow.Cells[1].Value = form1.OrganizationName;
                     break;
                 case 6:
                     List<string> filters = new List<string>();
@@ -826,9 +820,9 @@ namespace PK
 
                     DirectionSelect form2 = new DirectionSelect(filters);
                     form2.ShowDialog();
-                    dgvTargetOrganizatons.CurrentRow.Cells[3].Value = form2.directionID;
-                    dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.directionName;
-                    dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.directionCode;
+                    dgvTargetOrganizatons.CurrentRow.Cells[3].Value = form2.DirectionID;
+                    dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;
+                    dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.DirectionCode;
                     break;
             }           
 
@@ -877,7 +871,7 @@ namespace PK
         {
             bool progressEnabled = true;
 
-            if ((_NewCampaign)&&(!(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "uid" },
+            if ((!_CampaignUid.HasValue)&&(!(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "uid" },
                         new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object> ("name", Relation.EQUAL, tbName.Text)
@@ -903,7 +897,7 @@ namespace PK
                         MessageBox.Show("Не выбраны формы обучения.");
                     else if (!(cbEduLevelBacc.Checked) && !(cbEduLevelMag.Checked) && !(cbEduLevelSpec.Checked))
                         MessageBox.Show("Не выбран уровень образования.");
-                    else if (_NewCampaign)
+                    else if (!_CampaignUid.HasValue)
                             {
                                 SaveCampaign();
                                 Close();

@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PK
@@ -17,6 +11,7 @@ namespace PK
         public CampaignsForm()
         {
             InitializeComponent();
+
             _DB_Connection = new DB_Connector();
 
             UpdateTable();
@@ -25,17 +20,17 @@ namespace PK
         private void UpdateTable()
         {
             dgvPriemComp.Rows.Clear();
-            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS,
+            foreach (object[] v in _DB_Connection.Select(DB_Table.CAMPAIGNS,
                 new string[] { "uid", "name", "start_year", "end_year", "status_dict_id", "status_id" }))
             {
-                dgvPriemComp.Rows.Add(v[0].ToString(), v[1].ToString(), v[2].ToString() + " - " + v[3].ToString(), "",
-                    _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name"}, new List<Tuple<string, Relation, object>>
+                dgvPriemComp.Rows.Add(v[0], v[1], v[2].ToString() + " - " + v[3].ToString(), "",
+                    _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, v[4]),
                         new Tuple<string, Relation, object>("item_id", Relation.EQUAL, v[5])
                     })[0][0].ToString());
 
-                foreach (var r in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                foreach (object[] r in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, 2),
@@ -47,16 +42,18 @@ namespace PK
                     new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, 2),
                     new Tuple<string, Relation, object>("item_id", Relation.EQUAL, r[0])
                 })[0][0].ToString();
-                    if (dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value.ToString().Length==0)
+
+                    if (dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value.ToString() == "")
                         dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value = levelName;
-                    else dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value = dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value.ToString() + " - " + levelName;
-                } 
-            }                           
+                    else
+                        dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value = dgvPriemComp.Rows[dgvPriemComp.Rows.Count - 1].Cells[3].Value.ToString() + " - " + levelName;
+                }
+            }
         }
 
         private void btCreatePriemComp_Click(object sender, EventArgs e)
         {
-            NewCampaignForm form = new NewCampaignForm(true, 0);
+            NewCampaignForm form = new NewCampaignForm(null);
             form.ShowDialog();
             UpdateTable();
         }
@@ -67,7 +64,7 @@ namespace PK
                 MessageBox.Show("Выберите кампанию в списке.");
             else
             {
-                NewCampaignForm form = new NewCampaignForm(false, Convert.ToUInt32(dgvPriemComp.SelectedRows[0].Cells[0].Value));
+                NewCampaignForm form = new NewCampaignForm((uint)dgvPriemComp.SelectedRows[0].Cells[0].Value);
                 form.ShowDialog();
                 UpdateTable();
             }

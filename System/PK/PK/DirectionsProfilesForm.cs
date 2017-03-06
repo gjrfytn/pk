@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK
@@ -12,32 +8,32 @@ namespace PK
     public partial class DirectionsProfilesForm : Form
     {
         DB_Connector _DB_Connection;
-        List<object[]> directions;
-        List<string> faculties;
+        List<object[]> _Directions;
+        List<string> _Faculties;
 
         void UpdateTable()
         {
             dgvDirections.Rows.Clear();
-            directions = new List<object[]>();
+            _Directions = new List<object[]>();
 
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS,"id", "name", "code" ))
+            foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name", "code"))
             {
                 if (v[2].ToString().Substring(3, 2) == "03")
                 {
-                    directions.Add(new object[] { v[1].ToString(), v[2].ToString(), "Бакалавриат", v[0] });
-                    dgvDirections.Rows.Add(v[0].ToString(), "Н", v[1].ToString(), v[2].ToString(), "Бакалавриат");
+                    _Directions.Add(new object[] { v[1], v[2], "Бакалавриат", v[0] });
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Бакалавриат");
                 }
                 else if (v[2].ToString().Substring(3, 2) == "05")
                 {
-                    directions.Add(new object[] { v[1].ToString(), v[2].ToString(), "Специалитет", v[0] });
-                    dgvDirections.Rows.Add(v[0].ToString(), "Н", v[1].ToString(), v[2].ToString(), "Специалитет");
+                    _Directions.Add(new object[] { v[1], v[2], "Специалитет", v[0] });
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Специалитет");
                 }
                 else if (v[2].ToString().Substring(3, 2) == "04")
                 {
-                    directions.Add(new object[] { v[1].ToString(), v[2].ToString(), "Магистратура", v[0] });
-                    dgvDirections.Rows.Add(v[0].ToString(), "Н", v[1].ToString(), v[2].ToString(), "Магистратура");
+                    _Directions.Add(new object[] { v[1], v[2], "Магистратура", v[0] });
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Магистратура");
                 }
-                if(!(dgvDirections.Rows.Count==0))
+                if (dgvDirections.Rows.Count != 0)
                     for (int i = 0; i < dgvDirections.Rows[dgvDirections.Rows.Count - 1].Cells.Count; i++)
                     {
                         dgvDirections.Rows[dgvDirections.Rows.Count - 1].Cells[i].Style.Font = new Font(
@@ -47,23 +43,23 @@ namespace PK
                         dgvDirections.Rows[dgvDirections.Rows.Count - 1].Cells[i].Style.BackColor = Color.LightGray;
                     }
             }
-            dgvDirections.Sort(cCode, ListSortDirection.Ascending);
+            dgvDirections.Sort(cCode, System.ComponentModel.ListSortDirection.Ascending);
 
-            foreach (var v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id"))
+            foreach (object[] v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id"))
                 for (int i = 0; i < dgvDirections.Rows.Count; i++)
                 {
-                    if ((dgvDirections.Rows[i].Cells[1].Value.ToString()=="Н")&&(dgvDirections.Rows[i].Cells[0].Value.ToString()==v[1].ToString()))
-                        dgvDirections.Rows.Insert(i+1, v[1].ToString(),"П", v[0].ToString(), 
-                            dgvDirections.Rows[i].Cells[2].Value.ToString(), dgvDirections.Rows[i].Cells[3].Value.ToString());
+                    if ((dgvDirections.Rows[i].Cells[1].Value.ToString() == "Н") && (dgvDirections.Rows[i].Cells[0].Value.ToString() == v[1].ToString()))
+                        dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0],
+                            dgvDirections.Rows[i].Cells[2].Value, dgvDirections.Rows[i].Cells[3].Value);
                 }
 
-            faculties = new List<string>();
-            foreach (var v in _DB_Connection.Select(DB_Table.FACULTIES, "short_name"))
-                faculties.Add(v[0].ToString());
-            cbFaculties.DataSource = faculties;
+            _Faculties = new List<string>();
+            foreach (object[] v in _DB_Connection.Select(DB_Table.FACULTIES, "short_name"))
+                _Faculties.Add(v[0].ToString());
+            cbFaculties.DataSource = _Faculties;
         }
 
-        void EnableDisableControls (bool enable)
+        void EnableDisableControls(bool enable)
         {
             if (enable)
             {
@@ -93,6 +89,7 @@ namespace PK
         public DirectionsProfilesForm()
         {
             InitializeComponent();
+
             _DB_Connection = new DB_Connector();
 
             UpdateTable();
@@ -104,9 +101,9 @@ namespace PK
             if (rbBacc.Checked)
             {
                 cbDirections.Items.Clear();
-                for (int i = 0; i < directions.Count; i++)
-                    if (directions[i][2].ToString() == "Бакалавриат")
-                        cbDirections.Items.Add(directions[i][1].ToString() + " " + directions[i][0].ToString());
+                for (int i = 0; i < _Directions.Count; i++)
+                    if (_Directions[i][2].ToString() == "Бакалавриат")
+                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
             }
         }
 
@@ -115,9 +112,9 @@ namespace PK
             if (rbSpec.Checked)
             {
                 cbDirections.Items.Clear();
-                for (int i = 0; i < directions.Count; i++)
-                    if (directions[i][2].ToString() == "Специалитет")
-                        cbDirections.Items.Add(directions[i][1].ToString() + " " + directions[i][0].ToString());
+                for (int i = 0; i < _Directions.Count; i++)
+                    if (_Directions[i][2].ToString() == "Специалитет")
+                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
             }
         }
 
@@ -126,9 +123,9 @@ namespace PK
             if (rbMag.Checked)
             {
                 cbDirections.Items.Clear();
-                for (int i = 0; i < directions.Count; i++)
-                    if (directions[i][2].ToString() == "Магистратура")
-                        cbDirections.Items.Add(directions[i][1].ToString() + " " + directions[i][0].ToString());
+                for (int i = 0; i < _Directions.Count; i++)
+                    if (_Directions[i][2].ToString() == "Магистратура")
+                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
             }
         }
 
@@ -142,8 +139,8 @@ namespace PK
                 MessageBox.Show("Не указано название профиля");
             else
             {
-                object[] temp = directions.Find(x => x[1].ToString() == cbDirections.SelectedItem.ToString().Substring(0, 8));
-                uint id = _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object>
+                object[] temp = _Directions.Find(x => x[1].ToString() == cbDirections.SelectedItem.ToString().Substring(0, 8));
+                _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object>
                 {
                     { "direction_id",  temp[3]},
                     { "name", tbName.Text }
@@ -161,12 +158,12 @@ namespace PK
 
         private void btDelete_Click(object sender, EventArgs e)
         {
-            if ((dgvDirections.SelectedRows.Count == 0)||(dgvDirections.SelectedRows[0].Cells[1].Value.ToString()=="Н"))
+            if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[1].Value.ToString() == "Н"))
                 MessageBox.Show("Выберить профиль");
             else
             {
                 _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
-                { { "direction_id", Convert.ToInt32(dgvDirections.SelectedRows[0].Cells[0].Value.ToString())}, { "name", dgvDirections.SelectedRows[0].Cells[2].Value.ToString()} });
+                { { "direction_id", dgvDirections.SelectedRows[0].Cells[0].Value}, { "name", dgvDirections.SelectedRows[0].Cells[2].Value} });
                 UpdateTable();
             }
         }

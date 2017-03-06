@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PK
@@ -14,13 +10,13 @@ namespace PK
     {
         DB_Connector _DB_Connection;
 
-        void FillComboBox (ComboBox cb, int dictionaryNumber)
+        void FillComboBox(ComboBox cb, int dictionaryNumber)
         {
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name", "dictionary_id" },
+            foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" },
                 new List<Tuple<string, Relation, object>>
-            {
+                {
                 new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryNumber)
-            }))
+                }))
                 cb.Items.Add(v[0]);
             cb.SelectedIndex = 0;
         }
@@ -39,7 +35,7 @@ namespace PK
             cbForeignLanguage.SelectedIndex = 0;
 
             for (int i = DateTime.Now.Year; i >= 1950; i--)
-                cbGraduationYear.Items.Add((i).ToString());
+                cbGraduationYear.Items.Add(i);
             cbGraduationYear.SelectedIndex = 0;
 
             List<string> years = new List<string>
@@ -53,7 +49,7 @@ namespace PK
                 (DateTime.Now.Year - 5).ToString(),
             };
 
-            dgvExams.Rows.Add("Математика",null,"", "",32);
+            dgvExams.Rows.Add("Математика", null, "", "", 32);
             dgvExams.Rows.Add("Русский язык", null, "", "", 32);
             dgvExams.Rows.Add("Физика", null, "", "", 32);
             dgvExams.Rows.Add("Обществознание", null, "", "", 32);
@@ -61,20 +57,22 @@ namespace PK
 
             for (int j = 0; j < dgvExams.Rows.Count; j++)
             {
-                (dgvExams.Rows[j].Cells[1] as DataGridViewComboBoxCell).DataSource = years;
+                ((DataGridViewComboBoxCell)dgvExams.Rows[j].Cells[1]).DataSource = years;
                 dgvExams.Rows[j].Cells[1].Value = DateTime.Now.Year.ToString();
             }
 
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name","code"))
-            {
-                if ((v[1].ToString().Substring(3,2) == "03")||(v[1].ToString().Substring(3, 2) == "05"))
-                    foreach (var r in tbDirections.Controls)
-                        foreach (Control f in (r as TabPage).Controls)
-                        {
-                            if (f.GetType() == typeof(ComboBox))
-                                (f as ComboBox).Items.Add(v[0].ToString());
-                        }
-            }
+            object[] directions = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name", "code")
+                .Where(d => (d[1].ToString().Substring(3, 2) == "03") || (d[1].ToString().Substring(3, 2) == "05"))
+                .Select(d => d[0])
+                .ToArray();
+
+            foreach (Control tab in tbDirections.Controls)
+                foreach (Control c in tab.Controls)
+                {
+                    ComboBox cb = c as ComboBox;
+                    if (cb != null)
+                        cb.Items.AddRange(directions);
+                }
         }
 
         private void btAddDir1_Click(object sender, EventArgs e)
@@ -100,7 +98,7 @@ namespace PK
             //    btRemoveDir13.Visible = true;
             //    btRemoveDir13.Enabled = true;
             //}
-            
+
             //char parentNumber = this.Parent.Name.ToString()[this.Parent.Name.Length-1];
             //if (!(this.Parent.Controls.Find(("cbDirection" + parentNumber + "1"),false)[0] as Control).Visible)
             //{

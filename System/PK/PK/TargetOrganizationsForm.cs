@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK
@@ -17,21 +12,16 @@ namespace PK
         {
             InitializeComponent();
             _DB_Connection = new DB_Connector();
+
+            UpdateTable();
         }
 
-        private void UpdateTable ()
+        private void UpdateTable()
         {
             dgvTargetOrganizations.Rows.Clear();
-            List<object[]> tOList = new List<object[]>();
-            tOList = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "uid", "name");
-            foreach (var v in tOList)
+            foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "uid", "name"))
                 dgvTargetOrganizations.Rows.Add(v);
-            dgvTargetOrganizations.Sort(cOrgName, ListSortDirection.Ascending);
-        }
-
-        private void TargetOrganizationsForm_Load(object sender, EventArgs e)
-        {
-            UpdateTable();
+            dgvTargetOrganizations.Sort(cOrgName, System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void btNewTargetOrganization_Click(object sender, EventArgs e)
@@ -47,10 +37,10 @@ namespace PK
                 MessageBox.Show("Выберите строку");
             else
             {
-                NewTargetOrganizationForm form = new NewTargetOrganizationForm(Convert.ToInt32(dgvTargetOrganizations.SelectedRows[0].Cells[0].Value));
+                NewTargetOrganizationForm form = new NewTargetOrganizationForm((uint)dgvTargetOrganizations.SelectedRows[0].Cells[0].Value);
                 form.ShowDialog();
                 UpdateTable();
-            }                
+            }
         }
 
         private void btDelete_Click(object sender, EventArgs e)
@@ -60,7 +50,7 @@ namespace PK
             else
             {
                 _DB_Connection.Delete(DB_Table.TARGET_ORGANIZATIONS, new Dictionary<string, object>
-                { { "uid", Convert.ToInt32(dgvTargetOrganizations.SelectedRows[0].Cells[0].Value.ToString()) }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value.ToString()} });
+                { { "uid",dgvTargetOrganizations.SelectedRows[0].Cells[0].Value }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value} });
                 UpdateTable();
             }
         }

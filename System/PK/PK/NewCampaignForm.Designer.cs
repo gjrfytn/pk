@@ -199,7 +199,7 @@
             // 
             // btRemoveEduLevel
             // 
-            this.btRemoveEduLevel.Font = new System.Drawing.Font("ESSTIXOne", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btRemoveEduLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btRemoveEduLevel.Location = new System.Drawing.Point(212, 52);
             this.btRemoveEduLevel.Name = "btRemoveEduLevel";
             this.btRemoveEduLevel.Size = new System.Drawing.Size(46, 23);
@@ -210,7 +210,7 @@
             // 
             // btAddEduLevel
             // 
-            this.btAddEduLevel.Font = new System.Drawing.Font("ESSTIXOne", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btAddEduLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAddEduLevel.Location = new System.Drawing.Point(212, 19);
             this.btAddEduLevel.Name = "btAddEduLevel";
             this.btAddEduLevel.Size = new System.Drawing.Size(46, 23);

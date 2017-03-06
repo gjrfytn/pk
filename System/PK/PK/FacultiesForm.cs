@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK
@@ -12,12 +7,15 @@ namespace PK
     public partial class FacultiesForm : Form
     {
         DB_Connector _DB_Connection;
-        bool _Updating = false;
+        bool _Updating;
 
         public FacultiesForm()
         {
             InitializeComponent();
+
             _DB_Connection = new DB_Connector();
+
+            UpdateTable();
         }
 
         private void ShowHideControls(bool show)
@@ -43,22 +41,19 @@ namespace PK
         private void UpdateTable()
         {
             dgvFaculties.Rows.Clear();
-            List<object[]> tOList = new List<object[]>();
-            tOList = _DB_Connection.Select(DB_Table.FACULTIES);
-            foreach (var v in tOList)
-                dgvFaculties.Rows.Add(v[0], v[1]);
+            foreach (object[] v in _DB_Connection.Select(DB_Table.FACULTIES))
+                dgvFaculties.Rows.Add(v);
         }
 
         private void btSave_Click(object sender, EventArgs e)
         {
             if ((tbFacultyName.Text.Length == 0) || (tbFacultyShortName.Text.Length == 0))
                 MessageBox.Show("Одно из текстовых полей пусто");
-            else
-                if (!(_DB_Connection.Select(DB_Table.FACULTIES, new string[] { "name" },
+            else if (_DB_Connection.Select(DB_Table.FACULTIES, new string[] { "name" },
                                     new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("short_name", Relation.EQUAL, tbFacultyShortName.Text)
-                }).Count == 0))
+                }).Count != 0)
                 if (!_Updating)
                     MessageBox.Show("Факультет с таким сокращением уже существует");
                 else
@@ -68,27 +63,26 @@ namespace PK
                         new Dictionary<string, object> { { "short_name", tbFacultyShortName.Text } });
                     _Updating = false;
                     ShowHideControls(false);
+
+                    UpdateTable();
+                    tbFacultyName.Clear();
+                    tbFacultyShortName.Clear();
                 }
             else
             {
-                uint faculyUID = _DB_Connection.Insert(DB_Table.FACULTIES,
+                _DB_Connection.Insert(DB_Table.FACULTIES,
                 new Dictionary<string, object> { { "name", tbFacultyName.Text }, { "short_name", tbFacultyShortName.Text } });
                 ShowHideControls(false);
-            }
 
-            UpdateTable();
-            tbFacultyName.Clear();
-            tbFacultyShortName.Clear();
+                UpdateTable();
+                tbFacultyName.Clear();
+                tbFacultyShortName.Clear();
+            }
         }
 
         private void btNewFaculty_Click(object sender, EventArgs e)
         {
             ShowHideControls(true);
-        }
-
-        private void FacultiesForm_Load(object sender, EventArgs e)
-        {
-            UpdateTable();
         }
 
         private void btUpdate_Click(object sender, EventArgs e)
@@ -113,7 +107,6 @@ namespace PK
                 FaculityDirectionsSelect form = new FaculityDirectionsSelect(dgvFaculties.SelectedRows[0].Cells[0].Value.ToString());
                 form.ShowDialog();
             }
-  
         }
 
         private void btDelete_Click(object sender, EventArgs e)
@@ -122,8 +115,8 @@ namespace PK
                 MessageBox.Show("Выберите факультет");
             else
             {
-                _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object> { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value.ToString() },
-                    { "name", dgvFaculties.SelectedRows[0].Cells[1].Value.ToString()} });
+                _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object> { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value },
+                    { "name", dgvFaculties.SelectedRows[0].Cells[1].Value} });
                 UpdateTable();
             }
         }
