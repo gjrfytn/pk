@@ -9,13 +9,7 @@ namespace PK
 
         public DB_Connector()
         {
-            string connString = @"
-                        server = localhost;
-                        port=3306;
-                        database = pk_db;
-                        user = root;
-                        password = 1234;
-                ";
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["initial"].ConnectionString; //TODO потом перенести!
             _Connection = new MySqlConnection(connString);
             _Connection.Open();
         }
@@ -162,6 +156,13 @@ namespace PK
 
             cmd.CommandText = "DELETE FROM " + GetTableName(table) + " WHERE " + where + ";";
             cmd.ExecuteNonQuery();
+        }
+
+        public List<object[]> RunProcedure(string name, object parameter)
+        {
+            MySqlCommand cmd = new MySqlCommand("CALL " + name + "(" + parameter + ");", _Connection);
+
+            return ExecuteSelect(cmd);
         }
 
         static string GetTableName(DB_Table table) => System.Enum.GetName(typeof(DB_Table), table).ToLower();
