@@ -1,7 +1,7 @@
 ﻿
 namespace PK
 {
-    enum DB_Table
+    enum DB_Table : byte
     {
         DICTIONARIES,
         DICTIONARIES_ITEMS,
@@ -18,6 +18,8 @@ namespace PK
         _CAMPAIGNS_HAS_DICTIONARY_10_ITEMS,
         _CAMPAIGNS_HAS_DICTIONARIES_ITEMS,
         TARGET_ORGANISATIONS_ADM_VOLUMES,
-        DIR_ENTRANCE_TESTS
+        DIR_ENTRANCE_TESTS,
+        EXAMINATIONS,
+        EXAMINATIONS_AUDIENCES
     }
 }

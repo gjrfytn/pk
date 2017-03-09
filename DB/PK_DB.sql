@@ -1364,6 +1364,92 @@ ENGINE = InnoDB
 COMMENT = 'Вступительные испытания по направлениям.';
 
 
+-- -----------------------------------------------------
+-- Table `PK_DB`.`examinations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор.',
+  `subject_dict_id` INT UNSIGNED NOT NULL,
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ID дисциплины (справочник №1).',
+  `date` DATE NOT NULL COMMENT 'Дата проведения.',
+  `reg_start_date` DATE NOT NULL COMMENT 'Дата регистрации заявления, начиная с которой абитуриенты попадают в этот поток.',
+  `reg_end_date` DATE NOT NULL COMMENT 'Дата регистрации заявления, после которой абитуриенты не попадают в этот поток.',
+  PRIMARY KEY (`id`),
+  INDEX `examinations_corresponds_idx` (`subject_dict_id` ASC, `subject_id` ASC),
+  CONSTRAINT `examinations_corresponds`
+    FOREIGN KEY (`subject_dict_id` , `subject_id`)
+    REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Внутренние экзамены.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`examinations_audiences`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations_audiences` (
+  `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
+  `number` SMALLINT UNSIGNED NOT NULL COMMENT 'Номер аудитории.',
+  `capacity` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество мест.',
+  PRIMARY KEY (`examination_id`, `number`),
+  INDEX `has` (`examination_id` ASC),
+  CONSTRAINT `examinations_audiences_has`
+    FOREIGN KEY (`examination_id`)
+    REFERENCES `PK_DB`.`examinations` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Экзаменационные аудитории.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`entrants_examinations_marks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants_examinations_marks` (
+  `entrant_uid` INT UNSIGNED NOT NULL COMMENT 'UID абитуриента.',
+  `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
+  `mark` SMALLINT NOT NULL COMMENT 'Оценка.',
+  PRIMARY KEY (`entrant_uid`, `examination_id`),
+  INDEX `entr_exam_marks_has_exam_idx` (`examination_id` ASC),
+  INDEX `entr_exam_marks_has_entr_idx` (`entrant_uid` ASC),
+  CONSTRAINT `entr_exam_marks_has_entr`
+    FOREIGN KEY (`entrant_uid`)
+    REFERENCES `PK_DB`.`entrants` (`uid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `entr_exam_marks_has_exam`
+    FOREIGN KEY (`examination_id`)
+    REFERENCES `PK_DB`.`examinations` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Оценки абитуриентов по внутренним экзаменам.';
+
+USE `PK_DB` ;
+
+-- -----------------------------------------------------
+-- procedure get_campaign_edu_forms
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_campaign_edu_forms` (IN id INT UNSIGNED)
+BEGIN
+SELECT 
+    name
+FROM
+    _campaigns_has_dictionaries_items
+        JOIN
+    dictionaries_items ON _campaigns_has_dictionaries_items.dictionaries_items_dictionary_id = dictionaries_items.dictionary_id
+        AND _campaigns_has_dictionaries_items.dictionaries_items_item_id = dictionaries_items.item_id
+WHERE
+    dictionaries_items_dictionary_id = 14
+        AND campaigns_uid = id;
+END$$
+
+DELIMITER ;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
