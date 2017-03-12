@@ -120,7 +120,7 @@ namespace PK
             foreach (var cv in columnsValues)
             {
                 string paramName = "@sp" + count;
-                set += cv.Key + "= " + paramName + ", ";
+                set += cv.Key + " = " + paramName + ", ";
                 cmd.Parameters.AddWithValue(paramName, cv.Value);
                 count++;
             }
@@ -129,7 +129,7 @@ namespace PK
             foreach (var cv in whereColumnValues)
             {
                 string paramName = "@wp" + count;
-                where += cv.Key + "= " + paramName + " AND ";
+                where += cv.Key + " = " + paramName + " AND ";
                 cmd.Parameters.AddWithValue(paramName, cv.Value);
                 count++;
             }
@@ -148,13 +148,37 @@ namespace PK
             foreach (var cv in whereColumnValues)
             {
                 string paramName = "@p" + count;
-                where += cv.Key + "= " + paramName + " AND ";
+                where += cv.Key + " = " + paramName + " AND ";
                 cmd.Parameters.AddWithValue(paramName, cv.Value);
                 count++;
             }
             where = where.Remove(where.Length - 5);
 
             cmd.CommandText = "DELETE FROM " + GetTableName(table) + " WHERE " + where + ";";
+            cmd.ExecuteNonQuery();
+        }
+
+        public void InsertOnDuplicateUpdate(DB_Table table, Dictionary<string, object> columnsValues)
+        {
+            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            string columns = "", values = "", update = "";
+            byte count = 1;
+            foreach (var cv in columnsValues)
+            {
+                columns += cv.Key + ", ";
+                string paramName = "@p" + count;
+                values += paramName + ", ";
+
+                update += cv.Key + " = " + paramName + ", ";
+
+                cmd.Parameters.AddWithValue(paramName, cv.Value);
+                count++;
+            }
+            columns = columns.Remove(columns.Length - 2);
+            values = values.Remove(values.Length - 2);
+            update = update.Remove(update.Length - 2);
+
+            cmd.CommandText = "INSERT INTO " + GetTableName(table) + " (" + columns + ") VALUES (" + values + ") ON DUPLICATE KEY UPDATE " + update + ";";
             cmd.ExecuteNonQuery();
         }
 

@@ -7,23 +7,54 @@ namespace PK
 {
     partial class ExaminationsForm : Form
     {
-        DB_Connector _DB_Connection;
+        readonly DB_Connector _DB_Connection;
 
         public ExaminationsForm(DB_Connector connection)
         {
             #region Components
             InitializeComponent();
 
-            dgvExams_Date.ValueType = typeof(DateTime);
-            dgvExams_RegStartDate.ValueType = typeof(DateTime);
-            dgvExams_RegEndDate.ValueType = typeof(DateTime);
-
-            dgvExamsAudiences_Number.ValueType = typeof(ushort);
-            dgvExamsAudiences_Capacity.ValueType = typeof(short);
+            dataGridView_Date.ValueType = typeof(DateTime);
+            dataGridView_RegStartDate.ValueType = typeof(DateTime);
+            dataGridView_RegEndDate.ValueType = typeof(DateTime);
             #endregion
 
             _DB_Connection = connection;
 
+            UpdateTable();
+        }
+
+        private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[0].Value } });
+        }
+
+        private void bAdd_Click(object sender, EventArgs e)
+        {
+            ExaminationEditForm form = new ExaminationEditForm(_DB_Connection, null);
+            form.ShowDialog();
+            UpdateTable();
+        }
+
+        private void bEdit_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count != 0)
+            {
+                ExaminationEditForm form = new ExaminationEditForm(_DB_Connection, (uint)dataGridView.SelectedRows[0].Cells[0].Value);
+                form.ShowDialog();
+                UpdateTable();
+            }
+            else
+                MessageBox.Show("Выберите экзамен.");
+        }
+
+        private void bMarks_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        void UpdateTable()
+        {
             Dictionary<uint, string> subjects = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "item_id", "name" },
@@ -32,31 +63,15 @@ namespace PK
                     new Tuple<string, Relation, object>("dictionary_id",Relation.EQUAL,1)
                 }).ToDictionary(s1 => (uint)s1[0], s2 => s2[1].ToString());
 
-            dgvExams_Subject.Items.AddRange(subjects.Values.ToArray());
-
+            dataGridView.Rows.Clear();
             foreach (object[] row in _DB_Connection.Select(DB_Table.EXAMINATIONS))
-                dgvExams.Rows.Add(
+                dataGridView.Rows.Add(
                     row[0],
                     subjects[(uint)row[2]],
                     row[3],
                     row[4],
                     row[5]
                     );
-        }
-
-        private void dgv_DataError(object sender, DataGridViewDataErrorEventArgs e) => MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-        private void dgvExams_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            dgvExamsAudiences.Rows.Clear();
-            foreach (object[] row in _DB_Connection.Select(
-                DB_Table.EXAMINATIONS_AUDIENCES,
-                new string[] { "number", "capacity" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,dgvExams[0,e.RowIndex].Value)
-                }))
-                dgvExamsAudiences.Rows.Add(row[0], row[1]);
         }
     }
 }

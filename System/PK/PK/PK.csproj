@@ -76,6 +76,12 @@
     <Compile Include="DataManager.cs" />
     <Compile Include="DB_Connector.cs" />
     <Compile Include="DB_TableEnum.cs" />
+    <Compile Include="ExaminationEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExaminationEditForm.Designer.cs">
+      <DependentUpon>ExaminationEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExaminationsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DirectionSelect.resx">
       <DependentUpon>DirectionSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExaminationEditForm.resx">
+      <DependentUpon>ExaminationEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExaminationsForm.resx">
       <DependentUpon>ExaminationsForm.cs</DependentUpon>

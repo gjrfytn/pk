@@ -29,141 +29,166 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dgvExams = new System.Windows.Forms.DataGridView();
-            this.dgvExamsAudiences = new System.Windows.Forms.DataGridView();
-            this.dgvExamsAudiences_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExamsAudiences_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBox = new System.Windows.Forms.GroupBox();
-            this.dgvExams_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_Subject = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dgvExams_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_RegStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_RegEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvExamsAudiences)).BeginInit();
-            this.groupBox.SuspendLayout();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_RegStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_RegEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel = new System.Windows.Forms.Panel();
+            this.controlPanel = new System.Windows.Forms.Panel();
+            this.bEdit = new System.Windows.Forms.Button();
+            this.bAdd = new System.Windows.Forms.Button();
+            this.bMarks = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.panel.SuspendLayout();
+            this.controlPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dgvExams
+            // dataGridView
             // 
-            this.dgvExams.AllowUserToResizeColumns = false;
-            this.dgvExams.AllowUserToResizeRows = false;
-            this.dgvExams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvExams.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dgvExams_ID,
-            this.dgvExams_Subject,
-            this.dgvExams_Date,
-            this.dgvExams_RegStartDate,
-            this.dgvExams_RegEndDate});
-            this.dgvExams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvExams.Location = new System.Drawing.Point(0, 0);
-            this.dgvExams.MultiSelect = false;
-            this.dgvExams.Name = "dgvExams";
-            this.dgvExams.RowHeadersWidth = 30;
-            this.dgvExams.Size = new System.Drawing.Size(608, 472);
-            this.dgvExams.TabIndex = 0;
-            this.dgvExams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
-            this.dgvExams.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvExams_RowEnter);
+            this.dataGridView.AllowUserToResizeColumns = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridView_ID,
+            this.dataGridView_Subject,
+            this.dataGridView_Date,
+            this.dataGridView_RegStartDate,
+            this.dataGridView_RegEndDate});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
+            this.dataGridView.RowHeadersVisible = false;
+            this.dataGridView.RowHeadersWidth = 30;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(746, 428);
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             // 
-            // dgvExamsAudiences
+            // dataGridView_ID
             // 
-            this.dgvExamsAudiences.AllowUserToResizeColumns = false;
-            this.dgvExamsAudiences.AllowUserToResizeRows = false;
-            this.dgvExamsAudiences.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvExamsAudiences.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dgvExamsAudiences_Number,
-            this.dgvExamsAudiences_Capacity});
-            this.dgvExamsAudiences.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvExamsAudiences.Location = new System.Drawing.Point(3, 16);
-            this.dgvExamsAudiences.MultiSelect = false;
-            this.dgvExamsAudiences.Name = "dgvExamsAudiences";
-            this.dgvExamsAudiences.RowHeadersWidth = 30;
-            this.dgvExamsAudiences.Size = new System.Drawing.Size(132, 453);
-            this.dgvExamsAudiences.TabIndex = 1;
-            this.dgvExamsAudiences.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
+            this.dataGridView_ID.DataPropertyName = "id";
+            this.dataGridView_ID.HeaderText = "ID";
+            this.dataGridView_ID.Name = "dataGridView_ID";
+            this.dataGridView_ID.ReadOnly = true;
+            this.dataGridView_ID.Visible = false;
             // 
-            // dgvExamsAudiences_Number
+            // dataGridView_Subject
             // 
-            this.dgvExamsAudiences_Number.HeaderText = "Номер";
-            this.dgvExamsAudiences_Number.Name = "dgvExamsAudiences_Number";
-            this.dgvExamsAudiences_Number.Width = 50;
+            this.dataGridView_Subject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_Subject.HeaderText = "Дисциплина";
+            this.dataGridView_Subject.Name = "dataGridView_Subject";
+            this.dataGridView_Subject.ReadOnly = true;
+            this.dataGridView_Subject.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_Subject.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // dgvExamsAudiences_Capacity
+            // dataGridView_Date
             // 
-            this.dgvExamsAudiences_Capacity.HeaderText = "Места";
-            this.dgvExamsAudiences_Capacity.Name = "dgvExamsAudiences_Capacity";
-            this.dgvExamsAudiences_Capacity.Width = 50;
-            // 
-            // groupBox
-            // 
-            this.groupBox.Controls.Add(this.dgvExamsAudiences);
-            this.groupBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox.Location = new System.Drawing.Point(608, 0);
-            this.groupBox.Name = "groupBox";
-            this.groupBox.Size = new System.Drawing.Size(138, 472);
-            this.groupBox.TabIndex = 2;
-            this.groupBox.TabStop = false;
-            this.groupBox.Text = "Аудитории";
-            // 
-            // dgvExams_ID
-            // 
-            this.dgvExams_ID.HeaderText = "ID";
-            this.dgvExams_ID.Name = "dgvExams_ID";
-            this.dgvExams_ID.Visible = false;
-            // 
-            // dgvExams_Subject
-            // 
-            this.dgvExams_Subject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvExams_Subject.HeaderText = "Дисциплина";
-            this.dgvExams_Subject.Name = "dgvExams_Subject";
-            // 
-            // dgvExams_Date
-            // 
-            this.dgvExams_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_Date.DataPropertyName = "date";
             dataGridViewCellStyle1.NullValue = null;
-            this.dgvExams_Date.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvExams_Date.HeaderText = "Дата проведения";
-            this.dgvExams_Date.Name = "dgvExams_Date";
+            this.dataGridView_Date.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView_Date.HeaderText = "Дата проведения";
+            this.dataGridView_Date.Name = "dataGridView_Date";
+            this.dataGridView_Date.ReadOnly = true;
             // 
-            // dgvExams_RegStartDate
+            // dataGridView_RegStartDate
             // 
-            this.dgvExams_RegStartDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvExams_RegStartDate.HeaderText = "Дата начала потока";
-            this.dgvExams_RegStartDate.Name = "dgvExams_RegStartDate";
+            this.dataGridView_RegStartDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_RegStartDate.DataPropertyName = "reg_start_date";
+            this.dataGridView_RegStartDate.HeaderText = "Дата начала потока";
+            this.dataGridView_RegStartDate.Name = "dataGridView_RegStartDate";
+            this.dataGridView_RegStartDate.ReadOnly = true;
             // 
-            // dgvExams_RegEndDate
+            // dataGridView_RegEndDate
             // 
-            this.dgvExams_RegEndDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvExams_RegEndDate.HeaderText = "Дата окончания потока";
-            this.dgvExams_RegEndDate.Name = "dgvExams_RegEndDate";
+            this.dataGridView_RegEndDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_RegEndDate.DataPropertyName = "reg_end_date";
+            this.dataGridView_RegEndDate.HeaderText = "Дата окончания потока";
+            this.dataGridView_RegEndDate.Name = "dataGridView_RegEndDate";
+            this.dataGridView_RegEndDate.ReadOnly = true;
+            // 
+            // panel
+            // 
+            this.panel.Controls.Add(this.dataGridView);
+            this.panel.Controls.Add(this.controlPanel);
+            this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel.Location = new System.Drawing.Point(0, 0);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(746, 469);
+            this.panel.TabIndex = 3;
+            // 
+            // controlPanel
+            // 
+            this.controlPanel.Controls.Add(this.bMarks);
+            this.controlPanel.Controls.Add(this.bEdit);
+            this.controlPanel.Controls.Add(this.bAdd);
+            this.controlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.controlPanel.Location = new System.Drawing.Point(0, 428);
+            this.controlPanel.Name = "controlPanel";
+            this.controlPanel.Size = new System.Drawing.Size(746, 41);
+            this.controlPanel.TabIndex = 0;
+            // 
+            // bEdit
+            // 
+            this.bEdit.Location = new System.Drawing.Point(84, 6);
+            this.bEdit.Name = "bEdit";
+            this.bEdit.Size = new System.Drawing.Size(94, 23);
+            this.bEdit.TabIndex = 1;
+            this.bEdit.Text = "Редактировать";
+            this.bEdit.UseVisualStyleBackColor = true;
+            this.bEdit.Click += new System.EventHandler(this.bEdit_Click);
+            // 
+            // bAdd
+            // 
+            this.bAdd.Location = new System.Drawing.Point(12, 6);
+            this.bAdd.Name = "bAdd";
+            this.bAdd.Size = new System.Drawing.Size(66, 23);
+            this.bAdd.TabIndex = 0;
+            this.bAdd.Text = "Добавить";
+            this.bAdd.UseVisualStyleBackColor = true;
+            this.bAdd.Click += new System.EventHandler(this.bAdd_Click);
+            // 
+            // bMarks
+            // 
+            this.bMarks.Location = new System.Drawing.Point(184, 6);
+            this.bMarks.Name = "bMarks";
+            this.bMarks.Size = new System.Drawing.Size(54, 23);
+            this.bMarks.TabIndex = 2;
+            this.bMarks.Text = "Оценки";
+            this.bMarks.UseVisualStyleBackColor = true;
+            this.bMarks.Click += new System.EventHandler(this.bMarks_Click);
             // 
             // ExaminationsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(746, 472);
-            this.Controls.Add(this.dgvExams);
-            this.Controls.Add(this.groupBox);
+            this.ClientSize = new System.Drawing.Size(746, 469);
+            this.Controls.Add(this.panel);
             this.Name = "ExaminationsForm";
             this.Text = "ExaminationsForm";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvExamsAudiences)).EndInit();
-            this.groupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.panel.ResumeLayout(false);
+            this.controlPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dgvExams;
-        private System.Windows.Forms.DataGridView dgvExamsAudiences;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsAudiences_Number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsAudiences_Capacity;
-        private System.Windows.Forms.GroupBox groupBox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_ID;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvExams_Subject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_RegStartDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_RegEndDate;
+        private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.Panel panel;
+        private System.Windows.Forms.Panel controlPanel;
+        private System.Windows.Forms.Button bAdd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Subject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_RegStartDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_RegEndDate;
+        private System.Windows.Forms.Button bEdit;
+        private System.Windows.Forms.Button bMarks;
     }
 }
