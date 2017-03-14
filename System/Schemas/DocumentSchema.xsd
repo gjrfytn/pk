@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:complexType name="TFont">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Параметры шрифта.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Name" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Имя.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Size" type="xs:unsignedShort" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Размер.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Style" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Стиль.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Bold"/>
+            <xs:enumeration value="Italic"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Color" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Цвет.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Red"/>
+            <xs:enumeration value="Violet"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:all>
+    <xs:attribute name="ID" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="ru">ID для ссылок.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="Template">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Корневой элемент.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Fonts">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Шрифты, используемые в документе.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Font" type="TFont" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Шрифт.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Document">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Шаблон документа.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="Excel">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Часть для таблиц Excel.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="Placeholder" type="xs:string" minOccurs="0">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Structure">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Форматирование таблицы.</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Column" maxOccurs="unbounded">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Столбец.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Caption" type="xs:string">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Заголовок.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Width" type="xs:unsignedShort" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Ширина.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="CaptionFontID" type="xs:string" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="DataFontID" type="xs:string" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Placeholder" type="xs:string" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Word">
+                <xs:annotation>
+                  <xs:documentation xml:lang="ru">Часть для документов Word.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="Properties" minOccurs="0">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Параметры документа.</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element name="Album" minOccurs="0">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Альбомная ориентация.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType/>
+                          </xs:element>
+                          <xs:element name="A5" minOccurs="0">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Формат A5.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType/>
+                          </xs:element>
+                          <xs:element name="Borders" minOccurs="0">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Рамка.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType/>
+                          </xs:element>
+                          <xs:element name="Margins" minOccurs="0">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Отступы по краям.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:all>
+                                <xs:element name="Left" type="xs:unsignedShort" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Левый.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Top" type="xs:unsignedShort" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Верхний.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Right" type="xs:unsignedShort" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Правый.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Bottom" type="xs:unsignedShort" minOccurs="0">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Нижний.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                              </xs:all>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Structure">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Структура документа.</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Element" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:choice>
+                                <xs:element name="Paragraph">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Параграф (строка).</xs:documentation>
+                                  </xs:annotation>
+                                  <xs:complexType>
+                                    <xs:all>
+                                      <xs:element name="Alighment" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Выравнивание.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                          <xs:restriction base="xs:string">
+                                            <xs:enumeration value="Center"/>
+                                            <xs:enumeration value="Right"/>
+                                            <xs:enumeration value="Both"/>
+                                          </xs:restriction>
+                                        </xs:simpleType>
+                                      </xs:element>
+                                      <xs:element name="FontID" type="xs:string" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
+                                      <xs:element name="Parts" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Составные части параграфа.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="Part" maxOccurs="unbounded">
+                                              <xs:annotation>
+                                                <xs:documentation xml:lang="ru">Часть параграфа.</xs:documentation>
+                                              </xs:annotation>
+                                              <xs:complexType>
+                                                <xs:all>
+                                                  <xs:element name="FontID" type="xs:string" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                  <xs:element name="Text">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Простой текст.</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:complexType>
+                                                      <xs:choice>
+                                                        <xs:element name="String" type="xs:string">
+                                                          <xs:annotation>
+                                                            <xs:documentation xml:lang="ru">Текст.</xs:documentation>
+                                                          </xs:annotation>
+                                                        </xs:element>
+                                                        <xs:element name="Placeholder" type="xs:string">
+                                                          <xs:annotation>
+                                                            <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
+                                                          </xs:annotation>
+                                                        </xs:element>
+                                                      </xs:choice>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                </xs:all>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:all>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Table">
+                                  <xs:complexType>
+                                    <xs:annotation>
+                                      <xs:documentation xml:lang="ru">Таблица.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:all>
+                                      <xs:element name ="Numeration" type="xs:boolean">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Создавать столбец с номерами строк.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
+                                      <xs:element name="Placeholder" type="xs:string">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
+                                      <xs:element name="Structure">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Форматирование таблицы.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="Column" maxOccurs="unbounded">
+                                              <xs:annotation>
+                                                <xs:documentation xml:lang="ru">Столбец.</xs:documentation>
+                                              </xs:annotation>
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="Caption" type="xs:string">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Заголовок.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                  <xs:element name="Width" type="xs:unsignedShort" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ширина.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                  <xs:element name="CaptionFontID" type="xs:string" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                  <xs:element name="DataFontID" type="xs:string" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:all>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:choice>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

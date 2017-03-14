@@ -29,14 +29,14 @@ namespace PK
             _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[0].Value } });
         }
 
-        private void bAdd_Click(object sender, EventArgs e)
+        private void toolStrip_Add_Click(object sender, EventArgs e)
         {
             ExaminationEditForm form = new ExaminationEditForm(_DB_Connection, null);
             form.ShowDialog();
             UpdateTable();
         }
 
-        private void bEdit_Click(object sender, EventArgs e)
+        private void toolStrip_Edit_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count != 0)
             {
@@ -48,9 +48,10 @@ namespace PK
                 MessageBox.Show("Выберите экзамен.");
         }
 
-        private void bMarks_Click(object sender, EventArgs e)
+        private void toolStrip_Marks_Click(object sender, EventArgs e)
         {
-
+            ExaminationMarksForm form = new ExaminationMarksForm(_DB_Connection, (uint)dataGridView.SelectedRows[0].Cells[0].Value);
+            form.ShowDialog();
         }
 
         void UpdateTable()

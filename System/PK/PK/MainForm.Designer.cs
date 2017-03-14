@@ -43,6 +43,7 @@
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Campaign_Exams = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +83,8 @@
             // menuStrip_Campaign
             // 
             this.menuStrip_Campaign.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuStrip_Campaign_Campaigns});
+            this.menuStrip_Campaign_Campaigns,
+            this.menuStrip_Campaign_Exams});
             this.menuStrip_Campaign.Name = "menuStrip_Campaign";
             this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 20);
             this.menuStrip_Campaign.Text = "Приемная кампания";
@@ -163,6 +165,13 @@
             this.menuStrip_DirDictionary.Text = "Справочник направлений ФИС";
             this.menuStrip_DirDictionary.Click += new System.EventHandler(this.menuStrip_DirDictionary_Click);
             // 
+            // menuStrip_Campaign_Exams
+            // 
+            this.menuStrip_Campaign_Exams.Name = "menuStrip_Campaign_Exams";
+            this.menuStrip_Campaign_Exams.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Exams.Text = "Экзамены";
+            this.menuStrip_Campaign_Exams.Click += new System.EventHandler(this.menuStrip_Campaign_Exams_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -199,6 +208,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Help;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Dictionaries;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_DirDictionary;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Exams;
     }
 }
 

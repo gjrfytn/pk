@@ -59,5 +59,11 @@ namespace PK
             DirectionsProfilesForm form = new DirectionsProfilesForm();
             form.ShowDialog();
         }
+
+        private void menuStrip_Campaign_Exams_Click(object sender, EventArgs e)
+        {
+            ExaminationsForm form = new ExaminationsForm(_DB_Connection);
+            form.ShowDialog();
+        }
     }
 }

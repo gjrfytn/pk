@@ -1450,6 +1450,23 @@ END$$
 
 DELIMITER ;
 
+-- -----------------------------------------------------
+-- procedure get_entrants_marks
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_entrants_marks` (id INT UNSIGNED)
+BEGIN
+SELECT uid, CONCAT_WS(' ',last_name,first_name,middle_name), mark FROM
+entrants_examinations_marks
+JOIN
+entrants ON entrant_uid=entrants.uid
+WHERE examination_id=id;
+END$$
+
+DELIMITER ;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

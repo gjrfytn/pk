@@ -191,7 +191,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ExaminationEditForm";
-            this.Text = "ExaminationEditForm";
+            this.Text = "Экзамен";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBox.ResumeLayout(false);
             this.ResumeLayout(false);

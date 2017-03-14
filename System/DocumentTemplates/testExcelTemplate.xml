@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Template
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
+  <Fonts>
+    <Font ID="Usual">
+      <Name>Arial</Name>
+      <Size>20</Size>
+    </Font>
+    <Font ID="UsualBold">
+      <Name>Arial</Name>
+      <Size>20</Size>
+      <Style>Bold</Style>
+    </Font>
+  </Fonts>
+  <Document>
+    <Excel>
+      <!--<Placeholder>campaignEduForms</Placeholder>-->
+      <Structure>
+        <Column>
+          <Caption>Наименование</Caption>
+          <Width>100</Width>
+          <CaptionFontID>UsualBold</CaptionFontID>
+          <Placeholder>campaignName</Placeholder>
+        </Column>
+        <Column>
+          <Caption>Старт</Caption>
+          <DataFontID>Usual</DataFontID>
+          <Placeholder>campaignStartYear</Placeholder>
+        </Column>
+        <Column>
+          <Caption>Статус</Caption>
+          <Placeholder>campaignStatus</Placeholder>
+        </Column>
+      </Structure>
+    </Excel>
+  </Document>
+</Template>

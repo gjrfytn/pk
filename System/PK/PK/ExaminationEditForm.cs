@@ -16,7 +16,7 @@ namespace PK
             InitializeComponent();
 
             dataGridView_Number.ValueType = typeof(ushort);
-            dataGridView_Capacity.ValueType = typeof(short);
+            dataGridView_Capacity.ValueType = typeof(ushort);
             #endregion
 
             _DB_Connection = connection;
@@ -61,17 +61,16 @@ namespace PK
         private void bSave_Click(object sender, EventArgs e)
         {
             if (cbSubject.SelectedIndex != -1)
-            {
-                foreach (DataGridViewRow row in dataGridView.Rows)
+                if (dataGridView.Rows.Count > 1)
                 {
-                    if (!row.IsNewRow && (row.Cells[0].Value == null || row.Cells[1].Value == null))
-                    {
-                        MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if (!row.IsNewRow && (row.Cells[0].Value == null || row.Cells[1].Value == null))
+                        {
+                            MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
 
-                Dictionary<string, object> data = new Dictionary<string, object>
+                    Dictionary<string, object> data = new Dictionary<string, object>
                        {
                         {"subject_dict_id",1},
                         {"subject_id",_DB_Connection.Select(
@@ -88,35 +87,37 @@ namespace PK
                         {"reg_end_date",dtpRegEndDate.Value}
                        };
 
-                if (_ID.HasValue)
-                {
-                    _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } });
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                        if (!row.IsNewRow)
-                            _DB_Connection.InsertOnDuplicateUpdate(
-                                DB_Table.EXAMINATIONS_AUDIENCES,
-                                new Dictionary<string, object> {
+                    if (_ID.HasValue)
+                    {
+                        _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } });
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                            if (!row.IsNewRow)
+                                _DB_Connection.InsertOnDuplicateUpdate(
+                                    DB_Table.EXAMINATIONS_AUDIENCES,
+                                    new Dictionary<string, object> {
                                 { "examination_id", _ID },
                                 { "number", row.Cells[0].Value },
                                 { "capacity", row.Cells[1].Value }
-                                });
-                }
-                else
-                {
-                    uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data);
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                        if (!row.IsNewRow)
-                            _DB_Connection.Insert(
-                            DB_Table.EXAMINATIONS_AUDIENCES,
-                            new Dictionary<string, object> {
+                                    });
+                    }
+                    else
+                    {
+                        uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data);
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                            if (!row.IsNewRow)
+                                _DB_Connection.Insert(
+                                DB_Table.EXAMINATIONS_AUDIENCES,
+                                new Dictionary<string, object> {
                                 { "examination_id", id },
                                 { "number", row.Cells[0].Value },
                                 { "capacity", row.Cells[1].Value }
-                            });
-                }
+                                });
+                    }
 
-                Close();
-            }
+                    Close();
+                }
+                else
+                    MessageBox.Show("Не добавлено ни одной аудитории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
                 MessageBox.Show("Не выбрана дисциплина.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
