@@ -58,7 +58,7 @@ namespace PK
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
-            DocumentCreator.CreateFromTemplate(_DB_Connection, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaMarks.xml", "AlphaMarks", _ExaminationID);
+            DocumentCreator.Create(_DB_Connection, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaMarks.xml", "AlphaMarks", _ExaminationID);
         }
 
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)

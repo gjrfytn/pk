@@ -22,6 +22,7 @@ namespace PK
         EXAMINATIONS,
         EXAMINATIONS_AUDIENCES,
         ENTRANTS_EXAMINATIONS_MARKS,
-        ENTRANTS
+        ENTRANTS,
+        APPLICATIONS
     }
 }

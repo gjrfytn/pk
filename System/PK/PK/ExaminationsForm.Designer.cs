@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExaminationsForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,6 +40,7 @@
             this.toolStrip_Add = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Marks = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Distribute = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -89,8 +90,8 @@
             // 
             this.dataGridView_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_Date.DataPropertyName = "date";
-            dataGridViewCellStyle3.NullValue = null;
-            this.dataGridView_Date.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.NullValue = null;
+            this.dataGridView_Date.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView_Date.HeaderText = "Дата проведения";
             this.dataGridView_Date.Name = "dataGridView_Date";
             this.dataGridView_Date.ReadOnly = true;
@@ -116,6 +117,7 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStrip_Add,
             this.toolStrip_Edit,
+            this.toolStrip_Distribute,
             this.toolStrip_Marks});
             this.toolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
@@ -151,6 +153,15 @@
             this.toolStrip_Marks.Text = "Оценки";
             this.toolStrip_Marks.Click += new System.EventHandler(this.toolStrip_Marks_Click);
             // 
+            // toolStrip_Distribute
+            // 
+            this.toolStrip_Distribute.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Distribute.Image")));
+            this.toolStrip_Distribute.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Distribute.Name = "toolStrip_Distribute";
+            this.toolStrip_Distribute.Size = new System.Drawing.Size(103, 22);
+            this.toolStrip_Distribute.Text = "Распределить";
+            this.toolStrip_Distribute.Click += new System.EventHandler(this.toolStrip_Distribute_Click);
+            // 
             // ExaminationsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -180,5 +191,6 @@
         private System.Windows.Forms.ToolStripButton toolStrip_Add;
         private System.Windows.Forms.ToolStripButton toolStrip_Edit;
         private System.Windows.Forms.ToolStripButton toolStrip_Marks;
+        private System.Windows.Forms.ToolStripButton toolStrip_Distribute;
     }
 }

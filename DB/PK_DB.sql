@@ -1390,7 +1390,7 @@ COMMENT = 'Внутренние экзамены.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations_audiences` (
   `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
-  `number` SMALLINT UNSIGNED NOT NULL COMMENT 'Номер аудитории.',
+  `number` VARCHAR(5) NOT NULL COMMENT 'Номер аудитории.',
   `capacity` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество мест.',
   PRIMARY KEY (`examination_id`, `number`),
   INDEX `has` (`examination_id` ASC),
@@ -1425,6 +1425,15 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants_examinations_marks` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Оценки абитуриентов по внутренним экзаменам.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`constants`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
+  `min_math_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по математике.')
+ENGINE = InnoDB
+COMMENT = 'Константы.';
 
 USE `PK_DB` ;
 
