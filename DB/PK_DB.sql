@@ -538,7 +538,7 @@ COMMENT = 'common_benefits:\nOlympicDiplomTypes.OlympicDiplomTypeID[1..n] - ИД
 CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_19_items` (
   `olympic_id` INT UNSIGNED NOT NULL COMMENT 'ИД олимпиады.',
   `olympic_number` INT UNSIGNED NULL COMMENT 'Номер олимпиады.',
-  `olympic_name` VARCHAR(50) NOT NULL COMMENT 'Имя олимпиады.',
+  `olympic_name` VARCHAR(200) NOT NULL COMMENT 'Имя олимпиады.',
   PRIMARY KEY (`olympic_id`))
 ENGINE = InnoDB
 COMMENT = 'Справочник №19 \"Олимпиады\".';

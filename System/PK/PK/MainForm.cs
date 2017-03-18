@@ -48,6 +48,12 @@ namespace PK
             form.ShowDialog();
         }
 
+        private void menuStrip_OlympDictionary_Click(object sender, EventArgs e)
+        {
+            OlympicsDictionaryForm form = new OlympicsDictionaryForm(_DB_Connection);
+            form.ShowDialog();
+        }
+
         private void menuStrip_Faculties_Click(object sender, EventArgs e)
         {
             FacultiesForm form = new FacultiesForm();

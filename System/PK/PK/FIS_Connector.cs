@@ -5,6 +5,9 @@ using System.Xml.Linq;
 
 namespace PK
 {
+    using Olympic =
+        Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
+
     class FIS_Connector
     {
         string _Login;
@@ -27,7 +30,7 @@ namespace PK
 
             if (doc.Root.Name == "Error" && doc.Root.Element("ErrorText").Value.Contains("Ошибка авторизации")) //TODO
                 throw new System.Exception(doc.Root.Element("ErrorText").Value);*/
-                //
+            //
         }
 
         public Dictionary<uint, string> GetDictionaries()
@@ -47,7 +50,7 @@ namespace PK
             XDocument doc = XDocument.Load("tempDictList.xml");
             Dictionary<uint, string> dictionaries = new Dictionary<uint, string>();
 
-            foreach (var dict in doc.Root.Elements())
+            foreach (XElement dict in doc.Root.Elements())
                 dictionaries.Add(uint.Parse(dict.Element("Code").Value), dict.Element("Name").Value);
 
             return dictionaries;
@@ -72,11 +75,11 @@ namespace PK
           XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
             //
 
-            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + dictionaryID+".xml");
+            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + dictionaryID + ".xml");
             Dictionary<uint, string> dictionaryItems = new Dictionary<uint, string>();
 
             if (doc.Root.Element("DictionaryItems") != null)//TODO Из-за 24 справочника, в котором вопреки спецификации вообще нету элементов. Возможно из-за тестового клиента.
-                foreach (var item in doc.Root.Element("DictionaryItems").Elements())
+                foreach (XElement item in doc.Root.Element("DictionaryItems").Elements())
                     if (item.Element("Name") != null) //TODO Из-за 9 справочника, в котором вопреки спецификации нету элемента Name. Возможно из-за тестового клиента.
                         dictionaryItems.Add(uint.Parse(item.Element("ID").Value), item.Element("Name").Value);
                     else
@@ -105,7 +108,7 @@ namespace PK
             XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 10 + ".xml");
             Dictionary<uint, string[]> dictionaryItems = new Dictionary<uint, string[]>();
 
-            foreach (var item in doc.Root.Element("DictionaryItems").Elements())
+            foreach (XElement item in doc.Root.Element("DictionaryItems").Elements())
                 dictionaryItems.Add(
                     uint.Parse(item.Element("ID").Value),
                     new string[]
@@ -118,6 +121,60 @@ namespace PK
                             item.Element("UGSName").Value
                     }
                     );
+
+            return dictionaryItems;
+        }
+
+        public Olympic GetOlympicsDictionaryItems()
+        {
+            //
+            /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
+                     @"<Root>
+                     <GetDictionaryContent>
+                         <DictionaryCode>" + 19 + @"</DictionaryCode>
+                     </GetDictionaryContent>
+                     <AuthData>
+                         <Login>" + _Login + @"</Login>
+                         <Pass>" + _Password + @"</Pass>
+                     </AuthData>
+                 </Root>"
+             );
+           XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
+            //
+
+            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 19 + ".xml");
+            Olympic dictionaryItems = new Olympic();
+
+            foreach (XElement olymp in doc.Root.Element("DictionaryItems").Elements())
+            {
+                Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>> profiles =
+                    new Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>();
+                foreach (XElement prof in olymp.Element("Profiles").Elements())
+                {
+                    profiles.Add(
+                        new System.Tuple<uint, uint>(
+                            39,
+                            uint.Parse(prof.Element("ProfileID").Value)
+                            ),
+                        new System.Tuple<System.Tuple<uint, uint>[], uint, uint>(
+                            System.Linq.Enumerable.ToArray(
+                                System.Linq.Enumerable.Select(
+                                    System.Linq.Enumerable.Where(
+                                        prof.Element("Subjects").Elements(),/*TODO в ФИС сидят идиоты 2*/e => e.Value != "0"),
+                                    s => new System.Tuple<uint, uint>(1, uint.Parse(s.Value)))
+                                    ),
+                            3,
+                            uint.Parse(prof.Element("LevelID").Value) != 0 ? uint.Parse(prof.Element("LevelID").Value) : 255 //TODO Временно, т.к. в ФИС сидят идиоты
+                            ));
+                }
+                dictionaryItems.Add(
+                    uint.Parse(olymp.Element("OlympicID").Value),
+                    new System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>(
+                       olymp.Element("OlympicNumber") != null ? (uint?)uint.Parse(olymp.Element("OlympicNumber").Value) : null,
+                        olymp.Element("OlympicName").Value,
+                        profiles
+                    ));
+            }
 
             return dictionaryItems;
         }
