@@ -22,6 +22,15 @@
       <Size>14</Size>
       <Color>Violet</Color>
     </Font>
+	<Font ID="UsualTable">
+      <Name>Arial</Name>
+      <Size>10</Size>
+    </Font>
+    <Font ID="UsualBoldTable">
+      <Name>Arial</Name>
+      <Size>10</Size>
+      <Style>Bold</Style>
+    </Font>
   </Fonts>
   <Document>
     <Word>
@@ -217,23 +226,23 @@
             <Structure>
               <Column>
                 <Caption>№ п/п</Caption>
-                <CaptionFontID>UsualBold</CaptionFontID>
-                <DataFontID>Usual</DataFontID>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
               </Column>
               <Column>
                 <Caption>Рег. номер</Caption>
-                <CaptionFontID>UsualBold</CaptionFontID>
-                <DataFontID>Usual</DataFontID>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
               </Column>
               <Column>
                 <Caption>ФИО</Caption>
-                <CaptionFontID>UsualBold</CaptionFontID>
-                <DataFontID>Usual</DataFontID>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
               </Column>
               <Column>
                 <Caption>Оценка</Caption>
-                <CaptionFontID>UsualBold</CaptionFontID>
-                <DataFontID>Usual</DataFontID>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
               </Column>
             </Structure>
           </Table>

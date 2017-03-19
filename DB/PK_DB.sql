@@ -538,7 +538,7 @@ COMMENT = 'common_benefits:\nOlympicDiplomTypes.OlympicDiplomTypeID[1..n] - ИД
 CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_19_items` (
   `olympic_id` INT UNSIGNED NOT NULL COMMENT 'ИД олимпиады.',
   `olympic_number` INT UNSIGNED NULL COMMENT 'Номер олимпиады.',
-  `olympic_name` VARCHAR(50) NOT NULL COMMENT 'Имя олимпиады.',
+  `olympic_name` VARCHAR(200) NOT NULL COMMENT 'Имя олимпиады.',
   PRIMARY KEY (`olympic_id`))
 ENGINE = InnoDB
 COMMENT = 'Справочник №19 \"Олимпиады\".';
@@ -1390,7 +1390,7 @@ COMMENT = 'Внутренние экзамены.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations_audiences` (
   `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
-  `number` SMALLINT UNSIGNED NOT NULL COMMENT 'Номер аудитории.',
+  `number` VARCHAR(5) NOT NULL COMMENT 'Номер аудитории.',
   `capacity` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество мест.',
   PRIMARY KEY (`examination_id`, `number`),
   INDEX `has` (`examination_id` ASC),
@@ -1425,6 +1425,15 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants_examinations_marks` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Оценки абитуриентов по внутренним экзаменам.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`constants`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
+  `min_math_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по математике.')
+ENGINE = InnoDB
+COMMENT = 'Константы.';
 
 USE `PK_DB` ;
 

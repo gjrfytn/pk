@@ -60,47 +60,59 @@ namespace PK
                             }
                     }
                     else
+                        AddTable(
+                            doc,
+                            element.Element("Table"),
+                            fonts,
+                            connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
+                                .ConvertAll(row => System.Array.ConvertAll(row, c => c.ToString()))
+                            );
+                }
+
+                doc.Save();
+            }
+
+            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            {
+                DocX doc = DocX.Create(resultFile + ".docx");
+
+                AddCoreProperties(doc);
+
+                if (wordTemplateElement.Element("Properties") != null)
+                    ApplyProperties(doc, wordTemplateElement.Element("Properties"));
+
+                foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
+                {
+                    if (element.Element("Paragraph") != null)
                     {
-                        XElement tableElem = element.Element("Table");
+                        XElement parElem = element.Element("Paragraph");
+                        Paragraph paragraph = doc.InsertParagraph();
 
-                        List<string> colNames;
-                        Dictionary<byte, ushort> colWidths;
-                        List<System.Tuple<string, string>> colFonts;
-                        GetTableFormatting(tableElem, out colNames, out colWidths, out colFonts);
+                        if (parElem.Element("Alighment") != null)
+                            paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
 
-                        List<object[]> rows = connection.RunProcedure(_PH_Table[tableElem.Element("Placeholder").Value], id);
+                        string parFontID = parElem.Element("FontID")?.Value;
 
-                        bool numeration = bool.Parse(tableElem.Element("Numeration").Value);
-
-                        Table table = doc.InsertTable(1, colNames.Count);
-                        table.Design = TableDesign.TableGrid;
-
-                        for (byte i = 0; i < colNames.Count; ++i)
-                        {
-                            Paragraph paragraph = table.Rows[0].Cells[i].InsertParagraph(colNames[i]);
-                            SetFont(paragraph, fonts, colFonts[i].Item1);
-                            // if (colWidths.ContainsKey(i))
-                            //     table.SetColumnWidth(i, colWidths[i]); //TODO
-                        }
-
-                        byte count = 1;
-                        foreach (object[] row in rows)
-                        {
-                            table.InsertRow();
-                            if (numeration)
+                        if (parElem.Element("Parts") != null)
+                            foreach (XElement part in parElem.Element("Parts").Elements())
                             {
-                                Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[0].InsertParagraph(count.ToString());
-                                SetFont(paragraph, fonts, colFonts[0].Item2);
-                                count++;
-                            }
+                                XElement text = part.Element("Text");
 
-                            for (byte i = 0; i < row.Length; ++i)
-                            {
-                                Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numeration ? 1 : 0)].InsertParagraph(row[i].ToString());
-                                SetFont(paragraph, fonts, colFonts[i].Item2);
+                                if (text.Element("String") != null)
+                                    paragraph.Append(text.Element("String").Value);
+                                else
+                                    paragraph.Append(singleParams[int.Parse(text.Element("Placeholder").Value)]);
+
+                                SetFont(paragraph, fonts, part.Element("FontID")?.Value ?? parFontID);
                             }
-                        }
                     }
+                    else
+                        AddTable(
+                            doc,
+                            element.Element("Table"),
+                            fonts,
+                            tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
+                            );
                 }
 
                 doc.Save();
@@ -213,6 +225,48 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     new XElement(w + "right", borderVal, borderSz, borderSpace, borderColor)
                     ));
             }
+
+            static void AddTable(DocX doc, XElement tableElem, Dictionary<string, Font> fonts, List<string[]> rows)
+            {
+                List<string> colNames;
+                Dictionary<byte, ushort> colWidths;
+                List<System.Tuple<string, string>> colFonts;
+                GetTableFormatting(tableElem, out colNames, out colWidths, out colFonts);
+
+                bool numeration = bool.Parse(tableElem.Element("Numeration").Value);
+
+                Table table = doc.InsertTable(1, colNames.Count);
+                table.Design = TableDesign.TableGrid;
+
+                for (byte i = 0; i < colNames.Count; ++i)
+                {
+                    Paragraph paragraph = table.Rows[0].Cells[i].InsertParagraph(colNames[i]);
+                    SetFont(paragraph, fonts, colFonts[i].Item1);
+                    // if (colWidths.ContainsKey(i))
+                    //     table.SetColumnWidth(i, colWidths[i]); //TODO
+                }
+
+                byte count = 1;
+                foreach (object[] row in rows)
+                {
+                    table.InsertRow();
+                    if (numeration)
+                    {
+                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[0].InsertParagraph(count.ToString());
+                        SetFont(paragraph, fonts, colFonts[0].Item2);
+                        count++;
+                    }
+
+                    for (byte i = 0; i < row.Length; ++i)
+                    {
+                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numeration ? 1 : 0)].InsertParagraph(row[i].ToString());
+                        SetFont(paragraph, fonts, colFonts[i].Item2);
+                    }
+                }
+
+                table.AutoFit = AutoFit.Contents; //TODO
+            }
+
         }
     }
 }

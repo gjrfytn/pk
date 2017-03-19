@@ -30,8 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectionsDictionaryForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Update = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,6 +37,8 @@
             this.dataGridView_Period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_UGS_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_UGS_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_Update = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -66,25 +66,6 @@
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.Size = new System.Drawing.Size(931, 537);
             this.dataGridView.TabIndex = 1;
-            // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Update});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(931, 25);
-            this.toolStrip.TabIndex = 2;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // toolStrip_Update
-            // 
-            this.toolStrip_Update.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Update.Image")));
-            this.toolStrip_Update.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Update.Name = "toolStrip_Update";
-            this.toolStrip_Update.Size = new System.Drawing.Size(81, 22);
-            this.toolStrip_Update.Text = "Обновить";
-            this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
             // 
             // dataGridView_ID
             // 
@@ -146,6 +127,25 @@
             this.dataGridView_UGS_Name.Name = "dataGridView_UGS_Name";
             this.dataGridView_UGS_Name.ReadOnly = true;
             // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_Update});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(931, 25);
+            this.toolStrip.TabIndex = 2;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolStrip_Update
+            // 
+            this.toolStrip_Update.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Update.Image")));
+            this.toolStrip_Update.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Update.Name = "toolStrip_Update";
+            this.toolStrip_Update.Size = new System.Drawing.Size(81, 22);
+            this.toolStrip_Update.Text = "Обновить";
+            this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
+            // 
             // DirectionsDictionaryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -154,7 +154,7 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
             this.Name = "DirectionsDictionaryForm";
-            this.Text = "DirectionsDictionaryForm";
+            this.Text = "Направления (справочник №10 ФИС)";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();

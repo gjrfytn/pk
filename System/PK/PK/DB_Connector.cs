@@ -86,7 +86,7 @@ namespace PK
             }
             whereClause = whereClause.Remove(whereClause.Length - 5);
 
-            MySqlCommand cmd = new MySqlCommand("SELECT " + string.Join(", ", fields) + " FROM " + table + " WHERE " + whereClause + ";", _Connection);
+            MySqlCommand cmd = new MySqlCommand("SELECT " + string.Join(", ", fields) + " FROM " + GetTableName(table) + " WHERE " + whereClause + ";", _Connection);
 
             return ExecuteSelect(cmd);
         }

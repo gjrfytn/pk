@@ -250,3 +250,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+System/PK/PK/DB_TableEnum.cs
+System/PK/PK/DB_TableEnum.cs

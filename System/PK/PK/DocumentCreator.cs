@@ -22,7 +22,7 @@ namespace PK
 
         static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
 
-        public static void CreateFromTemplate(DB_Connector connection, string templateFile, string resultFile, uint id)
+        public static void Create(DB_Connector connection, string templateFile, string resultFile, uint id)
         {
             XDocument template = XDocument.Load(templateFile);
 
@@ -34,7 +34,19 @@ namespace PK
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
         }
 
-        public static void CreateFromTemplate(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)
+        public static void Create(string templateFile, string resultFile,string[] singleParams, List<string[]>[] tableParams)
+        {
+            XDocument template = XDocument.Load(templateFile);
+
+            Validate(template);
+
+            if (template.Root.Element("Document").Element("Word") != null)
+                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"),singleParams,tableParams, resultFile);
+            else
+                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+        }
+
+        public static void Create(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)
         {
             XDocument template = XDocument.Load(templateFile);
 
@@ -99,10 +111,14 @@ namespace PK
 
             List<System.Tuple<string, Relation, object>> whereClause;
             if (placeholderValue.Length == 2)
+            {
+                string[] buf = placeholderValue[1].Split('|');
+                placeholderValue[1] = buf[0];
                 whereClause = new List<System.Tuple<string, Relation, object>>
                 {
-                    new System.Tuple<string, Relation, object>(placeholderValue[1].Split('|')[1], Relation.EQUAL, id)
+                    new System.Tuple<string, Relation, object>(buf[1], Relation.EQUAL, id)
                 };
+            }
             else
             {
                 whereClause = new List<System.Tuple<string, Relation, object>>();
