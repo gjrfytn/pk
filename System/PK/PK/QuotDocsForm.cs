@@ -16,10 +16,11 @@ namespace PK
             _Parent = parent;
             cbCause.SelectedIndex = 0;
 
-            cbOrphanhoodDocType.DataSource = Utility.GetDictionaryItems(_DB_Connection, 42);
+            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
+            cbOrphanhoodDocType.DataSource = dbHelper.GetDictionaryItems(42);
             cbOrphanhoodDocType.SelectedIndex = 0;
             cbMedCause.SelectedIndex = 0;
-            cbDisabilityGroup.DataSource = Utility.GetDictionaryItems(_DB_Connection, 23);
+            cbDisabilityGroup.DataSource = dbHelper.GetDictionaryItems(23);
             cbDisabilityGroup.SelectedIndex = 0;
 
             if (_Parent.QouteDoc.cause == "Медицинские показатели")
@@ -99,7 +100,7 @@ namespace PK
                     _Parent.QouteDoc.cause = cbCause.SelectedItem.ToString();
                     _Parent.QouteDoc.orphanhoodDocType = cbOrphanhoodDocType.SelectedItem.ToString();
                     _Parent.QouteDoc.orphanhoodDocOrg = tbOrphanhoodDocOrg.Text;
-                    _Parent.QouteDoc.orphanhoodDocName =tbOrphanhoodDocName.Text;
+                    _Parent.QouteDoc.orphanhoodDocName = tbOrphanhoodDocName.Text;
                     _Parent.QouteDoc.orphanhoodDocDate = dtpOrphanhoodDocDate.Value;
                     saved = true;
                 }

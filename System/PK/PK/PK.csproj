@@ -78,9 +78,10 @@
     <Compile Include="AuthorizationForm.Designer.cs">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataManager.cs" />
     <Compile Include="DB_Connector.cs" />
+    <Compile Include="DB_Helper.cs" />
     <Compile Include="DB_TableEnum.cs" />
+    <Compile Include="DictionaryUpdater.cs" />
     <Compile Include="DocumentCreator.cs" />
     <Compile Include="DocumentCreator.Excel.cs" />
     <Compile Include="DocumentCreator.Placeholders.cs" />

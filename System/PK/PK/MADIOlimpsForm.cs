@@ -14,18 +14,20 @@ namespace PK
 
             _DB_Connection = new DB_Connector();
             _Parent = parent;
+
+            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
             cbOlympType.SelectedIndex = 0;
-            cbDiplomaType.DataSource = Utility.GetDictionaryItems(_DB_Connection, 18);
-            cbDiplomaType.SelectedIndex = -1;            
-            
-            cbOlympProfile.DataSource = Utility.GetDictionaryItems(_DB_Connection, 39);
+            cbDiplomaType.DataSource = dbHelper.GetDictionaryItems(18);
+            cbDiplomaType.SelectedIndex = -1;
+
+            cbOlympProfile.DataSource = dbHelper.GetDictionaryItems(39);
             cbOlympProfile.SelectedIndex = -1;
             cbClass.SelectedItem = "10";
-            cbDiscipline.DataSource = Utility.GetDictionaryItems(_DB_Connection, 1);
+            cbDiscipline.DataSource = dbHelper.GetDictionaryItems(1);
             cbDiscipline.SelectedIndex = -1;
-            cbContry.DataSource = Utility.GetDictionaryItems(_DB_Connection,7);
+            cbContry.DataSource = dbHelper.GetDictionaryItems(7);
 
-            if ((_Parent.OlympicDoc.olympType!=null)&&(_Parent.OlympicDoc.olympType !=""))
+            if ((_Parent.OlympicDoc.olympType != null) && (_Parent.OlympicDoc.olympType != ""))
             {
                 cbOlympType.SelectedItem = _Parent.OlympicDoc.olympType;
                 tbOlympName.Text = _Parent.OlympicDoc.olympName;
@@ -142,7 +144,7 @@ namespace PK
                             _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
                             _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedItem.ToString();
                             saved = true;
-                        }                        
+                        }
                         break;
                     case "Диплом победителя/призера всероссийской олимпиады школьников":
                         if ((tbDocNumber.Text == "") || (cbDiplomaType.SelectedIndex == -1) || (cbOlympProfile.SelectedIndex == -1)
@@ -151,13 +153,13 @@ namespace PK
                         else
                         {
                             _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympDocNumber=int.Parse(tbDocNumber.Text);
+                            _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
                             _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
                             _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedItem.ToString();
                             saved = true;
-                        }                            
+                        }
                         break;
                     case "Диплом 4 этапа всеукраинской олимпиады":
                         if ((tbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbDiplomaType.SelectedIndex == -1)
@@ -171,7 +173,7 @@ namespace PK
                             _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
                             saved = true;
-                        }                            
+                        }
                         break;
                     case "Диплом международной олимпиады":
                         if ((tbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbOlympProfile.SelectedIndex == -1)
@@ -185,7 +187,7 @@ namespace PK
                             _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
                             _Parent.OlympicDoc.country = cbContry.SelectedItem.ToString();
                             saved = true;
-                        }                            
+                        }
                         break;
                 }
             if (saved)

@@ -14,10 +14,11 @@ namespace PK
 
             _DB_Connection = new DB_Connector();
             _Parent = parent;
-            cbDocType.DataSource = Utility.GetDictionaryItems(_DB_Connection, 43);
+            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
+            cbDocType.DataSource = dbHelper.GetDictionaryItems(43);
             cbDocType.SelectedIndex = 0;
 
-            if ((_Parent.SportDoc.diplomaType!=null)&&(_Parent.SportDoc.diplomaType!=""))
+            if ((_Parent.SportDoc.diplomaType != null) && (_Parent.SportDoc.diplomaType != ""))
             {
                 cbDocType.SelectedItem = _Parent.SportDoc.diplomaType;
                 tbDocName.Text = _Parent.SportDoc.docName;

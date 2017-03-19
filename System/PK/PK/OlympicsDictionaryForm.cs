@@ -6,7 +6,7 @@ namespace PK
     {
         DB_Connector _DB_Connection;
         FIS_Connector _FIS_Connection;
-        DataManager _DataManager;
+        DictionaryUpdater _Updater;
 
         public OlympicsDictionaryForm(DB_Connector dbConnection)
         {
@@ -23,7 +23,7 @@ namespace PK
                 MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            _DataManager = new DataManager(_DB_Connection, _FIS_Connection);
+            _Updater = new DictionaryUpdater(_DB_Connection, _FIS_Connection);
 
             UpdateOlympicsTable();
         }
@@ -89,7 +89,7 @@ namespace PK
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
-            _DataManager.UpdateOlympicsDictionary();
+            _Updater.UpdateOlympicsDictionary();
 
             UpdateOlympicsTable();
         }
