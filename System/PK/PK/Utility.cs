@@ -141,5 +141,44 @@ namespace PK
 
             return distributions;
         }
+
+        public static List<string> GetDictionaryItems(DB_Connector connector, int dictID)
+        {
+            List<string> itemsNames = new List<string>();
+
+            foreach (var itemName in connector.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" }, new List<System.Tuple<string, Relation, object>>
+            {
+                new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictID)
+            }))
+                itemsNames.Add(itemName[0].ToString());
+
+            return itemsNames;
+        }
+
+        public static string GetDictionaryItemName(DB_Connector connector, int dictionaryID, int itemID)
+        {
+            List<object[]> list = connector.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" }, new List<System.Tuple<string, Relation, object>>
+            {
+                new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryID),
+                new System.Tuple<string, Relation, object>("item_id", Relation.EQUAL, itemID)
+            });
+
+            if (list.Count == 0)
+                return "";
+            else return list[0][0].ToString();
+        }
+
+        public static int GetDictionaryItemID(DB_Connector connector, int dictionaryID, string itemName)
+        {
+            List<object[]> list = connector.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "item_id" }, new List<System.Tuple<string, Relation, object>>
+            {
+                new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryID),
+                new System.Tuple<string, Relation, object>("name", Relation.EQUAL, itemName)
+            });
+
+            if (list.Count == 0)
+                return 0;
+            else return int.Parse(list[0][0].ToString());
+        }
     }
 }

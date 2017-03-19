@@ -9,6 +9,47 @@ namespace PK
     public partial class NewApplicForm : Form
     {
         DB_Connector _DB_Connection;
+        public struct QDoc
+        {
+            public string cause;
+
+            public string medCause;
+            public int medDocSerie;
+            public int medDocNumber;
+            public string disabilityGroup;
+            public int conclusionNumber;
+            public DateTime conclusionDate;
+
+            public string orphanhoodDocType;
+            public string orphanhoodDocName;
+            public DateTime orphanhoodDocDate;
+            public string orphanhoodDocOrg;
+        }
+
+        public struct ODoc
+        {
+            public string olympType;
+            public string olympName;
+            public int olympDocNumber;
+            public string diplomaType;
+            public int olympID;
+            public string olympProfile;
+            public int olympClass;
+            public string olympDist;
+            public string country;
+        }
+
+        public struct SDoc
+        {
+            public string diplomaType;
+            public string docName;
+            public DateTime docDate;
+            public string orgName;
+        }
+
+        public QDoc QouteDoc;
+        public ODoc OlympicDoc;
+        public SDoc SportDoc;
 
         void FillComboBox(ComboBox cb, int dictionaryNumber)
         {
@@ -49,11 +90,11 @@ namespace PK
                 (DateTime.Now.Year - 5).ToString(),
             };
 
-            dgvExams.Rows.Add("Математика", null, "", "", 32);
-            dgvExams.Rows.Add("Русский язык", null, "", "", 32);
-            dgvExams.Rows.Add("Физика", null, "", "", 32);
-            dgvExams.Rows.Add("Обществознание", null, "", "", 32);
-            dgvExams.Rows.Add("Иностранный язык", null, "", "", 32);
+            dgvExams.Rows.Add("Математика", null, "", "0", 32);
+            dgvExams.Rows.Add("Русский язык", null, "", "0", 32);
+            dgvExams.Rows.Add("Физика", null, "", "0", 32);
+            dgvExams.Rows.Add("Обществознание", null, "", "0", 32);
+            dgvExams.Rows.Add("Иностранный язык", null, "", "0", 32);
 
             for (int j = 0; j < dgvExams.Rows.Count; j++)
             {
@@ -134,6 +175,175 @@ namespace PK
             {
                 MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
                 DialogResult = DialogResult.Abort;
+            }
+        }
+
+        private void cbSpecial_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbSpecial.Checked)
+            {
+                QuotDocsForm form = new QuotDocsForm(this);
+                form.ShowDialog();
+            }
+        }
+
+        private void cbSport_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbSport.Checked)
+            {
+                SportDocsForm form = new SportDocsForm(this);
+                form.ShowDialog();
+            }            
+        }
+
+        private void cbMADIOlympiad_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbMADIOlympiad.Checked)
+            {
+                MADIOlimpsForm form = new MADIOlimpsForm(this);
+                form.ShowDialog();
+            }
+        }
+
+        private void cbOlympiad_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            uint entrantUid = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
+                { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
+                { "gender_id", Utility.GetDictionaryItemID(_DB_Connection, 5, cbSex.SelectedItem.ToString())},
+                { "email", mtbEMail.Text},{ "is_from_krym", null}});
+
+            Random randNumber = new Random();            
+            uint applicationUid = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "number", randNumber.Next()},
+                { "entrant_uid", entrantUid}, { "registration_time", DateTime.Now}, { "needs_hostel", cbHostleNeeded.Checked},
+            { "status_dict_id", 4},{ "status_id", Utility.GetDictionaryItemID(_DB_Connection, 4, "Новое")}});
+
+            uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
+                { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} , { "organization", tbIssuedBy.Text} });
+
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_uid", applicationUid},
+                { "documents_uid", idDocUid } });
+
+            _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_uid", idDocUid},
+                { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
+                { "gender_dict_id", 5},{ "gender_id", Utility.GetDictionaryItemID(_DB_Connection,5,cbSex.SelectedItem.ToString())},
+                { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", 22},
+                { "type_id", Utility.GetDictionaryItemID(_DB_Connection,22,cbIDDocType.SelectedItem.ToString())},
+                { "nationality_dict_id", 7}, { "nationality_id", Utility.GetDictionaryItemID(_DB_Connection,7,cbNationality.SelectedItem.ToString())},
+                { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}});
+
+            uint examsDocId = 0;
+            if (cbPassportMatch.Checked)
+                examsDocId = idDocUid;
+            else examsDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
+                { "series", tbEduDocSeries.Text}, { "number", tbExamsDocNumber.Text} });
+
+            foreach (DataGridViewRow row in dgvExams.Rows)
+            {
+                if (row.Cells[3].Value.ToString() != "0")
+                    _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object> { { "document_uid", examsDocId},
+                        { "subject_dict_id", 1} , { "subject_id", Utility.GetDictionaryItemID(_DB_Connection, 1, row.Cells[0].Value.ToString())} ,
+                        { "value", row.Cells[3].Value} });
+            }
+
+            if (cbSpecial.Checked)
+                if (QouteDoc.cause == "Сиротство")
+                {
+                    uint orphDocUid=_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "orphan" },
+                    { "date", QouteDoc.orphanhoodDocDate} , { "organization", QouteDoc.orphanhoodDocOrg} });
+                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_uid", orphDocUid},
+                        { "name", QouteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", 42},
+                        { "dictionaries_item_id", Utility.GetDictionaryItemID(_DB_Connection, 42, QouteDoc.orphanhoodDocType)} });
+                    _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_uid", applicationUid},{ "competitive_group_uid", 1},{ "document_type_dict_id", 31},
+                            { "document_type_id",  Utility.GetDictionaryItemID(_DB_Connection,31,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                            { "reason_document_uid", orphDocUid},{ "benefit_kind_dict_id", 30},
+                            { "benefit_kind_id", Utility.GetDictionaryItemID(_DB_Connection, 30, "По квоте приёма лиц, имеющих особое право") } });
+                }
+                else if (QouteDoc.cause=="Медицинские показатели")
+                {
+                    uint allowEducationDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                    { { "number", QouteDoc.conclusionNumber}, { "date", QouteDoc.conclusionDate} });
+                    if (QouteDoc.medCause == "Справква об установлении инвалидности")
+                    {
+                        uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "disability" },
+                        { "series", QouteDoc.medDocSerie},  { "number", QouteDoc.medDocNumber} });
+                        _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
+                            { "document_uid", medDocUid}, { "dictionaries_dictionary_id",23},
+                            { "dictionaries_item_id", Utility.GetDictionaryItemID(_DB_Connection,23,QouteDoc.disabilityGroup)} });
+                        _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_uid", applicationUid},{ "competitive_group_uid", 1},{ "document_type_dict_id", 31},
+                            { "document_type_id",  Utility.GetDictionaryItemID(_DB_Connection,31,"Справка об установлении инвалидности")},
+                            { "reason_document_uid", medDocUid},{ "allow_education_document_uid", allowEducationDocUid},{ "benefit_kind_dict_id", 30},
+                            { "benefit_kind_id", Utility.GetDictionaryItemID(_DB_Connection, 30, "По квоте приёма лиц, имеющих особое право") } });
+                    }
+                    else if (QouteDoc.medCause == "Заключение психолого-медико-педагогической комиссии")
+                    {
+                        uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" },
+                        { "series", QouteDoc.medDocSerie},  { "number", QouteDoc.medDocNumber} });
+                        _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_uid", applicationUid}, { "competitive_group_uid", 1}, { "document_type_dict_id", 31},
+                            { "document_type_id",  Utility.GetDictionaryItemID(_DB_Connection, 31, "Заключение психолого-медико-педагогической комиссии")},
+                            { "reason_document_uid", medDocUid},{ "allow_education_document_uid", allowEducationDocUid}, { "benefit_kind_dict_id", 30},
+                            { "benefit_kind_id", Utility.GetDictionaryItemID(_DB_Connection, 30, "По квоте приёма лиц, имеющих особое право") } });
+                    }                    
+                }
+
+            if (cbSport.Checked)
+            {
+                uint sportDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                { { "type", "sport" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName} });
+                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                { { "document_uid", sportDocUid}, { "name", SportDoc.docName} });
+                List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "institution_achievement_uid" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, 36),
+                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, Utility.GetDictionaryItemID(_DB_Connection, 36, SportDoc.diplomaType))
+                });
+                uint achievementUid;
+                if (achievments.Count != 0)
+                    achievementUid = uint.Parse(achievments[0][0].ToString());
+                else
+                {
+                    int achevmentCategoryId=0;
+                    switch (SportDoc.diplomaType)
+                    {
+                        case "Диплом чемпиона/призера Олимпийских игр":
+                            achevmentCategoryId = Utility.GetDictionaryItemID(_DB_Connection, 36, "Статус чемпиона и призера Олимпийских игр");
+                            break;
+                        case "Диплом чемпиона/призера Паралимпийских игр":
+                            achevmentCategoryId = Utility.GetDictionaryItemID(_DB_Connection, 36, "Статус чемпиона и призера Паралимпийских игр");
+                            break;
+                        case "Диплом чемпиона/призера Сурдлимпийских игр":
+                            achevmentCategoryId = Utility.GetDictionaryItemID(_DB_Connection, 36, "Статус чемпиона и призера Сурдлимпийских игр");
+                            break;
+                        case "Диплом чемпиона мира":
+                            achevmentCategoryId = Utility.GetDictionaryItemID(_DB_Connection, 36, "Чемпион Мира");
+                            break;
+                        case "Диплом чемпиона Европы":
+                            achevmentCategoryId = Utility.GetDictionaryItemID(_DB_Connection, 36, "Чемпион Европы");
+                            break;
+                    }
+                    achievementUid = _DB_Connection.Insert(DB_Table.INSTITUTION_ACHIEVEMENTS, new Dictionary<string, object>
+                    { { "name", Utility.GetDictionaryItemName(_DB_Connection, 36, achevmentCategoryId) }, { "category_dict_id", 36}, { "category_id", achevmentCategoryId},
+                        { "max_value", 1}, { "campaign_uid", 1} });
+                }
+                    
+                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_uid", applicationUid },
+                    { "institution_achievement_uid", achievementUid}, { "mark", _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "max_value" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object> ("institution_achievement_uid", Relation.EQUAL, achievementUid)
+                    })[0][0]}, { "document_uid", sportDocUid} });
+            }
+
+            if (cbMADIOlympiad.Checked)
+            {
+
             }
         }
     }

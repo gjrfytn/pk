@@ -54,19 +54,19 @@
             this.label10 = new System.Windows.Forms.Label();
             this.tbIssuedBy = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbUnitNumber = new System.Windows.Forms.TextBox();
+            this.tbSubdivisionCode = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbIDDocNumber = new System.Windows.Forms.TextBox();
             this.tbIDDocSeries = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.tbSecName = new System.Windows.Forms.TextBox();
+            this.dtpIDDocDate = new System.Windows.Forms.DateTimePicker();
+            this.tbMidleName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.tbFName = new System.Windows.Forms.TextBox();
+            this.tbLastName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tbName = new System.Windows.Forms.TextBox();
+            this.tbFirstName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbIDDocType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -101,7 +101,7 @@
             this.cbSpecial = new System.Windows.Forms.CheckBox();
             this.cbChernobyl = new System.Windows.Forms.CheckBox();
             this.cbMCDAO = new System.Windows.Forms.CheckBox();
-            this.chHostleNeeded = new System.Windows.Forms.CheckBox();
+            this.cbHostleNeeded = new System.Windows.Forms.CheckBox();
             this.btClose = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
             this.gbOther = new System.Windows.Forms.GroupBox();
@@ -257,19 +257,19 @@
             this.gbPassport.Controls.Add(this.label10);
             this.gbPassport.Controls.Add(this.tbIssuedBy);
             this.gbPassport.Controls.Add(this.label9);
-            this.gbPassport.Controls.Add(this.tbUnitNumber);
+            this.gbPassport.Controls.Add(this.tbSubdivisionCode);
             this.gbPassport.Controls.Add(this.label8);
             this.gbPassport.Controls.Add(this.label7);
             this.gbPassport.Controls.Add(this.tbIDDocNumber);
             this.gbPassport.Controls.Add(this.tbIDDocSeries);
             this.gbPassport.Controls.Add(this.label6);
             this.gbPassport.Controls.Add(this.label5);
-            this.gbPassport.Controls.Add(this.dateTimePicker1);
-            this.gbPassport.Controls.Add(this.tbSecName);
+            this.gbPassport.Controls.Add(this.dtpIDDocDate);
+            this.gbPassport.Controls.Add(this.tbMidleName);
             this.gbPassport.Controls.Add(this.label4);
-            this.gbPassport.Controls.Add(this.tbFName);
+            this.gbPassport.Controls.Add(this.tbLastName);
             this.gbPassport.Controls.Add(this.label3);
-            this.gbPassport.Controls.Add(this.tbName);
+            this.gbPassport.Controls.Add(this.tbFirstName);
             this.gbPassport.Controls.Add(this.label2);
             this.gbPassport.Controls.Add(this.cbIDDocType);
             this.gbPassport.Controls.Add(this.label1);
@@ -500,12 +500,12 @@
             this.label9.TabIndex = 16;
             this.label9.Text = "Кем выдан:";
             // 
-            // tbUnitNumber
+            // tbSubdivisionCode
             // 
-            this.tbUnitNumber.Location = new System.Drawing.Point(130, 84);
-            this.tbUnitNumber.Name = "tbUnitNumber";
-            this.tbUnitNumber.Size = new System.Drawing.Size(95, 20);
-            this.tbUnitNumber.TabIndex = 15;
+            this.tbSubdivisionCode.Location = new System.Drawing.Point(130, 84);
+            this.tbSubdivisionCode.Name = "tbSubdivisionCode";
+            this.tbSubdivisionCode.Size = new System.Drawing.Size(95, 20);
+            this.tbSubdivisionCode.TabIndex = 15;
             // 
             // label8
             // 
@@ -557,21 +557,21 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "Серия:";
             // 
-            // dateTimePicker1
+            // dtpIDDocDate
             // 
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(871, 17);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(95, 20);
-            this.dateTimePicker1.TabIndex = 8;
-            this.dateTimePicker1.Value = new System.DateTime(2017, 2, 28, 11, 49, 40, 0);
+            this.dtpIDDocDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpIDDocDate.Location = new System.Drawing.Point(871, 17);
+            this.dtpIDDocDate.Name = "dtpIDDocDate";
+            this.dtpIDDocDate.Size = new System.Drawing.Size(95, 20);
+            this.dtpIDDocDate.TabIndex = 8;
+            this.dtpIDDocDate.Value = new System.DateTime(2017, 2, 28, 11, 49, 40, 0);
             // 
-            // tbSecName
+            // tbMidleName
             // 
-            this.tbSecName.Location = new System.Drawing.Point(726, 51);
-            this.tbSecName.Name = "tbSecName";
-            this.tbSecName.Size = new System.Drawing.Size(242, 20);
-            this.tbSecName.TabIndex = 7;
+            this.tbMidleName.Location = new System.Drawing.Point(726, 51);
+            this.tbMidleName.Name = "tbMidleName";
+            this.tbMidleName.Size = new System.Drawing.Size(242, 20);
+            this.tbMidleName.TabIndex = 7;
             // 
             // label4
             // 
@@ -582,12 +582,12 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Отчество:";
             // 
-            // tbFName
+            // tbLastName
             // 
-            this.tbFName.Location = new System.Drawing.Point(355, 51);
-            this.tbFName.Name = "tbFName";
-            this.tbFName.Size = new System.Drawing.Size(273, 20);
-            this.tbFName.TabIndex = 5;
+            this.tbLastName.Location = new System.Drawing.Point(355, 51);
+            this.tbLastName.Name = "tbLastName";
+            this.tbLastName.Size = new System.Drawing.Size(273, 20);
+            this.tbLastName.TabIndex = 5;
             // 
             // label3
             // 
@@ -598,12 +598,12 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Фамилия:";
             // 
-            // tbName
+            // tbFirstName
             // 
-            this.tbName.Location = new System.Drawing.Point(49, 51);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(210, 20);
-            this.tbName.TabIndex = 3;
+            this.tbFirstName.Location = new System.Drawing.Point(49, 51);
+            this.tbFirstName.Name = "tbFirstName";
+            this.tbFirstName.Size = new System.Drawing.Size(210, 20);
+            this.tbFirstName.TabIndex = 3;
             // 
             // label2
             // 
@@ -878,7 +878,7 @@
             this.gbAttributes.Controls.Add(this.cbSpecial);
             this.gbAttributes.Controls.Add(this.cbChernobyl);
             this.gbAttributes.Controls.Add(this.cbMCDAO);
-            this.gbAttributes.Controls.Add(this.chHostleNeeded);
+            this.gbAttributes.Controls.Add(this.cbHostleNeeded);
             this.gbAttributes.Location = new System.Drawing.Point(805, 146);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Size = new System.Drawing.Size(173, 213);
@@ -915,6 +915,7 @@
             this.cbOlympiad.TabIndex = 5;
             this.cbOlympiad.Text = "Олимпиада";
             this.cbOlympiad.UseVisualStyleBackColor = true;
+            this.cbOlympiad.CheckedChanged += new System.EventHandler(this.cbOlympiad_CheckedChanged);
             // 
             // cbExams
             // 
@@ -935,6 +936,7 @@
             this.cbSpecial.TabIndex = 3;
             this.cbSpecial.Text = "Особая квота";
             this.cbSpecial.UseVisualStyleBackColor = true;
+            this.cbSpecial.CheckedChanged += new System.EventHandler(this.cbSpecial_CheckedChanged);
             // 
             // cbChernobyl
             // 
@@ -956,15 +958,15 @@
             this.cbMCDAO.Text = "МЦДАО";
             this.cbMCDAO.UseVisualStyleBackColor = true;
             // 
-            // chHostleNeeded
+            // cbHostleNeeded
             // 
-            this.chHostleNeeded.AutoSize = true;
-            this.chHostleNeeded.Location = new System.Drawing.Point(6, 19);
-            this.chHostleNeeded.Name = "chHostleNeeded";
-            this.chHostleNeeded.Size = new System.Drawing.Size(152, 17);
-            this.chHostleNeeded.TabIndex = 0;
-            this.chHostleNeeded.Text = "Нуждается в общежитии";
-            this.chHostleNeeded.UseVisualStyleBackColor = true;
+            this.cbHostleNeeded.AutoSize = true;
+            this.cbHostleNeeded.Location = new System.Drawing.Point(6, 19);
+            this.cbHostleNeeded.Name = "cbHostleNeeded";
+            this.cbHostleNeeded.Size = new System.Drawing.Size(152, 17);
+            this.cbHostleNeeded.TabIndex = 0;
+            this.cbHostleNeeded.Text = "Нуждается в общежитии";
+            this.cbHostleNeeded.UseVisualStyleBackColor = true;
             // 
             // btClose
             // 
@@ -1073,6 +1075,7 @@
             this.cbMADIOlympiad.TabIndex = 20;
             this.cbMADIOlympiad.Text = "Олимпиады и конференции МАДИ";
             this.cbMADIOlympiad.UseVisualStyleBackColor = true;
+            this.cbMADIOlympiad.CheckedChanged += new System.EventHandler(this.cbMADIOlympiad_CheckedChanged);
             // 
             // cbSport
             // 
@@ -1083,6 +1086,7 @@
             this.cbSport.TabIndex = 19;
             this.cbSport.Text = "Спортивные достижения";
             this.cbSport.UseVisualStyleBackColor = true;
+            this.cbSport.CheckedChanged += new System.EventHandler(this.cbSport_CheckedChanged);
             // 
             // cbMedal
             // 
@@ -1102,6 +1106,7 @@
             this.btSave.TabIndex = 23;
             this.btSave.Text = "Сохранить заявление";
             this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
             // gbExamsDoc
             // 
@@ -2334,19 +2339,19 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbIssuedBy;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbUnitNumber;
+        private System.Windows.Forms.TextBox tbSubdivisionCode;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tbIDDocNumber;
         private System.Windows.Forms.TextBox tbIDDocSeries;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.TextBox tbSecName;
+        private System.Windows.Forms.DateTimePicker dtpIDDocDate;
+        private System.Windows.Forms.TextBox tbMidleName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tbFName;
+        private System.Windows.Forms.TextBox tbLastName;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.TextBox tbFirstName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbIDDocType;
         private System.Windows.Forms.Label label1;
@@ -2405,7 +2410,7 @@
         private System.Windows.Forms.CheckBox cbSpecial;
         private System.Windows.Forms.CheckBox cbChernobyl;
         private System.Windows.Forms.CheckBox cbMCDAO;
-        private System.Windows.Forms.CheckBox chHostleNeeded;
+        private System.Windows.Forms.CheckBox cbHostleNeeded;
         private System.Windows.Forms.TabControl tbDirections;
         private System.Windows.Forms.TabPage tpDirPage1;
         private System.Windows.Forms.TabPage tpDirPage2;

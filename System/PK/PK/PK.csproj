@@ -147,6 +147,12 @@
     <Compile Include="GridItemSelection.Designer.cs">
       <DependentUpon>GridItemSelection.cs</DependentUpon>
     </Compile>
+    <Compile Include="MADIOlimpsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MADIOlimpsForm.Designer.cs">
+      <DependentUpon>MADIOlimpsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,7 +185,19 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuotDocsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuotDocsForm.Designer.cs">
+      <DependentUpon>QuotDocsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RelationEnum.cs" />
+    <Compile Include="SportDocsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SportDocsForm.Designer.cs">
+      <DependentUpon>SportDocsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TargetOrganizationsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -220,6 +238,9 @@
     <EmbeddedResource Include="GridItemSelection.resx">
       <DependentUpon>GridItemSelection.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MADIOlimpsForm.resx">
+      <DependentUpon>MADIOlimpsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -245,6 +266,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="QuotDocsForm.resx">
+      <DependentUpon>QuotDocsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SportDocsForm.resx">
+      <DependentUpon>SportDocsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TargetOrganizationsForm.resx">
       <DependentUpon>TargetOrganizationsForm.cs</DependentUpon>
     </EmbeddedResource>
