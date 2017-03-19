@@ -94,7 +94,11 @@ namespace PK
             DocumentCreator.Create(
                 "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaCodes.xml",
                 "AlphaCodes",
-                new string[] { dataGridView.SelectedRows[0].Cells[1].Value.ToString(), dataGridView.SelectedRows[0].Cells[2].Value.ToString() },
+                new string[]
+                {
+                    dataGridView.SelectedRows[0].Cells[1].Value.ToString(),
+                    ((DateTime)dataGridView.SelectedRows[0].Cells[2].Value).ToShortDateString()
+                },
                 new List<string[]>[] { entrantsTable }
                 );
 
@@ -126,9 +130,10 @@ namespace PK
             DocumentCreator.Create(
                "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AbitAudDistrib.xml",
                "AbitAudDistrib",
-               new string[] {
+               new string[]
+               {
                    dataGridView.SelectedRows[0].Cells[1].Value.ToString(),
-                   dataGridView.SelectedRows[0].Cells[2].Value.ToString(),
+                   ((DateTime)dataGridView.SelectedRows[0].Cells[2].Value).ToShortDateString(),
                    entrants.Count().ToString(),
                    audiences.Sum(a=>(ushort)a[1]).ToString()
                },

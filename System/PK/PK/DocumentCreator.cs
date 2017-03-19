@@ -34,14 +34,14 @@ namespace PK
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
         }
 
-        public static void Create(string templateFile, string resultFile,string[] singleParams, List<string[]>[] tableParams)
+        public static void Create(string templateFile, string resultFile, string[] singleParams, List<string[]>[] tableParams)
         {
             XDocument template = XDocument.Load(templateFile);
 
             Validate(template);
 
             if (template.Root.Element("Document").Element("Word") != null)
-                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"),singleParams,tableParams, resultFile);
+                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
             else
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
         }
@@ -144,6 +144,9 @@ namespace PK
 
             if (selectRes.Count != 1)
                 throw new System.Exception("По условию Placeholder возвращена не одна строка. Значение: " + placeholder);
+
+            if (selectRes[0][0] is System.DateTime) //TODO Временно!
+                return ((System.DateTime)selectRes[0][0]).ToShortDateString();
 
             return selectRes[0][0].ToString();
         }
