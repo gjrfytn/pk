@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace PK
+namespace PK.Forms
 {
     public partial class QuotDocsForm : Form
     {
-        DB_Connector _DB_Connection;
+        Classes.DB_Connector _DB_Connection;
         NewApplicForm _Parent;
 
         public QuotDocsForm(NewApplicForm parent)
         {
             InitializeComponent();
 
-            _DB_Connection = new DB_Connector();
+            _DB_Connection = new Classes.DB_Connector();
             _Parent = parent;
-            cbCause.SelectedIndex = 0;
+            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
 
-            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
+            cbCause.SelectedIndex = 0;
+            cbMedCause.SelectedIndex = 0;
 
             cbOrphanhoodDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(42), null);
             cbOrphanhoodDocType.DisplayMember = "Value";
             cbOrphanhoodDocType.ValueMember = "Value";
-            cbOrphanhoodDocType.SelectedIndex = 0;
-
-            cbMedCause.SelectedIndex = 0;
+            cbOrphanhoodDocType.SelectedIndex = 0;            
 
             cbDisabilityGroup.DataSource = new BindingSource(dbHelper.GetDictionaryItems(23), null);
             cbDisabilityGroup.DisplayMember = "Value";

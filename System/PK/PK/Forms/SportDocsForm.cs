@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace PK
+namespace PK.Forms
 {
     public partial class SportDocsForm : Form
     {
-        DB_Connector _DB_Connection;
+        Classes.DB_Connector _DB_Connection;
         NewApplicForm _Parent;
 
         public SportDocsForm(NewApplicForm parent)
         {
             InitializeComponent();
 
-            _DB_Connection = new DB_Connector();
+            _DB_Connection = new Classes.DB_Connector();
             _Parent = parent;
-            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
+            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+
             cbDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(43), null);
             cbDocType.DisplayMember = "Value";
             cbDocType.ValueMember = "Value";

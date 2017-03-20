@@ -72,198 +72,204 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorizationForm.cs">
+    <Compile Include="Forms\AuthorizationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AuthorizationForm.Designer.cs">
+    <Compile Include="Forms\AuthorizationForm.Designer.cs">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DB_Connector.cs" />
-    <Compile Include="DB_Helper.cs" />
+    <Compile Include="Classes\DB_Connector.cs" />
+    <Compile Include="Classes\DB_Helper.cs" />
     <Compile Include="DB_TableEnum.cs" />
-    <Compile Include="DictionaryUpdater.cs" />
-    <Compile Include="DocumentCreator.cs" />
-    <Compile Include="DocumentCreator.Excel.cs" />
-    <Compile Include="DocumentCreator.Placeholders.cs" />
-    <Compile Include="DocumentCreator.Word.cs" />
-    <Compile Include="ExaminationEditForm.cs">
+    <Compile Include="Classes\DictionaryUpdater.cs" />
+    <Compile Include="Classes\DocumentCreator.cs" />
+    <Compile Include="Classes\DocumentCreator.Excel.cs" />
+    <Compile Include="Classes\DocumentCreator.Placeholders.cs" />
+    <Compile Include="Classes\DocumentCreator.Word.cs" />
+    <Compile Include="Forms\ExaminationEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExaminationEditForm.Designer.cs">
+    <Compile Include="Forms\ExaminationEditForm.Designer.cs">
       <DependentUpon>ExaminationEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExaminationMarksForm.cs">
+    <Compile Include="Forms\ExaminationMarksForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExaminationMarksForm.Designer.cs">
+    <Compile Include="Forms\ExaminationMarksForm.Designer.cs">
       <DependentUpon>ExaminationMarksForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExaminationsForm.cs">
+    <Compile Include="Forms\ExaminationsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExaminationsForm.Designer.cs">
+    <Compile Include="Forms\ExaminationsForm.Designer.cs">
       <DependentUpon>ExaminationsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FaculityDirectionsSelect.cs">
+    <Compile Include="Forms\FaculityDirectionsSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FaculityDirectionsSelect.Designer.cs">
+    <Compile Include="Forms\FaculityDirectionsSelect.Designer.cs">
       <DependentUpon>FaculityDirectionsSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="KLADR.cs" />
-    <Compile Include="DictionariesForm.cs">
+    <Compile Include="Classes\KLADR.cs" />
+    <Compile Include="Forms\DictionariesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DictionariesForm.Designer.cs">
+    <Compile Include="Forms\DictionariesForm.Designer.cs">
       <DependentUpon>DictionariesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirectionsProfilesForm.cs">
+    <Compile Include="Forms\DirectionsProfilesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DirectionsProfilesForm.Designer.cs">
+    <Compile Include="Forms\DirectionsProfilesForm.Designer.cs">
       <DependentUpon>DirectionsProfilesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirectionsDictionaryForm.cs">
+    <Compile Include="Forms\DirectionsDictionaryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DirectionsDictionaryForm.Designer.cs">
+    <Compile Include="Forms\DirectionsDictionaryForm.Designer.cs">
       <DependentUpon>DirectionsDictionaryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirectionSelect.cs">
+    <Compile Include="Forms\DirectionSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DirectionSelect.Designer.cs">
+    <Compile Include="Forms\DirectionSelect.Designer.cs">
       <DependentUpon>DirectionSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="FacultiesForm.cs">
+    <Compile Include="Forms\FacultiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FacultiesForm.Designer.cs">
+    <Compile Include="Forms\FacultiesForm.Designer.cs">
       <DependentUpon>FacultiesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FIS_Connector.cs" />
-    <Compile Include="GridItemSelection.cs">
+    <Compile Include="Classes\FIS_Connector.cs" />
+    <Compile Include="Forms\GridItemSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GridItemSelection.Designer.cs">
+    <Compile Include="Forms\GridItemSelection.Designer.cs">
       <DependentUpon>GridItemSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="MADIOlimpsForm.cs">
+    <Compile Include="Forms\MADIOlimpsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MADIOlimpsForm.Designer.cs">
+    <Compile Include="Forms\MADIOlimpsForm.Designer.cs">
       <DependentUpon>MADIOlimpsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewApplicForm.cs">
+    <Compile Include="Forms\NewApplicForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewApplicForm.Designer.cs">
+    <Compile Include="Forms\NewApplicForm.Designer.cs">
       <DependentUpon>NewApplicForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewCampaignForm.cs">
+    <Compile Include="Forms\NewCampaignForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewCampaignForm.Designer.cs">
+    <Compile Include="Forms\NewCampaignForm.Designer.cs">
       <DependentUpon>NewCampaignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CampaignsForm.cs">
+    <Compile Include="Forms\CampaignsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CampaignsForm.Designer.cs">
+    <Compile Include="Forms\CampaignsForm.Designer.cs">
       <DependentUpon>CampaignsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewTargetOrganizationForm.cs">
+    <Compile Include="Forms\NewTargetOrganizationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewTargetOrganizationForm.Designer.cs">
+    <Compile Include="Forms\NewTargetOrganizationForm.Designer.cs">
       <DependentUpon>NewTargetOrganizationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OlympicsDictionaryForm.cs">
+    <Compile Include="Forms\OlympicsDictionaryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OlympicsDictionaryForm.Designer.cs">
+    <Compile Include="Forms\OlympicsDictionaryForm.Designer.cs">
       <DependentUpon>OlympicsDictionaryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuotDocsForm.cs">
+    <Compile Include="Forms\QuotDocsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="QuotDocsForm.Designer.cs">
+    <Compile Include="Forms\QuotDocsForm.Designer.cs">
       <DependentUpon>QuotDocsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RelationEnum.cs" />
-    <Compile Include="SportDocsForm.cs">
+    <Compile Include="Forms\SportDocsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SportDocsForm.Designer.cs">
+    <Compile Include="Forms\SportDocsForm.Designer.cs">
       <DependentUpon>SportDocsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TargetOrganizationsForm.cs">
+    <Compile Include="Forms\TargetOrganizationsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TargetOrganizationsForm.Designer.cs">
+    <Compile Include="Forms\TargetOrganizationsForm.Designer.cs">
       <DependentUpon>TargetOrganizationsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utility.cs" />
-    <EmbeddedResource Include="AuthorizationForm.resx">
+    <Compile Include="Forms\UsersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UsersForm.Designer.cs">
+      <DependentUpon>UsersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Utility.cs" />
+    <EmbeddedResource Include="Forms\AuthorizationForm.resx">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DictionariesForm.resx">
+    <EmbeddedResource Include="Forms\DictionariesForm.resx">
       <DependentUpon>DictionariesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DirectionsProfilesForm.resx">
+    <EmbeddedResource Include="Forms\DirectionsProfilesForm.resx">
       <DependentUpon>DirectionsProfilesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DirectionsDictionaryForm.resx">
+    <EmbeddedResource Include="Forms\DirectionsDictionaryForm.resx">
       <DependentUpon>DirectionsDictionaryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DirectionSelect.resx">
+    <EmbeddedResource Include="Forms\DirectionSelect.resx">
       <DependentUpon>DirectionSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExaminationEditForm.resx">
+    <EmbeddedResource Include="Forms\ExaminationEditForm.resx">
       <DependentUpon>ExaminationEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExaminationMarksForm.resx">
+    <EmbeddedResource Include="Forms\ExaminationMarksForm.resx">
       <DependentUpon>ExaminationMarksForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExaminationsForm.resx">
+    <EmbeddedResource Include="Forms\ExaminationsForm.resx">
       <DependentUpon>ExaminationsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FaculityDirectionsSelect.resx">
+    <EmbeddedResource Include="Forms\FaculityDirectionsSelect.resx">
       <DependentUpon>FaculityDirectionsSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FacultiesForm.resx">
+    <EmbeddedResource Include="Forms\FacultiesForm.resx">
       <DependentUpon>FacultiesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GridItemSelection.resx">
+    <EmbeddedResource Include="Forms\GridItemSelection.resx">
       <DependentUpon>GridItemSelection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MADIOlimpsForm.resx">
+    <EmbeddedResource Include="Forms\MADIOlimpsForm.resx">
       <DependentUpon>MADIOlimpsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewApplicForm.resx">
+    <EmbeddedResource Include="Forms\NewApplicForm.resx">
       <DependentUpon>NewApplicForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewCampaignForm.resx">
+    <EmbeddedResource Include="Forms\NewCampaignForm.resx">
       <DependentUpon>NewCampaignForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CampaignsForm.resx">
+    <EmbeddedResource Include="Forms\CampaignsForm.resx">
       <DependentUpon>CampaignsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewTargetOrganizationForm.resx">
+    <EmbeddedResource Include="Forms\NewTargetOrganizationForm.resx">
       <DependentUpon>NewTargetOrganizationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OlympicsDictionaryForm.resx">
+    <EmbeddedResource Include="Forms\OlympicsDictionaryForm.resx">
       <DependentUpon>OlympicsDictionaryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -276,14 +282,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="QuotDocsForm.resx">
+    <EmbeddedResource Include="Forms\QuotDocsForm.resx">
       <DependentUpon>QuotDocsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SportDocsForm.resx">
+    <EmbeddedResource Include="Forms\SportDocsForm.resx">
       <DependentUpon>SportDocsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TargetOrganizationsForm.resx">
+    <EmbeddedResource Include="Forms\TargetOrganizationsForm.resx">
       <DependentUpon>TargetOrganizationsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UsersForm.resx">
+      <DependentUpon>UsersForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

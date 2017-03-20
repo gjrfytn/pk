@@ -14,9 +14,9 @@ namespace PK
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            AuthorizationForm form = new AuthorizationForm();
+            Forms.AuthorizationForm form = new Forms.AuthorizationForm();
             if (form.ShowDialog() == DialogResult.OK)
-                Application.Run(new MainForm(form.UsersRole));
+                Application.Run(new Forms.MainForm(form.UsersRole));
         }
     }
 }

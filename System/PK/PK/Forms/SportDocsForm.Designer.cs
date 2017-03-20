@@ -1,4 +1,4 @@
-﻿namespace PK
+﻿namespace PK.Forms
 {
     partial class SportDocsForm
     {
