@@ -49,31 +49,36 @@ namespace PK
         {
             if ((tbFacultyName.Text.Length == 0) || (tbFacultyShortName.Text.Length == 0))
                 MessageBox.Show("Одно из текстовых полей пусто");
+            else if (_Updating)
+            {
+                _DB_Connection.Update(DB_Table.FACULTIES,
+                    new Dictionary<string, object> { { "name", tbFacultyName.Text } },
+                    new Dictionary<string, object> { { "short_name", tbFacultyShortName.Text } });
+                _Updating = false;
+                ShowHideControls(false);
+
+                UpdateTable();
+                tbFacultyName.Clear();
+                tbFacultyShortName.Clear();
+            }
             else if (_DB_Connection.Select(DB_Table.FACULTIES, new string[] { "name" },
                                     new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("short_name", Relation.EQUAL, tbFacultyShortName.Text)
                 }).Count != 0)
-                if (!_Updating)
-                    MessageBox.Show("Факультет с таким сокращением уже существует");
-                else
+                MessageBox.Show("Факультет с таким сокращением уже существует");
+            else if (_DB_Connection.Select(DB_Table.FACULTIES, new string[] { "short_name" },
+                                    new List<Tuple<string, Relation, object>>
                 {
-                    _DB_Connection.Update(DB_Table.FACULTIES,
-                        new Dictionary<string, object> { { "name", tbFacultyName.Text } },
-                        new Dictionary<string, object> { { "short_name", tbFacultyShortName.Text } });
-                    _Updating = false;
-                    ShowHideControls(false);
-
-                    UpdateTable();
-                    tbFacultyName.Clear();
-                    tbFacultyShortName.Clear();
-                }
+                    new Tuple<string, Relation, object>("name", Relation.EQUAL, tbFacultyName.Text)
+                }).Count != 0)
+                MessageBox.Show("Факультет с таким названием уже существует");
             else
             {
                 _DB_Connection.Insert(DB_Table.FACULTIES,
                 new Dictionary<string, object> { { "name", tbFacultyName.Text }, { "short_name", tbFacultyShortName.Text } });
-                ShowHideControls(false);
 
+                ShowHideControls(false);
                 UpdateTable();
                 tbFacultyName.Clear();
                 tbFacultyShortName.Clear();

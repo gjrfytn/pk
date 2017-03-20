@@ -17,10 +17,17 @@ namespace PK
             cbCause.SelectedIndex = 0;
 
             DB_Helper dbHelper = new DB_Helper(_DB_Connection);
-            cbOrphanhoodDocType.DataSource = dbHelper.GetDictionaryItems(42);
+
+            cbOrphanhoodDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(42), null);
+            cbOrphanhoodDocType.DisplayMember = "Value";
+            cbOrphanhoodDocType.ValueMember = "Value";
             cbOrphanhoodDocType.SelectedIndex = 0;
+
             cbMedCause.SelectedIndex = 0;
-            cbDisabilityGroup.DataSource = dbHelper.GetDictionaryItems(23);
+
+            cbDisabilityGroup.DataSource = new BindingSource(dbHelper.GetDictionaryItems(23), null);
+            cbDisabilityGroup.DisplayMember = "Value";
+            cbDisabilityGroup.ValueMember = "Value";
             cbDisabilityGroup.SelectedIndex = 0;
 
             if (_Parent.QouteDoc.cause == "Медицинские показатели")
@@ -98,7 +105,7 @@ namespace PK
                 else
                 {
                     _Parent.QouteDoc.cause = cbCause.SelectedItem.ToString();
-                    _Parent.QouteDoc.orphanhoodDocType = cbOrphanhoodDocType.SelectedItem.ToString();
+                    _Parent.QouteDoc.orphanhoodDocType = cbOrphanhoodDocType.SelectedValue.ToString();
                     _Parent.QouteDoc.orphanhoodDocOrg = tbOrphanhoodDocOrg.Text;
                     _Parent.QouteDoc.orphanhoodDocName = tbOrphanhoodDocName.Text;
                     _Parent.QouteDoc.orphanhoodDocDate = dtpOrphanhoodDocDate.Value;
@@ -117,7 +124,7 @@ namespace PK
                         _Parent.QouteDoc.medCause = cbMedCause.SelectedItem.ToString();
                         _Parent.QouteDoc.medDocSerie = int.Parse(tbMedDocSeries.Text);
                         _Parent.QouteDoc.medDocNumber = int.Parse(tbMedDocNumber.Text);
-                        _Parent.QouteDoc.disabilityGroup = cbDisabilityGroup.SelectedItem.ToString();
+                        _Parent.QouteDoc.disabilityGroup = cbDisabilityGroup.SelectedValue.ToString();
                         saved = true;
                     }
                 }

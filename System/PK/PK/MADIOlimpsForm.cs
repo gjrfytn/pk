@@ -17,26 +17,37 @@ namespace PK
 
             DB_Helper dbHelper = new DB_Helper(_DB_Connection);
             cbOlympType.SelectedIndex = 0;
-            cbDiplomaType.DataSource = dbHelper.GetDictionaryItems(18);
+            cbDiplomaType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(18), null);
+            cbDiplomaType.DisplayMember = "Value";
+            cbDiplomaType.ValueMember = "Value";
             cbDiplomaType.SelectedIndex = -1;
 
-            cbOlympProfile.DataSource = dbHelper.GetDictionaryItems(39);
+            cbOlympProfile.DataSource = new BindingSource(dbHelper.GetDictionaryItems(39), null);
+            cbOlympProfile.DisplayMember = "Value";
+            cbOlympProfile.ValueMember = "Value";
             cbOlympProfile.SelectedIndex = -1;
+
             cbClass.SelectedItem = "10";
-            cbDiscipline.DataSource = dbHelper.GetDictionaryItems(1);
+
+            cbDiscipline.DataSource = new BindingSource(dbHelper.GetDictionaryItems(1), null);
+            cbDiscipline.DisplayMember = "Value";
+            cbDiscipline.ValueMember = "Value";
             cbDiscipline.SelectedIndex = -1;
-            cbContry.DataSource = dbHelper.GetDictionaryItems(7);
+
+            cbContry.DataSource = new BindingSource(dbHelper.GetDictionaryItems(7), null);
+            cbContry.DisplayMember = "Value";
+            cbContry.ValueMember = "Value";
 
             if ((_Parent.OlympicDoc.olympType != null) && (_Parent.OlympicDoc.olympType != ""))
             {
                 cbOlympType.SelectedItem = _Parent.OlympicDoc.olympType;
                 tbOlympName.Text = _Parent.OlympicDoc.olympName;
                 tbDocNumber.Text = _Parent.OlympicDoc.olympDocNumber.ToString();
-                cbDiplomaType.SelectedItem = _Parent.OlympicDoc.diplomaType;
-                cbOlympProfile.SelectedItem = _Parent.OlympicDoc.olympProfile;
+                cbDiplomaType.SelectedValue = _Parent.OlympicDoc.diplomaType;
+                cbOlympProfile.SelectedValue = _Parent.OlympicDoc.olympProfile;
                 cbClass.SelectedItem = _Parent.OlympicDoc.olympClass.ToString();
-                cbDiscipline.SelectedItem = _Parent.OlympicDoc.olympDist;
-                cbContry.SelectedItem = _Parent.OlympicDoc.country;
+                cbDiscipline.SelectedValue = _Parent.OlympicDoc.olympDist;
+                cbContry.SelectedValue = _Parent.OlympicDoc.country;
             }
         }
 
@@ -138,11 +149,11 @@ namespace PK
                         else
                         {
                             _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedItem.ToString();
+                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
                             //_Parent.OlympicDoc.olympID = int.Parse(cbOlympID);
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
                             _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedItem.ToString();
+                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
@@ -154,10 +165,10 @@ namespace PK
                         {
                             _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
+                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
                             _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedItem.ToString();
+                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
@@ -170,8 +181,8 @@ namespace PK
                             _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympName = tbOlympName.Text;
                             _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
+                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
@@ -184,7 +195,7 @@ namespace PK
                             _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
                             _Parent.OlympicDoc.olympName = tbOlympName.Text;
                             _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
                             _Parent.OlympicDoc.country = cbContry.SelectedItem.ToString();
                             saved = true;
                         }

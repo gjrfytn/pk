@@ -15,7 +15,9 @@ namespace PK
             _DB_Connection = new DB_Connector();
             _Parent = parent;
             DB_Helper dbHelper = new DB_Helper(_DB_Connection);
-            cbDocType.DataSource = dbHelper.GetDictionaryItems(43);
+            cbDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(43), null);
+            cbDocType.DisplayMember = "Value";
+            cbDocType.ValueMember = "Value";
             cbDocType.SelectedIndex = 0;
 
             if ((_Parent.SportDoc.diplomaType != null) && (_Parent.SportDoc.diplomaType != ""))
@@ -33,7 +35,7 @@ namespace PK
                 MessageBox.Show("Все поля должны быть заполнены");
             else
             {
-                _Parent.SportDoc.diplomaType = cbDocType.SelectedItem.ToString();
+                _Parent.SportDoc.diplomaType = cbDocType.SelectedValue.ToString();
                 _Parent.SportDoc.docName = tbDocName.Text;
                 _Parent.SportDoc.docDate = dtpDocDate.Value;
                 _Parent.SportDoc.orgName = tbOrgName.Text;
