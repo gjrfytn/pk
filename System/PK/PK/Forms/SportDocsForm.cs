@@ -6,9 +6,9 @@ namespace PK.Forms
     public partial class SportDocsForm : Form
     {
         Classes.DB_Connector _DB_Connection;
-        NewApplicForm _Parent;
+        ApplicationEdit _Parent;
 
-        public SportDocsForm(NewApplicForm parent)
+        public SportDocsForm(ApplicationEdit parent)
         {
             InitializeComponent();
 

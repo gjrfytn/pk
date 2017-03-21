@@ -6,9 +6,9 @@ namespace PK.Forms
     public partial class QuotDocsForm : Form
     {
         Classes.DB_Connector _DB_Connection;
-        NewApplicForm _Parent;
+        ApplicationEdit _Parent;
 
-        public QuotDocsForm(NewApplicForm parent)
+        public QuotDocsForm(ApplicationEdit parent)
         {
             InitializeComponent();
 
