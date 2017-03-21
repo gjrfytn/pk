@@ -111,14 +111,10 @@ namespace PK.Classes
 
             List<System.Tuple<string, Relation, object>> whereClause;
             if (placeholderValue.Length == 2)
-            {
-                string[] buf = placeholderValue[1].Split('|');
-                placeholderValue[1] = buf[0];
                 whereClause = new List<System.Tuple<string, Relation, object>>
                 {
-                    new System.Tuple<string, Relation, object>(buf[1], Relation.EQUAL, id)
+                    new System.Tuple<string, Relation, object>("id", Relation.EQUAL, id)
                 };
-            }
             else
             {
                 whereClause = new List<System.Tuple<string, Relation, object>>();

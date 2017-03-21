@@ -89,9 +89,10 @@ namespace PK
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             _Updater.UpdateOlympicsDictionary();
-
             UpdateOlympicsTable();
+            Cursor.Current = Cursors.Default;
         }
     }
 }

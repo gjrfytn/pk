@@ -30,9 +30,10 @@ namespace PK.Forms
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             _Updater.UpdateDirectionsDictionary();
-
             UpdateTable();
+            Cursor.Current = Cursors.Default;
         }
 
         void UpdateTable()

@@ -6,16 +6,16 @@ namespace PK.Classes
     {
         static readonly Dictionary<string, string> _PH_Single = new Dictionary<string, string>
         {
-          {"campaignName",              "campaigns.name|uid" },
-          {"campaignStartYear",         "campaigns.start_year|uid" },
-          {"campaignStatusDictID",      "campaigns.status_dict_id|uid" },
-          {"campaignStatusID",          "campaigns.status_id|uid" },
+          {"campaignName",              "campaigns.name" },
+          {"campaignStartYear",         "campaigns.start_year" },
+          {"campaignStatusDictID",      "campaigns.status_dict_id" },
+          {"campaignStatusID",          "campaigns.status_id" },
           {"campaignStatus",            "dictionaries_items.name:dictionary_id=@campaignStatusDictID,item_id=@campaignStatusID" },
-          {"dictionaryName",            "dictionaries.name|id" },
-          {"examinationSubjectDictID",  "examinations.subject_dict_id|id" },
-          {"examinationSubjectID",      "examinations.subject_id|id" },
+          {"dictionaryName",            "dictionaries.name" },
+          {"examinationSubjectDictID",  "examinations.subject_dict_id" },
+          {"examinationSubjectID",      "examinations.subject_id" },
           {"examinationSubject",        "dictionaries_items.name:dictionary_id=@examinationSubjectDictID,item_id=@examinationSubjectID" },
-          {"examinationDate",           "examinations.date|id" }
+          {"examinationDate",           "examinations.date" }
         };
 
         static readonly Dictionary<string, string> _PH_Table = new Dictionary<string, string>

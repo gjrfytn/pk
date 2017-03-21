@@ -221,7 +221,7 @@ COMMENT = 'Документы.';
 -- Table `PK_DB`.`entrants`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
-  `id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор в ИС ОО.',
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `last_name` VARCHAR(250) NOT NULL COMMENT 'Фамилия.',
   `first_name` VARCHAR(250) NOT NULL COMMENT 'Имя.',
   `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
@@ -914,7 +914,7 @@ COMMENT = 'Вступительные испытания по направлен
 -- Table `PK_DB`.`examinations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations` (
-  `id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор.',
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор.',
   `subject_dict_id` INT UNSIGNED NOT NULL COMMENT '1',
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ID дисциплины (справочник №1).',
   `date` DATE NOT NULL COMMENT 'Дата проведения.',
