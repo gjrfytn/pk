@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.dgvDirectionSelection = new System.Windows.Forms.DataGridView();
-            this.cID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cName1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.btSelect = new System.Windows.Forms.Button();
+            this.dgvDirectionSelection_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirectionSelection_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirectionSelection_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirectionSelection)).BeginInit();
             this.SuspendLayout();
             // 
@@ -43,9 +43,9 @@
             this.dgvDirectionSelection.AllowUserToDeleteRows = false;
             this.dgvDirectionSelection.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirectionSelection.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.cID,
-            this.cCode,
-            this.cName1});
+            this.dgvDirectionSelection_ID,
+            this.dgvDirectionSelection_Code,
+            this.dgvDirectionSelection_Name});
             this.dgvDirectionSelection.Location = new System.Drawing.Point(13, 31);
             this.dgvDirectionSelection.MultiSelect = false;
             this.dgvDirectionSelection.Name = "dgvDirectionSelection";
@@ -54,28 +54,6 @@
             this.dgvDirectionSelection.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDirectionSelection.Size = new System.Drawing.Size(612, 353);
             this.dgvDirectionSelection.TabIndex = 0;
-            // 
-            // cID
-            // 
-            this.cID.HeaderText = "ID";
-            this.cID.Name = "cID";
-            this.cID.ReadOnly = true;
-            this.cID.Visible = false;
-            // 
-            // cCode
-            // 
-            this.cCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.cCode.HeaderText = "Код";
-            this.cCode.Name = "cCode";
-            this.cCode.ReadOnly = true;
-            this.cCode.Width = 51;
-            // 
-            // cName1
-            // 
-            this.cName1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cName1.HeaderText = "Наименование";
-            this.cName1.Name = "cName1";
-            this.cName1.ReadOnly = true;
             // 
             // label1
             // 
@@ -95,6 +73,28 @@
             this.btSelect.Text = "Выбрать";
             this.btSelect.UseVisualStyleBackColor = true;
             this.btSelect.Click += new System.EventHandler(this.btSelect_Click);
+            // 
+            // dgvDirectionSelection_ID
+            // 
+            this.dgvDirectionSelection_ID.HeaderText = "ID";
+            this.dgvDirectionSelection_ID.Name = "dgvDirectionSelection_ID";
+            this.dgvDirectionSelection_ID.ReadOnly = true;
+            this.dgvDirectionSelection_ID.Visible = false;
+            // 
+            // dgvDirectionSelection_Code
+            // 
+            this.dgvDirectionSelection_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirectionSelection_Code.HeaderText = "Код";
+            this.dgvDirectionSelection_Code.Name = "dgvDirectionSelection_Code";
+            this.dgvDirectionSelection_Code.ReadOnly = true;
+            this.dgvDirectionSelection_Code.Width = 51;
+            // 
+            // dgvDirectionSelection_Name
+            // 
+            this.dgvDirectionSelection_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvDirectionSelection_Name.HeaderText = "Наименование";
+            this.dgvDirectionSelection_Name.Name = "dgvDirectionSelection_Name";
+            this.dgvDirectionSelection_Name.ReadOnly = true;
             // 
             // DirectionSelect
             // 
@@ -117,8 +117,8 @@
         private System.Windows.Forms.DataGridView dgvDirectionSelection;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btSelect;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cName1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirectionSelection_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirectionSelection_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirectionSelection_Name;
     }
 }
