@@ -77,5 +77,11 @@ namespace PK.Forms
             UsersForm form = new UsersForm(_DB_Connection);
             form.ShowDialog();
         }
+
+        private void toolStrip_FisImport_Click(object sender, EventArgs e)
+        {
+            Classes.FIS_Connector fisConnector = new Classes.FIS_Connector("XXX", "***");
+            fisConnector.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+        }
     }
 }

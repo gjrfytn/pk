@@ -16,7 +16,6 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
-            dataGridView_Number.ValueType = typeof(ushort);
             dataGridView_Capacity.ValueType = typeof(ushort);
             #endregion
 

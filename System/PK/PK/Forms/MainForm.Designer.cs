@@ -41,12 +41,13 @@
             this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_FisImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -153,6 +154,22 @@
             this.menuStrip_TargetOrganizations.Text = "Целевые организации";
             this.menuStrip_TargetOrganizations.Click += new System.EventHandler(this.menuStrip_TargetOrganizations_Click);
             // 
+            // toolStrip_Administration
+            // 
+            this.toolStrip_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_Users,
+            this.toolStrip_FisImport});
+            this.toolStrip_Administration.Name = "toolStrip_Administration";
+            this.toolStrip_Administration.Size = new System.Drawing.Size(134, 20);
+            this.toolStrip_Administration.Text = "Администрирование";
+            // 
+            // toolStrip_Users
+            // 
+            this.toolStrip_Users.Name = "toolStrip_Users";
+            this.toolStrip_Users.Size = new System.Drawing.Size(156, 22);
+            this.toolStrip_Users.Text = "Пользователи";
+            this.toolStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
+            // 
             // menuStrip_Help
             // 
             this.menuStrip_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -184,20 +201,12 @@
             this.menuStrip_OlympDictionary.Text = "Справочник олимпиад ФИС";
             this.menuStrip_OlympDictionary.Click += new System.EventHandler(this.menuStrip_OlympDictionary_Click);
             // 
-            // toolStrip_Administration
+            // toolStrip_FisImport
             // 
-            this.toolStrip_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Users});
-            this.toolStrip_Administration.Name = "toolStrip_Administration";
-            this.toolStrip_Administration.Size = new System.Drawing.Size(134, 20);
-            this.toolStrip_Administration.Text = "Администрирование";
-            // 
-            // toolStrip_Users
-            // 
-            this.toolStrip_Users.Name = "toolStrip_Users";
-            this.toolStrip_Users.Size = new System.Drawing.Size(152, 22);
-            this.toolStrip_Users.Text = "Пользователи";
-            this.toolStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
+            this.toolStrip_FisImport.Name = "toolStrip_FisImport";
+            this.toolStrip_FisImport.Size = new System.Drawing.Size(156, 22);
+            this.toolStrip_FisImport.Text = "Импорт в ФИС";
+            this.toolStrip_FisImport.Click += new System.EventHandler(this.toolStrip_FisImport_Click);
             // 
             // MainForm
             // 
@@ -239,6 +248,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_OlympDictionary;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_Administration;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_Users;
+        private System.Windows.Forms.ToolStripMenuItem toolStrip_FisImport;
     }
 }
 

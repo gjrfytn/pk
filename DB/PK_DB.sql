@@ -862,14 +862,14 @@ COMMENT = 'Данные кампаний по направлениям.';
 -- Table `PK_DB`.`campaigns_profiles_data`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
+  `campaigns_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
   `profiles_direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
   `profiles_direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
   `profiles_name` VARCHAR(100) NOT NULL COMMENT 'Профиль.',
-  `campaigns_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
   `places_paid_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных очных мест.',
   `places_paid_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных вечерних мест.',
   `places_paid_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных заочных мест.',
-  PRIMARY KEY (`profiles_direction_faculty`, `profiles_direction_id`, `profiles_name`, `campaigns_id`),
+  PRIMARY KEY (`campaigns_id`, `profiles_direction_faculty`, `profiles_direction_id`, `profiles_name`),
   INDEX `fk_profiles_has_campaigns_campaigns1_idx` (`campaigns_id` ASC),
   CONSTRAINT `fk_profiles_has_campaigns_profiles1`
     FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_name`)

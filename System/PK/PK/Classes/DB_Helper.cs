@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    using Olympic =
+    using DictOlympic =
            Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
 
     class DB_Helper
@@ -38,9 +38,9 @@ namespace PK.Classes
                 );
         }
 
-        public Olympic GetOlympicsDictionaryItems()
+        public DictOlympic GetOlympicsDictionaryItems()
         {
-            Olympic dictionaryItems = new Olympic();
+            DictOlympic dictionaryItems = new DictOlympic();
 
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
             {

@@ -30,11 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExaminationMarksForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -60,10 +60,29 @@
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_Print});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(361, 25);
+            this.toolStrip.TabIndex = 2;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolStrip_Print
+            // 
+            this.toolStrip_Print.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Print.Image")));
+            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Print.Name = "toolStrip_Print";
+            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
+            this.toolStrip_Print.Text = "Печать";
+            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
+            // 
             // dataGridView_UID
             // 
             this.dataGridView_UID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_UID.DataPropertyName = "entrant_uid";
+            this.dataGridView_UID.DataPropertyName = "entrant_id";
             this.dataGridView_UID.FillWeight = 50F;
             this.dataGridView_UID.HeaderText = "Рег. номер";
             this.dataGridView_UID.Name = "dataGridView_UID";
@@ -86,25 +105,6 @@
             this.dataGridView_Mark.HeaderText = "Оценка";
             this.dataGridView_Mark.Name = "dataGridView_Mark";
             this.dataGridView_Mark.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Print});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(361, 25);
-            this.toolStrip.TabIndex = 2;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // toolStrip_Print
-            // 
-            this.toolStrip_Print.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Print.Image")));
-            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Print.Name = "toolStrip_Print";
-            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
-            this.toolStrip_Print.Text = "Печать";
-            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
             // 
             // ExaminationMarksForm
             // 

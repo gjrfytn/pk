@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    using Olympic =
+    using DictOlympic =
            Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
 
     class DictionaryUpdater
@@ -190,8 +190,8 @@ namespace PK.Classes
 
         public void UpdateOlympicsDictionary()
         {
-            Olympic fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems();
-            Olympic dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
+            DictOlympic fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems();
+            DictOlympic dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
 
             string addedReport = "В справочник №" + 19 + " \"" + "Олимпиады" + "\" добавлены элементы:";
             ushort addedCount = 0;

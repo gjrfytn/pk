@@ -2,11 +2,10 @@
 using System.Net;
 using System.Xml.Linq;
 using System.Linq;
-//using web_connector_test.ImportClasses;
 
 namespace PK.Classes
 {
-    using Olympic =
+    using DictOlympic =
         Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
 
     class FIS_Connector
@@ -114,7 +113,7 @@ namespace PK.Classes
                 );
         }
 
-        public Olympic GetOlympicsDictionaryItems()
+        public DictOlympic GetOlympicsDictionaryItems()
         {
             //
             /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
@@ -151,14 +150,14 @@ namespace PK.Classes
                             ))));
         }
 
-        /*public void Import(PackageData data)
+        public void Import(ImportClasses.PackageData data)
         {
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new Root(
-                new AuthData(_Login, _Password), data).ConvertToXElement().ToString());
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
+                new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
 
             XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
             System.Windows.Forms.MessageBox.Show(doc.ToString());
-        }*/
+        }
 
         XDocument GetResponse(string uri, byte[] requestData)
         {
