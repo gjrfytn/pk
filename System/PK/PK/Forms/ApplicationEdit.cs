@@ -51,18 +51,7 @@ namespace PK.Forms
 
         public QDoc QouteDoc;
         public ODoc OlympicDoc;
-        public SDoc SportDoc;
-
-        void FillComboBox(ComboBox cb, int dictionaryNumber)
-        {
-            foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" },
-                new List<Tuple<string, Relation, object>>
-                {
-                new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryNumber)
-                }))
-                cb.Items.Add(v[0]);
-            cb.SelectedIndex = 0;
-        }
+        public SDoc SportDoc;        
 
         public ApplicationEdit()
         {
@@ -117,6 +106,19 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Items.AddRange(directions);
                 }
+
+            cbInstitutionType.SelectedIndex = 0;
+        }
+
+        void FillComboBox(ComboBox cb, int dictionaryNumber)
+        {
+            foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" },
+                new List<Tuple<string, Relation, object>>
+                {
+                new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryNumber)
+                }))
+                cb.Items.Add(v[0]);
+            cb.SelectedIndex = 0;
         }
 
         private void btAddDir1_Click(object sender, EventArgs e)
