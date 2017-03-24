@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-//using System.Linq;
+using System.Linq;
 using PK.Classes.ImportClasses;
-//using System;
 
 namespace PK.Classes
 {
@@ -34,10 +33,10 @@ namespace PK.Classes
                     new string[] { "dictionaries_items_dictionary_id", "dictionaries_items_item_id" },
                     new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, row[0]) }
                     ))
-                    if ((uint)diRow[1] == 14)
-                        eduForms.Add(new EducationFormID((uint)diRow[2]));
+                    if ((uint)diRow[0] == 14)
+                        eduForms.Add(new EducationFormID((uint)diRow[1]));
                     else
-                        eduLevels.Add(new EducationLevelID((uint)diRow[2]));
+                        eduLevels.Add(new EducationLevelID((uint)diRow[1]));
 
                 campaigns.Add(new Campaign(
                     new TUID(row[0].ToString()),
@@ -58,39 +57,53 @@ namespace PK.Classes
         {
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
-            foreach (object[] row in connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA))
+            foreach (var admData in connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA)
+                .GroupBy(k => new System.Tuple<uint, uint>((uint)k[0], (uint)k[2]), (k, g) => new
+                {
+                    CampID = k.Item1,
+                    DirID = k.Item2,
+                    BO = g.Sum(s => (ushort)s[3]),
+                    BOZ = g.Sum(s => (ushort)s[4]),
+                    BZ = g.Sum(s => (ushort)s[5]),
+                    TO = g.Sum(s => (ushort)s[6]),
+                    TOZ = g.Sum(s => (ushort)s[7]),
+                    TZ = g.Sum(s => (ushort)s[8]),
+                    QO = g.Sum(s => (ushort)s[9]),
+                    QOZ = g.Sum(s => (ushort)s[10]),
+                    QZ = g.Sum(s => (ushort)s[11])
+                }))
             {
                 ushort paid_o = 0, paid_oz = 0, paid_z = 0;
-                foreach (object[] profRow in connection.Select(
+                /*foreach (object[] profRow in connection.Select(
                     DB_Table.CAMPAIGNS_PROFILES_DATA,
                     new string[] { "places_paid_o, places_paid_oz, places_paid_z" },
                     new List<System.Tuple<string, Relation, object>>
                     {
                         new System.Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,row[0]),
-                        new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,row[1]),
-                        new System.Tuple<string, Relation, object>("profiles_direction_faculty",Relation.EQUAL,row[2])
+                        new System.Tuple<string, Relation, object>("profiles_direction_faculty",Relation.EQUAL,row[1]),
+                        new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,row[2])
                     }))
                 {
                     paid_o += (ushort)profRow[0];
                     paid_oz += (ushort)profRow[1];
                     paid_z += (ushort)profRow[2];
-                }
+                }*/ //TODO Сделать
 
-                uint levelID = uint.Parse(connection.Select(
+                uint levelID = 2;/*uint.Parse(connection.Select(
                     DB_Table.DICTIONARY_10_ITEMS,
                     new string[] { "code" },
                     new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("id", Relation.EQUAL, row[2]) }
-                    )[0][0].ToString().Split('.')[1]);
+                    )[0][0].ToString().Split('.')[1]);*///TODO Не так?
 
                 admissionVolumes.Add(new AVItem(
-                    new TUID(row[0].ToString() + row[1].ToString() + row[2]),
-                    new TUID(row[0].ToString()),
+                    new TUID(admData.CampID.ToString() + admData.DirID.ToString()),
+                    new TUID(admData.CampID.ToString()),
                     levelID,
-                    (uint)row[2],
-                    (uint)row[3], (uint)row[4], (uint)row[5],
+                    admData.DirID,
+                    (ushort)admData.BO, (ushort)admData.BOZ, (ushort)admData.BZ,
                     paid_o, paid_oz, paid_z,
-                    (uint)row[6], (uint)row[7], (uint)row[8],
-                    (uint)row[9], (uint)row[10], (uint)row[11]
+                    (ushort)admData.TO, (ushort)admData.TOZ, (ushort)admData.TZ,
+                    (ushort)admData.QO, (ushort)admData.QOZ, (ushort)admData.QZ
                     ));
 
                 foreach (object v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
@@ -102,17 +115,17 @@ namespace PK.Classes
                         case CompetitiveGroupItem.Variants.NumberBudgetO:
                             eduForm = 11;
                             eduSource = 14;
-                            places = (ushort)row[3];
+                            places = (ushort)admData.BO;
                             break;
                         case CompetitiveGroupItem.Variants.NumberBudgetOZ:
                             eduForm = 12;
                             eduSource = 14;
-                            places = (ushort)row[4];
+                            places = (ushort)admData.BOZ;
                             break;
                         case CompetitiveGroupItem.Variants.NumberBudgetZ:
                             eduForm = 10;
                             eduSource = 14;
-                            places = (ushort)row[5];
+                            places = (ushort)admData.BZ;
                             break;
                         case CompetitiveGroupItem.Variants.NumberPaidO:
                             eduForm = 11;
@@ -132,32 +145,32 @@ namespace PK.Classes
                         case CompetitiveGroupItem.Variants.NumberQuotaO:
                             eduForm = 11;
                             eduSource = 20;
-                            places = (ushort)row[6];
+                            places = (ushort)admData.QO;
                             break;
                         case CompetitiveGroupItem.Variants.NumberQuotaOZ:
                             eduForm = 12;
                             eduSource = 20;
-                            places = (ushort)row[7];
+                            places = (ushort)admData.QOZ;
                             break;
                         case CompetitiveGroupItem.Variants.NumberQuotaZ:
                             eduForm = 10;
                             eduSource = 20;
-                            places = (ushort)row[8];
+                            places = (ushort)admData.QZ;
                             break;
                         case CompetitiveGroupItem.Variants.NumberTargetO:
                             eduForm = 11;
                             eduSource = 16;
-                            places = (ushort)row[9];
+                            places = (ushort)admData.TO;
                             break;
                         case CompetitiveGroupItem.Variants.NumberTargetOZ:
                             eduForm = 12;
                             eduSource = 16;
-                            places = (ushort)row[10];
+                            places = (ushort)admData.TOZ;
                             break;
                         case CompetitiveGroupItem.Variants.NumberTargetZ:
                             eduForm = 10;
                             eduSource = 16;
-                            places = (ushort)row[11];
+                            places = (ushort)admData.TZ;
                             break;
                         default:
                             throw new System.Exception("Unreachable reached.");
@@ -165,40 +178,40 @@ namespace PK.Classes
 
                     if (places != 0)
                     {
-                        string compGroupUID = row[0].ToString() + row[2].ToString() + levelID.ToString() + eduForm.ToString() + eduSource.ToString();
+                        string compGroupUID = admData.CampID.ToString() + admData.DirID.ToString() + levelID.ToString() + eduForm.ToString() + eduSource.ToString();
 
                         List<EntranceTestItem> entranceTests = new List<EntranceTestItem>();
                         foreach (object[] etRow in connection.Select(
                             DB_Table.ENTRANCE_TESTS,
                             new string[] { "subject_id", "priority" },
-                            new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, row[2]) }
+                            new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
                             ))
                             entranceTests.Add(new EntranceTestItem(
-                                new TUID(compGroupUID + row[0].ToString()),
+                                new TUID(compGroupUID + etRow[0].ToString()),
                                 1,//TODO ?
-                                (uint)etRow[1],
-                                new TEntranceTestSubject((uint)row[0]),
+                                (ushort)etRow[1],
+                                new TEntranceTestSubject((uint)etRow[0]),
                                 null //TODO Добавить!
                                 ));
 
                         competitiveGroups.Add(new CompetitiveGroup(
                             new TUID(compGroupUID),
-                            new TUID(row[0].ToString()),
-                            row[0].ToString() + " " +
+                            new TUID(admData.CampID.ToString()),
+                            admData.CampID.ToString() + " " +
                             connection.Select(
                                 DB_Table.DICTIONARY_10_ITEMS,
                                 new string[] { "code" },
-                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("id", Relation.EQUAL, row[2]) }
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("id", Relation.EQUAL, admData.DirID) }
                                 )[0][0].ToString() +
                             " " + EduSourceLiterals[eduSource] + " " + EduFormLiterals[eduForm],
                             levelID,
                             eduSource,
                             eduForm,
-                            (uint)row[2],
+                            admData.DirID,
                             null,
                             null,
                             null, //TODO ?
-                            new CompetitiveGroupItem((CompetitiveGroupItem.Variants)v, places),
+                            new CompetitiveGroupItem((CompetitiveGroupItem.Variants)v, (uint)(places - 7)), //TODO
                             null,//TODO ?
                             null,//TODO ?
                             entranceTests
@@ -224,17 +237,23 @@ namespace PK.Classes
                         new TUID(campRow[0].ToString())
                         ));
 
-            return achievements;
+            if (achievements.Count != 0)
+                return achievements;
+
+            return null;
         }
 
         static List<TargetOrganizationImp> PackTargetOrganizations(DB_Connector connection)
         {
             List<TargetOrganizationImp> organizations = new List<TargetOrganizationImp>();
 
-            foreach (object[] row in connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS))
+            foreach (object[] row in connection.Select(DB_Table.TARGET_ORGANIZATIONS))
                 organizations.Add(new TargetOrganizationImp(new TUID(row[0].ToString()), row[1].ToString()));
 
-            return organizations;
+            if (organizations.Count != 0)
+                return organizations;
+
+            return null;
         }
 
         static List<Application> PackApplications(DB_Connector connection)

@@ -280,10 +280,12 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
   `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус заявления (справочник №4).',
   `status_comment` VARCHAR(4000) NULL COMMENT 'Комментарий к статусу заявления.',
   `language` ENUM('Английский', 'Немецкий', 'Французский') NOT NULL COMMENT 'Изучаемый язык.',
+  `registrator_login` VARCHAR(20) NOT NULL COMMENT 'Логин пользователя, занёсшего заявление.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `application_number_UNIQUE` (`number` ASC),
   INDEX `has_idx` (`entrant_id` ASC),
   INDEX `corresp_idx` (`status_dict_id` ASC, `status_id` ASC),
+  INDEX `applications_registrered_idx` (`registrator_login` ASC),
   CONSTRAINT `applications_has`
     FOREIGN KEY (`entrant_id`)
     REFERENCES `PK_DB`.`entrants` (`id`)
@@ -292,6 +294,11 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
   CONSTRAINT `applications_corresp`
     FOREIGN KEY (`status_id` , `status_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `applications_registrered`
+    FOREIGN KEY (`registrator_login`)
+    REFERENCES `PK_DB`.`users` (`login`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

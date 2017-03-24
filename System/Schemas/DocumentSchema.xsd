@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:simpleType name="TColor">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Цвет.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Red"/>
+      <xs:enumeration value="Violet"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="TFont">
     <xs:annotation>
       <xs:documentation xml:lang="ru">Параметры шрифта.</xs:documentation>
@@ -26,23 +35,141 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="Color" minOccurs="0">
+      <xs:element name="Color" type="TColor" minOccurs="0">
         <xs:annotation>
           <xs:documentation xml:lang="ru">Цвет.</xs:documentation>
         </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="Red"/>
-            <xs:enumeration value="Violet"/>
-          </xs:restriction>
-        </xs:simpleType>
       </xs:element>
     </xs:all>
-    <xs:attribute name="ID" type="xs:string">
+    <xs:attribute name="ID" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation xml:lang="ru">ID для ссылок.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TParagraph">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Данные параграфа (строки).</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Alighment" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Выравнивание.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Center"/>
+            <xs:enumeration value="Right"/>
+            <xs:enumeration value="Both"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="FontID" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Parts" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Составные части параграфа.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Part" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation xml:lang="ru">Часть параграфа.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:all>
+                  <xs:element name="FontID" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="Text">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Простой текст.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:choice>
+                        <xs:element name="String" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation xml:lang="ru">Текст.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Placeholder" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:choice>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:all>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="TBorder">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Параметры границы.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Size" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedByte">
+            <xs:maxExclusive value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Color" type="TColor" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Цвет.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Style" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Стиль границы.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Single"/>
+            <xs:enumeration value="Dashed"/>
+            <xs:enumeration value="None"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="TBorders">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Параметры границ.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Left" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Top" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Right" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Bottom" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
   </xs:complexType>
   <xs:element name="Template">
     <xs:annotation>
@@ -196,75 +323,15 @@
                       <xs:complexType>
                         <xs:sequence>
                           <xs:element name="Element" maxOccurs="unbounded">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Элемент структуры.</xs:documentation>
+                            </xs:annotation>
                             <xs:complexType>
                               <xs:choice>
-                                <xs:element name="Paragraph">
+                                <xs:element name="Paragraph" type="TParagraph">
                                   <xs:annotation>
                                     <xs:documentation xml:lang="ru">Параграф (строка).</xs:documentation>
                                   </xs:annotation>
-                                  <xs:complexType>
-                                    <xs:all>
-                                      <xs:element name="Alighment" minOccurs="0">
-                                        <xs:annotation>
-                                          <xs:documentation xml:lang="ru">Выравнивание.</xs:documentation>
-                                        </xs:annotation>
-                                        <xs:simpleType>
-                                          <xs:restriction base="xs:string">
-                                            <xs:enumeration value="Center"/>
-                                            <xs:enumeration value="Right"/>
-                                            <xs:enumeration value="Both"/>
-                                          </xs:restriction>
-                                        </xs:simpleType>
-                                      </xs:element>
-                                      <xs:element name="FontID" type="xs:string" minOccurs="0">
-                                        <xs:annotation>
-                                          <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
-                                        </xs:annotation>
-                                      </xs:element>
-                                      <xs:element name="Parts" minOccurs="0">
-                                        <xs:annotation>
-                                          <xs:documentation xml:lang="ru">Составные части параграфа.</xs:documentation>
-                                        </xs:annotation>
-                                        <xs:complexType>
-                                          <xs:sequence>
-                                            <xs:element name="Part" maxOccurs="unbounded">
-                                              <xs:annotation>
-                                                <xs:documentation xml:lang="ru">Часть параграфа.</xs:documentation>
-                                              </xs:annotation>
-                                              <xs:complexType>
-                                                <xs:all>
-                                                  <xs:element name="FontID" type="xs:string" minOccurs="0">
-                                                    <xs:annotation>
-                                                      <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
-                                                    </xs:annotation>
-                                                  </xs:element>
-                                                  <xs:element name="Text">
-                                                    <xs:annotation>
-                                                      <xs:documentation xml:lang="ru">Простой текст.</xs:documentation>
-                                                    </xs:annotation>
-                                                    <xs:complexType>
-                                                      <xs:choice>
-                                                        <xs:element name="String" type="xs:string">
-                                                          <xs:annotation>
-                                                            <xs:documentation xml:lang="ru">Текст.</xs:documentation>
-                                                          </xs:annotation>
-                                                        </xs:element>
-                                                        <xs:element name="Placeholder" type="xs:string">
-                                                          <xs:annotation>
-                                                            <xs:documentation xml:lang="ru">Заменяемое ключевое слово.</xs:documentation>
-                                                          </xs:annotation>
-                                                        </xs:element>
-                                                      </xs:choice>
-                                                    </xs:complexType>
-                                                  </xs:element>
-                                                </xs:all>
-                                              </xs:complexType>
-                                            </xs:element>
-                                          </xs:sequence>
-                                        </xs:complexType>
-                                      </xs:element>
-                                    </xs:all>
-                                  </xs:complexType>
                                 </xs:element>
                                 <xs:element name="Table">
                                   <xs:complexType>
@@ -315,6 +382,157 @@
                                                     </xs:annotation>
                                                   </xs:element>
                                                 </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:all>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="FixedTable">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Таблица с фиксированным числом столбцов и строк, позволяющая продвинутое форматирование.</xs:documentation>
+                                  </xs:annotation>
+                                  <xs:complexType>
+                                    <xs:all>
+                                      <xs:element name="ColumnsParameters">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Параметры столбцов.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                          <xs:choice>
+                                            <xs:element name="ColumnCount" type="xs:byte">
+                                              <xs:annotation>
+                                                <xs:documentation xml:lang="ru">Количество столбцов.</xs:documentation>
+                                              </xs:annotation>
+                                            </xs:element>
+                                            <xs:element name="Columns">
+                                              <xs:annotation>
+                                                <xs:documentation xml:lang="ru">Столбцы.</xs:documentation>
+                                              </xs:annotation>
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element name="ColumnWidth" type="xs:unsignedShort" maxOccurs="unbounded">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ширина столбца.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:choice>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element name="Borders" type="TBorders" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Границы.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
+                                      <xs:element name="Rows">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Строки.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="Row" maxOccurs="unbounded">
+                                              <xs:annotation>
+                                                <xs:documentation xml:lang="ru">Строка.</xs:documentation>
+                                              </xs:annotation>
+                                              <xs:complexType>
+                                                <xs:all>
+                                                  <xs:element name="Height" type="xs:unsignedShort" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Высота строки.</xs:documentation>
+                                                    </xs:annotation>
+                                                  </xs:element>
+                                                  <xs:element name="Merges" minOccurs="0">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Слияния столбцов.</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:complexType>
+                                                      <xs:sequence>
+                                                        <xs:element name="Merge" maxOccurs="unbounded">
+                                                          <xs:annotation>
+                                                            <xs:documentation xml:lang="ru">Слияние.</xs:documentation>
+                                                          </xs:annotation>
+                                                          <xs:complexType>
+                                                            <xs:all>
+                                                              <xs:element name="StartColumn" type="xs:byte">
+                                                                <xs:annotation>
+                                                                  <xs:documentation xml:lang="ru">Индекс начального столбца.</xs:documentation>
+                                                                </xs:annotation>
+                                                              </xs:element>
+                                                              <xs:element name="EndColumn" type="xs:byte">
+                                                                <xs:annotation>
+                                                                  <xs:documentation xml:lang="ru">Индекс завершающего столбца.</xs:documentation>
+                                                                </xs:annotation>
+                                                              </xs:element>
+                                                            </xs:all>
+                                                          </xs:complexType>
+                                                        </xs:element>
+                                                      </xs:sequence>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                  <xs:element name="Cells">
+                                                    <xs:annotation>
+                                                      <xs:documentation xml:lang="ru">Ячейки.</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:complexType>
+                                                      <xs:sequence>
+                                                        <xs:element name="Cell" maxOccurs="unbounded">
+                                                          <xs:annotation>
+                                                            <xs:documentation xml:lang="ru">Ячейка.</xs:documentation>
+                                                          </xs:annotation>
+                                                          <xs:complexType>
+                                                            <xs:all>
+                                                              <xs:element name="Borders" type="TBorders" minOccurs="0">
+                                                                <xs:annotation>
+                                                                  <xs:documentation xml:lang="ru">Границы.</xs:documentation>
+                                                                </xs:annotation>
+                                                              </xs:element>
+                                                              <xs:element name="Paragraphs">
+                                                                <xs:annotation>
+                                                                  <xs:documentation xml:lang="ru">Параграфы (строки).</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:complexType>
+                                                                  <xs:sequence>
+                                                                    <xs:element name="Paragraph" type="TParagraph" maxOccurs="unbounded">
+                                                                      <xs:annotation>
+                                                                        <xs:documentation xml:lang="ru">Параграф.</xs:documentation>
+                                                                      </xs:annotation>
+                                                                    </xs:element>
+                                                                  </xs:sequence>
+                                                                </xs:complexType>
+                                                              </xs:element>
+                                                            </xs:all>
+                                                            <xs:attribute name="Column" type="xs:byte" use="required">
+                                                              <xs:annotation>
+                                                                <xs:documentation xml:lang="ru">Индекс столбца.</xs:documentation>
+                                                              </xs:annotation>
+                                                            </xs:attribute>
+                                                            <!--<xs:complexContent>
+                                                              <xs:extension base="TParagraph">
+                                                                <xs:sequence>
+                                                                  <xs:element name="Borders" type="TBorders" minOccurs="0">
+                                                                    <xs:annotation>
+                                                                      <xs:documentation xml:lang="ru">Границы.</xs:documentation>
+                                                                    </xs:annotation>
+                                                                  </xs:element>
+                                                                </xs:sequence>
+                                                                <xs:attribute name="Column" type="xs:byte" use="required">
+                                                                  <xs:annotation>
+                                                                    <xs:documentation xml:lang="ru">Индекс столбца.</xs:documentation>
+                                                                  </xs:annotation>
+                                                                </xs:attribute>
+                                                              </xs:extension>
+                                                            </xs:complexContent>-->
+                                                          </xs:complexType>
+                                                        </xs:element>
+                                                      </xs:sequence>
+                                                    </xs:complexType>
+                                                  </xs:element>
+                                                </xs:all>
                                               </xs:complexType>
                                             </xs:element>
                                           </xs:sequence>

@@ -152,11 +152,13 @@ namespace PK.Classes
 
         public void Import(ImportClasses.PackageData data)
         {
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
-                new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
+              byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
+                  new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
 
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
-            System.Windows.Forms.MessageBox.Show(doc.ToString());
+              XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
+              System.Windows.Forms.MessageBox.Show(doc.ToString());
+
+            new ImportClasses.Root(new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
         }
 
         XDocument GetResponse(string uri, byte[] requestData)
