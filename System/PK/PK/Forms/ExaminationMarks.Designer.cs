@@ -30,11 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExaminationMarks));
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -59,25 +60,6 @@
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
-            // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Print});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(361, 25);
-            this.toolStrip.TabIndex = 2;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // toolStrip_Print
-            // 
-            this.toolStrip_Print.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Print.Image")));
-            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Print.Name = "toolStrip_Print";
-            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
-            this.toolStrip_Print.Text = "Печать";
-            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
             // 
             // dataGridView_UID
             // 
@@ -106,14 +88,43 @@
             this.dataGridView_Mark.Name = "dataGridView_Mark";
             this.dataGridView_Mark.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
-            // ExaminationMarksForm
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_Print,
+            this.toolStrip_Clear});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(361, 25);
+            this.toolStrip.TabIndex = 2;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolStrip_Print
+            // 
+            this.toolStrip_Print.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Print.Image")));
+            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Print.Name = "toolStrip_Print";
+            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
+            this.toolStrip_Print.Text = "Печать";
+            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
+            // 
+            // toolStrip_Clear
+            // 
+            this.toolStrip_Clear.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Clear.Image")));
+            this.toolStrip_Clear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Clear.Name = "toolStrip_Clear";
+            this.toolStrip_Clear.Size = new System.Drawing.Size(122, 22);
+            this.toolStrip_Clear.Text = "Очистить оценки";
+            this.toolStrip_Clear.Click += new System.EventHandler(this.toolStrip_Clear_Click);
+            // 
+            // ExaminationMarks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(361, 379);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
-            this.Name = "ExaminationMarksForm";
+            this.Name = "ExaminationMarks";
             this.Text = "ExaminationMarksForm";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);
@@ -131,5 +142,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_UID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Mark;
+        private System.Windows.Forms.ToolStripButton toolStrip_Clear;
     }
 }

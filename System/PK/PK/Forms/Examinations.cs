@@ -35,6 +35,13 @@ namespace PK.Forms
             UpdateTable();
         }
 
+        private void dataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            bool hasMarks = ExaminationHasMarks((uint)dataGridView[0, e.RowIndex].Value);
+            toolStrip_Edit.Enabled = !hasMarks;
+            toolStrip_Marks.Enabled = hasMarks;
+        }
+
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[0].Value } });
@@ -72,7 +79,7 @@ namespace PK.Forms
                 a => a[2],
                 (s1, s2) => new
                 {
-                    UID = s1[0],
+                    ID = s1[0],
                     LastName = s1[1].ToString(),
                     FirstName = s1[2].ToString(),
                     MiddleName = s1[3].ToString()
@@ -83,10 +90,15 @@ namespace PK.Forms
             ushort count = 1;
             foreach (var entr in entrants)
             {
+                _DB_Connection.InsertOnDuplicateUpdate(
+                    DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                    new Dictionary<string, object> { { "entrant_id", entr.ID }, { "examination_id", dataGridView.SelectedRows[0].Cells[0].Value } }
+                    );
+
                 entrantsTable.Add(new string[]
                 {
                     count.ToString(),
-                    entr.UID.ToString(),
+                    entr.ID.ToString(),
                     entr.LastName+" "+entr.FirstName+" "+entr.MiddleName,
                     _NameCodes[entr.LastName[0]]+_NameCodes[entr.FirstName[0]]+"."+dataGridView.SelectedRows[0].Cells[0].Value+count.ToString()
                 });
@@ -162,6 +174,17 @@ namespace PK.Forms
                     row[4],
                     row[5]
                     );
+        }
+
+        bool ExaminationHasMarks(uint id)
+        {
+            return _DB_Connection.Select(
+                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                     new string[] { "entrant_id" },
+                     new List<Tuple<string, Relation, object>>
+                     {
+                        new Tuple<string, Relation, object> ("examination_id",Relation.EQUAL, id)
+                     }).Count != 0;
         }
     }
 }

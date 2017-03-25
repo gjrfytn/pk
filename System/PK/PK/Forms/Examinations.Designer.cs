@@ -39,8 +39,8 @@
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_Add = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Marks = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Distribute = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Marks = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -67,6 +67,7 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(746, 444);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_RowEnter);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             // 
             // dataGridView_ID
@@ -144,15 +145,6 @@
             this.toolStrip_Edit.Text = "Редактировать";
             this.toolStrip_Edit.Click += new System.EventHandler(this.toolStrip_Edit_Click);
             // 
-            // toolStrip_Marks
-            // 
-            this.toolStrip_Marks.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Marks.Image")));
-            this.toolStrip_Marks.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Marks.Name = "toolStrip_Marks";
-            this.toolStrip_Marks.Size = new System.Drawing.Size(69, 22);
-            this.toolStrip_Marks.Text = "Оценки";
-            this.toolStrip_Marks.Click += new System.EventHandler(this.toolStrip_Marks_Click);
-            // 
             // toolStrip_Distribute
             // 
             this.toolStrip_Distribute.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Distribute.Image")));
@@ -162,14 +154,23 @@
             this.toolStrip_Distribute.Text = "Распределить";
             this.toolStrip_Distribute.Click += new System.EventHandler(this.toolStrip_Distribute_Click);
             // 
-            // ExaminationsForm
+            // toolStrip_Marks
+            // 
+            this.toolStrip_Marks.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Marks.Image")));
+            this.toolStrip_Marks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Marks.Name = "toolStrip_Marks";
+            this.toolStrip_Marks.Size = new System.Drawing.Size(69, 22);
+            this.toolStrip_Marks.Text = "Оценки";
+            this.toolStrip_Marks.Click += new System.EventHandler(this.toolStrip_Marks_Click);
+            // 
+            // Examinations
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(746, 469);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
-            this.Name = "ExaminationsForm";
+            this.Name = "Examinations";
             this.Text = "Экзамены";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);

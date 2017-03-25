@@ -32,11 +32,10 @@
         <Element>
           <FixedTable>
             <ColumnsParameters>
-              <ColumnCount>2</ColumnCount>
-              <!--<Columns>
-                <ColumnWidth>500</ColumnWidth>
-                <ColumnWidth>2500</ColumnWidth>
-              </Columns>-->
+              <Columns>
+                <ColumnWidth>550</ColumnWidth>
+                <ColumnWidth>5000</ColumnWidth>
+              </Columns>
             </ColumnsParameters>
             <Borders>
               <Left>
@@ -73,7 +72,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String> </String>
+                              <String>--</String>
                             </Text>
                           </Part>
                           <Part>
@@ -91,6 +90,12 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Size>5</Size>
+                        <Style>Dashed</Style>
+                      </Left>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>LargeBold</FontID>

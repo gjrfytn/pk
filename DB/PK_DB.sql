@@ -962,7 +962,7 @@ COMMENT = 'Экзаменационные аудитории.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants_examinations_marks` (
   `entrant_id` INT UNSIGNED NOT NULL COMMENT 'UID абитуриента.',
   `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
-  `mark` SMALLINT NOT NULL COMMENT 'Оценка.',
+  `mark` SMALLINT NOT NULL DEFAULT -1 COMMENT 'Оценка.',
   PRIMARY KEY (`entrant_id`, `examination_id`),
   INDEX `entr_exam_marks_has_exam_idx` (`examination_id` ASC),
   INDEX `entr_exam_marks_has_entr_idx` (`entrant_id` ASC),

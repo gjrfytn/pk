@@ -25,6 +25,16 @@ namespace PK.Classes
 
             public static void CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
+                Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
+            }
+
+            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            {
+                Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
+            }
+
+            static void Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
                 AddCoreProperties(doc);
@@ -36,72 +46,15 @@ namespace PK.Classes
                 foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
                 {
                     if (element.Element("Paragraph") != null)
-                        MakeParagraph(connection, element.Element("Paragraph"), doc.InsertParagraph(), fonts, id, ref placeholderGroup);
+                        MakeParagraph(element.Element("Paragraph"), doc.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
                     else if (element.Element("Table") != null)
                         AddTable(
                             doc,
                             element.Element("Table"),
                             fonts,
-                            connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
+                            connection != null ? connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
                                 .ConvertAll(row => System.Array.ConvertAll(row, c => c.ToString()))
-                            );
-                    else
-                    {
-                        XElement tableEl = element.Element("FixedTable");
-                        Table table = InsertFixedTable(doc, tableEl);
-
-                        MakeBorders(table, tableEl.Element("Borders"));
-                        byte index = 0;
-                        foreach (XElement row in tableEl.Element("Rows").Elements())
-                        {
-                            if (row.Element("Merges") != null)
-                                foreach (XElement merge in row.Element("Merges").Elements())
-                                    table.Rows[index].MergeCells(
-                                        int.Parse(merge.Element("StartColumn").Value),
-                                        int.Parse(merge.Element("EndColumn").Value)
-                                        );
-
-                            foreach (XElement cellEl in row.Element("Cells").Elements())
-                            {
-                                Cell cell = table.Rows[index].Cells[int.Parse(cellEl.Attribute("Column").Value)];
-
-                                MakeBorders(cell, cellEl.Element("Borders"));
-                                while (cell.RemoveParagraphAt(0))
-                                    ;
-                                foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
-                                    MakeParagraph(connection, paragraph, cell.InsertParagraph(), fonts, id, ref placeholderGroup);
-                            }
-
-                            if (row.Element("Height") != null)
-                                table.Rows[index].Height = ushort.Parse(row.Element("Height").Value);
-
-                            index++;
-                        }
-                    }
-                }
-
-                doc.Save();
-            }
-
-            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
-            {
-                DocX doc = DocX.Create(resultFile + ".docx");
-
-                AddCoreProperties(doc);
-
-                if (wordTemplateElement.Element("Properties") != null)
-                    ApplyProperties(doc, wordTemplateElement.Element("Properties"));
-
-                foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
-                {
-                    if (element.Element("Paragraph") != null)
-                        MakeParagraph(element.Element("Paragraph"), doc.InsertParagraph(), fonts, singleParams);
-                    else if (element.Element("Table") != null)
-                        AddTable(
-                            doc,
-                            element.Element("Table"),
-                            fonts,
-                            tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
+                                : tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
                             );
                     else
                     {
@@ -128,7 +81,7 @@ namespace PK.Classes
                                 while (cell.RemoveParagraphAt(0))
                                     ;
                                 foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
-                                    MakeParagraph(cellEl, cell.InsertParagraph(), fonts, singleParams);
+                                    MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
                             }
 
                             if (row.Element("Height") != null)
@@ -204,7 +157,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
-            static void MakeParagraph(DB_Connector connection, XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, uint id, ref string placeholderGroup)
+            static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (parElem.Element("Alighment") != null)
                     paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
@@ -218,7 +171,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
 
                         if (text.Element("String") != null)
                             paragraph.Append(text.Element("String").Value);
-                        else
+                        else if (connection != null)
                         {
                             string placeholder = text.Element("Placeholder").Value;
 
@@ -232,28 +185,9 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                                     if (placeholderGroup != GetPlaceholderGroup(placeholder))
                                     throw new System.Exception("В одном шаблоне не могут использоваться плейсхолдеры из разных групп. Конфликтная группа: " + GetPlaceholderGroup(placeholder));
 
-                                paragraph.Append(SelectByPlaceholder(connection, id, placeholder));
+                                paragraph.Append(SelectByPlaceholder(connection, id.Value, placeholder));
                             }
                         }
-
-                        SetFont(paragraph, fonts, part.Element("FontID")?.Value ?? parFontID);
-                    }
-            }
-
-            static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, string[] singleParams)
-            {
-                if (parElem.Element("Alighment") != null)
-                    paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
-
-                string parFontID = parElem.Element("FontID")?.Value;
-
-                if (parElem.Element("Parts") != null)
-                    foreach (XElement part in parElem.Element("Parts").Elements())
-                    {
-                        XElement text = part.Element("Text");
-
-                        if (text.Element("String") != null)
-                            paragraph.Append(text.Element("String").Value);
                         else
                             paragraph.Append(singleParams[int.Parse(text.Element("Placeholder").Value)]);
 
