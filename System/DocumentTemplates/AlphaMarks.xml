@@ -22,7 +22,7 @@
       <Size>14</Size>
       <Color>Violet</Color>
     </Font>
-	<Font ID="UsualTable">
+    <Font ID="UsualTable">
       <Name>Arial</Name>
       <Size>10</Size>
     </Font>
@@ -95,7 +95,17 @@
             <Parts>
               <Part>
                 <Text>
-                  <String>Абитуриенты, получившие неудовлетворительную оценку, выбывают из конкурса в ?2017? году.</String>
+                  <String>Абитуриенты, получившие неудовлетворительную оценку, выбывают из конкурса в </String>
+                </Text>
+              </Part>
+			  <Part>
+                <Text>
+                  <Placeholder>examinationDate|YEAR_ONLY</Placeholder>
+                </Text>
+              </Part>
+			  <Part>
+                <Text>
+                  <String> году.</String>
                 </Text>
               </Part>
             </Parts>
@@ -130,7 +140,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>examinationDate</Placeholder>
+                  <Placeholder>examinationDate|DATE_ONLY</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -165,8 +175,8 @@
         </Element>
         <Element>
           <Paragraph>
-            <FontID>Usual</FontID>
             <Alighment>Right</Alighment>
+            <FontID>Usual</FontID>
             <Parts>
               <Part>
                 <Text>
@@ -210,7 +220,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>examinationDate</Placeholder>
+                  <Placeholder>examinationDate|DATE_ONLY</Placeholder>
                 </Text>
               </Part>
             </Parts>

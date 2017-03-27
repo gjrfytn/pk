@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Linq;
 using Novacode;
 
 namespace PK.Classes
@@ -15,7 +16,24 @@ namespace PK.Classes
                 { "Both",Alignment.both}
             };
 
+            static readonly Dictionary<string, BorderStyle> _BorderStyles = new Dictionary<string, BorderStyle>
+            {
+                { "Single",BorderStyle.Tcbs_single},
+                { "Dashed",BorderStyle.Tcbs_dashed},
+                { "None",BorderStyle.Tcbs_none}
+            };
+
             public static void CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
+            {
+                Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
+            }
+
+            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            {
+                Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
+            }
+
+            static void Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -28,91 +46,50 @@ namespace PK.Classes
                 foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
                 {
                     if (element.Element("Paragraph") != null)
-                    {
-                        XElement parElem = element.Element("Paragraph");
-                        Paragraph paragraph = doc.InsertParagraph();
-
-                        if (parElem.Element("Alighment") != null)
-                            paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
-
-                        string parFontID = parElem.Element("FontID")?.Value;
-
-                        if (parElem.Element("Parts") != null)
-                            foreach (XElement part in parElem.Element("Parts").Elements())
-                            {
-                                XElement text = part.Element("Text");
-
-                                if (text.Element("String") != null)
-                                    paragraph.Append(text.Element("String").Value);
-                                else
-                                {
-                                    string placeholder = text.Element("Placeholder").Value;
-                                    if (placeholderGroup == null)
-                                        placeholderGroup = GetPlaceholderGroup(placeholder);
-                                    else
-                                        if (placeholderGroup != GetPlaceholderGroup(placeholder))
-                                        throw new System.Exception("В одном шаблоне не могут использоваться плейсхолдеры из разных групп. Конфликтная группа: " + GetPlaceholderGroup(placeholder));
-
-                                    paragraph.Append(SelectByPlaceholder(connection, id, placeholder));
-                                }
-
-                                SetFont(paragraph, fonts, part.Element("FontID")?.Value ?? parFontID);
-                            }
-                    }
-                    else
+                        MakeParagraph(element.Element("Paragraph"), doc.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    else if (element.Element("Table") != null)
                         AddTable(
                             doc,
                             element.Element("Table"),
                             fonts,
-                            connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
+                            connection != null ? connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
                                 .ConvertAll(row => System.Array.ConvertAll(row, c => c.ToString()))
+                                : tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
                             );
-                }
-
-                doc.Save();
-            }
-
-            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
-            {
-                DocX doc = DocX.Create(resultFile + ".docx");
-
-                AddCoreProperties(doc);
-
-                if (wordTemplateElement.Element("Properties") != null)
-                    ApplyProperties(doc, wordTemplateElement.Element("Properties"));
-
-                foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
-                {
-                    if (element.Element("Paragraph") != null)
-                    {
-                        XElement parElem = element.Element("Paragraph");
-                        Paragraph paragraph = doc.InsertParagraph();
-
-                        if (parElem.Element("Alighment") != null)
-                            paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
-
-                        string parFontID = parElem.Element("FontID")?.Value;
-
-                        if (parElem.Element("Parts") != null)
-                            foreach (XElement part in parElem.Element("Parts").Elements())
-                            {
-                                XElement text = part.Element("Text");
-
-                                if (text.Element("String") != null)
-                                    paragraph.Append(text.Element("String").Value);
-                                else
-                                    paragraph.Append(singleParams[int.Parse(text.Element("Placeholder").Value)]);
-
-                                SetFont(paragraph, fonts, part.Element("FontID")?.Value ?? parFontID);
-                            }
-                    }
                     else
-                        AddTable(
-                            doc,
-                            element.Element("Table"),
-                            fonts,
-                            tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
-                            );
+                    {
+                        XElement tableEl = element.Element("FixedTable");
+                        Table table = InsertFixedTable(doc, tableEl);
+
+                        MakeBorders(table, tableEl.Element("Borders"));
+
+                        byte index = 0;
+                        foreach (XElement row in tableEl.Element("Rows").Elements())
+                        {
+                            if (row.Element("Merges") != null)
+                                foreach (XElement merge in row.Element("Merges").Elements())
+                                    table.Rows[index].MergeCells(
+                                        int.Parse(merge.Element("StartColumn").Value),
+                                        int.Parse(merge.Element("EndColumn").Value)
+                                        );
+
+                            foreach (XElement cellEl in row.Element("Cells").Elements())
+                            {
+                                Cell cell = table.Rows[index].Cells[int.Parse(cellEl.Attribute("Column").Value)];
+
+                                MakeBorders(cell, cellEl.Element("Borders"));
+                                while (cell.RemoveParagraphAt(0))
+                                    ;
+                                foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
+                                    MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                            }
+
+                            if (row.Element("Height") != null)
+                                table.Rows[index].Height = ushort.Parse(row.Element("Height").Value);
+
+                            index++;
+                        }
+                    }
                 }
 
                 doc.Save();
@@ -180,6 +157,72 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
+            static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            {
+                if (parElem.Element("Alighment") != null)
+                    paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
+
+                string parFontID = parElem.Element("FontID")?.Value;
+
+                if (parElem.Element("Parts") != null)
+                    foreach (XElement part in parElem.Element("Parts").Elements())
+                    {
+                        XElement text = part.Element("Text");
+
+                        if (text.Element("String") != null)
+                            paragraph.Append(text.Element("String").Value);
+                        else if (connection != null)
+                        {
+                            string placeholder = text.Element("Placeholder").Value;
+
+                            if (_PH_SingleSpecial.ContainsKey(placeholder))
+                                paragraph.Append(_PH_SingleSpecial[placeholder]());
+                            else
+                            {
+                                if (placeholderGroup == null)
+                                    placeholderGroup = GetPlaceholderGroup(placeholder);
+                                else
+                                    if (placeholderGroup != GetPlaceholderGroup(placeholder))
+                                    throw new System.Exception("В одном шаблоне не могут использоваться плейсхолдеры из разных групп. Конфликтная группа: " + GetPlaceholderGroup(placeholder));
+
+                                paragraph.Append(SelectByPlaceholder(connection, id.Value, placeholder));
+                            }
+                        }
+                        else
+                            paragraph.Append(singleParams[int.Parse(text.Element("Placeholder").Value)]);
+
+                        SetFont(paragraph, fonts, part.Element("FontID")?.Value ?? parFontID);
+                    }
+            }
+
+            static void MakeBorders(Table table, XElement borders)
+            {
+                if (borders != null)
+                    foreach (XElement dir in borders.Elements())
+                        table.SetBorder(
+                            (TableBorderType)System.Enum.Parse(typeof(TableBorderType), dir.Name.ToString()),
+                            new Border(
+                                borders.Element(dir.Name).Element("Style") != null ? _BorderStyles[borders.Element(dir.Name).Element("Style").Value] : BorderStyle.Tcbs_single,
+                             borders.Element(dir.Name).Element("Size") != null ? (BorderSize)(int.Parse(borders.Element(dir.Name).Element("Size").Value) - 1) : BorderSize.one,
+                                0,
+                              borders.Element(dir.Name).Element("Color") != null ? _Colors[borders.Element(dir.Name).Element("Color").Value] : System.Drawing.Color.Black
+                                ));
+            }
+
+            static void MakeBorders(Cell cell, XElement borders)
+            {
+                if (borders != null)
+                    foreach (XElement dir in borders.Elements())
+                        cell.SetBorder(
+                            (TableCellBorderType)System.Enum.Parse(typeof(TableCellBorderType), dir.Name.ToString()),
+                            new Border(
+                                borders.Element(dir.Name).Element("Style") != null ? _BorderStyles[borders.Element(dir.Name).Element("Style").Value] : BorderStyle.Tcbs_single,
+                             borders.Element(dir.Name).Element("Size") != null ? (BorderSize)(int.Parse(borders.Element(dir.Name).Element("Size").Value) - 1) : BorderSize.one,
+                                0,
+                              borders.Element(dir.Name).Element("Color") != null ? _Colors[borders.Element(dir.Name).Element("Color").Value] : System.Drawing.Color.Black
+                                ));
+            }
+
             static void SetFont(Paragraph paragraph, Dictionary<string, Font> fonts, string fontID)
             {
                 if (fontID != null)
@@ -242,8 +285,8 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 {
                     Paragraph paragraph = table.Rows[0].Cells[i].InsertParagraph(colNames[i]);
                     SetFont(paragraph, fonts, colFonts[i].Item1);
-                    // if (colWidths.ContainsKey(i))
-                    //     table.SetColumnWidth(i, colWidths[i]); //TODO
+                    if (colWidths.ContainsKey(i))
+                        table.SetColumnWidth(i, colWidths[i]);
                 }
 
                 byte count = 1;
@@ -267,6 +310,30 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 table.AutoFit = AutoFit.Contents; //TODO
             }
 
+            static Table InsertFixedTable(DocX doc, XElement tableEl)
+            {
+                XElement colParameters = tableEl.Element("ColumnsParameters");
+                int colCount;
+                if (colParameters.Element("ColumnCount") != null)
+                    colCount = int.Parse(colParameters.Element("ColumnCount").Value);
+                else
+                    colCount = colParameters.Element("Columns").Elements().Count();
+
+                Table table = doc.InsertTable(tableEl.Element("Rows").Elements().Count(), colCount);
+                table.Design = TableDesign.TableGrid;
+
+                if (colParameters.Element("Columns") != null)
+                {
+                    byte wIndex = 0;
+                    foreach (XElement width in colParameters.Element("Columns").Elements())
+                    {
+                        table.SetColumnWidth(wIndex, double.Parse(width.Value));
+                        wIndex++;
+                    }
+                }
+
+                return table;
+            }
         }
     }
 }

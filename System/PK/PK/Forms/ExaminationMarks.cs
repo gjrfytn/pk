@@ -54,6 +54,18 @@ namespace PK.Forms
             Classes.DocumentCreator.Create(_DB_Connection, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaMarks.xml", "AlphaMarks", _ExaminationID);
         }
 
+        private void toolStrip_Clear_Click(object sender, EventArgs e)
+        {
+            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            {
+                foreach (object[] row in _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, "entrant_id", "examination_id"))
+                    _DB_Connection.Delete(
+                        DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                        new Dictionary<string, object> { { "entrant_id", row[0] }, { "examination_id", row[1] } }
+                        );
+            }
+        }
+
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1)

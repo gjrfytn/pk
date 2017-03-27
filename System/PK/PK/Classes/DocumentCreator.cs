@@ -24,7 +24,7 @@ namespace PK.Classes
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint id)
         {
-            XDocument template = XDocument.Load(templateFile);
+            XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
 
@@ -36,7 +36,7 @@ namespace PK.Classes
 
         public static void Create(string templateFile, string resultFile, string[] singleParams, List<string[]>[] tableParams)
         {
-            XDocument template = XDocument.Load(templateFile);
+            XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
 
@@ -48,7 +48,7 @@ namespace PK.Classes
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)
         {
-            XDocument template = XDocument.Load(templateFile);
+            XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
 
@@ -107,7 +107,8 @@ namespace PK.Classes
 
         static string SelectByPlaceholder(DB_Connector connection, uint id, string placeholder)
         {
-            string[] placeholderValue = _PH_Single[placeholder].Split('.', ':');
+            string[] placeholderAndFunction = placeholder.Split('|');
+            string[] placeholderValue = _PH_Single[placeholderAndFunction[0]].Split('.', ':');
 
             List<System.Tuple<string, Relation, object>> whereClause;
             if (placeholderValue.Length == 2)
@@ -141,10 +142,10 @@ namespace PK.Classes
             if (selectRes.Count != 1)
                 throw new System.Exception("По условию Placeholder возвращена не одна строка. Значение: " + placeholder);
 
-            if (selectRes[0][0] is System.DateTime) //TODO Временно!
-                return ((System.DateTime)selectRes[0][0]).ToShortDateString();
-
-            return selectRes[0][0].ToString();
+            if (placeholderAndFunction.Length == 1)
+                return selectRes[0][0].ToString();
+            else
+                return _PH_Functions[placeholderAndFunction[1]](selectRes[0][0]);
         }
     }
 }
