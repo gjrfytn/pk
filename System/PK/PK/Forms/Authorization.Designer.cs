@@ -80,7 +80,7 @@
             this.Controls.Add(this.bAuth);
             this.Name = "Authorization";
             this.Text = "Авторизация";
-            this.Load += new System.EventHandler(this.Authorization_Load);
+            //this.Load += new System.EventHandler(this.Authorization_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

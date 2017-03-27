@@ -6,11 +6,13 @@ namespace PK.Forms
     public partial class Main : Form
     {
         Classes.DB_Connector _DB_Connection;
+        string _UsersLogin;
 
-        public Main(byte userRole)
+        public Main(byte userRole, string usersLogin)
         {
             InitializeComponent();
 
+            _UsersLogin = usersLogin;
             _DB_Connection = new Classes.DB_Connector();
         }
 
@@ -22,13 +24,13 @@ namespace PK.Forms
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(1);
+            ApplicationEdit form = new ApplicationEdit(1, _UsersLogin);
             form.ShowDialog();
         }
 
         private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(1);
+            ApplicationEdit form = new ApplicationEdit(1, _UsersLogin);
             form.ShowDialog();
         }
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
@@ -82,6 +84,18 @@ namespace PK.Forms
         {
             Classes.FIS_Connector fisConnector = new Classes.FIS_Connector("XXX", "***");
             fisConnector.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+        }
+
+        private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
+        {
+            Forms.InstitutionAchievementsEdit form = new InstitutionAchievementsEdit();
+            form.ShowDialog();
+        }
+
+        private void menuStrip_Orders_Click(object sender, EventArgs e)
+        {
+            Forms.Orders form = new Orders(_DB_Connection);
+            form.ShowDialog();
         }
     }
 }

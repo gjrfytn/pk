@@ -41,13 +41,15 @@
             this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_InstitutionAchievements = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_FisImport = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_FisImport = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Orders = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -89,7 +91,8 @@
             // 
             this.menuStrip_Campaign.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Campaign_Campaigns,
-            this.menuStrip_Campaign_Exams});
+            this.menuStrip_Campaign_Exams,
+            this.menuStrip_Orders});
             this.menuStrip_Campaign.Name = "menuStrip_Campaign";
             this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 20);
             this.menuStrip_Campaign.Text = "Приемная кампания";
@@ -128,7 +131,8 @@
             this.menuStrip_Univesity.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Faculties,
             this.menuStrip_Directions,
-            this.menuStrip_TargetOrganizations});
+            this.menuStrip_TargetOrganizations,
+            this.menuStrip_InstitutionAchievements});
             this.menuStrip_Univesity.Name = "menuStrip_Univesity";
             this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 20);
             this.menuStrip_Univesity.Text = "Университет";
@@ -154,6 +158,13 @@
             this.menuStrip_TargetOrganizations.Text = "Целевые организации";
             this.menuStrip_TargetOrganizations.Click += new System.EventHandler(this.menuStrip_TargetOrganizations_Click);
             // 
+            // menuStrip_InstitutionAchievements
+            // 
+            this.menuStrip_InstitutionAchievements.Name = "menuStrip_InstitutionAchievements";
+            this.menuStrip_InstitutionAchievements.Size = new System.Drawing.Size(278, 22);
+            this.menuStrip_InstitutionAchievements.Text = "Индивидуальные достижения";
+            this.menuStrip_InstitutionAchievements.Click += new System.EventHandler(this.menuStrip_InstitutionAchievements_Click);
+            // 
             // toolStrip_Administration
             // 
             this.toolStrip_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -169,6 +180,13 @@
             this.toolStrip_Users.Size = new System.Drawing.Size(156, 22);
             this.toolStrip_Users.Text = "Пользователи";
             this.toolStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
+            // 
+            // toolStrip_FisImport
+            // 
+            this.toolStrip_FisImport.Name = "toolStrip_FisImport";
+            this.toolStrip_FisImport.Size = new System.Drawing.Size(156, 22);
+            this.toolStrip_FisImport.Text = "Импорт в ФИС";
+            this.toolStrip_FisImport.Click += new System.EventHandler(this.toolStrip_FisImport_Click);
             // 
             // menuStrip_Help
             // 
@@ -201,14 +219,14 @@
             this.menuStrip_OlympDictionary.Text = "Справочник олимпиад ФИС";
             this.menuStrip_OlympDictionary.Click += new System.EventHandler(this.menuStrip_OlympDictionary_Click);
             // 
-            // toolStrip_FisImport
+            // menuStrip_Orders
             // 
-            this.toolStrip_FisImport.Name = "toolStrip_FisImport";
-            this.toolStrip_FisImport.Size = new System.Drawing.Size(156, 22);
-            this.toolStrip_FisImport.Text = "Импорт в ФИС";
-            this.toolStrip_FisImport.Click += new System.EventHandler(this.toolStrip_FisImport_Click);
+            this.menuStrip_Orders.Name = "menuStrip_Orders";
+            this.menuStrip_Orders.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Orders.Text = "Приказы";
+            this.menuStrip_Orders.Click += new System.EventHandler(this.menuStrip_Orders_Click);
             // 
-            // MainForm
+            // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -216,7 +234,7 @@
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
-            this.Name = "MainForm";
+            this.Name = "Main";
             this.Text = "ИС \"Приемная комиссия\"";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.toolStrip.ResumeLayout(false);
@@ -249,6 +267,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStrip_Administration;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_Users;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_FisImport;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_InstitutionAchievements;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Orders;
     }
 }
 

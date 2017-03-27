@@ -16,7 +16,7 @@ namespace PK
 
             Forms.Authorization form = new Forms.Authorization();
             if (form.ShowDialog() == DialogResult.OK)
-                Application.Run(new Forms.Main(form.UsersRole));
+                Application.Run(new Forms.Main(form.UsersRole, form.UsersLogin));
         }
     }
 }

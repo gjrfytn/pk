@@ -8,6 +8,7 @@ namespace PK.Forms
     {
         Classes.DB_Connector _DB_Connection;
         public byte UsersRole { get; private set; }
+        public string UsersLogin;
 
         public Authorization()
         {
@@ -47,15 +48,16 @@ namespace PK.Forms
             else if (logpass[1].ToString() == tbPassword.Text)
             {
                 // UsersRole = <?>;
+                UsersLogin = cbLogin.Text;
                 DialogResult = DialogResult.OK;
             }
             else
                 MessageBox.Show("Неверный пароль");
         }
 
-        private void Authorization_Load(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
+        //private void Authorization_Load(object sender, EventArgs e)
+        //{
+        //    DialogResult = DialogResult.OK;
+        //}
     }
 }

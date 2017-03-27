@@ -143,6 +143,12 @@
       <DependentUpon>Faculties.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\FIS_Connector.cs" />
+    <Compile Include="Forms\InstitutionAchievementsEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InstitutionAchievementsEdit.Designer.cs">
+      <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OrderEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +268,9 @@
     <EmbeddedResource Include="Forms\Faculties.resx">
       <DependentUpon>Faculties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
+      <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OrderEdit.resx">
       <DependentUpon>OrderEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -313,6 +322,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Users.resx">
       <DependentUpon>Users.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

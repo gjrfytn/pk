@@ -2187,7 +2187,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ApplicationEdit";
             this.Text = "Заявление на поступление";
-            this.Load += new System.EventHandler(this.NewApplicForm_Load);
+            this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
