@@ -178,12 +178,15 @@
             // 
             // cbOlympID
             // 
+            this.cbOlympID.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbOlympID.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbOlympID.Enabled = false;
             this.cbOlympID.FormattingEnabled = true;
             this.cbOlympID.Location = new System.Drawing.Point(185, 138);
             this.cbOlympID.Name = "cbOlympID";
             this.cbOlympID.Size = new System.Drawing.Size(223, 21);
             this.cbOlympID.TabIndex = 13;
+            this.cbOlympID.SelectedIndexChanged += new System.EventHandler(this.cbOlympID_SelectedIndexChanged);
             // 
             // cbOlympProfile
             // 
@@ -236,7 +239,7 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // MADIOlimpsForm
+            // MADIOlimps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -260,7 +263,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbOlympType);
-            this.Name = "MADIOlimpsForm";
+            this.Name = "MADIOlimps";
             this.Text = "Олимпиады и конференции МАДИ";
             this.ResumeLayout(false);
             this.PerformLayout();

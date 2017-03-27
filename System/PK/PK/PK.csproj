@@ -328,9 +328,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="application.png" />
-    <Content Include="attestat.png" />
-    <Content Include="passport.png" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

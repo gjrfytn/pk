@@ -22,13 +22,13 @@ namespace PK.Forms
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit();
+            ApplicationEdit form = new ApplicationEdit(1);
             form.ShowDialog();
         }
 
         private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit();
+            ApplicationEdit form = new ApplicationEdit(1);
             form.ShowDialog();
         }
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)

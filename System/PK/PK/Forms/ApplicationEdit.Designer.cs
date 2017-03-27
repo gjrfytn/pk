@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationEdit));
             this.gbPassport = new System.Windows.Forms.GroupBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -72,6 +73,7 @@
             this.cbIDDocType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.gbCertificate = new System.Windows.Forms.GroupBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tbInstitutionLocation = new System.Windows.Forms.TextBox();
             this.cbGraduationYear = new System.Windows.Forms.ComboBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -95,6 +97,7 @@
             this.label21 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.grbApplication = new System.Windows.Forms.GroupBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.cbPrerogative = new System.Windows.Forms.CheckBox();
             this.cbTarget = new System.Windows.Forms.CheckBox();
@@ -105,7 +108,7 @@
             this.cbMCDAO = new System.Windows.Forms.CheckBox();
             this.cbHostleNeeded = new System.Windows.Forms.CheckBox();
             this.tbDirections = new System.Windows.Forms.TabControl();
-            this.tpDirPage1 = new System.Windows.Forms.TabPage();
+            this.tpDir_budget_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir13 = new System.Windows.Forms.Button();
             this.btRemoveDir12 = new System.Windows.Forms.Button();
             this.btRemoveDir11 = new System.Windows.Forms.Button();
@@ -114,52 +117,34 @@
             this.cbDirection12 = new System.Windows.Forms.ComboBox();
             this.cbDirection11 = new System.Windows.Forms.ComboBox();
             this.label32 = new System.Windows.Forms.Label();
-            this.tpDirPage2 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir23 = new System.Windows.Forms.Button();
-            this.btRemoveDir22 = new System.Windows.Forms.Button();
+            this.tpDir_paid_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir21 = new System.Windows.Forms.Button();
             this.btAddDir2 = new System.Windows.Forms.Button();
-            this.cbDirection23 = new System.Windows.Forms.ComboBox();
-            this.cbDirection22 = new System.Windows.Forms.ComboBox();
             this.cbDirection21 = new System.Windows.Forms.ComboBox();
             this.label36 = new System.Windows.Forms.Label();
-            this.tpDirPage3 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir33 = new System.Windows.Forms.Button();
+            this.tpDir_budget_oz = new System.Windows.Forms.TabPage();
             this.btRemoveDir32 = new System.Windows.Forms.Button();
             this.btRemoveDir31 = new System.Windows.Forms.Button();
             this.btAddDir3 = new System.Windows.Forms.Button();
-            this.cbDirection33 = new System.Windows.Forms.ComboBox();
             this.cbDirection32 = new System.Windows.Forms.ComboBox();
             this.cbDirection31 = new System.Windows.Forms.ComboBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.tpDirPage4 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir43 = new System.Windows.Forms.Button();
-            this.btRemoveDir42 = new System.Windows.Forms.Button();
+            this.tpDir_paid_oz = new System.Windows.Forms.TabPage();
             this.btRemoveDir41 = new System.Windows.Forms.Button();
             this.btAddDir4 = new System.Windows.Forms.Button();
-            this.cbDirection43 = new System.Windows.Forms.ComboBox();
-            this.cbDirection42 = new System.Windows.Forms.ComboBox();
             this.cbDirection41 = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
-            this.tpDirPage5 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir53 = new System.Windows.Forms.Button();
-            this.btRemoveDir52 = new System.Windows.Forms.Button();
+            this.tpDir_paid_z = new System.Windows.Forms.TabPage();
             this.btRemoveDir51 = new System.Windows.Forms.Button();
             this.btAddDir5 = new System.Windows.Forms.Button();
-            this.cbDirection53 = new System.Windows.Forms.ComboBox();
-            this.cbDirection52 = new System.Windows.Forms.ComboBox();
             this.cbDirection51 = new System.Windows.Forms.ComboBox();
             this.label39 = new System.Windows.Forms.Label();
-            this.tpDirPage6 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir63 = new System.Windows.Forms.Button();
-            this.btRemoveDir62 = new System.Windows.Forms.Button();
+            this.tpDir_quote_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir61 = new System.Windows.Forms.Button();
             this.btAddDir6 = new System.Windows.Forms.Button();
-            this.cbDirection63 = new System.Windows.Forms.ComboBox();
-            this.cbDirection62 = new System.Windows.Forms.ComboBox();
             this.cbDirection61 = new System.Windows.Forms.ComboBox();
             this.label40 = new System.Windows.Forms.Label();
-            this.tpDirPage7 = new System.Windows.Forms.TabPage();
+            this.tpDir_target_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir73 = new System.Windows.Forms.Button();
             this.btRemoveDir72 = new System.Windows.Forms.Button();
             this.btRemoveDir71 = new System.Windows.Forms.Button();
@@ -168,21 +153,15 @@
             this.cbDirection72 = new System.Windows.Forms.ComboBox();
             this.cbDirection71 = new System.Windows.Forms.ComboBox();
             this.label41 = new System.Windows.Forms.Label();
-            this.tpDirPage8 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir83 = new System.Windows.Forms.Button();
-            this.btRemoveDir82 = new System.Windows.Forms.Button();
+            this.tpDir_quote_oz = new System.Windows.Forms.TabPage();
             this.btRemoveDir81 = new System.Windows.Forms.Button();
             this.btAddDir8 = new System.Windows.Forms.Button();
-            this.cbDirection83 = new System.Windows.Forms.ComboBox();
-            this.cbDirection82 = new System.Windows.Forms.ComboBox();
             this.cbDirection81 = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
-            this.tpDirPage9 = new System.Windows.Forms.TabPage();
-            this.btRemoveDir93 = new System.Windows.Forms.Button();
+            this.tpDir_target_oz = new System.Windows.Forms.TabPage();
             this.btRemoveDir92 = new System.Windows.Forms.Button();
             this.btRemoveDir91 = new System.Windows.Forms.Button();
             this.btAddDir9 = new System.Windows.Forms.Button();
-            this.cbDirection93 = new System.Windows.Forms.ComboBox();
             this.cbDirection92 = new System.Windows.Forms.ComboBox();
             this.cbDirection91 = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
@@ -222,37 +201,34 @@
             this.cbDirectionDoc = new System.Windows.Forms.CheckBox();
             this.cbCertificateHRD = new System.Windows.Forms.CheckBox();
             this.cbDiplomaCopy = new System.Windows.Forms.CheckBox();
-            this.cCertificateCopy = new System.Windows.Forms.CheckBox();
+            this.cbCertificateCopy = new System.Windows.Forms.CheckBox();
             this.cbPassportCopy = new System.Windows.Forms.CheckBox();
             this.cbAppAdmission = new System.Windows.Forms.CheckBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbPassport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
             this.gbCertificate.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.gbEduDocument.SuspendLayout();
             this.panel1.SuspendLayout();
             this.grbApplication.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.gbAttributes.SuspendLayout();
             this.tbDirections.SuspendLayout();
-            this.tpDirPage1.SuspendLayout();
-            this.tpDirPage2.SuspendLayout();
-            this.tpDirPage3.SuspendLayout();
-            this.tpDirPage4.SuspendLayout();
-            this.tpDirPage5.SuspendLayout();
-            this.tpDirPage6.SuspendLayout();
-            this.tpDirPage7.SuspendLayout();
-            this.tpDirPage8.SuspendLayout();
-            this.tpDirPage9.SuspendLayout();
+            this.tpDir_budget_o.SuspendLayout();
+            this.tpDir_paid_o.SuspendLayout();
+            this.tpDir_budget_oz.SuspendLayout();
+            this.tpDir_paid_oz.SuspendLayout();
+            this.tpDir_paid_z.SuspendLayout();
+            this.tpDir_quote_o.SuspendLayout();
+            this.tpDir_target_o.SuspendLayout();
+            this.tpDir_quote_oz.SuspendLayout();
+            this.tpDir_target_oz.SuspendLayout();
             this.gbExamsDoc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).BeginInit();
             this.gbOther.SuspendLayout();
             this.gbIndividualAchievements.SuspendLayout();
             this.gbWithdrawDocs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // gbPassport
@@ -294,6 +270,16 @@
             this.gbPassport.TabIndex = 0;
             this.gbPassport.TabStop = false;
             this.gbPassport.Text = "Из паспорта";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(12, 23);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(73, 104);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 27;
+            this.pictureBox1.TabStop = false;
             // 
             // gbAdress
             // 
@@ -716,6 +702,16 @@
             this.gbCertificate.TabStop = false;
             this.gbCertificate.Text = "Из аттестата";
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(13, 22);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(72, 104);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 28;
+            this.pictureBox2.TabStop = false;
+            // 
             // tbInstitutionLocation
             // 
             this.tbInstitutionLocation.Location = new System.Drawing.Point(542, 120);
@@ -877,6 +873,7 @@
             this.rbSpravka.TabStop = true;
             this.rbSpravka.Text = "Справка";
             this.rbSpravka.UseVisualStyleBackColor = true;
+            this.rbSpravka.CheckedChanged += new System.EventHandler(this.rbSpravka_CheckedChanged);
             // 
             // rbDiploma
             // 
@@ -889,6 +886,7 @@
             this.rbDiploma.TabStop = true;
             this.rbDiploma.Text = "Диплом";
             this.rbDiploma.UseVisualStyleBackColor = true;
+            this.rbDiploma.CheckedChanged += new System.EventHandler(this.rbDiploma_CheckedChanged);
             // 
             // rbCertificate
             // 
@@ -901,6 +899,7 @@
             this.rbCertificate.TabStop = true;
             this.rbCertificate.Text = "Аттестат";
             this.rbCertificate.UseVisualStyleBackColor = true;
+            this.rbCertificate.CheckedChanged += new System.EventHandler(this.rbCertificate_CheckedChanged);
             // 
             // cbForeignLanguage
             // 
@@ -979,6 +978,16 @@
             this.grbApplication.TabStop = false;
             this.grbApplication.Text = "Из заявления";
             // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(17, 90);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(78, 104);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 29;
+            this.pictureBox3.TabStop = false;
+            // 
             // gbAttributes
             // 
             this.gbAttributes.Controls.Add(this.cbPrerogative);
@@ -1008,6 +1017,7 @@
             this.cbPrerogative.TabIndex = 7;
             this.cbPrerogative.Text = "Преимущественное право";
             this.cbPrerogative.UseVisualStyleBackColor = true;
+            this.cbPrerogative.CheckedChanged += new System.EventHandler(this.cbPrerogative_CheckedChanged);
             // 
             // cbTarget
             // 
@@ -1065,6 +1075,7 @@
             this.cbChernobyl.TabIndex = 2;
             this.cbChernobyl.Text = "Чернобыльская зона";
             this.cbChernobyl.UseVisualStyleBackColor = true;
+            this.cbChernobyl.CheckedChanged += new System.EventHandler(this.cbChernobyl_CheckedChanged);
             // 
             // cbMCDAO
             // 
@@ -1090,15 +1101,15 @@
             // 
             // tbDirections
             // 
-            this.tbDirections.Controls.Add(this.tpDirPage1);
-            this.tbDirections.Controls.Add(this.tpDirPage2);
-            this.tbDirections.Controls.Add(this.tpDirPage3);
-            this.tbDirections.Controls.Add(this.tpDirPage4);
-            this.tbDirections.Controls.Add(this.tpDirPage5);
-            this.tbDirections.Controls.Add(this.tpDirPage6);
-            this.tbDirections.Controls.Add(this.tpDirPage7);
-            this.tbDirections.Controls.Add(this.tpDirPage8);
-            this.tbDirections.Controls.Add(this.tpDirPage9);
+            this.tbDirections.Controls.Add(this.tpDir_budget_o);
+            this.tbDirections.Controls.Add(this.tpDir_paid_o);
+            this.tbDirections.Controls.Add(this.tpDir_budget_oz);
+            this.tbDirections.Controls.Add(this.tpDir_paid_oz);
+            this.tbDirections.Controls.Add(this.tpDir_paid_z);
+            this.tbDirections.Controls.Add(this.tpDir_quote_o);
+            this.tbDirections.Controls.Add(this.tpDir_target_o);
+            this.tbDirections.Controls.Add(this.tpDir_quote_oz);
+            this.tbDirections.Controls.Add(this.tpDir_target_oz);
             this.tbDirections.Location = new System.Drawing.Point(112, 90);
             this.tbDirections.Margin = new System.Windows.Forms.Padding(4);
             this.tbDirections.Name = "tbDirections";
@@ -1106,28 +1117,27 @@
             this.tbDirections.Size = new System.Drawing.Size(643, 289);
             this.tbDirections.TabIndex = 1;
             // 
-            // tpDirPage1
+            // tpDir_budget_o
             // 
-            this.tpDirPage1.Controls.Add(this.btRemoveDir13);
-            this.tpDirPage1.Controls.Add(this.btRemoveDir12);
-            this.tpDirPage1.Controls.Add(this.btRemoveDir11);
-            this.tpDirPage1.Controls.Add(this.btAddDir1);
-            this.tpDirPage1.Controls.Add(this.cbDirection13);
-            this.tpDirPage1.Controls.Add(this.cbDirection12);
-            this.tpDirPage1.Controls.Add(this.cbDirection11);
-            this.tpDirPage1.Controls.Add(this.label32);
-            this.tpDirPage1.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage1.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage1.Name = "tpDirPage1";
-            this.tpDirPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tpDirPage1.Size = new System.Drawing.Size(635, 260);
-            this.tpDirPage1.TabIndex = 0;
-            this.tpDirPage1.Text = "Очная бюджетная";
-            this.tpDirPage1.UseVisualStyleBackColor = true;
+            this.tpDir_budget_o.Controls.Add(this.btRemoveDir13);
+            this.tpDir_budget_o.Controls.Add(this.btRemoveDir12);
+            this.tpDir_budget_o.Controls.Add(this.btRemoveDir11);
+            this.tpDir_budget_o.Controls.Add(this.btAddDir1);
+            this.tpDir_budget_o.Controls.Add(this.cbDirection13);
+            this.tpDir_budget_o.Controls.Add(this.cbDirection12);
+            this.tpDir_budget_o.Controls.Add(this.cbDirection11);
+            this.tpDir_budget_o.Controls.Add(this.label32);
+            this.tpDir_budget_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_budget_o.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_budget_o.Name = "tpDir_budget_o";
+            this.tpDir_budget_o.Padding = new System.Windows.Forms.Padding(4);
+            this.tpDir_budget_o.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_budget_o.TabIndex = 0;
+            this.tpDir_budget_o.Text = "Очная бюджетная";
+            this.tpDir_budget_o.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir13
             // 
-            this.btRemoveDir13.Enabled = false;
             this.btRemoveDir13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir13.Location = new System.Drawing.Point(571, 192);
             this.btRemoveDir13.Margin = new System.Windows.Forms.Padding(4);
@@ -1136,11 +1146,9 @@
             this.btRemoveDir13.TabIndex = 6;
             this.btRemoveDir13.Text = "-";
             this.btRemoveDir13.UseVisualStyleBackColor = true;
-            this.btRemoveDir13.Visible = false;
             // 
             // btRemoveDir12
             // 
-            this.btRemoveDir12.Enabled = false;
             this.btRemoveDir12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir12.Location = new System.Drawing.Point(571, 128);
             this.btRemoveDir12.Margin = new System.Windows.Forms.Padding(4);
@@ -1149,11 +1157,9 @@
             this.btRemoveDir12.TabIndex = 4;
             this.btRemoveDir12.Text = "-";
             this.btRemoveDir12.UseVisualStyleBackColor = true;
-            this.btRemoveDir12.Visible = false;
             // 
             // btRemoveDir11
             // 
-            this.btRemoveDir11.Enabled = false;
             this.btRemoveDir11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir11.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir11.Margin = new System.Windows.Forms.Padding(4);
@@ -1162,7 +1168,6 @@
             this.btRemoveDir11.TabIndex = 2;
             this.btRemoveDir11.Text = "-";
             this.btRemoveDir11.UseVisualStyleBackColor = true;
-            this.btRemoveDir11.Visible = false;
             // 
             // btAddDir1
             // 
@@ -1178,25 +1183,21 @@
             // 
             // cbDirection13
             // 
-            this.cbDirection13.Enabled = false;
             this.cbDirection13.FormattingEnabled = true;
             this.cbDirection13.Location = new System.Drawing.Point(24, 203);
             this.cbDirection13.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection13.Name = "cbDirection13";
             this.cbDirection13.Size = new System.Drawing.Size(513, 24);
             this.cbDirection13.TabIndex = 5;
-            this.cbDirection13.Visible = false;
             // 
             // cbDirection12
             // 
-            this.cbDirection12.Enabled = false;
             this.cbDirection12.FormattingEnabled = true;
             this.cbDirection12.Location = new System.Drawing.Point(24, 139);
             this.cbDirection12.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection12.Name = "cbDirection12";
             this.cbDirection12.Size = new System.Drawing.Size(513, 24);
             this.cbDirection12.TabIndex = 3;
-            this.cbDirection12.Visible = false;
             // 
             // cbDirection11
             // 
@@ -1217,54 +1218,23 @@
             this.label32.TabIndex = 16;
             this.label32.Text = "Направление подготовки:";
             // 
-            // tpDirPage2
+            // tpDir_paid_o
             // 
-            this.tpDirPage2.Controls.Add(this.btRemoveDir23);
-            this.tpDirPage2.Controls.Add(this.btRemoveDir22);
-            this.tpDirPage2.Controls.Add(this.btRemoveDir21);
-            this.tpDirPage2.Controls.Add(this.btAddDir2);
-            this.tpDirPage2.Controls.Add(this.cbDirection23);
-            this.tpDirPage2.Controls.Add(this.cbDirection22);
-            this.tpDirPage2.Controls.Add(this.cbDirection21);
-            this.tpDirPage2.Controls.Add(this.label36);
-            this.tpDirPage2.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage2.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage2.Name = "tpDirPage2";
-            this.tpDirPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tpDirPage2.Size = new System.Drawing.Size(635, 260);
-            this.tpDirPage2.TabIndex = 1;
-            this.tpDirPage2.Text = "Очная платная";
-            this.tpDirPage2.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir23
-            // 
-            this.btRemoveDir23.Enabled = false;
-            this.btRemoveDir23.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir23.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir23.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir23.Name = "btRemoveDir23";
-            this.btRemoveDir23.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir23.TabIndex = 15;
-            this.btRemoveDir23.Text = "-";
-            this.btRemoveDir23.UseVisualStyleBackColor = true;
-            this.btRemoveDir23.Visible = false;
-            // 
-            // btRemoveDir22
-            // 
-            this.btRemoveDir22.Enabled = false;
-            this.btRemoveDir22.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir22.Location = new System.Drawing.Point(571, 128);
-            this.btRemoveDir22.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir22.Name = "btRemoveDir22";
-            this.btRemoveDir22.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir22.TabIndex = 14;
-            this.btRemoveDir22.Text = "-";
-            this.btRemoveDir22.UseVisualStyleBackColor = true;
-            this.btRemoveDir22.Visible = false;
+            this.tpDir_paid_o.Controls.Add(this.btRemoveDir21);
+            this.tpDir_paid_o.Controls.Add(this.btAddDir2);
+            this.tpDir_paid_o.Controls.Add(this.cbDirection21);
+            this.tpDir_paid_o.Controls.Add(this.label36);
+            this.tpDir_paid_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_o.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_paid_o.Name = "tpDir_paid_o";
+            this.tpDir_paid_o.Padding = new System.Windows.Forms.Padding(4);
+            this.tpDir_paid_o.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_paid_o.TabIndex = 1;
+            this.tpDir_paid_o.Text = "Очная платная";
+            this.tpDir_paid_o.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir21
             // 
-            this.btRemoveDir21.Enabled = false;
             this.btRemoveDir21.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir21.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir21.Margin = new System.Windows.Forms.Padding(4);
@@ -1273,7 +1243,6 @@
             this.btRemoveDir21.TabIndex = 13;
             this.btRemoveDir21.Text = "-";
             this.btRemoveDir21.UseVisualStyleBackColor = true;
-            this.btRemoveDir21.Visible = false;
             // 
             // btAddDir2
             // 
@@ -1286,38 +1255,14 @@
             this.btAddDir2.Text = "+";
             this.btAddDir2.UseVisualStyleBackColor = true;
             // 
-            // cbDirection23
-            // 
-            this.cbDirection23.Enabled = false;
-            this.cbDirection23.FormattingEnabled = true;
-            this.cbDirection23.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection23.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection23.Name = "cbDirection23";
-            this.cbDirection23.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection23.TabIndex = 11;
-            this.cbDirection23.Visible = false;
-            // 
-            // cbDirection22
-            // 
-            this.cbDirection22.Enabled = false;
-            this.cbDirection22.FormattingEnabled = true;
-            this.cbDirection22.Location = new System.Drawing.Point(24, 139);
-            this.cbDirection22.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection22.Name = "cbDirection22";
-            this.cbDirection22.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection22.TabIndex = 10;
-            this.cbDirection22.Visible = false;
-            // 
             // cbDirection21
             // 
-            this.cbDirection21.Enabled = false;
             this.cbDirection21.FormattingEnabled = true;
             this.cbDirection21.Location = new System.Drawing.Point(24, 78);
             this.cbDirection21.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection21.Name = "cbDirection21";
             this.cbDirection21.Size = new System.Drawing.Size(513, 24);
             this.cbDirection21.TabIndex = 9;
-            this.cbDirection21.Visible = false;
             // 
             // label36
             // 
@@ -1325,44 +1270,28 @@
             this.label36.Location = new System.Drawing.Point(20, 30);
             this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(180, 16);
+            this.label36.Size = new System.Drawing.Size(150, 16);
             this.label36.TabIndex = 8;
-            this.label36.Text = "Направление подготовки:";
+            this.label36.Text = "Профиль подготовки:";
             // 
-            // tpDirPage3
+            // tpDir_budget_oz
             // 
-            this.tpDirPage3.Controls.Add(this.btRemoveDir33);
-            this.tpDirPage3.Controls.Add(this.btRemoveDir32);
-            this.tpDirPage3.Controls.Add(this.btRemoveDir31);
-            this.tpDirPage3.Controls.Add(this.btAddDir3);
-            this.tpDirPage3.Controls.Add(this.cbDirection33);
-            this.tpDirPage3.Controls.Add(this.cbDirection32);
-            this.tpDirPage3.Controls.Add(this.cbDirection31);
-            this.tpDirPage3.Controls.Add(this.label37);
-            this.tpDirPage3.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage3.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage3.Name = "tpDirPage3";
-            this.tpDirPage3.Size = new System.Drawing.Size(635, 260);
-            this.tpDirPage3.TabIndex = 2;
-            this.tpDirPage3.Text = "Очно-заочная бюджетная";
-            this.tpDirPage3.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir33
-            // 
-            this.btRemoveDir33.Enabled = false;
-            this.btRemoveDir33.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir33.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir33.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir33.Name = "btRemoveDir33";
-            this.btRemoveDir33.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir33.TabIndex = 15;
-            this.btRemoveDir33.Text = "-";
-            this.btRemoveDir33.UseVisualStyleBackColor = true;
-            this.btRemoveDir33.Visible = false;
+            this.tpDir_budget_oz.Controls.Add(this.btRemoveDir32);
+            this.tpDir_budget_oz.Controls.Add(this.btRemoveDir31);
+            this.tpDir_budget_oz.Controls.Add(this.btAddDir3);
+            this.tpDir_budget_oz.Controls.Add(this.cbDirection32);
+            this.tpDir_budget_oz.Controls.Add(this.cbDirection31);
+            this.tpDir_budget_oz.Controls.Add(this.label37);
+            this.tpDir_budget_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_budget_oz.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_budget_oz.Name = "tpDir_budget_oz";
+            this.tpDir_budget_oz.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_budget_oz.TabIndex = 2;
+            this.tpDir_budget_oz.Text = "Очно-заочная бюджетная";
+            this.tpDir_budget_oz.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir32
             // 
-            this.btRemoveDir32.Enabled = false;
             this.btRemoveDir32.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir32.Location = new System.Drawing.Point(571, 128);
             this.btRemoveDir32.Margin = new System.Windows.Forms.Padding(4);
@@ -1371,11 +1300,9 @@
             this.btRemoveDir32.TabIndex = 14;
             this.btRemoveDir32.Text = "-";
             this.btRemoveDir32.UseVisualStyleBackColor = true;
-            this.btRemoveDir32.Visible = false;
             // 
             // btRemoveDir31
             // 
-            this.btRemoveDir31.Enabled = false;
             this.btRemoveDir31.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir31.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir31.Margin = new System.Windows.Forms.Padding(4);
@@ -1384,7 +1311,6 @@
             this.btRemoveDir31.TabIndex = 13;
             this.btRemoveDir31.Text = "-";
             this.btRemoveDir31.UseVisualStyleBackColor = true;
-            this.btRemoveDir31.Visible = false;
             // 
             // btAddDir3
             // 
@@ -1397,38 +1323,23 @@
             this.btAddDir3.Text = "+";
             this.btAddDir3.UseVisualStyleBackColor = true;
             // 
-            // cbDirection33
-            // 
-            this.cbDirection33.Enabled = false;
-            this.cbDirection33.FormattingEnabled = true;
-            this.cbDirection33.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection33.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection33.Name = "cbDirection33";
-            this.cbDirection33.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection33.TabIndex = 11;
-            this.cbDirection33.Visible = false;
-            // 
             // cbDirection32
             // 
-            this.cbDirection32.Enabled = false;
             this.cbDirection32.FormattingEnabled = true;
             this.cbDirection32.Location = new System.Drawing.Point(24, 139);
             this.cbDirection32.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection32.Name = "cbDirection32";
             this.cbDirection32.Size = new System.Drawing.Size(513, 24);
             this.cbDirection32.TabIndex = 10;
-            this.cbDirection32.Visible = false;
             // 
             // cbDirection31
             // 
-            this.cbDirection31.Enabled = false;
             this.cbDirection31.FormattingEnabled = true;
             this.cbDirection31.Location = new System.Drawing.Point(24, 78);
             this.cbDirection31.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection31.Name = "cbDirection31";
             this.cbDirection31.Size = new System.Drawing.Size(513, 24);
             this.cbDirection31.TabIndex = 9;
-            this.cbDirection31.Visible = false;
             // 
             // label37
             // 
@@ -1440,53 +1351,22 @@
             this.label37.TabIndex = 8;
             this.label37.Text = "Направление подготовки:";
             // 
-            // tpDirPage4
+            // tpDir_paid_oz
             // 
-            this.tpDirPage4.Controls.Add(this.btRemoveDir43);
-            this.tpDirPage4.Controls.Add(this.btRemoveDir42);
-            this.tpDirPage4.Controls.Add(this.btRemoveDir41);
-            this.tpDirPage4.Controls.Add(this.btAddDir4);
-            this.tpDirPage4.Controls.Add(this.cbDirection43);
-            this.tpDirPage4.Controls.Add(this.cbDirection42);
-            this.tpDirPage4.Controls.Add(this.cbDirection41);
-            this.tpDirPage4.Controls.Add(this.label38);
-            this.tpDirPage4.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage4.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage4.Name = "tpDirPage4";
-            this.tpDirPage4.Size = new System.Drawing.Size(635, 260);
-            this.tpDirPage4.TabIndex = 3;
-            this.tpDirPage4.Text = "Очно-заочная платная";
-            this.tpDirPage4.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir43
-            // 
-            this.btRemoveDir43.Enabled = false;
-            this.btRemoveDir43.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir43.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir43.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir43.Name = "btRemoveDir43";
-            this.btRemoveDir43.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir43.TabIndex = 15;
-            this.btRemoveDir43.Text = "-";
-            this.btRemoveDir43.UseVisualStyleBackColor = true;
-            this.btRemoveDir43.Visible = false;
-            // 
-            // btRemoveDir42
-            // 
-            this.btRemoveDir42.Enabled = false;
-            this.btRemoveDir42.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir42.Location = new System.Drawing.Point(571, 128);
-            this.btRemoveDir42.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir42.Name = "btRemoveDir42";
-            this.btRemoveDir42.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir42.TabIndex = 14;
-            this.btRemoveDir42.Text = "-";
-            this.btRemoveDir42.UseVisualStyleBackColor = true;
-            this.btRemoveDir42.Visible = false;
+            this.tpDir_paid_oz.Controls.Add(this.btRemoveDir41);
+            this.tpDir_paid_oz.Controls.Add(this.btAddDir4);
+            this.tpDir_paid_oz.Controls.Add(this.cbDirection41);
+            this.tpDir_paid_oz.Controls.Add(this.label38);
+            this.tpDir_paid_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_oz.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_paid_oz.Name = "tpDir_paid_oz";
+            this.tpDir_paid_oz.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_paid_oz.TabIndex = 3;
+            this.tpDir_paid_oz.Text = "Очно-заочная платная";
+            this.tpDir_paid_oz.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir41
             // 
-            this.btRemoveDir41.Enabled = false;
             this.btRemoveDir41.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir41.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir41.Margin = new System.Windows.Forms.Padding(4);
@@ -1495,7 +1375,6 @@
             this.btRemoveDir41.TabIndex = 13;
             this.btRemoveDir41.Text = "-";
             this.btRemoveDir41.UseVisualStyleBackColor = true;
-            this.btRemoveDir41.Visible = false;
             // 
             // btAddDir4
             // 
@@ -1508,38 +1387,14 @@
             this.btAddDir4.Text = "+";
             this.btAddDir4.UseVisualStyleBackColor = true;
             // 
-            // cbDirection43
-            // 
-            this.cbDirection43.Enabled = false;
-            this.cbDirection43.FormattingEnabled = true;
-            this.cbDirection43.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection43.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection43.Name = "cbDirection43";
-            this.cbDirection43.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection43.TabIndex = 11;
-            this.cbDirection43.Visible = false;
-            // 
-            // cbDirection42
-            // 
-            this.cbDirection42.Enabled = false;
-            this.cbDirection42.FormattingEnabled = true;
-            this.cbDirection42.Location = new System.Drawing.Point(24, 139);
-            this.cbDirection42.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection42.Name = "cbDirection42";
-            this.cbDirection42.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection42.TabIndex = 10;
-            this.cbDirection42.Visible = false;
-            // 
             // cbDirection41
             // 
-            this.cbDirection41.Enabled = false;
             this.cbDirection41.FormattingEnabled = true;
             this.cbDirection41.Location = new System.Drawing.Point(24, 78);
             this.cbDirection41.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection41.Name = "cbDirection41";
             this.cbDirection41.Size = new System.Drawing.Size(513, 24);
             this.cbDirection41.TabIndex = 9;
-            this.cbDirection41.Visible = false;
             // 
             // label38
             // 
@@ -1547,57 +1402,26 @@
             this.label38.Location = new System.Drawing.Point(20, 30);
             this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(180, 16);
+            this.label38.Size = new System.Drawing.Size(150, 16);
             this.label38.TabIndex = 8;
-            this.label38.Text = "Направление подготовки:";
+            this.label38.Text = "Профиль подготовки:";
             // 
-            // tpDirPage5
+            // tpDir_paid_z
             // 
-            this.tpDirPage5.Controls.Add(this.btRemoveDir53);
-            this.tpDirPage5.Controls.Add(this.btRemoveDir52);
-            this.tpDirPage5.Controls.Add(this.btRemoveDir51);
-            this.tpDirPage5.Controls.Add(this.btAddDir5);
-            this.tpDirPage5.Controls.Add(this.cbDirection53);
-            this.tpDirPage5.Controls.Add(this.cbDirection52);
-            this.tpDirPage5.Controls.Add(this.cbDirection51);
-            this.tpDirPage5.Controls.Add(this.label39);
-            this.tpDirPage5.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage5.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage5.Name = "tpDirPage5";
-            this.tpDirPage5.Size = new System.Drawing.Size(635, 284);
-            this.tpDirPage5.TabIndex = 4;
-            this.tpDirPage5.Text = "Заочная платная";
-            this.tpDirPage5.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir53
-            // 
-            this.btRemoveDir53.Enabled = false;
-            this.btRemoveDir53.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir53.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir53.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir53.Name = "btRemoveDir53";
-            this.btRemoveDir53.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir53.TabIndex = 15;
-            this.btRemoveDir53.Text = "-";
-            this.btRemoveDir53.UseVisualStyleBackColor = true;
-            this.btRemoveDir53.Visible = false;
-            // 
-            // btRemoveDir52
-            // 
-            this.btRemoveDir52.Enabled = false;
-            this.btRemoveDir52.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir52.Location = new System.Drawing.Point(571, 128);
-            this.btRemoveDir52.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir52.Name = "btRemoveDir52";
-            this.btRemoveDir52.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir52.TabIndex = 14;
-            this.btRemoveDir52.Text = "-";
-            this.btRemoveDir52.UseVisualStyleBackColor = true;
-            this.btRemoveDir52.Visible = false;
+            this.tpDir_paid_z.Controls.Add(this.btRemoveDir51);
+            this.tpDir_paid_z.Controls.Add(this.btAddDir5);
+            this.tpDir_paid_z.Controls.Add(this.cbDirection51);
+            this.tpDir_paid_z.Controls.Add(this.label39);
+            this.tpDir_paid_z.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_z.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_paid_z.Name = "tpDir_paid_z";
+            this.tpDir_paid_z.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_paid_z.TabIndex = 4;
+            this.tpDir_paid_z.Text = "Заочная платная";
+            this.tpDir_paid_z.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir51
             // 
-            this.btRemoveDir51.Enabled = false;
             this.btRemoveDir51.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir51.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir51.Margin = new System.Windows.Forms.Padding(4);
@@ -1606,7 +1430,6 @@
             this.btRemoveDir51.TabIndex = 13;
             this.btRemoveDir51.Text = "-";
             this.btRemoveDir51.UseVisualStyleBackColor = true;
-            this.btRemoveDir51.Visible = false;
             // 
             // btAddDir5
             // 
@@ -1619,38 +1442,14 @@
             this.btAddDir5.Text = "+";
             this.btAddDir5.UseVisualStyleBackColor = true;
             // 
-            // cbDirection53
-            // 
-            this.cbDirection53.Enabled = false;
-            this.cbDirection53.FormattingEnabled = true;
-            this.cbDirection53.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection53.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection53.Name = "cbDirection53";
-            this.cbDirection53.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection53.TabIndex = 11;
-            this.cbDirection53.Visible = false;
-            // 
-            // cbDirection52
-            // 
-            this.cbDirection52.Enabled = false;
-            this.cbDirection52.FormattingEnabled = true;
-            this.cbDirection52.Location = new System.Drawing.Point(24, 139);
-            this.cbDirection52.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection52.Name = "cbDirection52";
-            this.cbDirection52.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection52.TabIndex = 10;
-            this.cbDirection52.Visible = false;
-            // 
             // cbDirection51
             // 
-            this.cbDirection51.Enabled = false;
             this.cbDirection51.FormattingEnabled = true;
             this.cbDirection51.Location = new System.Drawing.Point(24, 78);
             this.cbDirection51.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection51.Name = "cbDirection51";
             this.cbDirection51.Size = new System.Drawing.Size(513, 24);
             this.cbDirection51.TabIndex = 9;
-            this.cbDirection51.Visible = false;
             // 
             // label39
             // 
@@ -1658,57 +1457,26 @@
             this.label39.Location = new System.Drawing.Point(20, 30);
             this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(180, 16);
+            this.label39.Size = new System.Drawing.Size(150, 16);
             this.label39.TabIndex = 8;
-            this.label39.Text = "Направление подготовки:";
+            this.label39.Text = "Профиль подготовки:";
             // 
-            // tpDirPage6
+            // tpDir_quote_o
             // 
-            this.tpDirPage6.Controls.Add(this.btRemoveDir63);
-            this.tpDirPage6.Controls.Add(this.btRemoveDir62);
-            this.tpDirPage6.Controls.Add(this.btRemoveDir61);
-            this.tpDirPage6.Controls.Add(this.btAddDir6);
-            this.tpDirPage6.Controls.Add(this.cbDirection63);
-            this.tpDirPage6.Controls.Add(this.cbDirection62);
-            this.tpDirPage6.Controls.Add(this.cbDirection61);
-            this.tpDirPage6.Controls.Add(this.label40);
-            this.tpDirPage6.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage6.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage6.Name = "tpDirPage6";
-            this.tpDirPage6.Size = new System.Drawing.Size(635, 284);
-            this.tpDirPage6.TabIndex = 5;
-            this.tpDirPage6.Text = "Очная бюджетная по особой квоте";
-            this.tpDirPage6.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir63
-            // 
-            this.btRemoveDir63.Enabled = false;
-            this.btRemoveDir63.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir63.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir63.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir63.Name = "btRemoveDir63";
-            this.btRemoveDir63.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir63.TabIndex = 15;
-            this.btRemoveDir63.Text = "-";
-            this.btRemoveDir63.UseVisualStyleBackColor = true;
-            this.btRemoveDir63.Visible = false;
-            // 
-            // btRemoveDir62
-            // 
-            this.btRemoveDir62.Enabled = false;
-            this.btRemoveDir62.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir62.Location = new System.Drawing.Point(571, 128);
-            this.btRemoveDir62.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir62.Name = "btRemoveDir62";
-            this.btRemoveDir62.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir62.TabIndex = 14;
-            this.btRemoveDir62.Text = "-";
-            this.btRemoveDir62.UseVisualStyleBackColor = true;
-            this.btRemoveDir62.Visible = false;
+            this.tpDir_quote_o.Controls.Add(this.btRemoveDir61);
+            this.tpDir_quote_o.Controls.Add(this.btAddDir6);
+            this.tpDir_quote_o.Controls.Add(this.cbDirection61);
+            this.tpDir_quote_o.Controls.Add(this.label40);
+            this.tpDir_quote_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_quote_o.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_quote_o.Name = "tpDir_quote_o";
+            this.tpDir_quote_o.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_quote_o.TabIndex = 5;
+            this.tpDir_quote_o.Text = "Очная бюджетная по особой квоте";
+            this.tpDir_quote_o.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir61
             // 
-            this.btRemoveDir61.Enabled = false;
             this.btRemoveDir61.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir61.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir61.Margin = new System.Windows.Forms.Padding(4);
@@ -1717,7 +1485,6 @@
             this.btRemoveDir61.TabIndex = 13;
             this.btRemoveDir61.Text = "-";
             this.btRemoveDir61.UseVisualStyleBackColor = true;
-            this.btRemoveDir61.Visible = false;
             // 
             // btAddDir6
             // 
@@ -1730,38 +1497,14 @@
             this.btAddDir6.Text = "+";
             this.btAddDir6.UseVisualStyleBackColor = true;
             // 
-            // cbDirection63
-            // 
-            this.cbDirection63.Enabled = false;
-            this.cbDirection63.FormattingEnabled = true;
-            this.cbDirection63.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection63.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection63.Name = "cbDirection63";
-            this.cbDirection63.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection63.TabIndex = 11;
-            this.cbDirection63.Visible = false;
-            // 
-            // cbDirection62
-            // 
-            this.cbDirection62.Enabled = false;
-            this.cbDirection62.FormattingEnabled = true;
-            this.cbDirection62.Location = new System.Drawing.Point(24, 139);
-            this.cbDirection62.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection62.Name = "cbDirection62";
-            this.cbDirection62.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection62.TabIndex = 10;
-            this.cbDirection62.Visible = false;
-            // 
             // cbDirection61
             // 
-            this.cbDirection61.Enabled = false;
             this.cbDirection61.FormattingEnabled = true;
             this.cbDirection61.Location = new System.Drawing.Point(24, 78);
             this.cbDirection61.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection61.Name = "cbDirection61";
             this.cbDirection61.Size = new System.Drawing.Size(513, 24);
             this.cbDirection61.TabIndex = 9;
-            this.cbDirection61.Visible = false;
             // 
             // label40
             // 
@@ -1769,31 +1512,30 @@
             this.label40.Location = new System.Drawing.Point(20, 30);
             this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(180, 16);
+            this.label40.Size = new System.Drawing.Size(150, 16);
             this.label40.TabIndex = 8;
-            this.label40.Text = "Направление подготовки:";
+            this.label40.Text = "Профиль подготовки:";
             // 
-            // tpDirPage7
+            // tpDir_target_o
             // 
-            this.tpDirPage7.Controls.Add(this.btRemoveDir73);
-            this.tpDirPage7.Controls.Add(this.btRemoveDir72);
-            this.tpDirPage7.Controls.Add(this.btRemoveDir71);
-            this.tpDirPage7.Controls.Add(this.btAddDir7);
-            this.tpDirPage7.Controls.Add(this.cbDirection73);
-            this.tpDirPage7.Controls.Add(this.cbDirection72);
-            this.tpDirPage7.Controls.Add(this.cbDirection71);
-            this.tpDirPage7.Controls.Add(this.label41);
-            this.tpDirPage7.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage7.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage7.Name = "tpDirPage7";
-            this.tpDirPage7.Size = new System.Drawing.Size(635, 284);
-            this.tpDirPage7.TabIndex = 6;
-            this.tpDirPage7.Text = "Очная бюджетная форма целевой прием";
-            this.tpDirPage7.UseVisualStyleBackColor = true;
+            this.tpDir_target_o.Controls.Add(this.btRemoveDir73);
+            this.tpDir_target_o.Controls.Add(this.btRemoveDir72);
+            this.tpDir_target_o.Controls.Add(this.btRemoveDir71);
+            this.tpDir_target_o.Controls.Add(this.btAddDir7);
+            this.tpDir_target_o.Controls.Add(this.cbDirection73);
+            this.tpDir_target_o.Controls.Add(this.cbDirection72);
+            this.tpDir_target_o.Controls.Add(this.cbDirection71);
+            this.tpDir_target_o.Controls.Add(this.label41);
+            this.tpDir_target_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_target_o.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_target_o.Name = "tpDir_target_o";
+            this.tpDir_target_o.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_target_o.TabIndex = 6;
+            this.tpDir_target_o.Text = "Очная бюджетная форма целевой прием";
+            this.tpDir_target_o.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir73
             // 
-            this.btRemoveDir73.Enabled = false;
             this.btRemoveDir73.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir73.Location = new System.Drawing.Point(571, 192);
             this.btRemoveDir73.Margin = new System.Windows.Forms.Padding(4);
@@ -1802,11 +1544,9 @@
             this.btRemoveDir73.TabIndex = 15;
             this.btRemoveDir73.Text = "-";
             this.btRemoveDir73.UseVisualStyleBackColor = true;
-            this.btRemoveDir73.Visible = false;
             // 
             // btRemoveDir72
             // 
-            this.btRemoveDir72.Enabled = false;
             this.btRemoveDir72.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir72.Location = new System.Drawing.Point(571, 128);
             this.btRemoveDir72.Margin = new System.Windows.Forms.Padding(4);
@@ -1815,11 +1555,9 @@
             this.btRemoveDir72.TabIndex = 14;
             this.btRemoveDir72.Text = "-";
             this.btRemoveDir72.UseVisualStyleBackColor = true;
-            this.btRemoveDir72.Visible = false;
             // 
             // btRemoveDir71
             // 
-            this.btRemoveDir71.Enabled = false;
             this.btRemoveDir71.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir71.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir71.Margin = new System.Windows.Forms.Padding(4);
@@ -1828,7 +1566,6 @@
             this.btRemoveDir71.TabIndex = 13;
             this.btRemoveDir71.Text = "-";
             this.btRemoveDir71.UseVisualStyleBackColor = true;
-            this.btRemoveDir71.Visible = false;
             // 
             // btAddDir7
             // 
@@ -1843,36 +1580,30 @@
             // 
             // cbDirection73
             // 
-            this.cbDirection73.Enabled = false;
             this.cbDirection73.FormattingEnabled = true;
             this.cbDirection73.Location = new System.Drawing.Point(24, 203);
             this.cbDirection73.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection73.Name = "cbDirection73";
             this.cbDirection73.Size = new System.Drawing.Size(513, 24);
             this.cbDirection73.TabIndex = 11;
-            this.cbDirection73.Visible = false;
             // 
             // cbDirection72
             // 
-            this.cbDirection72.Enabled = false;
             this.cbDirection72.FormattingEnabled = true;
             this.cbDirection72.Location = new System.Drawing.Point(24, 139);
             this.cbDirection72.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection72.Name = "cbDirection72";
             this.cbDirection72.Size = new System.Drawing.Size(513, 24);
             this.cbDirection72.TabIndex = 10;
-            this.cbDirection72.Visible = false;
             // 
             // cbDirection71
             // 
-            this.cbDirection71.Enabled = false;
             this.cbDirection71.FormattingEnabled = true;
             this.cbDirection71.Location = new System.Drawing.Point(24, 78);
             this.cbDirection71.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection71.Name = "cbDirection71";
             this.cbDirection71.Size = new System.Drawing.Size(513, 24);
             this.cbDirection71.TabIndex = 9;
-            this.cbDirection71.Visible = false;
             // 
             // label41
             // 
@@ -1884,53 +1615,22 @@
             this.label41.TabIndex = 8;
             this.label41.Text = "Направление подготовки:";
             // 
-            // tpDirPage8
+            // tpDir_quote_oz
             // 
-            this.tpDirPage8.Controls.Add(this.btRemoveDir83);
-            this.tpDirPage8.Controls.Add(this.btRemoveDir82);
-            this.tpDirPage8.Controls.Add(this.btRemoveDir81);
-            this.tpDirPage8.Controls.Add(this.btAddDir8);
-            this.tpDirPage8.Controls.Add(this.cbDirection83);
-            this.tpDirPage8.Controls.Add(this.cbDirection82);
-            this.tpDirPage8.Controls.Add(this.cbDirection81);
-            this.tpDirPage8.Controls.Add(this.label42);
-            this.tpDirPage8.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage8.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage8.Name = "tpDirPage8";
-            this.tpDirPage8.Size = new System.Drawing.Size(635, 284);
-            this.tpDirPage8.TabIndex = 7;
-            this.tpDirPage8.Text = "Очно-заочная бюджетная по особой квоте";
-            this.tpDirPage8.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir83
-            // 
-            this.btRemoveDir83.Enabled = false;
-            this.btRemoveDir83.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir83.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir83.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir83.Name = "btRemoveDir83";
-            this.btRemoveDir83.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir83.TabIndex = 15;
-            this.btRemoveDir83.Text = "-";
-            this.btRemoveDir83.UseVisualStyleBackColor = true;
-            this.btRemoveDir83.Visible = false;
-            // 
-            // btRemoveDir82
-            // 
-            this.btRemoveDir82.Enabled = false;
-            this.btRemoveDir82.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir82.Location = new System.Drawing.Point(571, 128);
-            this.btRemoveDir82.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir82.Name = "btRemoveDir82";
-            this.btRemoveDir82.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir82.TabIndex = 14;
-            this.btRemoveDir82.Text = "-";
-            this.btRemoveDir82.UseVisualStyleBackColor = true;
-            this.btRemoveDir82.Visible = false;
+            this.tpDir_quote_oz.Controls.Add(this.btRemoveDir81);
+            this.tpDir_quote_oz.Controls.Add(this.btAddDir8);
+            this.tpDir_quote_oz.Controls.Add(this.cbDirection81);
+            this.tpDir_quote_oz.Controls.Add(this.label42);
+            this.tpDir_quote_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_quote_oz.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_quote_oz.Name = "tpDir_quote_oz";
+            this.tpDir_quote_oz.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_quote_oz.TabIndex = 7;
+            this.tpDir_quote_oz.Text = "Очно-заочная бюджетная по особой квоте";
+            this.tpDir_quote_oz.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir81
             // 
-            this.btRemoveDir81.Enabled = false;
             this.btRemoveDir81.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir81.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir81.Margin = new System.Windows.Forms.Padding(4);
@@ -1939,7 +1639,6 @@
             this.btRemoveDir81.TabIndex = 13;
             this.btRemoveDir81.Text = "-";
             this.btRemoveDir81.UseVisualStyleBackColor = true;
-            this.btRemoveDir81.Visible = false;
             // 
             // btAddDir8
             // 
@@ -1952,38 +1651,14 @@
             this.btAddDir8.Text = "+";
             this.btAddDir8.UseVisualStyleBackColor = true;
             // 
-            // cbDirection83
-            // 
-            this.cbDirection83.Enabled = false;
-            this.cbDirection83.FormattingEnabled = true;
-            this.cbDirection83.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection83.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection83.Name = "cbDirection83";
-            this.cbDirection83.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection83.TabIndex = 11;
-            this.cbDirection83.Visible = false;
-            // 
-            // cbDirection82
-            // 
-            this.cbDirection82.Enabled = false;
-            this.cbDirection82.FormattingEnabled = true;
-            this.cbDirection82.Location = new System.Drawing.Point(24, 139);
-            this.cbDirection82.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection82.Name = "cbDirection82";
-            this.cbDirection82.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection82.TabIndex = 10;
-            this.cbDirection82.Visible = false;
-            // 
             // cbDirection81
             // 
-            this.cbDirection81.Enabled = false;
             this.cbDirection81.FormattingEnabled = true;
             this.cbDirection81.Location = new System.Drawing.Point(24, 78);
             this.cbDirection81.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection81.Name = "cbDirection81";
             this.cbDirection81.Size = new System.Drawing.Size(513, 24);
             this.cbDirection81.TabIndex = 9;
-            this.cbDirection81.Visible = false;
             // 
             // label42
             // 
@@ -1995,40 +1670,24 @@
             this.label42.TabIndex = 8;
             this.label42.Text = "Направление подготовки:";
             // 
-            // tpDirPage9
+            // tpDir_target_oz
             // 
-            this.tpDirPage9.Controls.Add(this.btRemoveDir93);
-            this.tpDirPage9.Controls.Add(this.btRemoveDir92);
-            this.tpDirPage9.Controls.Add(this.btRemoveDir91);
-            this.tpDirPage9.Controls.Add(this.btAddDir9);
-            this.tpDirPage9.Controls.Add(this.cbDirection93);
-            this.tpDirPage9.Controls.Add(this.cbDirection92);
-            this.tpDirPage9.Controls.Add(this.cbDirection91);
-            this.tpDirPage9.Controls.Add(this.label43);
-            this.tpDirPage9.Location = new System.Drawing.Point(4, 25);
-            this.tpDirPage9.Margin = new System.Windows.Forms.Padding(4);
-            this.tpDirPage9.Name = "tpDirPage9";
-            this.tpDirPage9.Size = new System.Drawing.Size(635, 284);
-            this.tpDirPage9.TabIndex = 8;
-            this.tpDirPage9.Text = "Очно-заочная бюджетная целевой прием";
-            this.tpDirPage9.UseVisualStyleBackColor = true;
-            // 
-            // btRemoveDir93
-            // 
-            this.btRemoveDir93.Enabled = false;
-            this.btRemoveDir93.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btRemoveDir93.Location = new System.Drawing.Point(571, 192);
-            this.btRemoveDir93.Margin = new System.Windows.Forms.Padding(4);
-            this.btRemoveDir93.Name = "btRemoveDir93";
-            this.btRemoveDir93.Size = new System.Drawing.Size(41, 39);
-            this.btRemoveDir93.TabIndex = 15;
-            this.btRemoveDir93.Text = "-";
-            this.btRemoveDir93.UseVisualStyleBackColor = true;
-            this.btRemoveDir93.Visible = false;
+            this.tpDir_target_oz.Controls.Add(this.btRemoveDir92);
+            this.tpDir_target_oz.Controls.Add(this.btRemoveDir91);
+            this.tpDir_target_oz.Controls.Add(this.btAddDir9);
+            this.tpDir_target_oz.Controls.Add(this.cbDirection92);
+            this.tpDir_target_oz.Controls.Add(this.cbDirection91);
+            this.tpDir_target_oz.Controls.Add(this.label43);
+            this.tpDir_target_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_target_oz.Margin = new System.Windows.Forms.Padding(4);
+            this.tpDir_target_oz.Name = "tpDir_target_oz";
+            this.tpDir_target_oz.Size = new System.Drawing.Size(635, 260);
+            this.tpDir_target_oz.TabIndex = 8;
+            this.tpDir_target_oz.Text = "Очно-заочная бюджетная целевой прием";
+            this.tpDir_target_oz.UseVisualStyleBackColor = true;
             // 
             // btRemoveDir92
             // 
-            this.btRemoveDir92.Enabled = false;
             this.btRemoveDir92.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir92.Location = new System.Drawing.Point(571, 128);
             this.btRemoveDir92.Margin = new System.Windows.Forms.Padding(4);
@@ -2037,11 +1696,9 @@
             this.btRemoveDir92.TabIndex = 14;
             this.btRemoveDir92.Text = "-";
             this.btRemoveDir92.UseVisualStyleBackColor = true;
-            this.btRemoveDir92.Visible = false;
             // 
             // btRemoveDir91
             // 
-            this.btRemoveDir91.Enabled = false;
             this.btRemoveDir91.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir91.Location = new System.Drawing.Point(571, 66);
             this.btRemoveDir91.Margin = new System.Windows.Forms.Padding(4);
@@ -2050,7 +1707,6 @@
             this.btRemoveDir91.TabIndex = 13;
             this.btRemoveDir91.Text = "-";
             this.btRemoveDir91.UseVisualStyleBackColor = true;
-            this.btRemoveDir91.Visible = false;
             // 
             // btAddDir9
             // 
@@ -2063,38 +1719,23 @@
             this.btAddDir9.Text = "+";
             this.btAddDir9.UseVisualStyleBackColor = true;
             // 
-            // cbDirection93
-            // 
-            this.cbDirection93.Enabled = false;
-            this.cbDirection93.FormattingEnabled = true;
-            this.cbDirection93.Location = new System.Drawing.Point(24, 203);
-            this.cbDirection93.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDirection93.Name = "cbDirection93";
-            this.cbDirection93.Size = new System.Drawing.Size(513, 24);
-            this.cbDirection93.TabIndex = 11;
-            this.cbDirection93.Visible = false;
-            // 
             // cbDirection92
             // 
-            this.cbDirection92.Enabled = false;
             this.cbDirection92.FormattingEnabled = true;
             this.cbDirection92.Location = new System.Drawing.Point(24, 139);
             this.cbDirection92.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection92.Name = "cbDirection92";
             this.cbDirection92.Size = new System.Drawing.Size(513, 24);
             this.cbDirection92.TabIndex = 10;
-            this.cbDirection92.Visible = false;
             // 
             // cbDirection91
             // 
-            this.cbDirection91.Enabled = false;
             this.cbDirection91.FormattingEnabled = true;
             this.cbDirection91.Location = new System.Drawing.Point(24, 78);
             this.cbDirection91.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection91.Name = "cbDirection91";
             this.cbDirection91.Size = new System.Drawing.Size(513, 24);
             this.cbDirection91.TabIndex = 9;
-            this.cbDirection91.Visible = false;
             // 
             // label43
             // 
@@ -2245,6 +1886,7 @@
             this.cbPassportMatch.TabIndex = 0;
             this.cbPassportMatch.Text = "Совпадает с текущим паспортом";
             this.cbPassportMatch.UseVisualStyleBackColor = true;
+            this.cbPassportMatch.CheckedChanged += new System.EventHandler(this.cbPassportMatch_CheckedChanged);
             // 
             // gbOther
             // 
@@ -2382,7 +2024,7 @@
             // 
             // btClose
             // 
-            this.btClose.Location = new System.Drawing.Point(1042, 1049);
+            this.btClose.Location = new System.Drawing.Point(1107, 1049);
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
@@ -2392,7 +2034,7 @@
             // 
             // btPrint
             // 
-            this.btPrint.Location = new System.Drawing.Point(978, 1013);
+            this.btPrint.Location = new System.Drawing.Point(989, 981);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(217, 28);
@@ -2402,7 +2044,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(997, 979);
+            this.btSave.Location = new System.Drawing.Point(1030, 1017);
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(177, 28);
@@ -2419,7 +2061,7 @@
             this.gbWithdrawDocs.Controls.Add(this.cbDirectionDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbCertificateHRD);
             this.gbWithdrawDocs.Controls.Add(this.cbDiplomaCopy);
-            this.gbWithdrawDocs.Controls.Add(this.cCertificateCopy);
+            this.gbWithdrawDocs.Controls.Add(this.cbCertificateCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
             this.gbWithdrawDocs.Location = new System.Drawing.Point(0, 977);
@@ -2456,6 +2098,7 @@
             // cbMedCertificate
             // 
             this.cbMedCertificate.AutoSize = true;
+            this.cbMedCertificate.Enabled = false;
             this.cbMedCertificate.Location = new System.Drawing.Point(728, 34);
             this.cbMedCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.cbMedCertificate.Name = "cbMedCertificate";
@@ -2467,6 +2110,7 @@
             // cbDirectionDoc
             // 
             this.cbDirectionDoc.AutoSize = true;
+            this.cbDirectionDoc.Enabled = false;
             this.cbDirectionDoc.Location = new System.Drawing.Point(559, 34);
             this.cbDirectionDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirectionDoc.Name = "cbDirectionDoc";
@@ -2478,6 +2122,7 @@
             // cbCertificateHRD
             // 
             this.cbCertificateHRD.AutoSize = true;
+            this.cbCertificateHRD.Enabled = false;
             this.cbCertificateHRD.Location = new System.Drawing.Point(505, 64);
             this.cbCertificateHRD.Margin = new System.Windows.Forms.Padding(4);
             this.cbCertificateHRD.Name = "cbCertificateHRD";
@@ -2489,6 +2134,7 @@
             // cbDiplomaCopy
             // 
             this.cbDiplomaCopy.AutoSize = true;
+            this.cbDiplomaCopy.Enabled = false;
             this.cbDiplomaCopy.Location = new System.Drawing.Point(345, 64);
             this.cbDiplomaCopy.Margin = new System.Windows.Forms.Padding(4);
             this.cbDiplomaCopy.Name = "cbDiplomaCopy";
@@ -2497,16 +2143,17 @@
             this.cbDiplomaCopy.Text = "Копия диплома";
             this.cbDiplomaCopy.UseVisualStyleBackColor = true;
             // 
-            // cCertificateCopy
+            // cbCertificateCopy
             // 
-            this.cCertificateCopy.AutoSize = true;
-            this.cCertificateCopy.Location = new System.Drawing.Point(176, 65);
-            this.cCertificateCopy.Margin = new System.Windows.Forms.Padding(4);
-            this.cCertificateCopy.Name = "cCertificateCopy";
-            this.cCertificateCopy.Size = new System.Drawing.Size(136, 20);
-            this.cCertificateCopy.TabIndex = 5;
-            this.cCertificateCopy.Text = "Копия аттестата";
-            this.cCertificateCopy.UseVisualStyleBackColor = true;
+            this.cbCertificateCopy.AutoSize = true;
+            this.cbCertificateCopy.Enabled = false;
+            this.cbCertificateCopy.Location = new System.Drawing.Point(176, 65);
+            this.cbCertificateCopy.Margin = new System.Windows.Forms.Padding(4);
+            this.cbCertificateCopy.Name = "cbCertificateCopy";
+            this.cbCertificateCopy.Size = new System.Drawing.Size(136, 20);
+            this.cbCertificateCopy.TabIndex = 5;
+            this.cbCertificateCopy.Text = "Копия аттестата";
+            this.cbCertificateCopy.UseVisualStyleBackColor = true;
             // 
             // cbPassportCopy
             // 
@@ -2530,36 +2177,6 @@
             this.cbAppAdmission.Text = "Заявление на поступление";
             this.cbAppAdmission.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 23);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(73, 104);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 27;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(13, 22);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(72, 104);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 28;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(17, 90);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(78, 104);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 29;
-            this.pictureBox3.TabStop = false;
-            // 
             // ApplicationEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2573,35 +2190,38 @@
             this.Load += new System.EventHandler(this.NewApplicForm_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.gbAdress.ResumeLayout(false);
             this.gbAdress.PerformLayout();
             this.gbCertificate.ResumeLayout(false);
             this.gbCertificate.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.grbApplication.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.gbAttributes.ResumeLayout(false);
             this.gbAttributes.PerformLayout();
             this.tbDirections.ResumeLayout(false);
-            this.tpDirPage1.ResumeLayout(false);
-            this.tpDirPage1.PerformLayout();
-            this.tpDirPage2.ResumeLayout(false);
-            this.tpDirPage2.PerformLayout();
-            this.tpDirPage3.ResumeLayout(false);
-            this.tpDirPage3.PerformLayout();
-            this.tpDirPage4.ResumeLayout(false);
-            this.tpDirPage4.PerformLayout();
-            this.tpDirPage5.ResumeLayout(false);
-            this.tpDirPage5.PerformLayout();
-            this.tpDirPage6.ResumeLayout(false);
-            this.tpDirPage6.PerformLayout();
-            this.tpDirPage7.ResumeLayout(false);
-            this.tpDirPage7.PerformLayout();
-            this.tpDirPage8.ResumeLayout(false);
-            this.tpDirPage8.PerformLayout();
-            this.tpDirPage9.ResumeLayout(false);
-            this.tpDirPage9.PerformLayout();
+            this.tpDir_budget_o.ResumeLayout(false);
+            this.tpDir_budget_o.PerformLayout();
+            this.tpDir_paid_o.ResumeLayout(false);
+            this.tpDir_paid_o.PerformLayout();
+            this.tpDir_budget_oz.ResumeLayout(false);
+            this.tpDir_budget_oz.PerformLayout();
+            this.tpDir_paid_oz.ResumeLayout(false);
+            this.tpDir_paid_oz.PerformLayout();
+            this.tpDir_paid_z.ResumeLayout(false);
+            this.tpDir_paid_z.PerformLayout();
+            this.tpDir_quote_o.ResumeLayout(false);
+            this.tpDir_quote_o.PerformLayout();
+            this.tpDir_target_o.ResumeLayout(false);
+            this.tpDir_target_o.PerformLayout();
+            this.tpDir_quote_oz.ResumeLayout(false);
+            this.tpDir_quote_oz.PerformLayout();
+            this.tpDir_target_oz.ResumeLayout(false);
+            this.tpDir_target_oz.PerformLayout();
             this.gbExamsDoc.ResumeLayout(false);
             this.gbExamsDoc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExams)).EndInit();
@@ -2611,9 +2231,6 @@
             this.gbIndividualAchievements.PerformLayout();
             this.gbWithdrawDocs.ResumeLayout(false);
             this.gbWithdrawDocs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2698,15 +2315,15 @@
         private System.Windows.Forms.CheckBox cbMCDAO;
         private System.Windows.Forms.CheckBox cbHostleNeeded;
         private System.Windows.Forms.TabControl tbDirections;
-        private System.Windows.Forms.TabPage tpDirPage1;
-        private System.Windows.Forms.TabPage tpDirPage2;
-        private System.Windows.Forms.TabPage tpDirPage3;
-        private System.Windows.Forms.TabPage tpDirPage4;
-        private System.Windows.Forms.TabPage tpDirPage5;
-        private System.Windows.Forms.TabPage tpDirPage6;
-        private System.Windows.Forms.TabPage tpDirPage7;
-        private System.Windows.Forms.TabPage tpDirPage8;
-        private System.Windows.Forms.TabPage tpDirPage9;
+        private System.Windows.Forms.TabPage tpDir_budget_o;
+        private System.Windows.Forms.TabPage tpDir_paid_o;
+        private System.Windows.Forms.TabPage tpDir_budget_oz;
+        private System.Windows.Forms.TabPage tpDir_paid_oz;
+        private System.Windows.Forms.TabPage tpDir_paid_z;
+        private System.Windows.Forms.TabPage tpDir_quote_o;
+        private System.Windows.Forms.TabPage tpDir_target_o;
+        private System.Windows.Forms.TabPage tpDir_quote_oz;
+        private System.Windows.Forms.TabPage tpDir_target_oz;
         private System.Windows.Forms.Button btClose;
         private System.Windows.Forms.Button btPrint;
         private System.Windows.Forms.Button btSave;
@@ -2717,7 +2334,7 @@
         private System.Windows.Forms.CheckBox cbDirectionDoc;
         private System.Windows.Forms.CheckBox cbCertificateHRD;
         private System.Windows.Forms.CheckBox cbDiplomaCopy;
-        private System.Windows.Forms.CheckBox cCertificateCopy;
+        private System.Windows.Forms.CheckBox cbCertificateCopy;
         private System.Windows.Forms.CheckBox cbPassportCopy;
         private System.Windows.Forms.CheckBox cbAppAdmission;
         private System.Windows.Forms.GroupBox gbExamsDoc;
@@ -2732,44 +2349,26 @@
         private System.Windows.Forms.MaskedTextBox mtbEMail;
         private System.Windows.Forms.MaskedTextBox mtbHomePhone;
         private System.Windows.Forms.MaskedTextBox mtbMobilePhone;
-        private System.Windows.Forms.Button btRemoveDir23;
-        private System.Windows.Forms.Button btRemoveDir22;
         private System.Windows.Forms.Button btRemoveDir21;
         private System.Windows.Forms.Button btAddDir2;
-        private System.Windows.Forms.ComboBox cbDirection23;
-        private System.Windows.Forms.ComboBox cbDirection22;
         private System.Windows.Forms.ComboBox cbDirection21;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Button btRemoveDir33;
         private System.Windows.Forms.Button btRemoveDir32;
         private System.Windows.Forms.Button btRemoveDir31;
         private System.Windows.Forms.Button btAddDir3;
-        private System.Windows.Forms.ComboBox cbDirection33;
         private System.Windows.Forms.ComboBox cbDirection32;
         private System.Windows.Forms.ComboBox cbDirection31;
         private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.Button btRemoveDir43;
-        private System.Windows.Forms.Button btRemoveDir42;
         private System.Windows.Forms.Button btRemoveDir41;
         private System.Windows.Forms.Button btAddDir4;
-        private System.Windows.Forms.ComboBox cbDirection43;
-        private System.Windows.Forms.ComboBox cbDirection42;
         private System.Windows.Forms.ComboBox cbDirection41;
         private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Button btRemoveDir53;
-        private System.Windows.Forms.Button btRemoveDir52;
         private System.Windows.Forms.Button btRemoveDir51;
         private System.Windows.Forms.Button btAddDir5;
-        private System.Windows.Forms.ComboBox cbDirection53;
-        private System.Windows.Forms.ComboBox cbDirection52;
         private System.Windows.Forms.ComboBox cbDirection51;
         private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Button btRemoveDir63;
-        private System.Windows.Forms.Button btRemoveDir62;
         private System.Windows.Forms.Button btRemoveDir61;
         private System.Windows.Forms.Button btAddDir6;
-        private System.Windows.Forms.ComboBox cbDirection63;
-        private System.Windows.Forms.ComboBox cbDirection62;
         private System.Windows.Forms.ComboBox cbDirection61;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.Button btRemoveDir73;
@@ -2780,19 +2379,13 @@
         private System.Windows.Forms.ComboBox cbDirection72;
         private System.Windows.Forms.ComboBox cbDirection71;
         private System.Windows.Forms.Label label41;
-        private System.Windows.Forms.Button btRemoveDir83;
-        private System.Windows.Forms.Button btRemoveDir82;
         private System.Windows.Forms.Button btRemoveDir81;
         private System.Windows.Forms.Button btAddDir8;
-        private System.Windows.Forms.ComboBox cbDirection83;
-        private System.Windows.Forms.ComboBox cbDirection82;
         private System.Windows.Forms.ComboBox cbDirection81;
         private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.Button btRemoveDir93;
         private System.Windows.Forms.Button btRemoveDir92;
         private System.Windows.Forms.Button btRemoveDir91;
         private System.Windows.Forms.Button btAddDir9;
-        private System.Windows.Forms.ComboBox cbDirection93;
         private System.Windows.Forms.ComboBox cbDirection92;
         private System.Windows.Forms.ComboBox cbDirection91;
         private System.Windows.Forms.Label label43;
