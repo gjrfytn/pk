@@ -171,7 +171,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
   `education_level_dict_id` INT UNSIGNED NOT NULL COMMENT '2',
   `education_level_id` INT UNSIGNED NOT NULL COMMENT 'ИД Уровня образования (Справочник 2 \"Уровень образования\").',
   `stage` INT UNSIGNED NOT NULL COMMENT 'Этап приема (В случае зачисления на места в рамках контрольных цифр (бюджет) по программам бакалавриата и программам специалитета по очной и очно-заочной формам обучения, принимает значения 1 или 2). Иначе принимает значение 0.',
-  `type` ENUM('admission', 'exception') NOT NULL COMMENT 'Тип приказа (зачисление или исключение).',
+  `type` ENUM('admission', 'exception', 'hostel') NOT NULL COMMENT 'Тип приказа (зачисление, исключение или выделение мест в общежитии).',
+  `protocol_number` SMALLINT UNSIGNED NULL COMMENT 'Номер протокола, если приказ зарегестрирован, иначе - NULL.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`campaign_id` ASC),
   INDEX `corresp_edu_f_idx` (`education_form_dict_id` ASC, `education_form_id` ASC),
@@ -357,6 +358,51 @@ COMMENT = 'Направления по факультетам.';
 
 
 -- -----------------------------------------------------
+-- Table `PK_DB`.`profiles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
+  `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
+  `name` VARCHAR(100) NOT NULL COMMENT 'Название профиля.',
+  PRIMARY KEY (`faculty_short_name`, `direction_id`, `name`),
+  INDEX `has_idx` (`faculty_short_name` ASC, `direction_id` ASC),
+  CONSTRAINT `profiles_has`
+    FOREIGN KEY (`faculty_short_name` , `direction_id`)
+    REFERENCES `PK_DB`.`directions` (`faculty_short_name` , `direction_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Профили обучения по направлениям.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`campaigns_profiles_data`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
+  `campaigns_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
+  `profiles_direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
+  `profiles_direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
+  `profiles_name` VARCHAR(100) NOT NULL COMMENT 'Профиль.',
+  `places_paid_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных очных мест.',
+  `places_paid_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных вечерних мест.',
+  `places_paid_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных заочных мест.',
+  PRIMARY KEY (`campaigns_id`, `profiles_direction_faculty`, `profiles_direction_id`, `profiles_name`),
+  INDEX `fk_profiles_has_campaigns_campaigns1_idx` (`campaigns_id` ASC),
+  CONSTRAINT `fk_profiles_has_campaigns_profiles1`
+    FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_name`)
+    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_profiles_has_campaigns_campaigns1`
+    FOREIGN KEY (`campaigns_id`)
+    REFERENCES `PK_DB`.`campaigns` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'Данные кампаний по профилям.';
+
+
+-- -----------------------------------------------------
 -- Table `PK_DB`.`applications_entrances`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
@@ -371,12 +417,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
   `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
   `is_for_spo_and_vo` TINYINT(1) NOT NULL COMMENT 'Абитуриент поступает с профильным СПО/ВО.',
+  `profile_name` VARCHAR(100) NULL COMMENT 'Имя профиля, если заявление подаётся на платную форму, иначе NULL.',
   PRIMARY KEY (`application_id`, `faculty_short_name`, `direction_id`, `edu_form_dict_id`, `edu_form_id`, `edu_source_dict_id`, `edu_source_id`),
   INDEX `targets_idx` (`target_organization_id` ASC),
   INDEX `has_idx` (`application_id` ASC),
   INDEX `applies_idx` (`faculty_short_name` ASC, `direction_id` ASC),
   INDEX `corresp_edu_form_idx` (`edu_form_dict_id` ASC, `edu_form_id` ASC),
   INDEX `corresp_edu_source_idx` (`edu_source_dict_id` ASC, `edu_source_id` ASC),
+  INDEX `applies_prof_idx` (`profile_name` ASC),
   CONSTRAINT `applications_entrances_has`
     FOREIGN KEY (`application_id`)
     REFERENCES `PK_DB`.`applications` (`id`)
@@ -400,6 +448,11 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   CONSTRAINT `applications_entrances_corresp_edu_source`
     FOREIGN KEY (`edu_source_dict_id` , `edu_source_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `applications_entrances_applies_prof`
+    FOREIGN KEY (`profile_name`)
+    REFERENCES `PK_DB`.`campaigns_profiles_data` (`profiles_name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -791,24 +844,6 @@ COMMENT = 'dictionary_olympic_profiles:\nSubjects.SubjectID[1..n] - ИД пре�
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`profiles`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
-  `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
-  `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
-  `name` VARCHAR(100) NOT NULL COMMENT 'Название профиля.',
-  PRIMARY KEY (`faculty_short_name`, `direction_id`, `name`),
-  INDEX `has_idx` (`faculty_short_name` ASC, `direction_id` ASC),
-  CONSTRAINT `profiles_has`
-    FOREIGN KEY (`faculty_short_name` , `direction_id`)
-    REFERENCES `PK_DB`.`directions` (`faculty_short_name` , `direction_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Профили обучения по направлениям.';
-
-
--- -----------------------------------------------------
 -- Table `PK_DB`.`campaigns_faculties_data`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_faculties_data` (
@@ -863,33 +898,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_data` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Данные кампаний по направлениям.';
-
-
--- -----------------------------------------------------
--- Table `PK_DB`.`campaigns_profiles_data`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
-  `campaigns_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
-  `profiles_direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
-  `profiles_direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
-  `profiles_name` VARCHAR(100) NOT NULL COMMENT 'Профиль.',
-  `places_paid_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных очных мест.',
-  `places_paid_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных вечерних мест.',
-  `places_paid_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных заочных мест.',
-  PRIMARY KEY (`campaigns_id`, `profiles_direction_faculty`, `profiles_direction_id`, `profiles_name`),
-  INDEX `fk_profiles_has_campaigns_campaigns1_idx` (`campaigns_id` ASC),
-  CONSTRAINT `fk_profiles_has_campaigns_profiles1`
-    FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_name`)
-    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_profiles_has_campaigns_campaigns1`
-    FOREIGN KEY (`campaigns_id`)
-    REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Данные кампаний по профилям.';
 
 
 -- -----------------------------------------------------

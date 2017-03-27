@@ -143,6 +143,18 @@
       <DependentUpon>Faculties.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\FIS_Connector.cs" />
+    <Compile Include="Forms\OrderEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OrderEdit.Designer.cs">
+      <DependentUpon>OrderEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Orders.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Orders.Designer.cs">
+      <DependentUpon>Orders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TargetOrganizationSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +261,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Faculties.resx">
       <DependentUpon>Faculties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OrderEdit.resx">
+      <DependentUpon>OrderEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Orders.resx">
+      <DependentUpon>Orders.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TargetOrganizationSelect.resx">
       <DependentUpon>TargetOrganizationSelect.cs</DependentUpon>

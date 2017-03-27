@@ -81,6 +81,9 @@ namespace PK.Classes
 
         public string GetDictionaryItemName(uint dictionaryID, uint itemID)
         {
+            if (dictionaryID == 10 || dictionaryID == 19)
+                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
+
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "name" },
@@ -98,6 +101,9 @@ namespace PK.Classes
 
         public uint GetDictionaryItemID(uint dictionaryID, string itemName)
         {
+            if (dictionaryID == 10 || dictionaryID == 19)
+                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
+
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "item_id" },
@@ -111,6 +117,22 @@ namespace PK.Classes
                 throw new System.ArgumentException("Не найден справочник с заданным ID либо элемент справочника с заданным наименованием.");
 
             return (uint)list[0][0];
+        }
+
+        public string[] GetDirectionsDictionaryNameAndCode(uint id)//TODO Нужны другие поля?
+        {
+            List<object[]> list = _DB_Connection.Select(
+                DB_Table.DICTIONARY_10_ITEMS,
+                new string[] { "name", "code" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("id", Relation.EQUAL, id),
+                });
+
+            if (list.Count == 0)
+                throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.");
+
+            return System.Array.ConvertAll(list[0],c=>c.ToString());
         }
     }
 }
