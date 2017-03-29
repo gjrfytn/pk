@@ -103,7 +103,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationID|UPPERCASE</Placeholder>
+                              <Placeholder>applicationEntrantID</Placeholder>
                             </Text>
                           </Part>
                         </Parts>

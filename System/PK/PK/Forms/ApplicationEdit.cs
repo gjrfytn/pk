@@ -49,19 +49,26 @@ namespace PK.Forms
         public QDoc QouteDoc;
         public ODoc OlympicDoc;
         public SDoc SportDoc;
-        
+
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private Classes.KLADR _KLADR;
 
         private uint _ApplicationID;
+        private uint? _EntrantID;
         private int _CurrCampainID;
         private string _RegistratorsLogin;
         private DateTime _EditingDateTime;
 
         public ApplicationEdit(int campaignID, string registratorsLogin)
         {
+            #region Components
             InitializeComponent();
+
+            dgvExams_EGE.ValueType = typeof(byte);
+            #endregion
+
+            _DB_Connection = new Classes.DB_Connector();
 
             if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
             {
@@ -74,7 +81,6 @@ namespace PK.Forms
                 DialogResult = DialogResult.Abort;
             }
 
-            _DB_Connection = new Classes.DB_Connector();
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _KLADR = new Classes.KLADR();
             _CurrCampainID = campaignID;
@@ -106,11 +112,11 @@ namespace PK.Forms
                 (DateTime.Now.Year - 5).ToString(),
             };
 
-            dgvExams.Rows.Add("Математика", null, "", "0", 32);
-            dgvExams.Rows.Add("Русский язык", null, "", "0", 32);
-            dgvExams.Rows.Add("Физика", null, "", "0", 32);
-            dgvExams.Rows.Add("Обществознание", null, "", "0", 32);
-            dgvExams.Rows.Add("Иностранный язык", null, "", "0", 32);
+            dgvExams.Rows.Add("Математика", null, null, (byte)0, 32);
+            dgvExams.Rows.Add("Русский язык", null, null, (byte)0, 32);
+            dgvExams.Rows.Add("Физика", null, null, (byte)0, 32);
+            dgvExams.Rows.Add("Обществознание", null, null, (byte)0, 32);
+            dgvExams.Rows.Add("Иностранный язык", null, null, (byte)0, 32);
 
             for (int j = 0; j < dgvExams.Rows.Count; j++)
             {
@@ -332,14 +338,14 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            uint entrantId = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
+            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
                 { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
                 { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
                 { "email", mtbEMail.Text},{ "is_from_krym", null}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
 
             Random randNumber = new Random();
             _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "number", randNumber.Next()},
-                { "entrant_id", entrantId}, { "registration_time", DateTime.Now}, { "needs_hostel", cbHostleNeeded.Checked}, { "registrator_login", _RegistratorsLogin},
+                { "entrant_id", _EntrantID.Value}, { "registration_time", DateTime.Now}, { "needs_hostel", cbHostleNeeded.Checked}, { "registrator_login", _RegistratorsLogin},
             { "status_dict_id", 4},{ "status_id", _DB_Helper.GetDictionaryItemID( 4, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()} });
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
@@ -405,7 +411,7 @@ namespace PK.Forms
 
             foreach (DataGridViewRow row in dgvExams.Rows)
             {
-                if (row.Cells[3].Value.ToString() != "0")
+                if ((byte)row.Cells[3].Value != 0)
                     _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object> { { "document_id", examsDocId},
                         { "subject_dict_id", 1} , { "subject_id", _DB_Helper.GetDictionaryItemID( 1, row.Cells[0].Value.ToString())} ,
                         { "value", row.Cells[3].Value} });
@@ -802,6 +808,147 @@ namespace PK.Forms
             {
                 toolTip.Show("Не найдено адресов.", tbStreet, 3000);
             }
+        }
+
+        private void btPrint_Click(object sender, EventArgs e)
+        {
+            string doc = "moveJournal";
+            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "MoveJournal.xml", doc, _ApplicationID);
+            Classes.Utility.Print(doc + ".docx");
+
+            doc = "inventory";
+            List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+
+            foreach (TabPage tab in tbDirections.Controls)
+                if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
+                    tableParams[0].Add(new string[] { tab.Text + " форма обучения" });
+
+            foreach (CheckBox cb in gbWithdrawDocs.Controls)
+                if (cb.Checked)
+                    tableParams[1].Add(new string[] { cb.Text }); //TODO Оригинал
+
+            Classes.DocumentCreator.Create(
+                Classes.Utility.DocumentsTemplatesPath + "Inventory.xml",
+                doc,
+                new string[]
+                {
+                    _EntrantID.Value.ToString() ,
+                    tbLastName.Text.ToUpper(),
+                    (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
+                    _DB_Connection.Select(
+                        DB_Table.USERS,
+                        new string[] {"name" },
+                        new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorsLogin) }
+                        )[0][0].ToString().Split(' ')[0],
+                    SystemInformation.ComputerName,
+                    DateTime.Now.ToString() //TODO Брать из переменной
+                },
+                tableParams
+                );
+            Classes.Utility.Print(doc + ".docx");
+
+            doc = "percRecordFace";
+            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml", doc, _ApplicationID);
+            Classes.Utility.Print(doc + ".docx");
+
+            tableParams[0].Clear();
+            foreach (TabPage tab in tbDirections.Controls)
+            {
+                var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
+                if (cbs.Count() != 0)
+                {
+                    tableParams[0].Add(new string[] { tab.Text + " форма обучения" });
+                    byte count = 1;
+                    foreach (ComboBox cb in cbs)
+                    {
+                        tableParams[0].Add(new string[] { count.ToString() + ". " + cb.Text });
+                        count++;
+                    }
+                }
+            }
+
+            doc = "receipt";
+            Classes.DocumentCreator.Create(
+                Classes.Utility.DocumentsTemplatesPath + "Receipt.xml",
+                doc,
+                new string[]
+                {
+                    _EntrantID.Value.ToString() ,
+                    tbLastName.Text.ToUpper(),
+                    (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
+                    _DB_Connection.Select(
+                        DB_Table.USERS,
+                        new string[] {"name" },
+                        new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorsLogin) }
+                        )[0][0].ToString().Split(' ')[0],
+                    SystemInformation.ComputerName,
+                    DateTime.Now.ToString(), //TODO Брать из переменной
+                  _EditingDateTime.ToString()
+                },
+                tableParams
+                );
+            Classes.Utility.Print(doc + ".docx");
+
+            doc = "percRecordBack";
+
+            List<string> parameters = new List<string>
+            {
+                tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
+                    mtbHomePhone.Text,
+                    mtbMobilePhone.Text,
+                    cbSpecial.Checked?"+":"",
+                    cbPrerogative.Checked?"+":"",
+                    dgvExams[3,0].Value.ToString(),
+                    cbHostleNeeded.Checked?"+":"",
+                    cbExams.Checked?"+":"",
+                    dgvExams[3,1].Value.ToString(),
+                    cbChernobyl.Checked?"+":"",
+                    cbMCDAO.Checked?"+":"",
+                    dgvExams[3,2].Value.ToString(),
+                    cbTarget.Checked?"+":"",
+                    cbOriginal.Checked?"+":"",
+                    dgvExams[3,3].Value.ToString(),
+                    dgvExams[3,4].Value.ToString(),
+                    "!",//TODO Индивидуальные достижения
+                    ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,2].Value).ToString(),
+                    ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value).ToString(),
+                    ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
+            };
+
+            byte tabNumber = 1;
+            foreach (TabPage tab in tbDirections.Controls)
+            {
+                var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
+                if (cbs.Count() != 0)
+                {
+                    parameters.Add(tabNumber.ToString()); //TODO Временно
+                    byte count = 0;
+                    foreach (ComboBox cb in cbs)
+                    {
+                        parameters.Add(string.Concat(cb.Text.Split(')')[1].Where(c => char.IsUpper(c)))); //TODO Временно
+                        count++;
+                    }
+
+                    while (count != 3)
+                    {
+                        parameters.Add("");
+                        count++;
+                    }
+                }
+
+                tabNumber++;
+            }
+
+            while (parameters.Count != 40)
+                parameters.Add("");
+
+            Classes.DocumentCreator.Create(
+                Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
+                doc,
+                parameters.ToArray(),
+                null
+                );
+            Classes.Utility.Print(doc + ".docx");
         }
     }
 }

@@ -2058,6 +2058,7 @@
             this.btPrint.TabIndex = 5;
             this.btPrint.Text = "Распечатать документы";
             this.btPrint.UseVisualStyleBackColor = true;
+            this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // btSave
             // 

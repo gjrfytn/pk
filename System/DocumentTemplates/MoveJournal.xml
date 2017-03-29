@@ -97,7 +97,7 @@
               <Part>
                 <FontID>LargeBold</FontID>
                 <Text>
-                  <Placeholder>applicationID</Placeholder>
+                  <Placeholder>applicationEntrantID</Placeholder>
                 </Text>
               </Part>
             </Parts>
