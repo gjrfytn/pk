@@ -8,6 +8,11 @@ namespace PK.Classes
 
     class DB_Helper
     {
+        #region DictItemsNames
+
+        public const string EduFormO = "Очная форма";
+        #endregion
+
         readonly DB_Connector _DB_Connection;
 
         public DB_Helper(DB_Connector connection)

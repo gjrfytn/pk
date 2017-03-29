@@ -39,7 +39,7 @@ namespace PK.Forms
                     new Dictionary<string, object> { { "name", rtbOrganizationName.Text } },
                     new Dictionary<string, object> { { "uid", _UpdatingCode } });
 
-            Close();
+            DialogResult = DialogResult.OK;
         }
     }
 }
