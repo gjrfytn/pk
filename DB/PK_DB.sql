@@ -449,11 +449,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
     FOREIGN KEY (`edu_source_dict_id` , `edu_source_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `applications_entrances_applies_prof`
-    FOREIGN KEY (`profile_name`)
-    REFERENCES `PK_DB`.`campaigns_profiles_data` (`profiles_name`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Условия приёма заявления.';

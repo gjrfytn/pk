@@ -21,6 +21,10 @@ namespace PK.Forms
             {
                 cbCampaign.Items.Add(campaign[0]);
             }
+
+            cbAchievementType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(36), null);
+            cbAchievementType.DisplayMember = "Value";
+            cbAchievementType.ValueMember = "Value";
         }
 
         private void UpdateTable()
@@ -179,6 +183,53 @@ namespace PK.Forms
                     })[0][0];
                 UpdateTable();
             }
+        }
+
+        private void btAdd_Click(object sender, EventArgs e)
+        {
+            if ((cbAchievementType.SelectedIndex == -1) || (tbAchievementName.Text == "") || (tbMaxValue.Text == ""))
+                MessageBox.Show("Все поля должны быть заполнены");
+            else
+            {
+                bool found = false;
+                foreach (var record in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("name", Relation.EQUAL, tbAchievementName.Text)
+                }))
+                {
+                    MessageBox.Show("Достижение с таким наименованием уже существует");
+                    found = true;
+                }
+                if (!found)
+                    _DB_Connection.Insert(DB_Table.INSTITUTION_ACHIEVEMENTS, new Dictionary<string, object> { { "name", tbAchievementName.Text},
+                        { "category_dict_id", 36}, { "category_id", _DB_Helper.GetDictionaryItemID(36,cbAchievementType.SelectedValue.ToString())},
+                        { "max_value", tbMaxValue.Text}, { "campaign_id", _LoadedCampaign} });
+            }
+            
+            cbAchievementType.Enabled = false;
+            tbAchievementName.Enabled = false;
+            tbMaxValue.Enabled = false;
+            btAdd.Enabled = false;
+            label2.Enabled = false;
+            label4.Enabled = false;
+            label5.Enabled = false;
+        }
+
+        private void btNew_Click(object sender, EventArgs e)
+        {
+            if (cbCampaign.SelectedIndex == -1)
+                MessageBox.Show("Выберите кампанию");
+            else
+            {
+                cbAchievementType.Enabled = true;
+                tbAchievementName.Enabled = true;
+                tbMaxValue.Enabled = true;
+                btAdd.Enabled = true;
+                label2.Enabled = true;
+                label4.Enabled = true;
+                label5.Enabled = true;
+            }
+
         }
     }
 }

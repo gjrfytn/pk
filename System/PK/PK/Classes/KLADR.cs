@@ -89,8 +89,8 @@ namespace PK.Classes
                 distrCode = "000";
 
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM subjects WHERE " + _WhereTown + " AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "';", _Connection);
-
-            return SelectNameSocr(cmd);
+             
+            return SelectNameSocr(cmd); ;
         }
 
         public List<string> GetSettlements(string region, string district, string town)

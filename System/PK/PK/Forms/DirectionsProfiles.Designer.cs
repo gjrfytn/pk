@@ -225,7 +225,8 @@
             this.dgvDirections_ID.HeaderText = "ID";
             this.dgvDirections_ID.Name = "dgvDirections_ID";
             this.dgvDirections_ID.ReadOnly = true;
-            this.dgvDirections_ID.Width = 43;
+            this.dgvDirections_ID.Visible = false;
+            this.dgvDirections_ID.Width = 24;
             // 
             // dgvDirections_T
             // 
@@ -233,7 +234,8 @@
             this.dgvDirections_T.HeaderText = "";
             this.dgvDirections_T.Name = "dgvDirections_T";
             this.dgvDirections_T.ReadOnly = true;
-            this.dgvDirections_T.Width = 19;
+            this.dgvDirections_T.Visible = false;
+            this.dgvDirections_T.Width = 5;
             // 
             // dgvDirections_Name
             // 

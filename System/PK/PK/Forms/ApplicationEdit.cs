@@ -8,10 +8,6 @@ namespace PK.Forms
 {
     public partial class ApplicationEdit : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly Classes.DB_Helper _DB_Helper;
-        string _RegistratorsLogin;
-
         public struct QDoc
         {
             public string cause;
@@ -53,15 +49,19 @@ namespace PK.Forms
         public QDoc QouteDoc;
         public ODoc OlympicDoc;
         public SDoc SportDoc;
-        int _CurrCampainID;
+        
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
+        private Classes.KLADR _KLADR;
+
+        private uint _ApplicationID;
+        private int _CurrCampainID;
+        private string _RegistratorsLogin;
+        private DateTime _EditingDateTime;
 
         public ApplicationEdit(int campaignID, string registratorsLogin)
         {
             InitializeComponent();
-
-            _DB_Connection = new Classes.DB_Connector();
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-            _CurrCampainID = campaignID;
 
             if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
             {
@@ -74,6 +74,12 @@ namespace PK.Forms
                 DialogResult = DialogResult.Abort;
             }
 
+            _DB_Connection = new Classes.DB_Connector();
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _KLADR = new Classes.KLADR();
+            _CurrCampainID = campaignID;
+            _RegistratorsLogin = registratorsLogin;
+
             FillComboBox(cbIDDocType, 22);
             FillComboBox(cbSex, 5);
             FillComboBox(cbNationality, 7);
@@ -81,6 +87,7 @@ namespace PK.Forms
             cbFirstTime.SelectedIndex = 0;
             cbForeignLanguage.SelectedIndex = 0;
             rbCertificate.Checked = true;
+            tbRegion.AutoCompleteCustomSource.AddRange(_KLADR.GetRegions().ToArray());
 
             FillDirectionsProfilesCombobox(cbDirection21, true, "Очная", "");
 
@@ -166,7 +173,7 @@ namespace PK.Forms
                 new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryNumber)
                 }))
                 cb.Items.Add(v[0]);
-            if (cb.Items.Count>0)
+            if (cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
         }
 
@@ -327,18 +334,18 @@ namespace PK.Forms
         {
             uint entrantId = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
                 { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
-                { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())}, { "registrator_login", _RegistratorsLogin},
+                { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
                 { "email", mtbEMail.Text},{ "is_from_krym", null}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
 
             Random randNumber = new Random();
-            uint applicationId = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "number", randNumber.Next()},
-                { "entrant_id", entrantId}, { "registration_time", DateTime.Now}, { "needs_hostel", cbHostleNeeded.Checked},
+            _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "number", randNumber.Next()},
+                { "entrant_id", entrantId}, { "registration_time", DateTime.Now}, { "needs_hostel", cbHostleNeeded.Checked}, { "registrator_login", _RegistratorsLogin},
             { "status_dict_id", 4},{ "status_id", _DB_Helper.GetDictionaryItemID( 4, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()} });
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
                 { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} , { "organization", tbIssuedBy.Text} });
 
-            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId},
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID},
                 { "documents_id", idDocUid } });
 
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
@@ -370,14 +377,14 @@ namespace PK.Forms
                 int eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}, { "original_recieved_date", DateTime.Now}}));
                 _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "end_year", cbGraduationYear.SelectedItem } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", eduDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } });
             }
             else
             {
                 int eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}  }));
                 _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "end_year", cbGraduationYear.SelectedItem } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", eduDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } });
             }
 
             uint examsDocId = 0;
@@ -385,14 +392,14 @@ namespace PK.Forms
             {
                 examsDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "ege" }, { "series",  tbIDDocSeries.Text},
                     { "number", tbIDDocNumber.Text} });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", examsDocId } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", examsDocId } });
             }
 
             else
             {
                 examsDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
                 { "series", tbEduDocSeries.Text}, { "number", tbExamsDocNumber.Text} });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", examsDocId } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", examsDocId } });
             }
 
 
@@ -412,9 +419,9 @@ namespace PK.Forms
                     _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", orphDocUid},
                         { "name", QouteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", 42},
                         { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( 42, QouteDoc.orphanhoodDocType)} });
-                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", orphDocUid } });
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", orphDocUid } });
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", applicationId}, { "document_type_dict_id", 31},
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID(31,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
                             { "reason_document_id", orphDocUid},{ "benefit_kind_dict_id", 30},
                             { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
@@ -430,9 +437,9 @@ namespace PK.Forms
                         _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "document_id", medDocUid}, { "dictionaries_dictionary_id",23},
                             { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(23,QouteDoc.disabilityGroup)} });
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", allowEducationDocUid } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
                         _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", applicationId}, { "document_type_dict_id", 31},
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID(31,"Справка об установлении инвалидности")},
                             { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", 30},
                             { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
@@ -441,9 +448,9 @@ namespace PK.Forms
                     {
                         uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" },
                         { "series", QouteDoc.medDocSerie},  { "number", QouteDoc.medDocNumber} });
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", medDocUid } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
                         _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", applicationId}, { "document_type_dict_id", 31},
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID( 31, "Заключение психолого-медико-педагогической комиссии")},
                             { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", 30},
                             { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
@@ -456,7 +463,7 @@ namespace PK.Forms
                 { { "type", "sport" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName} });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                 { { "document_id", sportDocUid}, { "name", SportDoc.docName} });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", sportDocUid } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", sportDocUid } });
 
                 uint achevmentCategoryId = 0;
                 switch (SportDoc.diplomaType)
@@ -495,7 +502,7 @@ namespace PK.Forms
                         { "max_value", 1}, { "campaign_id", 1} });
                 }
 
-                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", applicationId },
+                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID },
                     { "institution_achievement_id", achievementUid}, { "mark", _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "max_value" },
                     new List<Tuple<string, Relation, object>>
                     {
@@ -522,10 +529,10 @@ namespace PK.Forms
                         {
                             new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, OlympicDoc.olympID)
                         })[0][0])},
-                    { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },                    
+                    { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
                     { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", 1 }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(1, OlympicDoc.olympDist) } });
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", olympicDocId } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом победителя/призера всероссийской олимпиады школьников":
@@ -543,7 +550,7 @@ namespace PK.Forms
                     { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
                     { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", 1 }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(1, OlympicDoc.olympDist) } });
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", olympicDocId } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом 4 этапа всеукраинской олимпиады":
@@ -554,7 +561,7 @@ namespace PK.Forms
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", 18 },
                     { "diploma_type_id", _DB_Helper.GetDictionaryItemID(18, OlympicDoc.diplomaType) }, { "olympic_name", OlympicDoc.olympName }, { "olympic_profile", OlympicDoc.olympProfile },
                     { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) }});
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", olympicDocId } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом международной олимпиады":
@@ -566,7 +573,7 @@ namespace PK.Forms
                             { "olympic_profile", OlympicDoc.olympProfile },
                     { "country_dict_id", 7 }, { "country_id", _DB_Helper.GetDictionaryItemID(7, OlympicDoc.country) },
                     { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) } });
-                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", olympicDocId } });
+                        _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
                 }
             }
@@ -607,7 +614,7 @@ namespace PK.Forms
                             if (cb.SelectedIndex != -1)
                             {
                                 string facultyShortName = (cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0];
-                                _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", applicationId },
+                                _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                     { "faculty_short_name", facultyShortName.Split('(')[1] },
                                     { "direction_id",_DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))},
                                     { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false} });
@@ -626,7 +633,7 @@ namespace PK.Forms
                                         new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)),
                                         new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, ((cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0]).Split('(')[1])
                                     })[0][0];
-                                _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", applicationId },
+                                _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                         { "faculty_short_name",  cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) },
                                         { "direction_id", dirID }, { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource},
                                     { "is_for_spo_and_vo", false}, { "profile_name", cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)} });
@@ -639,31 +646,31 @@ namespace PK.Forms
             {
                 uint otherDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "institution" } });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", otherDocID }, { "name", "Заявление о согласии на зачисление" } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", otherDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", otherDocID } });
             }
             if (cbDirectionDoc.Checked)
             {
                 uint otherDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "institution" } });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", otherDocID }, { "name", "Направление ПК" } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", otherDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", otherDocID } });
             }
             if (cbMedCertificate.Checked)
             {
                 uint otherDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "institution" } });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", otherDocID }, { "name", "Медицинская справка" } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", otherDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", otherDocID } });
             }
             if (cbCertificateHRD.Checked)
             {
                 uint otherDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "institution" } });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", otherDocID }, { "name", "Справка отдела кадров" } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", otherDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", otherDocID } });
             }
             if (cbPhotos.Checked)
             {
                 uint otherDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "institution" } });
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", otherDocID }, { "name", "4 фотографии 3x4" } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", applicationId }, { "documents_id", otherDocID } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", otherDocID } });
             }
         }
 
@@ -704,14 +711,14 @@ namespace PK.Forms
             {
                 cbDiplomaCopy.Enabled = false;
                 cbDiplomaCopy.Checked = false;
-            } 
+            }
             if (rbSpravka.Checked)
                 cbCertificateHRD.Enabled = true;
             else
             {
                 cbCertificateHRD.Enabled = false;
                 cbCertificateHRD.Checked = false;
-            } 
+            }
         }
 
         private void DirectionDocEnableDisable()
@@ -722,7 +729,7 @@ namespace PK.Forms
             {
                 cbDirectionDoc.Enabled = false;
                 cbDirectionDoc.Checked = false;
-            } 
+            }
         }
 
         private void rbCertificate_CheckedChanged(object sender, EventArgs e)
@@ -750,17 +757,50 @@ namespace PK.Forms
             DirectionDocEnableDisable();
         }
 
-        private void ApplicationEdit_Load(object sender, EventArgs e)
+        private void tbDistrict_Enter(object sender, EventArgs e)
         {
-            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
+            tbDistrict.AutoCompleteCustomSource.Clear();
+            tbDistrict.AutoCompleteCustomSource.AddRange(_KLADR.GetDistricts(tbRegion.Text).ToArray());
+
+            if (tbDistrict.AutoCompleteCustomSource.Count == 0)
             {
-                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
+                toolTip.Show("Не найдено адресов.", tbDistrict, 3000);
             }
-            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
+        }
+
+        private void tbCity_Enter(object sender, EventArgs e)
+        {
+            tbCity.AutoCompleteCustomSource.Clear();
+            tbCity.AutoCompleteCustomSource.AddRange(_KLADR.GetTowns(tbRegion.Text, tbDistrict.Text).ToArray());
+            tbCity.AutoCompleteCustomSource.AddRange(_KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, "").ToArray());
+
+            if (tbCity.AutoCompleteCustomSource.Count == 0)
             {
-                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
+                toolTip.Show("Не найдено адресов.", tbCity, 3000);
+            }
+        }
+
+        private void tbStreet_Enter(object sender, EventArgs e)
+        {
+            tbStreet.AutoCompleteCustomSource.Clear();
+            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbCity.Text, "").ToArray());
+            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, "", tbCity.Text).ToArray());
+
+            if (tbStreet.AutoCompleteCustomSource.Count == 0)
+            {
+                toolTip.Show("Не найдено адресов.", tbStreet, 3000);
+            }
+        }
+
+        private void tbHouse_Enter(object sender, EventArgs e)
+        {
+            tbHouse.AutoCompleteCustomSource.Clear();
+            tbHouse.AutoCompleteCustomSource.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbCity.Text, "", tbStreet.Text).ToArray());
+            tbHouse.AutoCompleteCustomSource.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, "", tbCity.Text, tbStreet.Text).ToArray());
+
+            if (tbHouse.AutoCompleteCustomSource.Count == 0)
+            {
+                toolTip.Show("Не найдено адресов.", tbStreet, 3000);
             }
         }
     }

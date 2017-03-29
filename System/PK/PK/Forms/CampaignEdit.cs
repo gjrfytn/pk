@@ -15,6 +15,18 @@ namespace PK.Forms
         public CampaignEdit(uint? campUid)
         {
             InitializeComponent();
+
+            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+
             _DB_Connection = new Classes.DB_Connector();
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _CampaignId = campUid;
@@ -785,7 +797,7 @@ namespace PK.Forms
                     else if (!_CampaignId.HasValue)
                             {
                                 SaveCampaign();
-                                Close();
+                                DialogResult = DialogResult.OK;
                             }
                         else
                         {
@@ -793,20 +805,6 @@ namespace PK.Forms
                         }
                 }
             }            
-        }
-
-        private void NewCampaignForm_Load(object sender, EventArgs e)
-        {
-            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
-            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
         }
     }
 }

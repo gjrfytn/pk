@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationEdit));
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbHouse = new System.Windows.Forms.TextBox();
+            this.tbCity = new System.Windows.Forms.TextBox();
+            this.tbDistrict = new System.Windows.Forms.TextBox();
+            this.tbStreet = new System.Windows.Forms.TextBox();
+            this.tbRegion = new System.Windows.Forms.TextBox();
             this.tbPostcode = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tbAppartment = new System.Windows.Forms.TextBox();
@@ -204,6 +205,7 @@
             this.cbCertificateCopy = new System.Windows.Forms.CheckBox();
             this.cbPassportCopy = new System.Windows.Forms.CheckBox();
             this.cbAppAdmission = new System.Windows.Forms.CheckBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
@@ -283,11 +285,11 @@
             // 
             // gbAdress
             // 
-            this.gbAdress.Controls.Add(this.textBox5);
-            this.gbAdress.Controls.Add(this.textBox4);
-            this.gbAdress.Controls.Add(this.textBox3);
-            this.gbAdress.Controls.Add(this.textBox2);
-            this.gbAdress.Controls.Add(this.textBox1);
+            this.gbAdress.Controls.Add(this.tbHouse);
+            this.gbAdress.Controls.Add(this.tbCity);
+            this.gbAdress.Controls.Add(this.tbDistrict);
+            this.gbAdress.Controls.Add(this.tbStreet);
+            this.gbAdress.Controls.Add(this.tbRegion);
             this.gbAdress.Controls.Add(this.tbPostcode);
             this.gbAdress.Controls.Add(this.label20);
             this.gbAdress.Controls.Add(this.tbAppartment);
@@ -306,50 +308,65 @@
             this.gbAdress.TabStop = false;
             this.gbAdress.Text = "Адрес регистрации";
             // 
-            // textBox5
+            // tbHouse
             // 
-            this.textBox5.Location = new System.Drawing.Point(572, 63);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(92, 22);
-            this.textBox5.TabIndex = 4;
+            this.tbHouse.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbHouse.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbHouse.Location = new System.Drawing.Point(572, 63);
+            this.tbHouse.Margin = new System.Windows.Forms.Padding(4);
+            this.tbHouse.Name = "tbHouse";
+            this.tbHouse.Size = new System.Drawing.Size(92, 22);
+            this.tbHouse.TabIndex = 4;
+            this.tbHouse.Enter += new System.EventHandler(this.tbHouse_Enter);
             // 
-            // textBox4
+            // tbCity
             // 
-            this.textBox4.Location = new System.Drawing.Point(882, 27);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(253, 22);
-            this.textBox4.TabIndex = 2;
+            this.tbCity.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbCity.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbCity.Location = new System.Drawing.Point(882, 27);
+            this.tbCity.Margin = new System.Windows.Forms.Padding(4);
+            this.tbCity.Name = "tbCity";
+            this.tbCity.Size = new System.Drawing.Size(253, 22);
+            this.tbCity.TabIndex = 2;
+            this.tbCity.Enter += new System.EventHandler(this.tbCity_Enter);
             // 
-            // textBox3
+            // tbDistrict
             // 
-            this.textBox3.Location = new System.Drawing.Point(504, 27);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(249, 22);
-            this.textBox3.TabIndex = 1;
+            this.tbDistrict.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbDistrict.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbDistrict.Location = new System.Drawing.Point(504, 27);
+            this.tbDistrict.Margin = new System.Windows.Forms.Padding(4);
+            this.tbDistrict.Name = "tbDistrict";
+            this.tbDistrict.Size = new System.Drawing.Size(249, 22);
+            this.tbDistrict.TabIndex = 1;
+            this.tbDistrict.Enter += new System.EventHandler(this.tbDistrict_Enter);
             // 
-            // textBox2
+            // tbStreet
             // 
-            this.textBox2.Location = new System.Drawing.Point(123, 64);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(329, 22);
-            this.textBox2.TabIndex = 3;
+            this.tbStreet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbStreet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbStreet.Location = new System.Drawing.Point(123, 64);
+            this.tbStreet.Margin = new System.Windows.Forms.Padding(4);
+            this.tbStreet.Name = "tbStreet";
+            this.tbStreet.Size = new System.Drawing.Size(329, 22);
+            this.tbStreet.TabIndex = 3;
+            this.tbStreet.Enter += new System.EventHandler(this.tbStreet_Enter);
             // 
-            // textBox1
+            // tbRegion
             // 
-            this.textBox1.Location = new System.Drawing.Point(123, 27);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(248, 22);
-            this.textBox1.TabIndex = 0;
+            this.tbRegion.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbRegion.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbRegion.Location = new System.Drawing.Point(123, 27);
+            this.tbRegion.Margin = new System.Windows.Forms.Padding(4);
+            this.tbRegion.Name = "tbRegion";
+            this.tbRegion.Size = new System.Drawing.Size(248, 22);
+            this.tbRegion.TabIndex = 0;
             // 
             // tbPostcode
             // 
             this.tbPostcode.Location = new System.Drawing.Point(1021, 65);
             this.tbPostcode.Margin = new System.Windows.Forms.Padding(4);
+            this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
             this.tbPostcode.Size = new System.Drawing.Size(115, 22);
             this.tbPostcode.TabIndex = 6;
@@ -2187,7 +2204,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ApplicationEdit";
             this.Text = "Заявление на поступление";
-            this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -2397,11 +2413,11 @@
         private System.Windows.Forms.ComboBox cbDirection12;
         private System.Windows.Forms.ComboBox cbDirection11;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbHouse;
+        private System.Windows.Forms.TextBox tbCity;
+        private System.Windows.Forms.TextBox tbDistrict;
+        private System.Windows.Forms.TextBox tbStreet;
+        private System.Windows.Forms.TextBox tbRegion;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Subject;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvExams_Year;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
@@ -2412,5 +2428,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

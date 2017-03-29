@@ -29,16 +29,24 @@
         private void InitializeComponent()
         {
             this.dgvAchievements = new System.Windows.Forms.DataGridView();
-            this.btSave = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btLoad = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cbCampaign = new System.Windows.Forms.ComboBox();
             this.dgvAchievements_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvAchievements_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvAchievements_MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvAchievements_Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvAchievements_CategoryID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btLoad = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbCampaign = new System.Windows.Forms.ComboBox();
+            this.btNew = new System.Windows.Forms.Button();
+            this.tbAchievementName = new System.Windows.Forms.TextBox();
+            this.cbAchievementType = new System.Windows.Forms.ComboBox();
+            this.tbMaxValue = new System.Windows.Forms.TextBox();
+            this.btAdd = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAchievements)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,13 +67,49 @@
             this.dgvAchievements.Size = new System.Drawing.Size(935, 363);
             this.dgvAchievements.TabIndex = 0;
             // 
+            // dgvAchievements_ID
+            // 
+            this.dgvAchievements_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvAchievements_ID.HeaderText = "ID";
+            this.dgvAchievements_ID.Name = "dgvAchievements_ID";
+            this.dgvAchievements_ID.ReadOnly = true;
+            this.dgvAchievements_ID.Visible = false;
+            // 
+            // dgvAchievements_Name
+            // 
+            this.dgvAchievements_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvAchievements_Name.HeaderText = "Наименование";
+            this.dgvAchievements_Name.Name = "dgvAchievements_Name";
+            // 
+            // dgvAchievements_MaxValue
+            // 
+            this.dgvAchievements_MaxValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvAchievements_MaxValue.HeaderText = "Баллы за достижение";
+            this.dgvAchievements_MaxValue.Name = "dgvAchievements_MaxValue";
+            this.dgvAchievements_MaxValue.Width = 80;
+            // 
+            // dgvAchievements_Category
+            // 
+            this.dgvAchievements_Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvAchievements_Category.HeaderText = "Категория";
+            this.dgvAchievements_Category.Name = "dgvAchievements_Category";
+            this.dgvAchievements_Category.ReadOnly = true;
+            // 
+            // dgvAchievements_CategoryID
+            // 
+            this.dgvAchievements_CategoryID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvAchievements_CategoryID.HeaderText = "ID категории";
+            this.dgvAchievements_CategoryID.Name = "dgvAchievements_CategoryID";
+            this.dgvAchievements_CategoryID.ReadOnly = true;
+            this.dgvAchievements_CategoryID.Visible = false;
+            // 
             // btSave
             // 
             this.btSave.Location = new System.Drawing.Point(775, 440);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 1;
-            this.btSave.Text = "Сохранить";
+            this.btSave.Text = "Сохранить таблицу";
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
@@ -106,49 +150,95 @@
             this.cbCampaign.TabIndex = 6;
             this.cbCampaign.SelectedIndexChanged += new System.EventHandler(this.cbCampaign_SelectedIndexChanged);
             // 
-            // dgvAchievements_ID
+            // btNew
             // 
-            this.dgvAchievements_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvAchievements_ID.HeaderText = "ID";
-            this.dgvAchievements_ID.Name = "dgvAchievements_ID";
-            this.dgvAchievements_ID.ReadOnly = true;
-            this.dgvAchievements_ID.Visible = false;
-            this.dgvAchievements_ID.Width = 24;
+            this.btNew.Location = new System.Drawing.Point(431, 440);
+            this.btNew.Name = "btNew";
+            this.btNew.Size = new System.Drawing.Size(143, 23);
+            this.btNew.TabIndex = 7;
+            this.btNew.Text = "Добавить достижение";
+            this.btNew.UseVisualStyleBackColor = true;
+            this.btNew.Click += new System.EventHandler(this.btNew_Click);
             // 
-            // dgvAchievements_Name
+            // tbAchievementName
             // 
-            this.dgvAchievements_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvAchievements_Name.HeaderText = "Наименование";
-            this.dgvAchievements_Name.Name = "dgvAchievements_Name";
+            this.tbAchievementName.Enabled = false;
+            this.tbAchievementName.Location = new System.Drawing.Point(399, 498);
+            this.tbAchievementName.Name = "tbAchievementName";
+            this.tbAchievementName.Size = new System.Drawing.Size(299, 20);
+            this.tbAchievementName.TabIndex = 8;
             // 
-            // dgvAchievements_MaxValue
+            // cbAchievementType
             // 
-            this.dgvAchievements_MaxValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvAchievements_MaxValue.HeaderText = "Баллы за достижение";
-            this.dgvAchievements_MaxValue.Name = "dgvAchievements_MaxValue";
-            this.dgvAchievements_MaxValue.Width = 80;
+            this.cbAchievementType.Enabled = false;
+            this.cbAchievementType.FormattingEnabled = true;
+            this.cbAchievementType.Location = new System.Drawing.Point(15, 498);
+            this.cbAchievementType.Name = "cbAchievementType";
+            this.cbAchievementType.Size = new System.Drawing.Size(356, 21);
+            this.cbAchievementType.TabIndex = 9;
             // 
-            // dgvAchievements_Category
+            // tbMaxValue
             // 
-            this.dgvAchievements_Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvAchievements_Category.HeaderText = "Категория";
-            this.dgvAchievements_Category.Name = "dgvAchievements_Category";
-            this.dgvAchievements_Category.ReadOnly = true;
+            this.tbMaxValue.Enabled = false;
+            this.tbMaxValue.Location = new System.Drawing.Point(741, 498);
+            this.tbMaxValue.Name = "tbMaxValue";
+            this.tbMaxValue.Size = new System.Drawing.Size(88, 20);
+            this.tbMaxValue.TabIndex = 10;
             // 
-            // dgvAchievements_CategoryID
+            // btAdd
             // 
-            this.dgvAchievements_CategoryID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvAchievements_CategoryID.HeaderText = "ID категории";
-            this.dgvAchievements_CategoryID.Name = "dgvAchievements_CategoryID";
-            this.dgvAchievements_CategoryID.ReadOnly = true;
-            this.dgvAchievements_CategoryID.Visible = false;
-            this.dgvAchievements_CategoryID.Width = 90;
+            this.btAdd.Enabled = false;
+            this.btAdd.Location = new System.Drawing.Point(872, 496);
+            this.btAdd.Name = "btAdd";
+            this.btAdd.Size = new System.Drawing.Size(75, 23);
+            this.btAdd.TabIndex = 11;
+            this.btAdd.Text = "Добавить";
+            this.btAdd.UseVisualStyleBackColor = true;
+            this.btAdd.Click += new System.EventHandler(this.btAdd_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Enabled = false;
+            this.label2.Location = new System.Drawing.Point(143, 478);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Тип достижения";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Enabled = false;
+            this.label4.Location = new System.Drawing.Point(469, 477);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(147, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Наименование достижения";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Enabled = false;
+            this.label5.Location = new System.Drawing.Point(726, 477);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(119, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Баллы за достижение";
             // 
             // InstitutionAchievementsEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(959, 475);
+            this.ClientSize = new System.Drawing.Size(959, 531);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.btAdd);
+            this.Controls.Add(this.tbMaxValue);
+            this.Controls.Add(this.cbAchievementType);
+            this.Controls.Add(this.tbAchievementName);
+            this.Controls.Add(this.btNew);
             this.Controls.Add(this.cbCampaign);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btLoad);
@@ -176,5 +266,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvAchievements_MaxValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvAchievements_Category;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvAchievements_CategoryID;
+        private System.Windows.Forms.Button btNew;
+        private System.Windows.Forms.TextBox tbAchievementName;
+        private System.Windows.Forms.ComboBox cbAchievementType;
+        private System.Windows.Forms.TextBox tbMaxValue;
+        private System.Windows.Forms.Button btAdd;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
