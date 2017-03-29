@@ -101,7 +101,7 @@ namespace PK.Forms
                                 });
                     }
 
-                    Close();
+                    DialogResult = DialogResult.OK;
                 }
                 else
                     MessageBox.Show("Не добавлено ни одной аудитории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);

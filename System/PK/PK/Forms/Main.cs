@@ -88,13 +88,13 @@ namespace PK.Forms
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
-            Forms.InstitutionAchievementsEdit form = new InstitutionAchievementsEdit();
+            InstitutionAchievementsEdit form = new InstitutionAchievementsEdit();
             form.ShowDialog();
         }
 
         private void menuStrip_Orders_Click(object sender, EventArgs e)
         {
-            Forms.Orders form = new Orders(_DB_Connection);
+            Orders form = new Orders(_DB_Connection);
             form.ShowDialog();
         }
     }
