@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
   `language` ENUM('Английский', 'Немецкий', 'Французский') NOT NULL COMMENT 'Изучаемый язык.',
   `registrator_login` VARCHAR(20) NOT NULL COMMENT 'Логин пользователя, занёсшего заявление.',
   `first_high_edu` TINYINT(1) NOT NULL COMMENT 'Высшее образование получает впервые.',
-  `mcdao` TINYINT(1) NOT NULL COMMENT 'МЦДАО.',
+  `mcado` TINYINT(1) NOT NULL COMMENT 'МЦАДО.',
   `chernobyl` TINYINT(1) NOT NULL COMMENT 'Чернобыльская зона.',
   `passing_examinations` TINYINT(1) NOT NULL COMMENT 'Сдаёт экзамены.',
   `priority_right` TINYINT(1) NOT NULL COMMENT 'Преимущественное право.',

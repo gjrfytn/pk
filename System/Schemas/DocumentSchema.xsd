@@ -32,6 +32,7 @@
           <xs:restriction base="xs:string">
             <xs:enumeration value="Bold"/>
             <xs:enumeration value="Italic"/>
+            <xs:enumeration value="Underline"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
@@ -144,7 +145,7 @@
       </xs:element>
     </xs:all>
   </xs:complexType>
-  <xs:complexType name="TBorders">
+  <xs:complexType name="TCellBorders">
     <xs:annotation>
       <xs:documentation xml:lang="ru">Параметры границ.</xs:documentation>
     </xs:annotation>
@@ -165,6 +166,43 @@
         </xs:annotation>
       </xs:element>
       <xs:element name="Bottom" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="TTableBorders">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Параметры границ таблицы.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="Left" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Top" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Right" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Bottom" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InsideH" type="TBorder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InsideV" type="TBorder" minOccurs="0">
         <xs:annotation>
           <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
         </xs:annotation>
@@ -339,6 +377,11 @@
                                       <xs:documentation xml:lang="ru">Таблица.</xs:documentation>
                                     </xs:annotation>
                                     <xs:all>
+                                      <xs:element name="Borders" type="TTableBorders" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Границы.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
                                       <xs:element name ="Numeration" type="xs:boolean">
                                         <xs:annotation>
                                           <xs:documentation xml:lang="ru">Создавать столбец с номерами строк.</xs:documentation>
@@ -360,7 +403,7 @@
                                                 <xs:documentation xml:lang="ru">Столбец.</xs:documentation>
                                               </xs:annotation>
                                               <xs:complexType>
-                                                <xs:sequence>
+                                                <xs:all>
                                                   <xs:element name="Caption" type="xs:string">
                                                     <xs:annotation>
                                                       <xs:documentation xml:lang="ru">Заголовок.</xs:documentation>
@@ -381,7 +424,7 @@
                                                       <xs:documentation xml:lang="ru">Ссылка на шрифт по ID.</xs:documentation>
                                                     </xs:annotation>
                                                   </xs:element>
-                                                </xs:sequence>
+                                                </xs:all>
                                               </xs:complexType>
                                             </xs:element>
                                           </xs:sequence>
@@ -424,7 +467,7 @@
                                           </xs:choice>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="Borders" type="TBorders" minOccurs="0">
+                                      <xs:element name="Borders" type="TTableBorders" minOccurs="0">
                                         <xs:annotation>
                                           <xs:documentation xml:lang="ru">Границы.</xs:documentation>
                                         </xs:annotation>
@@ -486,12 +529,12 @@
                                                           </xs:annotation>
                                                           <xs:complexType>
                                                             <xs:all>
-                                                              <xs:element name="Borders" type="TBorders" minOccurs="0">
+                                                              <xs:element name="Borders" type="TCellBorders" minOccurs="0">
                                                                 <xs:annotation>
                                                                   <xs:documentation xml:lang="ru">Границы.</xs:documentation>
                                                                 </xs:annotation>
                                                               </xs:element>
-                                                              <xs:element name="Paragraphs">
+                                                              <xs:element name="Paragraphs" minOccurs="0">
                                                                 <xs:annotation>
                                                                   <xs:documentation xml:lang="ru">Параграфы (строки).</xs:documentation>
                                                                 </xs:annotation>

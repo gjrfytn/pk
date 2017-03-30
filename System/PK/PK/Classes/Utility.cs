@@ -6,6 +6,8 @@ namespace PK.Classes
 {
     static class Utility
     {
+        public static readonly string DocumentsTemplatesPath = System.Configuration.ConfigurationManager.AppSettings["DocumentsTemplatesPath"];
+
         /// <summary>
         /// Отображает диалоговое окно с заголовком "Действие" и кнопками "Да" и "Нет".
         /// </summary>
@@ -143,6 +145,20 @@ namespace PK.Classes
             }
 
             return distributions;
+        }
+
+        public static void Print(string file)
+        {
+            // System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(file);
+            // info.Verb = "Print";
+            // info.CreateNoWindow = true;
+            // info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            // System.Diagnostics.Process.Start(info);
+            System.Diagnostics.Process.Start(file);
+
+            //p.WaitForExit();надо?
+            //p.Close();?
+            //p.Dispose();?
         }
     }
 }

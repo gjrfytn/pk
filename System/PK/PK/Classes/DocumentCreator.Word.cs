@@ -73,15 +73,22 @@ namespace PK.Classes
                                         int.Parse(merge.Element("EndColumn").Value)
                                         );
 
+                            foreach (Cell cell in table.Rows[index].Cells)
+                                while (cell.RemoveParagraphAt(1))
+                                    ;
+
                             foreach (XElement cellEl in row.Element("Cells").Elements())
                             {
                                 Cell cell = table.Rows[index].Cells[int.Parse(cellEl.Attribute("Column").Value)];
 
                                 MakeBorders(cell, cellEl.Element("Borders"));
-                                while (cell.RemoveParagraphAt(0))
-                                    ;
-                                foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
-                                    MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+
+                                if (cellEl.Element("Paragraphs") != null)
+                                {
+                                    cell.RemoveParagraphAt(0);
+                                    foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
+                                        MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                                }
                             }
 
                             if (row.Element("Height") != null)
@@ -198,14 +205,14 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
             static void MakeBorders(Table table, XElement borders)
             {
                 if (borders != null)
-                    foreach (XElement dir in borders.Elements())
+                    foreach (XElement place in borders.Elements())
                         table.SetBorder(
-                            (TableBorderType)System.Enum.Parse(typeof(TableBorderType), dir.Name.ToString()),
+                            (TableBorderType)System.Enum.Parse(typeof(TableBorderType), place.Name.ToString()),
                             new Border(
-                                borders.Element(dir.Name).Element("Style") != null ? _BorderStyles[borders.Element(dir.Name).Element("Style").Value] : BorderStyle.Tcbs_single,
-                             borders.Element(dir.Name).Element("Size") != null ? (BorderSize)(int.Parse(borders.Element(dir.Name).Element("Size").Value) - 1) : BorderSize.one,
+                                borders.Element(place.Name).Element("Style") != null ? _BorderStyles[borders.Element(place.Name).Element("Style").Value] : BorderStyle.Tcbs_single,
+                             borders.Element(place.Name).Element("Size") != null ? (BorderSize)(int.Parse(borders.Element(place.Name).Element("Size").Value) - 1) : BorderSize.one,
                                 0,
-                              borders.Element(dir.Name).Element("Color") != null ? _Colors[borders.Element(dir.Name).Element("Color").Value] : System.Drawing.Color.Black
+                              borders.Element(place.Name).Element("Color") != null ? _Colors[borders.Element(place.Name).Element("Color").Value] : System.Drawing.Color.Black
                                 ));
             }
 
@@ -241,6 +248,9 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                                 break;
                             case "Italic":
                                 paragraph.Italic();
+                                break;
+                            case "Underline":
+                                paragraph.UnderlineStyle(UnderlineStyle.singleLine);
                                 break;
                             default:
                                 throw new System.Exception("Reached unreacheable.");
@@ -281,6 +291,8 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 Table table = doc.InsertTable(1, colNames.Count);
                 table.Design = TableDesign.TableGrid;
 
+                MakeBorders(table, tableElem.Element("Borders"));
+
                 for (byte i = 0; i < colNames.Count; ++i)
                 {
                     Paragraph paragraph = table.Rows[0].Cells[i].InsertParagraph(colNames[i]);
@@ -303,7 +315,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     for (byte i = 0; i < row.Length; ++i)
                     {
                         Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numeration ? 1 : 0)].InsertParagraph(row[i].ToString());
-                        SetFont(paragraph, fonts, colFonts[i].Item2);
+                        SetFont(paragraph, fonts, colFonts[i + (byte)(numeration ? 1 : 0)].Item2);
                     }
                 }
 

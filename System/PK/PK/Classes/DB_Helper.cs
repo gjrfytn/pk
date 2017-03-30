@@ -9,7 +9,6 @@ namespace PK.Classes
     class DB_Helper
     {
         #region DictItemsNames
-
         public const string EduFormO = "Очная форма";
         #endregion
 

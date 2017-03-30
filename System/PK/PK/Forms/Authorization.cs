@@ -20,7 +20,6 @@ namespace PK.Forms
         }
 
         #region IDisposable Support
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>

@@ -25,7 +25,7 @@ namespace PK.Classes
           {"applicationEntrFirstName",  "entrants.first_name:id=@applicationEntrantID" },
           {"applicationEntrLastName",   "entrants.last_name:id=@applicationEntrantID" },
           {"applicationEntrMiddleName", "entrants.middle_name:id=@applicationEntrantID" },
-          {"applicationID",             "examinations.id" },
+          {"applicationID",             "applications.id" },
           {"applicationTime",           "applications.registration_time" },
           {"applicationRegistrLogin",   "applications.registrator_login" },
           {"applicationRegistrName",    "users.name:login=@applicationRegistrLogin" }
