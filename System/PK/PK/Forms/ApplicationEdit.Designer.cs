@@ -34,7 +34,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
             this.tbHouse = new System.Windows.Forms.TextBox();
-            this.tbCity = new System.Windows.Forms.TextBox();
+            this.tbTown = new System.Windows.Forms.TextBox();
             this.tbDistrict = new System.Windows.Forms.TextBox();
             this.tbStreet = new System.Windows.Forms.TextBox();
             this.tbRegion = new System.Windows.Forms.TextBox();
@@ -104,7 +104,7 @@
             this.cbTarget = new System.Windows.Forms.CheckBox();
             this.cbOlympiad = new System.Windows.Forms.CheckBox();
             this.cbExams = new System.Windows.Forms.CheckBox();
-            this.cbSpecial = new System.Windows.Forms.CheckBox();
+            this.cbQuote = new System.Windows.Forms.CheckBox();
             this.cbChernobyl = new System.Windows.Forms.CheckBox();
             this.cbMCDAO = new System.Windows.Forms.CheckBox();
             this.cbHostleNeeded = new System.Windows.Forms.CheckBox();
@@ -196,7 +196,7 @@
             this.btPrint = new System.Windows.Forms.Button();
             this.btSave = new System.Windows.Forms.Button();
             this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
-            this.cbAppEnrollment = new System.Windows.Forms.CheckBox();
+            this.cbAgreed = new System.Windows.Forms.CheckBox();
             this.cbPhotos = new System.Windows.Forms.CheckBox();
             this.cbMedCertificate = new System.Windows.Forms.CheckBox();
             this.cbDirectionDoc = new System.Windows.Forms.CheckBox();
@@ -286,7 +286,7 @@
             // gbAdress
             // 
             this.gbAdress.Controls.Add(this.tbHouse);
-            this.gbAdress.Controls.Add(this.tbCity);
+            this.gbAdress.Controls.Add(this.tbTown);
             this.gbAdress.Controls.Add(this.tbDistrict);
             this.gbAdress.Controls.Add(this.tbStreet);
             this.gbAdress.Controls.Add(this.tbRegion);
@@ -319,16 +319,16 @@
             this.tbHouse.TabIndex = 4;
             this.tbHouse.Enter += new System.EventHandler(this.tbHouse_Enter);
             // 
-            // tbCity
+            // tbTown
             // 
-            this.tbCity.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbCity.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbCity.Location = new System.Drawing.Point(882, 27);
-            this.tbCity.Margin = new System.Windows.Forms.Padding(4);
-            this.tbCity.Name = "tbCity";
-            this.tbCity.Size = new System.Drawing.Size(253, 22);
-            this.tbCity.TabIndex = 2;
-            this.tbCity.Enter += new System.EventHandler(this.tbCity_Enter);
+            this.tbTown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tbTown.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbTown.Location = new System.Drawing.Point(882, 27);
+            this.tbTown.Margin = new System.Windows.Forms.Padding(4);
+            this.tbTown.Name = "tbTown";
+            this.tbTown.Size = new System.Drawing.Size(253, 22);
+            this.tbTown.TabIndex = 2;
+            this.tbTown.Enter += new System.EventHandler(this.tbCity_Enter);
             // 
             // tbDistrict
             // 
@@ -1011,7 +1011,7 @@
             this.gbAttributes.Controls.Add(this.cbTarget);
             this.gbAttributes.Controls.Add(this.cbOlympiad);
             this.gbAttributes.Controls.Add(this.cbExams);
-            this.gbAttributes.Controls.Add(this.cbSpecial);
+            this.gbAttributes.Controls.Add(this.cbQuote);
             this.gbAttributes.Controls.Add(this.cbChernobyl);
             this.gbAttributes.Controls.Add(this.cbMCDAO);
             this.gbAttributes.Controls.Add(this.cbHostleNeeded);
@@ -1070,17 +1070,17 @@
             this.cbExams.Text = "Сдает экзамены";
             this.cbExams.UseVisualStyleBackColor = true;
             // 
-            // cbSpecial
+            // cbQuote
             // 
-            this.cbSpecial.AutoSize = true;
-            this.cbSpecial.Location = new System.Drawing.Point(447, 23);
-            this.cbSpecial.Margin = new System.Windows.Forms.Padding(4);
-            this.cbSpecial.Name = "cbSpecial";
-            this.cbSpecial.Size = new System.Drawing.Size(116, 20);
-            this.cbSpecial.TabIndex = 3;
-            this.cbSpecial.Text = "Особая квота";
-            this.cbSpecial.UseVisualStyleBackColor = true;
-            this.cbSpecial.CheckedChanged += new System.EventHandler(this.cbSpecial_CheckedChanged);
+            this.cbQuote.AutoSize = true;
+            this.cbQuote.Location = new System.Drawing.Point(447, 23);
+            this.cbQuote.Margin = new System.Windows.Forms.Padding(4);
+            this.cbQuote.Name = "cbQuote";
+            this.cbQuote.Size = new System.Drawing.Size(116, 20);
+            this.cbQuote.TabIndex = 3;
+            this.cbQuote.Text = "Особая квота";
+            this.cbQuote.UseVisualStyleBackColor = true;
+            this.cbQuote.CheckedChanged += new System.EventHandler(this.cbSpecial_CheckedChanged);
             // 
             // cbChernobyl
             // 
@@ -2048,9 +2048,11 @@
             this.btClose.TabIndex = 6;
             this.btClose.Text = "Закрыть";
             this.btClose.UseVisualStyleBackColor = true;
+            this.btClose.Click += new System.EventHandler(this.btClose_Click);
             // 
             // btPrint
             // 
+            this.btPrint.Enabled = false;
             this.btPrint.Location = new System.Drawing.Point(989, 981);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
@@ -2072,7 +2074,7 @@
             // 
             // gbWithdrawDocs
             // 
-            this.gbWithdrawDocs.Controls.Add(this.cbAppEnrollment);
+            this.gbWithdrawDocs.Controls.Add(this.cbAgreed);
             this.gbWithdrawDocs.Controls.Add(this.cbPhotos);
             this.gbWithdrawDocs.Controls.Add(this.cbMedCertificate);
             this.gbWithdrawDocs.Controls.Add(this.cbDirectionDoc);
@@ -2090,16 +2092,16 @@
             this.gbWithdrawDocs.TabStop = false;
             this.gbWithdrawDocs.Text = "Забираемые документы";
             // 
-            // cbAppEnrollment
+            // cbAgreed
             // 
-            this.cbAppEnrollment.AutoSize = true;
-            this.cbAppEnrollment.Location = new System.Drawing.Point(249, 34);
-            this.cbAppEnrollment.Margin = new System.Windows.Forms.Padding(4);
-            this.cbAppEnrollment.Name = "cbAppEnrollment";
-            this.cbAppEnrollment.Size = new System.Drawing.Size(274, 20);
-            this.cbAppEnrollment.TabIndex = 1;
-            this.cbAppEnrollment.Text = "Заявление о согласии на зачисление";
-            this.cbAppEnrollment.UseVisualStyleBackColor = true;
+            this.cbAgreed.AutoSize = true;
+            this.cbAgreed.Location = new System.Drawing.Point(249, 34);
+            this.cbAgreed.Margin = new System.Windows.Forms.Padding(4);
+            this.cbAgreed.Name = "cbAgreed";
+            this.cbAgreed.Size = new System.Drawing.Size(274, 20);
+            this.cbAgreed.TabIndex = 1;
+            this.cbAgreed.Text = "Заявление о согласии на зачисление";
+            this.cbAgreed.UseVisualStyleBackColor = true;
             // 
             // cbPhotos
             // 
@@ -2204,6 +2206,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ApplicationEdit";
             this.Text = "Заявление на поступление";
+            this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -2326,7 +2329,7 @@
         private System.Windows.Forms.CheckBox cbTarget;
         private System.Windows.Forms.CheckBox cbOlympiad;
         private System.Windows.Forms.CheckBox cbExams;
-        private System.Windows.Forms.CheckBox cbSpecial;
+        private System.Windows.Forms.CheckBox cbQuote;
         private System.Windows.Forms.CheckBox cbChernobyl;
         private System.Windows.Forms.CheckBox cbMCDAO;
         private System.Windows.Forms.CheckBox cbHostleNeeded;
@@ -2344,7 +2347,7 @@
         private System.Windows.Forms.Button btPrint;
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.GroupBox gbWithdrawDocs;
-        private System.Windows.Forms.CheckBox cbAppEnrollment;
+        private System.Windows.Forms.CheckBox cbAgreed;
         private System.Windows.Forms.CheckBox cbPhotos;
         private System.Windows.Forms.CheckBox cbMedCertificate;
         private System.Windows.Forms.CheckBox cbDirectionDoc;
@@ -2414,7 +2417,7 @@
         private System.Windows.Forms.ComboBox cbDirection11;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox tbHouse;
-        private System.Windows.Forms.TextBox tbCity;
+        private System.Windows.Forms.TextBox tbTown;
         private System.Windows.Forms.TextBox tbDistrict;
         private System.Windows.Forms.TextBox tbStreet;
         private System.Windows.Forms.TextBox tbRegion;

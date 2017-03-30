@@ -16,21 +16,10 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
-            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
-
             _DB_Connection = new Classes.DB_Connector();
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _CampaignId = campUid;
-           
+
             cbState.SelectedIndex = 0;
             cbType.SelectedIndex = 0;
 
@@ -160,12 +149,12 @@ namespace PK.Forms
             {
                 bool found = false;
                 foreach (DataGridViewRow v in dgvEntranceTests.Rows)
-                    if (v.Cells[0].Value.ToString() == r.Cells[0].Value.ToString())
+                    if ((v.Cells[0].Value.ToString() == r.Cells[0].Value.ToString())&&(v.Cells[3].Value==r.Cells[4].Value))
                         found = true;
                 if (!found)
                 {
-                    dgvEntranceTests.Rows.Add(r.Cells[0].Value.ToString(), r.Cells[2].Value.ToString(), r.Cells[3].Value.ToString());
-                    for (int i=3; i< dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells.Count;i++)
+                    dgvEntranceTests.Rows.Add(r.Cells[0].Value.ToString(), r.Cells[2].Value.ToString(), r.Cells[3].Value.ToString(), r.Cells[4].Value);
+                    for (int i=4; i< dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells.Count; i++)
                     {
                         (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Математика");
                         (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Русский язык");
@@ -174,13 +163,13 @@ namespace PK.Forms
 
                         switch (i)
                         {
-                            case 3:
+                            case 4:
                                 dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i].Value = "Математика";
                                 break;
-                            case 4:
+                            case 5:
                                 dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i].Value = "Физика";
                                 break;
-                            case 5:
+                            case 6:
                                 dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i].Value = "Русский язык";
                                 break;
                         }
@@ -199,6 +188,7 @@ namespace PK.Forms
                             { "end_year", Convert.ToInt32(cbEndYear.SelectedItem) },
                             { "status_dict_id",  34}, { "status_id", _DB_Helper.GetDictionaryItemID(34, cbState.SelectedItem.ToString()) },                    
                             { "type_dict_id",  38}, { "type_id", _DB_Helper.GetDictionaryItemID(38, cbType.SelectedItem.ToString()) } });
+            _CampaignId = campaignId;
 
             foreach (var v in lbEduFormsChoosen.Items)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
@@ -268,18 +258,20 @@ namespace PK.Forms
                 });
             
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-                    for (int i = 1; i < r.Cells.Count-2; i++)
+                    for (int i = 1; i < r.Cells.Count-3; i++)
                     {
                     bool found = false;
-                    uint subjectId = _DB_Helper.GetDictionaryItemID(1, r.Cells[i + 2].Value.ToString());
+                    uint subjectId = _DB_Helper.GetDictionaryItemID(1, r.Cells[i + 3].Value.ToString());
 
                     foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS,
-                        new string[] { "priority", "direction_id", "subject_dict_id", "subject_id" },
+                        new string[] { "priority", "direction_id", "subject_dict_id", "subject_id", "direction_faculty" },
                         new List<Tuple<string, Relation, object>>
                             {
-                                    new Tuple<string, Relation, object> ("direction_id", Relation.EQUAL, r.Cells[0].Value),
-                                    new Tuple<string, Relation, object> ("subject_dict_id", Relation.EQUAL, 1),
-                                    new Tuple<string, Relation, object> ("subject_id", Relation.EQUAL, subjectId)
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL,_CampaignId),
+                                new Tuple<string, Relation, object>("direction_faculty", Relation.EQUAL, r.Cells[3].Value),
+                                new Tuple<string, Relation, object> ("direction_id", Relation.EQUAL, r.Cells[0].Value),
+                                new Tuple<string, Relation, object> ("subject_dict_id", Relation.EQUAL, 1),
+                                new Tuple<string, Relation, object> ("subject_id", Relation.EQUAL, subjectId)
                             }))
 
                         if (Convert.ToInt32(v[0]) == i)
@@ -291,7 +283,9 @@ namespace PK.Forms
                                 { "priority", i}
                             }, new Dictionary<string, object>
                             {
+                                { "campaign_id", _CampaignId},
                                 { "direction_id", v[1] },
+                                { "direction_faculty", v[4]},
                                 { "subject_dict_id", v[2] },
                                 { "subject_id", v[3] }
                             });
@@ -301,6 +295,8 @@ namespace PK.Forms
                     if (!found)
                         _DB_Connection.Insert(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object>
                         {
+                            { "campaign_id", _CampaignId},
+                            { "direction_faculty", r.Cells[3].Value },
                             { "direction_id", r.Cells[0].Value },
                             { "subject_dict_id", 1 },
                             { "subject_id", subjectId },
@@ -508,45 +504,45 @@ namespace PK.Forms
 
 
             oldList = _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[]
-            { "direction_id", "subject_dict_id", "subject_id","priority"});
+            { "direction_id", "subject_dict_id", "subject_id", "priority", "campaign_id", "direction_faculty"});
 
             newList.Clear();
             foreach (DataGridViewRow r in dgvEntranceTests.Rows)
             {
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[3].Value.ToString()).ToString(), "1"});
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[4].Value.ToString()).ToString(), "1", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
 
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[4].Value.ToString()).ToString(), "2"});
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[5].Value.ToString()).ToString(), "2", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
 
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[5].Value.ToString()).ToString(), "3"});
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[6].Value.ToString()).ToString(), "3", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
             }                
 
             foreach (var v in oldList)
             {
                 bool found = false;
                 foreach (var r in newList)
-                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1]) && (v[2].ToString() == r[2]))
+                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1]) && (v[2].ToString() == r[2])&&(v[4].ToString()==r[4])&&(v[5].ToString()==r[5]))
                     {
                         _DB_Connection.Update(DB_Table.ENTRANCE_TESTS,
                         new Dictionary<string, object> { { "priority", int.Parse(r[3]) } },
                         new Dictionary<string, object> { { "direction_id", v[0] }, { "subject_dict_id", v[1] },
-                            { "subject_id", v[2]} });
-                        newList.RemoveAt(newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString()) && (x[2] == v[2].ToString()))));
+                            { "subject_id", v[2]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5] } });
+                        newList.RemoveAt(newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString()) && (x[2] == v[2].ToString()) && (v[4].ToString() == x[4]) && (v[5].ToString() == x[5]))));
                         found = true;
                         break;
                     }
                 if (!found)
                     _DB_Connection.Delete(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object> { { "direction_id", (uint)(v[0]) },
                         { "subject_dict_id", (uint)(v[1]) }, { "subject_id", (uint)(v[2]) },
-                    { "priority", v[3]} });
+                    { "priority", v[3]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5]} });
             }
 
             foreach (var v in newList)
                 _DB_Connection.Insert(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object>
                 { { "direction_id", uint.Parse(v[0]) }, { "subject_dict_id", uint.Parse(v[1]) }, { "subject_id", uint.Parse(v[2]) },
-                    { "priority", int.Parse(v[3])}});
+                    { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5]} });
         }
 
         void LoadCampaign()
@@ -641,10 +637,14 @@ namespace PK.Forms
                             r.Cells[i].Value = v[i - 3].ToString();
             UpdateProfiliesTable();
 
-            foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[] { "direction_id", "subject_dict_id", "subject_id", "priority" }))
+            foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[] { "direction_id", "subject_dict_id", "subject_id", "priority", "direction_faculty" },
+                new List<Tuple<string, Relation, object>>
+                {
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                }))                
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-                    if (v[0].ToString() == r.Cells[0].Value.ToString())
-                        r.Cells[2 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(1, (uint)v[2]);
+                    if ((v[0].ToString() == r.Cells[0].Value.ToString())&&(v[4].ToString()== r.Cells[3].Value.ToString()))
+                        r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(1, (uint)v[2]);
         }
 
         private void btAddEduLevel_Click(object sender, EventArgs e)
@@ -777,7 +777,7 @@ namespace PK.Forms
             else
             {
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-                    for (int i = 3; i < r.Cells.Count; i++)
+                    for (int i = 4; i < r.Cells.Count; i++)
                         for (int j = i + 1; j < r.Cells.Count; j++)
                         {
                             if ((r.Cells[i] as DataGridViewComboBoxCell).Value.ToString() ==
@@ -805,6 +805,20 @@ namespace PK.Forms
                         }
                 }
             }            
+        }
+
+        private void CampaignEdit_Load(object sender, EventArgs e)
+        {
+            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
         }
     }
 }

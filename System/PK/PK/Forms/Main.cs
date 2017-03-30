@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace PK.Forms
 {
     public partial class Main : Form
     {
-        Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
         string _UsersLogin;
 
         public Main(byte userRole, string usersLogin)
@@ -14,6 +16,18 @@ namespace PK.Forms
 
             _UsersLogin = usersLogin;
             _DB_Connection = new Classes.DB_Connector();
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+
+            foreach (var application in _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "number", "entrant_id" }))
+            {
+                object[] names = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "last_name", "first_name", "middle_name" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[2])
+                    })[0];
+                dgvApplications.Rows.Add(application[0], application[1], names[0], names[1], names[2]);
+            }
+
         }
 
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
@@ -24,13 +38,13 @@ namespace PK.Forms
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(1, _UsersLogin);
+            ApplicationEdit form = new ApplicationEdit(6, _UsersLogin, null);
             form.ShowDialog();
         }
 
         private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(1, _UsersLogin);
+            ApplicationEdit form = new ApplicationEdit(6, _UsersLogin, null);
             form.ShowDialog();
         }
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
@@ -95,6 +109,12 @@ namespace PK.Forms
         private void menuStrip_Orders_Click(object sender, EventArgs e)
         {
             Orders form = new Orders(_DB_Connection);
+            form.ShowDialog();
+        }
+
+        private void dgvApplications_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ApplicationEdit form = new ApplicationEdit(6, _UsersLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
             form.ShowDialog();
         }
     }

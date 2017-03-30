@@ -35,6 +35,7 @@
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Exams = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Orders = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Univesity = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,9 +50,15 @@
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip_Orders = new System.Windows.Forms.ToolStripMenuItem();
+            this.dgvApplications = new System.Windows.Forms.DataGridView();
+            this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip
@@ -60,7 +67,7 @@
             this.toolStrip_CreateApplication});
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(682, 25);
+            this.toolStrip.Size = new System.Drawing.Size(1008, 25);
             this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -83,7 +90,7 @@
             this.menuStrip_Help});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(682, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1008, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -110,6 +117,13 @@
             this.menuStrip_Campaign_Exams.Size = new System.Drawing.Size(192, 22);
             this.menuStrip_Campaign_Exams.Text = "Экзамены";
             this.menuStrip_Campaign_Exams.Click += new System.EventHandler(this.menuStrip_Campaign_Exams_Click);
+            // 
+            // menuStrip_Orders
+            // 
+            this.menuStrip_Orders.Name = "menuStrip_Orders";
+            this.menuStrip_Orders.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Orders.Text = "Приказы";
+            this.menuStrip_Orders.Click += new System.EventHandler(this.menuStrip_Orders_Click);
             // 
             // menuStrip_Entrants
             // 
@@ -219,18 +233,67 @@
             this.menuStrip_OlympDictionary.Text = "Справочник олимпиад ФИС";
             this.menuStrip_OlympDictionary.Click += new System.EventHandler(this.menuStrip_OlympDictionary_Click);
             // 
-            // menuStrip_Orders
+            // dgvApplications
             // 
-            this.menuStrip_Orders.Name = "menuStrip_Orders";
-            this.menuStrip_Orders.Size = new System.Drawing.Size(192, 22);
-            this.menuStrip_Orders.Text = "Приказы";
-            this.menuStrip_Orders.Click += new System.EventHandler(this.menuStrip_Orders_Click);
+            this.dgvApplications.AllowUserToAddRows = false;
+            this.dgvApplications.AllowUserToDeleteRows = false;
+            this.dgvApplications.AllowUserToResizeRows = false;
+            this.dgvApplications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvApplications.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvApplications_ID,
+            this.dgvApplications_Number,
+            this.dgvApplications_LastName,
+            this.dgvApplications_FirstName,
+            this.dgvApplications_MiddleName});
+            this.dgvApplications.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvApplications.Location = new System.Drawing.Point(0, 49);
+            this.dgvApplications.MultiSelect = false;
+            this.dgvApplications.Name = "dgvApplications";
+            this.dgvApplications.ReadOnly = true;
+            this.dgvApplications.RowHeadersVisible = false;
+            this.dgvApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvApplications.Size = new System.Drawing.Size(1008, 412);
+            this.dgvApplications.TabIndex = 2;
+            this.dgvApplications.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellContentDoubleClick);
+            // 
+            // dgvApplications_ID
+            // 
+            this.dgvApplications_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_ID.HeaderText = "ID";
+            this.dgvApplications_ID.Name = "dgvApplications_ID";
+            this.dgvApplications_ID.Width = 43;
+            // 
+            // dgvApplications_Number
+            // 
+            this.dgvApplications_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_Number.HeaderText = "Номер";
+            this.dgvApplications_Number.Name = "dgvApplications_Number";
+            this.dgvApplications_Number.Width = 66;
+            // 
+            // dgvApplications_LastName
+            // 
+            this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_LastName.HeaderText = "Фамилия";
+            this.dgvApplications_LastName.Name = "dgvApplications_LastName";
+            // 
+            // dgvApplications_FirstName
+            // 
+            this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_FirstName.HeaderText = "Имя";
+            this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
+            // 
+            // dgvApplications_MiddleName
+            // 
+            this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_MiddleName.HeaderText = "Отчество";
+            this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(682, 461);
+            this.ClientSize = new System.Drawing.Size(1008, 461);
+            this.Controls.Add(this.dgvApplications);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
@@ -241,6 +304,7 @@
             this.toolStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,6 +333,12 @@
         private System.Windows.Forms.ToolStripMenuItem toolStrip_FisImport;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_InstitutionAchievements;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Orders;
+        private System.Windows.Forms.DataGridView dgvApplications;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
     }
 }
 
