@@ -5,7 +5,7 @@ namespace PK.Classes
 {
     class DB_Connector : System.IDisposable
     {
-        MySqlConnection _Connection;
+        private MySqlConnection _Connection;
 
         public DB_Connector()
         {
@@ -189,9 +189,9 @@ namespace PK.Classes
             return ExecuteSelect(cmd);
         }
 
-        static string GetTableName(DB_Table table) => System.Enum.GetName(typeof(DB_Table), table).ToLower();
+        private static string GetTableName(DB_Table table) => System.Enum.GetName(typeof(DB_Table), table).ToLower();
 
-        static List<object[]> ExecuteSelect(MySqlCommand cmd)
+        private static List<object[]> ExecuteSelect(MySqlCommand cmd)
         {
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {

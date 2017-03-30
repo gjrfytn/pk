@@ -6,8 +6,8 @@ namespace PK.Classes
 {
     static class FIS_Packager
     {
-        static readonly Dictionary<uint, char> EduFormLiterals = new Dictionary<uint, char>() { { 11, 'Д' }, { 12, 'В' }, { 10, 'З' } };
-        static readonly Dictionary<uint, string> EduSourceLiterals = new Dictionary<uint, string>() { { 14, "ОО" }, { 15, "СН" }, { 16, "ЦН" }, { 20, "КВ" } };
+        private static readonly Dictionary<uint, char> EduFormLiterals = new Dictionary<uint, char>() { { 11, 'Д' }, { 12, 'В' }, { 10, 'З' } };
+        private static readonly Dictionary<uint, string> EduSourceLiterals = new Dictionary<uint, string>() { { 14, "ОО" }, { 15, "СН" }, { 16, "ЦН" }, { 20, "КВ" } };
 
         public static PackageData MakePackage(DB_Connector connection)
         {
@@ -21,7 +21,7 @@ namespace PK.Classes
                 );
         }
 
-        static CampaignInfo PackCampaignInfo(DB_Connector connection)
+        private static CampaignInfo PackCampaignInfo(DB_Connector connection)
         {
             List<Campaign> campaigns = new List<Campaign>();
             foreach (object[] row in connection.Select(DB_Table.CAMPAIGNS))
@@ -53,7 +53,7 @@ namespace PK.Classes
             return new CampaignInfo(campaigns);
         }
 
-        static AdmissionInfo PackAdmissionInfo(DB_Connector connection)
+        private static AdmissionInfo PackAdmissionInfo(DB_Connector connection)
         {
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
@@ -223,7 +223,7 @@ namespace PK.Classes
             return new AdmissionInfo(admissionVolumes, null, competitiveGroups);//TODO null
         }
 
-        static List<InstitutionAchievement> PackInstitutionAchievements(DB_Connector connection)
+        private static List<InstitutionAchievement> PackInstitutionAchievements(DB_Connector connection)
         {
             List<InstitutionAchievement> achievements = new List<InstitutionAchievement>();
 
@@ -243,7 +243,7 @@ namespace PK.Classes
             return null;
         }
 
-        static List<TargetOrganizationImp> PackTargetOrganizations(DB_Connector connection)
+        private static List<TargetOrganizationImp> PackTargetOrganizations(DB_Connector connection)
         {
             List<TargetOrganizationImp> organizations = new List<TargetOrganizationImp>();
 
@@ -256,7 +256,7 @@ namespace PK.Classes
             return null;
         }
 
-        static List<Application> PackApplications(DB_Connector connection)
+        private static List<Application> PackApplications(DB_Connector connection)
         {
             /*List<Application> applications = new List<Application>();
 
@@ -313,7 +313,7 @@ namespace PK.Classes
             return null;
         }
 
-        static Orders PackOrders(DB_Connector connection)
+        private static Orders PackOrders(DB_Connector connection)
         {
             return null;
         }

@@ -7,9 +7,9 @@ namespace PK.Forms
 {
     partial class ExaminationEdit : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly Classes.DB_Helper _DB_Helper;
-        readonly uint? _ID;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly uint? _ID;
 
         public ExaminationEdit(Classes.DB_Connector connection, uint? id)
         {

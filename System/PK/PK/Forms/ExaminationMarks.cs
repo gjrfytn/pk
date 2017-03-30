@@ -6,8 +6,8 @@ namespace PK.Forms
 {
     partial class ExaminationMarks : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly uint _ExaminationID;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly uint _ExaminationID;
 
         public ExaminationMarks(Classes.DB_Connector connection, uint examinationID)
         {

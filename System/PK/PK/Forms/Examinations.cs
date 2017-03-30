@@ -7,7 +7,7 @@ namespace PK.Forms
 {
     partial class Examinations : Form
     {
-        readonly Dictionary<char, string> _NameCodes = new Dictionary<char, string>
+        private readonly Dictionary<char, string> _NameCodes = new Dictionary<char, string>
         {
             {'А',"Q" },{'Б',"W" },{'В',"E" },{'Г',"R" },{'Д',"T" },{'Е',"Y" },{'Ё',"U" },
             {'Ж',"I" },{'З',"O" },{'И',"P" },{'Й',"A" },{'К',"S" },{'Л',"D" },{'М',"F" },
@@ -16,8 +16,8 @@ namespace PK.Forms
             {'Ю',"AC" },{'Я',"MK" }
         };
 
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly Classes.DB_Helper _DB_Helper;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
 
         public Examinations(Classes.DB_Connector connection)
         {
@@ -161,7 +161,7 @@ namespace PK.Forms
             form.ShowDialog();
         }
 
-        void UpdateTable()
+        private void UpdateTable()
         {
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(1);
 
@@ -176,7 +176,7 @@ namespace PK.Forms
                     );
         }
 
-        bool ExaminationHasMarks(uint id)
+        private bool ExaminationHasMarks(uint id)
         {
             return _DB_Connection.Select(
                      DB_Table.ENTRANTS_EXAMINATIONS_MARKS,

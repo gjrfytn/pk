@@ -4,12 +4,12 @@ namespace PK.Classes
 {
     static partial class DocumentCreator
     {
-        static readonly Dictionary<string, System.Func<string>> _PH_SingleSpecial = new Dictionary<string, System.Func<string>>
+        private static readonly Dictionary<string, System.Func<string>> _PH_SingleSpecial = new Dictionary<string, System.Func<string>>
         {
           {"PC_Name", ()=>System.Windows.Forms.SystemInformation.ComputerName}
         };
 
-        static readonly Dictionary<string, string> _PH_Single = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> _PH_Single = new Dictionary<string, string>
         {
           {"campaignName",              "campaigns.name" },
           {"campaignStartYear",         "campaigns.start_year" },
@@ -31,7 +31,7 @@ namespace PK.Classes
           {"applicationRegistrName",    "users.name:login=@applicationRegistrLogin" }
         };
 
-        static readonly Dictionary<string, System.Func<object, string>> _PH_Functions = new Dictionary<string, System.Func<object, string>>
+        private static readonly Dictionary<string, System.Func<object, string>> _PH_Functions = new Dictionary<string, System.Func<object, string>>
         {
             {"UPPERCASE",               (o)=>o.ToString().ToUpper()},
             {"DATE_ONLY",               (o)=>((System.DateTime)o).ToShortDateString()},
@@ -40,7 +40,7 @@ namespace PK.Classes
             {"FIRST_LETTER_DOT",        (o)=>o.ToString()[0]+"."}
         };
 
-        static readonly Dictionary<string, string> _PH_Table = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> _PH_Table = new Dictionary<string, string>
         {
             {"campaignEduForms",    "get_campaign_edu_forms"},
             {"entrantsMarks",       "get_entrants_marks"}

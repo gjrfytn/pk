@@ -9,14 +9,14 @@ namespace PK.Classes
     {
         static class Word
         {
-            static readonly Dictionary<string, Alignment> _Alignments = new Dictionary<string, Alignment>
+            private static readonly Dictionary<string, Alignment> _Alignments = new Dictionary<string, Alignment>
             {
                 { "Center",Alignment.center},
                 { "Right",Alignment.right},
                 { "Both",Alignment.both}
             };
 
-            static readonly Dictionary<string, BorderStyle> _BorderStyles = new Dictionary<string, BorderStyle>
+            private static readonly Dictionary<string, BorderStyle> _BorderStyles = new Dictionary<string, BorderStyle>
             {
                 { "Single",BorderStyle.Tcbs_single},
                 { "Dashed",BorderStyle.Tcbs_dashed},
@@ -33,7 +33,7 @@ namespace PK.Classes
                 Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
             }
 
-            static void Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            private static void Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -102,7 +102,7 @@ namespace PK.Classes
                 doc.Save();
             }
 
-            static void AddCoreProperties(DocX doc)
+            private static void AddCoreProperties(DocX doc)
             {
                 System.IO.Packaging.PackagePart coreProp = doc.PackagePart.Package.CreatePart(
                     new System.Uri("/docProps/core.xml", System.UriKind.Relative),
@@ -131,7 +131,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     );
             }
 
-            static void ApplyProperties(DocX doc, XElement properties)
+            private static void ApplyProperties(DocX doc, XElement properties)
             {
                 if (properties.Element("Borders") != null)
                     AddBorders(doc);
@@ -164,7 +164,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
-            static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (parElem.Element("Alighment") != null)
                     paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
@@ -202,7 +202,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     }
             }
 
-            static void MakeBorders(Table table, XElement borders)
+            private static void MakeBorders(Table table, XElement borders)
             {
                 if (borders != null)
                     foreach (XElement place in borders.Elements())
@@ -216,7 +216,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                                 ));
             }
 
-            static void MakeBorders(Cell cell, XElement borders)
+            private static void MakeBorders(Cell cell, XElement borders)
             {
                 if (borders != null)
                     foreach (XElement dir in borders.Elements())
@@ -230,7 +230,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                                 ));
             }
 
-            static void SetFont(Paragraph paragraph, Dictionary<string, Font> fonts, string fontID)
+            private static void SetFont(Paragraph paragraph, Dictionary<string, Font> fonts, string fontID)
             {
                 if (fontID != null)
                 {
@@ -262,7 +262,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
-            static void AddBorders(DocX doc)
+            private static void AddBorders(DocX doc)
             {
                 XNamespace w = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
                 XAttribute borderVal = new XAttribute(w + "val", "single");
@@ -279,7 +279,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     ));
             }
 
-            static void AddTable(DocX doc, XElement tableElem, Dictionary<string, Font> fonts, List<string[]> rows)
+            private static void AddTable(DocX doc, XElement tableElem, Dictionary<string, Font> fonts, List<string[]> rows)
             {
                 List<string> colNames;
                 Dictionary<byte, ushort> colWidths;
@@ -322,7 +322,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 table.AutoFit = AutoFit.Contents; //TODO
             }
 
-            static Table InsertFixedTable(DocX doc, XElement tableEl)
+            private static Table InsertFixedTable(DocX doc, XElement tableEl)
             {
                 XElement colParameters = tableEl.Element("ColumnsParameters");
                 int colCount;

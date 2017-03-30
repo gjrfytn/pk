@@ -4,9 +4,9 @@ namespace PK.Forms
 {
     partial class DirectionsDictionary : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        Classes.FIS_Connector _FIS_Connection;
-        Classes.DictionaryUpdater _Updater;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.FIS_Connector _FIS_Connection;
+        private readonly Classes.DictionaryUpdater _Updater;
 
         public DirectionsDictionary(Classes.DB_Connector dbConnection)
         {
@@ -36,7 +36,7 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        void UpdateTable()
+        private void UpdateTable()
         {
             dataGridView.Rows.Clear();
             foreach (object[] item in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS))

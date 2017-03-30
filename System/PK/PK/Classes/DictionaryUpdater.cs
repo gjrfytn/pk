@@ -9,9 +9,9 @@ namespace PK.Classes
 
     class DictionaryUpdater
     {
-        readonly DB_Connector _DB_Connection;
-        readonly FIS_Connector _FIS_Connection;
-        readonly DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly FIS_Connector _FIS_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         public DictionaryUpdater(DB_Connector dbConnection, FIS_Connector fisConnection)
         {
@@ -76,51 +76,6 @@ namespace PK.Classes
             else
                 addedReport += "\nВсего: " + addedCount;
             MessageBox.Show(addedReport, "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        void UpdateDictionaryItems(uint dictionaryID, string dictionaryName, Dictionary<uint, string> fisDictionaryItems)
-        {
-            Dictionary<uint, string> dbDictionaryItems = _DB_Helper.GetDictionaryItems(dictionaryID);
-
-            string addedReport = "В справочник №" + dictionaryID + " \"" + dictionaryName + "\" добавлены элементы:";
-            ushort addedCount = 0;
-
-            foreach (var item in fisDictionaryItems)
-                if (dbDictionaryItems.ContainsKey(item.Key))
-                {
-                    if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowActionMessageWithConfirmation(
-                                 "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
-                                 + item.Key + ":\nC \"" + dbDictionaryItems[item.Key] + "\"\nна \"" + item.Value +
-                                 "\".\n\nОбновить наименование в БД?"
-                                 ))
-                        _DB_Connection.Update(DB_Table.DICTIONARIES_ITEMS,
-                            new Dictionary<string, object> { { "name", item.Value } },
-                            new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
-                            );
-                }
-                else
-                {
-                    _DB_Connection.Insert(DB_Table.DICTIONARIES_ITEMS,
-                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key }, { "name", item.Value } }
-                        );
-                    addedReport += "\n" + item.Key + " \"" + item.Value + "\"";
-                    addedCount++;
-                }
-
-            foreach (var item in dbDictionaryItems)
-                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowActionMessageWithConfirmation(
-                             "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
-                             item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?"
-                             ))
-                    _DB_Connection.Delete(DB_Table.DICTIONARIES_ITEMS,
-                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
-                        );
-
-            if (addedCount != 0)
-            {
-                addedReport += "\nВсего: " + addedCount;
-                MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
         }
 
         public void UpdateDirectionsDictionary()
@@ -370,6 +325,51 @@ namespace PK.Classes
                 addedReport += "\nВсего: " + addedCount;
 
             MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void UpdateDictionaryItems(uint dictionaryID, string dictionaryName, Dictionary<uint, string> fisDictionaryItems)
+        {
+            Dictionary<uint, string> dbDictionaryItems = _DB_Helper.GetDictionaryItems(dictionaryID);
+
+            string addedReport = "В справочник №" + dictionaryID + " \"" + dictionaryName + "\" добавлены элементы:";
+            ushort addedCount = 0;
+
+            foreach (var item in fisDictionaryItems)
+                if (dbDictionaryItems.ContainsKey(item.Key))
+                {
+                    if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowActionMessageWithConfirmation(
+                                 "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
+                                 + item.Key + ":\nC \"" + dbDictionaryItems[item.Key] + "\"\nна \"" + item.Value +
+                                 "\".\n\nОбновить наименование в БД?"
+                                 ))
+                        _DB_Connection.Update(DB_Table.DICTIONARIES_ITEMS,
+                            new Dictionary<string, object> { { "name", item.Value } },
+                            new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
+                            );
+                }
+                else
+                {
+                    _DB_Connection.Insert(DB_Table.DICTIONARIES_ITEMS,
+                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key }, { "name", item.Value } }
+                        );
+                    addedReport += "\n" + item.Key + " \"" + item.Value + "\"";
+                    addedCount++;
+                }
+
+            foreach (var item in dbDictionaryItems)
+                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowActionMessageWithConfirmation(
+                             "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
+                             item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?"
+                             ))
+                    _DB_Connection.Delete(DB_Table.DICTIONARIES_ITEMS,
+                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
+                        );
+
+            if (addedCount != 0)
+            {
+                addedReport += "\nВсего: " + addedCount;
+                MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

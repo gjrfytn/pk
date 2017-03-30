@@ -4,9 +4,9 @@ namespace PK.Forms
 {
     partial class Dictionaries : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly Classes.DB_Helper _DB_Helper;
-        readonly Classes.DictionaryUpdater _Updater;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly Classes.DictionaryUpdater _Updater;
 
         public Dictionaries(Classes.DB_Connector connection)
         {
@@ -42,7 +42,7 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        void UpdateDictionariesTable()
+        private void UpdateDictionariesTable()
         {
             dgvDictionaries.Rows.Clear();
             foreach (object[] d in _DB_Connection.Select(DB_Table.DICTIONARIES))

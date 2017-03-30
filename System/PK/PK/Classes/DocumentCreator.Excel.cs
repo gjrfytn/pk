@@ -54,7 +54,7 @@ namespace PK.Classes
             }
 
 
-            static void Create(List<string> columnsNames, Dictionary<byte, ushort> columnsWidth, Dictionary<string, Font> fonts, List<System.Tuple<string, string>> columnsFonts, List<object[]> rows, string resultFile)
+            private static void Create(List<string> columnsNames, Dictionary<byte, ushort> columnsWidth, Dictionary<string, Font> fonts, List<System.Tuple<string, string>> columnsFonts, List<object[]> rows, string resultFile)
             {
                 XNamespace ss = "urn:schemas-microsoft-com:office:spreadsheet";
                 XElement styles = new XElement(ss + "Styles", new XAttribute("xmlns", ss.NamespaceName));

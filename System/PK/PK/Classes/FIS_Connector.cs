@@ -10,8 +10,8 @@ namespace PK.Classes
 
     class FIS_Connector
     {
-        string _Login;
-        string _Password;
+        private readonly string _Login;
+        private readonly string _Password;
 
         public FIS_Connector(/*string address,*/string login, string password) //TODO
         {
@@ -132,7 +132,12 @@ namespace PK.Classes
 
             XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 19 + ".xml");
 
-            return doc.Root.Element("DictionaryItems").Elements().ToDictionary(
+            return doc.Root.Element("DictionaryItems").Elements()
+                .Where(//TODO нормальный фильтр
+                o => o.Element("Year") != null &&
+                ushort.Parse(o.Element("Year").Value) >= System.DateTime.Now.Year - 1 &&
+                o.Element("Profiles").Elements().Any(p => p.Element("ProfileID").Value == "4" || p.Element("ProfileID").Value == "7")
+                ).ToDictionary(
                 k1 => uint.Parse(k1.Element("OlympicID").Value),
                 v1 => new System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>(
                     v1.Element("OlympicNumber") != null ? (uint?)uint.Parse(v1.Element("OlympicNumber").Value) : null,
@@ -152,16 +157,16 @@ namespace PK.Classes
 
         public void Import(ImportClasses.PackageData data)
         {
-              byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
-                  new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
+                new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
 
-              XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
-              System.Windows.Forms.MessageBox.Show(doc.ToString());
+            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
+            System.Windows.Forms.MessageBox.Show(doc.ToString());
 
             new ImportClasses.Root(new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
         }
 
-        XDocument GetResponse(string uri, byte[] requestData)
+        private XDocument GetResponse(string uri, byte[] requestData)
         {
             WebRequest request = WebRequest.Create(uri);
             request.Method = "POST";

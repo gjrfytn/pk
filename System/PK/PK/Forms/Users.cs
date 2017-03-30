@@ -6,7 +6,7 @@ namespace PK.Forms
 {
     partial class Users : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Connector _DB_Connection;
 
         public Users(Classes.DB_Connector connection)
         {

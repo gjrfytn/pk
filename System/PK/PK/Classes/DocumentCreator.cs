@@ -14,13 +14,13 @@ namespace PK.Classes
             public System.Drawing.Color? Color;
         }
 
-        static readonly Dictionary<string, System.Drawing.Color> _Colors = new Dictionary<string, System.Drawing.Color>
+        private static readonly Dictionary<string, System.Drawing.Color> _Colors = new Dictionary<string, System.Drawing.Color>
         {
             {"Red",System.Drawing.Color.Red },
             {"Violet",System.Drawing.Color.Violet }
         };
 
-        static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
+        private static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint id)
         {
@@ -58,13 +58,13 @@ namespace PK.Classes
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Excel\".", "templateFile");
         }
 
-        static void Validate(XDocument doc)
+        private static void Validate(XDocument doc)
         {
             _SchemaSet.Add(null, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\Schemas\\DocumentSchema.xsd");
             doc.Validate(_SchemaSet, (sender, e) => { throw e.Exception; });
         }
 
-        static Dictionary<string, Font> GetFonts(XElement fonts)
+        private static Dictionary<string, Font> GetFonts(XElement fonts)
         {
             Dictionary<string, Font> result = new Dictionary<string, Font>();
             foreach (XElement font in fonts.Elements())
@@ -82,7 +82,7 @@ namespace PK.Classes
             return result;
         }
 
-        static void GetTableFormatting(XElement tableElement, out List<string> colNames, out Dictionary<byte, ushort> colWidths, out List<System.Tuple<string, string>> colFonts)
+        private static void GetTableFormatting(XElement tableElement, out List<string> colNames, out Dictionary<byte, ushort> colWidths, out List<System.Tuple<string, string>> colFonts)
         {
             colNames = new List<string>();
             colWidths = new Dictionary<byte, ushort>();
@@ -100,12 +100,12 @@ namespace PK.Classes
             }
         }
 
-        static string GetPlaceholderGroup(string placeholder)
+        private static string GetPlaceholderGroup(string placeholder)
         {
             return new string(System.Linq.Enumerable.ToArray(System.Linq.Enumerable.TakeWhile(placeholder, c => char.IsLower(c))));
         }
 
-        static string SelectByPlaceholder(DB_Connector connection, uint id, string placeholder)
+        private static string SelectByPlaceholder(DB_Connector connection, uint id, string placeholder)
         {
             string[] placeholderAndFunction = placeholder.Split('|');
             string[] placeholderValue = _PH_Single[placeholderAndFunction[0]].Split('.', ':');

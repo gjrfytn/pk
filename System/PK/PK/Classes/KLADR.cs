@@ -6,18 +6,18 @@ namespace PK.Classes
 {
     class KLADR : System.IDisposable
     {
-        const string _RawRegionCode = "SUBSTR(code,1,2)";
-        const string _RawDistrictCode = "SUBSTR(code,3,3)";
-        const string _RawTownCode = "SUBSTR(code,6,3)";
-        const string _RawSettlementCode = "SUBSTR(code,9,3)";
-        const string _RawStreetCode = "SUBSTR(code,12,4)";
+        private const string _RawRegionCode = "SUBSTR(code,1,2)";
+        private const string _RawDistrictCode = "SUBSTR(code,3,3)";
+        private const string _RawTownCode = "SUBSTR(code,6,3)";
+        private const string _RawSettlementCode = "SUBSTR(code,9,3)";
+        private const string _RawStreetCode = "SUBSTR(code,12,4)";
 
-        const string _WhereRegion = "SUBSTR(code, 3) = '00000000000'";
-        const string _WhereDistrict = "SUBSTR(code, 6) = '00000000' AND " + _RawDistrictCode + " != '000'";
-        const string _WhereTown = "SUBSTR(code, 9) = '00000' AND " + _RawTownCode + " != '000'";
-        const string _WhereSettlement = "SUBSTR(code, 12) = '00' AND " + _RawSettlementCode + " != '000'";
+        private const string _WhereRegion = "SUBSTR(code, 3) = '00000000000'";
+        private const string _WhereDistrict = "SUBSTR(code, 6) = '00000000' AND " + _RawDistrictCode + " != '000'";
+        private const string _WhereTown = "SUBSTR(code, 9) = '00000' AND " + _RawTownCode + " != '000'";
+        private const string _WhereSettlement = "SUBSTR(code, 12) = '00' AND " + _RawSettlementCode + " != '000'";
 
-        MySqlConnection _Connection;
+        private readonly MySqlConnection _Connection;
 
         public KLADR()
         {
@@ -89,7 +89,7 @@ namespace PK.Classes
                 distrCode = "000";
 
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM subjects WHERE " + _WhereTown + " AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "';", _Connection);
-             
+
             return SelectNameSocr(cmd);
         }
 
@@ -248,7 +248,7 @@ namespace PK.Classes
             };
         }
 
-        bool GetCodes(string region, string district, string town, out string regCode, out string distrCode, out string townCode)
+        private bool GetCodes(string region, string district, string town, out string regCode, out string distrCode, out string townCode)
         {
             regCode = GetRegionCode(region);
             if (regCode == "")
@@ -282,7 +282,7 @@ namespace PK.Classes
             return true;
         }
 
-        string GetRegionCode(string region)
+        private string GetRegionCode(string region)
         {
             MySqlCommand cmd = new MySqlCommand(
                 "SELECT " + _RawRegionCode + " FROM subjects WHERE " + _WhereRegion + " AND name = '" +
@@ -293,7 +293,7 @@ namespace PK.Classes
             return SelectOneString(cmd);
         }
 
-        string GetDistrictCode(string regionCode, string district)
+        private string GetDistrictCode(string regionCode, string district)
         {
             MySqlCommand cmd = new MySqlCommand(
                 "SELECT " + _RawDistrictCode + " FROM subjects WHERE " + _WhereDistrict + " AND name = '" +
@@ -305,7 +305,7 @@ namespace PK.Classes
             return SelectOneString(cmd);
         }
 
-        string GetTownCode(string regionCode, string distrCode, string town)
+        private string GetTownCode(string regionCode, string distrCode, string town)
         {
             MySqlCommand cmd = new MySqlCommand(
                  "SELECT " + _RawTownCode + " FROM subjects WHERE " + _WhereTown + " AND name = '" +
@@ -318,7 +318,7 @@ namespace PK.Classes
             return SelectOneString(cmd);
         }
 
-        List<string> GetSettlementCodes(string regionCode, string distrCode, string townCode, string settlement)
+        private List<string> GetSettlementCodes(string regionCode, string distrCode, string townCode, string settlement)
         {
             string[] splitSettl = settlement.Split('(', ')', '[', ']');
             if (splitSettl.Length == 1)
@@ -353,7 +353,7 @@ namespace PK.Classes
             }
         }
 
-        string GetStreetCode(string regionCode, string distrCode, string townCode, string settlementCode, string street)
+        private string GetStreetCode(string regionCode, string distrCode, string townCode, string settlementCode, string street)
         {
             string[] splitStreet = street.Split('(', ')');
             if (splitStreet.Length == 1)
@@ -375,7 +375,7 @@ namespace PK.Classes
             return SelectOneString(cmd);
         }
 
-        List<string> SelectNameSocr(MySqlCommand cmd)
+        private List<string> SelectNameSocr(MySqlCommand cmd)
         {
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -387,7 +387,7 @@ namespace PK.Classes
             }
         }
 
-        string SelectOneString(MySqlCommand cmd)
+        private string SelectOneString(MySqlCommand cmd)
         {
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {

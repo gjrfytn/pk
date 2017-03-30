@@ -12,7 +12,7 @@ namespace PK.Classes
         public const string EduFormO = "Очная форма";
         #endregion
 
-        readonly DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
         public DB_Helper(DB_Connector connection)
         {
@@ -124,7 +124,7 @@ namespace PK.Classes
         }
 
 
-        public int GetDirectionIDByName (string dirName)
+        public int GetDirectionIDByName(string dirName)
         {
             List<object[]> dirList = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, new string[] { "id" }, new List<System.Tuple<string, Relation, object>>
                 {
@@ -136,7 +136,7 @@ namespace PK.Classes
                 return int.Parse(dirList[0][0].ToString());
         }
 
-        public string GetDirectionNameByID (int dirId)
+        public string GetDirectionNameByID(int dirId)
         {
             List<object[]> dirList = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, new string[] { "name" }, new List<System.Tuple<string, Relation, object>>
                 {
@@ -159,6 +159,7 @@ namespace PK.Classes
             else
                 return dirList[0][0].ToString();
         }
+
         public string[] GetDirectionsDictionaryNameAndCode(uint id)//TODO Нужны другие поля?
         {
             List<object[]> list = _DB_Connection.Select(
@@ -172,7 +173,7 @@ namespace PK.Classes
             if (list.Count == 0)
                 throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.");
 
-            return System.Array.ConvertAll(list[0],c=>c.ToString());
+            return System.Array.ConvertAll(list[0], c => c.ToString());
         }
     }
 }

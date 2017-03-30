@@ -6,9 +6,10 @@ namespace PK.Forms
 {
     public partial class Authorization : Form
     {
-        Classes.DB_Connector _DB_Connection;
         public byte UsersRole { get; private set; }
-        public string UsersLogin;
+        public string UsersLogin { get; private set; }
+
+        private readonly Classes.DB_Connector _DB_Connection;
 
         public Authorization()
         {

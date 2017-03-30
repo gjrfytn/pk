@@ -4,9 +4,9 @@ namespace PK
 {
     partial class OlympicsDictionaryForm : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        Classes.FIS_Connector _FIS_Connection;
-        Classes.DictionaryUpdater _Updater;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.FIS_Connector _FIS_Connection;
+        private readonly Classes.DictionaryUpdater _Updater;
 
         public OlympicsDictionaryForm(Classes.DB_Connector dbConnection)
         {
@@ -26,13 +26,6 @@ namespace PK
             _Updater = new Classes.DictionaryUpdater(_DB_Connection, _FIS_Connection);
 
             UpdateOlympicsTable();
-        }
-
-        void UpdateOlympicsTable()
-        {
-            dgvOlympics.Rows.Clear();
-            foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
-                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2]);
         }
 
         private void dgvOlympics_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -93,6 +86,13 @@ namespace PK
             _Updater.UpdateOlympicsDictionary();
             UpdateOlympicsTable();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void UpdateOlympicsTable()
+        {
+            dgvOlympics.Rows.Clear();
+            foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
+                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2]);
         }
     }
 }
