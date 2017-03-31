@@ -19,6 +19,14 @@ namespace PK.Forms
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
 
+        private uint SelectedExamID
+        {
+            get
+            {
+                return (uint)dataGridView.SelectedRows[0].Cells[0].Value;
+            }
+        }
+
         public Examinations(Classes.DB_Connector connection)
         {
             #region Components
@@ -37,9 +45,8 @@ namespace PK.Forms
 
         private void dataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            bool hasMarks = ExaminationHasMarks((uint)dataGridView[0, e.RowIndex].Value);
-            toolStrip_Edit.Enabled = !hasMarks;
-            toolStrip_Marks.Enabled = hasMarks;
+            if (dataGridView.SelectedRows.Count != 0)
+                ToggleButtons();
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
@@ -58,7 +65,7 @@ namespace PK.Forms
         {
             if (dataGridView.SelectedRows.Count != 0)
             {
-                ExaminationEdit form = new ExaminationEdit(_DB_Connection, (uint)dataGridView.SelectedRows[0].Cells[0].Value);
+                ExaminationEdit form = new ExaminationEdit(_DB_Connection, SelectedExamID);
                 form.ShowDialog();
                 UpdateTable();
             }
@@ -68,15 +75,33 @@ namespace PK.Forms
 
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
         {
-            var applications = _DB_Connection.Select(DB_Table.APPLICATIONS)
-                .Where(a => (DateTime)a[3] >= (DateTime)dataGridView.SelectedRows[0].Cells[3].Value &&
-                (DateTime)a[3] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите экзамен.");
+                return;
+            }
+
+            if (ExaminationHasMarks(SelectedExamID))
+                MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
+
+            var applications = _DB_Connection.Select(
+                DB_Table.APPLICATIONS,
+                new string[] { "entrant_id", "registration_time" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
+                }
+                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[3].Value &&
+               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
                 );
 
-            var entrants = _DB_Connection.Select(DB_Table.ENTRANTS).Join(
+            var entrants = _DB_Connection.Select(
+                DB_Table.ENTRANTS,
+                new string[] { "id", "last_name", "first_name", "middle_name" }
+                ).Join(
                 applications,
                 en => en[0],
-                a => a[2],
+                a => a[0],
                 (s1, s2) => new
                 {
                     ID = s1[0],
@@ -84,7 +109,7 @@ namespace PK.Forms
                     FirstName = s1[2].ToString(),
                     MiddleName = s1[3].ToString()
                 }
-              ).Distinct();
+              ).Distinct();//TODO Нужно?
 
             List<string[]> entrantsTable = new List<string[]>(entrants.Count());
             ushort count = 1;
@@ -92,7 +117,7 @@ namespace PK.Forms
             {
                 _DB_Connection.InsertOnDuplicateUpdate(
                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                    new Dictionary<string, object> { { "entrant_id", entr.ID }, { "examination_id", dataGridView.SelectedRows[0].Cells[0].Value } }
+                    new Dictionary<string, object> { { "entrant_id", entr.ID }, { "examination_id", SelectedExamID } }
                     );
 
                 entrantsTable.Add(new string[]
@@ -100,7 +125,7 @@ namespace PK.Forms
                     count.ToString(),
                     entr.ID.ToString(),
                     entr.LastName+" "+entr.FirstName+" "+entr.MiddleName,
-                    _NameCodes[entr.LastName[0]]+_NameCodes[entr.FirstName[0]]+"."+dataGridView.SelectedRows[0].Cells[0].Value+count.ToString()
+                    _NameCodes[entr.LastName[0]]+_NameCodes[entr.FirstName[0]]+"."+SelectedExamID.ToString()+count.ToString()
                 });
                 count++;
             }
@@ -120,7 +145,7 @@ namespace PK.Forms
                 new string[] { "number", "capacity" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,dataGridView.SelectedRows[0].Cells[0].Value)
+                    new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,SelectedExamID)
                 });
 
             List<Tuple<char, string>> distribution = Classes.Utility.DistributeAbiturients(
@@ -153,12 +178,20 @@ namespace PK.Forms
                },
                new List<string[]>[] { distibTable }
                );
+
+            ToggleButtons();
         }
 
         private void toolStrip_Marks_Click(object sender, EventArgs e)
         {
-            ExaminationMarks form = new ExaminationMarks(_DB_Connection, (uint)dataGridView.SelectedRows[0].Cells[0].Value);
-            form.ShowDialog();
+            if (dataGridView.SelectedRows.Count != 0)
+            {
+                ExaminationMarks form = new ExaminationMarks(_DB_Connection, SelectedExamID);
+                form.ShowDialog();
+                ToggleButtons();
+            }
+            else
+                MessageBox.Show("Выберите экзамен.");
         }
 
         private void UpdateTable()
@@ -174,6 +207,13 @@ namespace PK.Forms
                     row[4],
                     row[5]
                     );
+        }
+
+        private void ToggleButtons()
+        {
+            bool hasMarks = ExaminationHasMarks(SelectedExamID);
+            toolStrip_Edit.Enabled = !hasMarks;
+            toolStrip_Marks.Enabled = hasMarks;
         }
 
         private bool ExaminationHasMarks(uint id)

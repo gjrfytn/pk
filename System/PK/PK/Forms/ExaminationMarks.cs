@@ -63,6 +63,8 @@ namespace PK.Forms
                         DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
                         new Dictionary<string, object> { { "entrant_id", row[0] }, { "examination_id", row[1] } }
                         );
+
+                dataGridView.Rows.Clear();
             }
         }
 
