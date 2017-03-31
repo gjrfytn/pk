@@ -39,6 +39,11 @@
   </Fonts>
   <Document>
     <Word>
+      <Properties>
+        <Margins>
+          <Top>40</Top>
+        </Margins>
+      </Properties>
       <Structure>
         <Element>
           <Paragraph>
@@ -109,7 +114,6 @@
                 <Style>None</Style>
               </InsideV>
             </Borders>
-            <Numeration>false</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>
@@ -195,7 +199,7 @@
                 <Style>None</Style>
               </InsideV>
             </Borders>
-            <Numeration>true</Numeration>
+            <Numeration>NumberWithDot</Numeration>
             <Placeholder>1</Placeholder>
             <Structure>
               <Column>
@@ -248,7 +252,7 @@
               </Part>
               <Part>
                 <Text>
-                  <String>                   Дата создания: </String>
+                  <String>        Дата создания: </String>
                 </Text>
               </Part>
               <Part>

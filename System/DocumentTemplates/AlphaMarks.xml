@@ -231,7 +231,7 @@
         </Element>
         <Element>
           <Table>
-            <Numeration>true</Numeration>
+            <Numeration>Number</Numeration>
             <Placeholder>entrantsMarks</Placeholder>
             <Structure>
               <Column>

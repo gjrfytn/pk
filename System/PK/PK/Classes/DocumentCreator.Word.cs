@@ -23,6 +23,12 @@ namespace PK.Classes
                 { "None",BorderStyle.Tcbs_none}
             };
 
+            private static readonly Dictionary<string, VerticalAlignment> _VerticalAlignments = new Dictionary<string, VerticalAlignment>
+            {
+                { "Center",VerticalAlignment.Center},
+                { "Bottom",VerticalAlignment.Bottom}
+            };
+
             public static void CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
                 Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
@@ -59,43 +65,8 @@ namespace PK.Classes
                     else
                     {
                         XElement tableEl = element.Element("FixedTable");
-                        Table table = InsertFixedTable(doc, tableEl);
 
-                        MakeBorders(table, tableEl.Element("Borders"));
-
-                        byte index = 0;
-                        foreach (XElement row in tableEl.Element("Rows").Elements())
-                        {
-                            if (row.Element("Merges") != null)
-                                foreach (XElement merge in row.Element("Merges").Elements())
-                                    table.Rows[index].MergeCells(
-                                        int.Parse(merge.Element("StartColumn").Value),
-                                        int.Parse(merge.Element("EndColumn").Value)
-                                        );
-
-                            foreach (Cell cell in table.Rows[index].Cells)
-                                while (cell.RemoveParagraphAt(1))
-                                    ;
-
-                            foreach (XElement cellEl in row.Element("Cells").Elements())
-                            {
-                                Cell cell = table.Rows[index].Cells[int.Parse(cellEl.Attribute("Column").Value)];
-
-                                MakeBorders(cell, cellEl.Element("Borders"));
-
-                                if (cellEl.Element("Paragraphs") != null)
-                                {
-                                    cell.RemoveParagraphAt(0);
-                                    foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
-                                        MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
-                                }
-                            }
-
-                            if (row.Element("Height") != null)
-                                table.Rows[index].Height = ushort.Parse(row.Element("Height").Value);
-
-                            index++;
-                        }
+                        MakeFixedTable(InsertFixedTable(doc, tableEl), tableEl, fonts, connection, id, ref placeholderGroup, singleParams);
                     }
                 }
 
@@ -286,7 +257,12 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 List<System.Tuple<string, string>> colFonts;
                 GetTableFormatting(tableElem, out colNames, out colWidths, out colFonts);
 
-                bool numeration = bool.Parse(tableElem.Element("Numeration").Value);
+                bool? numerationWithDot = null;
+                if (tableElem.Element("Numeration") != null)
+                    if (tableElem.Element("Numeration").Value == "NumberWithDot")
+                        numerationWithDot = true;
+                    else
+                        numerationWithDot = false;
 
                 Table table = doc.InsertTable(1, colNames.Count);
                 table.Design = TableDesign.TableGrid;
@@ -295,6 +271,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
 
                 for (byte i = 0; i < colNames.Count; ++i)
                 {
+                    table.Rows[0].Cells[i].RemoveParagraphAt(0);
                     Paragraph paragraph = table.Rows[0].Cells[i].InsertParagraph(colNames[i]);
                     SetFont(paragraph, fonts, colFonts[i].Item1);
                     if (colWidths.ContainsKey(i))
@@ -305,17 +282,19 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 foreach (object[] row in rows)
                 {
                     table.InsertRow();
-                    if (numeration)
+                    if (numerationWithDot.HasValue)
                     {
-                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[0].InsertParagraph(count.ToString());
+                        table.Rows[table.Rows.Count - 1].Cells[0].RemoveParagraphAt(0);
+                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[0].InsertParagraph(count.ToString() + (numerationWithDot.Value ? "." : ""));
                         SetFont(paragraph, fonts, colFonts[0].Item2);
                         count++;
                     }
 
                     for (byte i = 0; i < row.Length; ++i)
                     {
-                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numeration ? 1 : 0)].InsertParagraph(row[i].ToString());
-                        SetFont(paragraph, fonts, colFonts[i + (byte)(numeration ? 1 : 0)].Item2);
+                        table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numerationWithDot.HasValue ? 1 : 0)].RemoveParagraphAt(0);
+                        Paragraph paragraph = table.Rows[table.Rows.Count - 1].Cells[i + (byte)(numerationWithDot.HasValue ? 1 : 0)].InsertParagraph(row[i].ToString());
+                        SetFont(paragraph, fonts, colFonts[i + (byte)(numerationWithDot.HasValue ? 1 : 0)].Item2);
                     }
                 }
 
@@ -345,6 +324,48 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
 
                 return table;
+            }
+
+            private static void MakeFixedTable(Table table, XElement tableEl, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            {
+                MakeBorders(table, tableEl.Element("Borders"));
+
+                byte index = 0;
+                foreach (XElement row in tableEl.Element("Rows").Elements())
+                {
+                    if (row.Element("Merges") != null)
+                        foreach (XElement merge in row.Element("Merges").Elements())
+                            table.Rows[index].MergeCells(
+                                int.Parse(merge.Element("StartColumn").Value),
+                                int.Parse(merge.Element("EndColumn").Value)
+                                );
+
+                    foreach (Cell cell in table.Rows[index].Cells)
+                        while (cell.RemoveParagraphAt(1))
+                            ;
+
+                    foreach (XElement cellEl in row.Element("Cells").Elements())
+                    {
+                        Cell cell = table.Rows[index].Cells[int.Parse(cellEl.Attribute("Column").Value)];
+
+                        if (cellEl.Element("VerticalAlignment") != null)
+                            cell.VerticalAlignment = _VerticalAlignments[cellEl.Element("VerticalAlignment").Value];
+
+                        MakeBorders(cell, cellEl.Element("Borders"));
+
+                        if (cellEl.Element("Paragraphs") != null)
+                        {
+                            cell.RemoveParagraphAt(0);
+                            foreach (XElement paragraph in cellEl.Element("Paragraphs").Elements())
+                                MakeParagraph(paragraph, cell.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                        }
+                    }
+
+                    if (row.Element("Height") != null)
+                        table.Rows[index].Height = ushort.Parse(row.Element("Height").Value);
+
+                    index++;
+                }
             }
         }
     }

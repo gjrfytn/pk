@@ -3,6 +3,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
   <Fonts>
+    <Font ID="Small">
+      <Name>Arial</Name>
+      <Size>12</Size>
+    </Font>
     <Font ID="Usual">
       <Name>Arial</Name>
       <Size>16</Size>
@@ -12,13 +16,17 @@
       <Size>16</Size>
       <Style>Bold</Style>
     </Font>
-    <Font ID="Large">
+    <Font ID="ID">
       <Name>Arial</Name>
       <Size>22</Size>
     </Font>
+    <Font ID="Large">
+      <Name>Arial</Name>
+      <Size>32</Size>
+    </Font>
     <Font ID="LargeBold">
       <Name>Arial</Name>
-      <Size>22</Size>
+      <Size>32</Size>
       <Style>Bold</Style>
     </Font>
   </Fonts>
@@ -27,6 +35,10 @@
       <Properties>
         <A5/>
         <Album/>
+        <Margins>
+          <Left>35</Left>
+          <Top>35</Top>
+        </Margins>
       </Properties>
       <Structure>
         <Element>
@@ -34,7 +46,7 @@
             <ColumnsParameters>
               <Columns>
                 <ColumnWidth>550</ColumnWidth>
-                <ColumnWidth>5000</ColumnWidth>
+                <ColumnWidth>9700</ColumnWidth>
               </Columns>
             </ColumnsParameters>
             <Borders>
@@ -67,7 +79,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrLastName|UPPERCASE</Placeholder>
+                              <Placeholder>0</Placeholder>
                             </Text>
                           </Part>
                           <Part>
@@ -77,12 +89,12 @@
                           </Part>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrFirstName|FIRST_LETTER_DOT</Placeholder>
+                              <Placeholder>1</Placeholder>
                             </Text>
                           </Part>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrMiddleName|FIRST_LETTER_DOT</Placeholder>
+                              <Placeholder>2</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -98,30 +110,115 @@
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>LargeBold</FontID>
+                        <FontID>ID</FontID>
                         <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrantID</Placeholder>
+                              <Placeholder>3</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
-                              <String>!ФОРМА ОБУЧЕНИЯ!</String>
+                              <Placeholder>8</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
-                      <Paragraph/>
-                      <Paragraph/>
-                      <Paragraph/>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>9</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>10</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>11</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>12</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>13</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>14</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>15</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>16</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
                       <Paragraph>
                         <FontID>LargeBold</FontID>
                         <Alighment>Center</Alighment>
@@ -129,7 +226,7 @@
                           <Part>
                             <FontID>LargeBold</FontID>
                             <Text>
-                              <Placeholder>applicationEntrLastName</Placeholder>
+                              <Placeholder>4</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -140,7 +237,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrFirstName</Placeholder>
+                              <Placeholder>5</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -151,7 +248,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationEntrMiddleName</Placeholder>
+                              <Placeholder>6</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -162,7 +259,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationTime|YEAR_ONLY</Placeholder>
+                              <Placeholder>7</Placeholder>
                             </Text>
                           </Part>
                         </Parts>

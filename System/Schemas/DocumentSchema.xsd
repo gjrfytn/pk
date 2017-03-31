@@ -372,20 +372,26 @@
                                   </xs:annotation>
                                 </xs:element>
                                 <xs:element name="Table">
+                                  <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Таблица.</xs:documentation>
+                                  </xs:annotation>
                                   <xs:complexType>
-                                    <xs:annotation>
-                                      <xs:documentation xml:lang="ru">Таблица.</xs:documentation>
-                                    </xs:annotation>
                                     <xs:all>
                                       <xs:element name="Borders" type="TTableBorders" minOccurs="0">
                                         <xs:annotation>
                                           <xs:documentation xml:lang="ru">Границы.</xs:documentation>
                                         </xs:annotation>
                                       </xs:element>
-                                      <xs:element name ="Numeration" type="xs:boolean">
+                                      <xs:element name ="Numeration" minOccurs="0">
                                         <xs:annotation>
                                           <xs:documentation xml:lang="ru">Создавать столбец с номерами строк.</xs:documentation>
                                         </xs:annotation>
+                                        <xs:simpleType>
+                                          <xs:restriction base="xs:string">
+                                            <xs:enumeration value="Number"/>
+                                            <xs:enumeration value="NumberWithDot"/>
+                                          </xs:restriction>
+                                        </xs:simpleType>
                                       </xs:element>
                                       <xs:element name="Placeholder" type="xs:string">
                                         <xs:annotation>
@@ -534,6 +540,17 @@
                                                                   <xs:documentation xml:lang="ru">Границы.</xs:documentation>
                                                                 </xs:annotation>
                                                               </xs:element>
+                                                              <xs:element name="VerticalAlignment" minOccurs="0">
+                                                                <xs:annotation>
+                                                                  <xs:documentation xml:lang="ru">Вертикальное выравнивание.</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:simpleType>
+                                                                  <xs:restriction base="xs:string">
+                                                                    <xs:enumeration value="Center"/>
+                                                                    <xs:enumeration value="Bottom"/>
+                                                                  </xs:restriction>
+                                                                </xs:simpleType>
+                                                              </xs:element>
                                                               <xs:element name="Paragraphs" minOccurs="0">
                                                                 <xs:annotation>
                                                                   <xs:documentation xml:lang="ru">Параграфы (строки).</xs:documentation>
@@ -554,22 +571,6 @@
                                                                 <xs:documentation xml:lang="ru">Индекс столбца.</xs:documentation>
                                                               </xs:annotation>
                                                             </xs:attribute>
-                                                            <!--<xs:complexContent>
-                                                              <xs:extension base="TParagraph">
-                                                                <xs:sequence>
-                                                                  <xs:element name="Borders" type="TBorders" minOccurs="0">
-                                                                    <xs:annotation>
-                                                                      <xs:documentation xml:lang="ru">Границы.</xs:documentation>
-                                                                    </xs:annotation>
-                                                                  </xs:element>
-                                                                </xs:sequence>
-                                                                <xs:attribute name="Column" type="xs:byte" use="required">
-                                                                  <xs:annotation>
-                                                                    <xs:documentation xml:lang="ru">Индекс столбца.</xs:documentation>
-                                                                  </xs:annotation>
-                                                                </xs:attribute>
-                                                              </xs:extension>
-                                                            </xs:complexContent>-->
                                                           </xs:complexType>
                                                         </xs:element>
                                                       </xs:sequence>

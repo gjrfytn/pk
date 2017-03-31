@@ -105,7 +105,6 @@
                 <Style>None</Style>
               </InsideV>
             </Borders>
-            <Numeration>false</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>
@@ -181,7 +180,7 @@
                 <Style>None</Style>
               </InsideV>
             </Borders>
-            <Numeration>true</Numeration>
+            <Numeration>NumberWithDot</Numeration>
             <Placeholder>1</Placeholder>
             <Structure>
               <Column>

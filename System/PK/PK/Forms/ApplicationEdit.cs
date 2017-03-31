@@ -1159,7 +1159,7 @@ namespace PK.Forms
                 doc,
                 new string[]
                 {
-                    _EntrantID.Value.ToString() ,
+                    _EntrantID.Value.ToString(),
                     tbLastName.Text.ToUpper(),
                     (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
                     _DB_Connection.Select(
@@ -1174,8 +1174,31 @@ namespace PK.Forms
                 );
             Classes.Utility.Print(doc + ".docx");
 
+            List<string> parameters = new List<string>
+            {
+                tbLastName.Text.ToUpper(),
+                    tbFirstName.Text[0]+".",
+                    tbMidleName.Text[0]+".",
+                    _EntrantID.Value.ToString(),
+                    tbLastName.Text,
+                    tbFirstName.Text,
+                    tbMidleName.Text,
+                    DateTime.Now.Year.ToString(), //TODO Брать из переменной
+            };
+
+            foreach (string[] form in tableParams[0])
+                parameters.Add(form[0]);
+
+            while (parameters.Count != 17)
+                parameters.Add("");
+
             doc = "percRecordFace";
-            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml", doc, _ApplicationID.Value);
+            Classes.DocumentCreator.Create(
+                Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
+                doc,
+                parameters.ToArray(),
+                null
+                );
             Classes.Utility.Print(doc + ".docx");
 
             tableParams[0].Clear();
@@ -1185,12 +1208,9 @@ namespace PK.Forms
                 if (cbs.Count() != 0)
                 {
                     tableParams[0].Add(new string[] { tab.Text + " форма обучения" });
-                    byte count = 1;
                     foreach (ComboBox cb in cbs)
-                    {
-                        tableParams[0].Add(new string[] { count.ToString() + ". " + cb.Text });
-                        count++;
-                    }
+                        tableParams[0].Add(new string[] { "          - " + cb.Text });
+                    tableParams[0].Add(new string[] { "" });
                 }
             }
 
@@ -1218,7 +1238,7 @@ namespace PK.Forms
 
             doc = "percRecordBack";
 
-            List<string> parameters = new List<string>
+            parameters = new List<string>
             {
                 tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
                     mtbHomePhone.Text,

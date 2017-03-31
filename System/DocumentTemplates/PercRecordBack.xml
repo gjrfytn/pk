@@ -5,15 +5,15 @@
   <Fonts>
     <Font ID="Small">
       <Name>Arial</Name>
-      <Size>10</Size>
+      <Size>12</Size>
     </Font>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>14</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>14</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="LargeBold">
@@ -55,6 +55,7 @@
                 </Merges>
                 <Cells>
                   <Cell Column="0">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Borders>
                       <Right>
                         <Size>5</Size>
@@ -80,7 +81,7 @@
                   <Cell Column="1">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Small</FontID>
+                        <FontID>Usual</FontID>
                         <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
@@ -112,10 +113,14 @@
                       <Right>
                         <Size>5</Size>
                       </Right>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -154,10 +159,14 @@
                       <Bottom>
                         <Size>5</Size>
                       </Bottom>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -205,7 +214,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -239,7 +248,6 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -268,7 +276,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -331,7 +339,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -370,7 +378,6 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -399,7 +406,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -462,7 +469,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -501,7 +508,6 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -530,7 +536,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -593,7 +599,7 @@
                   <Cell Column="0">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -632,7 +638,6 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -666,7 +671,7 @@
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -792,7 +797,6 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -969,8 +973,7 @@
                   <Cell Column="7">
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
+                        <FontID>Small</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -1229,6 +1232,7 @@
               </Row>
               <Row>
                 <!--17-->
+                <Height>50</Height>
                 <Merges>
                   <Merge>
                     <StartColumn>0</StartColumn>
@@ -1241,6 +1245,7 @@
                 </Merges>
                 <Cells>
                   <Cell Column="0">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
@@ -1262,6 +1267,7 @@
                     </Borders>
                   </Cell>
                   <Cell Column="2">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -1277,6 +1283,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="3">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -1292,6 +1299,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="4">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>

@@ -64,7 +64,6 @@
         </Element>
         <Element>
           <Table>
-            <Numeration>false</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>

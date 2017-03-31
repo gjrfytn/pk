@@ -140,6 +140,7 @@
                 </Merges>
                 <Cells>
                   <Cell Column="0">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
@@ -164,6 +165,7 @@
                     </Borders>
                   </Cell>
                   <Cell Column="1">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -181,6 +183,7 @@
                 </Cells>
               </Row>
               <Row>
+                <Height>42</Height>
                 <Merges>
                   <Merge>
                     <StartColumn>0</StartColumn>
@@ -197,6 +200,7 @@
                 </Merges>
                 <Cells>
                   <Cell Column="0">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -217,6 +221,7 @@
                     </Borders>
                   </Cell>
                   <Cell Column="1">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -232,6 +237,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -249,8 +255,10 @@
                 </Cells>
               </Row>
               <Row>
+                <Height>37</Height>
                 <Cells>
                   <Cell Column="0">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -266,6 +274,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="1">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -286,6 +295,7 @@
                     </Borders>
                   </Cell>
                   <Cell Column="2">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -301,6 +311,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="3">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -316,6 +327,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="4">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -331,6 +343,7 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="5">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
@@ -348,8 +361,10 @@
                 </Cells>
               </Row>
               <Row>
+                <Height>37</Height>
                 <Cells>
                   <Cell Column="1">
+                    <VerticalAlignment>Center</VerticalAlignment>
                     <Paragraphs>
                       <Paragraph>
                         <Alighment>Center</Alighment>
