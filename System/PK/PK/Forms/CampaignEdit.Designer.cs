@@ -148,6 +148,7 @@
             // 
             // cbStartYear
             // 
+            this.cbStartYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStartYear.FormattingEnabled = true;
             this.cbStartYear.Location = new System.Drawing.Point(438, 20);
             this.cbStartYear.Name = "cbStartYear";
@@ -156,6 +157,7 @@
             // 
             // cbEndYear
             // 
+            this.cbEndYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEndYear.FormattingEnabled = true;
             this.cbEndYear.Location = new System.Drawing.Point(596, 20);
             this.cbEndYear.Name = "cbEndYear";
@@ -343,6 +345,7 @@
             this.dgvDirections.Size = new System.Drawing.Size(790, 296);
             this.dgvDirections.TabIndex = 1;
             this.dgvDirections.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellValueChanged);
+            this.dgvDirections.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvDirections_DirID
             // 
@@ -577,6 +580,7 @@
             this.dgvPaidPlaces.Size = new System.Drawing.Size(788, 298);
             this.dgvPaidPlaces.TabIndex = 16;
             this.dgvPaidPlaces.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaidPlaces_CellEndEdit);
+            this.dgvPaidPlaces.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvPaidPlaces_Select
             // 
@@ -665,6 +669,7 @@
             this.dgvFacultities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvFacultities.Size = new System.Drawing.Size(533, 150);
             this.dgvFacultities.TabIndex = 14;
+            this.dgvFacultities.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvFacultities_ShortFacName
             // 
@@ -708,6 +713,7 @@
             this.dgvTargetOrganizatons.Size = new System.Drawing.Size(787, 297);
             this.dgvTargetOrganizatons.TabIndex = 4;
             this.dgvTargetOrganizatons.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTargetOrganizatons_CellContentClick);
+            this.dgvTargetOrganizatons.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             this.dgvTargetOrganizatons.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvTargetOrganizatons_RowsAdded);
             // 
             // dgvTargetOrganizatons_ID
