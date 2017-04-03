@@ -30,6 +30,8 @@
         {
             this.btNewFaculty = new System.Windows.Forms.Button();
             this.dgvFaculties = new System.Windows.Forms.DataGridView();
+            this.dgvFaculties_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvFaculties_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tbFacultyShortName = new System.Windows.Forms.TextBox();
             this.tbFacultyName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -38,8 +40,6 @@
             this.btUpdate = new System.Windows.Forms.Button();
             this.btEditDirections = new System.Windows.Forms.Button();
             this.btDelete = new System.Windows.Forms.Button();
-            this.dgvFaculties_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvFaculties_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,6 +68,21 @@
             this.dgvFaculties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvFaculties.Size = new System.Drawing.Size(559, 316);
             this.dgvFaculties.TabIndex = 1;
+            // 
+            // dgvFaculties_ShortName
+            // 
+            this.dgvFaculties_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvFaculties_ShortName.HeaderText = "Краткое название";
+            this.dgvFaculties_ShortName.Name = "dgvFaculties_ShortName";
+            this.dgvFaculties_ShortName.ReadOnly = true;
+            this.dgvFaculties_ShortName.Width = 114;
+            // 
+            // dgvFaculties_Name
+            // 
+            this.dgvFaculties_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvFaculties_Name.HeaderText = "Название факультета";
+            this.dgvFaculties_Name.Name = "dgvFaculties_Name";
+            this.dgvFaculties_Name.ReadOnly = true;
             // 
             // tbFacultyShortName
             // 
@@ -146,21 +161,6 @@
             this.btDelete.UseVisualStyleBackColor = true;
             this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
             // 
-            // dgvFaculties_ShortName
-            // 
-            this.dgvFaculties_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvFaculties_ShortName.HeaderText = "Краткое название";
-            this.dgvFaculties_ShortName.Name = "dgvFaculties_ShortName";
-            this.dgvFaculties_ShortName.ReadOnly = true;
-            this.dgvFaculties_ShortName.Width = 114;
-            // 
-            // dgvFaculties_Name
-            // 
-            this.dgvFaculties_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvFaculties_Name.HeaderText = "Название факультета";
-            this.dgvFaculties_Name.Name = "dgvFaculties_Name";
-            this.dgvFaculties_Name.ReadOnly = true;
-            // 
             // Faculties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -176,7 +176,9 @@
             this.Controls.Add(this.tbFacultyShortName);
             this.Controls.Add(this.dgvFaculties);
             this.Controls.Add(this.btNewFaculty);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Faculties";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Факультеты";
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).EndInit();
             this.ResumeLayout(false);

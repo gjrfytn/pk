@@ -228,6 +228,7 @@
             // 
             // InstitutionAchievementsEdit
             // 
+            this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(959, 531);
@@ -245,7 +246,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.dgvAchievements);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "InstitutionAchievementsEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Индивидуальные достижения";
             ((System.ComponentModel.ISupportInitialize)(this.dgvAchievements)).EndInit();
             this.ResumeLayout(false);

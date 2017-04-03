@@ -60,15 +60,18 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // NewTargetOrganizationForm
+            // TargetOrganizationEdit
             // 
+            this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(367, 164);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.rtbOrganizationName);
             this.Controls.Add(this.label1);
-            this.Name = "NewTargetOrganizationForm";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Name = "TargetOrganizationEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Создание целевой организации";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.dgvTargetOrganizations = new System.Windows.Forms.DataGridView();
+            this.dgvTargetOrganizations_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTargetOrganizations_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btNewTargetOrganization = new System.Windows.Forms.Button();
             this.btRename = new System.Windows.Forms.Button();
             this.btDelete = new System.Windows.Forms.Button();
-            this.dgvTargetOrganizations_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTargetOrganizations_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizations)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,6 +52,19 @@
             this.dgvTargetOrganizations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvTargetOrganizations.Size = new System.Drawing.Size(469, 385);
             this.dgvTargetOrganizations.TabIndex = 0;
+            // 
+            // dgvTargetOrganizations_ID
+            // 
+            this.dgvTargetOrganizations_ID.HeaderText = "ID";
+            this.dgvTargetOrganizations_ID.Name = "dgvTargetOrganizations_ID";
+            this.dgvTargetOrganizations_ID.ReadOnly = true;
+            this.dgvTargetOrganizations_ID.Visible = false;
+            // 
+            // dgvTargetOrganizations_Name
+            // 
+            this.dgvTargetOrganizations_Name.HeaderText = "Название организации";
+            this.dgvTargetOrganizations_Name.Name = "dgvTargetOrganizations_Name";
+            this.dgvTargetOrganizations_Name.ReadOnly = true;
             // 
             // btNewTargetOrganization
             // 
@@ -83,19 +96,6 @@
             this.btDelete.UseVisualStyleBackColor = true;
             this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
             // 
-            // dgvTargetOrganizations_ID
-            // 
-            this.dgvTargetOrganizations_ID.HeaderText = "ID";
-            this.dgvTargetOrganizations_ID.Name = "dgvTargetOrganizations_ID";
-            this.dgvTargetOrganizations_ID.ReadOnly = true;
-            this.dgvTargetOrganizations_ID.Visible = false;
-            // 
-            // dgvTargetOrganizations_Name
-            // 
-            this.dgvTargetOrganizations_Name.HeaderText = "Название организации";
-            this.dgvTargetOrganizations_Name.Name = "dgvTargetOrganizations_Name";
-            this.dgvTargetOrganizations_Name.ReadOnly = true;
-            // 
             // TargetOrganizations
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -105,7 +105,9 @@
             this.Controls.Add(this.btRename);
             this.Controls.Add(this.btNewTargetOrganization);
             this.Controls.Add(this.dgvTargetOrganizations);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "TargetOrganizations";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Целевые организации";
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizations)).EndInit();
             this.ResumeLayout(false);

@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_CreateApplication = new System.Windows.Forms.ToolStripButton();
+            this.toolStripMain = new System.Windows.Forms.ToolStrip();
+            this.toolStripMain_CreateApplication = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripMain_cbCurrCampaign = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,29 +58,44 @@
             this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStrip.SuspendLayout();
+            this.toolStripMain.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
             this.SuspendLayout();
             // 
-            // toolStrip
+            // toolStripMain
             // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_CreateApplication});
-            this.toolStrip.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1008, 25);
-            this.toolStrip.TabIndex = 0;
-            this.toolStrip.Text = "toolStrip1";
+            this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMain_CreateApplication,
+            this.toolStripLabel1,
+            this.toolStripMain_cbCurrCampaign});
+            this.toolStripMain.Location = new System.Drawing.Point(0, 24);
+            this.toolStripMain.Name = "toolStripMain";
+            this.toolStripMain.Size = new System.Drawing.Size(1008, 25);
+            this.toolStripMain.TabIndex = 0;
+            this.toolStripMain.Text = "toolStrip1";
             // 
-            // toolStrip_CreateApplication
+            // toolStripMain_CreateApplication
             // 
-            this.toolStrip_CreateApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_CreateApplication.Image")));
-            this.toolStrip_CreateApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_CreateApplication.Name = "toolStrip_CreateApplication";
-            this.toolStrip_CreateApplication.Size = new System.Drawing.Size(129, 22);
-            this.toolStrip_CreateApplication.Text = "Создать заявление";
-            this.toolStrip_CreateApplication.Click += new System.EventHandler(this.toolStrip_CreateApplication_Click);
+            this.toolStripMain_CreateApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMain_CreateApplication.Image")));
+            this.toolStripMain_CreateApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripMain_CreateApplication.Name = "toolStripMain_CreateApplication";
+            this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMain_CreateApplication.Text = "Создать заявление";
+            this.toolStripMain_CreateApplication.Click += new System.EventHandler(this.toolStrip_CreateApplication_Click);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(173, 22);
+            this.toolStripLabel1.Text = "Текущая приемная кампания:";
+            // 
+            // toolStripMain_cbCurrCampaign
+            // 
+            this.toolStripMain_cbCurrCampaign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripMain_cbCurrCampaign.Name = "toolStripMain_cbCurrCampaign";
+            this.toolStripMain_cbCurrCampaign.Size = new System.Drawing.Size(121, 25);
+            this.toolStripMain_cbCurrCampaign.SelectedIndexChanged += new System.EventHandler(this.toolStripMain_cbCurrCampaign_SelectedIndexChanged);
             // 
             // menuStrip
             // 
@@ -254,13 +271,14 @@
             this.dgvApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvApplications.Size = new System.Drawing.Size(1008, 412);
             this.dgvApplications.TabIndex = 2;
-            this.dgvApplications.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellContentDoubleClick);
+            this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             // 
             // dgvApplications_ID
             // 
             this.dgvApplications_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvApplications_ID.HeaderText = "ID";
             this.dgvApplications_ID.Name = "dgvApplications_ID";
+            this.dgvApplications_ID.ReadOnly = true;
             this.dgvApplications_ID.Width = 43;
             // 
             // dgvApplications_Number
@@ -268,6 +286,7 @@
             this.dgvApplications_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvApplications_Number.HeaderText = "Номер";
             this.dgvApplications_Number.Name = "dgvApplications_Number";
+            this.dgvApplications_Number.ReadOnly = true;
             this.dgvApplications_Number.Width = 66;
             // 
             // dgvApplications_LastName
@@ -275,18 +294,21 @@
             this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dgvApplications_LastName.HeaderText = "Фамилия";
             this.dgvApplications_LastName.Name = "dgvApplications_LastName";
+            this.dgvApplications_LastName.ReadOnly = true;
             // 
             // dgvApplications_FirstName
             // 
             this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dgvApplications_FirstName.HeaderText = "Имя";
             this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
+            this.dgvApplications_FirstName.ReadOnly = true;
             // 
             // dgvApplications_MiddleName
             // 
             this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dgvApplications_MiddleName.HeaderText = "Отчество";
             this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
+            this.dgvApplications_MiddleName.ReadOnly = true;
             // 
             // Main
             // 
@@ -294,14 +316,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 461);
             this.Controls.Add(this.dgvApplications);
-            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.toolStripMain);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Main";
             this.Text = "ИС \"Приемная комиссия\"";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
+            this.toolStripMain.ResumeLayout(false);
+            this.toolStripMain.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).EndInit();
@@ -312,8 +334,8 @@
 
         #endregion
 
-        private System.Windows.Forms.ToolStrip toolStrip;
-        private System.Windows.Forms.ToolStripButton toolStrip_CreateApplication;
+        private System.Windows.Forms.ToolStrip toolStripMain;
+        private System.Windows.Forms.ToolStripButton toolStripMain_CreateApplication;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Campaigns;
@@ -339,6 +361,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
+        private System.Windows.Forms.ToolStripComboBox toolStripMain_cbCurrCampaign;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 

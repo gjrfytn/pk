@@ -30,13 +30,13 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvDirections_ = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btSave = new System.Windows.Forms.Button();
             this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections_)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,25 +65,6 @@
             this.dgvDirections_.Size = new System.Drawing.Size(666, 436);
             this.dgvDirections_.TabIndex = 0;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(291, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Направления факультета отмечаются галочками слева";
-            // 
-            // btSave
-            // 
-            this.btSave.Location = new System.Drawing.Point(319, 484);
-            this.btSave.Name = "btSave";
-            this.btSave.Size = new System.Drawing.Size(75, 23);
-            this.btSave.TabIndex = 2;
-            this.btSave.Text = "Сохранить";
-            this.btSave.UseVisualStyleBackColor = true;
-            this.btSave.Click += new System.EventHandler(this.btSave_Click);
-            // 
             // dgvDirections_ID
             // 
             this.dgvDirections_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -91,7 +72,6 @@
             this.dgvDirections_ID.Name = "dgvDirections_ID";
             this.dgvDirections_ID.ReadOnly = true;
             this.dgvDirections_ID.Visible = false;
-            this.dgvDirections_ID.Width = 24;
             // 
             // dgvDirections_Select
             // 
@@ -123,15 +103,37 @@
             this.dgvDirections_Type.ReadOnly = true;
             this.dgvDirections_Type.Width = 128;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(291, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Направления факультета отмечаются галочками слева";
+            // 
+            // btSave
+            // 
+            this.btSave.Location = new System.Drawing.Point(319, 484);
+            this.btSave.Name = "btSave";
+            this.btSave.Size = new System.Drawing.Size(75, 23);
+            this.btSave.TabIndex = 2;
+            this.btSave.Text = "Сохранить";
+            this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            // 
             // FaculityDirectionsSelect
             // 
+            this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(691, 519);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvDirections_);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FaculityDirectionsSelect";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Выбор направлений факультета";
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections_)).EndInit();
             this.ResumeLayout(false);
