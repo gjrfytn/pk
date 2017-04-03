@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.dgvCampaigns = new System.Windows.Forms.DataGridView();
-            this.btCreatePriemComp = new System.Windows.Forms.Button();
-            this.btUpdate = new System.Windows.Forms.Button();
             this.dgvCampaigns_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvCampaigns_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvCampaigns_Timing = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvCampaigns_EduLevels = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvCampaigns_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btCreatePriemComp = new System.Windows.Forms.Button();
+            this.btUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCampaigns)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,26 +59,6 @@
             this.dgvCampaigns.Size = new System.Drawing.Size(715, 382);
             this.dgvCampaigns.TabIndex = 0;
             // 
-            // btCreatePriemComp
-            // 
-            this.btCreatePriemComp.Location = new System.Drawing.Point(149, 12);
-            this.btCreatePriemComp.Name = "btCreatePriemComp";
-            this.btCreatePriemComp.Size = new System.Drawing.Size(171, 23);
-            this.btCreatePriemComp.TabIndex = 1;
-            this.btCreatePriemComp.Text = "Создать приемную кампанию";
-            this.btCreatePriemComp.UseVisualStyleBackColor = true;
-            this.btCreatePriemComp.Click += new System.EventHandler(this.btCreatePriemComp_Click);
-            // 
-            // btUpdate
-            // 
-            this.btUpdate.Location = new System.Drawing.Point(450, 12);
-            this.btUpdate.Name = "btUpdate";
-            this.btUpdate.Size = new System.Drawing.Size(142, 23);
-            this.btUpdate.TabIndex = 2;
-            this.btUpdate.Text = "Изменить выделенную";
-            this.btUpdate.UseVisualStyleBackColor = true;
-            this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
-            // 
             // dgvCampaigns_ID
             // 
             this.dgvCampaigns_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -86,7 +66,6 @@
             this.dgvCampaigns_ID.Name = "dgvCampaigns_ID";
             this.dgvCampaigns_ID.ReadOnly = true;
             this.dgvCampaigns_ID.Visible = false;
-            this.dgvCampaigns_ID.Width = 24;
             // 
             // dgvCampaigns_Name
             // 
@@ -119,6 +98,26 @@
             this.dgvCampaigns_Status.ReadOnly = true;
             this.dgvCampaigns_Status.Width = 66;
             // 
+            // btCreatePriemComp
+            // 
+            this.btCreatePriemComp.Location = new System.Drawing.Point(149, 12);
+            this.btCreatePriemComp.Name = "btCreatePriemComp";
+            this.btCreatePriemComp.Size = new System.Drawing.Size(171, 23);
+            this.btCreatePriemComp.TabIndex = 1;
+            this.btCreatePriemComp.Text = "Создать приемную кампанию";
+            this.btCreatePriemComp.UseVisualStyleBackColor = true;
+            this.btCreatePriemComp.Click += new System.EventHandler(this.btCreatePriemComp_Click);
+            // 
+            // btUpdate
+            // 
+            this.btUpdate.Location = new System.Drawing.Point(450, 12);
+            this.btUpdate.Name = "btUpdate";
+            this.btUpdate.Size = new System.Drawing.Size(142, 23);
+            this.btUpdate.TabIndex = 2;
+            this.btUpdate.Text = "Изменить выделенную";
+            this.btUpdate.UseVisualStyleBackColor = true;
+            this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
+            // 
             // Campaigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -128,6 +127,7 @@
             this.Controls.Add(this.btCreatePriemComp);
             this.Controls.Add(this.dgvCampaigns);
             this.Name = "Campaigns";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приемные кампании";
             ((System.ComponentModel.ISupportInitialize)(this.dgvCampaigns)).EndInit();
             this.ResumeLayout(false);

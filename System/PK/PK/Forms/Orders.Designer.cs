@@ -130,6 +130,7 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
             this.Name = "Orders";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приказы";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);

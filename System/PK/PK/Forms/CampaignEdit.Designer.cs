@@ -66,6 +66,13 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvEntranceTests = new System.Windows.Forms.DataGridView();
+            this.dgvEntranceTests_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvEntranceTests_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvEntranceTests_DirCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvEntranceTests_FacultyNamr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvEntranceTests_First = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dgvEntranceTests_Second = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dgvEntranceTests_Third = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.label9 = new System.Windows.Forms.Label();
             this.dgvPaidPlaces = new System.Windows.Forms.DataGridView();
             this.dgvPaidPlaces_Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -95,13 +102,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
-            this.dgvEntranceTests_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvEntranceTests_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvEntranceTests_DirCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvEntranceTests_FacultyNamr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvEntranceTests_First = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dgvEntranceTests_Second = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dgvEntranceTests_Third = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -488,6 +488,56 @@
             this.dgvEntranceTests.Size = new System.Drawing.Size(788, 296);
             this.dgvEntranceTests.TabIndex = 18;
             // 
+            // dgvEntranceTests_ID
+            // 
+            this.dgvEntranceTests_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvEntranceTests_ID.HeaderText = "ID";
+            this.dgvEntranceTests_ID.Name = "dgvEntranceTests_ID";
+            this.dgvEntranceTests_ID.ReadOnly = true;
+            this.dgvEntranceTests_ID.Visible = false;
+            // 
+            // dgvEntranceTests_DirName
+            // 
+            this.dgvEntranceTests_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvEntranceTests_DirName.HeaderText = "Направление подготовки";
+            this.dgvEntranceTests_DirName.Name = "dgvEntranceTests_DirName";
+            this.dgvEntranceTests_DirName.ReadOnly = true;
+            this.dgvEntranceTests_DirName.Width = 300;
+            // 
+            // dgvEntranceTests_DirCode
+            // 
+            this.dgvEntranceTests_DirCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvEntranceTests_DirCode.HeaderText = "Код направления";
+            this.dgvEntranceTests_DirCode.Name = "dgvEntranceTests_DirCode";
+            this.dgvEntranceTests_DirCode.ReadOnly = true;
+            this.dgvEntranceTests_DirCode.Width = 110;
+            // 
+            // dgvEntranceTests_FacultyNamr
+            // 
+            this.dgvEntranceTests_FacultyNamr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvEntranceTests_FacultyNamr.HeaderText = "Факультет";
+            this.dgvEntranceTests_FacultyNamr.Name = "dgvEntranceTests_FacultyNamr";
+            this.dgvEntranceTests_FacultyNamr.ReadOnly = true;
+            this.dgvEntranceTests_FacultyNamr.Width = 70;
+            // 
+            // dgvEntranceTests_First
+            // 
+            this.dgvEntranceTests_First.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_First.HeaderText = "Первая дисциплина";
+            this.dgvEntranceTests_First.Name = "dgvEntranceTests_First";
+            // 
+            // dgvEntranceTests_Second
+            // 
+            this.dgvEntranceTests_Second.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_Second.HeaderText = "Вторая дисциплина";
+            this.dgvEntranceTests_Second.Name = "dgvEntranceTests_Second";
+            // 
+            // dgvEntranceTests_Third
+            // 
+            this.dgvEntranceTests_Third.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_Third.HeaderText = "Третья дисциплина";
+            this.dgvEntranceTests_Third.Name = "dgvEntranceTests_Third";
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -760,59 +810,9 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // dgvEntranceTests_ID
-            // 
-            this.dgvEntranceTests_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvEntranceTests_ID.HeaderText = "ID";
-            this.dgvEntranceTests_ID.Name = "dgvEntranceTests_ID";
-            this.dgvEntranceTests_ID.ReadOnly = true;
-            this.dgvEntranceTests_ID.Visible = false;
-            this.dgvEntranceTests_ID.Width = 24;
-            // 
-            // dgvEntranceTests_DirName
-            // 
-            this.dgvEntranceTests_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvEntranceTests_DirName.HeaderText = "Направление подготовки";
-            this.dgvEntranceTests_DirName.Name = "dgvEntranceTests_DirName";
-            this.dgvEntranceTests_DirName.ReadOnly = true;
-            this.dgvEntranceTests_DirName.Width = 300;
-            // 
-            // dgvEntranceTests_DirCode
-            // 
-            this.dgvEntranceTests_DirCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvEntranceTests_DirCode.HeaderText = "Код направления";
-            this.dgvEntranceTests_DirCode.Name = "dgvEntranceTests_DirCode";
-            this.dgvEntranceTests_DirCode.ReadOnly = true;
-            this.dgvEntranceTests_DirCode.Width = 110;
-            // 
-            // dgvEntranceTests_FacultyNamr
-            // 
-            this.dgvEntranceTests_FacultyNamr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvEntranceTests_FacultyNamr.HeaderText = "Факультет";
-            this.dgvEntranceTests_FacultyNamr.Name = "dgvEntranceTests_FacultyNamr";
-            this.dgvEntranceTests_FacultyNamr.ReadOnly = true;
-            this.dgvEntranceTests_FacultyNamr.Width = 70;
-            // 
-            // dgvEntranceTests_First
-            // 
-            this.dgvEntranceTests_First.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvEntranceTests_First.HeaderText = "Первая дисциплина";
-            this.dgvEntranceTests_First.Name = "dgvEntranceTests_First";
-            // 
-            // dgvEntranceTests_Second
-            // 
-            this.dgvEntranceTests_Second.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvEntranceTests_Second.HeaderText = "Вторая дисциплина";
-            this.dgvEntranceTests_Second.Name = "dgvEntranceTests_Second";
-            // 
-            // dgvEntranceTests_Third
-            // 
-            this.dgvEntranceTests_Third.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvEntranceTests_Third.HeaderText = "Третья дисциплина";
-            this.dgvEntranceTests_Third.Name = "dgvEntranceTests_Third";
-            // 
             // CampaignEdit
             // 
+            this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(822, 527);
@@ -832,6 +832,7 @@
             this.Controls.Add(this.gbEduForms);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "CampaignEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приемная кампания";
             this.Load += new System.EventHandler(this.CampaignEdit_Load);
             this.gbEduForms.ResumeLayout(false);

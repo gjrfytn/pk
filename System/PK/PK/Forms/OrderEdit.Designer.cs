@@ -388,6 +388,7 @@
             // 
             // OrderEdit
             // 
+            this.AcceptButton = this.bSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 561);
@@ -395,6 +396,7 @@
             this.Controls.Add(this.panel);
             this.Name = "OrderEdit";
             this.Text = "Приказ";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.gbEduSource.ResumeLayout(false);
             this.gbEduSource.PerformLayout();
             this.gbEduForm.ResumeLayout(false);

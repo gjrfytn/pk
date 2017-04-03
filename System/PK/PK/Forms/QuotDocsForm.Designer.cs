@@ -312,6 +312,7 @@
             // 
             // QuotDocsForm
             // 
+            this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(405, 364);
@@ -320,7 +321,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pOrphanhood);
             this.Controls.Add(this.pMed);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "QuotDocsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Особая квота";
             this.pOrphanhood.ResumeLayout(false);
             this.pOrphanhood.PerformLayout();

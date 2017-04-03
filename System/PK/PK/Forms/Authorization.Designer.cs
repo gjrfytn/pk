@@ -70,6 +70,7 @@
             // 
             // Authorization
             // 
+            this.AcceptButton = this.bAuth;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 175);
@@ -78,9 +79,12 @@
             this.Controls.Add(this.lLogin);
             this.Controls.Add(this.cbLogin);
             this.Controls.Add(this.bAuth);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Authorization";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
-            //this.Load += new System.EventHandler(this.Authorization_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
