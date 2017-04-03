@@ -5,16 +5,16 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>14</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>14</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="UsualUnderline">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>14</Size>
       <Style>Underline</Style>
     </Font>
     <Font ID="18">
@@ -237,6 +237,9 @@
           </Paragraph>
         </Element>
         <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
           <Paragraph>
             <FontID>Usual</FontID>
             <Parts>
@@ -250,9 +253,17 @@
                   <Placeholder>4</Placeholder>
                 </Text>
               </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Alighment>Right</Alighment>
+            <Parts>
               <Part>
                 <Text>
-                  <String>        Дата создания: </String>
+                  <String>Дата создания: </String>
                 </Text>
               </Part>
               <Part>

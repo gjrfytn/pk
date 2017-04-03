@@ -234,6 +234,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -245,6 +246,11 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <Borders>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
@@ -296,6 +302,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -307,6 +314,11 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -359,6 +371,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -372,7 +385,7 @@
                   <Cell Column="2">
                     <Borders>
                       <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
@@ -426,6 +439,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -437,6 +451,11 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -489,6 +508,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -502,7 +522,7 @@
                   <Cell Column="2">
                     <Borders>
                       <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
@@ -556,6 +576,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -567,6 +588,11 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -619,6 +645,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -632,7 +659,7 @@
                   <Cell Column="2">
                     <Borders>
                       <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
@@ -694,6 +721,7 @@
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
+                        <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
                             <Text>
@@ -705,6 +733,11 @@
                     </Paragraphs>
                   </Cell>
                   <Cell Column="2">
+                    <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -794,6 +827,11 @@
                     </Borders>
                   </Cell>
                   <Cell Column="7">
+                    <Borders>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Usual</FontID>
@@ -882,6 +920,11 @@
                     </Borders>
                   </Cell>
                   <Cell Column="7">
+                    <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>UsualBold</FontID>
@@ -971,6 +1014,11 @@
                     </Borders>
                   </Cell>
                   <Cell Column="7">
+                    <Borders>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
+                    </Borders>
                     <Paragraphs>
                       <Paragraph>
                         <FontID>Small</FontID>
@@ -1060,6 +1108,9 @@
                   </Cell>
                   <Cell Column="7">
                     <Borders>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
                       <Bottom>
                         <Size>5</Size>
                       </Bottom>
