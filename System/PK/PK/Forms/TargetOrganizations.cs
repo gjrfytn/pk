@@ -19,7 +19,7 @@ namespace PK.Forms
         private void UpdateTable()
         {
             dgvTargetOrganizations.Rows.Clear();
-            foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "uid", "name"))
+            foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "id", "name"))
                 dgvTargetOrganizations.Rows.Add(v);
             dgvTargetOrganizations.Sort(dgvTargetOrganizations_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
@@ -50,7 +50,7 @@ namespace PK.Forms
             else
             {
                 _DB_Connection.Delete(DB_Table.TARGET_ORGANIZATIONS, new Dictionary<string, object>
-                { { "uid",dgvTargetOrganizations.SelectedRows[0].Cells[0].Value }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value} });
+                { { "id",dgvTargetOrganizations.SelectedRows[0].Cells[0].Value }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value} });
                 UpdateTable();
             }
         }

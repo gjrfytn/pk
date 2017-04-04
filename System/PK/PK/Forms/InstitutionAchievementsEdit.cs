@@ -31,7 +31,7 @@ namespace PK.Forms
         {
             dgvAchievements.Rows.Clear();
             foreach (var record in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "name", "category_dict_id",
-                "category_id", "max_value" }, new List<Tuple<string, Relation, object>>
+                "category_id", "value" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
                 }))
@@ -131,27 +131,28 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dgvAchievements.Rows)
                 newList.Add(new object[] { row.Cells[0].Value, row.Cells[1].Value, row.Cells[2].Value, 36, row.Cells[4].Value, _LoadedCampaign });
 
-            foreach (var record in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "name", "max_value", "category_dict_id", "category_id", "campaign_id" },
+            foreach (var record in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "name", "value", "category_dict_id", "category_id", "campaign_id" },
                     new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
                 }))
                 oldList.Add(new object[] { record[0], record[1], record[2], record[3], record[4], record[5] });
-            UpdateData(DB_Table.INSTITUTION_ACHIEVEMENTS, oldList, newList, true, 1, new string[] { "id", "name", "max_value", "category_dict_id", "category_id", "campaign_id" });
 
-            foreach (var institutionAchievement in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "max_value" },
-                    new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
-                }))
-                foreach (var individualAchievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id", "mark" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, institutionAchievement[0])
-                    }))
-                    if (institutionAchievement[1] != individualAchievement[1])
-                        _DB_Connection.Update(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "mark", institutionAchievement[1] } },
-                            new Dictionary<string, object> { { "id", institutionAchievement[0] } });
+            UpdateData(DB_Table.INSTITUTION_ACHIEVEMENTS, oldList, newList, true, 1, new string[] { "id", "name", "value", "category_dict_id", "category_id", "campaign_id" });
+
+            //foreach (var institutionAchievement in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "value" },
+            //        new List<Tuple<string, Relation, object>>
+            //    {
+            //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
+            //    }))
+            //    foreach (var individualAchievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id", "mark" },
+            //        new List<Tuple<string, Relation, object>>
+            //        {
+            //            new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, institutionAchievement[0])
+            //        }))
+            //        if (institutionAchievement[1] != individualAchievement[1])
+            //            _DB_Connection.Update(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "mark", institutionAchievement[1] } },
+            //                new Dictionary<string, object> { { "id", institutionAchievement[0] } });
         }
 
         private void btLoad_Click(object sender, EventArgs e)
@@ -203,7 +204,7 @@ namespace PK.Forms
                 if (!found)
                     _DB_Connection.Insert(DB_Table.INSTITUTION_ACHIEVEMENTS, new Dictionary<string, object> { { "name", tbAchievementName.Text},
                         { "category_dict_id", 36}, { "category_id", _DB_Helper.GetDictionaryItemID(36,cbAchievementType.SelectedValue.ToString())},
-                        { "max_value", tbMaxValue.Text}, { "campaign_id", _LoadedCampaign} });
+                        { "value", tbMaxValue.Text}, { "campaign_id", _LoadedCampaign} });
             }
             
             cbAchievementType.Enabled = false;

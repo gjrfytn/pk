@@ -26,18 +26,18 @@ namespace PK.Forms
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
-            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "number", "entrant_id", "registration_time" });
+            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time" });
             if (apps.Count>0)
                 foreach (var application in apps)
                 {
-                    if (((DateTime)application[3]).Year == _CurrCampaignStartYear)
+                    if (((DateTime)application[2]).Year == _CurrCampaignStartYear)
                     {
                         object[] names = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "last_name", "first_name", "middle_name" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[2])
+                                new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
                             })[0];
-                        dgvApplications.Rows.Add(application[0], application[1], names[0], names[1], names[2]);
+                        dgvApplications.Rows.Add(application[0], names[0], names[1], names[2]);
                     }
                 }
         }
@@ -45,12 +45,12 @@ namespace PK.Forms
         private void UpdateCampaignsList()
         {
             toolStripMain_cbCurrCampaign.Items.Clear();
-            List<object[]> campaigns = _DB_Connection.Select(DB_Table.CAMPAIGNS, "name");
+            List<object[]> campaigns = _DB_Connection.Select(DB_Table.CAMPAIGNS, "id", "name");
             if (campaigns.Count>0)
             {
                 foreach (var campaign in campaigns)
                 {
-                    toolStripMain_cbCurrCampaign.Items.Insert(0, campaign[0]);
+                    toolStripMain_cbCurrCampaign.Items.Insert(0, campaign[1]);
                 }
                 toolStripMain_cbCurrCampaign.SelectedIndex = 0;
             }
@@ -162,8 +162,9 @@ namespace PK.Forms
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(6, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
+            ApplicationEdit form = new ApplicationEdit(_CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
             form.ShowDialog();
+            UpdateApplicationsTable();
         }
     }
 }

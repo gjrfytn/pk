@@ -23,7 +23,7 @@ namespace PK.Forms
 
             if ((_Parent.SportDoc.diplomaType != null) && (_Parent.SportDoc.diplomaType != ""))
             {
-                cbDocType.SelectedItem = _Parent.SportDoc.diplomaType;
+                cbDocType.SelectedValue = _Parent.SportDoc.diplomaType;
                 tbDocName.Text = _Parent.SportDoc.docName;
                 dtpDocDate.Value = _Parent.SportDoc.docDate;
                 tbOrgName.Text = _Parent.SportDoc.orgName;

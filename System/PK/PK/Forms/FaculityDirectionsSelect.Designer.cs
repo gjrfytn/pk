@@ -30,13 +30,14 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvDirections_ = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btSave = new System.Windows.Forms.Button();
             this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btSave = new System.Windows.Forms.Button();
+            this.dgvDirections_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections_)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +51,8 @@
             this.dgvDirections_Select,
             this.dgvDirections_Name,
             this.dgvDirections_Code,
-            this.dgvDirections_Type});
+            this.dgvDirections_Type,
+            this.dgvDirections_ShortName});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -65,6 +67,25 @@
             this.dgvDirections_.Size = new System.Drawing.Size(666, 436);
             this.dgvDirections_.TabIndex = 0;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(291, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Направления факультета отмечаются галочками слева";
+            // 
+            // btSave
+            // 
+            this.btSave.Location = new System.Drawing.Point(319, 484);
+            this.btSave.Name = "btSave";
+            this.btSave.Size = new System.Drawing.Size(75, 23);
+            this.btSave.TabIndex = 2;
+            this.btSave.Text = "Сохранить";
+            this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            // 
             // dgvDirections_ID
             // 
             this.dgvDirections_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -72,6 +93,7 @@
             this.dgvDirections_ID.Name = "dgvDirections_ID";
             this.dgvDirections_ID.ReadOnly = true;
             this.dgvDirections_ID.Visible = false;
+            this.dgvDirections_ID.Width = 24;
             // 
             // dgvDirections_Select
             // 
@@ -103,24 +125,12 @@
             this.dgvDirections_Type.ReadOnly = true;
             this.dgvDirections_Type.Width = 128;
             // 
-            // label1
+            // dgvDirections_ShortName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(291, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Направления факультета отмечаются галочками слева";
-            // 
-            // btSave
-            // 
-            this.btSave.Location = new System.Drawing.Point(319, 484);
-            this.btSave.Name = "btSave";
-            this.btSave.Size = new System.Drawing.Size(75, 23);
-            this.btSave.TabIndex = 2;
-            this.btSave.Text = "Сохранить";
-            this.btSave.UseVisualStyleBackColor = true;
-            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            this.dgvDirections_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_ShortName.HeaderText = "Сокращение";
+            this.dgvDirections_ShortName.Name = "dgvDirections_ShortName";
+            this.dgvDirections_ShortName.Width = 80;
             // 
             // FaculityDirectionsSelect
             // 
@@ -151,5 +161,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_ShortName;
     }
 }

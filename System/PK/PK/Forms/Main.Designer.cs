@@ -54,7 +54,6 @@
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvApplications = new System.Windows.Forms.DataGridView();
             this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -258,7 +257,6 @@
             this.dgvApplications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvApplications.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvApplications_ID,
-            this.dgvApplications_Number,
             this.dgvApplications_LastName,
             this.dgvApplications_FirstName,
             this.dgvApplications_MiddleName});
@@ -280,14 +278,6 @@
             this.dgvApplications_ID.Name = "dgvApplications_ID";
             this.dgvApplications_ID.ReadOnly = true;
             this.dgvApplications_ID.Width = 43;
-            // 
-            // dgvApplications_Number
-            // 
-            this.dgvApplications_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvApplications_Number.HeaderText = "Номер";
-            this.dgvApplications_Number.Name = "dgvApplications_Number";
-            this.dgvApplications_Number.ReadOnly = true;
-            this.dgvApplications_Number.Width = 66;
             // 
             // dgvApplications_LastName
             // 
@@ -356,13 +346,12 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_InstitutionAchievements;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Orders;
         private System.Windows.Forms.DataGridView dgvApplications;
+        private System.Windows.Forms.ToolStripComboBox toolStripMain_cbCurrCampaign;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Number;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
-        private System.Windows.Forms.ToolStripComboBox toolStripMain_cbCurrCampaign;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 

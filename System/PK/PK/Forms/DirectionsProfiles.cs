@@ -31,17 +31,17 @@ namespace PK.Forms
                 if (v[2].ToString().Substring(3, 2) == "03")
                 {
                     _Directions.Add(new object[] { v[1], v[2], "Бакалавриат", v[0] });
-                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Бакалавриат");
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], "", v[2], "Бакалавриат");
                 }
                 else if (v[2].ToString().Substring(3, 2) == "05")
                 {
                     _Directions.Add(new object[] { v[1], v[2], "Специалитет", v[0] });
-                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Специалитет");
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], "", v[2], "Специалитет");
                 }
                 else if (v[2].ToString().Substring(3, 2) == "04")
                 {
                     _Directions.Add(new object[] { v[1], v[2], "Магистратура", v[0] });
-                    dgvDirections.Rows.Add(v[0], "Н", v[1], v[2], "Магистратура");
+                    dgvDirections.Rows.Add(v[0], "Н", v[1], "", v[2], "Магистратура");
                 }
                 if (dgvDirections.Rows.Count != 0)
                     for (int i = 0; i < dgvDirections.Rows[dgvDirections.Rows.Count - 1].Cells.Count; i++)
@@ -55,12 +55,12 @@ namespace PK.Forms
             }
             dgvDirections.Sort(dgvDirections_Code, System.ComponentModel.ListSortDirection.Ascending);
 
-            foreach (object[] v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id", "faculty_short_name"))
+            foreach (object[] v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id", "faculty_short_name", "short_name"))
                 for (int i = 0; i < dgvDirections.Rows.Count; i++)
                 {
                     if ((dgvDirections.Rows[i].Cells[1].Value.ToString() == "Н") && (dgvDirections.Rows[i].Cells[0].Value.ToString() == v[1].ToString()))
-                        dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0],
-                            dgvDirections.Rows[i].Cells[2].Value, dgvDirections.Rows[i].Cells[3].Value, v[2]);
+                        dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0], v[3].ToString(),
+                            dgvDirections.Rows[i].Cells[4].Value, dgvDirections.Rows[i].Cells[5].Value, v[2]);
                 }
 
             _Faculties = new List<string>();
@@ -132,16 +132,18 @@ namespace PK.Forms
         private void btSave_Click(object sender, EventArgs e)
         {
             if (cbDirections.SelectedIndex == -1)
-                MessageBox.Show("Не выбрано направление");
+                MessageBox.Show("Не выбрано направление.");
             else if (cbFaculties.SelectedIndex == -1)
-                MessageBox.Show("Не выбран факультет");
-            else if (tbName.Text.Length == 0)
-                MessageBox.Show("Не указано название профиля");
+                MessageBox.Show("Не выбран факультет.");
+            else if (tbName.Text == "")
+                MessageBox.Show("Не указано название профиля.");
+            else if (tbShortName.Text == "")
+                MessageBox.Show("Не указано сокращенное название профиля.");
             else
             {
                 object[] temp = _Directions.Find(x => x[1].ToString() == cbDirections.SelectedItem.ToString().Substring(0, 8));
                 _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object>
-                { { "faculty_short_name", cbFaculties.SelectedItem.ToString()}, { "direction_id",  temp[3]},  { "name", tbName.Text } });
+                { { "faculty_short_name", cbFaculties.SelectedItem.ToString()}, { "direction_id",  temp[3]},  { "name", tbName.Text }, { "short_name", tbShortName.Text} });
 
                 EnableDisableControls(false);
                 UpdateTable();
@@ -156,7 +158,7 @@ namespace PK.Forms
         private void btDelete_Click(object sender, EventArgs e)
         {
             if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[1].Value.ToString() == "Н"))
-                MessageBox.Show("Выберить профиль");
+                MessageBox.Show("Выберите профиль");
             else
             {
                 _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>

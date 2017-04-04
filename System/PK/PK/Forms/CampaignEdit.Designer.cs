@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,19 +50,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbState = new System.Windows.Forms.ComboBox();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
-            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_CPOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_CPOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvEntranceTests = new System.Windows.Forms.DataGridView();
@@ -96,12 +83,24 @@
             this.dgvTargetOrganizatons_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTargetOrganizatons_faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons_DirSelect = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dgvTargetOrganizatons_OF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons_OZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
+            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -324,17 +323,15 @@
             this.dgvDirections_OOZF,
             this.dgvDirections_OKOF,
             this.dgvDirections_OKOZF,
-            this.dgvDirections_OKZF,
-            this.dgvDirections_CPOF,
-            this.dgvDirections_CPOZF});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvDirections_OKZF});
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvDirections.Location = new System.Drawing.Point(0, 19);
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.RowHeadersVisible = false;
@@ -343,104 +340,6 @@
             this.dgvDirections.Size = new System.Drawing.Size(790, 296);
             this.dgvDirections.TabIndex = 1;
             this.dgvDirections.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellValueChanged);
-            // 
-            // dgvDirections_DirID
-            // 
-            this.dgvDirections_DirID.Frozen = true;
-            this.dgvDirections_DirID.HeaderText = "ID";
-            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
-            this.dgvDirections_DirID.ReadOnly = true;
-            this.dgvDirections_DirID.Visible = false;
-            // 
-            // dgvDirections_Selected
-            // 
-            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Selected.Frozen = true;
-            this.dgvDirections_Selected.HeaderText = "";
-            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
-            this.dgvDirections_Selected.Width = 5;
-            // 
-            // dgvDirections_Name
-            // 
-            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Name.Frozen = true;
-            this.dgvDirections_Name.HeaderText = "Направление";
-            this.dgvDirections_Name.Name = "dgvDirections_Name";
-            this.dgvDirections_Name.Width = 250;
-            // 
-            // dgvDirections_Code
-            // 
-            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Code.Frozen = true;
-            this.dgvDirections_Code.HeaderText = "Код направления";
-            this.dgvDirections_Code.Name = "dgvDirections_Code";
-            this.dgvDirections_Code.ReadOnly = true;
-            this.dgvDirections_Code.Width = 80;
-            // 
-            // dgvDirections_Fac
-            // 
-            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Fac.Frozen = true;
-            this.dgvDirections_Fac.HeaderText = "Факультет";
-            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
-            this.dgvDirections_Fac.ReadOnly = true;
-            this.dgvDirections_Fac.Width = 70;
-            // 
-            // dgvDirections_OOOF
-            // 
-            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
-            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
-            this.dgvDirections_OOOF.Width = 80;
-            // 
-            // dgvDirections_OOOZF
-            // 
-            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
-            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
-            this.dgvDirections_OOOZF.Width = 80;
-            // 
-            // dgvDirections_OOZF
-            // 
-            this.dgvDirections_OOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOZF.HeaderText = "Общие основания, заочная форма";
-            this.dgvDirections_OOZF.Name = "dgvDirections_OOZF";
-            this.dgvDirections_OOZF.Width = 80;
-            // 
-            // dgvDirections_OKOF
-            // 
-            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
-            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
-            this.dgvDirections_OKOF.Width = 80;
-            // 
-            // dgvDirections_OKOZF
-            // 
-            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
-            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
-            this.dgvDirections_OKOZF.Width = 80;
-            // 
-            // dgvDirections_OKZF
-            // 
-            this.dgvDirections_OKZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKZF.HeaderText = "Особая квота, заочная форма";
-            this.dgvDirections_OKZF.Name = "dgvDirections_OKZF";
-            this.dgvDirections_OKZF.Width = 80;
-            // 
-            // dgvDirections_CPOF
-            // 
-            this.dgvDirections_CPOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_CPOF.HeaderText = "Целевой прием, очная форма";
-            this.dgvDirections_CPOF.Name = "dgvDirections_CPOF";
-            this.dgvDirections_CPOF.Width = 80;
-            // 
-            // dgvDirections_CPOZF
-            // 
-            this.dgvDirections_CPOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_CPOZF.HeaderText = "Целевой прием, очно-заочная форма";
-            this.dgvDirections_CPOZF.Name = "dgvDirections_CPOZF";
-            this.dgvDirections_CPOZF.Width = 80;
             // 
             // panel1
             // 
@@ -562,14 +461,14 @@
             this.dgvPaidPlaces_OFPM,
             this.dgvPaidPlaces_OZFPM,
             this.dgvPaidPlaces_ZFPM});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvPaidPlaces.Location = new System.Drawing.Point(0, 860);
             this.dgvPaidPlaces.Name = "dgvPaidPlaces";
             this.dgvPaidPlaces.RowHeadersVisible = false;
@@ -698,6 +597,7 @@
             this.dgvTargetOrganizatons_DirID,
             this.dgvTargetOrganizatons_DirName,
             this.dgvTargetOrganizatons_Code,
+            this.dgvTargetOrganizatons_faculty,
             this.dgvTargetOrganizatons_DirSelect,
             this.dgvTargetOrganizatons_OF,
             this.dgvTargetOrganizatons_OZF});
@@ -705,6 +605,7 @@
             this.dgvTargetOrganizatons.Name = "dgvTargetOrganizatons";
             this.dgvTargetOrganizatons.RowHeadersVisible = false;
             this.dgvTargetOrganizatons.RowHeadersWidth = 20;
+            this.dgvTargetOrganizatons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvTargetOrganizatons.Size = new System.Drawing.Size(787, 297);
             this.dgvTargetOrganizatons.TabIndex = 4;
             this.dgvTargetOrganizatons.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTargetOrganizatons_CellContentClick);
@@ -759,6 +660,14 @@
             this.dgvTargetOrganizatons_Code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dgvTargetOrganizatons_Code.Width = 91;
             // 
+            // dgvTargetOrganizatons_faculty
+            // 
+            this.dgvTargetOrganizatons_faculty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvTargetOrganizatons_faculty.HeaderText = "Факультет";
+            this.dgvTargetOrganizatons_faculty.Name = "dgvTargetOrganizatons_faculty";
+            this.dgvTargetOrganizatons_faculty.ReadOnly = true;
+            this.dgvTargetOrganizatons_faculty.Width = 70;
+            // 
             // dgvTargetOrganizatons_DirSelect
             // 
             this.dgvTargetOrganizatons_DirSelect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -809,6 +718,90 @@
             this.btSave.Text = "Сохранить";
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            // 
+            // dgvDirections_DirID
+            // 
+            this.dgvDirections_DirID.Frozen = true;
+            this.dgvDirections_DirID.HeaderText = "ID";
+            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
+            this.dgvDirections_DirID.ReadOnly = true;
+            this.dgvDirections_DirID.Visible = false;
+            // 
+            // dgvDirections_Selected
+            // 
+            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirections_Selected.Frozen = true;
+            this.dgvDirections_Selected.HeaderText = "";
+            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
+            this.dgvDirections_Selected.Width = 5;
+            // 
+            // dgvDirections_Name
+            // 
+            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Name.Frozen = true;
+            this.dgvDirections_Name.HeaderText = "Направление";
+            this.dgvDirections_Name.Name = "dgvDirections_Name";
+            this.dgvDirections_Name.Width = 250;
+            // 
+            // dgvDirections_Code
+            // 
+            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Code.Frozen = true;
+            this.dgvDirections_Code.HeaderText = "Код направления";
+            this.dgvDirections_Code.Name = "dgvDirections_Code";
+            this.dgvDirections_Code.ReadOnly = true;
+            this.dgvDirections_Code.Width = 80;
+            // 
+            // dgvDirections_Fac
+            // 
+            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Fac.Frozen = true;
+            this.dgvDirections_Fac.HeaderText = "Факультет";
+            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
+            this.dgvDirections_Fac.ReadOnly = true;
+            this.dgvDirections_Fac.Width = 70;
+            // 
+            // dgvDirections_OOOF
+            // 
+            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
+            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
+            this.dgvDirections_OOOF.Width = 80;
+            // 
+            // dgvDirections_OOOZF
+            // 
+            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
+            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
+            this.dgvDirections_OOOZF.Width = 80;
+            // 
+            // dgvDirections_OOZF
+            // 
+            this.dgvDirections_OOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOZF.HeaderText = "Общие основания, заочная форма";
+            this.dgvDirections_OOZF.Name = "dgvDirections_OOZF";
+            this.dgvDirections_OOZF.Width = 80;
+            // 
+            // dgvDirections_OKOF
+            // 
+            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
+            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
+            this.dgvDirections_OKOF.Width = 80;
+            // 
+            // dgvDirections_OKOZF
+            // 
+            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
+            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
+            this.dgvDirections_OKOZF.Width = 80;
+            // 
+            // dgvDirections_OKZF
+            // 
+            this.dgvDirections_OKZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKZF.HeaderText = "Особая квота, заочная форма";
+            this.dgvDirections_OKZF.Name = "dgvDirections_OKZF";
+            this.dgvDirections_OKZF.Width = 80;
             // 
             // CampaignEdit
             // 
@@ -883,19 +876,6 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView dgvEntranceTests;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_CPOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_CPOZF;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvPaidPlaces_Select;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
@@ -908,15 +888,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_ShortFacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_FacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_HostelPlaces;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Name;
-        private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_Select;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_DirID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_DirName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Code;
-        private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_DirSelect;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirCode;
@@ -924,5 +895,26 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Name;
+        private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_Select;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_DirID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_DirName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_faculty;
+        private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_DirSelect;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKZF;
     }
 }

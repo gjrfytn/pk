@@ -6,24 +6,29 @@ namespace PK
 {
     public partial class TargetOrganizationSelect : Form
     {
-        public uint OrganizationID;
+        public uint? OrganizationID;
         public string OrganizationName;
 
         Dictionary<uint, string> _All_Items = new Dictionary<uint, string>();
         Classes.DB_Connector _DB_Connection;
 
-        public TargetOrganizationSelect()
+        public TargetOrganizationSelect(uint? orgID)
         {
             InitializeComponent();
 
             _DB_Connection = new Classes.DB_Connector();
+            OrganizationID = orgID;
 
-            foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "uid", "name"))
+            foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "id", "name"))
             {
                 _All_Items.Add((uint)v[0], v[1].ToString());
                 lbSelection.Items.Add(v[1]);
             }
-
+            if (OrganizationID != null)
+                tbSearchString.Text = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, OrganizationID)
+                })[0][0].ToString();
             tbSearchString.Select();
         }
 
@@ -37,16 +42,22 @@ namespace PK
 
         private void btSelect_Click(object sender, EventArgs e)
         {
-            if (lbSelection.SelectedIndex == -1)
+            if ((lbSelection.Items.Count>1)&&(lbSelection.SelectedIndex == -1))
                 MessageBox.Show("Выберите организацию в списке.");
-            else
+            else if (lbSelection.SelectedIndex != -1)
             {
                 OrganizationName = lbSelection.SelectedItem.ToString();
                 OrganizationID = System.Linq.Enumerable.First(_All_Items, x => x.Value == OrganizationName).Key;
 
                 DialogResult = DialogResult.OK;
             }
+            else
+            {
+                OrganizationName = lbSelection.Items[0].ToString();
+                OrganizationID = System.Linq.Enumerable.First(_All_Items, x => x.Value == OrganizationName).Key;
+
+                DialogResult = DialogResult.OK;
+            }
         }
     }
-
 }
