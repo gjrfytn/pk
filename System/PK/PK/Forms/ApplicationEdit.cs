@@ -1838,7 +1838,7 @@ namespace PK.Forms
             foreach (string[] form in tableParams[0])
                 parameters.Add(form[0]);
 
-            while (parameters.Count != 17)
+            while (parameters.Count != 13)
                 parameters.Add("");
 
             doc = "percRecordFace";

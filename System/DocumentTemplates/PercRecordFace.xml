@@ -176,50 +176,6 @@
                         </Parts>
                       </Paragraph>
                       <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>13</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>14</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>15</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>16</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
                         <FontID>LargeBold</FontID>
                         <Alighment>Center</Alighment>
                         <Parts>

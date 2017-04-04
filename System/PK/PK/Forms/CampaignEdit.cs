@@ -8,13 +8,32 @@ namespace PK.Forms
 {
     public partial class CampaignEdit : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        Classes.DB_Helper _DB_Helper;
-        uint? _CampaignId;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly  Classes.DB_Helper _DB_Helper;
+
+        private uint? _CampaignId;
 
         public CampaignEdit(uint? campUid)
         {
+            #region Components
             InitializeComponent();
+
+            dgvDirections_OOOF.ValueType = typeof(ushort);
+            dgvDirections_OOOZF.ValueType = typeof(ushort);
+            dgvDirections_OOZF.ValueType = typeof(ushort);
+            dgvDirections_OKOF.ValueType = typeof(ushort);
+            dgvDirections_OKOZF.ValueType = typeof(ushort);
+            dgvDirections_OKZF.ValueType = typeof(ushort);
+
+            dgvTargetOrganizatons_OF.ValueType = typeof(ushort);
+            dgvTargetOrganizatons_OZF.ValueType = typeof(ushort);
+
+            dgvFacultities_HostelPlaces.ValueType = typeof(ushort);
+
+            dgvPaidPlaces_OFPM.ValueType = typeof(ushort);
+            dgvPaidPlaces_OZFPM.ValueType = typeof(ushort);
+            dgvPaidPlaces_ZFPM.ValueType = typeof(ushort);
+            #endregion
 
             _DB_Connection = new Classes.DB_Connector();
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
@@ -34,10 +53,12 @@ namespace PK.Forms
 
             ButtonsAppearanceChange(0);
 
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
-            {
-                new Tuple<string, Relation, object> ("dictionary_id", Relation.EQUAL, 14)
-            }))
+            foreach (var v in _DB_Connection.Select(
+                DB_Table.DICTIONARIES_ITEMS, 
+                new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("dictionary_id", Relation.EQUAL, 14)
+                }))
                 lbEduFormsAll.Items.Add(v[0].ToString());
 
             if (_CampaignId.HasValue)
@@ -47,7 +68,7 @@ namespace PK.Forms
             }
         }
 
-        void ButtonsAppearanceChange(int rowindex)
+        private void ButtonsAppearanceChange(int rowindex)
         {
 
             dgvTargetOrganizatons.Rows[rowindex].Cells[2].Style.Font = new Font("ESSTIXTwo", 11);
@@ -58,7 +79,7 @@ namespace PK.Forms
 
         }
 
-        void FillDirectionsTable()
+        private void FillDirectionsTable()
         {
             dgvDirections.Rows.Clear();
             foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name", "code", "id" ))
@@ -76,7 +97,7 @@ namespace PK.Forms
             dgvDirections.Sort(dgvDirections.Columns[1], ListSortDirection.Ascending);
         }
 
-        void FillProfiliesTable ()
+        private void FillProfiliesTable ()
         {
             dgvPaidPlaces.Rows.Clear();
             foreach (DataGridViewRow r in dgvDirections.Rows)
@@ -107,7 +128,7 @@ namespace PK.Forms
                 }
         }
 
-        void FillFacultiesTable ()
+        private void FillFacultiesTable ()
         {
             dgvFacultities.Rows.Clear();
             foreach (var v in _DB_Connection.Select(DB_Table.FACULTIES, "short_name", "name"))
@@ -124,7 +145,7 @@ namespace PK.Forms
             dgvFacultities.Sort(dgvFacultities.Columns[1], ListSortDirection.Ascending);
         }
 
-        void UpdateProfiliesTable()
+        private void UpdateProfiliesTable()
         {
             foreach (DataGridViewRow v in dgvPaidPlaces.Rows)
             {
@@ -141,7 +162,7 @@ namespace PK.Forms
             }
         }
 
-        void FillDistTable ()
+        private void FillDistTable ()
         {
             dgvEntranceTests.Rows.Clear();
             foreach (DataGridViewRow r in dgvDirections.Rows)               
@@ -179,7 +200,7 @@ namespace PK.Forms
             dgvEntranceTests.Sort(dgvEntranceTests.Columns[1], ListSortDirection.Ascending);
         }
 
-        void SaveCampaign()
+        private void SaveCampaign()
         {
             uint campaignId = _DB_Connection.Insert(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {
@@ -309,7 +330,7 @@ namespace PK.Forms
                 }
         }
 
-        void UpdateCampaing()
+        private void UpdateCampaing()
         {
             _DB_Connection.Update(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {   { "name", tbName.Text }, { "start_year",  int.Parse(cbStartYear.SelectedItem.ToString())},
@@ -595,7 +616,7 @@ namespace PK.Forms
                     { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5]} });
         }
 
-        void LoadCampaign()
+        private void LoadCampaign()
         {
             List<object> loadedCampaign = new List<object>();
             loadedCampaign.AddRange( _DB_Connection.Select(DB_Table.CAMPAIGNS, 
@@ -649,7 +670,7 @@ namespace PK.Forms
             }                
        }
 
-        void LoadTables()
+        private void LoadTables()
         {
             foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty",
                     "direction_id", "places_budget_o", "places_budget_oz", "places_budget_z", "places_quota_o", "places_quota_oz", "places_quota_z"},
@@ -881,6 +902,11 @@ namespace PK.Forms
                 MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
                 DialogResult = DialogResult.Abort;
             }
+        }
+
+        private void dgv_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
