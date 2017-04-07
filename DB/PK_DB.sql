@@ -202,22 +202,6 @@ COMMENT = 'Приказы.';
 
 
 -- -----------------------------------------------------
--- Table `PK_DB`.`documents`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PK_DB`.`documents` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
-  `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'parent_lost', 'pauper', 'phd_diploma', 'post_graduate_diploma', 'radiation_work', 'school_certificate', 'sport', 'state_employee', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student', 'photos') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nparent_lost\npauper\nphd_diploma\npost_graduate_diploma\nradiation_work\nschool_certificate\nsport\nstate_employee\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent\nphotos\n',
-  `series` VARCHAR(20) NULL COMMENT 'Серия документа.',
-  `number` VARCHAR(100) NULL COMMENT 'Номер документа.',
-  `date` DATE NULL COMMENT 'Дата выдачи документа.',
-  `organization` VARCHAR(500) NULL COMMENT 'Организация, выдавшая документ.',
-  `original_recieved_date` DATE NULL COMMENT 'Дата предоставления оригиналов документов.',
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-COMMENT = 'Документы.';
-
-
--- -----------------------------------------------------
 -- Table `PK_DB`.`entrants`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
@@ -234,15 +218,12 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
   `mail_town_type_dict_id` INT UNSIGNED NULL COMMENT '41',
   `mail_town_type_id` INT UNSIGNED NULL COMMENT 'Почтовый адрес - Тип населенного пункта (справочник № 41).',
   `mail_adress` VARCHAR(500) NULL COMMENT 'Почтовый адрес - Адрес.',
-  `is_from_krym` INT UNSIGNED NULL COMMENT 'ID подтверждающего документа.\nЕсли абитуриент - гражданин Крыма, иначе - NULL.',
   `home_phone` VARCHAR(10) NULL COMMENT 'Домашний телефон.',
   `mobile_phone` VARCHAR(10) NULL COMMENT 'Мобильный телефон.',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `is_from_krym_UNIQUE` (`is_from_krym` ASC),
   INDEX `corresp_gend_id_idx` (`gender_dict_id` ASC, `gender_id` ASC),
   INDEX `corresp_mail_region_idx` (`mail_region_dict_id` ASC, `mail_region_id` ASC),
   INDEX `corresp_mail_town_type_idx` (`mail_town_type_dict_id` ASC, `mail_town_type_id` ASC),
-  INDEX `has_krym_doc_idx` (`is_from_krym` ASC),
   CONSTRAINT `entrants_corresp_gender`
     FOREIGN KEY (`gender_id` , `gender_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -256,11 +237,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
   CONSTRAINT `entrants_corresp_mail_town_type`
     FOREIGN KEY (`mail_town_type_id` , `mail_town_type_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `entrants_has_krym_doc`
-    FOREIGN KEY (`is_from_krym`)
-    REFERENCES `PK_DB`.`documents` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -308,6 +284,22 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Заявления.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`documents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`documents` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
+  `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'parent_lost', 'pauper', 'phd_diploma', 'post_graduate_diploma', 'radiation_work', 'school_certificate', 'sport', 'state_employee', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student', 'photos') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nparent_lost\npauper\nphd_diploma\npost_graduate_diploma\nradiation_work\nschool_certificate\nsport\nstate_employee\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent\nphotos\n',
+  `series` VARCHAR(20) NULL COMMENT 'Серия документа.',
+  `number` VARCHAR(100) NULL COMMENT 'Номер документа.',
+  `date` DATE NULL COMMENT 'Дата выдачи документа.',
+  `organization` VARCHAR(500) NULL COMMENT 'Организация, выдавшая документ.',
+  `original_recieved_date` DATE NULL COMMENT 'Дата предоставления оригиналов документов.',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+COMMENT = 'Документы.';
 
 
 -- -----------------------------------------------------
@@ -397,6 +389,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
   `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
   `is_for_spo_and_vo` TINYINT(1) NOT NULL COMMENT 'Абитуриент поступает с профильным СПО/ВО.',
+  `profile_actual` TINYINT(1) NOT NULL COMMENT 'Текущий выбор профиля абитуриентом.',
   PRIMARY KEY (`application_id`, `faculty_short_name`, `direction_id`, `edu_form_dict_id`, `edu_form_id`, `edu_source_dict_id`, `edu_source_id`),
   INDEX `targets_idx` (`target_organization_id` ASC),
   INDEX `has_idx` (`application_id` ASC),
@@ -603,7 +596,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`other_docs_additional_data` (
   `name` VARCHAR(1000) NULL COMMENT 'Наименование документа.',
   `dictionaries_dictionary_id` INT UNSIGNED NULL COMMENT '45, 33, 43, 42, 23, 44, 46, 47, 48',
   `dictionaries_item_id` INT UNSIGNED NULL COMMENT 'ИД элемента справочника. Для разных документов:\nveteran - VeteranCategoryID - Тип документа, подтверждающего принадлежность к участникам и ветеранам боевых действий (справочник № 45).\ninstitution: DocumentTypeID - Тип документа (справочник №33).\nsport: SportCategoryID - Тип диплома в области спорта (справочник № 43).\norphan: OrphanCategoryID - Тип документа, подтверждающего сиротство (справочник № 42).\ndisability: DisabilityTypeID - Группа инвалидности (справочник №23).\ncompatriot: CompariotCategoryID - Тип документа, подтверждающего принадлежность к соотечественникам (справочник № 44).\nparents_lost: ParentsLostCategoryID - Тип документа, подтверждающег' /* comment truncated */ /*о принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей (справочник № 46).
-state_employee: StateEmployeeCategoryID - Тип документа, подтверждающего принадлежность к сотрудникам государственных органов Российской Федерации (справочник № 47).*/,
+state_employee: StateEmployeeCategoryID - Тип документа, подтверждающего принадлежность к сотрудникам государственных органов Российской Федерации (справочник № 47).
+radiation_work: RadiationWorkCategoryID - Тип документа, подтверждающего участие в работах на радиационных объектах или воздействие радиации (справочник № 48).*/,
   `text_data` VARCHAR(4000) NULL COMMENT 'Текстовые данные. Для разных документов:\ncustom, sport: AdditionalInfo - Дополнительные сведения.\nedu_custom: DocumentTypeNameText - Наименование документа.',
   `year` INT UNSIGNED NULL COMMENT 'Для документа типа ege - Год выдачи свидетельства.',
   PRIMARY KEY (`document_id`),
