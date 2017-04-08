@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExaminationMarks));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -101,7 +100,7 @@
             // 
             // toolStrip_Print
             // 
-            this.toolStrip_Print.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Print.Image")));
+            this.toolStrip_Print.Image = global::PK.Properties.Resources.printer;
             this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Print.Name = "toolStrip_Print";
             this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
@@ -110,7 +109,7 @@
             // 
             // toolStrip_Clear
             // 
-            this.toolStrip_Clear.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Clear.Image")));
+            this.toolStrip_Clear.Image = global::PK.Properties.Resources.cross;
             this.toolStrip_Clear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Clear.Name = "toolStrip_Clear";
             this.toolStrip_Clear.Size = new System.Drawing.Size(122, 22);

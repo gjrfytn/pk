@@ -95,31 +95,69 @@ namespace PK.Forms
                (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
                 );
 
+            var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
+                applications,
+                en => en[0],
+                a => a[0],
+                (s1, s2) => s1[0]
+              ).Distinct();//TODO Нужно?
+
+            foreach (object entrID in entrantsIDs)
+                _DB_Connection.InsertOnDuplicateUpdate(
+                    DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                    new Dictionary<string, object> { { "entrant_id", entrID }, { "examination_id", SelectedExamID } }
+                    );
+
+            ToggleButtons();
+        }
+
+        private void toolStrip_Marks_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count != 0)
+            {
+                ExaminationMarks form = new ExaminationMarks(_DB_Connection, SelectedExamID);
+                form.ShowDialog();
+                ToggleButtons();
+            }
+            else
+                MessageBox.Show("Выберите экзамен.");
+        }
+
+        private void toolStrip_Print_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Выберите экзамен.");
+                return;
+            }
+
+            var entrantsIDs = _DB_Connection.Select(
+                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                new string[] { "entrant_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,SelectedExamID)
+                });
+
             var entrants = _DB_Connection.Select(
                 DB_Table.ENTRANTS,
                 new string[] { "id", "last_name", "first_name", "middle_name" }
                 ).Join(
-                applications,
+                entrantsIDs,
                 en => en[0],
-                a => a[0],
+                i => i[0],
                 (s1, s2) => new
                 {
                     ID = s1[0],
                     LastName = s1[1].ToString(),
                     FirstName = s1[2].ToString(),
                     MiddleName = s1[3].ToString()
-                }
-              ).Distinct();//TODO Нужно?
+                });
 
             List<string[]> entrantsTable = new List<string[]>(entrants.Count());
             ushort count = 1;
             foreach (var entr in entrants)
             {
-                _DB_Connection.InsertOnDuplicateUpdate(
-                    DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                    new Dictionary<string, object> { { "entrant_id", entr.ID }, { "examination_id", SelectedExamID } }
-                    );
-
                 entrantsTable.Add(new string[]
                 {
                     count.ToString(),
@@ -130,14 +168,13 @@ namespace PK.Forms
                 count++;
             }
 
+            string examName = dataGridView.SelectedRows[0].Cells[1].Value.ToString();
+            string examDate = ((DateTime)dataGridView.SelectedRows[0].Cells[2].Value).ToShortDateString();
+
             Classes.DocumentCreator.Create(
-                "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaCodes.xml",
+                Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
                 "AlphaCodes",
-                new string[]
-                {
-                    dataGridView.SelectedRows[0].Cells[1].Value.ToString(),
-                    ((DateTime)dataGridView.SelectedRows[0].Cells[2].Value).ToShortDateString()
-                },
+                new string[] { examName, examDate },
                 new List<string[]>[] { entrantsTable }
                 );
 
@@ -153,11 +190,11 @@ namespace PK.Forms
                 entrants.Select(en => en.LastName[0]).GroupBy(en => en).ToDictionary(k => k.Key, v => (ushort)v.Count())
                 );
 
-            List<string[]> distibTable = new List<string[]>(audiences.Count);
+            List<string[]> distribTable = new List<string[]>(audiences.Count);
             foreach (object[] aud in audiences)
             {
                 var letters = distribution.Where(d => d.Item2 == aud[0].ToString()).Select(s => s.Item1);
-                distibTable.Add(new string[]
+                distribTable.Add(new string[]
                 {
                     aud[0].ToString(),
                     letters.Any()?letters.Aggregate("",(a,d)=> a+= d+", ",s=>s.Remove(s.Length- 2)):"-",
@@ -167,31 +204,58 @@ namespace PK.Forms
             }
 
             Classes.DocumentCreator.Create(
-               "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AbitAudDistrib.xml",
+               Classes.Utility.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                "AbitAudDistrib",
                new string[]
                {
-                   dataGridView.SelectedRows[0].Cells[1].Value.ToString(),
-                   ((DateTime)dataGridView.SelectedRows[0].Cells[2].Value).ToShortDateString(),
+                   examName,
+                   examDate,
                    entrants.Count().ToString(),
                    audiences.Sum(a=>(ushort)a[1]).ToString()
                },
-               new List<string[]>[] { distibTable }
+               new List<string[]>[] { distribTable }
                );
 
-            ToggleButtons();
-        }
-
-        private void toolStrip_Marks_Click(object sender, EventArgs e)
-        {
-            if (dataGridView.SelectedRows.Count != 0)
+            Dictionary<string, Tuple<ushort, ushort>> fill = audiences.ToDictionary(k => k[0].ToString(), v => new Tuple<ushort, ushort>(0, (ushort)v[1]));
+            for (ushort i = 0; i < entrantsTable.Count; ++i)
             {
-                ExaminationMarks form = new ExaminationMarks(_DB_Connection, SelectedExamID);
-                form.ShowDialog();
-                ToggleButtons();
+                foreach (Tuple<char, string> aud in distribution.FindAll(c => c.Item1 == entrantsTable[i][2][0]))
+                {
+                    if (fill[aud.Item2].Item1 < fill[aud.Item2].Item2)
+                    {
+                        fill[aud.Item2] = new Tuple<ushort, ushort>((ushort)(fill[aud.Item2].Item1 + 1), fill[aud.Item2].Item2);
+
+                        entrantsTable[i] = new string[]
+                        {
+                            entrantsTable[i][0],
+                            entrantsTable[i][1],
+                            entrantsTable[i][2],
+                            aud.Item2,
+                            fill[aud.Item2].Item1.ToString()
+                        };
+                    }
+                }
             }
-            else
-                MessageBox.Show("Выберите экзамен.");
+
+            Classes.DocumentCreator.Create(
+                Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
+                "AlphaAuditories",
+                new string[] { examName, examDate },
+                new List<string[]>[] { entrantsTable.Select(s => new string[] { s[0], s[1], s[2], s[3] }).ToList() }
+                );
+
+            System.IO.Directory.CreateDirectory("ExamCardsSheets");
+            foreach (Tuple<char, string> group in distribution)
+            {
+                Classes.DocumentCreator.Create(
+                    Classes.Utility.DocumentsTemplatesPath + "ExamCardsSheet.xml",
+                    ".\\ExamCardsSheets\\ExamCardsSheet_" + group.Item1 + "_" + group.Item2,
+                    new string[] { group.Item2, group.Item1.ToString(), examName, examDate },
+                    new List<string[]>[]
+                    {
+                        entrantsTable.Where(en=>en[2][0]== group.Item1&&en[3]==group.Item2).Select(s=>new string[] {s[0],s[1],s[2],s[4] }).ToList()
+                    });
+            }
         }
 
         private void UpdateTable()
@@ -214,6 +278,7 @@ namespace PK.Forms
             bool hasMarks = ExaminationHasMarks(SelectedExamID);
             toolStrip_Edit.Enabled = !hasMarks;
             toolStrip_Marks.Enabled = hasMarks;
+            toolStrip_Print.Enabled = hasMarks;
         }
 
         private bool ExaminationHasMarks(uint id)

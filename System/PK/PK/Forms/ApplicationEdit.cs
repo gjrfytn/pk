@@ -1798,7 +1798,7 @@ namespace PK.Forms
                 {tpDir_quote_o,new Tuple<string, string>("Квота, очная (дневная)","ОКВ") },
                 {tpDir_target_o,new Tuple<string, string>("Целевой прием, очная (дневная)","ОЦП") },
                 {tpDir_quote_oz,new Tuple<string, string>("Квота, очно-заочная (вечерняя)","ОЗКВ") },
-                {tpDir_target_oz,new Tuple<string, string>("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") },
+                {tpDir_target_oz,new Tuple<string, string>("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
             };
 
             string doc = "moveJournal";

@@ -64,30 +64,40 @@ namespace PK.Classes
                     DirID = k.Item2,
                     BO = g.Sum(s => (ushort)s[3]),
                     BOZ = g.Sum(s => (ushort)s[4]),
-                    BZ = g.Sum(s => (ushort)s[5]),
-                    TO = g.Sum(s => (ushort)s[6]),
-                    TOZ = g.Sum(s => (ushort)s[7]),
-                    TZ = g.Sum(s => (ushort)s[8]),
-                    QO = g.Sum(s => (ushort)s[9]),
-                    QOZ = g.Sum(s => (ushort)s[10]),
-                    QZ = g.Sum(s => (ushort)s[11])
+                    BZ = 0,
+                    QO = g.Sum(s => (ushort)s[5]),
+                    QOZ = g.Sum(s => (ushort)s[6]),
+                    QZ = 0
                 }))
             {
                 ushort paid_o = 0, paid_oz = 0, paid_z = 0;
-                /*foreach (object[] profRow in connection.Select(
+                foreach (object[] profRow in connection.Select(
                     DB_Table.CAMPAIGNS_PROFILES_DATA,
                     new string[] { "places_paid_o, places_paid_oz, places_paid_z" },
                     new List<System.Tuple<string, Relation, object>>
                     {
-                        new System.Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,row[0]),
-                        new System.Tuple<string, Relation, object>("profiles_direction_faculty",Relation.EQUAL,row[1]),
-                        new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,row[2])
+                        new System.Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,admData.CampID),
+                        new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,admData.DirID)
                     }))
                 {
                     paid_o += (ushort)profRow[0];
                     paid_oz += (ushort)profRow[1];
                     paid_z += (ushort)profRow[2];
-                }*/ //TODO Сделать
+                }
+
+                ushort target_o = 0, target_oz = 0, target_z = 0;
+                foreach (object[] targetRow in connection.Select(
+                    DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
+                    new string[] { "places_o, places_oz" },
+                    new List<System.Tuple<string, Relation, object>>
+                    {
+                        new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,admData.CampID),
+                        new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,admData.DirID)
+                    }))
+                {
+                    target_o += (ushort)targetRow[0];
+                    target_oz += (ushort)targetRow[1];
+                }
 
                 uint levelID = 2;/*uint.Parse(connection.Select(
                     DB_Table.DICTIONARY_10_ITEMS,
@@ -102,7 +112,7 @@ namespace PK.Classes
                     admData.DirID,
                     (ushort)admData.BO, (ushort)admData.BOZ, (ushort)admData.BZ,
                     paid_o, paid_oz, paid_z,
-                    (ushort)admData.TO, (ushort)admData.TOZ, (ushort)admData.TZ,
+                    target_o, target_oz, target_z,
                     (ushort)admData.QO, (ushort)admData.QOZ, (ushort)admData.QZ
                     ));
 
@@ -160,17 +170,17 @@ namespace PK.Classes
                         case CompetitiveGroupItem.Variants.NumberTargetO:
                             eduForm = 11;
                             eduSource = 16;
-                            places = (ushort)admData.TO;
+                            places = target_o;
                             break;
                         case CompetitiveGroupItem.Variants.NumberTargetOZ:
                             eduForm = 12;
                             eduSource = 16;
-                            places = (ushort)admData.TOZ;
+                            places = target_oz;
                             break;
                         case CompetitiveGroupItem.Variants.NumberTargetZ:
                             eduForm = 10;
                             eduSource = 16;
-                            places = (ushort)admData.TZ;
+                            places = target_z;
                             break;
                         default:
                             throw new System.Exception("Unreachable reached.");
@@ -211,7 +221,7 @@ namespace PK.Classes
                             null,
                             null,
                             null, //TODO ?
-                            new CompetitiveGroupItem((CompetitiveGroupItem.Variants)v, (uint)(places - 7)), //TODO
+                            new CompetitiveGroupItem((CompetitiveGroupItem.Variants)v, places),
                             null,//TODO ?
                             null,//TODO ?
                             entranceTests

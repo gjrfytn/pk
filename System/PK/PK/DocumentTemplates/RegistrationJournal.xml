@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Template
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
+  <Fonts>
+    <Font ID="Usual">
+      <Name>Arial</Name>
+      <Size>12</Size>
+    </Font>
+    <Font ID="UsualBold">
+      <Name>Arial</Name>
+      <Size>12</Size>
+      <Style>Bold</Style>
+    </Font>
+  </Fonts>
+  <Document>
+    <Word>
+      <Properties>
+        <Margins>
+          <Left>10</Left>
+          <Top>10</Top>
+          <Right>10</Right>
+          <Bottom>10</Bottom>
+        </Margins>
+      </Properties>
+      <Structure>
+        <Element>
+          <Table>
+            <Numeration>Number</Numeration>
+            <Placeholder>0</Placeholder>
+            <Structure>
+              <Column>
+                <Caption>№</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Рег. №</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>ФИО</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Домашний адрес, телефон</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>№ аттестата/диплома</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Номера потоков</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Отметка архива</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Отметка о возвращении документов (подпись, дата)</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+            </Structure>
+          </Table>
+        </Element>
+      </Structure>
+    </Word>
+  </Document>
+</Template>

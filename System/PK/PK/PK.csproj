@@ -367,10 +367,16 @@
     <Content Include="DocumentTemplates\AbitAudDistrib.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="DocumentTemplates\AlphaAuditories.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DocumentTemplates\AlphaCodes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\AlphaMarks.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\ExamCardsSheet.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\Inventory.xml">
@@ -391,6 +397,12 @@
     <Content Include="DocumentTemplates\RegistrationJournal.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\cross.png" />
+    <None Include="Resources\five.png" />
+    <None Include="Resources\pen.png" />
+    <None Include="Resources\plus.png" />
+    <None Include="Resources\printer.png" />
+    <None Include="Resources\seat.png" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

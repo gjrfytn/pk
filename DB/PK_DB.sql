@@ -1071,7 +1071,7 @@ DELIMITER $$
 USE `PK_DB`$$
 CREATE PROCEDURE `get_entrants_marks` (id INT UNSIGNED)
 BEGIN
-SELECT id, CONCAT_WS(' ',last_name,first_name,middle_name), IF(mark!=-1,mark,'неявка') FROM
+SELECT entrants.id, CONCAT_WS(' ',last_name,first_name,middle_name), IF(mark!=-1,mark,'неявка') FROM
 entrants_examinations_marks
 JOIN
 entrants ON entrant_id=entrants.id
