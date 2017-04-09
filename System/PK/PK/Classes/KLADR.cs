@@ -21,14 +21,7 @@ namespace PK.Classes
 
         public KLADR()
         {
-            string connString = @"
-                        server = localhost;
-                        port=3306;
-                        database = kladr;
-                        user = root;
-                        password = 1234;
-                ";
-            _Connection = new MySqlConnection(connString);
+            _Connection = new MySqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString);
             _Connection.Open();
         }
 

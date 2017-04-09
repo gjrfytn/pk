@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="TOlympicDocument">
 		<xs:all>
@@ -548,7 +548,198 @@
 			</xs:element>
 			<xs:element name="VeteranCategoryID" type="xs:unsignedInt">
 				<xs:annotation>
-					<xs:documentation>Тип документа, подтверждающего принадлежность к ветеранам боевых действий (справочник № 45)</xs:documentation>
+					<xs:documentation>Тип документа, подтверждающего принадлежность к участникам и ветеранам боевых действий (справочник № 45)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentName" type="TDocumentName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Наименование документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentNumber" type="TDocumentNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentDate" type="TDate">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentOrganization">
+				<xs:annotation>
+					<xs:documentation>Организация, выдавшая документ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="TPauperDocument">
+		<xs:all>
+			<xs:element name="UID" type="TUID">
+				<xs:annotation>
+					<xs:documentation>Идентификатор</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentName" type="TDocumentName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Наименование документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentNumber" type="TDocumentNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentDate" type="TDate">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentOrganization">
+				<xs:annotation>
+					<xs:documentation>Организация, выдавшая документ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="TParentLostDocument">
+		<xs:all>
+			<xs:element name="UID" type="TUID">
+				<xs:annotation>
+					<xs:documentation>Идентификатор</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ParentsLostCategoryID" type="xs:unsignedInt">
+				<xs:annotation>
+					<xs:documentation>Тип документа, подтверждающего принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей (справочник № 46)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentName" type="TDocumentName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Наименование документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentNumber" type="TDocumentNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentDate" type="TDate">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentOrganization">
+				<xs:annotation>
+					<xs:documentation>Организация, выдавшая документ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="TStateEmployeeDocument">
+		<xs:all>
+			<xs:element name="UID" type="TUID">
+				<xs:annotation>
+					<xs:documentation>Идентификатор</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StateEmployeeCategoryID" type="xs:unsignedInt">
+				<xs:annotation>
+					<xs:documentation>Тип документа, подтверждающего принадлежность к сотрудникам государственных органов Российской Федерации (справочник № 47)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentName" type="TDocumentName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Наименование документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentNumber" type="TDocumentNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentDate" type="TDate">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocumentOrganization">
+				<xs:annotation>
+					<xs:documentation>Организация, выдавшая документ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="TRadiationWorkDocument">
+		<xs:all>
+			<xs:element name="UID" type="TUID">
+				<xs:annotation>
+					<xs:documentation>Идентификатор</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RadiationWorkCategoryID" type="xs:unsignedInt">
+				<xs:annotation>
+					<xs:documentation>Тип документа, подтверждающего участие в работах на радиационных объектах или воздействие радиации (справочник № 48)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentName" type="TDocumentName" minOccurs="0">
@@ -1685,12 +1876,32 @@
 																</xs:element>
 																<xs:element name="VeteranDocument" type="TVeteranDocument">
 																	<xs:annotation>
-																		<xs:documentation>Документ, подтверждающий принадлежность к ветеранам боевых действий</xs:documentation>
+																		<xs:documentation>Документ, подтверждающий принадлежность к участникам и ветеранам боевых действий</xs:documentation>
 																	</xs:annotation>
 																</xs:element>
 																<xs:element name="SportDocument" type="TSportDocument">
 																	<xs:annotation>
 																		<xs:documentation>Диплом победителя/призера в области спорта</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="PauperDocument" type="TPauperDocument">
+																	<xs:annotation>
+																		<xs:documentation>Документ, подтверждающий наличие только одного родителя - инвалида I группы и принадлежность к числу малоимущих семей</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="ParentsLostDocument" type="TParentLostDocument">
+																	<xs:annotation>
+																		<xs:documentation>Документ, подтверждающий принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="StateEmployeeDocument" type="TStateEmployeeDocument">
+																	<xs:annotation>
+																		<xs:documentation>Документ, подтверждающий принадлежность к сотрудникам государственных органов Российской Федерации</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="RadiationWorkDocument" type="TRadiationWorkDocument">
+																	<xs:annotation>
+																		<xs:documentation>Документ, подтверждающий участие в работах на радиационных объектах или воздействие радиации</xs:documentation>
 																	</xs:annotation>
 																</xs:element>
 																<xs:element name="CustomDocument" type="TCustomDocument">
@@ -2300,13 +2511,13 @@
 										</xs:element>
 										<xs:element name="VeteranDocuments" minOccurs="0">
 											<xs:annotation>
-												<xs:documentation>Документы, подтверждающие принадлежность к ветеранам боевых действий</xs:documentation>
+												<xs:documentation>Документы, подтверждающие принадлежность к участникам и ветеранам боевых действий</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element name="VeteranDocument" type="TVeteranDocument" maxOccurs="unbounded">
 														<xs:annotation>
-															<xs:documentation>Документ, подтверждающий принадлежность к ветеранам боевых действий</xs:documentation>
+															<xs:documentation>Документ, подтверждающий принадлежность к участникам и ветеранам боевых действий</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 												</xs:sequence>
@@ -2335,6 +2546,62 @@
 													<xs:element name="CompatriotDocument" type="TCompatriotDocument" maxOccurs="unbounded">
 														<xs:annotation>
 															<xs:documentation>Документ, подтверждающий принадлежность к соотечественникам</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PauperDocuments" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Документы, подтверждающие наличие только одного родителя - инвалида I группы и принадлежность к числу малоимущих семей</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="PauperDocument" type="TPauperDocument" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Документ, подтверждающий наличие только одного родителя - инвалида I группы и принадлежность к числу малоимущих семей</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ParentsLostDocuments" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Документы, подтверждающие принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="ParentsLostDocument" type="TParentLostDocument" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Документ, подтверждающий принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="StateEmployeeDocuments" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Документы, подтверждающие принадлежность к сотрудникам государственных органов Российской Федерации</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="StateEmployeeDocument" type="TStateEmployeeDocument" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Документ, подтверждающий принадлежность к сотрудникам государственных органов Российской Федерации</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="RadiationWorkDocuments" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Документы, подтверждающие участие в работах на радиационных объектах или воздействие радиации</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="RadiationWorkDocument" type="TRadiationWorkDocument" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>Документ, подтверждающий участие в работах на радиационных объектах или воздействие радиации</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 												</xs:sequence>

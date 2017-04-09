@@ -275,5 +275,253 @@
       <ID>82</ID>
       <Name>Иностранный язык - китайский</Name>
     </DictionaryItem>
+    <DictionaryItem>
+      <ID>134</ID>
+      <Name>искусство концертного исполнительства</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>135</ID>
+      <Name>музыкознание и музыкально-прикладное искусство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>136</ID>
+      <Name>музыковедение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>137</ID>
+      <Name>дирижирование</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>138</ID>
+      <Name>физика и механика материалов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>139</ID>
+      <Name>фармация</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>140</ID>
+      <Name>иностранные языки</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>141</ID>
+      <Name>педагогическое образование</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>142</ID>
+      <Name>графика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>144</ID>
+      <Name>информационная безопасность</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>145</ID>
+      <Name>компьютерные и информационные науки</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>146</ID>
+      <Name>биологические науки</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>147</ID>
+      <Name>техника и технологии строительства</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>148</ID>
+      <Name>информатика и вычислительная техника</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>149</ID>
+      <Name>фотоника</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>150</ID>
+      <Name>приборостроение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>151</ID>
+      <Name>оптические и биотехнические  системы и технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>152</ID>
+      <Name>электро- и теплоэнергетика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>153</ID>
+      <Name>оружие и системы вооружения</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>154</ID>
+      <Name>химические технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>155</ID>
+      <Name>промышленная экология и биотехнологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>156</ID>
+      <Name>техносферная безопасность и природообустройство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>157</ID>
+      <Name>прикладная геология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>158</ID>
+      <Name>горное дело</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>159</ID>
+      <Name>нефтегазовое дело и геодезия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>160</ID>
+      <Name>аэронавигация и эксплуатация авиационной и ракетно-космической техники</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>161</ID>
+      <Name>управление в технических системах</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>162</ID>
+      <Name>нанотехнологии и наноматериалы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>163</ID>
+      <Name>технологии легкой промышленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>164</ID>
+      <Name>сельское, лесное и рыбное хозяйство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>165</ID>
+      <Name>экономика и управление</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>166</ID>
+      <Name>нефтегазовое дело</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>167</ID>
+      <Name>филология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>168</ID>
+      <Name>физико-технические науки и технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>169</ID>
+      <Name>монументально-декоративное искусство</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>170</ID>
+      <Name>декоративно-прикладное искусство и народные промыслы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>171</ID>
+      <Name>технология художественной обработки материалов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>172</ID>
+      <Name>искусство костюма и текстиля</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>173</ID>
+      <Name>конструирование изделий легкой промышленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>174</ID>
+      <Name>технологии и проектирование текстильных изделий</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>175</ID>
+      <Name>технология изделий легкой промышленности</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>176</ID>
+      <Name>информационные системы и технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>177</ID>
+      <Name>технология полиграфического и упаковочного производства</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>178</ID>
+      <Name>прикладная информатика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>179</ID>
+      <Name>профессиональное обучение</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>180</ID>
+      <Name>механика и математическое моделирование</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>181</ID>
+      <Name>прикладная математика и физика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>182</ID>
+      <Name>фундаментальная и прикладная химия</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>183</ID>
+      <Name>мехатроника и робототехника</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>184</ID>
+      <Name>фундаментальная информатика и информационные технологии</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>185</ID>
+      <Name>прикладная математика и информатика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>186</ID>
+      <Name>радиофизика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>187</ID>
+      <Name>системный анализ и управление</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>188</ID>
+      <Name>химия, физика и механика материалов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>189</ID>
+      <Name>сервис и туризм</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>190</ID>
+      <Name>социология</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>191</ID>
+      <Name>гостиничное дело</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>192</ID>
+      <Name>менеджмент</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>193</ID>
+      <Name>управление персоналом</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>194</ID>
+      <Name>государственное и муниципальное управление</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>195</ID>
+      <Name>бизнес-информатика</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>196</ID>
+      <Name>Иностранный язык - итальянский</Name>
+    </DictionaryItem>
   </DictionaryItems>
 </DictionaryData>

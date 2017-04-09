@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Template
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
+  <Fonts>
+    <Font ID="Usual">
+      <Name>Arial</Name>
+      <Size>14</Size>
+    </Font>
+    <Font ID="UsualBold">
+      <Name>Arial</Name>
+      <Size>14</Size>
+      <Style>Bold</Style>
+    </Font>
+    <Font ID="UsualTable">
+      <Name>Arial</Name>
+      <Size>10</Size>
+    </Font>
+    <Font ID="UsualBoldTable">
+      <Name>Arial</Name>
+      <Size>10</Size>
+      <Style>Bold</Style>
+    </Font>
+  </Fonts>
+  <Document>
+    <Word>
+      <Structure>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Alighment>Center</Alighment>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Ведомость проставления номеров экзаменационных билетов</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Alighment>Right</Alighment>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Ауд. </String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualBold</FontID>
+                <Text>
+                  <Placeholder>0</Placeholder>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Alighment>Right</Alighment>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Экзаменационная группа </String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualBold</FontID>
+                <Text>
+                  <Placeholder>1</Placeholder>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>UsualBold</FontID>
+            <Alighment>Center</Alighment>
+            <Parts>
+              <Part>
+                <Text>
+                  <Placeholder>2</Placeholder>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <String> - </String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <Placeholder>3</Placeholder>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Table>
+            <Placeholder>0</Placeholder>
+            <Structure>
+              <Column>
+                <Caption>№ п/п</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Рег. №</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
+              </Column>
+              <Column>
+                <Caption>ФИО</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Посад. место</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+                <DataFontID>UsualTable</DataFontID>
+              </Column>
+              <Column>
+                <Caption>№ билета</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+              </Column>
+              <Column>
+                <Caption>Подпись абитуриента</Caption>
+                <CaptionFontID>UsualBoldTable</CaptionFontID>
+              </Column>
+            </Structure>
+          </Table>
+        </Element>
+      </Structure>
+    </Word>
+  </Document>
+</Template>

@@ -51,7 +51,7 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
-            Classes.DocumentCreator.Create(_DB_Connection, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\DocumentTemplates\\AlphaMarks.xml", "AlphaMarks", _ExaminationID);
+            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", "AlphaMarks", _ExaminationID);
         }
 
         private void toolStrip_Clear_Click(object sender, EventArgs e)

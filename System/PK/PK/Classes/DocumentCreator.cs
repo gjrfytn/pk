@@ -14,6 +14,8 @@ namespace PK.Classes
             public System.Drawing.Color? Color;
         }
 
+        private static readonly string SchemaPath = System.Configuration.ConfigurationManager.AppSettings["SchemasPath"] + "DocumentSchema.xsd";
+
         private static readonly Dictionary<string, System.Drawing.Color> _Colors = new Dictionary<string, System.Drawing.Color>
         {
             {"Red",System.Drawing.Color.Red },
@@ -60,8 +62,7 @@ namespace PK.Classes
 
         private static void Validate(XDocument doc)
         {
-            _SchemaSet.Add(null, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\Schemas\\DocumentSchema.xsd");
-            //_SchemaSet.Add(null, "L:\\GitHub\\pk\\System\\Schemas\\DocumentSchema.xsd");
+            _SchemaSet.Add(null, SchemaPath);
             doc.Validate(_SchemaSet, (sender, e) => { throw e.Exception; });
         }
 
