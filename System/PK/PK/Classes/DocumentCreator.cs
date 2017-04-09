@@ -61,6 +61,7 @@ namespace PK.Classes
         private static void Validate(XDocument doc)
         {
             _SchemaSet.Add(null, "D:\\Dmitry\\Documents\\GitHub\\pk\\System\\Schemas\\DocumentSchema.xsd");
+            //_SchemaSet.Add(null, "L:\\GitHub\\pk\\System\\Schemas\\DocumentSchema.xsd");
             doc.Validate(_SchemaSet, (sender, e) => { throw e.Exception; });
         }
 

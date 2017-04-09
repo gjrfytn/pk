@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,10 +39,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cbType = new System.Windows.Forms.ComboBox();
             this.gbEduForms = new System.Windows.Forms.GroupBox();
-            this.btRemoveEduLevel = new System.Windows.Forms.Button();
-            this.btAddEduLevel = new System.Windows.Forms.Button();
-            this.lbEduFormsChoosen = new System.Windows.Forms.ListBox();
-            this.lbEduFormsAll = new System.Windows.Forms.ListBox();
+            this.cbEduFormO = new System.Windows.Forms.CheckBox();
+            this.cbEduFormZ = new System.Windows.Forms.CheckBox();
+            this.cbEduFormOZ = new System.Windows.Forms.CheckBox();
             this.gbEduLevel = new System.Windows.Forms.GroupBox();
             this.cbEduLevelSpec = new System.Windows.Forms.CheckBox();
             this.cbEduLevelMag = new System.Windows.Forms.CheckBox();
@@ -50,6 +49,17 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbState = new System.Windows.Forms.ComboBox();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
+            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvEntranceTests = new System.Windows.Forms.DataGridView();
@@ -90,17 +100,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
-            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -188,56 +187,48 @@
             // 
             // gbEduForms
             // 
-            this.gbEduForms.Controls.Add(this.btRemoveEduLevel);
-            this.gbEduForms.Controls.Add(this.btAddEduLevel);
-            this.gbEduForms.Controls.Add(this.lbEduFormsChoosen);
-            this.gbEduForms.Controls.Add(this.lbEduFormsAll);
+            this.gbEduForms.Controls.Add(this.cbEduFormO);
+            this.gbEduForms.Controls.Add(this.cbEduFormZ);
+            this.gbEduForms.Controls.Add(this.cbEduFormOZ);
             this.gbEduForms.Location = new System.Drawing.Point(34, 91);
             this.gbEduForms.Name = "gbEduForms";
-            this.gbEduForms.Size = new System.Drawing.Size(466, 89);
+            this.gbEduForms.Size = new System.Drawing.Size(166, 89);
             this.gbEduForms.TabIndex = 10;
             this.gbEduForms.TabStop = false;
             this.gbEduForms.Text = "Форма обучения";
             // 
-            // btRemoveEduLevel
+            // cbEduFormO
             // 
-            this.btRemoveEduLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btRemoveEduLevel.Location = new System.Drawing.Point(212, 52);
-            this.btRemoveEduLevel.Name = "btRemoveEduLevel";
-            this.btRemoveEduLevel.Size = new System.Drawing.Size(46, 23);
-            this.btRemoveEduLevel.TabIndex = 3;
-            this.btRemoveEduLevel.Text = "f";
-            this.btRemoveEduLevel.UseVisualStyleBackColor = true;
-            this.btRemoveEduLevel.Click += new System.EventHandler(this.btRemoveEduLevel_Click);
+            this.cbEduFormO.AutoSize = true;
+            this.cbEduFormO.Location = new System.Drawing.Point(6, 19);
+            this.cbEduFormO.Name = "cbEduFormO";
+            this.cbEduFormO.Size = new System.Drawing.Size(94, 17);
+            this.cbEduFormO.TabIndex = 17;
+            this.cbEduFormO.Text = "Очная форма";
+            this.cbEduFormO.UseVisualStyleBackColor = true;
+            this.cbEduFormO.CheckedChanged += new System.EventHandler(this.cbEduForm_CheckedChanged);
             // 
-            // btAddEduLevel
+            // cbEduFormZ
             // 
-            this.btAddEduLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btAddEduLevel.Location = new System.Drawing.Point(212, 19);
-            this.btAddEduLevel.Name = "btAddEduLevel";
-            this.btAddEduLevel.Size = new System.Drawing.Size(46, 23);
-            this.btAddEduLevel.TabIndex = 2;
-            this.btAddEduLevel.Text = "g";
-            this.btAddEduLevel.UseVisualStyleBackColor = true;
-            this.btAddEduLevel.Click += new System.EventHandler(this.btAddEduLevel_Click);
+            this.cbEduFormZ.AutoSize = true;
+            this.cbEduFormZ.Location = new System.Drawing.Point(6, 65);
+            this.cbEduFormZ.Name = "cbEduFormZ";
+            this.cbEduFormZ.Size = new System.Drawing.Size(105, 17);
+            this.cbEduFormZ.TabIndex = 19;
+            this.cbEduFormZ.Text = "Заочная форма";
+            this.cbEduFormZ.UseVisualStyleBackColor = true;
+            this.cbEduFormZ.CheckedChanged += new System.EventHandler(this.cbEduForm_CheckedChanged);
             // 
-            // lbEduFormsChoosen
+            // cbEduFormOZ
             // 
-            this.lbEduFormsChoosen.FormattingEnabled = true;
-            this.lbEduFormsChoosen.Location = new System.Drawing.Point(270, 19);
-            this.lbEduFormsChoosen.Name = "lbEduFormsChoosen";
-            this.lbEduFormsChoosen.Size = new System.Drawing.Size(190, 56);
-            this.lbEduFormsChoosen.Sorted = true;
-            this.lbEduFormsChoosen.TabIndex = 1;
-            // 
-            // lbEduFormsAll
-            // 
-            this.lbEduFormsAll.FormattingEnabled = true;
-            this.lbEduFormsAll.Location = new System.Drawing.Point(6, 19);
-            this.lbEduFormsAll.Name = "lbEduFormsAll";
-            this.lbEduFormsAll.Size = new System.Drawing.Size(190, 56);
-            this.lbEduFormsAll.Sorted = true;
-            this.lbEduFormsAll.TabIndex = 0;
+            this.cbEduFormOZ.AutoSize = true;
+            this.cbEduFormOZ.Location = new System.Drawing.Point(6, 42);
+            this.cbEduFormOZ.Name = "cbEduFormOZ";
+            this.cbEduFormOZ.Size = new System.Drawing.Size(151, 17);
+            this.cbEduFormOZ.TabIndex = 18;
+            this.cbEduFormOZ.Text = "Очно-заочная (вечерняя)";
+            this.cbEduFormOZ.UseVisualStyleBackColor = true;
+            this.cbEduFormOZ.CheckedChanged += new System.EventHandler(this.cbEduForm_CheckedChanged);
             // 
             // gbEduLevel
             // 
@@ -261,7 +252,7 @@
             this.cbEduLevelSpec.TabIndex = 2;
             this.cbEduLevelSpec.Text = "Специалитет";
             this.cbEduLevelSpec.UseVisualStyleBackColor = true;
-            this.cbEduLevelSpec.CheckedChanged += new System.EventHandler(this.cbEduLevelSpec_CheckedChanged);
+            this.cbEduLevelSpec.CheckedChanged += new System.EventHandler(this.cbEduLevel_CheckedChanged);
             // 
             // cbEduLevelMag
             // 
@@ -273,7 +264,7 @@
             this.cbEduLevelMag.TabIndex = 1;
             this.cbEduLevelMag.Text = "Магистратура";
             this.cbEduLevelMag.UseVisualStyleBackColor = true;
-            this.cbEduLevelMag.CheckedChanged += new System.EventHandler(this.cbEduLevelMag_CheckedChanged);
+            this.cbEduLevelMag.CheckedChanged += new System.EventHandler(this.cbEduLevel_CheckedChanged);
             // 
             // cbEduLevelBacc
             // 
@@ -285,7 +276,7 @@
             this.cbEduLevelBacc.TabIndex = 0;
             this.cbEduLevelBacc.Text = "Бакалавриат";
             this.cbEduLevelBacc.UseVisualStyleBackColor = true;
-            this.cbEduLevelBacc.CheckedChanged += new System.EventHandler(this.cbEduLevelBacc_CheckedChanged);
+            this.cbEduLevelBacc.CheckedChanged += new System.EventHandler(this.cbEduLevel_CheckedChanged);
             // 
             // label5
             // 
@@ -326,14 +317,14 @@
             this.dgvDirections_OKOF,
             this.dgvDirections_OKOZF,
             this.dgvDirections_OKZF});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDirections.Location = new System.Drawing.Point(0, 19);
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.RowHeadersVisible = false;
@@ -341,8 +332,98 @@
             this.dgvDirections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDirections.Size = new System.Drawing.Size(790, 296);
             this.dgvDirections.TabIndex = 1;
-            this.dgvDirections.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellValueChanged);
+            this.dgvDirections.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvDirections.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
+            // 
+            // dgvDirections_DirID
+            // 
+            this.dgvDirections_DirID.Frozen = true;
+            this.dgvDirections_DirID.HeaderText = "ID";
+            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
+            this.dgvDirections_DirID.ReadOnly = true;
+            this.dgvDirections_DirID.Visible = false;
+            // 
+            // dgvDirections_Selected
+            // 
+            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirections_Selected.Frozen = true;
+            this.dgvDirections_Selected.HeaderText = "";
+            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
+            this.dgvDirections_Selected.Visible = false;
+            // 
+            // dgvDirections_Name
+            // 
+            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Name.Frozen = true;
+            this.dgvDirections_Name.HeaderText = "Направление";
+            this.dgvDirections_Name.Name = "dgvDirections_Name";
+            this.dgvDirections_Name.Width = 250;
+            // 
+            // dgvDirections_Code
+            // 
+            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Code.Frozen = true;
+            this.dgvDirections_Code.HeaderText = "Код направления";
+            this.dgvDirections_Code.Name = "dgvDirections_Code";
+            this.dgvDirections_Code.ReadOnly = true;
+            this.dgvDirections_Code.Width = 80;
+            // 
+            // dgvDirections_Fac
+            // 
+            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Fac.Frozen = true;
+            this.dgvDirections_Fac.HeaderText = "Факультет";
+            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
+            this.dgvDirections_Fac.ReadOnly = true;
+            this.dgvDirections_Fac.Width = 70;
+            // 
+            // dgvDirections_OOOF
+            // 
+            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
+            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
+            this.dgvDirections_OOOF.Visible = false;
+            this.dgvDirections_OOOF.Width = 80;
+            // 
+            // dgvDirections_OOOZF
+            // 
+            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
+            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
+            this.dgvDirections_OOOZF.Visible = false;
+            this.dgvDirections_OOOZF.Width = 80;
+            // 
+            // dgvDirections_OOZF
+            // 
+            this.dgvDirections_OOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOZF.HeaderText = "Общие основания, заочная форма";
+            this.dgvDirections_OOZF.Name = "dgvDirections_OOZF";
+            this.dgvDirections_OOZF.Visible = false;
+            this.dgvDirections_OOZF.Width = 80;
+            // 
+            // dgvDirections_OKOF
+            // 
+            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
+            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
+            this.dgvDirections_OKOF.Visible = false;
+            this.dgvDirections_OKOF.Width = 80;
+            // 
+            // dgvDirections_OKOZF
+            // 
+            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
+            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
+            this.dgvDirections_OKOZF.Visible = false;
+            this.dgvDirections_OKOZF.Width = 80;
+            // 
+            // dgvDirections_OKZF
+            // 
+            this.dgvDirections_OKZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKZF.HeaderText = "Особая квота, заочная форма";
+            this.dgvDirections_OKZF.Name = "dgvDirections_OKZF";
+            this.dgvDirections_OKZF.Visible = false;
+            this.dgvDirections_OKZF.Width = 80;
             // 
             // panel1
             // 
@@ -464,14 +545,14 @@
             this.dgvPaidPlaces_OFPM,
             this.dgvPaidPlaces_OZFPM,
             this.dgvPaidPlaces_ZFPM});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvPaidPlaces.Location = new System.Drawing.Point(0, 860);
             this.dgvPaidPlaces.Name = "dgvPaidPlaces";
             this.dgvPaidPlaces.RowHeadersVisible = false;
@@ -568,6 +649,7 @@
             this.dgvFacultities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvFacultities.Size = new System.Drawing.Size(533, 150);
             this.dgvFacultities.TabIndex = 14;
+            this.dgvFacultities.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvFacultities.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvFacultities_ShortFacName
@@ -614,6 +696,7 @@
             this.dgvTargetOrganizatons.Size = new System.Drawing.Size(787, 297);
             this.dgvTargetOrganizatons.TabIndex = 4;
             this.dgvTargetOrganizatons.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTargetOrganizatons_CellContentClick);
+            this.dgvTargetOrganizatons.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvTargetOrganizatons.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             this.dgvTargetOrganizatons.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvTargetOrganizatons_RowsAdded);
             // 
@@ -686,6 +769,7 @@
             this.dgvTargetOrganizatons_OF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvTargetOrganizatons_OF.HeaderText = "Места на очной форме обучения";
             this.dgvTargetOrganizatons_OF.Name = "dgvTargetOrganizatons_OF";
+            this.dgvTargetOrganizatons_OF.ReadOnly = true;
             this.dgvTargetOrganizatons_OF.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvTargetOrganizatons_OF.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
@@ -694,6 +778,7 @@
             this.dgvTargetOrganizatons_OZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvTargetOrganizatons_OZF.HeaderText = "Места на очно-заочной форме обучения";
             this.dgvTargetOrganizatons_OZF.Name = "dgvTargetOrganizatons_OZF";
+            this.dgvTargetOrganizatons_OZF.ReadOnly = true;
             this.dgvTargetOrganizatons_OZF.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvTargetOrganizatons_OZF.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
@@ -717,7 +802,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(703, 87);
+            this.btSave.Location = new System.Drawing.Point(706, 91);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 16;
@@ -725,96 +810,12 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // dgvDirections_DirID
-            // 
-            this.dgvDirections_DirID.Frozen = true;
-            this.dgvDirections_DirID.HeaderText = "ID";
-            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
-            this.dgvDirections_DirID.ReadOnly = true;
-            this.dgvDirections_DirID.Visible = false;
-            // 
-            // dgvDirections_Selected
-            // 
-            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Selected.Frozen = true;
-            this.dgvDirections_Selected.HeaderText = "";
-            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
-            this.dgvDirections_Selected.Width = 5;
-            // 
-            // dgvDirections_Name
-            // 
-            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Name.Frozen = true;
-            this.dgvDirections_Name.HeaderText = "Направление";
-            this.dgvDirections_Name.Name = "dgvDirections_Name";
-            this.dgvDirections_Name.Width = 250;
-            // 
-            // dgvDirections_Code
-            // 
-            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Code.Frozen = true;
-            this.dgvDirections_Code.HeaderText = "Код направления";
-            this.dgvDirections_Code.Name = "dgvDirections_Code";
-            this.dgvDirections_Code.ReadOnly = true;
-            this.dgvDirections_Code.Width = 80;
-            // 
-            // dgvDirections_Fac
-            // 
-            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Fac.Frozen = true;
-            this.dgvDirections_Fac.HeaderText = "Факультет";
-            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
-            this.dgvDirections_Fac.ReadOnly = true;
-            this.dgvDirections_Fac.Width = 70;
-            // 
-            // dgvDirections_OOOF
-            // 
-            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
-            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
-            this.dgvDirections_OOOF.Width = 80;
-            // 
-            // dgvDirections_OOOZF
-            // 
-            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
-            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
-            this.dgvDirections_OOOZF.Width = 80;
-            // 
-            // dgvDirections_OOZF
-            // 
-            this.dgvDirections_OOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOZF.HeaderText = "Общие основания, заочная форма";
-            this.dgvDirections_OOZF.Name = "dgvDirections_OOZF";
-            this.dgvDirections_OOZF.Width = 80;
-            // 
-            // dgvDirections_OKOF
-            // 
-            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
-            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
-            this.dgvDirections_OKOF.Width = 80;
-            // 
-            // dgvDirections_OKOZF
-            // 
-            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
-            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
-            this.dgvDirections_OKOZF.Width = 80;
-            // 
-            // dgvDirections_OKZF
-            // 
-            this.dgvDirections_OKZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKZF.HeaderText = "Особая квота, заочная форма";
-            this.dgvDirections_OKZF.Name = "dgvDirections_OKZF";
-            this.dgvDirections_OKZF.Width = 80;
-            // 
             // CampaignEdit
             // 
             this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(822, 527);
+            this.ClientSize = new System.Drawing.Size(825, 527);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.cbState);
@@ -832,9 +833,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "CampaignEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Приемная кампания";
+            this.Text = "Редактирование приемной кампании";
             this.Load += new System.EventHandler(this.CampaignEdit_Load);
             this.gbEduForms.ResumeLayout(false);
+            this.gbEduForms.PerformLayout();
             this.gbEduLevel.ResumeLayout(false);
             this.gbEduLevel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).EndInit();
@@ -860,10 +862,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbType;
         private System.Windows.Forms.GroupBox gbEduForms;
-        private System.Windows.Forms.Button btRemoveEduLevel;
-        private System.Windows.Forms.Button btAddEduLevel;
-        private System.Windows.Forms.ListBox lbEduFormsChoosen;
-        private System.Windows.Forms.ListBox lbEduFormsAll;
         private System.Windows.Forms.GroupBox gbEduLevel;
         private System.Windows.Forms.CheckBox cbEduLevelSpec;
         private System.Windows.Forms.CheckBox cbEduLevelMag;
@@ -882,15 +880,6 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView dgvEntranceTests;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvPaidPlaces_Select;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Fac;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OFPM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OZFPM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ZFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_ShortFacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_FacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_HostelPlaces;
@@ -901,6 +890,18 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
+        private System.Windows.Forms.CheckBox cbEduFormO;
+        private System.Windows.Forms.CheckBox cbEduFormOZ;
+        private System.Windows.Forms.CheckBox cbEduFormZ;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvPaidPlaces_Select;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Fac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OFPM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OZFPM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ZFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Name;
         private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_Select;

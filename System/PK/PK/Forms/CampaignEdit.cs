@@ -53,14 +53,6 @@ namespace PK.Forms
 
             ButtonsAppearanceChange(0);
 
-            foreach (var v in _DB_Connection.Select(
-                DB_Table.DICTIONARIES_ITEMS, 
-                new string[] { "name" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object> ("dictionary_id", Relation.EQUAL, 14)
-                }))
-                lbEduFormsAll.Items.Add(v[0].ToString());
-
             if (_CampaignId.HasValue)
             {
                 LoadCampaign();
@@ -71,11 +63,11 @@ namespace PK.Forms
         private void ButtonsAppearanceChange(int rowindex)
         {
 
-            dgvTargetOrganizatons.Rows[rowindex].Cells[2].Style.Font = new Font("ESSTIXTwo", 11);
-            dgvTargetOrganizatons.Rows[rowindex].Cells[2].Value = "=";
+            //dgvTargetOrganizatons.Rows[rowindex].Cells[2].Style.Font = new Font("ESSTIXTwo", 11);
+            dgvTargetOrganizatons.Rows[rowindex].Cells[2].Value = "<";
 
-            dgvTargetOrganizatons.Rows[rowindex].Cells[7].Style.Font = new Font("ESSTIXTwo", 11);
-            dgvTargetOrganizatons.Rows[rowindex].Cells[7].Value = "=";
+            //dgvTargetOrganizatons.Rows[rowindex].Cells[7].Style.Font = new Font("ESSTIXTwo", 11);
+            dgvTargetOrganizatons.Rows[rowindex].Cells[7].Value = "<";
 
         }
 
@@ -135,7 +127,7 @@ namespace PK.Forms
             {
                 bool found = false;
                 foreach (DataGridViewRow r in dgvDirections.Rows)
-                    if (v[0].ToString() == r.Cells[4].Value.ToString())
+                    if ((v[0].ToString() == r.Cells[4].Value.ToString())&&((bool)(r.Cells[1].Value)))
                     {
                         found = true;
                     }
@@ -157,7 +149,10 @@ namespace PK.Forms
                     foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
                         if (v.Cells[2].Value.ToString() == r.Cells[2].Value.ToString())
                             for (int i = 6; i <= 8; i++)
-                                v.Cells[i].Value = (Convert.ToInt32(v.Cells[i].Value.ToString()) + Convert.ToInt32(r.Cells[i].Value.ToString())).ToString();
+                                if (r.Cells[i].Value.ToString() == "")
+                                    r.Cells[i].Value = 0;
+                                else
+                                    v.Cells[i].Value = (int.Parse(v.Cells[i].Value.ToString()) + int.Parse(r.Cells[i].Value.ToString())).ToString();
                 }
             }
         }
@@ -180,6 +175,7 @@ namespace PK.Forms
                         (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Русский язык");
                         (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Физика");
                         (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Обществознание");
+                        (dgvEntranceTests.Rows[dgvEntranceTests.Rows.Count - 1].Cells[i] as DataGridViewComboBoxCell).Items.Add("Иностранный язык");
 
                         switch (i)
                         {
@@ -200,6 +196,480 @@ namespace PK.Forms
             dgvEntranceTests.Sort(dgvEntranceTests.Columns[1], ListSortDirection.Ascending);
         }
 
+        private void UpdateEduForms()
+        {
+            List<object[]> eduFormsList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
+                { "dictionaries_items_item_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
+                        new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14)
+                    });
+
+            foreach (CheckBox chekBox in gbEduForms.Controls)
+                if (chekBox.Checked)
+                {
+                    bool found = false;
+                    foreach (object[] listElement in eduFormsList)
+                        if ((uint)listElement[0] == _DB_Helper.GetDictionaryItemID(14, chekBox.Text))
+                            found = true;
+                    if (!found)
+                        _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                        { { "campaigns_id", _CampaignId}, {"dictionaries_items_dictionary_id", 14},
+                            { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, chekBox.Text) } });
+                }
+            foreach (object[] eduForm in eduFormsList)
+            {
+                bool found = false;
+                foreach (CheckBox chekBox in gbEduForms.Controls)
+                    if (((uint)eduForm[0] == _DB_Helper.GetDictionaryItemID(14, chekBox.Text)) && chekBox.Checked)
+                        found = true;
+                if (!found)
+                    _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object> { { "campaigns_id", _CampaignId },
+                        { "dictionaries_items_dictionary_id", 14 }, { "dictionaries_items_item_id",  (uint)eduForm[0]} });
+            }
+        }
+
+        private void UpdateEduLevels()
+        {
+            List<uint> eduLevelsList = new List<uint>();
+
+            if (cbEduLevelBacc.Checked)
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Бакалавриат"));
+
+            if (cbEduLevelMag.Checked)
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Магистратура"));
+
+            if (cbEduLevelSpec.Checked)
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Специалитет"));
+
+            List<object[]> oldList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
+            { "dictionaries_items_item_id", }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
+                new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, 2)
+            });
+
+            foreach (uint v in eduLevelsList)
+            {
+                bool found = false;
+                foreach (var r in oldList)
+                    if ((uint)(r[0]) == v)
+                        found = true;
+                if (!found)
+                    _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", v } });
+            }
+
+            foreach (var v in oldList)
+            {
+                bool found = false;
+                foreach (uint r in eduLevelsList)
+                {
+                    if ((uint)(v[0]) == r)
+                        found = true;
+                }
+                    if (!found)
+                        _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", (uint)v[0] } });
+                
+            }
+        }
+
+        private List<object[]> UpdateDirections()
+        {
+            List<object[]> missingDirections = new List<object[]>();
+            List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[]
+            { "direction_faculty", "direction_id", "places_budget_o", "places_budget_oz","places_budget_z","places_quota_o","places_quota_oz","places_quota_z"},
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                });
+
+            List<string[]> newList = new List<string[]>();
+            foreach (DataGridViewRow r in dgvDirections.Rows)
+                if ((bool)r.Cells[1].Value)
+                {
+                    int[] places = new int[6];
+                    for (int i = 5; i <= 10; i++)
+                        if (dgvDirections.Columns[i].Visible == true)
+                            places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
+
+                    newList.Add(new string[] { r.Cells[4].Value.ToString(), r.Cells[0].Value.ToString(), places[0].ToString(),
+                   places[1].ToString(), places[2].ToString(), places[3].ToString(), places[4].ToString(),
+                    places[5].ToString() });
+                }
+
+            foreach (var v in oldList)
+            {
+                bool found = false;
+                int index = 0;
+                foreach (var r in newList)
+                    if ((v[0].ToString() == r[0].ToString()) && (v[1].ToString() == r[1].ToString()))
+                    {
+                        found = true;
+                        index = newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString())));
+                        break;
+                    }
+                if (found)
+                {
+                    _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
+                    new Dictionary<string, object> { { "places_budget_o", int.Parse(newList[index][2]) }, { "places_budget_oz", int.Parse(newList[index][3])},
+                        { "places_budget_z", int.Parse(newList[index][4])}, {"places_quota_o", int.Parse(newList[index][5])},
+                        { "places_quota_oz", int.Parse(newList[index][6])}, { "places_quota_z", int.Parse(newList[index][7])} },
+                    new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", v[0].ToString() },
+                        { "direction_id", v[1]} });
+                    newList.RemoveAt(index);
+                }
+                else
+                    missingDirections.Add(new object[]{ v[0].ToString(), v[1] });
+                    //_DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId },
+                    //    { "direction_faculty", v[0].ToString() }, { "direction_id", v[1]} });
+            }
+            foreach (var v in newList)
+                _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
+                { { "campaign_id", _CampaignId }, { "direction_faculty", v[0] }, { "direction_id", uint.Parse(v[1]) },
+                    { "places_budget_o",int.Parse(v[2]) },{ "places_budget_oz", int.Parse(v[3])},
+                    { "places_budget_z", int.Parse(v[4])}, {"places_quota_o", int.Parse(v[5])},
+                    { "places_quota_oz", int.Parse(v[6])}, { "places_quota_z", int.Parse(v[7])}});
+            return missingDirections;
+        }
+
+        private void UpdateTargetOrganizations()
+        {
+            List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
+                "places_o", "places_oz" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                });
+            List<string[]> newList = new List<string[]>();
+            foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
+                if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
+                    newList.Add(new string[] { row.Cells[6].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[0].Value.ToString(), row.Cells[8].Value.ToString(), row.Cells[9].Value.ToString() });
+            int j = 0;
+            while (j < oldList.Count)
+            {
+                bool keysMatch = false;
+                bool valuesMatch = false;
+                string[] item = new string[1];
+                foreach (string[] newItem in newList)
+                {
+                    item = newItem;
+                    if ((oldList[j][0].ToString() == newItem[0]) && (oldList[j][1].ToString() == newItem[1]) && (oldList[j][2].ToString() == newItem[2]))
+                        keysMatch = true;
+                    if ((oldList[j][3].ToString() == newItem[3]) && (oldList[j][4].ToString() == newItem[4]))
+                        valuesMatch = true;
+                    if (keysMatch)
+                        break;
+                }
+                if (keysMatch && valuesMatch)
+                {
+                    oldList.RemoveAt(j);
+                    newList.Remove(item);
+                }
+                else if (keysMatch && !valuesMatch)
+                {
+                    _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "places_o",  int.Parse(item[3])},
+                        { "places_oz", int.Parse(item[4]) } }, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", (uint)oldList[j][0]},
+                            { "direction_id", (uint)oldList[j][1] }, { "target_organization_id", (uint)oldList[j][2] } });
+                    oldList.RemoveAt(j);
+                    newList.Remove(item);
+                }
+                else
+                    j++;
+            }
+            foreach (string[] record in newList)
+                _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
+                        { "direction_faculty", record[0]}, { "direction_id", uint.Parse(record[1]) }, { "target_organization_id", uint.Parse(record[2]) },
+                        { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) }, { "places_z", 0} });
+            foreach (object[] record in oldList)
+                _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
+                        { "direction_faculty", record[0].ToString()}, { "direction_id", (uint)record[1] }, { "target_organization_id", (uint)record[2] }});
+        }
+
+        private void UpdateFaculties()
+        {
+            List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_FACULTIES_DATA, new string[]
+           { "faculty_short_name", "hostel_places" }, new List<Tuple<string, Relation, object>>
+           {
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+           });
+
+            List<string[]> newList = new List<string[]>();
+            foreach (DataGridViewRow r in dgvFacultities.Rows)
+                newList.Add(new string[] { r.Cells[0].Value.ToString(), r.Cells[2].Value.ToString() });
+
+            foreach (var v in oldList)
+            {
+                bool found = false;
+                int places = 0;
+                foreach (var r in newList)
+                    if (v[0].ToString() == r[0].ToString())
+                    {
+                        found = true;
+                        places = int.Parse(r[1]);
+                    }
+
+                if (found)
+                {
+                    _DB_Connection.Update(DB_Table.CAMPAIGNS_FACULTIES_DATA,
+                        new Dictionary<string, object> { { "hostel_places", places } },
+                        new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } });
+                    newList.RemoveAt(newList.FindIndex(x => x[0] == v[0].ToString()));
+                }
+                else
+                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } });
+            }
+            foreach (var v in newList)
+                _DB_Connection.Insert(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object>
+                { { "faculty_short_name", v[0]}, { "hostel_places", int.Parse(v[1])}, { "campaign_id", _CampaignId} });
+        }
+
+        private void UpdateProfiles()
+        {
+            List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[]
+            { "profiles_direction_faculty", "profiles_direction_id", "profiles_name",
+                "places_paid_o","places_paid_oz", "places_paid_z"},
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId)
+                });
+
+            List<string[]> newList = new List<string[]>();
+            foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
+                if (((bool)r.Cells[0].Value) && (r.Cells[1].Value.ToString() == "П"))
+                    newList.Add(new string[] { r.Cells[5].Value.ToString(), r.Cells[2].Value.ToString(), r.Cells[3].Value.ToString(),
+                        r.Cells[6].Value.ToString(), r.Cells[7].Value.ToString(), r.Cells[8].Value.ToString()});
+
+            foreach (var v in oldList)
+            {
+                bool found = false;
+                int index = 0;
+                foreach (var r in newList)
+                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1]) && (v[2].ToString() == r[2]))
+                    {
+                        found = true;
+                        index = newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString())));
+                        break;
+                    }
+                if (found)
+                {
+                    _DB_Connection.Update(DB_Table.CAMPAIGNS_PROFILES_DATA,
+                    new Dictionary<string, object> { { "places_paid_o", int.Parse(newList[index][3]) }, { "places_paid_oz", int.Parse(newList[index][4])},
+                        { "places_paid_z", int.Parse(newList[index][5])}},
+                    new Dictionary<string, object> { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0].ToString() },
+                        { "profiles_direction_id", v[1]}, { "profiles_name", v[2].ToString()} });
+                    newList.RemoveAt(index);
+                }
+                else
+                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object> { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0].ToString() },
+                        { "profiles_direction_id", v[1]}, { "profiles_name", v[2].ToString()} });
+            }
+            foreach (var v in newList)
+                _DB_Connection.Insert(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0] }, { "profiles_direction_id", int.Parse(v[1]) },
+                    { "profiles_name", v[2]}, { "places_paid_o", int.Parse(v[3]) },{ "places_paid_oz", int.Parse(v[4])},
+                    { "places_paid_z",int.Parse(v[5])}});
+        }
+
+        private void UpdateEntranceTests()
+        {
+            List<object[]> oldList = _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[]
+            { "direction_id", "subject_dict_id", "subject_id", "priority", "direction_faculty"}, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+            });
+
+            List<string[]> newList = new List<string[]>();
+            foreach (DataGridViewRow r in dgvEntranceTests.Rows)
+            {
+                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[4].Value.ToString()).ToString(), "1", r.Cells[3].Value.ToString()});
+
+                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[5].Value.ToString()).ToString(), "2", r.Cells[3].Value.ToString()});
+
+                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
+                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[6].Value.ToString()).ToString(), "3", r.Cells[3].Value.ToString()});
+            }
+
+            foreach (var v in oldList)
+            {
+                bool found = false;
+                foreach (var r in newList)
+                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1]) && (v[2].ToString() == r[2]) && (v[3].ToString() == r[3]) && (v[4].ToString() == r[4]))
+                    {
+                        _DB_Connection.Update(DB_Table.ENTRANCE_TESTS,
+                        new Dictionary<string, object> { { "priority", int.Parse(r[3]) } },
+                        new Dictionary<string, object> { { "direction_id", v[0] }, { "subject_dict_id", v[1] },
+                            { "subject_id", v[2]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4] } });
+                        newList.Remove(r);
+                        found = true;
+                        break;
+                    }
+                if (!found)
+                    _DB_Connection.Delete(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object> { { "direction_id", (uint)(v[0]) },
+                        { "subject_dict_id", (uint)(v[1]) }, { "subject_id", (uint)(v[2]) },
+                    { "priority", v[3]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} });
+            }
+
+            foreach (var v in newList)
+                _DB_Connection.Insert(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object>
+                { { "direction_id", uint.Parse(v[0]) }, { "subject_dict_id", uint.Parse(v[1]) }, { "subject_id", uint.Parse(v[2]) },
+                    { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} });
+        }
+
+        private void SaveEduForms()
+        {
+
+        }
+
+        private void SaveEduLevels()
+        {
+
+        }
+
+        private void SaveDirections()
+        {
+
+        }
+
+        private void SaveTargetOrganizations()
+        {
+
+        }
+
+        private void SaveFaculties()
+        {
+
+        }
+
+        private void SaveProfiles()
+        {
+
+        }
+
+        private void SaveEntranceTests()
+        {
+
+        }
+
+        private void LoadEduForms()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14),
+                    new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
+                }))
+            {
+                foreach (CheckBox chekBox in gbEduForms.Controls)
+                    if (chekBox.Text == _DB_Helper.GetDictionaryItemName(14, (uint)v[0]))
+                        chekBox.Checked = true;
+            }
+        }
+
+        private void LoadEduLevels()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+            new List<Tuple<string, Relation, object>>
+            {
+                                new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 2),
+                                new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
+            }))
+            {
+                string itemName = _DB_Helper.GetDictionaryItemName(2, (uint)v[0]);
+
+                switch (itemName)
+                {
+                    case "Бакалавриат":
+                        cbEduLevelBacc.Checked = true;
+                        break;
+                    case "Магистратура":
+                        cbEduLevelMag.Checked = true;
+                        break;
+                    case "Специалитет":
+                        cbEduLevelSpec.Checked = true;
+                        break;
+                }
+            }
+        }
+
+        private void LoadDirections()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty",
+                    "direction_id", "places_budget_o", "places_budget_oz", "places_budget_z", "places_quota_o", "places_quota_oz", "places_quota_z"},
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                    }))
+                foreach (DataGridViewRow r in dgvDirections.Rows)
+                    if ((v[0].ToString() == r.Cells[4].Value.ToString()) && (v[1].ToString() == r.Cells[0].Value.ToString()))
+                    {
+                        r.Cells[1].Value = true;
+                        for (int i = 5; i < r.Cells.Count; i++)
+                            r.Cells[i].Value = v[i - 3].ToString();
+                    }
+        }
+
+        private void LoadTargetOrganizations()
+        {
+            foreach (var record in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
+                "places_o", "places_oz" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                }))
+            {
+                dgvTargetOrganizatons.Rows.Add(record[2], _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)record[2])
+                })[0][0].ToString(),
+                "", record[1], _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[0],
+                _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[1], record[0], "", record[3], record[4]);
+                ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count - 2);
+            }
+        }
+
+        private void LoadFaculties()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_FACULTIES_DATA, new string[] { "faculty_short_name", "hostel_places" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("campaign_id", Relation.EQUAL, _CampaignId)
+                }))
+                foreach (DataGridViewRow r in dgvFacultities.Rows)
+                    if (r.Cells[0].Value.ToString() == v[0].ToString())
+                        r.Cells[2].Value = v[1].ToString();
+        }
+
+        private void LoadProfiles()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_faculty",
+                    "profiles_direction_id", "profiles_name", "places_paid_o", "places_paid_oz", "places_paid_z" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId)
+                    }
+                    ))
+                foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
+                    if ((v[0].ToString() == r.Cells[5].Value.ToString()) && (v[1].ToString() == r.Cells[2].Value.ToString()) && (v[2].ToString() == r.Cells[3].Value.ToString()))
+                        for (int i = 6; i < r.Cells.Count; i++)
+                            r.Cells[i].Value = v[i - 3].ToString();
+            UpdateProfiliesTable();
+        }
+
+        private void LoadEntranceTests()
+        {
+            foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[] { "direction_id", "subject_dict_id", "subject_id", "priority", "direction_faculty" },
+                new List<Tuple<string, Relation, object>>
+                {
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
+                }))
+                foreach (DataGridViewRow r in dgvEntranceTests.Rows)
+                    if ((v[0].ToString() == r.Cells[0].Value.ToString()) && (v[4].ToString() == r.Cells[3].Value.ToString()))
+                        r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(1, (uint)v[2]);
+        }
+
         private void SaveCampaign()
         {
             uint campaignId = _DB_Connection.Insert(DB_Table.CAMPAIGNS, new Dictionary<string, object>
@@ -210,12 +680,24 @@ namespace PK.Forms
                             { "type_dict_id",  38}, { "type_id", _DB_Helper.GetDictionaryItemID(38, cbType.SelectedItem.ToString()) } });
             _CampaignId = campaignId;
 
-            foreach (var v in lbEduFormsChoosen.Items)
+            if (cbEduFormO.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                {
-                    { "campaigns_id", campaignId},
-                    { "dictionaries_items_dictionary_id", 14},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, v.ToString()) } });
+                    {
+                        { "campaigns_id", campaignId},
+                        { "dictionaries_items_dictionary_id", 14},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Очная форма") } });
+            if (cbEduFormOZ.Checked)
+                _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                    {
+                        { "campaigns_id", campaignId},
+                        { "dictionaries_items_dictionary_id", 14},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)") } });
+            if (cbEduFormZ.Checked)
+                _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                    {
+                        { "campaigns_id", campaignId},
+                        { "dictionaries_items_dictionary_id", 14},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Заочная форма") } });                
 
             if (cbEduLevelBacc.Checked)
                     _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
@@ -239,22 +721,28 @@ namespace PK.Forms
                     { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(2, "Специалитет") } });
 
             foreach (DataGridViewRow r in dgvDirections.Rows)
+            {
+                int[] places = new int[5];
+                for (int i = 5; i < 10; i++)
+                    if (dgvDirections.Columns[i].Visible == true)
+                        places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
+
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
                 {
                     { "campaign_id", campaignId},
                     { "direction_faculty", r.Cells[4].Value.ToString()},
                     { "direction_id", r.Cells[0].Value},
-                    { "places_budget_o", r.Cells[5].Value},
-                    { "places_budget_oz", r.Cells[6].Value},
-                    { "places_budget_z", r.Cells[7].Value},
-                    { "places_quota_o", r.Cells[8].Value},
-                    { "places_quota_oz", r.Cells[9].Value},
-                    { "places_quota_z", r.Cells[10].Value}
-                });
+                    { "places_budget_o", places[0]},
+                    { "places_budget_oz", places[1]},
+                    { "places_budget_z", places[2]},
+                    { "places_quota_o", places[3]},
+                    { "places_quota_oz", places[4]},
+                    { "places_quota_z", places[5]}});
+            }                
 
             foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
             {
-                if (row.Index < dgvTargetOrganizatons.Rows.Count-1);
+                if (row.Index < dgvTargetOrganizatons.Rows.Count-1)
                     _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId},
                         { "direction_faculty", row.Cells[6].Value}, { "direction_id", row.Cells[3].Value}, { "target_organization_id", row.Cells[0].Value},
                         { "places_o", row.Cells[8].Value}, { "places_oz",row.Cells[9].Value }, { "places_z", 0} });
@@ -341,279 +829,17 @@ namespace PK.Forms
                         {
                             { "id", _CampaignId}
                         });
-
-            List<object[]> eduFormsList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
-                { "dictionaries_items_item_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
-                        new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14)
-                    });
-
-            foreach (var v in lbEduFormsChoosen.Items)
-            {
-                bool found = false;
-                foreach (var r in eduFormsList)
-                    if ((uint)r[0] == _DB_Helper.GetDictionaryItemID(14, v.ToString()))
-                        found = true;
-
-                if (!found)
-                {
-                    _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                    { { "campaigns_id", _CampaignId}, {"dictionaries_items_dictionary_id", 14},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, v.ToString()) } });
-                }                    
-            }
-            foreach (var v in eduFormsList)
-            {
-                bool found = false;
-                foreach (var r in lbEduFormsChoosen.Items)
-                    if ((uint)v[0] == _DB_Helper.GetDictionaryItemID(14, r.ToString()))
-                        found = true;
-                if (!found)
-                    _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object> { { "campaigns_id", _CampaignId },
-                        { "dictionaries_items_dictionary_id", 14 }, { "dictionaries_items_item_id", v[0] } });
-            }
-
-            List<uint> eduLevelsList = new List<uint>();
-
-            if (cbEduLevelBacc.Checked)
-                eduLevelsList.Add( _DB_Helper.GetDictionaryItemID(2, "Бакалавриат"));
-
-            if (cbEduLevelMag.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Магистратура"));
-
-            if (cbEduLevelSpec.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Специалитет"));
-
-            List<object[]> oldList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
-            { "dictionaries_items_item_id", }, new List<Tuple<string, Relation, object>>
-            {
-                new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
-                new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, 2)
-            });
-
-            foreach (uint v in eduLevelsList)
-            {
-                bool found = false;
-                foreach (var r in oldList)
-                    if ((uint)(r[0]) == v)
-                        found = true;
-                if (!found)
-                    _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", v } });
-            }
-
-            foreach (var v in oldList)
-            {
-                bool found = false;
-                foreach (uint r in eduLevelsList)
-                {
-                    if ((uint)(v[0]) == r)
-                        found = true;
-
-                    if (!found)
-                        _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", v } });
-                }
-            }
-
-            oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_FACULTIES_DATA, new string[]
-            { "faculty_short_name", "hostel_places" }, new List<Tuple<string, Relation, object>>
-            {
-                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
-            });
-
-            List<string[]> newList = new List<string[]>();
-            foreach (DataGridViewRow r in dgvFacultities.Rows)
-                newList.Add(new string[] { r.Cells[0].Value.ToString(), r.Cells[2].Value.ToString() });
-
-            foreach (var v in oldList)
-            {
-                bool found = false;
-                int places = 0;
-                foreach (var r in newList)
-                    if (v[0].ToString() == r[0].ToString())
-                    {
-                        found = true;
-                        places = Convert.ToInt32(r[1]);
-                    }
-
-                if (found)
-                {
-                    _DB_Connection.Update(DB_Table.CAMPAIGNS_FACULTIES_DATA,
-                        new Dictionary<string, object> { { "hostel_places", places } },
-                        new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } });
-                    newList.RemoveAt(newList.FindIndex(x => x[0] == v[0].ToString()));
-                }
-            }
-            foreach (var v in newList)
-                _DB_Connection.Insert(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object>
-                { { "faculty_short_name", v[0]}, { "hostel_places", int.Parse(v[1])}, { "campaign_id", _CampaignId} });
-
-            oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
-                "places_o", "places_oz" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
-                });
-            newList.Clear();
-            foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
-                if (row.Index<dgvTargetOrganizatons.Rows.Count-1)
-                newList.Add(new string[] { row.Cells[6].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[0].Value.ToString(), row.Cells[8].Value.ToString(), row.Cells[9].Value.ToString() });
-            int j = 0;
-            while (j < oldList.Count)
-            {
-                bool keysMatch = false;
-                bool valuesMatch = false;
-                string[] item = new string[1];
-                foreach (string[] newItem in newList)
-                {
-                    item = newItem;
-                    if ((oldList[j][0].ToString() == newItem[0]) && (oldList[j][1].ToString() == newItem[1]) && (oldList[j][2].ToString() == newItem[2]))
-                        keysMatch = true;
-                    if ((oldList[j][3].ToString() == newItem[3]) && (oldList[j][4].ToString() == newItem[4]))
-                        valuesMatch = true;
-                    if (keysMatch)
-                        break;
-                }
-                if (keysMatch && valuesMatch)
-                {
-                    oldList.RemoveAt(j);
-                    newList.Remove(item);
-                }
-                else if (keysMatch && !valuesMatch)
-                {
-                    _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "places_o",  int.Parse(item[3])},
-                        { "places_oz", int.Parse(item[4]) } }, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", (uint)oldList[j][0]},
-                            { "direction_id", (uint)oldList[j][1] }, { "target_organization_id", (uint)oldList[j][2] } });
-                    oldList.RemoveAt(j);
-                    newList.Remove(item);
-                }
-                else
-                    j++;
-            }
-            if (newList.Count > 0)
-                foreach (string[] record in newList)
-                    _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
-                            { "direction_faculty", record[0]}, { "direction_id", uint.Parse(record[1]) }, { "target_organization_id", uint.Parse(record[2]) },
-                            { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) }, { "places_z", 0} });
-            if (oldList.Count > 0)
-                foreach (object[] record in oldList)
-                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
-                            { "direction_faculty", record[0].ToString()}, { "direction_id", (uint)record[1] }, { "target_organization_id", (uint)record[2] }});
-
-            oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[]
-            { "direction_faculty", "direction_id", "places_budget_o", "places_budget_oz","places_budget_z","places_quota_o","places_quota_oz","places_quota_z"},
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
-                });
-
-            newList.Clear();
-            foreach (DataGridViewRow r in dgvDirections.Rows)
-                if ((bool)r.Cells[1].Value)
-                newList.Add(new string[] { r.Cells[4].Value.ToString(), r.Cells[0].Value.ToString(), r.Cells[5].Value.ToString(),
-                    r.Cells[6].Value.ToString(), r.Cells[7].Value.ToString(), r.Cells[8].Value.ToString(), r.Cells[9].Value.ToString(),
-                    "0" });
-
-            foreach (var v in oldList)
-            {
-                foreach (var r in newList)
-                    if ((v[0].ToString() == r[0].ToString())&&(v[1].ToString() == r[1].ToString()))
-                    {
-                        _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
-                        new Dictionary<string, object> { { "places_budget_o", int.Parse(r[2]) }, { "places_budget_oz", int.Parse(r[3])},
-                            { "places_budget_z", int.Parse(r[4])}, {"places_quota_o", int.Parse(r[5])},
-                            { "places_quota_oz", int.Parse(r[6])}, { "places_quota_z", int.Parse(r[7])} },
-                        new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", v[0].ToString() },
-                            { "direction_id", v[1]} });
-                        newList.RemoveAt(newList.FindIndex(x => (x[0] == v[0].ToString()&&(x[1] == v[1].ToString()))));
-                        break;
-                    }
-            }
-            foreach (var v in newList)
-                _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
-                { { "campaign_id", _CampaignId }, { "direction_faculty", v[0] }, { "direction_id", uint.Parse(v[1]) },
-                    { "places_budget_o",int.Parse(v[2]) },{ "places_budget_oz", int.Parse(v[3])},
-                    { "places_budget_z", int.Parse(v[4])}, {"places_quota_o", int.Parse(v[5])},
-                    { "places_quota_oz", int.Parse(v[6])}, { "places_quota_z", int.Parse(v[7])}});
-
-
-            oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[]
-            { "profiles_direction_faculty", "profiles_direction_id", "profiles_name",
-                "places_paid_o","places_paid_oz", "places_paid_z"},
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId)
-                });
-
-            newList.Clear();
-            foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                if (((bool)r.Cells[0].Value)&&(r.Cells[1].Value.ToString()=="П"))
-                    newList.Add(new string[] { r.Cells[5].Value.ToString(), r.Cells[2].Value.ToString(), r.Cells[3].Value.ToString(),
-                        r.Cells[6].Value.ToString(), r.Cells[7].Value.ToString(), r.Cells[8].Value.ToString()});
-
-            foreach (var v in oldList)
-            {
-                foreach (var r in newList)
-                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1])&&(v[2].ToString() == r[2]))
-                    {
-                        _DB_Connection.Update(DB_Table.CAMPAIGNS_PROFILES_DATA,
-                        new Dictionary<string, object> { { "places_paid_o", int.Parse(r[3]) }, { "places_paid_oz", int.Parse(r[4])},
-                            { "places_paid_z", int.Parse(r[5])}},
-                        new Dictionary<string, object> { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0].ToString() },
-                            { "profiles_direction_id", v[1]}, { "profiles_name", v[2].ToString()} });
-                        newList.RemoveAt(newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString())&&(x[2] == v[2].ToString()))));
-                        break;
-                    }
-            }
-            foreach (var v in newList)
-                _DB_Connection.Insert(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
-                { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0] }, { "profiles_direction_id", int.Parse(v[1]) },
-                    { "profiles_name", v[2]}, { "places_paid_o", int.Parse(v[3]) },{ "places_paid_oz", int.Parse(v[4])},
-                    { "places_paid_z",int.Parse(v[5])}});
-
-
-            oldList = _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[]
-            { "direction_id", "subject_dict_id", "subject_id", "priority", "campaign_id", "direction_faculty"});
-
-            newList.Clear();
-            foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-            {
-                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[4].Value.ToString()).ToString(), "1", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
-
-                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[5].Value.ToString()).ToString(), "2", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
-
-                newList.Add(new string[] { r.Cells[0].Value.ToString(), oldList[0][1].ToString(),
-                    _DB_Helper.GetDictionaryItemID((uint)oldList[0][1], r.Cells[6].Value.ToString()).ToString(), "3", _CampaignId.ToString(), r.Cells[3].Value.ToString()});
-            }                
-
-            foreach (var v in oldList)
-            {
-                bool found = false;
-                foreach (var r in newList)
-                    if ((v[0].ToString() == r[0]) && (v[1].ToString() == r[1]) && (v[2].ToString() == r[2])&&(v[4].ToString()==r[4])&&(v[5].ToString()==r[5]))
-                    {
-                        _DB_Connection.Update(DB_Table.ENTRANCE_TESTS,
-                        new Dictionary<string, object> { { "priority", int.Parse(r[3]) } },
-                        new Dictionary<string, object> { { "direction_id", v[0] }, { "subject_dict_id", v[1] },
-                            { "subject_id", v[2]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5] } });
-                        newList.RemoveAt(newList.FindIndex(x => (x[0] == v[0].ToString() && (x[1] == v[1].ToString()) && (x[2] == v[2].ToString()) && (v[4].ToString() == x[4]) && (v[5].ToString() == x[5]))));
-                        found = true;
-                        break;
-                    }
-                if (!found)
-                    _DB_Connection.Delete(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object> { { "direction_id", (uint)(v[0]) },
-                        { "subject_dict_id", (uint)(v[1]) }, { "subject_id", (uint)(v[2]) },
-                    { "priority", v[3]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5]} });
-            }
-
-            foreach (var v in newList)
-                _DB_Connection.Insert(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object>
-                { { "direction_id", uint.Parse(v[0]) }, { "subject_dict_id", uint.Parse(v[1]) }, { "subject_id", uint.Parse(v[2]) },
-                    { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[5]} });
+            
+            UpdateEduForms();
+            UpdateEduLevels();
+            List<object[]> removingDirections = UpdateDirections();
+            UpdateTargetOrganizations();
+            UpdateFaculties();            
+            UpdateProfiles();
+            UpdateEntranceTests();
+            foreach (object[] direction in removingDirections)
+                _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId },
+                        { "direction_faculty", direction[0].ToString() }, { "direction_id", (uint)direction[1]} });
         }
 
         private void LoadCampaign()
@@ -634,118 +860,17 @@ namespace PK.Forms
 
             cbType.SelectedItem = _DB_Helper.GetDictionaryItemName((uint)loadedCampaign[5], (uint)loadedCampaign[6]);
 
-            foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14),
-                    new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
-                }))
-            {
-                string itemName = _DB_Helper.GetDictionaryItemName(14, (uint)v[0]);
-                lbEduFormsChoosen.Items.Add(itemName);
-                lbEduFormsAll.Items.Remove(itemName);
-            }
-
-            foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
-            new List<Tuple<string, Relation, object>>
-            {
-                    new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 2),
-                    new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
-            }))
-            {
-                string itemName = _DB_Helper.GetDictionaryItemName(2, (uint)v[0]);
-
-                switch (itemName)
-                {
-                    case "Бакалавриат":
-                        cbEduLevelBacc.Checked = true;
-                        break;
-                    case "Магистратура":
-                        cbEduLevelMag.Checked = true;
-                        break;
-                    case "Специалитет":
-                        cbEduLevelSpec.Checked = true;
-                        break;
-                }
-            }                
+            LoadEduForms();
+            LoadEduLevels();
        }
 
         private void LoadTables()
         {
-            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty",
-                    "direction_id", "places_budget_o", "places_budget_oz", "places_budget_z", "places_quota_o", "places_quota_oz", "places_quota_z"},
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
-                    }))
-                foreach (DataGridViewRow r in dgvDirections.Rows)
-                    if ((v[0].ToString() == r.Cells[4].Value.ToString())&&(v[1].ToString()==r.Cells[0].Value.ToString()))
-                    {
-                        r.Cells[1].Value = true;
-                        for (int i = 5; i < r.Cells.Count; i++)
-                            r.Cells[i].Value = v[i-3].ToString();
-                    }
-
-            foreach (var record in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
-                "places_o", "places_oz" }))
-            {
-                dgvTargetOrganizatons.Rows.Add(record[2], _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)record[2])
-                })[0][0].ToString(), 
-                "", record[1], _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[0],
-                _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[1], record[0], "", record[3], record[4]);
-                ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count-2);
-            }
-
-            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_FACULTIES_DATA, new string[] { "faculty_short_name", "hostel_places" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object> ("campaign_id", Relation.EQUAL, _CampaignId)
-                }))
-                foreach (DataGridViewRow r in dgvFacultities.Rows)
-                    if (r.Cells[0].Value.ToString() == v[0].ToString())
-                        r.Cells[2].Value = v[1].ToString();
-
-            foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_faculty",
-                    "profiles_direction_id", "profiles_name", "places_paid_o", "places_paid_oz", "places_paid_z" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId)
-                    }
-                    ))
-                foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                    if ((v[0].ToString() == r.Cells[5].Value.ToString()) && (v[1].ToString() == r.Cells[2].Value.ToString()) && (v[2].ToString() == r.Cells[3].Value.ToString()))
-                        for (int i = 6; i < r.Cells.Count; i++)
-                            r.Cells[i].Value = v[i - 3].ToString();
-            UpdateProfiliesTable();
-
-            foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS, new string[] { "direction_id", "subject_dict_id", "subject_id", "priority", "direction_faculty" },
-                new List<Tuple<string, Relation, object>>
-                {
-                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
-                }))                
-                foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-                    if ((v[0].ToString() == r.Cells[0].Value.ToString())&&(v[4].ToString()== r.Cells[3].Value.ToString()))
-                        r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(1, (uint)v[2]);
-        }
-
-        private void btAddEduLevel_Click(object sender, EventArgs e)
-        {
-            if (lbEduFormsAll.SelectedIndex != -1)
-            {
-                lbEduFormsChoosen.Items.Add(lbEduFormsAll.SelectedItem.ToString());
-                lbEduFormsAll.Items.Remove(lbEduFormsAll.SelectedItem.ToString());
-            }
-        }
-
-        private void btRemoveEduLevel_Click(object sender, EventArgs e)
-        {
-            if (lbEduFormsChoosen.SelectedIndex != -1)
-            {
-                lbEduFormsAll.Items.Add(lbEduFormsChoosen.SelectedItem.ToString());
-                lbEduFormsChoosen.Items.Remove(lbEduFormsChoosen.SelectedItem.ToString());
-            }
+            LoadDirections();
+            LoadTargetOrganizations();
+            LoadFaculties();
+            LoadProfiles();
+            LoadEntranceTests();
         }
 
         private void cbType_SelectedIndexChanged(object sender, EventArgs e)
@@ -804,6 +929,8 @@ namespace PK.Forms
                     dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;
                     dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.DirectionCode;
                     dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
+                    dgvTargetOrganizatons.CurrentRow.Cells[8].ReadOnly = false;
+                    dgvTargetOrganizatons.CurrentRow.Cells[9].ReadOnly = false;
                     break;
             }
         }
@@ -811,40 +938,6 @@ namespace PK.Forms
         private void dgvPaidPlaces_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             UpdateProfiliesTable();
-        }
-
-        private void cbEduLevelBacc_CheckedChanged(object sender, EventArgs e)
-        {
-            FillDirectionsTable();
-            FillFacultiesTable();
-            FillProfiliesTable();
-            FillDistTable();
-        }
-
-        private void cbEduLevelSpec_CheckedChanged(object sender, EventArgs e)
-        {
-            FillDirectionsTable();
-            FillFacultiesTable();
-            FillProfiliesTable();
-            FillDistTable();
-        }
-
-        private void cbEduLevelMag_CheckedChanged(object sender, EventArgs e)
-        {
-            FillDirectionsTable();
-            FillFacultiesTable();
-            FillProfiliesTable();
-            FillDistTable();
-        }
-
-        private void dgvDirections_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (dgvDirections.CurrentCell.ColumnIndex==0)
-            //    if ((dgvDirections.CurrentCell as DataGridViewCheckBoxCell).Value== (dgvDirections.CurrentCell as DataGridViewCheckBoxCell).TrueValue)
-            //    {
-
-            //    }
-
         }
 
         private void btSave_Click(object sender, EventArgs e)
@@ -873,9 +966,9 @@ namespace PK.Forms
                         }
                 if (progressEnabled)
                 {
-                    if (lbEduFormsChoosen.Items.Count == 0)
-                        MessageBox.Show("Не выбраны формы обучения.");
-                    else if (!(cbEduLevelBacc.Checked) && !(cbEduLevelMag.Checked) && !(cbEduLevelSpec.Checked))
+                    if (!cbEduFormO.Checked && !cbEduFormOZ.Checked && !cbEduFormZ.Checked)
+                        MessageBox.Show("Не выбраны формы обучения.");                    
+                    else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked)
                         MessageBox.Show("Не выбран уровень образования.");
                     else if (!_CampaignId.HasValue)
                             {
@@ -907,6 +1000,58 @@ namespace PK.Forms
         private void dgv_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void cbEduForm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbEduFormO.Checked)
+            {
+                dgvDirections_OOOF.Visible = true;
+                dgvDirections_OKOF.Visible = true;
+            }
+            else
+            {
+                dgvDirections_OOOF.Visible = false;
+                dgvDirections_OKOF.Visible = false;
+            }
+            if (cbEduFormOZ.Checked)
+            {
+                dgvDirections_OOOZF.Visible = true;
+                dgvDirections_OKOZF.Visible = true;
+            }
+            else
+            {
+                dgvDirections_OOOZF.Visible = false;
+                dgvDirections_OKOZF.Visible = false;
+            }
+            if (cbEduFormZ.Checked)
+            {
+                dgvDirections_OOZF.Visible = true;
+                dgvDirections_OKZF.Visible = true;
+            }
+            else
+            {
+                dgvDirections_OOZF.Visible = false;
+                dgvDirections_OKZF.Visible = false;
+            }
+        }
+
+        private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if ((sender as DataGridView).CurrentCell.Value.ToString() == "")
+                (sender as DataGridView).CurrentCell.Value = 0;
+        }
+
+        private void cbEduLevel_CheckedChanged(object sender, EventArgs e)
+        {
+            FillDirectionsTable();
+            FillFacultiesTable();
+            FillProfiliesTable();
+            FillDistTable();
+            if (_CampaignId != null)
+            {
+                LoadTables();
+            }
         }
     }
 }

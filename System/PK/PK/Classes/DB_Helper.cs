@@ -9,7 +9,16 @@ namespace PK.Classes
     class DB_Helper
     {
         #region DictItemsNames
-        public const string EduFormO = "Очная форма";
+        public const string ConstEduFormO = "Очная форма";
+        public const string ConstEduFormOZ = "Очно-заочная (вечерняя)";
+        public const string ConstEduFormZ = "Заочная форма";
+        public const string ConstEduLevelB = "Бакалавриат";
+        public const string ConstEduLevelM = "Магистратура";
+        public const string ConstEduLevelS = "Специалитет";
+        public const string ConstEduSourceB = "Бюджетные места";
+        public const string ConstEduSourceP = "С оплатой обучения";
+        public const string ConstEduSourceQ = "Квота приема лиц, имеющих особое право";
+        public const string ConstEduSourceT = "Целевой прием";
         #endregion
 
         private readonly DB_Connector _DB_Connection;
