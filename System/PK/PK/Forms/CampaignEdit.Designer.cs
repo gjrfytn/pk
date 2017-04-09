@@ -49,17 +49,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbState = new System.Windows.Forms.ComboBox();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
-            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_OKZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvEntranceTests = new System.Windows.Forms.DataGridView();
@@ -100,6 +89,15 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
+            this.dgvDirections_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -313,10 +311,8 @@
             this.dgvDirections_Fac,
             this.dgvDirections_OOOF,
             this.dgvDirections_OOOZF,
-            this.dgvDirections_OOZF,
             this.dgvDirections_OKOF,
-            this.dgvDirections_OKOZF,
-            this.dgvDirections_OKZF});
+            this.dgvDirections_OKOZF});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -334,96 +330,6 @@
             this.dgvDirections.TabIndex = 1;
             this.dgvDirections.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvDirections.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
-            // 
-            // dgvDirections_DirID
-            // 
-            this.dgvDirections_DirID.Frozen = true;
-            this.dgvDirections_DirID.HeaderText = "ID";
-            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
-            this.dgvDirections_DirID.ReadOnly = true;
-            this.dgvDirections_DirID.Visible = false;
-            // 
-            // dgvDirections_Selected
-            // 
-            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Selected.Frozen = true;
-            this.dgvDirections_Selected.HeaderText = "";
-            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
-            this.dgvDirections_Selected.Visible = false;
-            // 
-            // dgvDirections_Name
-            // 
-            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Name.Frozen = true;
-            this.dgvDirections_Name.HeaderText = "Направление";
-            this.dgvDirections_Name.Name = "dgvDirections_Name";
-            this.dgvDirections_Name.Width = 250;
-            // 
-            // dgvDirections_Code
-            // 
-            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Code.Frozen = true;
-            this.dgvDirections_Code.HeaderText = "Код направления";
-            this.dgvDirections_Code.Name = "dgvDirections_Code";
-            this.dgvDirections_Code.ReadOnly = true;
-            this.dgvDirections_Code.Width = 80;
-            // 
-            // dgvDirections_Fac
-            // 
-            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Fac.Frozen = true;
-            this.dgvDirections_Fac.HeaderText = "Факультет";
-            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
-            this.dgvDirections_Fac.ReadOnly = true;
-            this.dgvDirections_Fac.Width = 70;
-            // 
-            // dgvDirections_OOOF
-            // 
-            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
-            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
-            this.dgvDirections_OOOF.Visible = false;
-            this.dgvDirections_OOOF.Width = 80;
-            // 
-            // dgvDirections_OOOZF
-            // 
-            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
-            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
-            this.dgvDirections_OOOZF.Visible = false;
-            this.dgvDirections_OOOZF.Width = 80;
-            // 
-            // dgvDirections_OOZF
-            // 
-            this.dgvDirections_OOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OOZF.HeaderText = "Общие основания, заочная форма";
-            this.dgvDirections_OOZF.Name = "dgvDirections_OOZF";
-            this.dgvDirections_OOZF.Visible = false;
-            this.dgvDirections_OOZF.Width = 80;
-            // 
-            // dgvDirections_OKOF
-            // 
-            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
-            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
-            this.dgvDirections_OKOF.Visible = false;
-            this.dgvDirections_OKOF.Width = 80;
-            // 
-            // dgvDirections_OKOZF
-            // 
-            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
-            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
-            this.dgvDirections_OKOZF.Visible = false;
-            this.dgvDirections_OKOZF.Width = 80;
-            // 
-            // dgvDirections_OKZF
-            // 
-            this.dgvDirections_OKZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_OKZF.HeaderText = "Особая квота, заочная форма";
-            this.dgvDirections_OKZF.Name = "dgvDirections_OKZF";
-            this.dgvDirections_OKZF.Visible = false;
-            this.dgvDirections_OKZF.Width = 80;
             // 
             // panel1
             // 
@@ -810,6 +716,81 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
+            // dgvDirections_DirID
+            // 
+            this.dgvDirections_DirID.Frozen = true;
+            this.dgvDirections_DirID.HeaderText = "ID";
+            this.dgvDirections_DirID.Name = "dgvDirections_DirID";
+            this.dgvDirections_DirID.ReadOnly = true;
+            this.dgvDirections_DirID.Visible = false;
+            // 
+            // dgvDirections_Selected
+            // 
+            this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirections_Selected.Frozen = true;
+            this.dgvDirections_Selected.HeaderText = "";
+            this.dgvDirections_Selected.Name = "dgvDirections_Selected";
+            this.dgvDirections_Selected.Visible = false;
+            this.dgvDirections_Selected.Width = 5;
+            // 
+            // dgvDirections_Name
+            // 
+            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Name.Frozen = true;
+            this.dgvDirections_Name.HeaderText = "Направление";
+            this.dgvDirections_Name.Name = "dgvDirections_Name";
+            this.dgvDirections_Name.Width = 250;
+            // 
+            // dgvDirections_Code
+            // 
+            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Code.Frozen = true;
+            this.dgvDirections_Code.HeaderText = "Код направления";
+            this.dgvDirections_Code.Name = "dgvDirections_Code";
+            this.dgvDirections_Code.ReadOnly = true;
+            this.dgvDirections_Code.Width = 80;
+            // 
+            // dgvDirections_Fac
+            // 
+            this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_Fac.Frozen = true;
+            this.dgvDirections_Fac.HeaderText = "Факультет";
+            this.dgvDirections_Fac.Name = "dgvDirections_Fac";
+            this.dgvDirections_Fac.ReadOnly = true;
+            this.dgvDirections_Fac.Width = 70;
+            // 
+            // dgvDirections_OOOF
+            // 
+            this.dgvDirections_OOOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOF.HeaderText = "Общие основания, очная форма";
+            this.dgvDirections_OOOF.Name = "dgvDirections_OOOF";
+            this.dgvDirections_OOOF.Visible = false;
+            this.dgvDirections_OOOF.Width = 80;
+            // 
+            // dgvDirections_OOOZF
+            // 
+            this.dgvDirections_OOOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OOOZF.HeaderText = "Общие основания, очно-заочная форма";
+            this.dgvDirections_OOOZF.Name = "dgvDirections_OOOZF";
+            this.dgvDirections_OOOZF.Visible = false;
+            this.dgvDirections_OOOZF.Width = 80;
+            // 
+            // dgvDirections_OKOF
+            // 
+            this.dgvDirections_OKOF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOF.HeaderText = "Особая квота, очная форма";
+            this.dgvDirections_OKOF.Name = "dgvDirections_OKOF";
+            this.dgvDirections_OKOF.Visible = false;
+            this.dgvDirections_OKOF.Width = 80;
+            // 
+            // dgvDirections_OKOZF
+            // 
+            this.dgvDirections_OKOZF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_OKOZF.HeaderText = "Особая квота, очно-заочная форма";
+            this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
+            this.dgvDirections_OKOZF.Visible = false;
+            this.dgvDirections_OKOZF.Width = 80;
+            // 
             // CampaignEdit
             // 
             this.AcceptButton = this.btSave;
@@ -919,9 +900,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKZF;
     }
 }

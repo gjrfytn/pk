@@ -447,6 +447,7 @@ namespace PK.Forms
                     cbAgreed.Checked = true;
 
                 string eduLevel = "";
+                string temp = _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)entrancesData[1])[1].Split('.')[1];
                 switch (_DB_Helper.GetDirectionsDictionaryNameAndCode((uint)entrancesData[1])[1].Split('.')[1])
                 {
                     case ("03"):
@@ -562,7 +563,7 @@ namespace PK.Forms
             _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
                 { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
                 { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
-                { "email", mtbEMail.Text},{ "is_from_krym", null}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}}, new Dictionary<string, object>
+                { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}}, new Dictionary<string, object>
                 { { "id", _EntrantID } });
 
             bool firstHightEdu = true;
@@ -822,7 +823,7 @@ namespace PK.Forms
             List<object[]> oldD = new List<object[]>();
             List<object[]> newD = new List<object[]>();
             string[] fieldsList = new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
-                "edu_source_dict_id", "edu_source_id", "is_agreed_date", "is_for_spo_and_vo", "profile_name", "target_organization_id" };
+                "edu_source_dict_id", "edu_source_id", "is_agreed_date", "is_for_spo_and_vo", "profile_name", "target_organization_id", "profile_actual" };
             foreach (object[] record in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, fieldsList, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object> ("application_id", Relation.EQUAL, _ApplicationID)
@@ -871,7 +872,7 @@ namespace PK.Forms
                             {
                                 string facultyShortName = (cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0].Remove(0, 1);
                                 newD.Add(new object[] { _ApplicationID , facultyShortName , _DB_Helper.GetDirectionIDByName((cb.SelectedItem.ToString().Split(')')[1]).Remove(0, 1)),
-                                14, eduForm, 15, eduSource, agreedDate, false, null, null});
+                                14, eduForm, 15, eduSource, agreedDate, false, null, null, false});
                             }
                     }
                 else if (tab.Name.Split('_')[1] != "target")
@@ -888,7 +889,7 @@ namespace PK.Forms
                                         new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, ((cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0]).Split('(')[1])
                                     })[0][0];
                                 newD.Add(new object[] { _ApplicationID , cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) , dirID,
-                                14, eduForm, 15, eduSource, agreedDate, false, cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)});
+                                14, eduForm, 15, eduSource, agreedDate, false, cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1), null, true});
                             }
                     }
                 }
@@ -902,7 +903,7 @@ namespace PK.Forms
                             {
                                 string facultyShortName = (cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0].Remove(0, 1);
                                 newD.Add(new object[] { _ApplicationID , facultyShortName , _DB_Helper.GetDirectionIDByName((cb.SelectedItem.ToString().Split(')')[1]).Remove(0, 1)),
-                                14, eduForm, 15, eduSource, agreedDate, false, null, _TargetOrganizationID});
+                                14, eduForm, 15, eduSource, agreedDate, false, null, _TargetOrganizationID, false});
                             }
                     }
                 }
@@ -997,7 +998,7 @@ namespace PK.Forms
             _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
                 { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
                 { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
-                { "email", mtbEMail.Text},{ "is_from_krym", null}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
+                { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -1292,7 +1293,7 @@ namespace PK.Forms
                             {
                                 string facultyShortName = (cb.SelectedItem.ToString().Split(')')[0]).Split(',')[0];
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                    { "faculty_short_name", facultyShortName.Split('(')[1] }, { "is_agreed_date", agreedDate},
+                                    { "faculty_short_name", facultyShortName.Split('(')[1] }, { "is_agreed_date", agreedDate}, { "profile_actual", false},
                                     { "direction_id", _DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))},
                                     { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false} });
                             }
@@ -1313,7 +1314,7 @@ namespace PK.Forms
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                         { "faculty_short_name",  cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) }, { "is_agreed_date", agreedDate},
                                         { "direction_id", dirID }, { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource},
-                                    { "is_for_spo_and_vo", false}, { "profile_name", cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)} });
+                                    { "is_for_spo_and_vo", false}, { "profile_name", cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)}, { "profile_actual", true}, });
                             }
                     }
                 }
@@ -1329,7 +1330,7 @@ namespace PK.Forms
                                      { "faculty_short_name",  cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) }, { "is_agreed_date", agreedDate},
                                     { "direction_id", _DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))}, { "edu_form_dict_id", 14},
                                     { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false},
-                                    { "target_organization_id", _TargetOrganizationID} });
+                                    { "target_organization_id", _TargetOrganizationID}, { "profile_actual", false} });
                             }
                     }
                 }
@@ -1382,10 +1383,6 @@ namespace PK.Forms
                     placesCountColumnName = "places_budget_oz";
                 else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Квота приема лиц, имеющих особое право"))
                     placesCountColumnName = "places_quota_oz";
-                else if ((eduForm == "Заочная форма") && (eduSource == "Бюджетные места"))
-                    placesCountColumnName = "places_budget_z";
-                else if ((eduForm == "Заочная форма") && (eduSource == "Квота приема лиц, имеющих особое право"))
-                    placesCountColumnName = "places_quota_z";
 
                 foreach (var record in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty", "direction_id", placesCountColumnName },
                     new List<Tuple<string, Relation, object>>

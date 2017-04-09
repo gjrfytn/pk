@@ -20,10 +20,8 @@ namespace PK.Forms
 
             dgvDirections_OOOF.ValueType = typeof(ushort);
             dgvDirections_OOOZF.ValueType = typeof(ushort);
-            dgvDirections_OOZF.ValueType = typeof(ushort);
             dgvDirections_OKOF.ValueType = typeof(ushort);
             dgvDirections_OKOZF.ValueType = typeof(ushort);
-            dgvDirections_OKZF.ValueType = typeof(ushort);
 
             dgvTargetOrganizatons_OF.ValueType = typeof(ushort);
             dgvTargetOrganizatons_OZF.ValueType = typeof(ushort);
@@ -56,6 +54,185 @@ namespace PK.Forms
             if (_CampaignId.HasValue)
             {
                 LoadCampaign();
+                LoadTables();
+            }
+        }
+
+        private void cbType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (CheckBox v in gbEduLevel.Controls)
+                v.Checked = false;
+
+            if (cbType.SelectedItem.ToString() == "Прием иностранце по направлениям Минобрнауки")
+                foreach (CheckBox v in gbEduLevel.Controls)
+                    v.Enabled = true;
+            else
+                foreach (CheckBox v in gbEduLevel.Controls)
+                    v.Enabled = false;
+
+            switch (cbType.SelectedItem.ToString())
+            {
+                case "Прием на обучение на бакалавриат/специалитет":
+                    cbEduLevelBacc.Visible = true;
+                    cbEduLevelBacc.Enabled = true;
+                    cbEduLevelSpec.Visible = true;
+                    cbEduLevelSpec.Enabled = true;
+                    break;
+                case "Прием на обучение в магистратуру":
+                    cbEduLevelMag.Checked = true;
+                    break;
+            }
+        }
+
+        private void dgvTargetOrganizatons_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count-1);
+        }
+
+        private void dgvTargetOrganizatons_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+                switch (dgvTargetOrganizatons.CurrentCell.ColumnIndex)
+            {
+                case 2:
+                    TargetOrganizationSelect form1 = new TargetOrganizationSelect(null);
+                    form1.ShowDialog();
+                    dgvTargetOrganizatons.CurrentRow.Cells[0].Value = form1.OrganizationID;
+                    dgvTargetOrganizatons.CurrentRow.Cells[1].Value = form1.OrganizationName;
+                    break;
+                case 7:
+                    List<string> filters = new List<string>();
+                    if (cbEduLevelBacc.Checked)
+                        filters.Add("03");
+                    if (cbEduLevelSpec.Checked)
+                        filters.Add("05");
+                    if (cbEduLevelMag.Checked)
+                        filters.Add("04");
+
+                    DirectionSelect form2 = new DirectionSelect(filters);
+                    form2.ShowDialog();
+                    dgvTargetOrganizatons.CurrentRow.Cells[3].Value = form2.DirectionID;
+                    dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;
+                    dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.DirectionCode;
+                    dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
+                    dgvTargetOrganizatons.CurrentRow.Cells[8].ReadOnly = false;
+                    dgvTargetOrganizatons.CurrentRow.Cells[9].ReadOnly = false;
+                    break;
+            }
+        }
+
+        private void dgvPaidPlaces_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            UpdateProfiliesTable();
+        }
+
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            bool progressEnabled = true;
+
+            if ((!_CampaignId.HasValue)&&(!(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
+                        new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object> ("name", Relation.EQUAL, tbName.Text)
+                            }).Count == 0)))
+                MessageBox.Show("Компания с таким именем уже существует.");
+            else
+            {
+                foreach (DataGridViewRow r in dgvEntranceTests.Rows)
+                    for (int i = 4; i < r.Cells.Count; i++)
+                        for (int j = i + 1; j < r.Cells.Count; j++)
+                        {
+                            if ((r.Cells[i] as DataGridViewComboBoxCell).Value.ToString() ==
+                                (r.Cells[j] as DataGridViewComboBoxCell).Value.ToString())
+                            {
+                                progressEnabled = false;
+                                MessageBox.Show("Совпадают дисциплины вступительных испытаний для направления\n\n" + r.Cells[2].Value.ToString()
+                                    + "\n" + r.Cells[1].Value.ToString() + "\n\nДисциплины для одного направления не должны повторяться.");
+                            }
+                        }
+                if (progressEnabled)
+                {
+                    if (!cbEduFormO.Checked && !cbEduFormOZ.Checked && !cbEduFormZ.Checked)
+                        MessageBox.Show("Не выбраны формы обучения.");                    
+                    else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked)
+                        MessageBox.Show("Не выбран уровень образования.");
+                    else if (!_CampaignId.HasValue)
+                            {
+                                SaveCampaign();
+                                DialogResult = DialogResult.OK;
+                            }
+                        else
+                        {
+                            UpdateCampaing();
+                        }
+                }
+            }            
+        }
+
+        private void CampaignEdit_Load(object sender, EventArgs e)
+        {
+            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
+            {
+                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
+                DialogResult = DialogResult.Abort;
+            }
+        }
+
+        private void dgv_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void cbEduForm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbEduFormO.Checked)
+            {
+                dgvDirections_OOOF.Visible = true;
+                dgvDirections_OKOF.Visible = true;
+            }
+            else
+            {
+                dgvDirections_OOOF.Visible = false;
+                dgvDirections_OKOF.Visible = false;
+            }
+            if (cbEduFormOZ.Checked)
+            {
+                dgvDirections_OOOZF.Visible = true;
+                dgvDirections_OKOZF.Visible = true;
+            }
+            else
+            {
+                dgvDirections_OOOZF.Visible = false;
+                dgvDirections_OKOZF.Visible = false;
+            }
+            if (cbEduFormZ.Checked)
+            {
+                
+            }
+            else
+            {
+                
+            }
+        }
+
+        private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if ((sender as DataGridView).CurrentCell.Value.ToString() == "")
+                (sender as DataGridView).CurrentCell.Value = 0;
+        }
+
+        private void cbEduLevel_CheckedChanged(object sender, EventArgs e)
+        {
+            FillDirectionsTable();
+            FillFacultiesTable();
+            FillProfiliesTable();
+            FillDistTable();
+            if (_CampaignId != null)
+            {
                 LoadTables();
             }
         }
@@ -280,7 +457,7 @@ namespace PK.Forms
         {
             List<object[]> missingDirections = new List<object[]>();
             List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[]
-            { "direction_faculty", "direction_id", "places_budget_o", "places_budget_oz","places_budget_z","places_quota_o","places_quota_oz","places_quota_z"},
+            { "direction_faculty", "direction_id", "places_budget_o", "places_budget_oz", "places_quota_o","places_quota_oz"},
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
@@ -290,14 +467,13 @@ namespace PK.Forms
             foreach (DataGridViewRow r in dgvDirections.Rows)
                 if ((bool)r.Cells[1].Value)
                 {
-                    int[] places = new int[6];
-                    for (int i = 5; i <= 10; i++)
+                    int[] places = new int[4];
+                    for (int i = 5; i <= 8; i++)
                         if (dgvDirections.Columns[i].Visible == true)
                             places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
 
                     newList.Add(new string[] { r.Cells[4].Value.ToString(), r.Cells[0].Value.ToString(), places[0].ToString(),
-                   places[1].ToString(), places[2].ToString(), places[3].ToString(), places[4].ToString(),
-                    places[5].ToString() });
+                   places[1].ToString(), places[2].ToString(), places[3].ToString()});
                 }
 
             foreach (var v in oldList)
@@ -315,23 +491,19 @@ namespace PK.Forms
                 {
                     _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
                     new Dictionary<string, object> { { "places_budget_o", int.Parse(newList[index][2]) }, { "places_budget_oz", int.Parse(newList[index][3])},
-                        { "places_budget_z", int.Parse(newList[index][4])}, {"places_quota_o", int.Parse(newList[index][5])},
-                        { "places_quota_oz", int.Parse(newList[index][6])}, { "places_quota_z", int.Parse(newList[index][7])} },
+                        {"places_quota_o", int.Parse(newList[index][4])}, { "places_quota_oz", int.Parse(newList[index][5])} },
                     new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", v[0].ToString() },
                         { "direction_id", v[1]} });
                     newList.RemoveAt(index);
                 }
                 else
                     missingDirections.Add(new object[]{ v[0].ToString(), v[1] });
-                    //_DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId },
-                    //    { "direction_faculty", v[0].ToString() }, { "direction_id", v[1]} });
             }
             foreach (var v in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
                 { { "campaign_id", _CampaignId }, { "direction_faculty", v[0] }, { "direction_id", uint.Parse(v[1]) },
                     { "places_budget_o",int.Parse(v[2]) },{ "places_budget_oz", int.Parse(v[3])},
-                    { "places_budget_z", int.Parse(v[4])}, {"places_quota_o", int.Parse(v[5])},
-                    { "places_quota_oz", int.Parse(v[6])}, { "places_quota_z", int.Parse(v[7])}});
+                    {"places_quota_o", int.Parse(v[4])}, { "places_quota_oz", int.Parse(v[5])}});
             return missingDirections;
         }
 
@@ -381,7 +553,7 @@ namespace PK.Forms
             foreach (string[] record in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
                         { "direction_faculty", record[0]}, { "direction_id", uint.Parse(record[1]) }, { "target_organization_id", uint.Parse(record[2]) },
-                        { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) }, { "places_z", 0} });
+                        { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) } });
             foreach (object[] record in oldList)
                 _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
                         { "direction_faculty", record[0].ToString()}, { "direction_id", (uint)record[1] }, { "target_organization_id", (uint)record[2] }});
@@ -598,7 +770,7 @@ namespace PK.Forms
         private void LoadDirections()
         {
             foreach (var v in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty",
-                    "direction_id", "places_budget_o", "places_budget_oz", "places_budget_z", "places_quota_o", "places_quota_oz", "places_quota_z"},
+                    "direction_id", "places_budget_o", "places_budget_oz", "places_quota_o", "places_quota_oz"},
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignId)
@@ -614,6 +786,7 @@ namespace PK.Forms
 
         private void LoadTargetOrganizations()
         {
+            dgvTargetOrganizatons.Rows.Clear();
             foreach (var record in _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
                 "places_o", "places_oz" }, new List<Tuple<string, Relation, object>>
                 {
@@ -723,7 +896,7 @@ namespace PK.Forms
             foreach (DataGridViewRow r in dgvDirections.Rows)
             {
                 int[] places = new int[5];
-                for (int i = 5; i < 10; i++)
+                for (int i = 5; i <= 8; i++)
                     if (dgvDirections.Columns[i].Visible == true)
                         places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
 
@@ -734,10 +907,8 @@ namespace PK.Forms
                     { "direction_id", r.Cells[0].Value},
                     { "places_budget_o", places[0]},
                     { "places_budget_oz", places[1]},
-                    { "places_budget_z", places[2]},
                     { "places_quota_o", places[3]},
-                    { "places_quota_oz", places[4]},
-                    { "places_quota_z", places[5]}});
+                    { "places_quota_oz", places[4]}});
             }                
 
             foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
@@ -871,187 +1042,6 @@ namespace PK.Forms
             LoadFaculties();
             LoadProfiles();
             LoadEntranceTests();
-        }
-
-        private void cbType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            foreach (CheckBox v in gbEduLevel.Controls)
-                v.Checked = false;
-
-            if (cbType.SelectedItem.ToString() == "Прием иностранце по направлениям Минобрнауки")
-                foreach (CheckBox v in gbEduLevel.Controls)
-                    v.Enabled = true;
-            else
-                foreach (CheckBox v in gbEduLevel.Controls)
-                    v.Enabled = false;
-
-            switch (cbType.SelectedItem.ToString())
-            {
-                case "Прием на обучение на бакалавриат/специалитет":
-                    cbEduLevelBacc.Visible = true;
-                    cbEduLevelBacc.Enabled = true;
-                    cbEduLevelSpec.Visible = true;
-                    cbEduLevelSpec.Enabled = true;
-                    break;
-                case "Прием на обучение в магистратуру":
-                    cbEduLevelMag.Checked = true;
-                    break;
-            }
-        }
-
-        private void dgvTargetOrganizatons_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count-1);
-        }
-
-        private void dgvTargetOrganizatons_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-                switch (dgvTargetOrganizatons.CurrentCell.ColumnIndex)
-            {
-                case 2:
-                    TargetOrganizationSelect form1 = new TargetOrganizationSelect(null);
-                    form1.ShowDialog();
-                    dgvTargetOrganizatons.CurrentRow.Cells[0].Value = form1.OrganizationID;
-                    dgvTargetOrganizatons.CurrentRow.Cells[1].Value = form1.OrganizationName;
-                    break;
-                case 7:
-                    List<string> filters = new List<string>();
-                    if (cbEduLevelBacc.Checked)
-                        filters.Add("03");
-                    if (cbEduLevelSpec.Checked)
-                        filters.Add("05");
-                    if (cbEduLevelMag.Checked)
-                        filters.Add("04");
-
-                    DirectionSelect form2 = new DirectionSelect(filters);
-                    form2.ShowDialog();
-                    dgvTargetOrganizatons.CurrentRow.Cells[3].Value = form2.DirectionID;
-                    dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;
-                    dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.DirectionCode;
-                    dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
-                    dgvTargetOrganizatons.CurrentRow.Cells[8].ReadOnly = false;
-                    dgvTargetOrganizatons.CurrentRow.Cells[9].ReadOnly = false;
-                    break;
-            }
-        }
-
-        private void dgvPaidPlaces_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            UpdateProfiliesTable();
-        }
-
-        private void btSave_Click(object sender, EventArgs e)
-        {
-            bool progressEnabled = true;
-
-            if ((!_CampaignId.HasValue)&&(!(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
-                        new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object> ("name", Relation.EQUAL, tbName.Text)
-                            }).Count == 0)))
-                MessageBox.Show("Компания с таким именем уже существует.");
-            else
-            {
-                foreach (DataGridViewRow r in dgvEntranceTests.Rows)
-                    for (int i = 4; i < r.Cells.Count; i++)
-                        for (int j = i + 1; j < r.Cells.Count; j++)
-                        {
-                            if ((r.Cells[i] as DataGridViewComboBoxCell).Value.ToString() ==
-                                (r.Cells[j] as DataGridViewComboBoxCell).Value.ToString())
-                            {
-                                progressEnabled = false;
-                                MessageBox.Show("Совпадают дисциплины вступительных испытаний для направления\n\n" + r.Cells[2].Value.ToString()
-                                    + "\n" + r.Cells[1].Value.ToString() + "\n\nДисциплины для одного направления не должны повторяться.");
-                            }
-                        }
-                if (progressEnabled)
-                {
-                    if (!cbEduFormO.Checked && !cbEduFormOZ.Checked && !cbEduFormZ.Checked)
-                        MessageBox.Show("Не выбраны формы обучения.");                    
-                    else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked)
-                        MessageBox.Show("Не выбран уровень образования.");
-                    else if (!_CampaignId.HasValue)
-                            {
-                                SaveCampaign();
-                                DialogResult = DialogResult.OK;
-                            }
-                        else
-                        {
-                            UpdateCampaing();
-                        }
-                }
-            }            
-        }
-
-        private void CampaignEdit_Load(object sender, EventArgs e)
-        {
-            if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
-            else if (_DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS).Count == 0)
-            {
-                MessageBox.Show("Справочники пусты. Чтобы загрузить их, выберите:\nГлавное Меню -> Справка -> Справочники ФИС -> Обновить");
-                DialogResult = DialogResult.Abort;
-            }
-        }
-
-        private void dgv_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
-        private void cbEduForm_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbEduFormO.Checked)
-            {
-                dgvDirections_OOOF.Visible = true;
-                dgvDirections_OKOF.Visible = true;
-            }
-            else
-            {
-                dgvDirections_OOOF.Visible = false;
-                dgvDirections_OKOF.Visible = false;
-            }
-            if (cbEduFormOZ.Checked)
-            {
-                dgvDirections_OOOZF.Visible = true;
-                dgvDirections_OKOZF.Visible = true;
-            }
-            else
-            {
-                dgvDirections_OOOZF.Visible = false;
-                dgvDirections_OKOZF.Visible = false;
-            }
-            if (cbEduFormZ.Checked)
-            {
-                dgvDirections_OOZF.Visible = true;
-                dgvDirections_OKZF.Visible = true;
-            }
-            else
-            {
-                dgvDirections_OOZF.Visible = false;
-                dgvDirections_OKZF.Visible = false;
-            }
-        }
-
-        private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if ((sender as DataGridView).CurrentCell.Value.ToString() == "")
-                (sender as DataGridView).CurrentCell.Value = 0;
-        }
-
-        private void cbEduLevel_CheckedChanged(object sender, EventArgs e)
-        {
-            FillDirectionsTable();
-            FillFacultiesTable();
-            FillProfiliesTable();
-            FillDistTable();
-            if (_CampaignId != null)
-            {
-                LoadTables();
-            }
-        }
+        }        
     }
 }
