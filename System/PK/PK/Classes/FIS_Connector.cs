@@ -5,9 +5,6 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    using DictOlympic =
-        Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
-
     class FIS_Connector
     {
         private readonly string _Login;
@@ -113,7 +110,7 @@ namespace PK.Classes
                 );
         }
 
-        public DictOlympic GetOlympicsDictionaryItems()
+        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(byte years)
         {
             //
             /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
@@ -135,24 +132,28 @@ namespace PK.Classes
             return doc.Root.Element("DictionaryItems").Elements()
                 .Where(//TODO нормальный фильтр
                 o => o.Element("Year") != null &&
-                ushort.Parse(o.Element("Year").Value) >= System.DateTime.Now.Year - 1 &&
+                ushort.Parse(o.Element("Year").Value) >= System.DateTime.Now.Year - (years - 1) &&
                 o.Element("Profiles").Elements().Any(p => p.Element("ProfileID").Value == "4" || p.Element("ProfileID").Value == "7")
                 ).ToDictionary(
                 k1 => uint.Parse(k1.Element("OlympicID").Value),
-                v1 => new System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>(
-                    v1.Element("OlympicNumber") != null ? (uint?)uint.Parse(v1.Element("OlympicNumber").Value) : null,
-                    v1.Element("OlympicName").Value,
-                    v1.Element("Profiles").Elements().ToDictionary(
+                v1 => new FIS_Olympic_TEMP
+                {
+                    Year = ushort.Parse(v1.Element("Year").Value),
+                    Number = v1.Element("OlympicNumber") != null ? (uint?)uint.Parse(v1.Element("OlympicNumber").Value) : null,
+                    Name = v1.Element("OlympicName").Value,
+                    Profiles = v1.Element("Profiles").Elements().ToDictionary(
                         k2 => new System.Tuple<uint, uint>(
                             39,
                             uint.Parse(k2.Element("ProfileID").Value)
                             ),
-                        v2 => new System.Tuple<System.Tuple<uint, uint>[], uint, uint>(
-                            v2.Element("Subjects").Elements().Where(/*TODO в ФИС сидят идиоты 2*/e => e.Value != "0")
+                        v2 => new FIS_Olympic_TEMP.FIS_Olympic_Profile
+                        {
+                            Subjects = v2.Element("Subjects").Elements().Where(/*TODO в ФИС сидят идиоты 2*/e => e.Value != "0")
                             .Select(s => new System.Tuple<uint, uint>(1, uint.Parse(s.Value))).ToArray(),
-                            3,
-                            uint.Parse(v2.Element("LevelID").Value) != 0 ? uint.Parse(v2.Element("LevelID").Value) : 255 //TODO Временно, т.к. в ФИС сидят идиоты
-                            ))));
+                            LevelDictID = 3,
+                            LevelID = uint.Parse(v2.Element("LevelID").Value) != 0 ? uint.Parse(v2.Element("LevelID").Value) : 255 //TODO Временно, т.к. в ФИС сидят идиоты
+                        })
+                });
         }
 
         public void Import(ImportClasses.PackageData data)

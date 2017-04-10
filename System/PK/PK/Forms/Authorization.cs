@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace PK.Forms
 {
     public partial class Authorization : Form
     {
-        public byte UsersRole { get; private set; }
+        public string UsersRole { get; private set; }
         public string UsersLogin { get; private set; }
 
         private readonly Classes.DB_Connector _DB_Connection;
@@ -15,7 +14,7 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = new Classes.DB_Connector("default", "");
             foreach (var v in _DB_Connection.Select(DB_Table.USERS, "login"))
                 cbLogin.Items.Add(v[0]);
         }
@@ -40,14 +39,13 @@ namespace PK.Forms
 
         private void bAuth_Click(object sender, EventArgs e)
         {
-            List<object[]> usersdata = _DB_Connection.Select(DB_Table.USERS, "login", "password");
-            object[] logpass = usersdata.Find(x => x[0].ToString() == cbLogin.Text);
+            object[] user = _DB_Connection.Select(DB_Table.USERS, "login", "password", "role").Find(x => x[0].ToString() == cbLogin.Text);
 
-            if (logpass == null)
+            if (user == null)
                 MessageBox.Show("Логин не найден");
-            else if (logpass[1].ToString() == tbPassword.Text)
+            else if (user[1].ToString() == tbPassword.Text)
             {
-                // UsersRole = <?>;
+                UsersRole = user[2].ToString();
                 UsersLogin = cbLogin.Text;
                 DialogResult = DialogResult.OK;
             }

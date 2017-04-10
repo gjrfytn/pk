@@ -4,23 +4,23 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class TargetOrganizationEdit : Form
+    partial class TargetOrganizationEdit : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        uint? _UpdatingCode;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly uint? _UpdatingCode;
 
-        public TargetOrganizationEdit()
+        public TargetOrganizationEdit(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
         }
 
-        public TargetOrganizationEdit(uint organizationCode)
+        public TargetOrganizationEdit(Classes.DB_Connector connection, uint organizationCode)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _UpdatingCode = organizationCode;
             rtbOrganizationName.Text = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, new string[] { "name" },
                 new List<Tuple<string, Relation, object>>

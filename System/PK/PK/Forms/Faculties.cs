@@ -4,16 +4,17 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class Faculties : Form
+    partial class Faculties : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        bool _Updating;
+        private readonly Classes.DB_Connector _DB_Connection;
 
-        public Faculties()
+        private bool _Updating;
+
+        public Faculties(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
 
             UpdateTable();
         }
@@ -109,7 +110,7 @@ namespace PK.Forms
                 MessageBox.Show("Выберите факультет");
             else
             {
-                FaculityDirectionsSelect form = new FaculityDirectionsSelect(dgvFaculties.SelectedRows[0].Cells[0].Value.ToString());
+                FaculityDirectionsSelect form = new FaculityDirectionsSelect(_DB_Connection,dgvFaculties.SelectedRows[0].Cells[0].Value.ToString());
                 form.ShowDialog();
             }
         }

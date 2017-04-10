@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dictionaries));
             this.dgvDictionaries = new System.Windows.Forms.DataGridView();
             this.dgvDictionaries_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDictionaries_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -135,14 +134,14 @@
             // 
             // toolStrip_Update
             // 
-            this.toolStrip_Update.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Update.Image")));
+            this.toolStrip_Update.Image = global::PK.Properties.Resources.refresh;
             this.toolStrip_Update.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Update.Name = "toolStrip_Update";
             this.toolStrip_Update.Size = new System.Drawing.Size(81, 22);
             this.toolStrip_Update.Text = "Обновить";
             this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
             // 
-            // DictionariesForm
+            // Dictionaries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -150,7 +149,7 @@
             this.Controls.Add(this.dgvDictionaryItems);
             this.Controls.Add(this.dgvDictionaries);
             this.Controls.Add(this.toolStrip);
-            this.Name = "DictionariesForm";
+            this.Name = "Dictionaries";
             this.Text = "Справочники ФИС";
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaries)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaryItems)).EndInit();

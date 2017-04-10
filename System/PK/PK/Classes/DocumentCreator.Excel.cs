@@ -22,7 +22,7 @@ namespace PK.Classes
                         if (column.Element("Placeholder") != null)
                             throw new System.Exception("Нельзя задавать плейсхолдеры для отдельных столбцов, если задан табличный плейсхолдер. Значение: " + column.Element("Placeholder").Value);
 
-                    rows = connection.RunProcedure(_PH_Table[excelTemplateElement.Element("Placeholder").Value], 1); //TODO 1;
+                    rows = connection.RunProcedure(_PH_Table[excelTemplateElement.Element("Placeholder").Value], ids[0]);
                 }
                 else
                 {
@@ -49,6 +49,15 @@ namespace PK.Classes
                             rows[rows.Count - 1][i] = SelectByPlaceholder(connection, id, placeholders[i]);
                     }
                 }
+
+                if (bool.Parse(excelTemplateElement.Element("Numeration").Value))
+                    for (byte i = 0; i < rows.Count; ++i)
+                    {
+                        object[] buf = new object[rows[i].Length + 1];
+                        buf[0] = i + 1;
+                        for (byte j = 0; j < rows[i].Length; ++j)
+                            buf[j + 1] = rows[i][j];
+                    }
 
                 Create(colNames, colWidths, fonts, colFonts, rows, resultFile);
             }

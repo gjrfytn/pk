@@ -4,16 +4,16 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class FaculityDirectionsSelect : Form
+    partial class FaculityDirectionsSelect : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        string _FacultyShortName;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly string _FacultyShortName;
 
-        public FaculityDirectionsSelect(string shortName)
+        public FaculityDirectionsSelect(Classes.DB_Connector connection, string shortName)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _FacultyShortName = shortName;
 
             foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name", "code"))

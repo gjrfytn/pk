@@ -4,16 +4,16 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class Campaigns : Form
+    partial class Campaigns : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        Classes.DB_Helper _DB_Helper;
+        private readonly  Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
 
-        public Campaigns()
+        public Campaigns(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             UpdateTable();
@@ -46,7 +46,7 @@ namespace PK.Forms
 
         private void btCreatePriemComp_Click(object sender, EventArgs e)
         {
-            CampaignEdit form = new CampaignEdit(null);
+            CampaignEdit form = new CampaignEdit(_DB_Connection,null);
             form.ShowDialog();
             UpdateTable();
         }
@@ -57,7 +57,7 @@ namespace PK.Forms
                 MessageBox.Show("Выберите кампанию в списке.");
             else
             {
-                CampaignEdit form = new CampaignEdit((uint)dgvCampaigns.SelectedRows[0].Cells[0].Value);
+                CampaignEdit form = new CampaignEdit(_DB_Connection,(uint)dgvCampaigns.SelectedRows[0].Cells[0].Value);
                 form.ShowDialog();
                 UpdateTable();
             }

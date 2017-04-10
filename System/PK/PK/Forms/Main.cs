@@ -8,26 +8,27 @@ namespace PK.Forms
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private string _UserLogin;
+        private readonly string _UserLogin;
+
         private uint _CurrCampaignID;
         private int _CurrCampaignStartYear;
 
-        public Main(byte userRole, string usersLogin)
+        public Main(string userRole, string usersLogin)
         {
             InitializeComponent();
 
-            _UserLogin = usersLogin;
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = new Classes.DB_Connector(userRole, new Classes.DB_Connector("default", "").Select(DB_Table.CONSTANTS, userRole + "_password")[0][0].ToString());
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _UserLogin = usersLogin;
 
-            UpdateCampaignsList();            
+            UpdateCampaignsList();
         }
 
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
             List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time" });
-            if (apps.Count>0)
+            if (apps.Count > 0)
                 foreach (var application in apps)
                 {
                     if (((DateTime)application[2]).Year == _CurrCampaignStartYear)
@@ -46,7 +47,7 @@ namespace PK.Forms
         {
             toolStripMain_cbCurrCampaign.Items.Clear();
             List<object[]> campaigns = _DB_Connection.Select(DB_Table.CAMPAIGNS, "id", "name");
-            if (campaigns.Count>0)
+            if (campaigns.Count > 0)
             {
                 foreach (var campaign in campaigns)
                 {
@@ -76,27 +77,27 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
         {
-            Campaigns form = new Campaigns();
+            Campaigns form = new Campaigns(_DB_Connection);
             form.ShowDialog();
             UpdateCampaignsList();
         }
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_CurrCampaignID, _UserLogin, null);
+            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
             form.ShowDialog();
             UpdateApplicationsTable();
         }
 
         private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_CurrCampaignID, _UserLogin, null);
+            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
             form.ShowDialog();
             UpdateApplicationsTable();
         }
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
         {
-            TargetOrganizations form = new TargetOrganizations();
+            TargetOrganizations form = new TargetOrganizations(_DB_Connection);
             form.ShowDialog();
         }
         private void menuStrip_Dictionaries_Click(object sender, EventArgs e)
@@ -119,13 +120,13 @@ namespace PK.Forms
 
         private void menuStrip_Faculties_Click(object sender, EventArgs e)
         {
-            Faculties form = new Faculties();
+            Faculties form = new Faculties(_DB_Connection);
             form.ShowDialog();
         }
 
         private void menuStrip_Directions_Click(object sender, EventArgs e)
         {
-            DirectionsProfiles form = new DirectionsProfiles();
+            DirectionsProfiles form = new DirectionsProfiles(_DB_Connection);
             form.ShowDialog();
         }
 
@@ -143,13 +144,12 @@ namespace PK.Forms
 
         private void toolStrip_FisImport_Click(object sender, EventArgs e)
         {
-            Classes.FIS_Connector fisConnector = new Classes.FIS_Connector("XXX", "***");
-            fisConnector.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+            new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****").Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
         }
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
-            InstitutionAchievementsEdit form = new InstitutionAchievementsEdit();
+            InstitutionAchievementsEdit form = new InstitutionAchievementsEdit(_DB_Connection);
             form.ShowDialog();
         }
 
@@ -162,7 +162,7 @@ namespace PK.Forms
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
+            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
             form.ShowDialog();
             UpdateApplicationsTable();
         }

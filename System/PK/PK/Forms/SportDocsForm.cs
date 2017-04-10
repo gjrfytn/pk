@@ -3,16 +3,16 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class SportDocsForm : Form
+    partial class SportDocsForm : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        ApplicationEdit _Parent;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly ApplicationEdit _Parent;
 
-        public SportDocsForm(ApplicationEdit parent)
+        public SportDocsForm(Classes.DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _Parent = parent;
             Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
 

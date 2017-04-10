@@ -3,17 +3,17 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class MADIOlimps : Form
+    partial class MADIOlimps : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        Classes.DB_Helper _DB_Helper;
-        ApplicationEdit _Parent;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly ApplicationEdit _Parent;
 
-        public MADIOlimps(ApplicationEdit parent)
+        public MADIOlimps(Classes.DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _Parent = parent;
 
@@ -22,7 +22,7 @@ namespace PK.Forms
             cbDiplomaType.DisplayMember = "Value";
             cbDiplomaType.ValueMember = "Value";
             cbDiplomaType.SelectedIndex = -1;
-
+            
             cbClass.SelectedItem = "10";
 
             cbDiscipline.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(1), null);

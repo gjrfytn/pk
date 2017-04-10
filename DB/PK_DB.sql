@@ -206,11 +206,6 @@ COMMENT = 'Приказы.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
-  `last_name` VARCHAR(250) NOT NULL COMMENT 'Фамилия.',
-  `first_name` VARCHAR(250) NOT NULL COMMENT 'Имя.',
-  `middle_name` VARCHAR(250) NULL COMMENT 'Отчество.',
-  `gender_dict_id` INT UNSIGNED NOT NULL COMMENT '5',
-  `gender_id` INT UNSIGNED NOT NULL COMMENT 'Пол (справочник №5).',
   `custom_information` VARCHAR(4000) NULL COMMENT 'Дополнительные сведения, предоставленные абитуриентом.',
   `email` VARCHAR(150) NULL COMMENT 'Электронный адрес.',
   `mail_region_dict_id` INT UNSIGNED NULL COMMENT '8',
@@ -221,14 +216,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants` (
   `home_phone` VARCHAR(10) NULL COMMENT 'Домашний телефон.',
   `mobile_phone` VARCHAR(10) NULL COMMENT 'Мобильный телефон.',
   PRIMARY KEY (`id`),
-  INDEX `corresp_gend_id_idx` (`gender_dict_id` ASC, `gender_id` ASC),
   INDEX `corresp_mail_region_idx` (`mail_region_dict_id` ASC, `mail_region_id` ASC),
   INDEX `corresp_mail_town_type_idx` (`mail_town_type_dict_id` ASC, `mail_town_type_id` ASC),
-  CONSTRAINT `entrants_corresp_gender`
-    FOREIGN KEY (`gender_id` , `gender_dict_id`)
-    REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `entrants_corresp_mail_region`
     FOREIGN KEY (`mail_region_id` , `mail_region_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -389,7 +378,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
   `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
   `is_for_spo_and_vo` TINYINT(1) NOT NULL COMMENT 'Абитуриент поступает с профильным СПО/ВО.',
-  `profile_actual` TINYINT(1) NOT NULL COMMENT 'Текущий выбор профиля абитуриентом.',
+  `profile_actual` TINYINT(1) NULL COMMENT 'Текущий выбор профиля абитуриентом.',
   PRIMARY KEY (`application_id`, `faculty_short_name`, `direction_id`, `edu_form_dict_id`, `edu_form_id`, `edu_source_dict_id`, `edu_source_id`),
   INDEX `targets_idx` (`target_organization_id` ASC),
   INDEX `has_idx` (`application_id` ASC),
@@ -440,7 +429,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`diploma_docs_additional_data` (
   `speciality_id` INT UNSIGNED NULL COMMENT 'Код направления подготовки (справочник №10).',
   `end_year` INT UNSIGNED NULL COMMENT 'Год окончания.',
   `gpa` FLOAT UNSIGNED NULL COMMENT 'Средний балл.',
-  `red_diploma` TINYINT(1) NULL COMMENT 'Диплом с отличием или золотая медаль.',
   PRIMARY KEY (`document_id`),
   INDEX `corresp_idx` (`speciality_id` ASC),
   CONSTRAINT `diploma_docs_additional_data_has`
@@ -514,6 +502,7 @@ COMMENT = 'Дополнительная информация для докуме
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`dictionary_19_items` (
   `olympic_id` INT UNSIGNED NOT NULL COMMENT 'ИД олимпиады.',
+  `year` SMALLINT UNSIGNED NOT NULL COMMENT 'Год.',
   `olympic_number` INT UNSIGNED NULL COMMENT 'Номер олимпиады.',
   `olympic_name` VARCHAR(200) NOT NULL COMMENT 'Имя олимпиады.',
   PRIMARY KEY (`olympic_id`))
@@ -1003,6 +992,9 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
   `min_physics_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по физике.',
   `min_social_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по обществознанию.',
   `min_foreign_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по иностранному языку.',
+  `registrator_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли регистратора.',
+  `inspector_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли проверяющего.',
+  `administrator_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли администратора.',
   INDEX `constants_current_campaign_idx` (`current_campaign_id` ASC),
   CONSTRAINT `constants_current_campaign`
     FOREIGN KEY (`current_campaign_id`)
@@ -1042,6 +1034,11 @@ COMMENT = 'Данные направления кампании по целев�
 USE `PK_DB` ;
 
 -- -----------------------------------------------------
+-- Placeholder table for view `PK_DB`.`entrants_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`entrants_view` (`id` INT, `last_name` INT, `first_name` INT, `middle_name` INT, `series` INT, `number` INT);
+
+-- -----------------------------------------------------
 -- procedure get_campaign_edu_forms
 -- -----------------------------------------------------
 
@@ -1079,6 +1076,64 @@ WHERE examination_id=id;
 END$$
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- View `PK_DB`.`entrants_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `PK_DB`.`entrants_view`;
+USE `PK_DB`;
+CREATE  OR REPLACE VIEW `entrants_view` AS
+    SELECT 
+        entrants.id,
+        appls_idents.last_name,
+        appls_idents.first_name,
+        appls_idents.middle_name,
+        appls_idents.series,
+        appls_idents.number
+    FROM
+        entrants
+            JOIN
+        (SELECT 
+            applications.entrant_id,
+                a_d_idents.series,
+                a_d_idents.number,
+                a_d_idents.last_name,
+                a_d_idents.first_name,
+                a_d_idents.middle_name
+        FROM
+            applications
+        JOIN (SELECT 
+            _applications_has_documents.applications_id,
+                docs_idents.series,
+                docs_idents.number,
+                docs_idents.last_name,
+                docs_idents.first_name,
+                docs_idents.middle_name
+        FROM
+            _applications_has_documents
+        JOIN (SELECT 
+            documents.id,
+                documents.series,
+                documents.number,
+                identity_docs_additional_data.last_name,
+                identity_docs_additional_data.first_name,
+                identity_docs_additional_data.middle_name
+        FROM
+            documents
+        JOIN identity_docs_additional_data ON documents.id = identity_docs_additional_data.document_id) AS docs_idents ON _applications_has_documents.documents_id = docs_idents.id) AS a_d_idents ON applications.id = a_d_idents.applications_id) AS appls_idents ON entrants.id = appls_idents.entrant_id;
+CREATE USER 'default';
+
+GRANT SELECT ON TABLE `PK_DB`.`users` TO 'default';
+GRANT SELECT ON TABLE `PK_DB`.`constants` TO 'default';
+CREATE USER 'registrator' IDENTIFIED BY 'reg1234';
+
+GRANT ALL ON `PK_DB`.* TO 'registrator';
+CREATE USER 'inspector' IDENTIFIED BY 'ins1234';
+
+GRANT ALL ON `PK_DB`.* TO 'inspector';
+CREATE USER 'administrator' IDENTIFIED BY 'adm1234';
+
+GRANT ALL ON `PK_DB`.* TO 'administrator';
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

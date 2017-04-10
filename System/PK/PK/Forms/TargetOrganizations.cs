@@ -4,14 +4,15 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class TargetOrganizations : Form
+    partial class TargetOrganizations : Form
     {
-        Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Connector _DB_Connection;
 
-        public TargetOrganizations()
+        public TargetOrganizations(Classes.DB_Connector connection)
         {
             InitializeComponent();
-            _DB_Connection = new Classes.DB_Connector();
+
+            _DB_Connection = connection;
 
             UpdateTable();
         }
@@ -26,7 +27,7 @@ namespace PK.Forms
 
         private void btNewTargetOrganization_Click(object sender, EventArgs e)
         {
-            TargetOrganizationEdit form = new TargetOrganizationEdit();
+            TargetOrganizationEdit form = new TargetOrganizationEdit(_DB_Connection);
             form.ShowDialog();
             UpdateTable();
         }
@@ -37,7 +38,7 @@ namespace PK.Forms
                 MessageBox.Show("Выберите строку");
             else
             {
-                TargetOrganizationEdit form = new TargetOrganizationEdit((uint)dgvTargetOrganizations.SelectedRows[0].Cells[0].Value);
+                TargetOrganizationEdit form = new TargetOrganizationEdit(_DB_Connection,(uint)dgvTargetOrganizations.SelectedRows[0].Cells[0].Value);
                 form.ShowDialog();
                 UpdateTable();
             }

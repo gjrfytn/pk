@@ -5,8 +5,8 @@ namespace PK.Forms
     partial class DirectionsDictionary : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.FIS_Connector _FIS_Connection;
-        private readonly Classes.DictionaryUpdater _Updater;
+
+        private Classes.DictionaryUpdater _Updater;
 
         public DirectionsDictionary(Classes.DB_Connector dbConnection)
         {
@@ -14,22 +14,21 @@ namespace PK.Forms
 
             _DB_Connection = dbConnection;
 
-            try
-            {
-                _FIS_Connection = new Classes.FIS_Connector("XXXX", "****");
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            _Updater = new Classes.DictionaryUpdater(_DB_Connection, _FIS_Connection);
-
             UpdateTable();
         }
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
+            if (_Updater == null)
+                try
+                {
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****"));
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             Cursor.Current = Cursors.WaitCursor;
             _Updater.UpdateDirectionsDictionary();
             UpdateTable();

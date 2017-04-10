@@ -7,6 +7,7 @@ namespace PK.Classes
     static class Utility
     {
         public static readonly string DocumentsTemplatesPath = System.Configuration.ConfigurationManager.AppSettings["DocumentsTemplatesPath"];
+        public static readonly string FIS_Login = System.Configuration.ConfigurationManager.AppSettings["FIS_Login"];
 
         /// <summary>
         /// Отображает диалоговое окно с заголовком "Действие" и кнопками "Да" и "Нет".

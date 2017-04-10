@@ -6,14 +6,14 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class CampaignEdit : Form
+    partial class CampaignEdit : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly  Classes.DB_Helper _DB_Helper;
 
         private uint? _CampaignId;
 
-        public CampaignEdit(uint? campUid)
+        public CampaignEdit(Classes.DB_Connector connection,uint? campUid)
         {
             #region Components
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace PK.Forms
             dgvPaidPlaces_ZFPM.ValueType = typeof(ushort);
             #endregion
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _CampaignId = campUid;
 
@@ -94,7 +94,7 @@ namespace PK.Forms
                 switch (dgvTargetOrganizatons.CurrentCell.ColumnIndex)
             {
                 case 2:
-                    TargetOrganizationSelect form1 = new TargetOrganizationSelect(null);
+                    TargetOrganizationSelect form1 = new TargetOrganizationSelect(_DB_Connection,null);
                     form1.ShowDialog();
                     dgvTargetOrganizatons.CurrentRow.Cells[0].Value = form1.OrganizationID;
                     dgvTargetOrganizatons.CurrentRow.Cells[1].Value = form1.OrganizationName;
@@ -108,7 +108,7 @@ namespace PK.Forms
                     if (cbEduLevelMag.Checked)
                         filters.Add("04");
 
-                    DirectionSelect form2 = new DirectionSelect(filters);
+                    DirectionSelect form2 = new DirectionSelect(_DB_Connection,filters);
                     form2.ShowDialog();
                     dgvTargetOrganizatons.CurrentRow.Cells[3].Value = form2.DirectionID;
                     dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;

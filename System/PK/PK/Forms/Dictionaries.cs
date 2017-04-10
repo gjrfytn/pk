@@ -6,7 +6,8 @@ namespace PK.Forms
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private readonly Classes.DictionaryUpdater _Updater;
+
+        private Classes.DictionaryUpdater _Updater;
 
         public Dictionaries(Classes.DB_Connector connection)
         {
@@ -14,15 +15,6 @@ namespace PK.Forms
 
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-
-            try
-            {
-                _Updater = new Classes.DictionaryUpdater(_DB_Connection, new Classes.FIS_Connector("XXXX", "****"));
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
 
             UpdateDictionariesTable();
         }
@@ -36,6 +28,16 @@ namespace PK.Forms
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
+            if (_Updater == null)
+                try
+                {
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****"));
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             Cursor.Current = Cursors.WaitCursor;
             _Updater.UpdateDictionaries();
             UpdateDictionariesTable();

@@ -4,19 +4,19 @@ using System.Windows.Forms;
 
 namespace PK
 {
-    public partial class TargetOrganizationSelect : Form
+    partial class TargetOrganizationSelect : Form
     {
         public uint? OrganizationID;
         public string OrganizationName;
 
-        Dictionary<uint, string> _All_Items = new Dictionary<uint, string>();
-        Classes.DB_Connector _DB_Connection;
+        private readonly Dictionary<uint, string> _All_Items = new Dictionary<uint, string>();
+        private readonly Classes.DB_Connector _DB_Connection;
 
-        public TargetOrganizationSelect(uint? orgID)
+        public TargetOrganizationSelect(Classes.DB_Connector connection, uint? orgID)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             OrganizationID = orgID;
 
             foreach (object[] v in _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, "id", "name"))

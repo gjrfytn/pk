@@ -3,9 +3,6 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    using DictOlympic =
-           Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
-
     class DB_Helper
     {
         #region DictItemsNames
@@ -51,23 +48,24 @@ namespace PK.Classes
                 );
         }
 
-        public DictOlympic GetOlympicsDictionaryItems()
+        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems()
         {
-            DictOlympic dictionaryItems = new DictOlympic();
+            Dictionary<uint, FIS_Olympic_TEMP> dictionaryItems = new Dictionary<uint, FIS_Olympic_TEMP>();
 
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
             {
-                Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>> profiles =
-                    new Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>();
+                Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile> profiles =
+                    new Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile>();
                 foreach (object[] prof in _DB_Connection.Select(
                     DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                     new string[] { "*" },
                     new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, olymp[0]) }))
                 {
                     profiles.Add(
-                        new System.Tuple<uint, uint>((uint)prof[1], (uint)prof[2]),
-                        new System.Tuple<System.Tuple<uint, uint>[], uint, uint>(
-                            _DB_Connection.Select(
+                       new System.Tuple<uint, uint>((uint)prof[1], (uint)prof[2]),
+                        new FIS_Olympic_TEMP.FIS_Olympic_Profile
+                        {
+                            Subjects = _DB_Connection.Select(
                                 DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                                 new string[] { "dictionaries_items_dictionary_id", "dictionaries_items_item_id" },
                                 new List<System.Tuple<string, Relation, object>>
@@ -76,17 +74,18 @@ namespace PK.Classes
                                     new System.Tuple<string, Relation, object>("dictionary_olympic_profiles_profile_dict_id", Relation.EQUAL, prof[1]),
                                     new System.Tuple<string, Relation, object>("dictionary_olympic_profiles_profile_id", Relation.EQUAL, prof[2])
                                 }).Select(s => new System.Tuple<uint, uint>((uint)s[0], (uint)s[1])).ToArray(),
-                            (uint)prof[3],
-                            (uint)prof[4]
-                            ));
+                            LevelID = (uint)prof[4]
+                        });
                 }
                 dictionaryItems.Add(
                     (uint)olymp[0],
-                    new System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>(
-                        olymp[1] as uint?,
-                        olymp[2].ToString(),
-                        profiles
-                        ));
+                    new FIS_Olympic_TEMP
+                    {
+                        Year = (ushort)olymp[1],
+                        Number = olymp[2] as uint?,
+                        Name = olymp[3].ToString(),
+                        Profiles = profiles
+                    });
             }
 
             return dictionaryItems;

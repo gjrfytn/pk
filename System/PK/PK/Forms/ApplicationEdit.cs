@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class ApplicationEdit : Form
+    partial class ApplicationEdit : Form
     {
         public struct QDoc
         {
@@ -62,7 +62,7 @@ namespace PK.Forms
         private bool _Loading;
         private uint? _TargetOrganizationID;
 
-        public ApplicationEdit(uint campaignID, string registratorsLogin, uint? applicationId)
+        public ApplicationEdit(Classes.DB_Connector connection,uint campaignID, string registratorsLogin, uint? applicationId)
         {
             #region Components
             InitializeComponent();
@@ -70,7 +70,7 @@ namespace PK.Forms
             dgvExams_EGE.ValueType = typeof(byte);
             #endregion
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
 
             if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
             {
@@ -1486,7 +1486,7 @@ namespace PK.Forms
         {
             if ((cbQuote.Checked)&&(!_Loading))
             {
-                QuotDocsForm form = new QuotDocsForm(this);
+                QuotDocsForm form = new QuotDocsForm(_DB_Connection,this);
                 form.ShowDialog();
                 cbMedCertificate.Enabled = true;
                 foreach (Control c in tbDirections.TabPages[6].Controls)
@@ -1519,7 +1519,7 @@ namespace PK.Forms
         {
             if ((cbSport.Checked)&&(!_Loading))
             {
-                SportDocsForm form = new SportDocsForm(this);
+                SportDocsForm form = new SportDocsForm(_DB_Connection,this);
                 form.ShowDialog();
             }
         }
@@ -1528,7 +1528,7 @@ namespace PK.Forms
         {
             if ((cbMADIOlympiad.Checked)&&(!_Loading))
             {
-                MADIOlimps form = new MADIOlimps(this);
+                MADIOlimps form = new MADIOlimps(_DB_Connection,this);
                 form.ShowDialog();
             }
         }
@@ -1801,8 +1801,7 @@ namespace PK.Forms
             string doc = "moveJournal";
             Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "MoveJournal.xml", doc, _ApplicationID.Value);
             Classes.Utility.Print(doc + ".docx");
-
-            doc = "inventory";
+            
             List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
             
             foreach (TabPage tab in tbDirections.Controls)
@@ -1813,6 +1812,7 @@ namespace PK.Forms
                 if (cb.Checked)
                     tableParams[1].Add(new string[] { cb.Text }); //TODO Оригинал
 
+            doc = "inventory";
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "Inventory.xml",
                 doc,
@@ -1925,7 +1925,18 @@ namespace PK.Forms
                 );
             Classes.Utility.Print(doc + ".docx");
 
-            doc = "percRecordBack";
+            string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                _DB_Connection.Select(
+                    DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                    new string[] { "institution_achievement_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ApplicationID)
+                    }),
+                k1 => k1[0],
+                k2 => k2[0],
+                (s1, s2) => s1[1]
+                ).Max()?.ToString();
 
             parameters = new List<string>
             {
@@ -1945,7 +1956,7 @@ namespace PK.Forms
                     cbOriginal.Checked?"+":"",
                     dgvExams[3,3].Value.ToString(),
                     dgvExams[3,4].Value.ToString(),
-                    "!",//TODO Индивидуальные достижения
+                    indAchValue,
                     ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,2].Value).ToString(),
                     ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value).ToString(),
                     ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
@@ -2004,6 +2015,7 @@ namespace PK.Forms
             while (parameters.Count != 40)
                 parameters.Add("");
 
+            doc = "percRecordBack";
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
                 doc,
@@ -2017,7 +2029,7 @@ namespace PK.Forms
         {
             if (cbTarget.Checked && !_Loading)
             {
-                TargetOrganizationSelect form = new TargetOrganizationSelect(_TargetOrganizationID);
+                TargetOrganizationSelect form = new TargetOrganizationSelect(_DB_Connection,_TargetOrganizationID);
                 form.ShowDialog();
                 _TargetOrganizationID = form.OrganizationID;
                 foreach (Control c in tbDirections.TabPages[6].Controls)

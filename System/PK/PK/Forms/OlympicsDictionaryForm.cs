@@ -5,25 +5,16 @@ namespace PK
     partial class OlympicsDictionaryForm : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.FIS_Connector _FIS_Connection;
-        private readonly Classes.DictionaryUpdater _Updater;
+
+        private Classes.DictionaryUpdater _Updater;
 
         public OlympicsDictionaryForm(Classes.DB_Connector dbConnection)
         {
             InitializeComponent();
 
+            toolStrip_Years.SelectedIndex = 1;
+
             _DB_Connection = dbConnection;
-
-            try
-            {
-                _FIS_Connection = new Classes.FIS_Connector("XXXX", "****");
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            _Updater = new Classes.DictionaryUpdater(_DB_Connection, _FIS_Connection);
 
             UpdateOlympicsTable();
         }
@@ -82,8 +73,18 @@ namespace PK
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
+            if (_Updater == null)
+                try
+                {
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****"));
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             Cursor.Current = Cursors.WaitCursor;
-            _Updater.UpdateOlympicsDictionary();
+            _Updater.UpdateOlympicsDictionary(byte.Parse(toolStrip_Years.Text));
             UpdateOlympicsTable();
             Cursor.Current = Cursors.Default;
         }
@@ -92,7 +93,7 @@ namespace PK
         {
             dgvOlympics.Rows.Clear();
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
-                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2]);
+                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2], olymp[3]);
         }
     }
 }

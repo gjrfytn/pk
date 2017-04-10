@@ -4,17 +4,18 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class InstitutionAchievementsEdit : Form
+    partial class InstitutionAchievementsEdit : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
-        readonly Classes.DB_Helper _DB_Helper;
-        uint _LoadedCampaign;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
 
-        public InstitutionAchievementsEdit()
+        private uint _LoadedCampaign;
+
+        public InstitutionAchievementsEdit(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             foreach (var campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, "name"))

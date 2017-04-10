@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OlympicsDictionaryForm));
             this.dgvOlympics = new System.Windows.Forms.DataGridView();
             this.dgvOlympics_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvOlympics_Year = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvOlympics_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvOlympics_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbProfiles = new System.Windows.Forms.GroupBox();
@@ -44,6 +44,10 @@
             this.panel = new System.Windows.Forms.Panel();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_Update = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStrip_Label1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip_Years = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStrip_Label2 = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOlympics)).BeginInit();
             this.gbProfiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProfiles)).BeginInit();
@@ -62,6 +66,7 @@
             this.dgvOlympics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvOlympics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvOlympics_ID,
+            this.dgvOlympics_Year,
             this.dgvOlympics_Number,
             this.dgvOlympics_Name});
             this.dgvOlympics.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -78,15 +83,23 @@
             // dgvOlympics_ID
             // 
             this.dgvOlympics_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvOlympics_ID.FillWeight = 25F;
+            this.dgvOlympics_ID.FillWeight = 15F;
             this.dgvOlympics_ID.HeaderText = "ID";
             this.dgvOlympics_ID.Name = "dgvOlympics_ID";
             this.dgvOlympics_ID.ReadOnly = true;
             // 
+            // dgvOlympics_Year
+            // 
+            this.dgvOlympics_Year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvOlympics_Year.FillWeight = 15F;
+            this.dgvOlympics_Year.HeaderText = "Год";
+            this.dgvOlympics_Year.Name = "dgvOlympics_Year";
+            this.dgvOlympics_Year.ReadOnly = true;
+            // 
             // dgvOlympics_Number
             // 
             this.dgvOlympics_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvOlympics_Number.FillWeight = 25F;
+            this.dgvOlympics_Number.FillWeight = 15F;
             this.dgvOlympics_Number.HeaderText = "Номер";
             this.dgvOlympics_Number.Name = "dgvOlympics_Number";
             this.dgvOlympics_Number.ReadOnly = true;
@@ -195,7 +208,11 @@
             // toolStrip
             // 
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Update});
+            this.toolStrip_Update,
+            this.toolStrip_Separator1,
+            this.toolStrip_Label1,
+            this.toolStrip_Years,
+            this.toolStrip_Label2});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(784, 25);
@@ -204,12 +221,42 @@
             // 
             // toolStrip_Update
             // 
-            this.toolStrip_Update.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Update.Image")));
+            this.toolStrip_Update.Image = global::PK.Properties.Resources.refresh;
             this.toolStrip_Update.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Update.Name = "toolStrip_Update";
             this.toolStrip_Update.Size = new System.Drawing.Size(81, 22);
             this.toolStrip_Update.Text = "Обновить";
             this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
+            // 
+            // toolStrip_Separator1
+            // 
+            this.toolStrip_Separator1.Name = "toolStrip_Separator1";
+            this.toolStrip_Separator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStrip_Label1
+            // 
+            this.toolStrip_Label1.Name = "toolStrip_Label1";
+            this.toolStrip_Label1.Size = new System.Drawing.Size(140, 22);
+            this.toolStrip_Label1.Text = "Загружать за последние";
+            // 
+            // toolStrip_Years
+            // 
+            this.toolStrip_Years.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStrip_Years.DropDownWidth = 75;
+            this.toolStrip_Years.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.toolStrip_Years.Name = "toolStrip_Years";
+            this.toolStrip_Years.Size = new System.Drawing.Size(75, 25);
+            // 
+            // toolStrip_Label2
+            // 
+            this.toolStrip_Label2.Name = "toolStrip_Label2";
+            this.toolStrip_Label2.Size = new System.Drawing.Size(31, 22);
+            this.toolStrip_Label2.Text = "года";
             // 
             // OlympicsDictionaryForm
             // 
@@ -241,14 +288,19 @@
         private System.Windows.Forms.GroupBox gbSubjects;
         private System.Windows.Forms.ListBox lbSubjects;
         private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_Number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_Dict_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_Level;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton toolStrip_Update;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_Year;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_Number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvOlympics_Name;
+        private System.Windows.Forms.ToolStripSeparator toolStrip_Separator1;
+        private System.Windows.Forms.ToolStripLabel toolStrip_Label1;
+        private System.Windows.Forms.ToolStripComboBox toolStrip_Years;
+        private System.Windows.Forms.ToolStripLabel toolStrip_Label2;
     }
 }

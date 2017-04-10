@@ -7,9 +7,9 @@ namespace PK.Classes
     {
         private MySqlConnection _Connection;
 
-        public DB_Connector()
+        public DB_Connector(string user, string password)
         {
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["initial"].ConnectionString; //TODO потом перенести!
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["pk_db"].ConnectionString + "; user = " + user + "; password = " + password;
             _Connection = new MySqlConnection(connString);
             _Connection.Open();
         }

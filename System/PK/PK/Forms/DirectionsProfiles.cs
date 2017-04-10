@@ -5,17 +5,18 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class DirectionsProfiles : Form
+    partial class DirectionsProfiles : Form
     {
-        Classes.DB_Connector _DB_Connection;
-        List<object[]> _Directions;
-        List<string> _Faculties;
+        private readonly Classes.DB_Connector _DB_Connection;
 
-        public DirectionsProfiles()
+        private List<object[]> _Directions;
+        private List<string> _Faculties;
+
+        public DirectionsProfiles(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
 
             UpdateTable();
             rbBacc.Checked = true;

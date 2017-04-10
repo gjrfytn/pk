@@ -4,9 +4,6 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    using DictOlympic =
-           Dictionary<uint, System.Tuple<uint?, string, Dictionary<System.Tuple<uint, uint>, System.Tuple<System.Tuple<uint, uint>[], uint, uint>>>>;
-
     class DictionaryUpdater
     {
         private readonly DB_Connector _DB_Connection;
@@ -143,10 +140,10 @@ namespace PK.Classes
             MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public void UpdateOlympicsDictionary()
+        public void UpdateOlympicsDictionary(byte years)
         {
-            DictOlympic fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems();
-            DictOlympic dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
+            Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems(years);
+            Dictionary<uint, FIS_Olympic_TEMP> dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
 
             string addedReport = "В справочник №" + 19 + " \"" + "Олимпиады" + "\" добавлены элементы:";
             ushort addedCount = 0;
@@ -154,36 +151,46 @@ namespace PK.Classes
             foreach (var olymp in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(olymp.Key))
                 {
-                    if (olymp.Value.Item1 != dbDictionaryItems[olymp.Key].Item1 && Utility.ShowActionMessageWithConfirmation(
-                                     "В ФИС изменился номер олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Item2 + "\""
-                                     + ":\nC \"" + dbDictionaryItems[olymp.Key].Item1 + "\"\nна \"" + olymp.Value.Item1 +
+                    if (olymp.Value.Year != dbDictionaryItems[olymp.Key].Year && Utility.ShowActionMessageWithConfirmation(
+                                     "В ФИС изменился год олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
+                                     + ":\nC \"" + dbDictionaryItems[olymp.Key].Year + "\"\nна \"" + olymp.Value.Year +
                                      "\".\n\nОбновить значение в БД?"
                                      ))
                         _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
-                            new Dictionary<string, object> { { "olympic_number", olymp.Value.Item1 } },
+                            new Dictionary<string, object> { { "year", olymp.Value.Year } },
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    if (olymp.Value.Item2 != dbDictionaryItems[olymp.Key].Item2 && Utility.ShowActionMessageWithConfirmation(
+                    if (olymp.Value.Number != dbDictionaryItems[olymp.Key].Number && Utility.ShowActionMessageWithConfirmation(
+                                     "В ФИС изменился номер олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
+                                     + ":\nC \"" + dbDictionaryItems[olymp.Key].Number + "\"\nна \"" + olymp.Value.Number +
+                                     "\".\n\nОбновить значение в БД?"
+                                     ))
+                        _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
+                            new Dictionary<string, object> { { "olympic_number", olymp.Value.Number } },
+                            new Dictionary<string, object> { { "olympic_id", olymp.Key } }
+                            );
+
+                    if (olymp.Value.Name != dbDictionaryItems[olymp.Key].Name && Utility.ShowActionMessageWithConfirmation(
                                      "В ФИС изменилось имя олимпиады с кодом "
-                                     + olymp.Key + ":\nC \"" + dbDictionaryItems[olymp.Key].Item2 + "\"\nна \"" + olymp.Value.Item2 +
+                                     + olymp.Key + ":\nC \"" + dbDictionaryItems[olymp.Key].Name + "\"\nна \"" + olymp.Value.Name +
                                      "\".\n\nОбновить значение в БД?"
                                      ))
                         _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
-                            new Dictionary<string, object> { { "olympic_name", olymp.Value.Item2 } },
+                            new Dictionary<string, object> { { "olympic_name", olymp.Value.Name } },
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    foreach (var prof in olymp.Value.Item3)
-                        if (dbDictionaryItems[olymp.Key].Item3.ContainsKey(prof.Key))
+                    foreach (var prof in olymp.Value.Profiles)
+                        if (dbDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
                         {
-                            if (prof.Value.Item3 != dbDictionaryItems[olymp.Key].Item3[prof.Key].Item3 && Utility.ShowActionMessageWithConfirmation(
+                            if (prof.Value.LevelID != dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID && Utility.ShowActionMessageWithConfirmation(
                                              "В ФИС изменился код уровня для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                                             + " \"" + dbDictionaryItems[olymp.Key].Item2 + "\"" + ":\nC \"" + dbDictionaryItems[olymp.Key].Item3[prof.Key].Item3 + "\"\nна \"" + prof.Value.Item3 +
+                                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ":\nC \"" + dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID + "\"\nна \"" + prof.Value.LevelID +
                                              "\".\n\nОбновить значение в БД?"
                                              ))
                                 _DB_Connection.Update(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
-                                    new Dictionary<string, object> { { "level_id", prof.Value.Item3 } },
+                                    new Dictionary<string, object> { { "level_id", prof.Value.LevelID } },
                                     new Dictionary<string, object>
                                     {
                                         { "olympic_id",olymp.Key },
@@ -192,8 +199,8 @@ namespace PK.Classes
                                     }
                                     );
 
-                            foreach (System.Tuple<uint, uint> subj in prof.Value.Item1)
-                                if (!dbDictionaryItems[olymp.Key].Item3[prof.Key].Item1.Contains(subj))
+                            foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
+                                if (!dbDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj))
                                 {
                                     _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                                         new Dictionary<string, object>
@@ -215,12 +222,12 @@ namespace PK.Classes
                             { "olympic_id",olymp.Key },
                             { "profile_dict_id", prof.Key.Item1 },
                             { "profile_id", prof.Key.Item2 },
-                            { "level_dict_id", prof.Value.Item2 },
-                            { "level_id", prof.Value.Item3 }
+                            { "level_dict_id", prof.Value.LevelDictID },
+                            { "level_id", prof.Value.LevelID }
                         }
                         );
 
-                            foreach (System.Tuple<uint, uint> subj in prof.Value.Item1)
+                            foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
                                 _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                             new Dictionary<string, object>
                             {
@@ -239,12 +246,13 @@ namespace PK.Classes
                         new Dictionary<string, object>
                         {
                             { "olympic_id",olymp.Key },
-                            { "olympic_number", olymp.Value.Item1 },
-                            { "olympic_name", olymp.Value.Item2 }
+                            { "year",olymp.Value.Year },
+                            { "olympic_number", olymp.Value.Number },
+                            { "olympic_name", olymp.Value.Name }
                             }
                         );
 
-                    foreach (var prof in olymp.Value.Item3)
+                    foreach (var prof in olymp.Value.Profiles)
                     {
                         _DB_Connection.Insert(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                         new Dictionary<string, object>
@@ -252,12 +260,12 @@ namespace PK.Classes
                             { "olympic_id",olymp.Key },
                             { "profile_dict_id", prof.Key.Item1 },
                             { "profile_id", prof.Key.Item2 },
-                            { "level_dict_id", prof.Value.Item2 },
-                            { "level_id", prof.Value.Item3 }
+                            { "level_dict_id", prof.Value.LevelDictID },
+                            { "level_id", prof.Value.LevelID }
                         }
                         );
 
-                        foreach (System.Tuple<uint, uint> subj in prof.Value.Item1)
+                        foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
                             _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                         new Dictionary<string, object>
                         {
@@ -278,7 +286,7 @@ namespace PK.Classes
                 if (!fisDictionaryItems.ContainsKey(olymp.Key))
                 {
                     if (Utility.ShowActionMessageWithConfirmation(
-                             "В ФИС отсутствует олимпиада " + olymp.Key + " \"" + olymp.Value.Item2 + "\""
+                             "В ФИС отсутствует олимпиада " + olymp.Key + " \"" + olymp.Value.Name + "\""
                              + ".\n\nУдалить её из БД?"
                              ))
                         _DB_Connection.Delete(DB_Table.DICTIONARY_19_ITEMS,
@@ -286,12 +294,12 @@ namespace PK.Classes
                             );
                 }
                 else
-                    foreach (var prof in olymp.Value.Item3)
-                        if (!fisDictionaryItems[olymp.Key].Item3.ContainsKey(prof.Key))
+                    foreach (var prof in olymp.Value.Profiles)
+                        if (!fisDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
                         {
                             if (Utility.ShowActionMessageWithConfirmation(
                              "В ФИС отсутствует профиль с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Item2 + "\"" + ".\n\nУдалить его из БД?"
+                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?"
                              ))
                                 _DB_Connection.Delete(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                                 new Dictionary<string, object>
@@ -303,10 +311,10 @@ namespace PK.Classes
                                 );
                         }
                         else
-                            foreach (System.Tuple<uint, uint> subj in prof.Value.Item1)
-                                if (!fisDictionaryItems[olymp.Key].Item3[prof.Key].Item1.Contains(subj) && Utility.ShowActionMessageWithConfirmation(
+                            foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
+                                if (!fisDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj) && Utility.ShowActionMessageWithConfirmation(
                              "В ФИС отсутствует дисциплина с кодом " + subj.Item2 + " для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Item2 + "\"" + ".\n\nУдалить его из БД?"
+                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?"
                              ))
                                     _DB_Connection.Delete(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                             new Dictionary<string, object>
