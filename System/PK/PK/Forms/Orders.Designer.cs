@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Orders));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -99,7 +98,7 @@
             // 
             // toolStrip_New
             // 
-            this.toolStrip_New.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_New.Image")));
+            this.toolStrip_New.Image = global::PK.Properties.Resources.plus;
             this.toolStrip_New.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_New.Name = "toolStrip_New";
             this.toolStrip_New.Size = new System.Drawing.Size(65, 22);
@@ -108,7 +107,7 @@
             // 
             // toolStrip_Edit
             // 
-            this.toolStrip_Edit.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Edit.Image")));
+            this.toolStrip_Edit.Image = global::PK.Properties.Resources.pen;
             this.toolStrip_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Edit.Name = "toolStrip_Edit";
             this.toolStrip_Edit.Size = new System.Drawing.Size(107, 22);
@@ -116,7 +115,7 @@
             // 
             // toolStrip_Register
             // 
-            this.toolStrip_Register.Image = ((System.Drawing.Image)(resources.GetObject("toolStrip_Register.Image")));
+            this.toolStrip_Register.Image = global::PK.Properties.Resources.check;
             this.toolStrip_Register.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Register.Name = "toolStrip_Register";
             this.toolStrip_Register.Size = new System.Drawing.Size(126, 22);

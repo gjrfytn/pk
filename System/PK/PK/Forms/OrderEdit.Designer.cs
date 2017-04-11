@@ -115,6 +115,7 @@
             this.rbQuota.Tag = "quota";
             this.rbQuota.Text = "Квота";
             this.rbQuota.UseVisualStyleBackColor = true;
+            this.rbQuota.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbTarget
             // 
@@ -123,9 +124,10 @@
             this.rbTarget.Name = "rbTarget";
             this.rbTarget.Size = new System.Drawing.Size(69, 17);
             this.rbTarget.TabIndex = 2;
-            this.rbTarget.Tag = "target";
+            this.rbTarget.Tag = "";
             this.rbTarget.Text = "Целевой";
             this.rbTarget.UseVisualStyleBackColor = true;
+            this.rbTarget.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbPaid
             // 
@@ -150,6 +152,7 @@
             this.rbBudget.Tag = "budget";
             this.rbBudget.Text = "Бюджет";
             this.rbBudget.UseVisualStyleBackColor = true;
+            this.rbBudget.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // gbEduForm
             // 
@@ -166,6 +169,7 @@
             // rbZ
             // 
             this.rbZ.AutoSize = true;
+            this.rbZ.Enabled = false;
             this.rbZ.Location = new System.Drawing.Point(7, 68);
             this.rbZ.Name = "rbZ";
             this.rbZ.Size = new System.Drawing.Size(67, 17);
@@ -173,6 +177,7 @@
             this.rbZ.Tag = "z";
             this.rbZ.Text = "Заочная";
             this.rbZ.UseVisualStyleBackColor = true;
+            this.rbZ.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbOZ
             // 
@@ -184,6 +189,7 @@
             this.rbOZ.Tag = "oz";
             this.rbOZ.Text = "Очно-заочная (вечерняя)";
             this.rbOZ.UseVisualStyleBackColor = true;
+            this.rbOZ.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbO
             // 
@@ -197,6 +203,7 @@
             this.rbO.Tag = "o";
             this.rbO.Text = "Очная";
             this.rbO.UseVisualStyleBackColor = true;
+            this.rbO.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // lNumber
             // 

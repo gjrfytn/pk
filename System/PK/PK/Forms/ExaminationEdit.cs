@@ -68,7 +68,7 @@ namespace PK.Forms
                     Dictionary<string, object> data = new Dictionary<string, object>
                        {
                         {"subject_dict_id",1},
-                        {"subject_id",_DB_Helper.GetDictionaryItemID(1,cbSubject.SelectedItem.ToString())},
+                        {"subject_id",_DB_Helper.GetDictionaryItemID(1,cbSubject.Text)},
                         {"date",dtpDate.Value},
                         {"reg_start_date",dtpRegStartDate.Value},
                         {"reg_end_date",dtpRegEndDate.Value}

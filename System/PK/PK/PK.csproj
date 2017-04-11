@@ -405,6 +405,7 @@
     <None Include="Resources\printer.png" />
     <None Include="Resources\seat.png" />
     <None Include="Resources\refresh.png" />
+    <None Include="Resources\check.png" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
