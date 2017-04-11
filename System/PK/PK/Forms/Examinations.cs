@@ -84,21 +84,50 @@ namespace PK.Forms
             if (ExaminationHasMarks(SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
 
+            var applsDirections = _DB_Connection.Select(
+                DB_Table.APPLICATIONS_ENTRANCES,
+                "application_id", "faculty_short_name", "direction_id"
+                );
+
+            var subjectDirections = _DB_Connection.Select(
+                DB_Table.ENTRANCE_TESTS,
+                new string[] { "direction_faculty", "direction_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("subject_id",Relation.EQUAL,_DB_Helper.GetDictionaryItemID(1, dataGridView.SelectedRows[0].Cells[1].Value.ToString()))
+                }
+                );
+
+            var applsSubjects = applsDirections.Join(
+                subjectDirections,
+                k1 => new Tuple<object, object>(k1[1], k1[2]),
+                k2 => new Tuple<object, object>(k2[0], k2[1]),
+                (s1, s2) => s1[0]
+                ).Distinct();
+
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "entrant_id", "registration_time" },
+                new string[] { "id", "entrant_id", "registration_time" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
                 }
-                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[3].Value &&
-               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
+                ).Where(a => (DateTime)a[2] >= (DateTime)dataGridView.SelectedRows[0].Cells[3].Value &&
+               (DateTime)a[2] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
                 );
 
+            var applications2 = applications.Join(
+                 applsSubjects,
+                 k1 => k1[0],
+                 k2 => k2,
+                 (s1, s2) => s1[1]
+                 );
+
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
-                applications,
+                applications2,
                 en => en[0],
-                a => a[0],
+                a => a,
                 (s1, s2) => s1[0]
               ).Distinct();//TODO Нужно?
 

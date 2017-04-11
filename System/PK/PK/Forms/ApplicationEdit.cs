@@ -52,7 +52,7 @@ namespace PK.Forms
 
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private Classes.KLADR _KLADR;
+        private readonly Classes.KLADR _KLADR=new Classes.KLADR();
 
         private uint? _ApplicationID;
         private uint? _EntrantID;
@@ -61,6 +61,7 @@ namespace PK.Forms
         private DateTime _EditingDateTime;
         private bool _Loading;
         private uint? _TargetOrganizationID;
+        private Dictionary<string, string> _Towns = new Dictionary<string, string>();
 
         public ApplicationEdit(Classes.DB_Connector connection,uint campaignID, string registratorsLogin, uint? applicationId)
         {
@@ -84,7 +85,6 @@ namespace PK.Forms
             }
 
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-            _KLADR = new Classes.KLADR();
             _CurrCampainID = campaignID;
             _RegistratorsLogin = registratorsLogin;
             _ApplicationID = applicationId;
@@ -1727,12 +1727,22 @@ namespace PK.Forms
                 toolTip.Show("Не найдено адресов.", tbDistrict, 3000);
             }
         }
-
-        private void tbCity_Enter(object sender, EventArgs e)
+        
+        private void tbTown_Enter(object sender, EventArgs e)
         {
+            _Towns.Clear();
+            foreach (string town in _KLADR.GetTowns(tbRegion.Text, tbDistrict.Text))
+            {
+                _Towns.Add(town, null);
+                foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, town))
+                    _Towns.Add(settl, town);
+            }
+
+            foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, ""))
+                _Towns.Add(settl, "");
+
             tbTown.AutoCompleteCustomSource.Clear();
-            tbTown.AutoCompleteCustomSource.AddRange(_KLADR.GetTowns(tbRegion.Text, tbDistrict.Text).ToArray());
-            tbTown.AutoCompleteCustomSource.AddRange(_KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, "").ToArray());
+            tbTown.AutoCompleteCustomSource.AddRange(_Towns.Keys.ToArray());
 
             if (tbTown.AutoCompleteCustomSource.Count == 0)
             {
@@ -1743,8 +1753,15 @@ namespace PK.Forms
         private void tbStreet_Enter(object sender, EventArgs e)
         {
             tbStreet.AutoCompleteCustomSource.Clear();
-            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbTown.Text, "").ToArray());
-            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, "", tbTown.Text).ToArray());
+            if (_Towns.ContainsKey(tbTown.Text))
+            {
+                if (_Towns[tbTown.Text]==null)
+                    tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbTown.Text, "").ToArray());
+                else
+                    tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, _Towns[tbTown.Text], tbTown.Text).ToArray());
+            }
+            else if(tbTown.Text=="")
+                tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, "", "").ToArray());
 
             if (tbStreet.AutoCompleteCustomSource.Count == 0)
             {
@@ -1760,7 +1777,7 @@ namespace PK.Forms
 
             if (tbHouse.AutoCompleteCustomSource.Count == 0)
             {
-                toolTip.Show("Не найдено адресов.", tbStreet, 3000);
+                toolTip.Show("Не найдено адресов.", tbHouse, 3000);
             }
         }
 

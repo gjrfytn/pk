@@ -328,7 +328,7 @@
             this.tbTown.Name = "tbTown";
             this.tbTown.Size = new System.Drawing.Size(150, 22);
             this.tbTown.TabIndex = 2;
-            this.tbTown.Enter += new System.EventHandler(this.tbCity_Enter);
+            this.tbTown.Enter += new System.EventHandler(this.tbTown_Enter);
             // 
             // tbDistrict
             // 

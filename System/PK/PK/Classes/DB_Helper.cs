@@ -18,6 +18,11 @@ namespace PK.Classes
         public const string ConstEduSourceT = "Целевой прием";
         #endregion
 
+        public uint CurrentCampaignID
+        {
+            get { return (uint)_DB_Connection.Select(DB_Table.CONSTANTS, "current_campaign_id")[0][0]; }
+        }
+
         private readonly DB_Connector _DB_Connection;
 
         public DB_Helper(DB_Connector connection)
