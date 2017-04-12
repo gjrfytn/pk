@@ -25,7 +25,7 @@ namespace PK.Forms
             rtbOrganizationName.Text = _DB_Connection.Select(DB_Table.TARGET_ORGANIZATIONS, new string[] { "name" },
                 new List<Tuple<string, Relation, object>>
             {
-                new Tuple<string, Relation, object>("uid", Relation.EQUAL, _UpdatingCode)
+                new Tuple<string, Relation, object>("id", Relation.EQUAL, _UpdatingCode)
             })[0][0].ToString();
         }
 
@@ -37,7 +37,7 @@ namespace PK.Forms
             else
                 _DB_Connection.Update(DB_Table.TARGET_ORGANIZATIONS,
                     new Dictionary<string, object> { { "name", rtbOrganizationName.Text } },
-                    new Dictionary<string, object> { { "uid", _UpdatingCode } });
+                    new Dictionary<string, object> { { "id", _UpdatingCode } });
 
             DialogResult = DialogResult.OK;
         }

@@ -45,7 +45,7 @@
             this.cbOlympProfile = new System.Windows.Forms.ComboBox();
             this.cbClass = new System.Windows.Forms.ComboBox();
             this.cbDiscipline = new System.Windows.Forms.ComboBox();
-            this.cbContry = new System.Windows.Forms.ComboBox();
+            this.cbCountry = new System.Windows.Forms.ComboBox();
             this.btSave = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -220,14 +220,14 @@
             this.cbDiscipline.Size = new System.Drawing.Size(135, 21);
             this.cbDiscipline.TabIndex = 16;
             // 
-            // cbContry
+            // cbCountry
             // 
-            this.cbContry.Enabled = false;
-            this.cbContry.FormattingEnabled = true;
-            this.cbContry.Location = new System.Drawing.Point(80, 243);
-            this.cbContry.Name = "cbContry";
-            this.cbContry.Size = new System.Drawing.Size(247, 21);
-            this.cbContry.TabIndex = 17;
+            this.cbCountry.Enabled = false;
+            this.cbCountry.FormattingEnabled = true;
+            this.cbCountry.Location = new System.Drawing.Point(80, 243);
+            this.cbCountry.Name = "cbCountry";
+            this.cbCountry.Size = new System.Drawing.Size(247, 21);
+            this.cbCountry.TabIndex = 17;
             // 
             // btSave
             // 
@@ -246,7 +246,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(437, 318);
             this.Controls.Add(this.btSave);
-            this.Controls.Add(this.cbContry);
+            this.Controls.Add(this.cbCountry);
             this.Controls.Add(this.cbDiscipline);
             this.Controls.Add(this.cbClass);
             this.Controls.Add(this.cbOlympProfile);
@@ -292,7 +292,7 @@
         private System.Windows.Forms.ComboBox cbOlympProfile;
         private System.Windows.Forms.ComboBox cbClass;
         private System.Windows.Forms.ComboBox cbDiscipline;
-        private System.Windows.Forms.ComboBox cbContry;
+        private System.Windows.Forms.ComboBox cbCountry;
         private System.Windows.Forms.Button btSave;
     }
 }

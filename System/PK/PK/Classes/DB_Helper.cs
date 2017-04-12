@@ -6,16 +6,17 @@ namespace PK.Classes
     class DB_Helper
     {
         #region DictItemsNames
-        public const string ConstEduFormO = "Очная форма";
-        public const string ConstEduFormOZ = "Очно-заочная (вечерняя)";
-        public const string ConstEduFormZ = "Заочная форма";
-        public const string ConstEduLevelB = "Бакалавриат";
-        public const string ConstEduLevelM = "Магистратура";
-        public const string ConstEduLevelS = "Специалитет";
-        public const string ConstEduSourceB = "Бюджетные места";
-        public const string ConstEduSourceP = "С оплатой обучения";
-        public const string ConstEduSourceQ = "Квота приема лиц, имеющих особое право";
-        public const string ConstEduSourceT = "Целевой прием";
+        public const string EduFormO = "Очная форма";
+        public const string EduFormOZ = "Очно-заочная (вечерняя)";
+        public const string EduFormZ = "Заочная форма";
+        public const string EduLevelB = "Бакалавриат";
+        public const string EduLevelM = "Магистратура";
+        public const string EduLevelS = "Специалитет";
+        public const string EduSourceB = "Бюджетные места";
+        public const string EduSourceP = "С оплатой обучения";
+        public const string EduSourceQ = "Квота приема лиц, имеющих особое право";
+        public const string EduSourceT = "Целевой прием";
+        public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
         #endregion
 
         public uint CurrentCampaignID
