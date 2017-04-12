@@ -34,10 +34,11 @@ namespace PK.Classes
                     {
                         if (d.Value == dbDictionaries[d.Key])
                             UpdateDictionaryItems(d.Key, d.Value, fisDictionaryItems);
-                        else if (Utility.ShowActionMessageWithConfirmation(
+                        else if (Utility.ShowChoiceMessageWithConfirmation(
                          "В ФИС изменилось наименование справочника с кодом " + d.Key +
                          ":\nC \"" + dbDictionaries[d.Key] + "\"\nна \"" + d.Value +
-                         "\".\n\nОбновить наименование в БД?\nВ случае отказа изменения элементов этого справочника проверятся не будут." //TODO Нужен мягкий знак "проверятся"?
+                         "\".\n\nОбновить наименование в БД?\nВ случае отказа изменения элементов этого справочника проверятся не будут.", //TODO Нужен мягкий знак "проверятся"?
+                         "Действие"
                          ))
                         {
                             _DB_Connection.Update(DB_Table.DICTIONARIES,
@@ -63,8 +64,9 @@ namespace PK.Classes
                 }
 
             foreach (var d in dbDictionaries)
-                if (!fisDictionaries.ContainsKey(d.Key) && Utility.ShowActionMessageWithConfirmation(
-                             "В ФИС отсутствует справочник " + d.Key + " \"" + d.Value + "\".\n\nУдалить справочник из БД?"
+                if (!fisDictionaries.ContainsKey(d.Key) && Utility.ShowChoiceMessageWithConfirmation(
+                             "В ФИС отсутствует справочник " + d.Key + " \"" + d.Value + "\".\n\nУдалить справочник из БД?",
+                             "Действие"
                              ))
                     _DB_Connection.Delete(DB_Table.DICTIONARIES, new Dictionary<string, object> { { "id", d.Key } });
 
@@ -87,10 +89,11 @@ namespace PK.Classes
                 if (dbDictionaryItems.ContainsKey(item.Key))
                 {
                     for (byte i = 0; i < item.Value.Length; ++i) //TODO Если несколько изменений
-                        if (item.Value[i] != dbDictionaryItems[item.Key][i] && Utility.ShowActionMessageWithConfirmation(
+                        if (item.Value[i] != dbDictionaryItems[item.Key][i] && Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменилось значение " + (i + 2) + " столбца элемента с кодом "
                                      + item.Key + ":\nC \"" + dbDictionaryItems[item.Key][i] + "\"\nна \"" + item.Value[i] +
-                                     "\".\n\nОбновить значение в БД?"
+                                     "\".\n\nОбновить значение в БД?",
+                                     "Действие"
                                      ))
                             _DB_Connection.Update(DB_Table.DICTIONARY_10_ITEMS,
                                 new Dictionary<string, object>
@@ -124,9 +127,10 @@ namespace PK.Classes
                 }
 
             foreach (var item in dbDictionaryItems)
-                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowActionMessageWithConfirmation(
+                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowChoiceMessageWithConfirmation(
                              "В ФИС отсутствует направление " +
-                             item.Key + ".\n\nУдалить его из БД?"
+                             item.Key + ".\n\nУдалить его из БД?",
+                             "Действие"
                              ))
                     _DB_Connection.Delete(DB_Table.DICTIONARY_10_ITEMS,
                         new Dictionary<string, object> { { "id", item.Key } }
@@ -151,30 +155,33 @@ namespace PK.Classes
             foreach (var olymp in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(olymp.Key))
                 {
-                    if (olymp.Value.Year != dbDictionaryItems[olymp.Key].Year && Utility.ShowActionMessageWithConfirmation(
+                    if (olymp.Value.Year != dbDictionaryItems[olymp.Key].Year && Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменился год олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
                                      + ":\nC \"" + dbDictionaryItems[olymp.Key].Year + "\"\nна \"" + olymp.Value.Year +
-                                     "\".\n\nОбновить значение в БД?"
+                                     "\".\n\nОбновить значение в БД?",
+                                     "Действие"
                                      ))
                         _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
                             new Dictionary<string, object> { { "year", olymp.Value.Year } },
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    if (olymp.Value.Number != dbDictionaryItems[olymp.Key].Number && Utility.ShowActionMessageWithConfirmation(
+                    if (olymp.Value.Number != dbDictionaryItems[olymp.Key].Number && Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменился номер олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
                                      + ":\nC \"" + dbDictionaryItems[olymp.Key].Number + "\"\nна \"" + olymp.Value.Number +
-                                     "\".\n\nОбновить значение в БД?"
+                                     "\".\n\nОбновить значение в БД?",
+                                     "Действие"
                                      ))
                         _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
                             new Dictionary<string, object> { { "olympic_number", olymp.Value.Number } },
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    if (olymp.Value.Name != dbDictionaryItems[olymp.Key].Name && Utility.ShowActionMessageWithConfirmation(
+                    if (olymp.Value.Name != dbDictionaryItems[olymp.Key].Name && Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменилось имя олимпиады с кодом "
                                      + olymp.Key + ":\nC \"" + dbDictionaryItems[olymp.Key].Name + "\"\nна \"" + olymp.Value.Name +
-                                     "\".\n\nОбновить значение в БД?"
+                                     "\".\n\nОбновить значение в БД?",
+                                     "Действие"
                                      ))
                         _DB_Connection.Update(DB_Table.DICTIONARY_19_ITEMS,
                             new Dictionary<string, object> { { "olympic_name", olymp.Value.Name } },
@@ -184,10 +191,11 @@ namespace PK.Classes
                     foreach (var prof in olymp.Value.Profiles)
                         if (dbDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
                         {
-                            if (prof.Value.LevelID != dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID && Utility.ShowActionMessageWithConfirmation(
+                            if (prof.Value.LevelID != dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID && Utility.ShowChoiceMessageWithConfirmation(
                                              "В ФИС изменился код уровня для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
                                              + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ":\nC \"" + dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID + "\"\nна \"" + prof.Value.LevelID +
-                                             "\".\n\nОбновить значение в БД?"
+                                             "\".\n\nОбновить значение в БД?",
+                                             "Действие"
                                              ))
                                 _DB_Connection.Update(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                                     new Dictionary<string, object> { { "level_id", prof.Value.LevelID } },
@@ -285,9 +293,10 @@ namespace PK.Classes
             foreach (var olymp in dbDictionaryItems)
                 if (!fisDictionaryItems.ContainsKey(olymp.Key))
                 {
-                    if (Utility.ShowActionMessageWithConfirmation(
+                    if (Utility.ShowChoiceMessageWithConfirmation(
                              "В ФИС отсутствует олимпиада " + olymp.Key + " \"" + olymp.Value.Name + "\""
-                             + ".\n\nУдалить её из БД?"
+                             + ".\n\nУдалить её из БД?",
+                             "Действие"
                              ))
                         _DB_Connection.Delete(DB_Table.DICTIONARY_19_ITEMS,
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
@@ -297,9 +306,10 @@ namespace PK.Classes
                     foreach (var prof in olymp.Value.Profiles)
                         if (!fisDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
                         {
-                            if (Utility.ShowActionMessageWithConfirmation(
+                            if (Utility.ShowChoiceMessageWithConfirmation(
                              "В ФИС отсутствует профиль с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?"
+                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?",
+                             "Действие"
                              ))
                                 _DB_Connection.Delete(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                                 new Dictionary<string, object>
@@ -312,9 +322,10 @@ namespace PK.Classes
                         }
                         else
                             foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
-                                if (!fisDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj) && Utility.ShowActionMessageWithConfirmation(
+                                if (!fisDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj) && Utility.ShowChoiceMessageWithConfirmation(
                              "В ФИС отсутствует дисциплина с кодом " + subj.Item2 + " для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?"
+                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?",
+                             "Действие"
                              ))
                                     _DB_Connection.Delete(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
                             new Dictionary<string, object>
@@ -345,10 +356,11 @@ namespace PK.Classes
             foreach (var item in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(item.Key))
                 {
-                    if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowActionMessageWithConfirmation(
+                    if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowChoiceMessageWithConfirmation(
                                  "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
                                  + item.Key + ":\nC \"" + dbDictionaryItems[item.Key] + "\"\nна \"" + item.Value +
-                                 "\".\n\nОбновить наименование в БД?"
+                                 "\".\n\nОбновить наименование в БД?",
+                                 "Действие"
                                  ))
                         _DB_Connection.Update(DB_Table.DICTIONARIES_ITEMS,
                             new Dictionary<string, object> { { "name", item.Value } },
@@ -365,9 +377,10 @@ namespace PK.Classes
                 }
 
             foreach (var item in dbDictionaryItems)
-                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowActionMessageWithConfirmation(
+                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowChoiceMessageWithConfirmation(
                              "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
-                             item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?"
+                             item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?",
+                             "Действие"
                              ))
                     _DB_Connection.Delete(DB_Table.DICTIONARIES_ITEMS,
                         new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }

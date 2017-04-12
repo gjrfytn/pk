@@ -144,7 +144,7 @@ namespace PK.Forms
 
         private void toolStrip_FisImport_Click(object sender, EventArgs e)
         {
-            new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****").Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+            Classes.Utility.ConnectToFIS("****")?.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
         }
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
