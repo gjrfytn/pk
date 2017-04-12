@@ -143,6 +143,7 @@
             // 
             // cbCampaign
             // 
+            this.cbCampaign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCampaign.FormattingEnabled = true;
             this.cbCampaign.Location = new System.Drawing.Point(305, 25);
             this.cbCampaign.Name = "cbCampaign";

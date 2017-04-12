@@ -30,24 +30,26 @@ namespace PK.Forms
             cbDiscipline.ValueMember = "Value";
             cbDiscipline.SelectedIndex = -1;
 
-            cbContry.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(7), null);
-            cbContry.DisplayMember = "Value";
-            cbContry.ValueMember = "Value";
+            cbCountry.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(7), null);
+            cbCountry.DisplayMember = "Value";
+            cbCountry.ValueMember = "Value";
 
             foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_number" }))
                 cbOlympID.Items.Add(record[0]);
 
-            if ((_Parent.OlympicDoc.olympType != null) && (_Parent.OlympicDoc.olympType != ""))
+            Forms.ApplicationEdit.ODoc loadedDocument = _Parent.OlympicDoc;
+
+            if ((loadedDocument.olympType != null) && (loadedDocument.olympType != ""))
             {
-                cbOlympType.SelectedItem = _Parent.OlympicDoc.olympType;
-                tbOlympName.Text = _Parent.OlympicDoc.olympName;
-                tbDocNumber.Text = _Parent.OlympicDoc.olympDocNumber.ToString();
-                cbDiplomaType.SelectedValue = _Parent.OlympicDoc.diplomaType;
-                cbOlympID.SelectedItem = _Parent.OlympicDoc.olympID.ToString();
-                cbOlympProfile.SelectedValue = _Parent.OlympicDoc.olympProfile;
-                cbClass.SelectedItem = _Parent.OlympicDoc.olympClass.ToString();
-                cbDiscipline.SelectedValue = _Parent.OlympicDoc.olympDist;
-                cbContry.SelectedValue = _Parent.OlympicDoc.country;
+                cbOlympType.SelectedItem = loadedDocument.olympType;
+                tbOlympName.Text = loadedDocument.olympName;
+                tbDocNumber.Text = loadedDocument.olympDocNumber.ToString();
+                cbDiplomaType.SelectedValue = loadedDocument.diplomaType;
+                cbOlympID.SelectedItem = loadedDocument.olympID.ToString();
+                cbOlympProfile.SelectedValue = loadedDocument.olympProfile;
+                cbClass.SelectedItem = loadedDocument.olympClass.ToString();
+                cbDiscipline.SelectedValue = loadedDocument.olympDist;
+                cbCountry.SelectedValue = loadedDocument.country;
             }
         }
 
@@ -67,7 +69,7 @@ namespace PK.Forms
                 label7.Enabled = true;
                 cbDiscipline.Enabled = true;
                 label8.Enabled = true;
-                cbContry.Enabled = false;
+                cbCountry.Enabled = false;
                 label9.Enabled = false;
                 cbOlympProfile.DataSource = null;
             }
@@ -85,7 +87,7 @@ namespace PK.Forms
                 label7.Enabled = true;
                 cbDiscipline.Enabled = true;
                 label8.Enabled = true;
-                cbContry.Enabled = false;
+                cbCountry.Enabled = false;
                 label9.Enabled = false;
                 cbOlympProfile.DataSource = null;
             }
@@ -103,7 +105,7 @@ namespace PK.Forms
                 label7.Enabled = false;
                 cbDiscipline.Enabled = false;
                 label8.Enabled = false;
-                cbContry.Enabled = false;
+                cbCountry.Enabled = false;
                 label9.Enabled = false;
 
                 cbOlympProfile.DataSource = null;
@@ -126,7 +128,7 @@ namespace PK.Forms
                 label7.Enabled = false;
                 cbDiscipline.Enabled = false;
                 label8.Enabled = false;
-                cbContry.Enabled = true;
+                cbCountry.Enabled = true;
                 label9.Enabled = true;
 
                 cbOlympProfile.DataSource = null;
@@ -139,16 +141,17 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            _Parent.OlympicDoc.olympType = "";
-            _Parent.OlympicDoc.olympName = "";
-            _Parent.OlympicDoc.diplomaType = "";
-            _Parent.OlympicDoc.olympDocNumber = 0;
-            _Parent.OlympicDoc.diplomaType = "";
-            _Parent.OlympicDoc.olympID = 0;
-            _Parent.OlympicDoc.olympProfile = "";
-            _Parent.OlympicDoc.olympClass = 0;
-            _Parent.OlympicDoc.olympDist = "";
-            _Parent.OlympicDoc.country = "";
+            Forms.ApplicationEdit.ODoc newDocument;
+            newDocument.olympType = "";
+            newDocument.olympName = "";
+            newDocument.diplomaType = "";
+            newDocument.olympDocNumber = 0;
+            newDocument.diplomaType = "";
+            newDocument.olympID = 0;
+            newDocument.olympProfile = "";
+            newDocument.olympClass = 0;
+            newDocument.olympDist = "";
+            newDocument.country = "";
 
             bool saved = false;
             if ((cbOlympType.SelectedIndex == -1))
@@ -162,12 +165,12 @@ namespace PK.Forms
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
-                            _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            _Parent.OlympicDoc.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedValue.ToString();
+                            newDocument.olympType = cbOlympType.SelectedItem.ToString();
+                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
+                            newDocument.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
+                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            newDocument.olympClass = int.Parse(cbClass.SelectedItem.ToString());
+                            newDocument.olympDist = cbDiscipline.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
@@ -177,13 +180,13 @@ namespace PK.Forms
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
-                            _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            _Parent.OlympicDoc.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            _Parent.OlympicDoc.olympDist = cbDiscipline.SelectedValue.ToString();
+                            newDocument.olympType = cbOlympType.SelectedItem.ToString();
+                            newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
+                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
+                            newDocument.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
+                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            newDocument.olympClass = int.Parse(cbClass.SelectedItem.ToString());
+                            newDocument.olympDist = cbDiscipline.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
@@ -193,31 +196,34 @@ namespace PK.Forms
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
-                            _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympName = tbOlympName.Text;
-                            _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
+                            newDocument.olympType = cbOlympType.SelectedItem.ToString();
+                            newDocument.olympName = tbOlympName.Text;
+                            newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
+                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
+                            newDocument.olympProfile = cbOlympProfile.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
                     case "Диплом международной олимпиады":
                         if ((tbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbOlympProfile.SelectedIndex == -1)
-                            || (cbContry.SelectedIndex == -1))
+                            || (cbCountry.SelectedIndex == -1))
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
-                            _Parent.OlympicDoc.olympType = cbOlympType.SelectedItem.ToString();
-                            _Parent.OlympicDoc.olympName = tbOlympName.Text;
-                            _Parent.OlympicDoc.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            _Parent.OlympicDoc.olympProfile = cbOlympProfile.SelectedValue.ToString();
-                            _Parent.OlympicDoc.country = cbContry.SelectedValue.ToString();
+                            newDocument.olympType = cbOlympType.SelectedItem.ToString();
+                            newDocument.olympName = tbOlympName.Text;
+                            newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
+                            newDocument.olympProfile = cbOlympProfile.SelectedValue.ToString();
+                            newDocument.country = cbCountry.SelectedValue.ToString();
                             saved = true;
                         }
                         break;
                 }
             if (saved)
+            {
+                _Parent.OlympicDoc = newDocument;
                 DialogResult = DialogResult.OK;
+            }
         }
 
         private void cbOlympID_SelectedIndexChanged(object sender, EventArgs e)

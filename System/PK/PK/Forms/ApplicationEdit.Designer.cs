@@ -107,7 +107,7 @@
             this.cbQuote = new System.Windows.Forms.CheckBox();
             this.cbChernobyl = new System.Windows.Forms.CheckBox();
             this.cbMCDAO = new System.Windows.Forms.CheckBox();
-            this.cbHostleNeeded = new System.Windows.Forms.CheckBox();
+            this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
             this.tbDirections = new System.Windows.Forms.TabControl();
             this.tpDir_budget_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir13 = new System.Windows.Forms.Button();
@@ -735,7 +735,7 @@
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
             this.tbInstitutionLocation.Size = new System.Drawing.Size(294, 22);
-            this.tbInstitutionLocation.TabIndex = 7;
+            this.tbInstitutionLocation.TabIndex = 6;
             // 
             // cbGraduationYear
             // 
@@ -745,7 +745,7 @@
             this.cbGraduationYear.Margin = new System.Windows.Forms.Padding(4);
             this.cbGraduationYear.Name = "cbGraduationYear";
             this.cbGraduationYear.Size = new System.Drawing.Size(80, 24);
-            this.cbGraduationYear.TabIndex = 6;
+            this.cbGraduationYear.TabIndex = 7;
             // 
             // label27
             // 
@@ -828,6 +828,7 @@
             this.cbOriginal.TabIndex = 3;
             this.cbOriginal.Text = "Оригинал";
             this.cbOriginal.UseVisualStyleBackColor = true;
+            this.cbOriginal.CheckedChanged += new System.EventHandler(this.cbOriginal_CheckedChanged);
             // 
             // tbEduDocNumber
             // 
@@ -928,7 +929,7 @@
             this.cbForeignLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.cbForeignLanguage.Name = "cbForeignLanguage";
             this.cbForeignLanguage.Size = new System.Drawing.Size(149, 24);
-            this.cbForeignLanguage.TabIndex = 2;
+            this.cbForeignLanguage.TabIndex = 4;
             // 
             // label28
             // 
@@ -951,7 +952,7 @@
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
             this.cbFirstTime.Size = new System.Drawing.Size(117, 24);
-            this.cbFirstTime.TabIndex = 1;
+            this.cbFirstTime.TabIndex = 3;
             // 
             // label21
             // 
@@ -1017,7 +1018,7 @@
             this.gbAttributes.Controls.Add(this.cbQuote);
             this.gbAttributes.Controls.Add(this.cbChernobyl);
             this.gbAttributes.Controls.Add(this.cbMCDAO);
-            this.gbAttributes.Controls.Add(this.cbHostleNeeded);
+            this.gbAttributes.Controls.Add(this.cbHostelNeeded);
             this.gbAttributes.Location = new System.Drawing.Point(138, 1);
             this.gbAttributes.Margin = new System.Windows.Forms.Padding(4);
             this.gbAttributes.Name = "gbAttributes";
@@ -1109,16 +1110,16 @@
             this.cbMCDAO.Text = "МЦДАО";
             this.cbMCDAO.UseVisualStyleBackColor = true;
             // 
-            // cbHostleNeeded
+            // cbHostelNeeded
             // 
-            this.cbHostleNeeded.AutoSize = true;
-            this.cbHostleNeeded.Location = new System.Drawing.Point(5, 14);
-            this.cbHostleNeeded.Margin = new System.Windows.Forms.Padding(4);
-            this.cbHostleNeeded.Name = "cbHostleNeeded";
-            this.cbHostleNeeded.Size = new System.Drawing.Size(186, 20);
-            this.cbHostleNeeded.TabIndex = 0;
-            this.cbHostleNeeded.Text = "Нуждается в общежитии";
-            this.cbHostleNeeded.UseVisualStyleBackColor = true;
+            this.cbHostelNeeded.AutoSize = true;
+            this.cbHostelNeeded.Location = new System.Drawing.Point(5, 14);
+            this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
+            this.cbHostelNeeded.Name = "cbHostelNeeded";
+            this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
+            this.cbHostelNeeded.TabIndex = 0;
+            this.cbHostelNeeded.Text = "Нуждается в общежитии";
+            this.cbHostelNeeded.UseVisualStyleBackColor = true;
             // 
             // tbDirections
             // 
@@ -1159,6 +1160,7 @@
             // 
             // btRemoveDir13
             // 
+            this.btRemoveDir13.Enabled = false;
             this.btRemoveDir13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir13.Location = new System.Drawing.Point(539, 119);
             this.btRemoveDir13.Margin = new System.Windows.Forms.Padding(4);
@@ -1167,9 +1169,12 @@
             this.btRemoveDir13.TabIndex = 6;
             this.btRemoveDir13.Text = "-";
             this.btRemoveDir13.UseVisualStyleBackColor = true;
+            this.btRemoveDir13.Visible = false;
+            this.btRemoveDir13.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir12
             // 
+            this.btRemoveDir12.Enabled = false;
             this.btRemoveDir12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir12.Location = new System.Drawing.Point(539, 80);
             this.btRemoveDir12.Margin = new System.Windows.Forms.Padding(4);
@@ -1178,9 +1183,12 @@
             this.btRemoveDir12.TabIndex = 4;
             this.btRemoveDir12.Text = "-";
             this.btRemoveDir12.UseVisualStyleBackColor = true;
+            this.btRemoveDir12.Visible = false;
+            this.btRemoveDir12.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir11
             // 
+            this.btRemoveDir11.Enabled = false;
             this.btRemoveDir11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir11.Location = new System.Drawing.Point(539, 39);
             this.btRemoveDir11.Margin = new System.Windows.Forms.Padding(4);
@@ -1189,6 +1197,8 @@
             this.btRemoveDir11.TabIndex = 2;
             this.btRemoveDir11.Text = "-";
             this.btRemoveDir11.UseVisualStyleBackColor = true;
+            this.btRemoveDir11.Visible = false;
+            this.btRemoveDir11.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir1
             // 
@@ -1200,34 +1210,43 @@
             this.btAddDir1.TabIndex = 0;
             this.btAddDir1.Text = "+";
             this.btAddDir1.UseVisualStyleBackColor = true;
-            this.btAddDir1.Click += new System.EventHandler(this.btAddDir1_Click);
+            this.btAddDir1.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection13
             // 
+            this.cbDirection13.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection13.Enabled = false;
             this.cbDirection13.FormattingEnabled = true;
             this.cbDirection13.Location = new System.Drawing.Point(10, 119);
             this.cbDirection13.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection13.Name = "cbDirection13";
             this.cbDirection13.Size = new System.Drawing.Size(513, 24);
             this.cbDirection13.TabIndex = 5;
+            this.cbDirection13.Visible = false;
             // 
             // cbDirection12
             // 
+            this.cbDirection12.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection12.Enabled = false;
             this.cbDirection12.FormattingEnabled = true;
             this.cbDirection12.Location = new System.Drawing.Point(10, 83);
             this.cbDirection12.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection12.Name = "cbDirection12";
             this.cbDirection12.Size = new System.Drawing.Size(513, 24);
             this.cbDirection12.TabIndex = 3;
+            this.cbDirection12.Visible = false;
             // 
             // cbDirection11
             // 
+            this.cbDirection11.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection11.Enabled = false;
             this.cbDirection11.FormattingEnabled = true;
             this.cbDirection11.Location = new System.Drawing.Point(10, 42);
             this.cbDirection11.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection11.Name = "cbDirection11";
             this.cbDirection11.Size = new System.Drawing.Size(513, 24);
             this.cbDirection11.TabIndex = 1;
+            this.cbDirection11.Visible = false;
             // 
             // label32
             // 
@@ -1256,6 +1275,7 @@
             // 
             // btRemoveDir21
             // 
+            this.btRemoveDir21.Enabled = false;
             this.btRemoveDir21.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir21.Location = new System.Drawing.Point(539, 39);
             this.btRemoveDir21.Margin = new System.Windows.Forms.Padding(4);
@@ -1264,6 +1284,8 @@
             this.btRemoveDir21.TabIndex = 13;
             this.btRemoveDir21.Text = "-";
             this.btRemoveDir21.UseVisualStyleBackColor = true;
+            this.btRemoveDir21.Visible = false;
+            this.btRemoveDir21.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir2
             // 
@@ -1275,15 +1297,19 @@
             this.btAddDir2.TabIndex = 12;
             this.btAddDir2.Text = "+";
             this.btAddDir2.UseVisualStyleBackColor = true;
+            this.btAddDir2.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection21
             // 
+            this.cbDirection21.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection21.Enabled = false;
             this.cbDirection21.FormattingEnabled = true;
             this.cbDirection21.Location = new System.Drawing.Point(10, 42);
             this.cbDirection21.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection21.Name = "cbDirection21";
             this.cbDirection21.Size = new System.Drawing.Size(513, 24);
             this.cbDirection21.TabIndex = 9;
+            this.cbDirection21.Visible = false;
             // 
             // label36
             // 
@@ -1313,6 +1339,7 @@
             // 
             // btRemoveDir32
             // 
+            this.btRemoveDir32.Enabled = false;
             this.btRemoveDir32.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir32.Location = new System.Drawing.Point(539, 80);
             this.btRemoveDir32.Margin = new System.Windows.Forms.Padding(4);
@@ -1321,9 +1348,12 @@
             this.btRemoveDir32.TabIndex = 14;
             this.btRemoveDir32.Text = "-";
             this.btRemoveDir32.UseVisualStyleBackColor = true;
+            this.btRemoveDir32.Visible = false;
+            this.btRemoveDir32.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir31
             // 
+            this.btRemoveDir31.Enabled = false;
             this.btRemoveDir31.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir31.Location = new System.Drawing.Point(539, 39);
             this.btRemoveDir31.Margin = new System.Windows.Forms.Padding(4);
@@ -1332,6 +1362,8 @@
             this.btRemoveDir31.TabIndex = 13;
             this.btRemoveDir31.Text = "-";
             this.btRemoveDir31.UseVisualStyleBackColor = true;
+            this.btRemoveDir31.Visible = false;
+            this.btRemoveDir31.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir3
             // 
@@ -1343,24 +1375,31 @@
             this.btAddDir3.TabIndex = 12;
             this.btAddDir3.Text = "+";
             this.btAddDir3.UseVisualStyleBackColor = true;
+            this.btAddDir3.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection32
             // 
+            this.cbDirection32.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection32.Enabled = false;
             this.cbDirection32.FormattingEnabled = true;
             this.cbDirection32.Location = new System.Drawing.Point(10, 83);
             this.cbDirection32.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection32.Name = "cbDirection32";
             this.cbDirection32.Size = new System.Drawing.Size(513, 24);
             this.cbDirection32.TabIndex = 10;
+            this.cbDirection32.Visible = false;
             // 
             // cbDirection31
             // 
+            this.cbDirection31.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection31.Enabled = false;
             this.cbDirection31.FormattingEnabled = true;
             this.cbDirection31.Location = new System.Drawing.Point(10, 42);
             this.cbDirection31.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection31.Name = "cbDirection31";
             this.cbDirection31.Size = new System.Drawing.Size(513, 24);
             this.cbDirection31.TabIndex = 9;
+            this.cbDirection31.Visible = false;
             // 
             // label37
             // 
@@ -1388,6 +1427,7 @@
             // 
             // btRemoveDir41
             // 
+            this.btRemoveDir41.Enabled = false;
             this.btRemoveDir41.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir41.Location = new System.Drawing.Point(539, 39);
             this.btRemoveDir41.Margin = new System.Windows.Forms.Padding(4);
@@ -1396,6 +1436,8 @@
             this.btRemoveDir41.TabIndex = 13;
             this.btRemoveDir41.Text = "-";
             this.btRemoveDir41.UseVisualStyleBackColor = true;
+            this.btRemoveDir41.Visible = false;
+            this.btRemoveDir41.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir4
             // 
@@ -1407,15 +1449,19 @@
             this.btAddDir4.TabIndex = 12;
             this.btAddDir4.Text = "+";
             this.btAddDir4.UseVisualStyleBackColor = true;
+            this.btAddDir4.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection41
             // 
+            this.cbDirection41.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection41.Enabled = false;
             this.cbDirection41.FormattingEnabled = true;
             this.cbDirection41.Location = new System.Drawing.Point(10, 42);
             this.cbDirection41.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection41.Name = "cbDirection41";
             this.cbDirection41.Size = new System.Drawing.Size(513, 24);
             this.cbDirection41.TabIndex = 9;
+            this.cbDirection41.Visible = false;
             // 
             // label38
             // 
@@ -1443,6 +1489,7 @@
             // 
             // btRemoveDir51
             // 
+            this.btRemoveDir51.Enabled = false;
             this.btRemoveDir51.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btRemoveDir51.Location = new System.Drawing.Point(539, 39);
             this.btRemoveDir51.Margin = new System.Windows.Forms.Padding(4);
@@ -1451,6 +1498,8 @@
             this.btRemoveDir51.TabIndex = 13;
             this.btRemoveDir51.Text = "-";
             this.btRemoveDir51.UseVisualStyleBackColor = true;
+            this.btRemoveDir51.Visible = false;
+            this.btRemoveDir51.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir5
             // 
@@ -1462,15 +1511,19 @@
             this.btAddDir5.TabIndex = 12;
             this.btAddDir5.Text = "+";
             this.btAddDir5.UseVisualStyleBackColor = true;
+            this.btAddDir5.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection51
             // 
+            this.cbDirection51.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDirection51.Enabled = false;
             this.cbDirection51.FormattingEnabled = true;
             this.cbDirection51.Location = new System.Drawing.Point(10, 42);
             this.cbDirection51.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection51.Name = "cbDirection51";
             this.cbDirection51.Size = new System.Drawing.Size(513, 24);
             this.cbDirection51.TabIndex = 9;
+            this.cbDirection51.Visible = false;
             // 
             // label39
             // 
@@ -1508,6 +1561,8 @@
             this.btRemoveDir61.TabIndex = 13;
             this.btRemoveDir61.Text = "-";
             this.btRemoveDir61.UseVisualStyleBackColor = true;
+            this.btRemoveDir61.Visible = false;
+            this.btRemoveDir61.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir6
             // 
@@ -1520,9 +1575,11 @@
             this.btAddDir6.TabIndex = 12;
             this.btAddDir6.Text = "+";
             this.btAddDir6.UseVisualStyleBackColor = true;
+            this.btAddDir6.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection61
             // 
+            this.cbDirection61.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection61.Enabled = false;
             this.cbDirection61.FormattingEnabled = true;
             this.cbDirection61.Location = new System.Drawing.Point(10, 42);
@@ -1530,6 +1587,7 @@
             this.cbDirection61.Name = "cbDirection61";
             this.cbDirection61.Size = new System.Drawing.Size(513, 24);
             this.cbDirection61.TabIndex = 9;
+            this.cbDirection61.Visible = false;
             // 
             // label40
             // 
@@ -1572,6 +1630,8 @@
             this.btRemoveDir73.TabIndex = 15;
             this.btRemoveDir73.Text = "-";
             this.btRemoveDir73.UseVisualStyleBackColor = true;
+            this.btRemoveDir73.Visible = false;
+            this.btRemoveDir73.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir72
             // 
@@ -1584,6 +1644,8 @@
             this.btRemoveDir72.TabIndex = 14;
             this.btRemoveDir72.Text = "-";
             this.btRemoveDir72.UseVisualStyleBackColor = true;
+            this.btRemoveDir72.Visible = false;
+            this.btRemoveDir72.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir71
             // 
@@ -1596,6 +1658,8 @@
             this.btRemoveDir71.TabIndex = 13;
             this.btRemoveDir71.Text = "-";
             this.btRemoveDir71.UseVisualStyleBackColor = true;
+            this.btRemoveDir71.Visible = false;
+            this.btRemoveDir71.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir7
             // 
@@ -1608,9 +1672,11 @@
             this.btAddDir7.TabIndex = 12;
             this.btAddDir7.Text = "+";
             this.btAddDir7.UseVisualStyleBackColor = true;
+            this.btAddDir7.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection73
             // 
+            this.cbDirection73.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection73.Enabled = false;
             this.cbDirection73.FormattingEnabled = true;
             this.cbDirection73.Location = new System.Drawing.Point(10, 119);
@@ -1618,9 +1684,11 @@
             this.cbDirection73.Name = "cbDirection73";
             this.cbDirection73.Size = new System.Drawing.Size(513, 24);
             this.cbDirection73.TabIndex = 11;
+            this.cbDirection73.Visible = false;
             // 
             // cbDirection72
             // 
+            this.cbDirection72.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection72.Enabled = false;
             this.cbDirection72.FormattingEnabled = true;
             this.cbDirection72.Location = new System.Drawing.Point(10, 83);
@@ -1628,9 +1696,11 @@
             this.cbDirection72.Name = "cbDirection72";
             this.cbDirection72.Size = new System.Drawing.Size(513, 24);
             this.cbDirection72.TabIndex = 10;
+            this.cbDirection72.Visible = false;
             // 
             // cbDirection71
             // 
+            this.cbDirection71.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection71.Enabled = false;
             this.cbDirection71.FormattingEnabled = true;
             this.cbDirection71.Location = new System.Drawing.Point(10, 42);
@@ -1638,6 +1708,7 @@
             this.cbDirection71.Name = "cbDirection71";
             this.cbDirection71.Size = new System.Drawing.Size(513, 24);
             this.cbDirection71.TabIndex = 9;
+            this.cbDirection71.Visible = false;
             // 
             // label41
             // 
@@ -1676,6 +1747,8 @@
             this.btRemoveDir81.TabIndex = 13;
             this.btRemoveDir81.Text = "-";
             this.btRemoveDir81.UseVisualStyleBackColor = true;
+            this.btRemoveDir81.Visible = false;
+            this.btRemoveDir81.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir8
             // 
@@ -1688,9 +1761,11 @@
             this.btAddDir8.TabIndex = 12;
             this.btAddDir8.Text = "+";
             this.btAddDir8.UseVisualStyleBackColor = true;
+            this.btAddDir8.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection81
             // 
+            this.cbDirection81.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection81.Enabled = false;
             this.cbDirection81.FormattingEnabled = true;
             this.cbDirection81.Location = new System.Drawing.Point(10, 42);
@@ -1698,6 +1773,7 @@
             this.cbDirection81.Name = "cbDirection81";
             this.cbDirection81.Size = new System.Drawing.Size(513, 24);
             this.cbDirection81.TabIndex = 9;
+            this.cbDirection81.Visible = false;
             // 
             // label42
             // 
@@ -1738,6 +1814,8 @@
             this.btRemoveDir92.TabIndex = 14;
             this.btRemoveDir92.Text = "-";
             this.btRemoveDir92.UseVisualStyleBackColor = true;
+            this.btRemoveDir92.Visible = false;
+            this.btRemoveDir92.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btRemoveDir91
             // 
@@ -1750,6 +1828,8 @@
             this.btRemoveDir91.TabIndex = 13;
             this.btRemoveDir91.Text = "-";
             this.btRemoveDir91.UseVisualStyleBackColor = true;
+            this.btRemoveDir91.Visible = false;
+            this.btRemoveDir91.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
             // btAddDir9
             // 
@@ -1762,9 +1842,11 @@
             this.btAddDir9.TabIndex = 12;
             this.btAddDir9.Text = "+";
             this.btAddDir9.UseVisualStyleBackColor = true;
+            this.btAddDir9.Click += new System.EventHandler(this.btAddDir_Click);
             // 
             // cbDirection92
             // 
+            this.cbDirection92.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection92.Enabled = false;
             this.cbDirection92.FormattingEnabled = true;
             this.cbDirection92.Location = new System.Drawing.Point(10, 83);
@@ -1772,9 +1854,11 @@
             this.cbDirection92.Name = "cbDirection92";
             this.cbDirection92.Size = new System.Drawing.Size(513, 24);
             this.cbDirection92.TabIndex = 10;
+            this.cbDirection92.Visible = false;
             // 
             // cbDirection91
             // 
+            this.cbDirection91.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection91.Enabled = false;
             this.cbDirection91.FormattingEnabled = true;
             this.cbDirection91.Location = new System.Drawing.Point(10, 42);
@@ -1782,6 +1866,7 @@
             this.cbDirection91.Name = "cbDirection91";
             this.cbDirection91.Size = new System.Drawing.Size(513, 24);
             this.cbDirection91.TabIndex = 9;
+            this.cbDirection91.Visible = false;
             // 
             // label43
             // 
@@ -1950,7 +2035,7 @@
             this.gbOther.Name = "gbOther";
             this.gbOther.Padding = new System.Windows.Forms.Padding(4);
             this.gbOther.Size = new System.Drawing.Size(1340, 75);
-            this.gbOther.TabIndex = 2;
+            this.gbOther.TabIndex = 5;
             this.gbOther.TabStop = false;
             // 
             // gbIndividualAchievements
@@ -2006,7 +2091,7 @@
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
             this.mtbEMail.Size = new System.Drawing.Size(191, 22);
-            this.mtbEMail.TabIndex = 6;
+            this.mtbEMail.TabIndex = 4;
             // 
             // mtbHomePhone
             // 
@@ -2014,7 +2099,7 @@
             this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbHomePhone.Name = "mtbHomePhone";
             this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
-            this.mtbHomePhone.TabIndex = 5;
+            this.mtbHomePhone.TabIndex = 3;
             // 
             // mtbMobilePhone
             // 
@@ -2022,7 +2107,7 @@
             this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbMobilePhone.Name = "mtbMobilePhone";
             this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
-            this.mtbMobilePhone.TabIndex = 4;
+            this.mtbMobilePhone.TabIndex = 2;
             // 
             // label31
             // 
@@ -2061,7 +2146,7 @@
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
-            this.cbSpecialConditions.TabIndex = 3;
+            this.cbSpecialConditions.TabIndex = 1;
             this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
             this.cbSpecialConditions.UseVisualStyleBackColor = true;
             // 
@@ -2363,7 +2448,7 @@
         private System.Windows.Forms.CheckBox cbQuote;
         private System.Windows.Forms.CheckBox cbChernobyl;
         private System.Windows.Forms.CheckBox cbMCDAO;
-        private System.Windows.Forms.CheckBox cbHostleNeeded;
+        private System.Windows.Forms.CheckBox cbHostelNeeded;
         private System.Windows.Forms.TabControl tbDirections;
         private System.Windows.Forms.TabPage tpDir_budget_o;
         private System.Windows.Forms.TabPage tpDir_paid_o;

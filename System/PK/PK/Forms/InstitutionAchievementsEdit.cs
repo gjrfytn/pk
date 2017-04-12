@@ -140,20 +140,6 @@ namespace PK.Forms
                 oldList.Add(new object[] { record[0], record[1], record[2], record[3], record[4], record[5] });
 
             UpdateData(DB_Table.INSTITUTION_ACHIEVEMENTS, oldList, newList, true, 1, new string[] { "id", "name", "value", "category_dict_id", "category_id", "campaign_id" });
-
-            //foreach (var institutionAchievement in _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id", "value" },
-            //        new List<Tuple<string, Relation, object>>
-            //    {
-            //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
-            //    }))
-            //    foreach (var individualAchievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id", "mark" },
-            //        new List<Tuple<string, Relation, object>>
-            //        {
-            //            new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, institutionAchievement[0])
-            //        }))
-            //        if (institutionAchievement[1] != individualAchievement[1])
-            //            _DB_Connection.Update(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "mark", institutionAchievement[1] } },
-            //                new Dictionary<string, object> { { "id", institutionAchievement[0] } });
         }
 
         private void btLoad_Click(object sender, EventArgs e)

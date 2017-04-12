@@ -21,12 +21,13 @@ namespace PK.Forms
             cbDocType.ValueMember = "Value";
             cbDocType.SelectedIndex = 0;
 
-            if ((_Parent.SportDoc.diplomaType != null) && (_Parent.SportDoc.diplomaType != ""))
+            Forms.ApplicationEdit.SDoc loadedDocument = _Parent.SportDoc;
+            if ((loadedDocument.diplomaType != null) && (loadedDocument.diplomaType != ""))
             {
-                cbDocType.SelectedValue = _Parent.SportDoc.diplomaType;
-                tbDocName.Text = _Parent.SportDoc.docName;
-                dtpDocDate.Value = _Parent.SportDoc.docDate;
-                tbOrgName.Text = _Parent.SportDoc.orgName;
+                cbDocType.SelectedValue = loadedDocument.diplomaType;
+                tbDocName.Text = loadedDocument.docName;
+                dtpDocDate.Value = loadedDocument.docDate;
+                tbOrgName.Text = loadedDocument.orgName;
             }
         }
 
@@ -36,10 +37,12 @@ namespace PK.Forms
                 MessageBox.Show("Все поля должны быть заполнены");
             else
             {
-                _Parent.SportDoc.diplomaType = cbDocType.SelectedValue.ToString();
-                _Parent.SportDoc.docName = tbDocName.Text;
-                _Parent.SportDoc.docDate = dtpDocDate.Value;
-                _Parent.SportDoc.orgName = tbOrgName.Text;
+                Forms.ApplicationEdit.SDoc newDocument;
+                newDocument.diplomaType = cbDocType.SelectedValue.ToString();
+                newDocument.docName = tbDocName.Text;
+                newDocument.docDate = dtpDocDate.Value;
+                newDocument.orgName = tbOrgName.Text;
+                _Parent.SportDoc = newDocument;
 
                 DialogResult = DialogResult.OK;
             }

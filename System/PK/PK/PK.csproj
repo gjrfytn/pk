@@ -88,6 +88,12 @@
     <Compile Include="Classes\DocumentCreator.Excel.cs" />
     <Compile Include="Classes\DocumentCreator.Placeholders.cs" />
     <Compile Include="Classes\DocumentCreator.Word.cs" />
+    <Compile Include="Forms\Constants.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Constants.Designer.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExaminationEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -241,6 +247,9 @@
     <Compile Include="Classes\Utility.cs" />
     <EmbeddedResource Include="Forms\Authorization.resx">
       <DependentUpon>Authorization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Constants.resx">
+      <DependentUpon>Constants.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dictionaries.resx">
       <DependentUpon>Dictionaries.cs</DependentUpon>

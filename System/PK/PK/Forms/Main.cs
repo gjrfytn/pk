@@ -166,5 +166,11 @@ namespace PK.Forms
             form.ShowDialog();
             UpdateApplicationsTable();
         }
+
+        private void menuStrip_Constants_Click(object sender, EventArgs e)
+        {
+            Constants form = new Constants();
+            form.ShowDialog();
+        }
     }
 }
