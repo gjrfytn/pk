@@ -169,8 +169,15 @@ namespace PK.Forms
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
         {
-            Constants form = new Constants();
+            Constants form = new Constants(_DB_Connection);
             form.ShowDialog();
+        }
+
+        private void toolStrip_RegJournal_Click(object sender, EventArgs e)
+        {
+            DateChoice form = new DateChoice();
+            form.ShowDialog();
+            Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
         }
     }
 }
