@@ -21,8 +21,44 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
 
+            System.IO.Directory.CreateDirectory(".\\temp");
+
             UpdateCampaignsList();
         }
+
+        #region IDisposable Support
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+                        _DB_Connection.Dispose();
+
+                        if (components != null)
+                            components.Dispose();
+                    }
+
+                    System.IO.Directory.Delete(".\\temp", true);
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
+        }
+
+        ~Main()
+        {
+            Dispose(false);
+        }
+        #endregion
 
         private void UpdateApplicationsTable()
         {

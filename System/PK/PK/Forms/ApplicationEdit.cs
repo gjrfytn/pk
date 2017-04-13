@@ -184,6 +184,24 @@ namespace PK.Forms
                 
         }
 
+        #region IDisposable Support
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _KLADR.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        #endregion
+
         private void SaveApplication()
         {
             SaveBasic();
@@ -1815,55 +1833,67 @@ namespace PK.Forms
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-            Dictionary<TabPage, Tuple<string, string>> streams = new Dictionary<TabPage, Tuple<string, string>>
+            ApplicationDocsPrint form = new ApplicationDocsPrint();
+            DialogResult res = form.ShowDialog();
+            if (res != DialogResult.Cancel)
             {
-                {tpDir_budget_o,new Tuple<string, string>("Очная (дневная) бюджетная","ОБ") },
-                {tpDir_paid_o,new Tuple<string, string>("Очная (дневная) платная","ОП") },
-                {tpDir_budget_oz,new Tuple<string, string>("Очно-заочная (вечерняя) бюджетная","ОЗБ") },
-                {tpDir_paid_oz,new Tuple<string, string>("Очно-заочная (вечерняя) платная","ОЗП") },
-                {tpDir_paid_z,new Tuple<string, string>("Заочная платная","ЗП") },
-                {tpDir_quote_o,new Tuple<string, string>("Квота, очная (дневная)","ОКВ") },
-                {tpDir_target_o,new Tuple<string, string>("Целевой прием, очная (дневная)","ОЦП") },
-                {tpDir_quote_oz,new Tuple<string, string>("Квота, очно-заочная (вечерняя)","ОЗКВ") },
-                {tpDir_target_oz,new Tuple<string, string>("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
-            };
-
-            string doc = "moveJournal";
-            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "MoveJournal.xml", doc, _ApplicationID.Value);
-            Classes.Utility.Print(doc + ".docx");
-            
-            List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
-            
-            foreach (TabPage tab in tbDirections.Controls)
-                if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
-                    tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
-
-            foreach (CheckBox cb in gbWithdrawDocs.Controls)
-                if (cb.Checked)
-                    tableParams[1].Add(new string[] { cb.Text }); //TODO Оригинал
-
-            doc = "inventory";
-            Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "Inventory.xml",
-                doc,
-                new string[]
+                Dictionary<TabPage, Tuple<string, string>> streams = new Dictionary<TabPage, Tuple<string, string>>
                 {
-                    _EntrantID.Value.ToString(),
-                    tbLastName.Text.ToUpper(),
-                    (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
-                    _DB_Connection.Select(
-                        DB_Table.USERS,
-                        new string[] {"name" },
-                        new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorLogin) }
-                        )[0][0].ToString().Split(' ')[0],
-                    SystemInformation.ComputerName,
-                    DateTime.Now.ToString() //TODO Брать из переменной
-                },
-                tableParams
-                );
-            Classes.Utility.Print(doc + ".docx");
+                    { tpDir_budget_o,new Tuple<string, string>("Очная (дневная) бюджетная","ОБ") },
+                    { tpDir_paid_o,new Tuple<string, string>("Очная (дневная) платная","ОП") },
+                    { tpDir_budget_oz,new Tuple<string, string>("Очно-заочная (вечерняя) бюджетная","ОЗБ") },
+                    { tpDir_paid_oz,new Tuple<string, string>("Очно-заочная (вечерняя) платная","ОЗП") },
+                    { tpDir_paid_z,new Tuple<string, string>("Заочная платная","ЗП") },
+                    { tpDir_quote_o,new Tuple<string, string>("Квота, очная (дневная)","ОКВ") },
+                    { tpDir_target_o,new Tuple<string, string>("Целевой прием, очная (дневная)","ОЦП") },
+                    { tpDir_quote_oz,new Tuple<string, string>("Квота, очно-заочная (вечерняя)","ОЗКВ") },
+                    { tpDir_target_oz,new Tuple<string, string>("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
+                };
 
-            List<string> parameters = new List<string>
+                List<Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>> documents =
+                    new List<Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>>();
+
+                if (form.cbMoveJournal.Checked)
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "MoveJournal.xml",
+                        _DB_Connection,
+                        _ApplicationID.Value,
+                        null,
+                        null
+                        ));
+
+                List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+
+                foreach (TabPage tab in tbDirections.Controls)
+                    if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
+                        tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
+
+                foreach (CheckBox cb in gbWithdrawDocs.Controls)
+                    if (cb.Checked)
+                        tableParams[1].Add(new string[] { cb.Text }); //TODO Оригинал
+
+                if (form.cbInventory.Checked)
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "Inventory.xml",
+                        null,
+                        null,
+                        new string[]
+                        {
+                            _EntrantID.Value.ToString(),
+                            tbLastName.Text.ToUpper(),
+                            (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
+                            _DB_Connection.Select(
+                                DB_Table.USERS,
+                                new string[] {"name" },
+                                new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorLogin) }
+                                )[0][0].ToString().Split(' ')[0],
+                            SystemInformation.ComputerName,
+                            DateTime.Now.ToString() //TODO Брать из переменной
+                        },
+                        tableParams
+                        ));
+
+                List<string> parameters = new List<string>
             {
                 tbLastName.Text.ToUpper(),
                     tbFirstName.Text[0]+".",
@@ -1875,34 +1905,34 @@ namespace PK.Forms
                     DateTime.Now.Year.ToString(), //TODO Брать из переменной
             };
 
-            foreach (string[] form in tableParams[0])
-                parameters.Add(form[0]);
+                foreach (string[] eduForm in tableParams[0])
+                    parameters.Add(eduForm[0]);
 
-            while (parameters.Count != 13)
-                parameters.Add("");
+                while (parameters.Count != 13)
+                    parameters.Add("");
 
-            doc = "percRecordFace";
-            Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
-                doc,
-                parameters.ToArray(),
-                null
-                );
-            Classes.Utility.Print(doc + ".docx");
+                if (form.cbInventory.Checked)
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
+                        null,
+                        null,
+                        parameters.ToArray(),
+                        null
+                        ));
 
-            tableParams[0].Clear();
-            foreach (TabPage tab in tbDirections.Controls)
-            {
-                var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
-                if (cbs.Count() != 0)
+                tableParams[0].Clear();
+                foreach (TabPage tab in tbDirections.Controls)
                 {
-                    tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
-                    foreach (ComboBox cb in cbs)
+                    var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
+                    if (cbs.Count() != 0)
                     {
-                        string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
-                        string name = cb.Text.Split(')')[1].Remove(0, 1);
-                        if (tab.Name.Split('_')[1] != "paid")
-                            tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
+                        tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
+                        foreach (ComboBox cb in cbs)
+                        {
+                            string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
+                            string name = cb.Text.Split(')')[1].Remove(0, 1);
+                            if (tab.Name.Split('_')[1] != "paid")
+                                tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
                             DB_Table.DIRECTIONS,
                             new string[] { "short_name" },
                             new List<Tuple<string, Relation, object>>
@@ -1910,67 +1940,67 @@ namespace PK.Forms
                                 new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
                                 new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  _DB_Helper.GetDirectionIDByName(name))
                             })[0][0].ToString()+ " (" + faculty + ") " + name});
-                        else
-                        {
-                            uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
+                            else
                             {
-                                new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
-                            })[0][0];
+                                uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
+                                    new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
+                                })[0][0];
 
-                            tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
-                            DB_Table.PROFILES,
-                            new string[] { "short_name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dirID),
-                                new Tuple<string, Relation, object>("name",Relation.EQUAL,name)
-                            })[0][0].ToString()+ " (" + faculty + ") " + name});
+                                tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
+                                    DB_Table.PROFILES,
+                                    new string[] { "short_name" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
+                                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dirID),
+                                        new Tuple<string, Relation, object>("name",Relation.EQUAL,name)
+                                    })[0][0].ToString()+ " (" + faculty + ") " + name});
+                            }
                         }
+                        tableParams[0].Add(new string[] { "" });
                     }
-                    tableParams[0].Add(new string[] { "" });
                 }
-            }
 
-            doc = "receipt";
-            Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "Receipt.xml",
-                doc,
-                new string[]
-                {
-                    _EntrantID.Value.ToString() ,
-                    tbLastName.Text.ToUpper(),
-                    (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
+                if (form.cbInventory.Checked)
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "Receipt.xml",
+                        null,
+                        null,
+                        new string[]
+                        {
+                            _EntrantID.Value.ToString(),
+                            tbLastName.Text.ToUpper(),
+                            (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
+                            _DB_Connection.Select(
+                                DB_Table.USERS,
+                                new string[] {"name" },
+                                new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorLogin) }
+                                )[0][0].ToString().Split(' ')[0],
+                            SystemInformation.ComputerName,
+                            DateTime.Now.ToString(), //TODO Брать из переменной
+                            _EditingDateTime.ToString()
+                        },
+                        tableParams
+                        ));
+
+                string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
                     _DB_Connection.Select(
-                        DB_Table.USERS,
-                        new string[] {"name" },
-                        new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("login",Relation.EQUAL,_RegistratorLogin) }
-                        )[0][0].ToString().Split(' ')[0],
-                    SystemInformation.ComputerName,
-                    DateTime.Now.ToString(), //TODO Брать из переменной
-                  _EditingDateTime.ToString()
-                },
-                tableParams
-                );
-            Classes.Utility.Print(doc + ".docx");
-
-            string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
-                _DB_Connection.Select(
-                    DB_Table.INDIVIDUAL_ACHIEVEMENTS,
-                    new string[] { "institution_achievement_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
+                        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                        new string[] { "institution_achievement_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
                         new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ApplicationID)
-                    }),
-                k1 => k1[0],
-                k2 => k2[0],
-                (s1, s2) => s1[1]
-                ).Max()?.ToString();
+                        }),
+                    k1 => k1[0],
+                    k2 => k2[0],
+                    (s1, s2) => s1[1]
+                    ).Max()?.ToString();
 
-            parameters = new List<string>
-            {
-                tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
+                parameters = new List<string>
+                {
+                    tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
                     mtbHomePhone.Text,
                     mtbMobilePhone.Text,
                     cbQuote.Checked?"+":"",
@@ -1990,69 +2020,79 @@ namespace PK.Forms
                     ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,2].Value).ToString(),
                     ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value).ToString(),
                     ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
-            };
+                };
 
-            foreach (TabPage tab in tbDirections.Controls)
-            {
-                var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
-                if (cbs.Count() != 0)
+                foreach (TabPage tab in tbDirections.Controls)
                 {
-                    parameters.Add(streams[tab].Item2);
-                    byte count = 0;
-                    foreach (ComboBox cb in cbs)
+                    var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
+                    if (cbs.Count() != 0)
                     {
-                        string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
-                        string name = cb.Text.Split(')')[1].Remove(0, 1);
-                        if (tab.Name.Split('_')[1] != "paid")
-                            parameters.Add(_DB_Connection.Select(
-                            DB_Table.DIRECTIONS,
-                            new string[] { "short_name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
+                        parameters.Add(streams[tab].Item2);
+                        byte count = 0;
+                        foreach (ComboBox cb in cbs)
+                        {
+                            string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
+                            string name = cb.Text.Split(')')[1].Remove(0, 1);
+                            if (tab.Name.Split('_')[1] != "paid")
+                                parameters.Add(_DB_Connection.Select(
+                                DB_Table.DIRECTIONS,
+                                new string[] { "short_name" },
+                                new List<Tuple<string, Relation, object>>
+                                {
                                 new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
                                 new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  _DB_Helper.GetDirectionIDByName(name))
-                            })[0][0].ToString());
-                        else
-                        {
-                            uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
+                                })[0][0].ToString());
+                            else
                             {
-                                new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
+                                uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
                                 new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
                             })[0][0];
 
-                            parameters.Add(_DB_Connection.Select(
-                            DB_Table.PROFILES,
-                            new string[] { "short_name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
+                                parameters.Add(_DB_Connection.Select(
+                                DB_Table.PROFILES,
+                                new string[] { "short_name" },
+                                new List<Tuple<string, Relation, object>>
+                                {
                                 new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
                                 new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dirID),
                                 new Tuple<string, Relation, object>("name",Relation.EQUAL,  name)
-                            })[0][0].ToString());
+                                })[0][0].ToString());
+                            }
+
+                            count++;
                         }
 
-                        count++;
-                    }
-
-                    while (count != 3)
-                    {
-                        parameters.Add("");
-                        count++;
+                        while (count != 3)
+                        {
+                            parameters.Add("");
+                            count++;
+                        }
                     }
                 }
+
+                while (parameters.Count != 40)
+                    parameters.Add("");
+
+                if (form.cbInventory.Checked)
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
+                        null,
+                        null,
+                        parameters.ToArray(),
+                        null
+                        ));
+
+                string doc = ".\\temp\\percRecordBack";
+                Classes.DocumentCreator.Create(doc, documents);
+                doc += ".docx";
+
+                if (res == DialogResult.Yes)
+                    Classes.Utility.Print(doc);
+                else
+                    System.Diagnostics.Process.Start(doc);
             }
-
-            while (parameters.Count != 40)
-                parameters.Add("");
-
-            doc = "percRecordBack";
-            Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
-                doc,
-                parameters.ToArray(),
-                null
-                );
-            Classes.Utility.Print(doc + ".docx");
         }
 
         private void cbTarget_CheckedChanged(object sender, EventArgs e)

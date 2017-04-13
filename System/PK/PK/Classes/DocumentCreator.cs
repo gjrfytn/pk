@@ -31,7 +31,7 @@ namespace PK.Classes
             Validate(template);
 
             if (template.Root.Element("Document").Element("Word") != null)
-                Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
+                Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile).Save();
             else
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
         }
@@ -43,9 +43,41 @@ namespace PK.Classes
             Validate(template);
 
             if (template.Root.Element("Document").Element("Word") != null)
-                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
+                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile).Save();
             else
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+        }
+
+        public static void Create(string resultFile, List<System.Tuple<string, DB_Connector, uint?, string[], List<string[]>[]>> documents)
+        {
+            Novacode.DocX doc = null;
+            foreach (var document in documents)
+            {
+                XDocument template = XDocument.Load(document.Item1, LoadOptions.PreserveWhitespace);
+
+                Validate(template);
+
+                if (template.Root.Element("Document").Element("Word") != null)
+                {
+                    Novacode.DocX buf;
+                    if (document.Item2 != null)
+                        buf = Word.CreateFromTemplate(document.Item2, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.Item3.Value, resultFile);
+                    else
+                        buf = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.Item4, document.Item5, resultFile);
+
+                    if (doc == null)
+                        doc = buf;
+                    else
+                    {
+                        doc.InsertSectionPageBreak();
+                        doc.InsertDocument(buf);
+                    }
+                }
+                else
+                    throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+
+                doc.Save();
+            }
         }
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)

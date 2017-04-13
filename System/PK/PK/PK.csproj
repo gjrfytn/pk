@@ -75,6 +75,12 @@
     <Compile Include="Classes\ImportClasses.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="FIS_Olympic_TEMP.cs" />
+    <Compile Include="Forms\ApplicationDocsPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApplicationDocsPrint.Designer.cs">
+      <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Authorization.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
       <DependentUpon>Users.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Utility.cs" />
+    <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
+      <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Authorization.resx">
       <DependentUpon>Authorization.cs</DependentUpon>
     </EmbeddedResource>
