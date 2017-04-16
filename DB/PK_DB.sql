@@ -349,7 +349,7 @@ COMMENT = 'Направления по факультетам.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
   `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
-  `name` VARCHAR(100) NOT NULL COMMENT 'Название профиля.',
+  `name` VARCHAR(150) NOT NULL COMMENT 'Название профиля.',
   `short_name` VARCHAR(5) NOT NULL COMMENT 'Краткое название профиля.',
   PRIMARY KEY (`faculty_short_name`, `direction_id`, `name`),
   INDEX `has_idx` (`faculty_short_name` ASC, `direction_id` ASC),

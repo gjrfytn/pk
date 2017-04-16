@@ -104,6 +104,7 @@
         </Element>
         <Element>
           <Table>
+            <Numeration>Number</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>

@@ -82,7 +82,7 @@
                 <DataFontID>UsualTable</DataFontID>
               </Column>
               <Column>
-                <Caption>Код</Caption>
+                <Caption>Ауд.</Caption>
                 <CaptionFontID>UsualBoldTable</CaptionFontID>
                 <DataFontID>UsualTable</DataFontID>
               </Column>
