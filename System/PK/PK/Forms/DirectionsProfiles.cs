@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ namespace PK.Forms
     partial class DirectionsProfiles : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
 
         private List<object[]> _Directions;
         private List<string> _Faculties;
@@ -17,12 +19,11 @@ namespace PK.Forms
             InitializeComponent();
 
             _DB_Connection = connection;
-
-            UpdateTable();
-            rbBacc.Checked = true;
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            cbDirections.ValueMember = "Value";
         }
 
-        void UpdateTable()
+        private void UpdateTable()
         {
             dgvDirections.Rows.Clear();
             _Directions = new List<object[]>();
@@ -70,7 +71,43 @@ namespace PK.Forms
             cbFaculties.DataSource = _Faculties;
         }
 
-        void EnableDisableControls(bool enable)
+        private void FillDirCombobox(string filter)
+        {
+            List<object[]> directionsData = new List<object[]>();
+            foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name", "code"))
+                if (record[2].ToString().Split('.')[1] == filter)
+                    directionsData.Add(record);
+
+            cbDirections.DataSource = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name" }).Join(
+                directionsData,
+                campDirs => campDirs[0],
+                dirsData => dirsData[0],
+                (s1, s2) => new
+                {
+                    Id = (uint)s1[0],
+                    Faculty = s1[1].ToString(),
+                    Name = s2[1].ToString(),
+                    Code = s2[2]
+                }).Select(s => new
+                {
+                    Value = new Tuple<uint, string, string>(s.Id, s.Faculty, s.Name),
+                    Display = s.Code + " " + s.Name
+                }).ToList();
+            cbDirections.DisplayMember = "Display";
+        }
+
+        private void FillFacultiesCombobox()
+        {
+            cbFaculties.Items.Clear();
+            if (cbDirections.SelectedIndex != -1)
+            foreach (object[] faculty in _DB_Connection.Select(DB_Table.FACULTIES, "short_name"))
+                if ((cbDirections.SelectedValue as Tuple<uint, string, string>).Item2 == faculty[0].ToString())
+                    cbFaculties.Items.Add(faculty[0].ToString());
+
+            cbFaculties.Text = "";
+        }
+
+        private void EnableDisableControls(bool enable)
         {
             if (enable)
             {
@@ -80,7 +117,9 @@ namespace PK.Forms
                 label1.Enabled = true;
                 label2.Enabled = true;
                 label3.Enabled = true;
+                label4.Enabled = true;
                 tbName.Enabled = true;
+                tbShortName.Enabled = true;
                 btSave.Enabled = true;
             }
             else
@@ -91,42 +130,12 @@ namespace PK.Forms
                 label1.Enabled = false;
                 label2.Enabled = false;
                 label3.Enabled = false;
+                label4.Enabled = false;
                 tbName.Enabled = false;
                 tbName.Clear();
+                tbShortName.Enabled = true;
+                tbShortName.Clear();
                 btSave.Enabled = false;
-            }
-        }
-
-        private void rbBacc_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbBacc.Checked)
-            {
-                cbDirections.Items.Clear();
-                for (int i = 0; i < _Directions.Count; i++)
-                    if (_Directions[i][2].ToString() == "Бакалавриат")
-                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
-            }
-        }
-
-        private void rbSpec_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbSpec.Checked)
-            {
-                cbDirections.Items.Clear();
-                for (int i = 0; i < _Directions.Count; i++)
-                    if (_Directions[i][2].ToString() == "Специалитет")
-                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
-            }
-        }
-
-        private void rbMag_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbMag.Checked)
-            {
-                cbDirections.Items.Clear();
-                for (int i = 0; i < _Directions.Count; i++)
-                    if (_Directions[i][2].ToString() == "Магистратура")
-                        cbDirections.Items.Add(_Directions[i][1].ToString() + " " + _Directions[i][0].ToString());
             }
         }
 
@@ -142,9 +151,9 @@ namespace PK.Forms
                 MessageBox.Show("Не указано сокращенное название профиля.");
             else
             {
-                object[] temp = _Directions.Find(x => x[1].ToString() == cbDirections.SelectedItem.ToString().Substring(0, 8));
-                _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object>
-                { { "faculty_short_name", cbFaculties.SelectedItem.ToString()}, { "direction_id",  temp[3]},  { "name", tbName.Text }, { "short_name", tbShortName.Text} });
+                _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object> { { "faculty_short_name", cbFaculties.SelectedItem.ToString() },
+                    { "direction_id", (cbDirections.SelectedValue as Tuple<uint, string, string>).Item1 },
+                    { "name", tbName.Text}, { "short_name", tbShortName.Text } });
 
                 EnableDisableControls(false);
                 UpdateTable();
@@ -167,6 +176,21 @@ namespace PK.Forms
                     { "name", dgvDirections.SelectedRows[0].Cells[2].Value} });
                 UpdateTable();
             }
+        }
+
+        private void rb_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBacc.Checked)
+                FillDirCombobox("03");
+            else if (rbMag.Checked)
+                FillDirCombobox("04");
+            else if (rbSpec.Checked)
+                FillDirCombobox("05");
+        }
+
+        private void cbDirections_SelectedValueChanged(object sender, EventArgs e)
+        {
+            FillFacultiesCombobox();
         }
     }
 }

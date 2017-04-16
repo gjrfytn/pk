@@ -126,8 +126,6 @@ namespace PK.Forms
                 dgvExams.Rows[j].Cells[1].Value = DateTime.Now.Year.ToString();
             }
 
-            //List<object[]>
-
             foreach (TabPage tab in tbDirections.Controls)
             {
                 string eduFormName = "";
@@ -220,18 +218,21 @@ namespace PK.Forms
             cbPassportCopy.Checked = true;
             cbAppAdmission.Checked = true;
 
-            object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "last_name", "first_name","middle_name","gender_id","email",
-                "home_phone","mobile_phone"}, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
-                })[0];
+            object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
+            })[0];
             tbLastName.Text = entrant[0].ToString();
             tbFirstName.Text = entrant[1].ToString();
             tbMidleName.Text = entrant[2].ToString();
-            cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(5, (uint)entrant[3]);
-            mtbEMail.Text = entrant[4].ToString();
-            mtbHomePhone.Text = entrant[5].ToString();
-            mtbMobilePhone.Text = entrant[6].ToString();
+
+            entrant = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "email", "home_phone","mobile_phone"}, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
+                })[0];
+            mtbEMail.Text = entrant[0].ToString();
+            mtbHomePhone.Text = entrant[1].ToString();
+            mtbMobilePhone.Text = entrant[2].ToString();
 
             if (_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
             {
@@ -311,7 +312,7 @@ namespace PK.Forms
                         tbInstitutionLocation.Text = document[5].ToString().Split('|')[2];
                     }
 
-                    object[] diploma = _DB_Connection.Select(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new string[] { "end_year", "red_diploma" }, new List<Tuple<string, Relation, object>>
+                    object[] diploma = _DB_Connection.Select(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new string[] { "end_year" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
                     })[0];
@@ -480,20 +481,28 @@ namespace PK.Forms
                     if (cbDirection11.SelectedIndex == -1)
                     {
                         cbDirection11.SelectedItem = cbDirItem;
+                        cbDirection11.Visible = true;
+                        cbDirection11.Enabled = true;
                     }
                     else if (cbDirection12.SelectedIndex == -1)
                     {
                         cbDirection12.SelectedItem = cbDirItem;
+                        cbDirection12.Visible = true;
+                        cbDirection12.Enabled = true;
                     }
                     else if (cbDirection13.SelectedIndex == -1)
                     {
                         cbDirection13.SelectedItem = cbDirItem;
+                        cbDirection13.Visible = true;
+                        cbDirection13.Enabled = true;
                     }
                 }
 
                 else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
                 {
                     cbDirection21.SelectedItem = cbPrItem;
+                    cbDirection21.Visible = true;
+                    cbDirection21.Enabled = true;
                 }
 
                 else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Бюджетные места")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
@@ -501,21 +510,29 @@ namespace PK.Forms
                     if (cbDirection31.SelectedIndex == -1)
                     {
                         cbDirection31.SelectedItem = cbDirItem;
+                        cbDirection31.Visible = true;
+                        cbDirection31.Enabled = true;
                     }
                     else if (cbDirection32.SelectedIndex == -1)
                     {
                         cbDirection32.SelectedItem = cbDirItem;
+                        cbDirection32.Visible = true;
+                        cbDirection32.Enabled = true;
                     }
                 }
 
                 else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
                 {
                     cbDirection41.SelectedItem = cbPrItem;
+                    cbDirection41.Visible = true;
+                    cbDirection41.Enabled = true;
                 }
 
                 else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Заочная форма")))
                 {
                     cbDirection51.SelectedItem = cbPrItem;
+                    cbDirection51.Visible = true;
+                    cbDirection51.Enabled = true;
                 }
 
                 else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Квота приема лиц, имеющих особое право")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
@@ -524,6 +541,8 @@ namespace PK.Forms
                     if (cbDirection61.SelectedIndex == -1)
                     {
                         cbDirection61.SelectedItem = cbDirItem;
+                        cbDirection61.Visible = true;
+                        cbDirection61.Enabled = true;
                     }
                 }
 
@@ -534,14 +553,20 @@ namespace PK.Forms
                     if (cbDirection71.SelectedIndex == -1)
                     {
                         cbDirection71.SelectedItem = cbDirItem;
+                        cbDirection71.Visible = true;
+                        cbDirection71.Enabled = true;
                     }
                     else if (cbDirection72.SelectedIndex == -1)
                     {
                         cbDirection72.SelectedItem = cbDirItem;
+                        cbDirection72.Visible = true;
+                        cbDirection72.Enabled = true;
                     }
                     else if (cbDirection73.SelectedIndex == -1)
                     {
                         cbDirection73.SelectedItem = cbDirItem;
+                        cbDirection73.Visible = true;
+                        cbDirection73.Enabled = true;
                     }
                 }
 
@@ -551,6 +576,8 @@ namespace PK.Forms
                     if (cbDirection81.SelectedIndex == -1)
                     {
                         cbDirection81.SelectedItem = cbDirItem;
+                        cbDirection81.Visible = true;
+                        cbDirection81.Enabled = true;
                     }
                 }
 
@@ -561,10 +588,14 @@ namespace PK.Forms
                     if (cbDirection91.SelectedIndex == -1)
                     {
                         cbDirection91.SelectedItem = cbDirItem;
+                        cbDirection91.Visible = true;
+                        cbDirection91.Enabled = true;
                     }
                     else if (cbDirection92.SelectedIndex == -1)
                     {
                         cbDirection92.SelectedItem = cbDirItem;
+                        cbDirection92.Visible = true;
+                        cbDirection92.Enabled = true;
                     }
                 }                
             }
@@ -572,11 +603,8 @@ namespace PK.Forms
 
         private void UpdateApplication()
         {
-            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
-                { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
-                { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
-                { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}}, new Dictionary<string, object>
-                { { "id", _EntrantID } });
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}},
+                new Dictionary<string, object> { { "id", _EntrantID } });
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -650,8 +678,8 @@ namespace PK.Forms
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
 
-                        _DB_Connection.Update(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "end_year", cbGraduationYear.SelectedItem },
-                                { "red_diploma", cbMedal.Checked} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                        _DB_Connection.Update(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "end_year", cbGraduationYear.SelectedItem } },
+                            new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
                         if ((cbMedal.Checked) && (_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                             {
@@ -1024,11 +1052,7 @@ namespace PK.Forms
 
         private void SaveBasic ()
         {
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "last_name", tbLastName.Text},
-                { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},{ "gender_dict_id", 5},
-                { "gender_id", _DB_Helper.GetDictionaryItemID( 5, cbSex.SelectedItem.ToString())},
-                { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
-
+            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text}, { "home_phone", mtbHomePhone.Text}, { "mobile_phone", mtbMobilePhone.Text}});
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
@@ -1077,16 +1101,14 @@ namespace PK.Forms
                 eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text},
                     { "original_recieved_date", DateTime.Now}}));
-                _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID },
-                    { "end_year", cbGraduationYear.SelectedItem }, { "red_diploma", cbMedal.Checked} });
+                _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "end_year", cbGraduationYear.SelectedItem } });
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } });
             }
             else
             {
                 eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}  }));
-                _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID },
-                    { "end_year", cbGraduationYear.SelectedItem }, { "red_diploma", cbMedal.Checked } });
+                _DB_Connection.Insert(DB_Table.DIPLOMA_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "end_year", cbGraduationYear.SelectedItem } });
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } });
             }
             if (cbMedal.Checked)
@@ -1420,7 +1442,7 @@ namespace PK.Forms
                 else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Квота приема лиц, имеющих особое право"))
                     placesCountColumnName = "places_quota_oz";
 
-               // string[][] eduLevelsCodes = new string[][] { new string[]{ "03", "Бакалавр" }, new string[] { "04", "Магистр" }, new string[] { "05", "Специалист" } };
+               //string[][] eduLevelsCodes = new string[][] { new string[]{ "03", "Бакалавр" }, new string[] { "04", "Магистр" }, new string[] { "05", "Специалист" } };
 
                //var directionsData = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name", "code");
 

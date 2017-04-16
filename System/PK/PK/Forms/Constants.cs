@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK.Forms
@@ -19,7 +15,7 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector();
+            //_DB_Connection = new Classes.DB_Connector();
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             foreach (var campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, "name"))
