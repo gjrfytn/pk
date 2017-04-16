@@ -41,19 +41,36 @@
             <Parts>
               <Part>
                 <Text>
-                  <String>Минимальная оценка экзамена по математике, соответствующая успешному его прохождению – </String>
+                  <String>Минимальная оценка экзамена по </String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualViolet</FontID>
+                <Text>
+                  <String>ПРЕДМЕТ</String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <String>, соответствующая успешному его прохождению – </String>
                 </Text>
               </Part>
               <Part>
                 <FontID>UsualRed</FontID>
                 <Text>
-                  <String>XXX</String>
+                  <String>0</String>
                 </Text>
               </Part>
               <Part>
                 <FontID>UsualRed</FontID>
                 <Text>
-                  <String> балла</String>
+                  <String> балл</String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualViolet</FontID>
+                <Text>
+                  <String>А</String>
                 </Text>
               </Part>
               <Part>
@@ -75,12 +92,23 @@
               </Part>
               <Part>
                 <Text>
-                  <String>XXX</String>
+                  <String>0</String>
                 </Text>
               </Part>
               <Part>
                 <Text>
-                  <String> баллов считается неудовлетворительной.</String>
+                  <String> балл</String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualViolet</FontID>
+                <Text>
+                  <String>ОВ</String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <String> считается неудовлетворительной.</String>
                 </Text>
               </Part>
             </Parts>
@@ -98,12 +126,12 @@
                   <String>Абитуриенты, получившие неудовлетворительную оценку, выбывают из конкурса в </String>
                 </Text>
               </Part>
-			  <Part>
+              <Part>
                 <Text>
-                  <Placeholder>examinationDate|YEAR_ONLY</Placeholder>
+                  <Placeholder>1</Placeholder>
                 </Text>
               </Part>
-			  <Part>
+              <Part>
                 <Text>
                   <String> году.</String>
                 </Text>
@@ -135,12 +163,23 @@
             <Parts>
               <Part>
                 <Text>
-                  <String>Рассмотрение апелляций вступительного экзамена по математике, проведенного </String>
+                  <String>Рассмотрение апелляций вступительного экзамена по </String>
+                </Text>
+              </Part>
+              <Part>
+                <FontID>UsualViolet</FontID>
+                <Text>
+                  <String>ПРЕДМЕТ</String>
                 </Text>
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>examinationDate|DATE_ONLY</Placeholder>
+                  <String>, проведенного </String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <Placeholder>2</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -210,7 +249,7 @@
             <Parts>
               <Part>
                 <Text>
-                  <Placeholder>examinationSubject</Placeholder>
+                  <Placeholder>3</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -220,7 +259,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>examinationDate|DATE_ONLY</Placeholder>
+                  <Placeholder>2</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -232,7 +271,7 @@
         <Element>
           <Table>
             <Numeration>Number</Numeration>
-            <Placeholder>entrantsMarks</Placeholder>
+            <Placeholder>0</Placeholder>
             <Structure>
               <Column>
                 <Caption>№ п/п</Caption>

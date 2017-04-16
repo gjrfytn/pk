@@ -86,10 +86,7 @@ namespace PK.Classes
             if (rooms.Sum(r => r.Value) < letters.Sum(l => l.Value))
                 throw new System.ArgumentException("Общее количество мест в аудиториях меньше общего количества абитуриентов.");
 
-            rooms = rooms.OrderByDescending(r => r.Value).ToDictionary(k => k.Key, v => v.Value);
             letters = letters.OrderByDescending(l => l.Value).ToDictionary(k => k.Key, v => v.Value);
-            //rooms.OrderByDescending(r => r.Value).ToDictionary(k => k.Key, v => v.Value);
-            // letters.OrderByDescending(l => l.Value).ToDictionary(k => k.Key, v => v.Value);
             List<System.Tuple<char, string>> distributions = new List<System.Tuple<char, string>>();
             while (letters.Count != 0)
             {
@@ -102,35 +99,28 @@ namespace PK.Classes
                     ushort lSum = (ushort)letters.Sum(l => l.Value);
                     if (lSum > room.Value)
                     {
-                        if (roomBuf != null)
-                            break;
+                        char letter = letters.Last().Key;
+                        if (letters.Count == 1)
+                        {
+                            if (!splitLetterCounts.ContainsKey(letter))
+                                splitLetterCounts.Add(letter, 0);
+                            splitLetterCounts[letter]++;
+
+                            excludedLetters.Add(letter, (ushort)(letters[letter] - room.Value));
+                            letters[letter] = room.Value;
+                        }
                         else
                         {
-                            char letter = letters.Last().Key;
-                            if (letters.Count == 1)
-                            {
-                                if (!splitLetterCounts.ContainsKey(letter))
-                                    splitLetterCounts.Add(letter, 0);
-                                splitLetterCounts[letter]++;
-
-                                excludedLetters.Add(letter, (ushort)(letters[letter] - room.Value));
-                                letters[letter] = room.Value;
-                            }
-                            else
-                            {
-                                excludedLetters.Add(letter, letters[letter]);
-                                letters.Remove(letter);
-                            }
-
-                            goto ifLabel; //TODO ?
+                            excludedLetters.Add(letter, letters[letter]);
+                            letters.Remove(letter);
                         }
+
+                        goto ifLabel; //TODO ?
                     }
                     else
                     {
                         roomBuf = room.Key;
-
-                        if (lSum == room.Value)
-                            break;
+                        break;
                     }
                 }
 
@@ -144,7 +134,6 @@ namespace PK.Classes
                 foreach (var el in excludedLetters)
                     letters.Add(el.Key, el.Value);
                 letters = letters.OrderByDescending(a => a.Value).ToDictionary(k => k.Key, v => v.Value);
-                // letters.OrderByDescending(a => a.Value).ToDictionary(k => k.Key, v => v.Value);
             }
 
             return distributions;

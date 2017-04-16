@@ -8,6 +8,8 @@ namespace PK.Forms
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly uint _ExaminationID;
+        private readonly uint _SubjectID;
+        private readonly DateTime _Date;
 
         public ExaminationMarks(Classes.DB_Connector connection, uint examinationID)
         {
@@ -29,7 +31,9 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL,examinationID)
                 })[0];
 
-            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], (uint)exam[1]) + " " + ((DateTime)exam[2]).ToShortDateString();
+            _SubjectID = (uint)exam[1];
+            _Date = (DateTime)exam[2];
+            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
 
             foreach (object[] row in _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
@@ -51,7 +55,35 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
-            Classes.DocumentCreator.Create(_DB_Connection, Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", "AlphaMarks", _ExaminationID);
+            Dictionary<uint, string> minMarksConsts = new Dictionary<uint, string>
+            {
+                { 1,"min_russian_mark" },
+                { 2,"min_math_mark" },
+                { 6,"min_foreign_mark" },
+                { 9,"min_social_mark" },
+                { 10,"min_physics_mark" }
+            };
+
+            string[] singleParams = new string[]
+            {
+                _DB_Connection.Select(DB_Table.CONSTANTS,minMarksConsts[_SubjectID])[0][0].ToString(),
+                _Date.Year.ToString(),
+                _Date.ToShortDateString(),
+                new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID)
+            };
+
+            List<string[]> table = new List<string[]>(dataGridView.Rows.Count);
+            foreach (DataGridViewRow row in dataGridView.Rows)
+                table.Add(new string[]
+                {
+                    row.Cells[0].Value.ToString(),
+                    row.Cells[1].Value.ToString(),
+                    ((short)row.Cells[2].Value==-1)?"неявка": row.Cells[2].Value.ToString(),
+                });
+
+            string doc = ".\\temp\\AlphaMarks";
+            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new List<string[]>[] { table });
+            Classes.Utility.Print(doc + ".docx");
         }
 
         private void toolStrip_Clear_Click(object sender, EventArgs e)

@@ -1061,23 +1061,6 @@ END$$
 DELIMITER ;
 
 -- -----------------------------------------------------
--- procedure get_entrants_marks
--- -----------------------------------------------------
-
-DELIMITER $$
-USE `PK_DB`$$
-CREATE PROCEDURE `get_entrants_marks` (id INT UNSIGNED)
-BEGIN
-SELECT entrants.id, CONCAT_WS(' ',last_name,first_name,middle_name), IF(mark!=-1,mark,'неявка') FROM
-entrants_examinations_marks
-JOIN
-entrants ON entrant_id=entrants.id
-WHERE examination_id=id;
-END$$
-
-DELIMITER ;
-
--- -----------------------------------------------------
 -- View `PK_DB`.`entrants_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `PK_DB`.`entrants_view`;

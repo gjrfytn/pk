@@ -1887,7 +1887,32 @@ namespace PK.Forms
 
                 foreach (CheckBox cb in gbWithdrawDocs.Controls)
                     if (cb.Checked)
-                        tableParams[1].Add(new string[] { cb.Text }); //TODO Оригинал
+                        if (cb == cbCertificateCopy)
+                        {
+                            string buf = cb.Text + " " + tbEduDocSeries.Text + " " + tbEduDocNumber.Text;
+                            if (cb.Text.Contains("Оригинал"))
+                            {
+                                DateTime origDate = (DateTime)_DB_Connection.Select(
+                                    DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                                    new string[] { "documents_id" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID)
+                                    }).Join(
+                                    _DB_Connection.Select(DB_Table.DOCUMENTS, "id", "type", "original_recieved_date")
+                                    .Where(d => d[1].ToString() == "school_certificate" || d[1].ToString() == "high_edu_diploma" || d[1].ToString() == "academic_diploma"),
+                                    k1 => k1[0],
+                                    k2 => k2[0],
+                                    (s1, s2) => s2[2]
+                                    ).Single();
+
+                                tableParams[1].Add(new string[] { buf + " Дата ориг.: " + origDate.ToShortDateString() });
+                            }
+                            else
+                                tableParams[1].Add(new string[] { buf });
+                        }
+                        else
+                            tableParams[1].Add(new string[] { cb.Text });
 
                 if (form.cbInventory.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
@@ -1928,7 +1953,7 @@ namespace PK.Forms
                 while (parameters.Count != 13)
                     parameters.Add("");
 
-                if (form.cbInventory.Checked)
+                if (form.cbPercRecordFace.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
                         Classes.Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
                         null,
@@ -1980,7 +2005,7 @@ namespace PK.Forms
                     }
                 }
 
-                if (form.cbInventory.Checked)
+                if (form.cbReceipt.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
                         Classes.Utility.DocumentsTemplatesPath + "Receipt.xml",
                         null,
@@ -2092,7 +2117,7 @@ namespace PK.Forms
                 while (parameters.Count != 40)
                     parameters.Add("");
 
-                if (form.cbInventory.Checked)
+                if (form.cbPercRecordBack.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
                         Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
                         null,

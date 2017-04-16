@@ -42,8 +42,7 @@ namespace PK.Classes
 
         private static readonly Dictionary<string, string> _PH_Table = new Dictionary<string, string>
         {
-            {"campaignEduForms",    "get_campaign_edu_forms"},
-            {"entrantsMarks",       "get_entrants_marks"}
+            {"campaignEduForms",    "get_campaign_edu_forms"}
         };
     }
 }

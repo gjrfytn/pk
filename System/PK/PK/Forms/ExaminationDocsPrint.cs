@@ -104,42 +104,6 @@ namespace PK.Forms
 
                 count++;
             }
-
-            //_EntrantsTable = new List<string[]>(_Entrants.Count());
-            //ushort count = 1;
-            //foreach (var entr in _Entrants)
-            //{
-            //    _EntrantsTable.Add(new string[]
-            //    {
-            //        count.ToString(),
-            //        entr.Item1.ToString(),
-            //        entr.Item2+" "+entr.Item3+" "+entr.Item4,
-            //        nameCodes[entr.Item2[0]]+nameCodes[entr.Item3[0]]+"."+_ExaminationID.ToString()+count.ToString()
-            //    });
-            //    count++;
-            //}
-
-            //Dictionary<string, Tuple<ushort, ushort>> fill = _Audiences.ToDictionary(k => k[0].ToString(), v => new Tuple<ushort, ushort>(0, (ushort)v[1]));
-            //for (ushort i = 0; i < _EntrantsTable.Count; ++i)
-            //{
-            //    foreach (Tuple<char, string> aud in _Distribution.FindAll(c => c.Item1 == _EntrantsTable[i][2][0]))
-            //    {
-            //        if (fill[aud.Item2].Item1 < fill[aud.Item2].Item2)
-            //        {
-            //            fill[aud.Item2] = new Tuple<ushort, ushort>((ushort)(fill[aud.Item2].Item1 + 1), fill[aud.Item2].Item2);
-
-            //            _EntrantsTable[i] = new string[]
-            //            {
-            //                _EntrantsTable[i][0],
-            //                _EntrantsTable[i][1],
-            //                _EntrantsTable[i][2],
-            //                _EntrantsTable[i][3],
-            //                aud.Item2,
-            //                fill[aud.Item2].Item1.ToString()
-            //            };
-            //        }
-            //    }
-            //}
         }
 
         private void bAlphaCodes_Click(object sender, System.EventArgs e)
