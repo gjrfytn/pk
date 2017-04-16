@@ -22,8 +22,44 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
 
+            System.IO.Directory.CreateDirectory(".\\temp");
+
             UpdateCampaignsList();
         }
+
+        #region IDisposable Support
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+                        _DB_Connection.Dispose();
+
+                        if (components != null)
+                            components.Dispose();
+                    }
+
+                    System.IO.Directory.Delete(".\\temp", true);
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
+        }
+
+        ~Main()
+        {
+            Dispose(false);
+        }
+        #endregion
 
         private void UpdateApplicationsTable()
         {
@@ -145,7 +181,7 @@ namespace PK.Forms
 
         private void toolStrip_FisImport_Click(object sender, EventArgs e)
         {
-            new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****").Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+            Classes.Utility.ConnectToFIS("****")?.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
         }
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
@@ -170,8 +206,15 @@ namespace PK.Forms
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
         {
-            Constants form = new Constants();
+            Constants form = new Constants(_DB_Connection);
             form.ShowDialog();
+        }
+
+        private void toolStrip_RegJournal_Click(object sender, EventArgs e)
+        {
+            DateChoice form = new DateChoice();
+            form.ShowDialog();
+            Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
         }
     }
 }

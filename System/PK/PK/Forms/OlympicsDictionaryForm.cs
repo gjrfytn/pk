@@ -74,14 +74,13 @@ namespace PK
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
             if (_Updater == null)
-                try
-                {
-                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, new Classes.FIS_Connector(Classes.Utility.FIS_Login, "****"));
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Ошибка подключения к ФИС", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+            {
+                Classes.FIS_Connector connector = Classes.Utility.ConnectToFIS("****");
+                if (connector == null)
+                    return;
+
+                _Updater = new Classes.DictionaryUpdater(_DB_Connection, connector);
+            }
 
             Cursor.Current = Cursors.WaitCursor;
             _Updater.UpdateOlympicsDictionary(byte.Parse(toolStrip_Years.Text));

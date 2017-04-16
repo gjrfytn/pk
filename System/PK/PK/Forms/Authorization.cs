@@ -14,9 +14,36 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector("default", "");
-            foreach (var v in _DB_Connection.Select(DB_Table.USERS, "login"))
-                cbLogin.Items.Add(v[0]);
+            while (true)
+            {
+                try
+                {
+                    _DB_Connection = new Classes.DB_Connector("default", "");
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    if (ex.Number == 1042 && !Classes.Utility.ShowChoiceMessageBox("Подключён ли кабель локальной сети к компьютеру?", "Ошибка подключения"))
+                    {
+                        MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        continue;
+                    }
+
+                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    if (Classes.Utility.ShowChoiceMessageBox("Закрыть приложение?","Действие"))
+                    {
+                        Load += (s, e) => DialogResult = DialogResult.Abort;
+                        break;
+                    }
+
+                    continue;
+                }
+
+                foreach (var v in _DB_Connection.Select(DB_Table.USERS, "login"))
+                    cbLogin.Items.Add(v[0]);
+                break;
+            }
         }
 
         #region IDisposable Support
@@ -42,7 +69,7 @@ namespace PK.Forms
             object[] user = _DB_Connection.Select(DB_Table.USERS, "login", "password", "role").Find(x => x[0].ToString() == cbLogin.Text);
 
             if (user == null)
-                MessageBox.Show("Логин не найден");
+                MessageBox.Show("Логин не найден.","Ошибка авторизации", MessageBoxButtons.OK,MessageBoxIcon.Error);
             else if (user[1].ToString() == tbPassword.Text)
             {
                 UsersRole = user[2].ToString();
@@ -50,7 +77,7 @@ namespace PK.Forms
                 DialogResult = DialogResult.OK;
             }
             else
-                MessageBox.Show("Неверный пароль");
+                MessageBox.Show("Неверный пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         //private void Authorization_Load(object sender, EventArgs e)

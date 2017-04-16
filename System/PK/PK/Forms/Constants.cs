@@ -5,17 +5,16 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    public partial class Constants : Form
+    partial class Constants : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private uint _CurrCampaignID;
 
-        public Constants()
+        public Constants(Classes.DB_Connector connection)
         {
             InitializeComponent();
-
-            //_DB_Connection = new Classes.DB_Connector();
+            _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             foreach (var campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, "name"))

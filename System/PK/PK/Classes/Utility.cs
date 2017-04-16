@@ -10,15 +10,16 @@ namespace PK.Classes
         public static readonly string FIS_Login = System.Configuration.ConfigurationManager.AppSettings["FIS_Login"];
 
         /// <summary>
-        /// Отображает диалоговое окно с заголовком "Действие" и кнопками "Да" и "Нет".
+        /// Отображает диалоговое окно с кнопками "Да" и "Нет".
         /// </summary>
         /// <param name="description">Текст сообщения.</param>
+        /// <param name="caption">Текст заголовка.</param>
         /// <returns><c>true</c>, если нажата кнопка "Да".</returns>
-        public static bool ShowActionMessageBox(string description)
+        public static bool ShowChoiceMessageBox(string description, string caption)
         {
             return MessageBox.Show(
                 description,
-                "Действие",
+                caption,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2
@@ -56,15 +57,16 @@ namespace PK.Classes
         }
 
         /// <summary>
-        /// Вызывает <see cref="ShowActionMessageBox(string)"/>. Далее, если нажата кнопка "Да", - <see cref="ShowUnrevertableActionMessageBox"/>.
+        /// Вызывает <see cref="ShowChoiceMessageBox(string, string)"/>. Далее, если нажата кнопка "Да", - <see cref="ShowUnrevertableActionMessageBox"/>.
         /// Если во втором окне нажата конпка "Нет", то снова вызывается первое.
         /// </summary>
         /// <param name="description">Текст сообщения для первого окна.</param>
+        /// <param name="caption">Текст заголовка для первого окна.</param>
         /// <returns><c>true</c>, если в обоих окнах нажата кнопка "Да".</returns>
-        public static bool ShowActionMessageWithConfirmation(string description)
+        public static bool ShowChoiceMessageWithConfirmation(string description, string caption)
         {
             while (true)
-                if (ShowActionMessageBox(description))
+                if (ShowChoiceMessageBox(description, caption))
                 {
                     if (ShowUnrevertableActionMessageBox())
                         return true;
@@ -160,6 +162,30 @@ namespace PK.Classes
             //p.WaitForExit();надо?
             //p.Close();?
             //p.Dispose();?
+        }
+
+        public static FIS_Connector ConnectToFIS(string password)
+        {
+            try
+            {
+                return new FIS_Connector(FIS_Login, password);
+            }
+            catch (System.Net.WebException ex)
+            {
+                if (ShowChoiceMessageBox("Подключён ли компьютер к сети ФИС?", "Ошибка подключения"))
+                {
+                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                    MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (FIS_Connector.FIS_Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return null;
         }
     }
 }

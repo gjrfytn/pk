@@ -7,6 +7,11 @@ namespace PK.Classes
 {
     class FIS_Connector
     {
+        public class FIS_Exception : System.Exception
+        {
+            public FIS_Exception(string message) : base(message) { }
+        }
+
         private readonly string _Login;
         private readonly string _Password;
 
@@ -25,8 +30,8 @@ namespace PK.Classes
             );
             XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
 
-            if (doc.Root.Name == "Error" && doc.Root.Element("ErrorText").Value.Contains("Ошибка авторизации")) //TODO
-                throw new System.Exception(doc.Root.Element("ErrorText").Value);*/
+            if (doc.Root.Name == "Error")
+                throw new FIS_Exception(doc.Root.Element("ErrorText").Value);*/
             //
         }
 

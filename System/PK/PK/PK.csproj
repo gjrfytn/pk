@@ -73,7 +73,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ImportClasses.cs" />
+    <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="FIS_Olympic_TEMP.cs" />
+    <Compile Include="Forms\ApplicationDocsPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApplicationDocsPrint.Designer.cs">
+      <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Authorization.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +100,12 @@
     </Compile>
     <Compile Include="Forms\Constants.Designer.cs">
       <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DateChoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DateChoice.Designer.cs">
+      <DependentUpon>DateChoice.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExaminationEdit.cs">
       <SubType>Form</SubType>
@@ -245,11 +258,17 @@
       <DependentUpon>Users.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Utility.cs" />
+    <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
+      <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Authorization.resx">
       <DependentUpon>Authorization.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Constants.resx">
       <DependentUpon>Constants.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DateChoice.resx">
+      <DependentUpon>DateChoice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dictionaries.resx">
       <DependentUpon>Dictionaries.cs</DependentUpon>

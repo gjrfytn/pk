@@ -29,17 +29,17 @@ namespace PK.Classes
                 { "Bottom",VerticalAlignment.Bottom}
             };
 
-            public static void CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
+            public static DocX CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
-                Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
+                return Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
             }
 
-            public static void CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            public static DocX CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
             {
-                Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
+                return Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
             }
 
-            private static void Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -70,7 +70,7 @@ namespace PK.Classes
                     }
                 }
 
-                doc.Save();
+                return doc;
             }
 
             private static void AddCoreProperties(DocX doc)

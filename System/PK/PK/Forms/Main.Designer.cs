@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Освободить все используемые ресурсы.
-        /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Код, автоматически созданный конструктором форм Windows
 
         /// <summary>
@@ -41,6 +28,7 @@
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Univesity = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Constants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +45,8 @@
             this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.menuStrip_Constants = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_OutDocuments = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip_RegJournal = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -103,6 +92,7 @@
             this.menuStrip_Campaign,
             this.menuStrip_Entrants,
             this.menuStrip_Univesity,
+            this.toolStrip_OutDocuments,
             this.toolStrip_Administration,
             this.menuStrip_Help});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -168,6 +158,13 @@
             this.menuStrip_Univesity.Name = "menuStrip_Univesity";
             this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 20);
             this.menuStrip_Univesity.Text = "Университет";
+            // 
+            // menuStrip_Constants
+            // 
+            this.menuStrip_Constants.Name = "menuStrip_Constants";
+            this.menuStrip_Constants.Size = new System.Drawing.Size(278, 22);
+            this.menuStrip_Constants.Text = "Основная информация";
+            this.menuStrip_Constants.Click += new System.EventHandler(this.menuStrip_Constants_Click);
             // 
             // menuStrip_Faculties
             // 
@@ -302,12 +299,20 @@
             this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
             this.dgvApplications_MiddleName.ReadOnly = true;
             // 
-            // menuStrip_Constants
+            // toolStrip_OutDocuments
             // 
-            this.menuStrip_Constants.Name = "menuStrip_Constants";
-            this.menuStrip_Constants.Size = new System.Drawing.Size(278, 22);
-            this.menuStrip_Constants.Text = "Основная информация";
-            this.menuStrip_Constants.Click += new System.EventHandler(this.menuStrip_Constants_Click);
+            this.toolStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_RegJournal});
+            this.toolStrip_OutDocuments.Name = "toolStrip_OutDocuments";
+            this.toolStrip_OutDocuments.Size = new System.Drawing.Size(118, 20);
+            this.toolStrip_OutDocuments.Text = "Печатные формы";
+            // 
+            // toolStrip_RegJournal
+            // 
+            this.toolStrip_RegJournal.Name = "toolStrip_RegJournal";
+            this.toolStrip_RegJournal.Size = new System.Drawing.Size(191, 22);
+            this.toolStrip_RegJournal.Text = "Журнал регистрации";
+            this.toolStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
             // 
             // Main
             // 
@@ -362,6 +367,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Constants;
+        private System.Windows.Forms.ToolStripMenuItem toolStrip_OutDocuments;
+        private System.Windows.Forms.ToolStripMenuItem toolStrip_RegJournal;
     }
 }
 
