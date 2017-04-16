@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK.Forms
@@ -18,7 +14,6 @@ namespace PK.Forms
         public Constants(Classes.DB_Connector connection)
         {
             InitializeComponent();
-
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 

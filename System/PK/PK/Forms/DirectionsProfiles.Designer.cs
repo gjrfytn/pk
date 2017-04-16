@@ -30,6 +30,13 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvDirections = new System.Windows.Forms.DataGridView();
+            this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_T = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_FacultyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btAddProfile = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cbDirections = new System.Windows.Forms.ComboBox();
@@ -45,13 +52,6 @@
             this.btDelete = new System.Windows.Forms.Button();
             this.tbShortName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_T = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_FacultyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
             this.gbType.SuspendLayout();
             this.SuspendLayout();
@@ -86,6 +86,61 @@
             this.dgvDirections.Size = new System.Drawing.Size(776, 272);
             this.dgvDirections.TabIndex = 0;
             // 
+            // dgvDirections_ID
+            // 
+            this.dgvDirections_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirections_ID.HeaderText = "ID";
+            this.dgvDirections_ID.Name = "dgvDirections_ID";
+            this.dgvDirections_ID.ReadOnly = true;
+            this.dgvDirections_ID.Visible = false;
+            // 
+            // dgvDirections_T
+            // 
+            this.dgvDirections_T.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirections_T.HeaderText = "";
+            this.dgvDirections_T.Name = "dgvDirections_T";
+            this.dgvDirections_T.ReadOnly = true;
+            this.dgvDirections_T.Visible = false;
+            // 
+            // dgvDirections_Name
+            // 
+            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvDirections_Name.HeaderText = "Направление подготовки/специальность";
+            this.dgvDirections_Name.Name = "dgvDirections_Name";
+            this.dgvDirections_Name.ReadOnly = true;
+            // 
+            // dgvDirections_ShortName
+            // 
+            this.dgvDirections_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_ShortName.HeaderText = "Сокращение";
+            this.dgvDirections_ShortName.Name = "dgvDirections_ShortName";
+            this.dgvDirections_ShortName.ReadOnly = true;
+            this.dgvDirections_ShortName.Width = 80;
+            // 
+            // dgvDirections_Code
+            // 
+            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirections_Code.HeaderText = "Код направления/ специальности";
+            this.dgvDirections_Code.Name = "dgvDirections_Code";
+            this.dgvDirections_Code.ReadOnly = true;
+            this.dgvDirections_Code.Width = 186;
+            // 
+            // dgvDirections_Type
+            // 
+            this.dgvDirections_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirections_Type.HeaderText = "Программа обучения";
+            this.dgvDirections_Type.Name = "dgvDirections_Type";
+            this.dgvDirections_Type.ReadOnly = true;
+            this.dgvDirections_Type.Width = 128;
+            // 
+            // dgvDirections_FacultyName
+            // 
+            this.dgvDirections_FacultyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvDirections_FacultyName.HeaderText = "Факультет";
+            this.dgvDirections_FacultyName.Name = "dgvDirections_FacultyName";
+            this.dgvDirections_FacultyName.ReadOnly = true;
+            this.dgvDirections_FacultyName.Width = 70;
+            // 
             // btAddProfile
             // 
             this.btAddProfile.Location = new System.Drawing.Point(222, 300);
@@ -115,6 +170,7 @@
             this.cbDirections.Size = new System.Drawing.Size(310, 21);
             this.cbDirections.Sorted = true;
             this.cbDirections.TabIndex = 3;
+            this.cbDirections.SelectedValueChanged += new System.EventHandler(this.cbDirections_SelectedValueChanged);
             // 
             // gbType
             // 
@@ -139,7 +195,7 @@
             this.rbMag.TabStop = true;
             this.rbMag.Text = "Магистратура";
             this.rbMag.UseVisualStyleBackColor = true;
-            this.rbMag.CheckedChanged += new System.EventHandler(this.rbMag_CheckedChanged);
+            this.rbMag.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbSpec
             // 
@@ -151,7 +207,7 @@
             this.rbSpec.TabStop = true;
             this.rbSpec.Text = "Специалитет";
             this.rbSpec.UseVisualStyleBackColor = true;
-            this.rbSpec.CheckedChanged += new System.EventHandler(this.rbSpec_CheckedChanged);
+            this.rbSpec.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbBacc
             // 
@@ -163,7 +219,7 @@
             this.rbBacc.TabStop = true;
             this.rbBacc.Text = "Бакалавриат";
             this.rbBacc.UseVisualStyleBackColor = true;
-            this.rbBacc.CheckedChanged += new System.EventHandler(this.rbBacc_CheckedChanged);
+            this.rbBacc.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // label2
             // 
@@ -226,6 +282,7 @@
             // tbShortName
             // 
             this.tbShortName.Location = new System.Drawing.Point(662, 387);
+            this.tbShortName.MaxLength = 5;
             this.tbShortName.Name = "tbShortName";
             this.tbShortName.Size = new System.Drawing.Size(127, 20);
             this.tbShortName.TabIndex = 12;
@@ -238,63 +295,6 @@
             this.label4.Size = new System.Drawing.Size(74, 13);
             this.label4.TabIndex = 13;
             this.label4.Text = "Сокращение:";
-            // 
-            // dgvDirections_ID
-            // 
-            this.dgvDirections_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirections_ID.HeaderText = "ID";
-            this.dgvDirections_ID.Name = "dgvDirections_ID";
-            this.dgvDirections_ID.ReadOnly = true;
-            this.dgvDirections_ID.Visible = false;
-            this.dgvDirections_ID.Width = 24;
-            // 
-            // dgvDirections_T
-            // 
-            this.dgvDirections_T.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirections_T.HeaderText = "";
-            this.dgvDirections_T.Name = "dgvDirections_T";
-            this.dgvDirections_T.ReadOnly = true;
-            this.dgvDirections_T.Visible = false;
-            this.dgvDirections_T.Width = 5;
-            // 
-            // dgvDirections_Name
-            // 
-            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDirections_Name.HeaderText = "Направление подготовки/специальность";
-            this.dgvDirections_Name.Name = "dgvDirections_Name";
-            this.dgvDirections_Name.ReadOnly = true;
-            // 
-            // dgvDirections_ShortName
-            // 
-            this.dgvDirections_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_ShortName.HeaderText = "Сокращение";
-            this.dgvDirections_ShortName.Name = "dgvDirections_ShortName";
-            this.dgvDirections_ShortName.ReadOnly = true;
-            this.dgvDirections_ShortName.Width = 80;
-            // 
-            // dgvDirections_Code
-            // 
-            this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirections_Code.HeaderText = "Код направления/ специальности";
-            this.dgvDirections_Code.Name = "dgvDirections_Code";
-            this.dgvDirections_Code.ReadOnly = true;
-            this.dgvDirections_Code.Width = 186;
-            // 
-            // dgvDirections_Type
-            // 
-            this.dgvDirections_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Type.HeaderText = "Программа обучения";
-            this.dgvDirections_Type.Name = "dgvDirections_Type";
-            this.dgvDirections_Type.ReadOnly = true;
-            this.dgvDirections_Type.Width = 128;
-            // 
-            // dgvDirections_FacultyName
-            // 
-            this.dgvDirections_FacultyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_FacultyName.HeaderText = "Факультет";
-            this.dgvDirections_FacultyName.Name = "dgvDirections_FacultyName";
-            this.dgvDirections_FacultyName.ReadOnly = true;
-            this.dgvDirections_FacultyName.Width = 70;
             // 
             // DirectionsProfiles
             // 

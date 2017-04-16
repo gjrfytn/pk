@@ -17,6 +17,7 @@ namespace PK.Forms
         {
             InitializeComponent();
 
+            string bfbf = new Classes.DB_Connector("default", "").Select(DB_Table.CONSTANTS, userRole + "_password")[0][0].ToString();
             _DB_Connection = new Classes.DB_Connector(userRole, new Classes.DB_Connector("default", "").Select(DB_Table.CONSTANTS, userRole + "_password")[0][0].ToString());
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
@@ -69,7 +70,7 @@ namespace PK.Forms
                 {
                     if (((DateTime)application[2]).Year == _CurrCampaignStartYear)
                     {
-                        object[] names = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "last_name", "first_name", "middle_name" },
+                        object[] names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
                             new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
