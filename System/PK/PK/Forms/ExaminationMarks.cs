@@ -29,7 +29,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL,examinationID)
                 })[0];
 
-            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((uint)exam[0], (uint)exam[1]) + " " + ((DateTime)exam[2]).ToShortDateString();
+            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], (uint)exam[1]) + " " + ((DateTime)exam[2]).ToShortDateString();
 
             foreach (object[] row in _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,

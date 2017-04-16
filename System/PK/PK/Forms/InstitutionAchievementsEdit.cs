@@ -23,7 +23,7 @@ namespace PK.Forms
                 cbCampaign.Items.Add(campaign[0]);
             }
 
-            cbAchievementType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(36), null);
+            cbAchievementType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.IND_ACH_CATEGORIES), null);
             cbAchievementType.DisplayMember = "Value";
             cbAchievementType.ValueMember = "Value";
         }
@@ -37,7 +37,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _LoadedCampaign)
                 }))
             {
-                dgvAchievements.Rows.Add(record[0], record[1], record[4], _DB_Helper.GetDictionaryItemName((uint)record[2], (uint)record[3]), record[3]);
+                dgvAchievements.Rows.Add(record[0], record[1], record[4], _DB_Helper.GetDictionaryItemName((FIS_Dictionary)record[2], (uint)record[3]), record[3]);
             }
         }
 
@@ -148,7 +148,7 @@ namespace PK.Forms
                 MessageBox.Show("Не выбрана кампания");
             else
             {                
-                foreach (var record in _DB_Helper.GetDictionaryItems(36))
+                foreach (var record in _DB_Helper.GetDictionaryItems(FIS_Dictionary.IND_ACH_CATEGORIES))
                 {
                     bool found = false;
                     foreach (DataGridViewRow row in dgvAchievements.Rows)
@@ -190,7 +190,7 @@ namespace PK.Forms
                 }
                 if (!found)
                     _DB_Connection.Insert(DB_Table.INSTITUTION_ACHIEVEMENTS, new Dictionary<string, object> { { "name", tbAchievementName.Text},
-                        { "category_dict_id", 36}, { "category_id", _DB_Helper.GetDictionaryItemID(36,cbAchievementType.SelectedValue.ToString())},
+                        { "category_dict_id", (uint)FIS_Dictionary.IND_ACH_CATEGORIES}, { "category_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES,cbAchievementType.SelectedValue.ToString())},
                         { "value", tbMaxValue.Text}, { "campaign_id", _LoadedCampaign} });
             }
             

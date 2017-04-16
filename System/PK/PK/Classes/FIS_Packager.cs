@@ -33,7 +33,7 @@ namespace PK.Classes
                     new string[] { "dictionaries_items_dictionary_id", "dictionaries_items_item_id" },
                     new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, row[0]) }
                     ))
-                    if ((uint)diRow[0] == 14)
+                    if ((uint)diRow[0] == (uint)FIS_Dictionary.EDU_FORM)
                         eduForms.Add(new EducationFormID((uint)diRow[1]));
                     else
                         eduLevels.Add(new EducationLevelID((uint)diRow[1]));

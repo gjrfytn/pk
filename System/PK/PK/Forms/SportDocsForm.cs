@@ -16,7 +16,7 @@ namespace PK.Forms
             _Parent = parent;
             Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
 
-            cbDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(43), null);
+            cbDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(FIS_Dictionary.SPORT_DIPLOMA_TYPE), null);
             cbDocType.DisplayMember = "Value";
             cbDocType.ValueMember = "Value";
             cbDocType.SelectedIndex = 0;

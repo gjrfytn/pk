@@ -23,7 +23,7 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _ID = id;
 
-            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(1);
+            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
 
             cbSubject.Items.AddRange(subjects.Values.ToArray());
 
@@ -67,8 +67,8 @@ namespace PK.Forms
 
                     Dictionary<string, object> data = new Dictionary<string, object>
                        {
-                        {"subject_dict_id",1},
-                        {"subject_id",_DB_Helper.GetDictionaryItemID(1,cbSubject.Text)},
+                        {"subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
+                        {"subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
                         {"date",dtpDate.Value},
                         {"reg_start_date",dtpRegStartDate.Value},
                         {"reg_end_date",dtpRegEndDate.Value}

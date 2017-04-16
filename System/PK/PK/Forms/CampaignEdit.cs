@@ -379,8 +379,8 @@ namespace PK.Forms
                         {
                             { "name", tbName.Text }, { "start_year",  Convert.ToInt32(cbStartYear.SelectedItem)},
                             { "end_year", Convert.ToInt32(cbEndYear.SelectedItem) },
-                            { "status_dict_id",  34}, { "status_id", _DB_Helper.GetDictionaryItemID(34, cbState.SelectedItem.ToString()) },
-                            { "type_dict_id",  38}, { "type_id", _DB_Helper.GetDictionaryItemID(38, cbType.SelectedItem.ToString()) } });
+                            { "status_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_STATUS}, { "status_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_STATUS, cbState.SelectedItem.ToString()) },
+                            { "type_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_TYPE}, { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_TYPE, cbType.SelectedItem.ToString()) } });
 
             SaveEduForms();
             SaveEduLevels();
@@ -396,8 +396,8 @@ namespace PK.Forms
             _DB_Connection.Update(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {   { "name", tbName.Text }, { "start_year",  int.Parse(cbStartYear.SelectedItem.ToString())},
                             { "end_year", int.Parse(cbEndYear.SelectedItem.ToString()) },
-                            { "status_dict_id",  34}, { "status_id", _DB_Helper.GetDictionaryItemID(34, cbState.SelectedItem.ToString()) },
-                            { "type_dict_id",  38}, { "type_id", _DB_Helper.GetDictionaryItemID(38, cbType.SelectedItem.ToString()) } },
+                            { "status_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_STATUS}, { "status_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_STATUS, cbState.SelectedItem.ToString()) },
+                            { "type_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_TYPE}, { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_TYPE, cbType.SelectedItem.ToString()) } },
                         new Dictionary<string, object>
                         {
                             { "id", _CampaignId}
@@ -429,9 +429,9 @@ namespace PK.Forms
             cbStartYear.SelectedItem = loadedCampaign[1].ToString();
             cbEndYear.SelectedItem = loadedCampaign[2].ToString();
 
-            cbState.SelectedItem = _DB_Helper.GetDictionaryItemName((uint)loadedCampaign[3], (uint)loadedCampaign[4]);
+            cbState.SelectedItem = _DB_Helper.GetDictionaryItemName((FIS_Dictionary)loadedCampaign[3], (uint)loadedCampaign[4]);
 
-            cbType.SelectedItem = _DB_Helper.GetDictionaryItemName((uint)loadedCampaign[5], (uint)loadedCampaign[6]);
+            cbType.SelectedItem = _DB_Helper.GetDictionaryItemName((FIS_Dictionary)loadedCampaign[5], (uint)loadedCampaign[6]);
 
             LoadEduForms();
             LoadEduLevels();
@@ -452,20 +452,20 @@ namespace PK.Forms
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
-                        { "dictionaries_items_dictionary_id", 14},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Очная форма") } });
+                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма") } });
             if (cbEduFormOZ.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
-                        { "dictionaries_items_dictionary_id", 14},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)") } });
+                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)") } });
             if (cbEduFormZ.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
-                        { "dictionaries_items_dictionary_id", 14},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, "Заочная форма") } });
+                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма") } });
         }
 
         private void SaveEduLevels()
@@ -474,22 +474,22 @@ namespace PK.Forms
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
-                    { "dictionaries_items_dictionary_id", 2},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(2, "Бакалавриат") } });
+                    { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат") } });
 
             if (cbEduLevelMag.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
-                    { "dictionaries_items_dictionary_id", 2},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(2, "Магистратура") } });
+                    { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура") } });
 
             if (cbEduLevelSpec.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
-                    { "dictionaries_items_dictionary_id", 2},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(2, "Специалитет") } });
+                    { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет") } });
         }
 
         private void SaveDirections()
@@ -558,7 +558,7 @@ namespace PK.Forms
                 for (int i = 1; i < r.Cells.Count - 3; i++)
                 {
                     bool found = false;
-                    uint subjectId = _DB_Helper.GetDictionaryItemID(1, r.Cells[i + 3].Value.ToString());
+                    uint subjectId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, r.Cells[i + 3].Value.ToString());
 
                     foreach (var v in _DB_Connection.Select(DB_Table.ENTRANCE_TESTS,
                         new string[] { "priority", "direction_id", "subject_dict_id", "subject_id", "direction_faculty" },
@@ -567,7 +567,7 @@ namespace PK.Forms
                                 new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL,_CampaignId),
                                 new Tuple<string, Relation, object>("direction_faculty", Relation.EQUAL, r.Cells[3].Value),
                                 new Tuple<string, Relation, object> ("direction_id", Relation.EQUAL, r.Cells[0].Value),
-                                new Tuple<string, Relation, object> ("subject_dict_id", Relation.EQUAL, 1),
+                                new Tuple<string, Relation, object> ("subject_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.SUBJECTS),
                                 new Tuple<string, Relation, object> ("subject_id", Relation.EQUAL, subjectId)
                             }))
 
@@ -595,7 +595,7 @@ namespace PK.Forms
                             { "campaign_id", _CampaignId},
                             { "direction_faculty", r.Cells[3].Value },
                             { "direction_id", r.Cells[0].Value },
-                            { "subject_dict_id", 1 },
+                            { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
                             { "subject_id", subjectId },
                             { "priority", i }
                         });
@@ -607,12 +607,12 @@ namespace PK.Forms
             foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14),
+                    new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_FORM),
                     new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
                 }))
             {
                 foreach (CheckBox chekBox in gbEduForms.Controls)
-                    if (chekBox.Text == _DB_Helper.GetDictionaryItemName(14, (uint)v[0]))
+                    if (chekBox.Text == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)v[0]))
                         chekBox.Checked = true;
             }
         }
@@ -622,11 +622,11 @@ namespace PK.Forms
             foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
             new List<Tuple<string, Relation, object>>
             {
-                                new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 2),
+                                new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL),
                                 new Tuple<string, Relation, object> ("campaigns_id", Relation.EQUAL, _CampaignId)
             }))
             {
-                string itemName = _DB_Helper.GetDictionaryItemName(2, (uint)v[0]);
+                string itemName = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)v[0]);
 
                 switch (itemName)
                 {
@@ -673,8 +673,8 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)record[2])
                 })[0][0].ToString(),
-                "", record[1], _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[0],
-                _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)record[1])[1], record[0], "", record[3], record[4]);
+                "", record[1], _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item1,
+                _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item2, record[0], "", record[3], record[4]);
                 ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count - 2);
             }
         }
@@ -716,7 +716,7 @@ namespace PK.Forms
                 }))
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
                     if ((v[0].ToString() == r.Cells[0].Value.ToString()) && (v[4].ToString() == r.Cells[3].Value.ToString()))
-                        r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(1, (uint)v[2]);
+                        r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)v[2]);
         }
 
         private void UpdateEduForms()
@@ -726,7 +726,7 @@ namespace PK.Forms
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
-                        new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, 14)
+                        new Tuple<string, Relation, object> ("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_FORM)
                     });
 
             foreach (CheckBox chekBox in gbEduForms.Controls)
@@ -734,22 +734,22 @@ namespace PK.Forms
                 {
                     bool found = false;
                     foreach (object[] listElement in eduFormsList)
-                        if ((uint)listElement[0] == _DB_Helper.GetDictionaryItemID(14, chekBox.Text))
+                        if ((uint)listElement[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, chekBox.Text))
                             found = true;
                     if (!found)
                         _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                        { { "campaigns_id", _CampaignId}, {"dictionaries_items_dictionary_id", 14},
-                            { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(14, chekBox.Text) } });
+                        { { "campaigns_id", _CampaignId}, {"dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
+                            { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, chekBox.Text) } });
                 }
             foreach (object[] eduForm in eduFormsList)
             {
                 bool found = false;
                 foreach (CheckBox chekBox in gbEduForms.Controls)
-                    if (((uint)eduForm[0] == _DB_Helper.GetDictionaryItemID(14, chekBox.Text)) && chekBox.Checked)
+                    if (((uint)eduForm[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, chekBox.Text)) && chekBox.Checked)
                         found = true;
                 if (!found)
                     _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object> { { "campaigns_id", _CampaignId },
-                        { "dictionaries_items_dictionary_id", 14 }, { "dictionaries_items_item_id",  (uint)eduForm[0]} });
+                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM }, { "dictionaries_items_item_id",  (uint)eduForm[0]} });
             }
         }
 
@@ -758,19 +758,19 @@ namespace PK.Forms
             List<uint> eduLevelsList = new List<uint>();
 
             if (cbEduLevelBacc.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Бакалавриат"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат"));
 
             if (cbEduLevelMag.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Магистратура"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура"));
 
             if (cbEduLevelSpec.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(2, "Специалитет"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет"));
 
             List<object[]> oldList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
             { "dictionaries_items_item_id", }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CampaignId),
-                new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, 2)
+                new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
             });
 
             foreach (uint v in eduLevelsList)
@@ -781,7 +781,7 @@ namespace PK.Forms
                         found = true;
                 if (!found)
                     _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", v } });
+                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", v } });
             }
 
             foreach (var v in oldList)
@@ -794,7 +794,7 @@ namespace PK.Forms
                 }
                     if (!found)
                         _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", 2 }, { "dictionaries_items_item_id", (uint)v[0] } });
+                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", (uint)v[0] } });
                 
             }
         }
@@ -1002,13 +1002,13 @@ namespace PK.Forms
             foreach (DataGridViewRow r in dgvEntranceTests.Rows)
             {
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), "1",
-                    _DB_Helper.GetDictionaryItemID(1, r.Cells[4].Value.ToString()).ToString(), "1", r.Cells[3].Value.ToString()});
+                    _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, r.Cells[4].Value.ToString()).ToString(), "1", r.Cells[3].Value.ToString()});
 
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), "1",
-                    _DB_Helper.GetDictionaryItemID(1, r.Cells[5].Value.ToString()).ToString(), "2", r.Cells[3].Value.ToString()});
+                    _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, r.Cells[5].Value.ToString()).ToString(), "2", r.Cells[3].Value.ToString()});
 
                 newList.Add(new string[] { r.Cells[0].Value.ToString(), "1",
-                    _DB_Helper.GetDictionaryItemID(1, r.Cells[6].Value.ToString()).ToString(), "3", r.Cells[3].Value.ToString()});
+                    _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, r.Cells[6].Value.ToString()).ToString(), "3", r.Cells[3].Value.ToString()});
             }
 
             foreach (var v in oldList)

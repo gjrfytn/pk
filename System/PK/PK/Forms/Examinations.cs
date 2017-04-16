@@ -86,7 +86,11 @@ namespace PK.Forms
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("subject_id",Relation.EQUAL,_DB_Helper.GetDictionaryItemID(1, dataGridView.SelectedRows[0].Cells[1].Value.ToString()))
+                    new Tuple<string, Relation, object>(
+                        "subject_id",
+                        Relation.EQUAL,
+                        _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[1].Value.ToString())
+                        )
                 }
                 );
 
@@ -156,7 +160,7 @@ namespace PK.Forms
 
         private void UpdateTable()
         {
-            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(1);
+            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
 
             dataGridView.Rows.Clear();
             foreach (object[] row in _DB_Connection.Select(DB_Table.EXAMINATIONS))

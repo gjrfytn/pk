@@ -31,7 +31,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id",Relation.EQUAL,_ExaminationID)
                 })[0];
 
-            _ExamName = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(1, (uint)buf[0]);
+            _ExamName = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)buf[0]);
             _ExamDate = ((DateTime)buf[1]).ToShortDateString();
 
             var entrantsIDs = _DB_Connection.Select(

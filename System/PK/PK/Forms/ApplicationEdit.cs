@@ -89,10 +89,10 @@ namespace PK.Forms
             _RegistratorLogin = registratorsLogin;
             _ApplicationID = applicationId;
 
-            FillComboBox(cbIDDocType, 22);
-            FillComboBox(cbSex, 5);
-            FillComboBox(cbNationality, 7);
-            FillComboBox(cbExamsDocType, 22);
+            FillComboBox(cbIDDocType, FIS_Dictionary.IDENTITY_DOC_TYPE);
+            FillComboBox(cbSex, FIS_Dictionary.GENDER);
+            FillComboBox(cbNationality, FIS_Dictionary.COUNTRY);
+            FillComboBox(cbExamsDocType, FIS_Dictionary.IDENTITY_DOC_TYPE);
             cbFirstTime.SelectedIndex = 0;
             cbForeignLanguage.SelectedIndex = 0;
             rbCertificate.Checked = false;
@@ -257,7 +257,7 @@ namespace PK.Forms
                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                 new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(36, Classes.DB_Helper.MedalAchievement)),
+                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                 })[0][0])
             }).Count > 0)
@@ -290,8 +290,8 @@ namespace PK.Forms
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                         })[0];
                     tbSubdivisionCode.Text = passport[0].ToString();
-                    cbIDDocType.SelectedItem = _DB_Helper.GetDictionaryItemName(22, (uint)passport[1]);
-                    cbNationality.SelectedItem = _DB_Helper.GetDictionaryItemName(7, (uint)passport[2]);
+                    cbIDDocType.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IDENTITY_DOC_TYPE, (uint)passport[1]);
+                    cbNationality.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)passport[2]);
                     dtpDateOfBirth.Value = (DateTime)passport[3];
                     tbPlaceOfBirth.Text = passport[4].ToString();
                     tbRegion.Text = passport[5].ToString();
@@ -347,7 +347,7 @@ namespace PK.Forms
                     });
                     foreach (var subject in subjects)
                         foreach (DataGridViewRow row in dgvExams.Rows)
-                            if (row.Cells[0].Value.ToString() == _DB_Helper.GetDictionaryItemName(1, (uint)subject[0]))
+                            if (row.Cells[0].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)subject[0]))
                                 row.Cells[3].Value = (byte)(uint)subject[1];
                 }
                 else if (document[1].ToString() == "photos")
@@ -361,7 +361,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     })[0];
                     SportDoc.docName = sportDocData[1].ToString();
-                    string achievementName = _DB_Helper.GetDictionaryItemName(36, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
+                    string achievementName = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
                         new Tuple<string, Relation, object>("id", Relation.EQUAL,
@@ -401,10 +401,10 @@ namespace PK.Forms
                     object[] orphanDoc = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "dictionaries_item_id" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0]),
-                        new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, 42)
+                        new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.ORPHAN_DOC_TYPE)
                     })[0];
                     QuoteDoc.orphanhoodDocName = orphanDoc[0].ToString();
-                    QuoteDoc.orphanhoodDocType = _DB_Helper.GetDictionaryItemName(42, (uint)orphanDoc[1]);
+                    QuoteDoc.orphanhoodDocType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.ORPHAN_DOC_TYPE, (uint)orphanDoc[1]);
                 }
                 else if (document[1].ToString() == "disability")
                 {
@@ -413,11 +413,11 @@ namespace PK.Forms
                     cbQuote.Checked = true;
                     QuoteDoc.medDocSerie = int.Parse(document[2].ToString());
                     QuoteDoc.medDocNumber = int.Parse(document[3].ToString());
-                    QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(23, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA,new string[] { "dictionaries_item_id"},
+                    QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA,new string[] { "dictionaries_item_id"},
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL,(uint)document[0]),
-                            new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, 23)
+                            new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.DISABILITY_GROUP)
                         })[0][0]);
                     object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
                     {
@@ -425,7 +425,7 @@ namespace PK.Forms
                     (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(31,"Справка об установлении инвалидности"))
+                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности"))
                     }))[0][0])})[0];
                     QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
                     QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
@@ -443,7 +443,7 @@ namespace PK.Forms
                     (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(31,"Заключение психолого-медико-педагогической комиссии"))
+                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
                     }))[0][0])})[0];
                     QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
                     QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
@@ -478,8 +478,8 @@ namespace PK.Forms
                     cbAgreed.Checked = true;
 
                 string eduLevel = "";
-                string temp = _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)entrancesData[1])[1].Split('.')[1];
-                switch (_DB_Helper.GetDirectionsDictionaryNameAndCode((uint)entrancesData[1])[1].Split('.')[1])
+                string temp = _DB_Helper.GetDirectionNameAndCode((uint)entrancesData[1]).Item2.Split('.')[1];
+                switch (_DB_Helper.GetDirectionNameAndCode((uint)entrancesData[1]).Item2.Split('.')[1])
                 {
                     case ("03"):
                         eduLevel = "Бакалавр";
@@ -491,10 +491,10 @@ namespace PK.Forms
                         eduLevel = "Специалист";
                         break;
                 }
-                string cbDirItem = "(" + entrancesData[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)entrancesData[1])[0];
+                string cbDirItem = "(" + entrancesData[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionNameAndCode((uint)entrancesData[1]).Item1;
                 string cbPrItem = "(" + entrancesData[0] + ", " + eduLevel + ") " + entrancesData[3];
 
-                if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Бюджетные места")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
+                if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Бюджетные места")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма")))
                 {
                     if (cbDirection11.SelectedIndex == -1)
                     {
@@ -516,14 +516,14 @@ namespace PK.Forms
                     }
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма")))
                 {
                     cbDirection21.SelectedItem = cbPrItem;
                     cbDirection21.Visible = true;
                     cbDirection21.Enabled = true;
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Бюджетные места")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Бюджетные места")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)")))
                 {
                     if (cbDirection31.SelectedIndex == -1)
                     {
@@ -539,21 +539,21 @@ namespace PK.Forms
                     }
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)")))
                 {
                     cbDirection41.SelectedItem = cbPrItem;
                     cbDirection41.Visible = true;
                     cbDirection41.Enabled = true;
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Заочная форма")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "С оплатой обучения")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма")))
                 {
                     cbDirection51.SelectedItem = cbPrItem;
                     cbDirection51.Visible = true;
                     cbDirection51.Enabled = true;
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Квота приема лиц, имеющих особое право")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Квота приема лиц, имеющих особое право")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма")))
                 {
                     cbQuote.Checked = true;
                     if (cbDirection61.SelectedIndex == -1)
@@ -564,7 +564,7 @@ namespace PK.Forms
                     }
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Целевой прием")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очная форма")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Целевой прием")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма")))
                 {
                     cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)entrancesData[6];
@@ -588,7 +588,7 @@ namespace PK.Forms
                     }
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Квота приема лиц, имеющих особое право")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Квота приема лиц, имеющих особое право")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)")))
                 {
                     cbQuote.Checked = true;
                     if (cbDirection81.SelectedIndex == -1)
@@ -599,7 +599,7 @@ namespace PK.Forms
                     }
                 }
 
-                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(15, "Целевой прием")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)")))
+                else if (((uint)entrancesData[5] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Целевой прием")) && ((uint)entrancesData[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)")))
                 {
                     cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)entrancesData[6];
@@ -630,7 +630,7 @@ namespace PK.Forms
             Random randNumber = new Random();
 
             _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "needs_hostel", cbHostelNeeded.Checked}, { "edit_time", _EditingDateTime},
-                { "status_dict_id", 4}, { "status_id", _DB_Helper.GetDictionaryItemID( 4, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()},
+                { "status_dict_id", (uint)FIS_Dictionary.APPLICATION_STATUS}, { "status_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.APPLICATION_STATUS, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()},
                 { "first_high_edu", firstHightEdu}, { "mcado", cbMCDAO.Checked}, { "chernobyl", cbChernobyl.Checked}, { "passing_examinations",cbExams.Checked },
                 { "priority_right", cbPrerogative.Checked}, { "special_conditions", cbSpecialConditions.Checked} }, new Dictionary<string, object> { { "id", _ApplicationID}});
 
@@ -664,10 +664,10 @@ namespace PK.Forms
 
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
-                            { "gender_dict_id", 5},{ "gender_id", _DB_Helper.GetDictionaryItemID(5,cbSex.SelectedItem.ToString())},
-                            { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", 22},
-                            { "type_id", _DB_Helper.GetDictionaryItemID(22,cbIDDocType.SelectedItem.ToString())},
-                            { "nationality_dict_id", 7}, { "nationality_id", _DB_Helper.GetDictionaryItemID(7,cbNationality.SelectedItem.ToString())},
+                            { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
+                            { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                            { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
+                            { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
                             { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_index", tbPostcode.Text} },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } });
@@ -704,14 +704,14 @@ namespace PK.Forms
                                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                                 new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(36, Classes.DB_Helper.MedalAchievement)),
+                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
                                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                                 })[0][0])
                             }).Count == 0))
                             _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                 { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(36, Classes.DB_Helper.MedalAchievement)),
+                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
                                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                                 })[0][0] }, { "document_id", (uint)document[0] } });
                     }
@@ -738,7 +738,7 @@ namespace PK.Forms
                         foreach (DataGridViewRow row in dgvExams.Rows)
                         {
                             if (int.Parse(row.Cells[3].Value.ToString()) != 0)
-                                newData.Add(new object[] { (uint)document[0], 1, _DB_Helper.GetDictionaryItemID(1, row.Cells[0].Value.ToString()), row.Cells[3].Value });
+                                newData.Add(new object[] { (uint)document[0], 1, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString()), row.Cells[3].Value });
                         }
                         UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, false, keysNames);
                     }
@@ -752,19 +752,19 @@ namespace PK.Forms
                             switch (SportDoc.diplomaType)
                             {
                                 case "Диплом чемпиона/призера Олимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Олимпийских игр");
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
                                     break;
                                 case "Диплом чемпиона/призера Паралимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Паралимпийских игр");
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
                                     break;
                                 case "Диплом чемпиона/призера Сурдлимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Сурдлимпийских игр");
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
                                     break;
                                 case "Диплом чемпиона мира":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(36, "Чемпион Мира");
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
                                     break;
                                 case "Диплом чемпиона Европы":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(36, "Чемпион Европы");
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
                                     break;
                             }
                             uint achevmentCategoryIdOld =(uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
@@ -817,12 +817,12 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", QuoteDoc.orphanhoodDocDate }, { "organization", QuoteDoc.orphanhoodDocOrg } },
                                     new Dictionary<string, object> { { "id", (uint)document[0] } });
 
-                            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", 42},
-                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( 42, QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", 31},
-                                { "document_type_id",  _DB_Helper.GetDictionaryItemID(31, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
-                                { "benefit_kind_dict_id", 30}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } },
+                            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
                             new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
                         }
                         else if ((cbQuote.Checked) && ((document[1].ToString() == "disability") || (document[1].ToString() == "medical")) && (QuoteDoc.cause == "Медецинские показатели"))
@@ -837,12 +837,12 @@ namespace PK.Forms
                                 _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
                                     new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                                _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",23},
-                                { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(23,QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
+                                { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP,QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", 31},
-                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID(31,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
-                                    { "benefit_kind_dict_id", 30}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } },
+                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
+                                    { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
                                     new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
                             }
                             else if (document[1].ToString() == "medical")
@@ -851,9 +851,9 @@ namespace PK.Forms
                                 _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
                                     new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", 31},
-                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID( 31, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
-                                    { "benefit_kind_dict_id", 30}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } },
+                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
+                                    { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
                                     new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
                             }
                         }
@@ -918,25 +918,25 @@ namespace PK.Forms
                 switch (tab.Name.Split('_')[2])
                 {
                     case "o":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Очная форма");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма");
                         break;
                     case "oz":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)");
                         break;
                     case "z":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Заочная форма");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма");
                         break;
                 }
 
                 if (tab.Name.Split('_')[1] == "budget")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Бюджетные места");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Бюджетные места");
                 else if (tab.Name.Split('_')[1] == "paid")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "С оплатой обучения");
 
                 else if (tab.Name.Split('_')[1] == "quote")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Квота приема лиц, имеющих особое право");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Квота приема лиц, имеющих особое право");
                 else if (tab.Name.Split('_')[1] == "target")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Целевой прием");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Целевой прием");
 
                 if ((tab.Name.Split('_')[1] != "paid")&&(tab.Name.Split('_')[1] != "target"))
                     foreach (Control c in tab.Controls)
@@ -1077,7 +1077,7 @@ namespace PK.Forms
 
             _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "entrant_id", _EntrantID.Value}, { "registration_time", DateTime.Now},
                 { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin},
-            { "status_dict_id", 4},{ "status_id", _DB_Helper.GetDictionaryItemID( 4, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()},
+                { "status_dict_id", (uint)FIS_Dictionary.APPLICATION_STATUS},{ "status_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.APPLICATION_STATUS, "Новое")}, { "language", cbForeignLanguage.SelectedItem.ToString()},
                 { "first_high_edu", firstHightEdu}, { "mcado", cbMCDAO.Checked}, { "chernobyl", cbChernobyl.Checked}, { "passing_examinations",cbExams.Checked },
                 { "priority_right", cbPrerogative.Checked}, { "special_conditions", cbSpecialConditions.Checked} });
 
@@ -1089,10 +1089,10 @@ namespace PK.Forms
 
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
-                { "gender_dict_id", 5},{ "gender_id", _DB_Helper.GetDictionaryItemID(5,cbSex.SelectedItem.ToString())},
-                { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", 22},
-                { "type_id", _DB_Helper.GetDictionaryItemID(22,cbIDDocType.SelectedItem.ToString())},
-                { "nationality_dict_id", 7}, { "nationality_id", _DB_Helper.GetDictionaryItemID(7,cbNationality.SelectedItem.ToString())},
+                { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
+                { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
+                { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
                 { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
 
@@ -1133,7 +1133,7 @@ namespace PK.Forms
                 _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID },
                     { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(36, Classes.DB_Helper.MedalAchievement)),
+                        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
                         new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                     })[0][0] }, { "document_id", eduDocID } });
         }
@@ -1145,14 +1145,14 @@ namespace PK.Forms
                     uint orphDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "orphan" },
                     { "date", QuoteDoc.orphanhoodDocDate} , { "organization", QuoteDoc.orphanhoodDocOrg} });
                     _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", orphDocUid},
-                        { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", 42},
-                        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( 42, QuoteDoc.orphanhoodDocType)} });
+                        { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
+                        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, QuoteDoc.orphanhoodDocType)} });
                     _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", orphDocUid } });
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
-                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(31,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
-                            { "reason_document_id", orphDocUid},{ "benefit_kind_dict_id", 30},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                            { "reason_document_id", orphDocUid},{ "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
                 }
                 else if (QuoteDoc.cause == "Медицинские показатели")
                 {
@@ -1165,14 +1165,14 @@ namespace PK.Forms
                         uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "disability" },
                         { "series", QuoteDoc.medDocSerie},  { "number", QuoteDoc.medDocNumber} });
                         _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
-                            { "document_id", medDocUid}, { "dictionaries_dictionary_id",23},
-                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(23,QuoteDoc.disabilityGroup)} });
+                            { "document_id", medDocUid}, { "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP,QuoteDoc.disabilityGroup)} });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
                         _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
-                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(31,"Справка об установлении инвалидности")},
-                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", 30},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")},
+                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
                     }
                     else if (QuoteDoc.medCause == "Заключение психолого-медико-педагогической комиссии")
                     {
@@ -1180,10 +1180,10 @@ namespace PK.Forms
                         { "series", QuoteDoc.medDocSerie},  { "number", QuoteDoc.medDocNumber} });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
                         _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
-                        { { "application_id", _ApplicationID}, { "document_type_dict_id", 31},
-                            { "document_type_id",  _DB_Helper.GetDictionaryItemID( 31, "Заключение психолого-медико-педагогической комиссии")},
-                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", 30},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( 30, "По квоте приёма лиц, имеющих особое право") } });
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")},
+                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
                     }
                 }
         }
@@ -1200,26 +1200,26 @@ namespace PK.Forms
                 switch (SportDoc.diplomaType)
                 {
                     case "Диплом чемпиона/призера Олимпийских игр":
-                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Олимпийских игр");
+                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
                         break;
                     case "Диплом чемпиона/призера Паралимпийских игр":
-                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Паралимпийских игр");
+                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
                         break;
                     case "Диплом чемпиона/призера Сурдлимпийских игр":
-                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Сурдлимпийских игр");
+                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
                         break;
                     case "Диплом чемпиона мира":
-                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Чемпион Мира");
+                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
                         break;
                     case "Диплом чемпиона Европы":
-                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Чемпион Европы");
+                        achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
                         break;
                 }
 
                 List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                     new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, 36),
+                    new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
                     new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryId)
                 });
 
@@ -1242,60 +1242,60 @@ namespace PK.Forms
                 {
                     case "Диплом победителя/призера олимпиады школьников":
                         docType = "olympic";
-                        benefitDocType = _DB_Helper.GetDictionaryItemID(31, "Диплом победителя/призера олимпиады школьников");
+                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Диплом победителя/призера олимпиады школьников");
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
-                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", 18 },
-                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(18, OlympicDoc.diplomaType) },
+                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
+                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
                     { "olympic_id", (int)((uint)_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
-                        new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                        new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, OlympicDoc.olympID)
                         })[0][0])},
                     { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
-                    { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) },
-                    { "olympic_subject_dict_id", 1 }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(1, OlympicDoc.olympDist) } });
+                    { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
+                    { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом победителя/призера всероссийской олимпиады школьников":
                         docType = "olympic_total";
-                        benefitDocType = _DB_Helper.GetDictionaryItemID(31, "Диплом победителя/призера всероссийской олимпиады школьников");
+                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Диплом победителя/призера всероссийской олимпиады школьников");
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
-                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", 18 },
-                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(18, OlympicDoc.diplomaType) },
+                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
+                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
                     { "olympic_id", (int)((uint)_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
-                        new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                        new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, OlympicDoc.olympID)
                         })[0][0])},
                     { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
-                    { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) },
-                    { "olympic_subject_dict_id", 1 }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(1, OlympicDoc.olympDist) } });
+                    { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
+                    { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом 4 этапа всеукраинской олимпиады":
                         docType = "ukraine_olympic";
-                        benefitDocType = _DB_Helper.GetDictionaryItemID(31, "Диплом победителя/призера IV  всеукраинской ученической олимпиады");
+                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Диплом победителя/призера IV  всеукраинской ученической олимпиады");
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
-                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", 18 },
-                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(18, OlympicDoc.diplomaType) }, { "olympic_name", OlympicDoc.olympName }, { "olympic_profile", OlympicDoc.olympProfile },
-                    { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) }});
+                        _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
+                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) }, { "olympic_name", OlympicDoc.olympName }, { "olympic_profile", OlympicDoc.olympProfile },
+                    { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) }});
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
 
                     case "Диплом международной олимпиады":
                         docType = "international_olympic";
-                        benefitDocType = _DB_Helper.GetDictionaryItemID(31, "Документ об участии в международной олимпиаде");
+                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ об участии в международной олимпиаде");
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "olympic_name", OlympicDoc.olympName },
                             { "olympic_profile", OlympicDoc.olympProfile },
-                    { "country_dict_id", 7 }, { "country_id", _DB_Helper.GetDictionaryItemID(7, OlympicDoc.country) },
-                    { "profile_dict_id", 39 }, { "profile_id", _DB_Helper.GetDictionaryItemID(39, OlympicDoc.olympProfile) } });
+                    { "country_dict_id", (uint)FIS_Dictionary.COUNTRY }, { "country_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY, OlympicDoc.country) },
+                    { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
                 }
@@ -1321,7 +1321,7 @@ namespace PK.Forms
             {
                 if ((byte)row.Cells[3].Value != 0)
                     _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object> { { "document_id", examsDocId},
-                        { "subject_dict_id", 1} , { "subject_id", _DB_Helper.GetDictionaryItemID( 1, row.Cells[0].Value.ToString())} ,
+                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS} , { "subject_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString())} ,
                         { "value", row.Cells[3].Value} });
             }
         }
@@ -1341,24 +1341,24 @@ namespace PK.Forms
                 switch (tab.Name.Split('_')[2])
                 {
                     case "o":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Очная форма");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма");
                         break;
                     case "oz":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Очно-заочная (вечерняя)");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)");
                         break;
                     case "z":
-                        eduForm = _DB_Helper.GetDictionaryItemID(14, "Заочная форма");
+                        eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма");
                         break;
                 }
 
                 if (tab.Name.Split('_')[1] == "budget")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Бюджетные места");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Бюджетные места");
                 else if (tab.Name.Split('_')[1] == "paid")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "С оплатой обучения");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "С оплатой обучения");
                 else if (tab.Name.Split('_')[1] == "quote")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Квота приема лиц, имеющих особое право");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Квота приема лиц, имеющих особое право");
                 else if (tab.Name.Split('_')[1] == "target")
-                    eduSource = _DB_Helper.GetDictionaryItemID(15, "Целевой прием");
+                    eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, "Целевой прием");
 
                 if ((tab.Name.Split('_')[1] != "paid")&&(tab.Name.Split('_')[1] != "target"))
                     foreach (Control c in tab.Controls)
@@ -1371,7 +1371,7 @@ namespace PK.Forms
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                     { "faculty_short_name", facultyShortName.Split('(')[1] }, { "is_agreed_date", agreedDate}, { "profile_actual", false},
                                     { "direction_id", _DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))},
-                                    { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false} });
+                                    { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", eduForm}, { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false} });
                             }
                     }
                 else if ((tab.Name.Split('_')[1] == "paid") && (tab.Name.Split('_')[1] != "target"))
@@ -1389,7 +1389,7 @@ namespace PK.Forms
                                     })[0][0];
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                         { "faculty_short_name",  cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) }, { "is_agreed_date", agreedDate},
-                                        { "direction_id", dirID }, { "edu_form_dict_id", 14}, { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource},
+                                        { "direction_id", dirID }, { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", eduForm}, { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", eduSource},
                                     { "is_for_spo_and_vo", false}, { "profile_name", cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1)}, { "profile_actual", true}, });
                             }
                     }
@@ -1404,8 +1404,8 @@ namespace PK.Forms
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
                                      { "faculty_short_name",  cb.SelectedItem.ToString().Split(')')[0].Split(',')[0].Remove(0,1) }, { "is_agreed_date", agreedDate},
-                                    { "direction_id", _DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))}, { "edu_form_dict_id", 14},
-                                    { "edu_form_id", eduForm}, { "edu_source_dict_id", 15}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false},
+                                    { "direction_id", _DB_Helper.GetDirectionIDByName(cb.SelectedItem.ToString().Split(')')[1].Remove(0, 1))}, { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
+                                    { "edu_form_id", eduForm}, { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", eduSource}, { "is_for_spo_and_vo", false},
                                     { "target_organization_id", _TargetOrganizationID}, { "profile_actual", false} });
                             }
                     }
@@ -1413,14 +1413,9 @@ namespace PK.Forms
             }
         }
 
-        private void FillComboBox(ComboBox cb, int dictionaryNumber)
+        private void FillComboBox(ComboBox cb, FIS_Dictionary dictionary)
         {
-            foreach (object[] v in _DB_Connection.Select(DB_Table.DICTIONARIES_ITEMS, new string[] { "name" },
-                new List<Tuple<string, Relation, object>>
-                {
-                new Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryNumber)
-                }))
-                cb.Items.Add(v[0]);
+            cb.Items.AddRange(_DB_Helper.GetDictionaryItems(dictionary).Values.ToArray());
             if (cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
         }
@@ -1438,7 +1433,7 @@ namespace PK.Forms
                         || (eduForm == "Заочная форма") && (int.Parse(record[4].ToString()) > 0))
                     {
                         string eduLevel = "";
-                        string directionCode = _DB_Helper.GetDirectionCodeByID(int.Parse(record[5].ToString()));
+                        string directionCode = _DB_Helper.GetDirectionNameAndCode((uint)record[5]).Item2;
                         if (directionCode.ToString().Split('.')[1] == "03")
                             eduLevel = "Бакалавр";
                         else if (directionCode.ToString().Split('.')[1] == "04")
@@ -1494,14 +1489,14 @@ namespace PK.Forms
                     if (int.Parse(record[2].ToString()) > 0)
                     {
                         string eduLevel = "";
-                        string directionCode = _DB_Helper.GetDirectionCodeByID(int.Parse(record[1].ToString()));
+                        string directionCode = _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item2;
                         if (directionCode.ToString().Split('.')[1] == "03")
                             eduLevel = "Бакалавр";
                         else if (directionCode.ToString().Split('.')[1] == "04")
                             eduLevel = "Магистр";
                         else if (directionCode.ToString().Split('.')[1] == "05")
                             eduLevel = "Специалист";
-                        combobox.Items.Add("(" + record[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionNameByID(int.Parse(record[1].ToString())));
+                        combobox.Items.Add("(" + record[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item1);
                     }
                 }
             }
@@ -1523,14 +1518,14 @@ namespace PK.Forms
                     if (int.Parse(record[2].ToString()) > 0)
                     {
                         string eduLevel = "";
-                        string directionCode = _DB_Helper.GetDirectionCodeByID(int.Parse(record[1].ToString()));
+                        string directionCode = _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item2;
                         if (directionCode.ToString().Split('.')[1] == "03")
                             eduLevel = "Бакалавр";
                         else if (directionCode.ToString().Split('.')[1] == "04")
                             eduLevel = "Магистр";
                         else if (directionCode.ToString().Split('.')[1] == "05")
                             eduLevel = "Специалист";
-                        combobox.Items.Add("(" + record[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionNameByID(int.Parse(record[1].ToString())));
+                        combobox.Items.Add("(" + record[0] + ", " + eduLevel + ") " + _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item1);
                     }
             }
         }
@@ -1619,33 +1614,33 @@ namespace PK.Forms
                         switch (SportDoc.diplomaType)
                         {
                             case "Диплом чемпиона/призера Олимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Олимпийских игр");
+                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
                                 break;
                             case "Диплом чемпиона/призера Паралимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Паралимпийских игр");
+                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
                                 break;
                             case "Диплом чемпиона/призера Сурдлимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Статус чемпиона и призера Сурдлимпийских игр");
+                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
                                 break;
                             case "Диплом чемпиона мира":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Чемпион Мира");
+                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
                                 break;
                             case "Диплом чемпиона Европы":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(36, "Чемпион Европы");
+                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
                                 break;
                         }
 
                         List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                             new List<Tuple<string, Relation, object>>
                         {
-                        new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, 36),
+                        new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
                         new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryId),
                         new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                         });
 
                         if (achievments.Count == 0)
                         {
-                            MessageBox.Show("Спортивное достижение \"" + _DB_Helper.GetDictionaryItemName(36, achevmentCategoryId) + "\" отсутствует для данной кампании в списке университета.");
+                            MessageBox.Show("Спортивное достижение \"" + _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, achevmentCategoryId) + "\" отсутствует для данной кампании в списке университета.");
                             stop = true;
                         }                            
                     }

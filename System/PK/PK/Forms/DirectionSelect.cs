@@ -23,10 +23,10 @@ namespace PK.Forms
 
             foreach (object[] item in _DB_Connection.Select(DB_Table.DIRECTIONS, "direction_id", "faculty_short_name"))
             {
-                string[] dirData = _DB_Helper.GetDirectionsDictionaryNameAndCode((uint)item[0]);
+                Tuple<string,string> dirData = _DB_Helper.GetDirectionNameAndCode((uint)item[0]);
                 foreach (string v in filters)
-                    if (dirData[1].Split('.')[1] == v)
-                        dgvDirectionSelection.Rows.Add(item[0], dirData[1], dirData[0], item[1]);
+                    if (dirData.Item2.Split('.')[1] == v)
+                        dgvDirectionSelection.Rows.Add(item[0], dirData.Item2, dirData.Item1, item[1]);
             }
 
         }

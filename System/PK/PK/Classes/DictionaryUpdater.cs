@@ -33,7 +33,7 @@ namespace PK.Classes
                     if (dbDictionaries.ContainsKey(d.Key))
                     {
                         if (d.Value == dbDictionaries[d.Key])
-                            UpdateDictionaryItems(d.Key, d.Value, fisDictionaryItems);
+                            UpdateDictionaryItems((FIS_Dictionary)d.Key, d.Value, fisDictionaryItems);
                         else if (Utility.ShowChoiceMessageWithConfirmation(
                          "В ФИС изменилось наименование справочника с кодом " + d.Key +
                          ":\nC \"" + dbDictionaries[d.Key] + "\"\nна \"" + d.Value +
@@ -45,7 +45,7 @@ namespace PK.Classes
                                 new Dictionary<string, object> { { "name", d.Value } },
                                 new Dictionary<string, object> { { "id", d.Key } }
                                 );
-                            UpdateDictionaryItems(d.Key, d.Value, fisDictionaryItems);
+                            UpdateDictionaryItems((FIS_Dictionary)d.Key, d.Value, fisDictionaryItems);
                         }
                     }
                     else
@@ -346,31 +346,31 @@ namespace PK.Classes
             MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void UpdateDictionaryItems(uint dictionaryID, string dictionaryName, Dictionary<uint, string> fisDictionaryItems)
+        private void UpdateDictionaryItems(FIS_Dictionary dictionary, string dictionaryName, Dictionary<uint, string> fisDictionaryItems)
         {
-            Dictionary<uint, string> dbDictionaryItems = _DB_Helper.GetDictionaryItems(dictionaryID);
+            Dictionary<uint, string> dbDictionaryItems = _DB_Helper.GetDictionaryItems(dictionary);
 
-            string addedReport = "В справочник №" + dictionaryID + " \"" + dictionaryName + "\" добавлены элементы:";
+            string addedReport = "В справочник №" + dictionary + " \"" + dictionaryName + "\" добавлены элементы:";
             ushort addedCount = 0;
 
             foreach (var item in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(item.Key))
                 {
                     if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowChoiceMessageWithConfirmation(
-                                 "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
+                                 "Справочник №" + dictionary + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
                                  + item.Key + ":\nC \"" + dbDictionaryItems[item.Key] + "\"\nна \"" + item.Value +
                                  "\".\n\nОбновить наименование в БД?",
                                  "Действие"
                                  ))
                         _DB_Connection.Update(DB_Table.DICTIONARIES_ITEMS,
                             new Dictionary<string, object> { { "name", item.Value } },
-                            new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
+                            new Dictionary<string, object> { { "dictionary_id", dictionary }, { "item_id", item.Key } }
                             );
                 }
                 else
                 {
                     _DB_Connection.Insert(DB_Table.DICTIONARIES_ITEMS,
-                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key }, { "name", item.Value } }
+                        new Dictionary<string, object> { { "dictionary_id", dictionary }, { "item_id", item.Key }, { "name", item.Value } }
                         );
                     addedReport += "\n" + item.Key + " \"" + item.Value + "\"";
                     addedCount++;
@@ -378,12 +378,12 @@ namespace PK.Classes
 
             foreach (var item in dbDictionaryItems)
                 if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowChoiceMessageWithConfirmation(
-                             "Справочник №" + dictionaryID + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
+                             "Справочник №" + dictionary + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
                              item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?",
                              "Действие"
                              ))
                     _DB_Connection.Delete(DB_Table.DICTIONARIES_ITEMS,
-                        new Dictionary<string, object> { { "dictionary_id", dictionaryID }, { "item_id", item.Key } }
+                        new Dictionary<string, object> { { "dictionary_id", dictionary }, { "item_id", item.Key } }
                         );
 
             if (addedCount != 0)

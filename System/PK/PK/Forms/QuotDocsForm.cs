@@ -19,12 +19,12 @@ namespace PK.Forms
             cbCause.SelectedIndex = 0;
             cbMedCause.SelectedIndex = 0;
 
-            cbOrphanhoodDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(42), null);
+            cbOrphanhoodDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(FIS_Dictionary.ORPHAN_DOC_TYPE), null);
             cbOrphanhoodDocType.DisplayMember = "Value";
             cbOrphanhoodDocType.ValueMember = "Value";
             cbOrphanhoodDocType.SelectedIndex = 0;            
 
-            cbDisabilityGroup.DataSource = new BindingSource(dbHelper.GetDictionaryItems(23), null);
+            cbDisabilityGroup.DataSource = new BindingSource(dbHelper.GetDictionaryItems(FIS_Dictionary.DISABILITY_GROUP), null);
             cbDisabilityGroup.DisplayMember = "Value";
             cbDisabilityGroup.ValueMember = "Value";
             cbDisabilityGroup.SelectedIndex = 0;

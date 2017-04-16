@@ -18,19 +18,19 @@ namespace PK.Forms
             _Parent = parent;
 
             cbOlympType.SelectedIndex = 0;
-            cbDiplomaType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(18), null);
+            cbDiplomaType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.DIPLOMA_TYPE), null);
             cbDiplomaType.DisplayMember = "Value";
             cbDiplomaType.ValueMember = "Value";
             cbDiplomaType.SelectedIndex = -1;
             
             cbClass.SelectedItem = "10";
 
-            cbDiscipline.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(1), null);
+            cbDiscipline.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS), null);
             cbDiscipline.DisplayMember = "Value";
             cbDiscipline.ValueMember = "Value";
             cbDiscipline.SelectedIndex = -1;
 
-            cbCountry.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(7), null);
+            cbCountry.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.COUNTRY), null);
             cbCountry.DisplayMember = "Value";
             cbCountry.ValueMember = "Value";
 
@@ -109,7 +109,7 @@ namespace PK.Forms
                 label9.Enabled = false;
 
                 cbOlympProfile.DataSource = null;
-                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(39), null);
+                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES), null);
                 cbOlympProfile.DisplayMember = "Value";
                 cbOlympProfile.ValueMember = "Value";
                 cbOlympProfile.SelectedIndex = -1;
@@ -132,7 +132,7 @@ namespace PK.Forms
                 label9.Enabled = true;
 
                 cbOlympProfile.DataSource = null;
-                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(39), null);
+                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES), null);
                 cbOlympProfile.DisplayMember = "Value";
                 cbOlympProfile.ValueMember = "Value";
                 cbOlympProfile.SelectedIndex = -1;
@@ -243,7 +243,7 @@ namespace PK.Forms
                             new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, int.Parse(cbOlympID.SelectedItem.ToString()))
                         })[0][0].ToString()))
                     }))
-                    cbOlympProfile.Items.Add(_DB_Helper.GetDictionaryItemName(39, (uint)(record[0])));
+                    cbOlympProfile.Items.Add(_DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)(record[0])));
                     cbOlympProfile.SelectedIndex = 0;
             }
         }

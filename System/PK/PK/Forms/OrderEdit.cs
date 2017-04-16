@@ -71,7 +71,7 @@ namespace PK.Forms
                     }
                     ).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                     .Where(s => s.Places > 0)
-                    .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + dbHelper.GetDirectionsDictionaryNameAndCode(s.DirID)[0] }).ToList();
+                    .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + dbHelper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
             else
                 cbDirOrProfile.DataSource = _DB_Connection.Select(
                         DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
@@ -83,7 +83,7 @@ namespace PK.Forms
                         "_"+gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString(),
                         Relation.GREATER,0 )
                         }
-                        ).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + dbHelper.GetDirectionsDictionaryNameAndCode((uint)s[1])[0] }).ToList();
+                        ).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
         }
 
         private void cbDirOrProfile_SelectedIndexChanged(object sender, EventArgs e)

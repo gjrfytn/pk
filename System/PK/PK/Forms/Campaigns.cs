@@ -25,16 +25,16 @@ namespace PK.Forms
             foreach (object[] v in _DB_Connection.Select(DB_Table.CAMPAIGNS,
                 new string[] { "id", "name", "start_year", "end_year", "status_dict_id", "status_id" }))
             {
-                dgvCampaigns.Rows.Add(v[0], v[1], v[2].ToString() + " - " + v[3].ToString(), "", _DB_Helper.GetDictionaryItemName((uint)v[4], (uint)v[5]));
+                dgvCampaigns.Rows.Add(v[0], v[1], v[2].ToString() + " - " + v[3].ToString(), "", _DB_Helper.GetDictionaryItemName((FIS_Dictionary)v[4], (uint)v[5]));
 
                 foreach (object[] r in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, 2),
+                        new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL),
                         new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, dgvCampaigns.Rows[dgvCampaigns.Rows.Count-1].Cells[0].Value)
                     }))
                 {
-                    string levelName = _DB_Helper.GetDictionaryItemName(2, (uint)r[0]);
+                    string levelName = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)r[0]);
 
                     if (dgvCampaigns.Rows[dgvCampaigns.Rows.Count - 1].Cells[3].Value.ToString() == "")
                         dgvCampaigns.Rows[dgvCampaigns.Rows.Count - 1].Cells[3].Value = levelName;

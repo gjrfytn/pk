@@ -31,17 +31,14 @@ namespace PK.Classes
             _DB_Connection = connection;
         }
 
-        public Dictionary<uint, string> GetDictionaryItems(uint dictionaryID)
+        public Dictionary<uint, string> GetDictionaryItems(FIS_Dictionary dictionary)
         {
-            if (dictionaryID == 10 || dictionaryID == 19)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
-
             return _DB_Connection.Select(
                  DB_Table.DICTIONARIES_ITEMS,
                  new string[] { "item_id", "name" },
                  new List<System.Tuple<string, Relation, object>>
                  {
-                    new System.Tuple<string, Relation, object>( "dictionary_id",Relation.EQUAL, dictionaryID)
+                    new System.Tuple<string, Relation, object>( "dictionary_id",Relation.EQUAL, (uint)dictionary)
                  }
                  ).ToDictionary(i1 => (uint)i1[0], i2 => i2[1].ToString());
         }
@@ -97,17 +94,14 @@ namespace PK.Classes
             return dictionaryItems;
         }
 
-        public string GetDictionaryItemName(uint dictionaryID, uint itemID)
+        public string GetDictionaryItemName(FIS_Dictionary dictionary, uint itemID)
         {
-            if (dictionaryID == 10 || dictionaryID == 19)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
-
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "name" },
                 new List<System.Tuple<string, Relation, object>>
                 {
-                    new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryID),
+                    new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, (uint)dictionary),
                     new System.Tuple<string, Relation, object>("item_id", Relation.EQUAL, itemID)
                 });
 
@@ -117,26 +111,22 @@ namespace PK.Classes
             return list[0][0].ToString();
         }
 
-        public uint GetDictionaryItemID(uint dictionaryID, string itemName)
+        public uint GetDictionaryItemID(FIS_Dictionary dictionary, string itemName)
         {
-            if (dictionaryID == 10 || dictionaryID == 19)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
-
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "item_id" },
                 new List<System.Tuple<string, Relation, object>>
                 {
-                    new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, dictionaryID),
+                    new System.Tuple<string, Relation, object>("dictionary_id", Relation.EQUAL, (uint)dictionary),
                     new System.Tuple<string, Relation, object>("name", Relation.EQUAL, itemName)
                 });
 
             if (list.Count == 0)
-                throw new System.ArgumentException("Не найден справочник с заданным ID либо элемент справочника с заданным наименованием.");
+                throw new System.ArgumentException("Не найден справочник либо элемент справочника с заданным наименованием.");
 
             return (uint)list[0][0];
         }
-
 
         public int GetDirectionIDByName(string dirName)
         {
@@ -150,31 +140,7 @@ namespace PK.Classes
                 return int.Parse(dirList[0][0].ToString());
         }
 
-        public string GetDirectionNameByID(int dirId)
-        {
-            List<object[]> dirList = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, new string[] { "name" }, new List<System.Tuple<string, Relation, object>>
-                {
-                    new System.Tuple<string, Relation, object>("id", Relation.EQUAL, dirId)
-                });
-            if (dirList.Count == 0)
-                return "";
-            else
-                return dirList[0][0].ToString();
-        }
-
-        public string GetDirectionCodeByID(int dirId)
-        {
-            List<object[]> dirList = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, new string[] { "code" }, new List<System.Tuple<string, Relation, object>>
-                {
-                    new System.Tuple<string, Relation, object>("id", Relation.EQUAL, dirId)
-                });
-            if (dirList.Count == 0)
-                return "";
-            else
-                return dirList[0][0].ToString();
-        }
-
-        public string[] GetDirectionsDictionaryNameAndCode(uint id)//TODO Нужны другие поля?
+        public System.Tuple<string, string> GetDirectionNameAndCode(uint id)//TODO Нужны другие поля?
         {
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARY_10_ITEMS,
@@ -187,7 +153,7 @@ namespace PK.Classes
             if (list.Count == 0)
                 throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.");
 
-            return System.Array.ConvertAll(list[0], c => c.ToString());
+            return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
         }
     }
 }
