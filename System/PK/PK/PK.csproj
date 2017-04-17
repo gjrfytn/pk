@@ -176,6 +176,12 @@
     <Compile Include="Forms\InstitutionAchievementsEdit.Designer.cs">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MOlymps.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MOlymps.Designer.cs">
+      <DependentUpon>MOlymps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OrderEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -309,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MOlymps.resx">
+      <DependentUpon>MOlymps.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OrderEdit.resx">
       <DependentUpon>OrderEdit.cs</DependentUpon>

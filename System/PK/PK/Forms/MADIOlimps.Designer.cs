@@ -265,9 +265,11 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbOlympType);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MADIOlimps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Олимпиады и конференции МАДИ";
+            this.Text = "Олимпиады и конференции";
             this.ResumeLayout(false);
             this.PerformLayout();
 

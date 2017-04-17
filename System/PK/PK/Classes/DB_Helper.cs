@@ -17,6 +17,8 @@ namespace PK.Classes
         public const string EduSourceQ = "Квота приема лиц, имеющих особое право";
         public const string EduSourceT = "Целевой прием";
         public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
+        public const string MADIOlympDocName = "Диплом участника олимпиад";
+        public const string OlympAchievementName = "Участие в олимпиадах и иных конкурсах";
         #endregion
 
         public uint CurrentCampaignID
