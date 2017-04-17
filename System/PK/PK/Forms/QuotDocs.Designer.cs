@@ -1,6 +1,6 @@
 ﻿namespace PK.Forms
 {
-    partial class QuotDocsForm
+    partial class QuotDocs
     {
         /// <summary>
         /// Required designer variable.

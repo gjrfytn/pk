@@ -1,6 +1,6 @@
 ﻿namespace PK.Forms
 {
-    partial class MADIOlimps
+    partial class Olymps
     {
         /// <summary>
         /// Required designer variable.

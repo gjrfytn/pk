@@ -5,14 +5,14 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    partial class MOlymps : Form
+    partial class MADIOlymps : Form
     {
         public string OlympName;
 
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
 
-        public MOlymps(Classes.DB_Connector connection, string name)
+        public MADIOlymps(Classes.DB_Connector connection, string name)
         {
             InitializeComponent();
 

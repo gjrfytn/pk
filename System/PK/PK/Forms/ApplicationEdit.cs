@@ -1602,7 +1602,7 @@ namespace PK.Forms
         {
             if ((cbQuote.Checked)&&(!_Loading))
             {
-                QuotDocsForm form = new QuotDocsForm(_DB_Connection,this);
+                QuotDocs form = new QuotDocs(_DB_Connection,this);
                 form.ShowDialog();
                 cbMedCertificate.Enabled = true;
                 foreach (Control c in tbDirections.TabPages[5].Controls)
@@ -1635,7 +1635,7 @@ namespace PK.Forms
         {
             if ((cbSport.Checked)&&(!_Loading))
             {
-                SportDocsForm form = new SportDocsForm(_DB_Connection,this);
+                SportDocs form = new SportDocs(_DB_Connection,this);
                 form.ShowDialog();
             }
         }
@@ -1644,7 +1644,7 @@ namespace PK.Forms
         {
             if ((cbMADIOlympiad.Checked) && (!_Loading))
             {
-                MOlymps form = new MOlymps(_DB_Connection, _MADIOlympName);
+                MADIOlymps form = new MADIOlymps(_DB_Connection, _MADIOlympName);
                 form.ShowDialog();
                 _MADIOlympName = form.OlympName;
             }
@@ -1654,7 +1654,7 @@ namespace PK.Forms
         {
             if ((cbOlympiad.Checked)&&(!_Loading))
             {
-                MADIOlimps form = new MADIOlimps(_DB_Connection,this);
+                Olymps form = new Olymps(_DB_Connection,this);
                 form.ShowDialog();
             }
             DirectionDocEnableDisable();

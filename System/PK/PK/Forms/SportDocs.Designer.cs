@@ -1,6 +1,6 @@
 ﻿namespace PK.Forms
 {
-    partial class SportDocsForm
+    partial class SportDocs
     {
         /// <summary>
         /// Required designer variable.

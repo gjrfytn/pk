@@ -1,6 +1,6 @@
 ﻿namespace PK.Forms
 {
-    partial class MOlymps
+    partial class MADIOlymps
     {
         /// <summary>
         /// Required designer variable.

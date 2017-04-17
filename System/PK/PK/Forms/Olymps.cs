@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    partial class MADIOlimps : Form
+    partial class Olymps : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private readonly ApplicationEdit _Parent;
 
-        public MADIOlimps(Classes.DB_Connector connection, ApplicationEdit parent)
+        public Olymps(Classes.DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 

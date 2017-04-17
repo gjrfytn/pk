@@ -3,12 +3,12 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    partial class QuotDocsForm : Form
+    partial class QuotDocs : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly ApplicationEdit _Parent;
 
-        public QuotDocsForm(Classes.DB_Connector connection, ApplicationEdit parent)
+        public QuotDocs(Classes.DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 

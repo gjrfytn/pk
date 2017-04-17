@@ -3,12 +3,12 @@ using System.Windows.Forms;
 
 namespace PK.Forms
 {
-    partial class SportDocsForm : Form
+    partial class SportDocs : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly ApplicationEdit _Parent;
 
-        public SportDocsForm(Classes.DB_Connector connection, ApplicationEdit parent)
+        public SportDocs(Classes.DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 
