@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PK.Forms
@@ -25,6 +26,7 @@ namespace PK.Forms
             System.IO.Directory.CreateDirectory(".\\temp");
 
             UpdateCampaignsList();
+            dtpRegDate.Value = dtpRegDate.MinDate;
         }
 
         #region IDisposable Support
@@ -60,11 +62,11 @@ namespace PK.Forms
             Dispose(false);
         }
         #endregion
-
+        
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
-            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time" });
+            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time" });
             if (apps.Count > 0)
                 foreach (var application in apps)
                 {
@@ -75,9 +77,33 @@ namespace PK.Forms
                             {
                                 new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
                             })[0];
-                        dgvApplications.Rows.Add(application[0], names[0], names[1], names[2]);
+                        var appDocuments = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
+                        });
+                        dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null, application[3]);
+                        foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
+                            appDocuments,
+                            docs => docs[0],
+                            appdocs => appdocs[0],
+                            (s1, s2) => new
+                            {
+                                Type = s1[1].ToString(),
+                                OriginalRecievedDate = s1[2] as DateTime?
+                            }
+                            ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
+                            if (((document.Value.Item1 == "school_certificate") || (document.Value.Item1 == "high_edu_diploma") || (document.Value.Item1 == "academic_diploma")) && (document.Value.Item2!=null))
+                                dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
+                        //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                        //{
+                        //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
+                        //}))
+                        //{
+
+                        //}
                     }
                 }
+            dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void UpdateCampaignsList()
@@ -132,11 +158,13 @@ namespace PK.Forms
             form.ShowDialog();
             UpdateApplicationsTable();
         }
+
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
         {
             TargetOrganizations form = new TargetOrganizations(_DB_Connection);
             form.ShowDialog();
         }
+
         private void menuStrip_Dictionaries_Click(object sender, EventArgs e)
         {
             Dictionaries form = new Dictionaries(_DB_Connection);
@@ -215,6 +243,57 @@ namespace PK.Forms
             DateChoice form = new DateChoice();
             form.ShowDialog();
             Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
+        }
+
+        private void tbField_Leave(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).Text == "")
+            {
+                (sender as TextBox).Text = (sender as TextBox).Tag.ToString();
+                (sender as TextBox).ForeColor = System.Drawing.Color.Gray;
+            }
+        }
+
+        private void tbField_Enter(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).ForeColor == System.Drawing.Color.Gray)
+            {
+                (sender as TextBox).Text = "";
+                (sender as TextBox).ForeColor = System.Drawing.Color.Black;
+            }
+        }
+
+        private void tbField_TextChanged(object sender, EventArgs e)
+        {            
+                FilterAppsTable();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            dtpRegDate.Enabled = cbDateSearch.Checked;
+            if (!dtpRegDate.Enabled)
+                dtpRegDate.Value = dtpRegDate.MinDate;
+            else
+                dtpRegDate.Value = DateTime.Now;
+        }
+
+        private void FilterAppsTable()
+        {
+            foreach (DataGridViewRow row in dgvApplications.Rows)
+            {
+                bool matches = true;
+                if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
+                    matches = false;
+                else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
+                    matches = false;
+                else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
+                    matches = false;
+                else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
+                    matches = false;
+                else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date)) 
+                    matches = false;
+                row.Visible = matches;
+            }
         }
     }
 }

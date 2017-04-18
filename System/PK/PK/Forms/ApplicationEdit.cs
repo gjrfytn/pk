@@ -286,7 +286,7 @@ namespace PK.Forms
                     tbIssuedBy.Text = document[5].ToString();
 
                     object[] passport = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id", "nationality_id",
-                        "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_index" }, new List<Tuple<string, Relation, object>>
+                        "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_index", "reg_flat" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                         })[0];
@@ -301,6 +301,7 @@ namespace PK.Forms
                     tbStreet.Text = passport[8].ToString();
                     tbHouse.Text = passport[9].ToString();
                     tbPostcode.Text = passport[10].ToString();
+                    tbAppartment.Text = passport[11].ToString();
                 }
                 else if ((document[1].ToString() == "school_certificate") || (document[1].ToString() == "high_edu_diploma") || (document[1].ToString() == "academic_diploma"))
                 {
@@ -322,7 +323,7 @@ namespace PK.Forms
 
                     tbEduDocSeries.Text = document[2].ToString();
                     tbEduDocNumber.Text = document[3].ToString();
-                    if (document[6] != null)
+                    if (document[6] as DateTime? != null)
                         cbOriginal.Checked = true;
                     if (document[5].ToString().Split('|').Count() > 1)
                     {
@@ -449,21 +450,66 @@ namespace PK.Forms
                     QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
                     QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
                 }
-                else if (document[1].ToString()=="olimpic")
+                else if (document[1].ToString()=="olympic")
                 {
-
+                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
+                    foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "olympic_id", "class_number",
+                        "olympic_profile", "olympic_subject_id" }))
+                    {
+                        OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
+                        OlympicDoc.olympID = int.Parse(olympDocData[1].ToString());
+                        OlympicDoc.olympClass = int.Parse(olympDocData[2].ToString());
+                        OlympicDoc.olympProfile = olympDocData[3].ToString();
+                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[4]);
+                        OlympicDoc.olympType = "Диплом победителя/призера олимпиады школьников";
+                    }
+                    cbOlympiad.Checked = true;
                 }
                 else if (document[1].ToString() == "olympic_total")
                 {
-
+                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
+                    foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "olympic_id", "class_number",
+                        "olympic_profile", "olympic_subject_id" }))
+                    {
+                        OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
+                        OlympicDoc.olympID = int.Parse(olympDocData[1].ToString());
+                        OlympicDoc.olympClass = int.Parse(olympDocData[2].ToString());
+                        OlympicDoc.olympProfile = olympDocData[3].ToString();
+                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[4]);
+                        OlympicDoc.olympType = "Диплом победителя/призера всероссийской олимпиады школьников";
+                    }
+                    cbOlympiad.Checked = true;
                 }
-                else if (document[1].ToString() == "ukraine_olimpic")
+                else if (document[1].ToString() == "ukraine_olympic")
                 {
-
+                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
+                    foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "class_number",
+                        "olympic_profile", "olympic_subject_id", "olympic_name" }))
+                    {
+                        OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
+                        OlympicDoc.olympClass = int.Parse(olympDocData[1].ToString());
+                        OlympicDoc.olympProfile = olympDocData[2].ToString();
+                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[3]);
+                        OlympicDoc.olympName = olympDocData[4].ToString();
+                        OlympicDoc.olympType = "Диплом 4 этапа всеукраинской олимпиады";
+                    }
+                    cbOlympiad.Checked = true;
                 }
-                else if (document[1].ToString() == "international_olimpic")
+                else if (document[1].ToString() == "international_olympic")
                 {
-
+                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
+                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
+                    foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "class_number",
+                        "olympic_profile", "olympic_subject_id", "olympic_name", "country_id" }))
+                    {
+                        OlympicDoc.olympClass = int.Parse(olympDocData[0].ToString());
+                        OlympicDoc.olympProfile = olympDocData[1].ToString();
+                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[2]);
+                        OlympicDoc.olympName = olympDocData[3].ToString();
+                        OlympicDoc.country = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)olympDocData[4]);
+                        OlympicDoc.olympType = "Диплом международной олимпиады";
+                    }
+                    cbOlympiad.Checked = true;
                 }
                 else if (document[1].ToString() == "custom")
                 {
@@ -705,7 +751,7 @@ namespace PK.Forms
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
-                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_index", tbPostcode.Text} },
+                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } });
                     }
 
@@ -719,15 +765,15 @@ namespace PK.Forms
                         if (rbDiploma.Checked)
                             eduDocType = "high_edu_diploma";
 
-                        if ((document[6].ToString() != "") && (cbOriginal.Checked))
+                        if ((document[6] as DateTime?)!=null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
-                        else if ((document[6].ToString() != "") && (!cbOriginal.Checked))
+                        else if ((document[6] as DateTime?) != null && (!cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "original_recieved_date", null }, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
-                        else if ((document[6].ToString() == "") && (cbOriginal.Checked))
+                        else if ((document[6] as DateTime?) != null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "original_recieved_date", DateTime.Now }, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
@@ -1294,11 +1340,7 @@ namespace PK.Forms
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
                     { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
-                    { "olympic_id", (int)((uint)_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, OlympicDoc.olympID)
-                        })[0][0])},
+                    { "olympic_id", (uint)OlympicDoc.olympID},
                     { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });
@@ -1312,11 +1354,7 @@ namespace PK.Forms
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
                     { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
-                    { "olympic_id", (int)((uint)_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, OlympicDoc.olympID)
-                        })[0][0])},
+                    { "olympic_id", (uint)OlympicDoc.olympID},
                     { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });

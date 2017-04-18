@@ -34,7 +34,7 @@ namespace PK.Forms
             cbCountry.DisplayMember = "Value";
             cbCountry.ValueMember = "Value";
 
-            foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_number" }))
+            foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" }))
                 cbOlympID.Items.Add(record[0]);
 
             Forms.ApplicationEdit.ODoc loadedDocument = _Parent.OlympicDoc;
@@ -44,12 +44,17 @@ namespace PK.Forms
                 cbOlympType.SelectedItem = loadedDocument.olympType;
                 tbOlympName.Text = loadedDocument.olympName;
                 tbDocNumber.Text = loadedDocument.olympDocNumber.ToString();
-                cbDiplomaType.SelectedValue = loadedDocument.diplomaType;
-                cbOlympID.SelectedItem = loadedDocument.olympID.ToString();
+                if ((loadedDocument.diplomaType !=null)&&(loadedDocument.diplomaType !=""))
+                    cbDiplomaType.SelectedValue = loadedDocument.diplomaType;
+                if (loadedDocument.olympID != 0)
+                    cbOlympID.SelectedItem = loadedDocument.olympID.ToString();
                 cbOlympProfile.SelectedValue = loadedDocument.olympProfile;
-                cbClass.SelectedItem = loadedDocument.olympClass.ToString();
-                cbDiscipline.SelectedValue = loadedDocument.olympDist;
-                cbCountry.SelectedValue = loadedDocument.country;
+                if (loadedDocument.olympClass != 0)
+                    cbClass.SelectedItem = loadedDocument.olympClass.ToString();
+                if ((loadedDocument.olympDist != null) && (loadedDocument.olympDist != ""))
+                    cbDiscipline.SelectedValue = loadedDocument.olympDist;
+                if ((loadedDocument.country !=null) && (loadedDocument.country != ""))
+                    cbCountry.SelectedValue = loadedDocument.country;
             }
         }
 
@@ -234,14 +239,19 @@ namespace PK.Forms
             {
                 cbOlympProfile.DataSource = null;
                     cbOlympProfile.Items.Clear();
+                    //foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_OLYMPIC_PROFILES, new string[] { "profile_id" },
+                    //new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                    //{
+                    //    new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, int.Parse(_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
+                    //    new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                    //    {
+                    //        new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, int.Parse(cbOlympID.SelectedItem.ToString()))
+                    //    })[0][0].ToString()))
+                    //}))
                     foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_OLYMPIC_PROFILES, new string[] { "profile_id" },
-                    new System.Collections.Generic.List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, int.Parse(_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
                         new System.Collections.Generic.List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, int.Parse(cbOlympID.SelectedItem.ToString()))
-                        })[0][0].ToString()))
+                    {
+                        new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, (uint)(cbOlympID.SelectedItem))
                     }))
                     cbOlympProfile.Items.Add(_DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)(record[0])));
                     cbOlympProfile.SelectedIndex = 0;
