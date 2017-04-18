@@ -48,6 +48,7 @@ namespace PK.Forms
         private void cbDirOrProfile_DropDown(object sender, EventArgs e)
         {
             Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+            int selectedIndex = cbDirOrProfile.SelectedIndex;
             cbDirOrProfile.DisplayMember = "Display";
 
             if (rbPaid.Checked)
@@ -84,6 +85,8 @@ namespace PK.Forms
                         Relation.GREATER,0 )
                         }
                         ).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
+
+            cbDirOrProfile.SelectedIndex = selectedIndex;
         }
 
         private void cbDirOrProfile_SelectedIndexChanged(object sender, EventArgs e)

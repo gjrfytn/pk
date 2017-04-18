@@ -18,7 +18,7 @@ namespace PK.Forms
             {
                 try
                 {
-                    _DB_Connection = new Classes.DB_Connector("default", "");
+                    _DB_Connection = new Classes.DB_Connector("initial", "1234");
                 }
                 catch (MySql.Data.MySqlClient.MySqlException ex)
                 {

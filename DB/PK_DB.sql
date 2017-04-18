@@ -434,8 +434,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`diploma_docs_additional_data` (
   CONSTRAINT `diploma_docs_additional_data_has`
     FOREIGN KEY (`document_id`)
     REFERENCES `PK_DB`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `diploma_docs_additional_data_corresp`
     FOREIGN KEY (`speciality_id`)
     REFERENCES `PK_DB`.`dictionary_10_items` (`id`)
@@ -476,8 +476,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`identity_docs_additional_data` (
   CONSTRAINT `identity_docs_additional_data_has`
     FOREIGN KEY (`document_id`)
     REFERENCES `PK_DB`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `identity_docs_additional_data_corresp_gender`
     FOREIGN KEY (`gender_id` , `gender_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -541,8 +541,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_additional_data` (
   CONSTRAINT `olympic_docs_additional_data_has`
     FOREIGN KEY (`document_id`)
     REFERENCES `PK_DB`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `olympic_docs_additional_data_corresp_dip_type`
     FOREIGN KEY (`diploma_type_id` , `diploma_type_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -594,8 +594,8 @@ radiation_work: RadiationWorkCategoryID - Тип документа, подтв�
   CONSTRAINT `other_docs_additional_data_has`
     FOREIGN KEY (`document_id`)
     REFERENCES `PK_DB`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `other_docs_additional_data_corresp`
     FOREIGN KEY (`dictionaries_item_id` , `dictionaries_dictionary_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -618,8 +618,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`olympic_docs_subjects` (
   CONSTRAINT `olympic_docs_subjects_has`
     FOREIGN KEY (`olympic_docs_ad_id`)
     REFERENCES `PK_DB`.`olympic_docs_additional_data` (`document_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `olympic_docs_subjects_corresp`
     FOREIGN KEY (`subject_id` , `subject_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -718,8 +718,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`_applications_has_documents` (
   CONSTRAINT `fk_applications_has_documents_documents1`
     FOREIGN KEY (`documents_id`)
     REFERENCES `PK_DB`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'applications:\nApplicationDocuments - Документы, приложенные к заявлению.';
 
@@ -908,8 +908,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`entrance_tests` (
   CONSTRAINT `dir_entrance_tests_has`
     FOREIGN KEY (`campaign_id` , `direction_faculty` , `direction_id`)
     REFERENCES `PK_DB`.`campaigns_directions_data` (`campaign_id` , `direction_faculty` , `direction_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `dir_entrance_tests_corresp`
     FOREIGN KEY (`subject_dict_id` , `subject_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
@@ -952,8 +952,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`examinations_audiences` (
   CONSTRAINT `examinations_audiences_has`
     FOREIGN KEY (`examination_id`)
     REFERENCES `PK_DB`.`examinations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Экзаменационные аудитории.';
 
@@ -992,9 +992,6 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
   `min_physics_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по физике.',
   `min_social_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по обществознанию.',
   `min_foreign_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по иностранному языку.',
-  `registrator_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли регистратора.',
-  `inspector_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли проверяющего.',
-  `administrator_password` VARCHAR(10) NOT NULL COMMENT 'Пароль роли администратора.',
   INDEX `constants_current_campaign_idx` (`current_campaign_id` ASC),
   CONSTRAINT `constants_current_campaign`
     FOREIGN KEY (`current_campaign_id`)
@@ -1021,8 +1018,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_target_organizations_da
   CONSTRAINT `fk_campaigns_directions_data_has_target_organizations_campaig1`
     FOREIGN KEY (`campaign_id` , `direction_faculty` , `direction_id`)
     REFERENCES `PK_DB`.`campaigns_directions_data` (`campaign_id` , `direction_faculty` , `direction_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_campaigns_directions_data_has_target_organizations_target_1`
     FOREIGN KEY (`target_organization_id`)
     REFERENCES `PK_DB`.`target_organizations` (`id`)
@@ -1030,6 +1027,18 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_target_organizations_da
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Данные направления кампании по целевым организациям.';
+
+
+-- -----------------------------------------------------
+-- Table `PK_DB`.`roles_passwords`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PK_DB`.`roles_passwords` (
+  `role` ENUM('registrator', 'inspector', 'administrator') NOT NULL COMMENT 'Роль.',
+  `password` VARCHAR(10) NOT NULL COMMENT 'Пароль.',
+  PRIMARY KEY (`role`),
+  UNIQUE INDEX `password_UNIQUE` (`password` ASC))
+ENGINE = InnoDB
+COMMENT = 'Пароли ролей (пользователей).';
 
 USE `PK_DB` ;
 
@@ -1104,10 +1113,10 @@ CREATE  OR REPLACE VIEW `entrants_view` AS
         FROM
             documents
         JOIN identity_docs_additional_data ON documents.id = identity_docs_additional_data.document_id) AS docs_idents ON _applications_has_documents.documents_id = docs_idents.id) AS a_d_idents ON applications.id = a_d_idents.applications_id) AS appls_idents ON entrants.id = appls_idents.entrant_id;
-CREATE USER 'default';
+CREATE USER 'initial' IDENTIFIED BY '1234';
 
-GRANT SELECT ON TABLE `PK_DB`.`users` TO 'default';
-GRANT SELECT ON TABLE `PK_DB`.`constants` TO 'default';
+GRANT SELECT ON TABLE `PK_DB`.`users` TO 'initial';
+GRANT SELECT ON TABLE `PK_DB`.`roles_passwords` TO 'initial';
 CREATE USER 'registrator' IDENTIFIED BY 'reg1234';
 
 GRANT ALL ON `PK_DB`.* TO 'registrator';

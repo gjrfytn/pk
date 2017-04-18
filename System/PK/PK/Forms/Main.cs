@@ -18,8 +18,11 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            string bfbf = new Classes.DB_Connector("default", "").Select(DB_Table.CONSTANTS, userRole + "_password")[0][0].ToString();
-            _DB_Connection = new Classes.DB_Connector(userRole, new Classes.DB_Connector("default", "").Select(DB_Table.CONSTANTS, userRole + "_password")[0][0].ToString());
+            _DB_Connection = new Classes.DB_Connector(userRole, new Classes.DB_Connector("initial", "1234").Select(
+                DB_Table.ROLES_PASSWORDS,
+                new string[] { "password" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }
+                )[0][0].ToString());
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
 

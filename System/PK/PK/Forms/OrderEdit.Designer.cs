@@ -69,9 +69,13 @@
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
+            this.cbType.Items.AddRange(new object[] {
+            "Зачисление",
+            "Отчисление",
+            "Выделение мест в общежитии"});
             this.cbType.Location = new System.Drawing.Point(12, 64);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(121, 21);
+            this.cbType.Size = new System.Drawing.Size(136, 21);
             this.cbType.TabIndex = 1;
             // 
             // tbNumber
