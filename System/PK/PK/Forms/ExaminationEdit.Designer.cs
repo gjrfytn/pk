@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbSubject = new System.Windows.Forms.ComboBox();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.lSubject = new System.Windows.Forms.Label();
@@ -41,6 +39,8 @@
             this.dtpRegEndDate = new System.Windows.Forms.DateTimePicker();
             this.groupBox = new System.Windows.Forms.GroupBox();
             this.bSave = new System.Windows.Forms.Button();
+            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox.SuspendLayout();
             this.SuspendLayout();
@@ -62,20 +62,6 @@
             this.dataGridView.Size = new System.Drawing.Size(132, 143);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
-            // 
-            // dataGridView_Number
-            // 
-            this.dataGridView_Number.DataPropertyName = "number";
-            this.dataGridView_Number.HeaderText = "Номер";
-            this.dataGridView_Number.Name = "dataGridView_Number";
-            this.dataGridView_Number.Width = 50;
-            // 
-            // dataGridView_Capacity
-            // 
-            this.dataGridView_Capacity.DataPropertyName = "capacity";
-            this.dataGridView_Capacity.HeaderText = "Места";
-            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
-            this.dataGridView_Capacity.Width = 50;
             // 
             // cbSubject
             // 
@@ -173,7 +159,23 @@
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);
             // 
-            // ExaminationEditForm
+            // dataGridView_Number
+            // 
+            this.dataGridView_Number.DataPropertyName = "number";
+            this.dataGridView_Number.HeaderText = "Номер";
+            this.dataGridView_Number.Name = "dataGridView_Number";
+            this.dataGridView_Number.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridView_Number.Width = 50;
+            // 
+            // dataGridView_Capacity
+            // 
+            this.dataGridView_Capacity.DataPropertyName = "capacity";
+            this.dataGridView_Capacity.HeaderText = "Места";
+            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
+            this.dataGridView_Capacity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridView_Capacity.Width = 50;
+            // 
+            // ExaminationEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -190,7 +192,7 @@
             this.Controls.Add(this.groupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "ExaminationEditForm";
+            this.Name = "ExaminationEdit";
             this.Text = "Экзамен";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBox.ResumeLayout(false);
@@ -201,8 +203,6 @@
 
         #endregion
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Capacity;
         private System.Windows.Forms.ComboBox cbSubject;
         private System.Windows.Forms.DateTimePicker dtpDate;
         private System.Windows.Forms.Label lSubject;
@@ -213,5 +213,7 @@
         private System.Windows.Forms.DateTimePicker dtpRegEndDate;
         private System.Windows.Forms.GroupBox groupBox;
         private System.Windows.Forms.Button bSave;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Capacity;
     }
 }

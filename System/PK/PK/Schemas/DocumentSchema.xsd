@@ -184,27 +184,27 @@
       </xs:element>
       <xs:element name="Top" type="TBorder" minOccurs="0">
         <xs:annotation>
-          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+          <xs:documentation xml:lang="ru">Верхняя граница.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="Right" type="TBorder" minOccurs="0">
         <xs:annotation>
-          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+          <xs:documentation xml:lang="ru">Правая граница.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="Bottom" type="TBorder" minOccurs="0">
         <xs:annotation>
-          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+          <xs:documentation xml:lang="ru">Нижняя граница.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="InsideH" type="TBorder" minOccurs="0">
         <xs:annotation>
-          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+          <xs:documentation xml:lang="ru">Горизонтальные внутренние границы.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="InsideV" type="TBorder" minOccurs="0">
         <xs:annotation>
-          <xs:documentation xml:lang="ru">Левая граница.</xs:documentation>
+          <xs:documentation xml:lang="ru">Вертикальные внутренние границы.</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:all>

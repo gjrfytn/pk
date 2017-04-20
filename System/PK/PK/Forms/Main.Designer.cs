@@ -240,15 +240,15 @@
             // toolStrip_Users
             // 
             this.toolStrip_Users.Name = "toolStrip_Users";
-            this.toolStrip_Users.Size = new System.Drawing.Size(156, 22);
+            this.toolStrip_Users.Size = new System.Drawing.Size(157, 22);
             this.toolStrip_Users.Text = "Пользователи";
             this.toolStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
             // 
             // toolStrip_FisImport
             // 
             this.toolStrip_FisImport.Name = "toolStrip_FisImport";
-            this.toolStrip_FisImport.Size = new System.Drawing.Size(156, 22);
-            this.toolStrip_FisImport.Text = "Импорт в ФИС";
+            this.toolStrip_FisImport.Size = new System.Drawing.Size(157, 22);
+            this.toolStrip_FisImport.Text = "Экспорт в ФИС";
             this.toolStrip_FisImport.Click += new System.EventHandler(this.toolStrip_FisImport_Click);
             // 
             // menuStrip_Help
