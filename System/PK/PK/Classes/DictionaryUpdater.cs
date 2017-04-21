@@ -24,6 +24,7 @@ namespace PK.Classes
 
             string addedReport = "Добавлены справочники:";
             ushort addedCount = 0;
+            string deletedReport = "";
 
             foreach (var d in fisDictionaries)
                 if (d.Key != 10 && d.Key != 19)
@@ -64,17 +65,18 @@ namespace PK.Classes
                 }
 
             foreach (var d in dbDictionaries)
-                if (!fisDictionaries.ContainsKey(d.Key) && Utility.ShowChoiceMessageWithConfirmation(
-                             "В ФИС отсутствует справочник " + d.Key + " \"" + d.Value + "\".\n\nУдалить справочник из БД?",
-                             "Действие"
-                             ))
-                    _DB_Connection.Delete(DB_Table.DICTIONARIES, new Dictionary<string, object> { { "id", d.Key } });
+                if (!fisDictionaries.ContainsKey(d.Key))
+                    deletedReport += d.Key + ", ";
 
             if (addedCount == 0)
                 addedReport = "Новых справочников нет.";
             else
                 addedReport += "\nВсего: " + addedCount;
-            MessageBox.Show(addedReport, "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (deletedReport != "")
+                deletedReport = "\n\nВнимание: в ФИС отсутствуют справочники с ID: " + deletedReport.Remove(deletedReport.Length - 2);
+
+            MessageBox.Show(addedReport + deletedReport, "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void UpdateDirectionsDictionary()
@@ -84,6 +86,7 @@ namespace PK.Classes
 
             string addedReport = "В справочник №" + 10 + " \"" + "Направления подготовки" + "\" добавлены элементы:";
             ushort addedCount = 0;
+            string deletedReport = "";
 
             foreach (var item in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(item.Key))
@@ -127,21 +130,18 @@ namespace PK.Classes
                 }
 
             foreach (var item in dbDictionaryItems)
-                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowChoiceMessageWithConfirmation(
-                             "В ФИС отсутствует направление " +
-                             item.Key + ".\n\nУдалить его из БД?",
-                             "Действие"
-                             ))
-                    _DB_Connection.Delete(DB_Table.DICTIONARY_10_ITEMS,
-                        new Dictionary<string, object> { { "id", item.Key } }
-                        );
+                if (!fisDictionaryItems.ContainsKey(item.Key))
+                    deletedReport += item.Key + ", ";
 
             if (addedCount == 0)
                 addedReport = "Новых направлений нет.";
             else
                 addedReport += "\nВсего: " + addedCount;
 
-            MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (deletedReport != "")
+                deletedReport = "\n\nВнимание: в ФИС отсутствуют направления с ID: " + deletedReport.Remove(deletedReport.Length - 2);
+
+            MessageBox.Show(addedReport + deletedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void UpdateOlympicsDictionary(byte years)
@@ -151,6 +151,7 @@ namespace PK.Classes
 
             string addedReport = "В справочник №" + 19 + " \"" + "Олимпиады" + "\" добавлены элементы:";
             ushort addedCount = 0;
+            string deletedReport = "";
 
             foreach (var olymp in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(olymp.Key))
@@ -292,56 +293,23 @@ namespace PK.Classes
 
             foreach (var olymp in dbDictionaryItems)
                 if (!fisDictionaryItems.ContainsKey(olymp.Key))
-                {
-                    if (Utility.ShowChoiceMessageWithConfirmation(
-                             "В ФИС отсутствует олимпиада " + olymp.Key + " \"" + olymp.Value.Name + "\""
-                             + ".\n\nУдалить её из БД?",
-                             "Действие"
-                             ))
-                        _DB_Connection.Delete(DB_Table.DICTIONARY_19_ITEMS,
-                            new Dictionary<string, object> { { "olympic_id", olymp.Key } }
-                            );
-                }
+                    deletedReport += "олимпиада - " + olymp.Key + ", ";
                 else
                     foreach (var prof in olymp.Value.Profiles)
                         if (!fisDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
-                        {
-                            if (Utility.ShowChoiceMessageWithConfirmation(
-                             "В ФИС отсутствует профиль с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?",
-                             "Действие"
-                             ))
-                                _DB_Connection.Delete(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
-                                new Dictionary<string, object>
-                                {
-                                    { "olympic_id",olymp.Key },
-                                    { "profile_dict_id", prof.Key.Item1 },
-                                    { "profile_id", prof.Key.Item2 }
-                                }
-                                );
-                        }
+                            deletedReport += "олимпиада - " + olymp.Key + " -> профиль - " + prof.Key + ", ";
                         else
                             foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
-                                if (!fisDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj) && Utility.ShowChoiceMessageWithConfirmation(
-                             "В ФИС отсутствует дисциплина с кодом " + subj.Item2 + " для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
-                             + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ".\n\nУдалить его из БД?",
-                             "Действие"
-                             ))
-                                    _DB_Connection.Delete(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
-                            new Dictionary<string, object>
-                            {
-                                { "dictionary_olympic_profiles_olympic_id",olymp.Key },
-                                { "dictionary_olympic_profiles_profile_dict_id", prof.Key.Item1 },
-                                { "dictionary_olympic_profiles_profile_id", prof.Key.Item2 },
-                                { "dictionaries_items_dictionary_id", subj.Item1 },
-                                { "dictionaries_items_item_id",subj.Item2 }
-                            }
-                            );
+                                if (!fisDictionaryItems[olymp.Key].Profiles[prof.Key].Subjects.Contains(subj))
+                                    deletedReport += "олимпиада - " + olymp.Key + " -> профиль - " + prof.Key + " -> дисциплина - " + subj.Item2 + ", ";
 
             if (addedCount == 0)
                 addedReport = "Новых олимпиад нет.";
             else
                 addedReport += "\nВсего: " + addedCount;
+
+            if (deletedReport != "")
+                deletedReport = "\n\nВнимание: в ФИС отсутствуют объекты с ID: " + deletedReport.Remove(deletedReport.Length - 2);
 
             MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -352,6 +320,7 @@ namespace PK.Classes
 
             string addedReport = "В справочник №" + dictionary + " \"" + dictionaryName + "\" добавлены элементы:";
             ushort addedCount = 0;
+            string deletedReport = "";
 
             foreach (var item in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(item.Key))
@@ -377,19 +346,19 @@ namespace PK.Classes
                 }
 
             foreach (var item in dbDictionaryItems)
-                if (!fisDictionaryItems.ContainsKey(item.Key) && Utility.ShowChoiceMessageWithConfirmation(
-                             "Справочник №" + dictionary + " \"" + dictionaryName + "\":\nв ФИС отсутствует элемент " +
-                             item.Key + " \"" + item.Value + "\".\n\nУдалить элемент из БД?",
-                             "Действие"
-                             ))
-                    _DB_Connection.Delete(DB_Table.DICTIONARIES_ITEMS,
-                        new Dictionary<string, object> { { "dictionary_id", dictionary }, { "item_id", item.Key } }
-                        );
+                if (!fisDictionaryItems.ContainsKey(item.Key))
+                    deletedReport += item.Key + ", ";
 
             if (addedCount != 0)
             {
                 addedReport += "\nВсего: " + addedCount;
                 MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if (deletedReport != "")
+            {
+                deletedReport = "Справочник №" + dictionary + ": в ФИС отсутствуют элементы с ID: " + deletedReport.Remove(deletedReport.Length - 2);
+                MessageBox.Show(deletedReport, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`_campaigns_has_dictionaries_items` (
   CONSTRAINT `fk_campaigns_has_dictionaries_items_campaigns1`
     FOREIGN KEY (`campaigns_id`)
     REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_campaigns_has_dictionaries_items_dictionaries_items1`
     FOREIGN KEY (`dictionaries_items_dictionary_id` , `dictionaries_items_item_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`dictionary_id` , `item_id`)
@@ -119,11 +119,11 @@ COMMENT = 'campaigns:\nEducationForms.EducationFormID[1..n] - ИД формы о
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`institution_achievements` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приемной кампании.',
   `name` VARCHAR(500) NOT NULL COMMENT 'Наименование индивидуального достижения.',
   `category_dict_id` INT UNSIGNED NOT NULL COMMENT '36',
   `category_id` INT UNSIGNED NOT NULL COMMENT 'ИД индивидуального достижения (справочник №36).',
   `value` SMALLINT UNSIGNED NOT NULL COMMENT 'Балл, начисляемый за индивидуальное достижение.',
-  `campaign_id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор приемной кампании.',
   PRIMARY KEY (`id`),
   INDEX `corresp_idx` (`category_dict_id` ASC, `category_id` ASC),
   INDEX `has_idx` (`campaign_id` ASC),
@@ -135,8 +135,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`institution_achievements` (
   CONSTRAINT `institution_achievements_has`
     FOREIGN KEY (`campaign_id`)
     REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Индивидуальные достижения, учитываемые образовательной организацией.';
 
@@ -180,8 +180,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
   CONSTRAINT `orders_has`
     FOREIGN KEY (`campaign_id`)
     REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `orders_corresp_edu_f`
     FOREIGN KEY (`education_form_id` , `education_form_dict_id`)
     REFERENCES `PK_DB`.`dictionaries_items` (`item_id` , `dictionary_id`)
@@ -228,14 +228,14 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications` (
   `status_dict_id` INT UNSIGNED NOT NULL COMMENT '4',
   `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус заявления (справочник №4).',
   `comment` VARCHAR(4000) NULL COMMENT 'Комментарий к заявлению.',
-  `language` ENUM('Английский', 'Немецкий', 'Французский') NOT NULL COMMENT 'Изучаемый язык.',
+  `language` ENUM('Английский', 'Немецкий', 'Французский') NULL COMMENT 'Изучаемый язык.',
   `registrator_login` VARCHAR(20) NOT NULL COMMENT 'Логин пользователя, занёсшего заявление.',
-  `first_high_edu` TINYINT(1) NOT NULL COMMENT 'Высшее образование получает впервые.',
-  `mcado` TINYINT(1) NOT NULL COMMENT 'МЦАДО.',
-  `chernobyl` TINYINT(1) NOT NULL COMMENT 'Чернобыльская зона.',
-  `passing_examinations` TINYINT(1) NOT NULL COMMENT 'Сдаёт экзамены.',
-  `priority_right` TINYINT(1) NOT NULL COMMENT 'Преимущественное право.',
-  `special_conditions` TINYINT(1) NOT NULL COMMENT 'ВИ с созданием специальных условий.',
+  `first_high_edu` TINYINT(1) NOT NULL COMMENT 'Высшее образование данного уровня получает впервые.',
+  `mcado` TINYINT(1) NULL COMMENT 'МЦАДО.',
+  `chernobyl` TINYINT(1) NULL COMMENT 'Чернобыльская зона.',
+  `passing_examinations` TINYINT(1) NULL COMMENT 'Сдаёт экзамены.',
+  `priority_right` TINYINT(1) NULL COMMENT 'Преимущественное право.',
+  `special_conditions` TINYINT(1) NULL COMMENT 'ВИ с созданием специальных условий.',
   `master_appl` TINYINT(1) NOT NULL COMMENT 'Заявление на уровень магистра.',
   `recommendation` TINYINT(1) NULL COMMENT 'Рекомендация выпускающей кафедры.',
   PRIMARY KEY (`id`),
@@ -341,9 +341,9 @@ COMMENT = 'Направления по факультетам.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`profiles` (
   `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
-  `name` VARCHAR(150) NOT NULL COMMENT 'Название профиля.',
   `short_name` VARCHAR(5) NOT NULL COMMENT 'Краткое название профиля.',
-  PRIMARY KEY (`faculty_short_name`, `direction_id`, `name`),
+  `name` VARCHAR(150) NOT NULL COMMENT 'Название профиля.',
+  PRIMARY KEY (`faculty_short_name`, `direction_id`, `short_name`),
   INDEX `has_idx` (`faculty_short_name` ASC, `direction_id` ASC),
   CONSTRAINT `profiles_has`
     FOREIGN KEY (`faculty_short_name` , `direction_id`)
@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   `edu_form_id` INT UNSIGNED NOT NULL COMMENT 'Форма обучения (справочник №14).',
   `edu_source_dict_id` INT UNSIGNED NOT NULL COMMENT '15',
   `edu_source_id` INT UNSIGNED NOT NULL COMMENT 'Источник финансирования (справочник №15).',
-  `profile_name` VARCHAR(100) NULL COMMENT 'Имя профиля, если заявление подаётся на платную форму, иначе NULL.',
+  `profile_short_name` VARCHAR(5) NULL COMMENT 'Краткое имя профиля, если заявление подаётся на платную форму, иначе NULL.',
   `target_organization_id` INT UNSIGNED NULL COMMENT 'ID организации целевого приема.',
   `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
   `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
@@ -376,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
   INDEX `applies_idx` (`faculty_short_name` ASC, `direction_id` ASC),
   INDEX `corresp_edu_form_idx` (`edu_form_dict_id` ASC, `edu_form_id` ASC),
   INDEX `corresp_edu_source_idx` (`edu_source_dict_id` ASC, `edu_source_id` ASC),
-  INDEX `applies_prof_idx` (`faculty_short_name` ASC, `direction_id` ASC, `profile_name` ASC),
+  INDEX `applies_prof_idx` (`faculty_short_name` ASC, `direction_id` ASC, `profile_short_name` ASC),
   CONSTRAINT `applications_entrances_has`
     FOREIGN KEY (`application_id`)
     REFERENCES `PK_DB`.`applications` (`id`)
@@ -403,8 +403,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`applications_entrances` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `applications_entrances_applies_prof`
-    FOREIGN KEY (`faculty_short_name` , `direction_id` , `profile_name`)
-    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `name`)
+    FOREIGN KEY (`faculty_short_name` , `direction_id` , `profile_short_name`)
+    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `short_name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -762,8 +762,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_faculties_data` (
   CONSTRAINT `fk_faculties_has_campaigns_campaigns1`
     FOREIGN KEY (`campaign_id`)
     REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Данные кампаний по факультетам.';
 
@@ -790,8 +790,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_directions_data` (
   CONSTRAINT `campaigns_directions_data_has_camp_fac_d`
     FOREIGN KEY (`campaign_id` , `direction_faculty`)
     REFERENCES `PK_DB`.`campaigns_faculties_data` (`campaign_id` , `faculty_short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Данные кампаний по направлениям.';
 
@@ -803,23 +803,23 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`campaigns_profiles_data` (
   `campaigns_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
   `profiles_direction_faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет направления.',
   `profiles_direction_id` INT UNSIGNED NOT NULL COMMENT 'ID направления.',
-  `profiles_name` VARCHAR(100) NOT NULL COMMENT 'Профиль.',
+  `profiles_short_name` VARCHAR(5) NOT NULL COMMENT 'Профиль.',
   `places_paid_o` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных очных мест.',
   `places_paid_oz` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных вечерних мест.',
   `places_paid_z` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество платных заочных мест.',
-  PRIMARY KEY (`campaigns_id`, `profiles_direction_faculty`, `profiles_direction_id`, `profiles_name`),
-  INDEX `has_profiles_idx` (`profiles_direction_faculty` ASC, `profiles_direction_id` ASC, `profiles_name` ASC),
+  PRIMARY KEY (`campaigns_id`, `profiles_direction_faculty`, `profiles_direction_id`, `profiles_short_name`),
+  INDEX `has_profiles_idx` (`profiles_direction_faculty` ASC, `profiles_direction_id` ASC, `profiles_short_name` ASC),
   INDEX `has_camp_dir_d_idx` (`campaigns_id` ASC, `profiles_direction_faculty` ASC, `profiles_direction_id` ASC),
   CONSTRAINT `campaigns_profiles_data_has_profiles`
-    FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_name`)
-    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `name`)
+    FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_short_name`)
+    REFERENCES `PK_DB`.`profiles` (`faculty_short_name` , `direction_id` , `short_name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `campaigns_profiles_data_has_camp_dir_d`
     FOREIGN KEY (`campaigns_id` , `profiles_direction_faculty` , `profiles_direction_id`)
     REFERENCES `PK_DB`.`campaigns_directions_data` (`campaign_id` , `direction_faculty` , `direction_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Данные кампаний по профилям.';
 
@@ -918,7 +918,7 @@ COMMENT = 'Оценки абитуриентов по внутренним эк�
 -- Table `PK_DB`.`constants`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
-  `current_campaign_id` INT UNSIGNED NOT NULL COMMENT 'ID текущей кампании.',
+  `current_campaign_id` INT UNSIGNED NULL COMMENT 'ID текущей кампании.',
   `min_math_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по математике.',
   `min_russian_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по русскому языку.',
   `min_physics_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по физике.',
@@ -928,8 +928,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`constants` (
   CONSTRAINT `constants_current_campaign`
     FOREIGN KEY (`current_campaign_id`)
     REFERENCES `PK_DB`.`campaigns` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE SET NULL
+    ON UPDATE SET NULL)
 ENGINE = InnoDB
 COMMENT = 'Константы.';
 
