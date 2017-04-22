@@ -1991,11 +1991,11 @@ namespace PK.Forms
                         null
                         ));
 
-                List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+                List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
 
                 foreach (TabPage tab in tbDirections.Controls)
                     if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
-                        tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
+                        inventoryTableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
 
                 foreach (CheckBox cb in gbWithdrawDocs.Controls)
                     if (cb.Checked)
@@ -2018,13 +2018,13 @@ namespace PK.Forms
                                     (s1, s2) => s2[2]
                                     ).Single();
 
-                                tableParams[1].Add(new string[] { buf + " Дата ориг.: " + origDate.ToShortDateString() });
+                                inventoryTableParams[1].Add(new string[] { buf + " Дата ориг.: " + origDate.ToShortDateString() });
                             }
                             else
-                                tableParams[1].Add(new string[] { buf });
+                                inventoryTableParams[1].Add(new string[] { buf });
                         }
                         else
-                            tableParams[1].Add(new string[] { cb.Text });
+                            inventoryTableParams[1].Add(new string[] { cb.Text });
 
                 if (form.cbInventory.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
@@ -2044,12 +2044,12 @@ namespace PK.Forms
                             SystemInformation.ComputerName,
                             DateTime.Now.ToString() //TODO Брать из переменной
                         },
-                        tableParams
+                        inventoryTableParams
                         ));
 
                 List<string> parameters = new List<string>
-            {
-                tbLastName.Text.ToUpper(),
+                {
+                    tbLastName.Text.ToUpper(),
                     tbFirstName.Text[0]+".",
                     tbMidleName.Text[0]+".",
                     _EntrantID.Value.ToString(),
@@ -2057,9 +2057,9 @@ namespace PK.Forms
                     tbFirstName.Text,
                     tbMidleName.Text,
                     DateTime.Now.Year.ToString(), //TODO Брать из переменной
-            };
+                };
 
-                foreach (string[] eduForm in tableParams[0])
+                foreach (string[] eduForm in inventoryTableParams[0])
                     parameters.Add(eduForm[0]);
 
                 while (parameters.Count != 13)
@@ -2074,19 +2074,21 @@ namespace PK.Forms
                         null
                         ));
 
-                tableParams[0].Clear();
+                List < string[] >[]   receiptTableParams = new List<string[]>[2];
+                receiptTableParams[0] = new List<string[]>();
+                receiptTableParams[1] = inventoryTableParams[1];
                 foreach (TabPage tab in tbDirections.Controls)
                 {
                     var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
                     if (cbs.Count() != 0)
                     {
-                        tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
+                        receiptTableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
                         foreach (ComboBox cb in cbs)
                         {
                             string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
                             string name = cb.Text.Split(')')[1].Remove(0, 1);
                             if (tab.Name.Split('_')[1] != "paid")
-                                tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
+                                receiptTableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
                             DB_Table.DIRECTIONS,
                             new string[] { "short_name" },
                             new List<Tuple<string, Relation, object>>
@@ -2102,7 +2104,7 @@ namespace PK.Forms
                                     new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
                                 })[0][0];
 
-                                tableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
+                                receiptTableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
                                     DB_Table.PROFILES,
                                     new string[] { "short_name" },
                                     new List<Tuple<string, Relation, object>>
@@ -2113,7 +2115,7 @@ namespace PK.Forms
                                     })[0][0].ToString()+ " (" + faculty + ") " + name});
                             }
                         }
-                        tableParams[0].Add(new string[] { "" });
+                        receiptTableParams[0].Add(new string[] { "" });
                     }
                 }
 
@@ -2136,7 +2138,7 @@ namespace PK.Forms
                             DateTime.Now.ToString(), //TODO Брать из переменной
                             _EditingDateTime.ToString()
                         },
-                        tableParams
+                        receiptTableParams
                         ));
 
                 string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
@@ -2238,7 +2240,7 @@ namespace PK.Forms
                         null
                         ));
 
-                string doc = ".\\temp\\percRecordBack";
+                string doc = Classes.Utility.TempPath + "abitDocs";
                 Classes.DocumentCreator.Create(doc, documents);
                 doc += ".docx";
 

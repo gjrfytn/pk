@@ -85,6 +85,7 @@
         </Element>
         <Element>
           <Table>
+            <AutoFit>Window</AutoFit>
             <Borders>
               <Left>
                 <Style>None</Style>
@@ -160,6 +161,7 @@
         </Element>
         <Element>
           <Table>
+            <AutoFit>Contents</AutoFit>
             <Borders>
               <Left>
                 <Style>None</Style>

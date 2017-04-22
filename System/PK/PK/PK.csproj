@@ -436,7 +436,13 @@
     <Content Include="DocumentTemplates\PercRecordBack.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="DocumentTemplates\PercRecordBackM.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DocumentTemplates\PercRecordFace.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\PercRecordFaceM.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\Receipt.xml">

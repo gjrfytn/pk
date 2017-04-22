@@ -108,7 +108,7 @@ namespace PK.Forms
 
         private void bAlphaCodes_Click(object sender, System.EventArgs e)
         {
-            string doc = ".\\temp\\AlphaCodes";
+            string doc = Classes.Utility.TempPath + "AlphaCodes";
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
@@ -120,7 +120,7 @@ namespace PK.Forms
 
         private void bAlphaAuditories_Click(object sender, EventArgs e)
         {
-            string doc = ".\\temp\\AlphaAuditories";
+            string doc = Classes.Utility.TempPath + "AlphaAuditories";
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
@@ -145,7 +145,7 @@ namespace PK.Forms
                 });
             }
 
-            string doc = ".\\temp\\AbitAudDistrib";
+            string doc = Classes.Utility.TempPath + "AbitAudDistrib";
             Classes.DocumentCreator.Create(
                Classes.Utility.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                doc,
@@ -165,7 +165,7 @@ namespace PK.Forms
         {
             foreach (Tuple<char, string> group in _Distribution)
             {
-                string doc = ".\\temp\\ExamCardsSheet_" + group.Item1 + "_" + group.Item2;
+                string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2;
                 Classes.DocumentCreator.Create(
                     Classes.Utility.DocumentsTemplatesPath + "ExamCardsSheet.xml",
                     doc,

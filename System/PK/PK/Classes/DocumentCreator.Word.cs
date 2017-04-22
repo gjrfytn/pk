@@ -29,6 +29,12 @@ namespace PK.Classes
                 { "Bottom",VerticalAlignment.Bottom}
             };
 
+            private static readonly Dictionary<string, AutoFit> _AutoFits = new Dictionary<string, AutoFit>
+            {
+                { "Contents",AutoFit.Contents},
+                { "Window",AutoFit.Window}
+            };
+
             public static DocX CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
                 return Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
@@ -298,7 +304,8 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     }
                 }
 
-                table.AutoFit = AutoFit.Contents; //TODO
+                if (tableElem.Element("AutoFit") != null)
+                    table.AutoFit = _AutoFits[tableElem.Element("AutoFit").Value];
             }
 
             private static Table InsertFixedTable(DocX doc, XElement tableEl)
@@ -366,6 +373,9 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
 
                     index++;
                 }
+
+                if (tableEl.Element("AutoFit") != null)
+                    table.AutoFit = _AutoFits[tableEl.Element("AutoFit").Value];
             }
         }
     }
