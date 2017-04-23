@@ -87,6 +87,7 @@ namespace PK.Forms
         private void dgvTargetOrganizatons_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count-1);
+
         }
 
         private void dgvTargetOrganizatons_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -114,8 +115,8 @@ namespace PK.Forms
                     dgvTargetOrganizatons.CurrentRow.Cells[4].Value = form2.DirectionName;
                     dgvTargetOrganizatons.CurrentRow.Cells[5].Value = form2.DirectionCode;
                     dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
-                    dgvTargetOrganizatons.CurrentRow.Cells[8].ReadOnly = false;
-                    dgvTargetOrganizatons.CurrentRow.Cells[9].ReadOnly = false;
+                    dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OF.Index].Value = 0;
+                    dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OZF.Index].Value = 0;
                     break;
             }
         }
@@ -189,34 +190,17 @@ namespace PK.Forms
 
         private void cbEduForm_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbEduFormO.Checked)
-            {
-                dgvDirections_OOOF.Visible = true;
-                dgvDirections_OKOF.Visible = true;
-            }
-            else
-            {
-                dgvDirections_OOOF.Visible = false;
-                dgvDirections_OKOF.Visible = false;
-            }
-            if (cbEduFormOZ.Checked)
-            {
-                dgvDirections_OOOZF.Visible = true;
-                dgvDirections_OKOZF.Visible = true;
-            }
-            else
-            {
-                dgvDirections_OOOZF.Visible = false;
-                dgvDirections_OKOZF.Visible = false;
-            }
-            if (cbEduFormZ.Checked)
-            {
-                
-            }
-            else
-            {
-                
-            }
+            dgvDirections_OOOF.Visible = cbEduFormO.Checked;
+            dgvDirections_OKOF.Visible = cbEduFormO.Checked;
+            dgvTargetOrganizatons_OF.Visible = cbEduFormO.Checked;
+            dgvPaidPlaces_OFPM.Visible = cbEduFormO.Checked;
+
+            dgvDirections_OOOZF.Visible = cbEduFormOZ.Checked;
+            dgvDirections_OKOZF.Visible = cbEduFormOZ.Checked;
+            dgvTargetOrganizatons_OZF.Visible = cbEduFormOZ.Checked;
+            dgvPaidPlaces_OZFPM.Visible = cbEduFormOZ.Checked;
+
+            dgvPaidPlaces_ZFPM.Visible = cbEduFormZ.Checked;
         }
 
         private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -375,6 +359,7 @@ namespace PK.Forms
 
         private void SaveCampaign()
         {
+            Cursor.Current = Cursors.WaitCursor;
             _CampaignId = _DB_Connection.Insert(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {
                             { "name", tbName.Text }, { "start_year",  Convert.ToInt32(cbStartYear.SelectedItem)},
@@ -389,10 +374,12 @@ namespace PK.Forms
             SaveTargetOrganizations();
             SaveProfiles();            
             SaveEntranceTests();
+            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateCampaing()
         {
+            Cursor.Current = Cursors.WaitCursor;
             _DB_Connection.Update(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {   { "name", tbName.Text }, { "start_year",  int.Parse(cbStartYear.SelectedItem.ToString())},
                             { "end_year", int.Parse(cbEndYear.SelectedItem.ToString()) },
@@ -410,10 +397,12 @@ namespace PK.Forms
             UpdateTargetOrganizations();            
             UpdateProfiles();
             UpdateEntranceTests();
+            Cursor.Current = Cursors.Default;
         }
 
         private void LoadCampaign()
         {
+            Cursor.Current = Cursors.WaitCursor;
             List<object> loadedCampaign = new List<object>();
             loadedCampaign.AddRange(_DB_Connection.Select(DB_Table.CAMPAIGNS,
                 new string[] { "name", "start_year", "end_year", "status_dict_id", "status_id", "type_dict_id", "type_id" },
@@ -432,6 +421,7 @@ namespace PK.Forms
 
             LoadEduForms();
             LoadEduLevels();
+            Cursor.Current = Cursors.Default;
         }
 
         private void LoadTables()
@@ -516,8 +506,9 @@ namespace PK.Forms
             {
                 if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
                     _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId},
-                        { "direction_faculty", row.Cells[6].Value}, { "direction_id", row.Cells[3].Value}, { "target_organization_id", row.Cells[0].Value},
-                        { "places_o", row.Cells[8].Value}, { "places_oz",row.Cells[9].Value }, { "places_z", 0} });
+                        { "direction_faculty", row.Cells[dgvTargetOrganizatons_faculty.Index].Value}, { "direction_id", row.Cells[dgvTargetOrganizatons_DirID.Index].Value},
+                        { "target_organization_id", row.Cells[dgvTargetOrganizatons_ID.Index].Value},
+                        { "places_o", row.Cells[dgvTargetOrganizatons_OF.Index].Value}, { "places_oz", row.Cells[dgvTargetOrganizatons_OZF.Index].Value } });
             }
         }
 
@@ -885,7 +876,7 @@ namespace PK.Forms
                 else if (keysMatch && !valuesMatch)
                 {
                     _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "places_o",  int.Parse(item[3])},
-                        { "places_oz", int.Parse(item[4]) } }, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", (uint)oldList[j][0]},
+                        { "places_oz", int.Parse(item[4]) } }, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", oldList[j][0]},
                             { "direction_id", (uint)oldList[j][1] }, { "target_organization_id", (uint)oldList[j][2] } });
                     oldList.RemoveAt(j);
                     newList.Remove(item);

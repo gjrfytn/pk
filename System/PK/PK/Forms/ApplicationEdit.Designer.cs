@@ -95,7 +95,7 @@
             this.cbChernobyl = new System.Windows.Forms.CheckBox();
             this.cbMCDAO = new System.Windows.Forms.CheckBox();
             this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
-            this.tbDirections = new System.Windows.Forms.TabControl();
+            this.tcDirections = new System.Windows.Forms.TabControl();
             this.tpDir_budget_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir13 = new System.Windows.Forms.Button();
             this.btRemoveDir12 = new System.Windows.Forms.Button();
@@ -203,7 +203,7 @@
             this.grbApplication.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.gbAttributes.SuspendLayout();
-            this.tbDirections.SuspendLayout();
+            this.tcDirections.SuspendLayout();
             this.tpDir_budget_o.SuspendLayout();
             this.tpDir_paid_o.SuspendLayout();
             this.tpDir_budget_oz.SuspendLayout();
@@ -972,7 +972,7 @@
             this.grbApplication.BackColor = System.Drawing.Color.Ivory;
             this.grbApplication.Controls.Add(this.pictureBox3);
             this.grbApplication.Controls.Add(this.gbAttributes);
-            this.grbApplication.Controls.Add(this.tbDirections);
+            this.grbApplication.Controls.Add(this.tcDirections);
             this.grbApplication.Controls.Add(this.gbExamsDoc);
             this.grbApplication.Controls.Add(this.gbOther);
             this.grbApplication.Controls.Add(this.cbFirstTime);
@@ -1108,23 +1108,23 @@
             this.cbHostelNeeded.Text = "Нуждается в общежитии";
             this.cbHostelNeeded.UseVisualStyleBackColor = true;
             // 
-            // tbDirections
+            // tcDirections
             // 
-            this.tbDirections.Controls.Add(this.tpDir_budget_o);
-            this.tbDirections.Controls.Add(this.tpDir_paid_o);
-            this.tbDirections.Controls.Add(this.tpDir_budget_oz);
-            this.tbDirections.Controls.Add(this.tpDir_paid_oz);
-            this.tbDirections.Controls.Add(this.tpDir_paid_z);
-            this.tbDirections.Controls.Add(this.tpDir_quote_o);
-            this.tbDirections.Controls.Add(this.tpDir_target_o);
-            this.tbDirections.Controls.Add(this.tpDir_quote_oz);
-            this.tbDirections.Controls.Add(this.tpDir_target_oz);
-            this.tbDirections.Location = new System.Drawing.Point(108, 40);
-            this.tbDirections.Margin = new System.Windows.Forms.Padding(4);
-            this.tbDirections.Name = "tbDirections";
-            this.tbDirections.SelectedIndex = 0;
-            this.tbDirections.Size = new System.Drawing.Size(595, 184);
-            this.tbDirections.TabIndex = 1;
+            this.tcDirections.Controls.Add(this.tpDir_budget_o);
+            this.tcDirections.Controls.Add(this.tpDir_paid_o);
+            this.tcDirections.Controls.Add(this.tpDir_budget_oz);
+            this.tcDirections.Controls.Add(this.tpDir_paid_oz);
+            this.tcDirections.Controls.Add(this.tpDir_paid_z);
+            this.tcDirections.Controls.Add(this.tpDir_quote_o);
+            this.tcDirections.Controls.Add(this.tpDir_target_o);
+            this.tcDirections.Controls.Add(this.tpDir_quote_oz);
+            this.tcDirections.Controls.Add(this.tpDir_target_oz);
+            this.tcDirections.Location = new System.Drawing.Point(108, 40);
+            this.tcDirections.Margin = new System.Windows.Forms.Padding(4);
+            this.tcDirections.Name = "tcDirections";
+            this.tcDirections.SelectedIndex = 0;
+            this.tcDirections.Size = new System.Drawing.Size(595, 184);
+            this.tcDirections.TabIndex = 1;
             // 
             // tpDir_budget_o
             // 
@@ -2325,7 +2325,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.gbAttributes.ResumeLayout(false);
             this.gbAttributes.PerformLayout();
-            this.tbDirections.ResumeLayout(false);
+            this.tcDirections.ResumeLayout(false);
             this.tpDir_budget_o.ResumeLayout(false);
             this.tpDir_budget_o.PerformLayout();
             this.tpDir_paid_o.ResumeLayout(false);
@@ -2436,7 +2436,7 @@
         private System.Windows.Forms.CheckBox cbChernobyl;
         private System.Windows.Forms.CheckBox cbMCDAO;
         private System.Windows.Forms.CheckBox cbHostelNeeded;
-        private System.Windows.Forms.TabControl tbDirections;
+        private System.Windows.Forms.TabControl tcDirections;
         private System.Windows.Forms.TabPage tpDir_budget_o;
         private System.Windows.Forms.TabPage tpDir_paid_o;
         private System.Windows.Forms.TabPage tpDir_budget_oz;

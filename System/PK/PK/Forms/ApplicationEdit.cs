@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using DirTuple = System.Tuple<uint, string, string, uint, uint, string, string>;
 
 namespace PK.Forms
 {
@@ -127,7 +128,7 @@ namespace PK.Forms
                 dgvExams.Rows[j].Cells[1].Value = DateTime.Now.Year.ToString();
             }
 
-            foreach (TabPage tab in tbDirections.Controls)
+            foreach (TabPage tab in tcDirections.Controls)
             {
                 string eduFormName = "";
                 switch (tab.Name.Split('_')[2])
@@ -208,27 +209,27 @@ namespace PK.Forms
                 QuotDocs form = new QuotDocs(_DB_Connection,this);
                 form.ShowDialog();
                 cbMedCertificate.Enabled = true;
-                foreach (Control c in tbDirections.TabPages[5].Controls)
+                foreach (Control c in tcDirections.TabPages[5].Controls)
                     c.Enabled = true;
-                foreach (Control c in tbDirections.TabPages[7].Controls)
+                foreach (Control c in tcDirections.TabPages[7].Controls)
                     c.Enabled = true;
             }
             else if ((cbQuote.Checked) && (_Loading))
             {
                 cbMedCertificate.Enabled = true;
                 cbMedCertificate.Checked = true;
-                foreach (Control c in tbDirections.TabPages[5].Controls)
+                foreach (Control c in tcDirections.TabPages[5].Controls)
                     c.Enabled = true;
-                foreach (Control c in tbDirections.TabPages[7].Controls)
+                foreach (Control c in tcDirections.TabPages[7].Controls)
                     c.Enabled = true;
             }
             else
             {
                 cbMedCertificate.Enabled = false;
                 cbMedCertificate.Checked = false;
-                foreach (Control c in tbDirections.TabPages[5].Controls)
+                foreach (Control c in tcDirections.TabPages[5].Controls)
                     c.Enabled = false;
-                foreach (Control c in tbDirections.TabPages[7].Controls)
+                foreach (Control c in tcDirections.TabPages[7].Controls)
                     c.Enabled = false;
             }
             DirectionDocEnableDisable();
@@ -273,7 +274,7 @@ namespace PK.Forms
             else
             {
                 bool found = false;
-                foreach (TabPage tab in tbDirections.TabPages)
+                foreach (TabPage tab in tcDirections.TabPages)
                     foreach (Control control in tab.Controls)
                     {
                         ComboBox cb = control as ComboBox;
@@ -558,7 +559,7 @@ namespace PK.Forms
 
                 List<string[]>[] tableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
 
-                foreach (TabPage tab in tbDirections.Controls)
+                foreach (TabPage tab in tcDirections.Controls)
                     if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
                         tableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
 
@@ -640,7 +641,7 @@ namespace PK.Forms
                         ));
 
                 tableParams[0].Clear();
-                foreach (TabPage tab in tbDirections.Controls)
+                foreach (TabPage tab in tcDirections.Controls)
                 {
                     var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
                     if (cbs.Count() != 0)
@@ -741,7 +742,7 @@ namespace PK.Forms
                     ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
                 };
 
-                foreach (TabPage tab in tbDirections.Controls)
+                foreach (TabPage tab in tcDirections.Controls)
                 {
                     var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
                     if (cbs.Count() != 0)
@@ -821,23 +822,23 @@ namespace PK.Forms
                 TargetOrganizationSelect form = new TargetOrganizationSelect(_DB_Connection,_TargetOrganizationID);
                 form.ShowDialog();
                 _TargetOrganizationID = form.OrganizationID;
-                foreach (Control c in tbDirections.TabPages[6].Controls)
+                foreach (Control c in tcDirections.TabPages[6].Controls)
                     c.Enabled = true;
-                foreach (Control c in tbDirections.TabPages[8].Controls)
+                foreach (Control c in tcDirections.TabPages[8].Controls)
                     c.Enabled = true;
             }
             else if (!cbTarget.Checked && !_Loading)
             {
-                foreach (Control c in tbDirections.TabPages[6].Controls)
+                foreach (Control c in tcDirections.TabPages[6].Controls)
                     c.Enabled = false;
-                foreach (Control c in tbDirections.TabPages[8].Controls)
+                foreach (Control c in tcDirections.TabPages[8].Controls)
                     c.Enabled = false;
             }
             else if (_Loading)
             {
-                foreach (Control c in tbDirections.TabPages[6].Controls)
+                foreach (Control c in tcDirections.TabPages[6].Controls)
                     c.Enabled = true;
-                foreach (Control c in tbDirections.TabPages[8].Controls)
+                foreach (Control c in tcDirections.TabPages[8].Controls)
                     c.Enabled = true;
             }
         }
@@ -859,34 +860,34 @@ namespace PK.Forms
         private void btAddDir_Click(object sender, EventArgs e)
         {
             int tabNumber = int.Parse((sender as Control).Name.Substring((sender as Control).Name.Length - 1, 1));
-            ComboBox combo = tbDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "1", false)[0] as ComboBox;
+            ComboBox combo = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "1", false)[0] as ComboBox;
             if (combo.SelectedIndex == -1)
             {
                 combo.Visible = true;
                 combo.Enabled = true;
-                Button bt = tbDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "1", false)[0] as Button;
+                Button bt = tcDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "1", false)[0] as Button;
                 bt.Visible = true;
                 bt.Enabled = true;
             }
             else if ((tabNumber == 1)|| (tabNumber == 3) || (tabNumber == 7) || (tabNumber == 9))
             {
-                combo = tbDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "2", false)[0] as ComboBox;
+                combo = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "2", false)[0] as ComboBox;
                 if (combo.SelectedIndex == -1)
                 {
                     combo.Visible = true;
                     combo.Enabled = true;
-                    Button bt = tbDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "2", false)[0] as Button;
+                    Button bt = tcDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "2", false)[0] as Button;
                     bt.Visible = true;
                     bt.Enabled = true;
                 }
                 else if ((tabNumber == 1) || (tabNumber == 7))
                 {
-                    combo = tbDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "3", false)[0] as ComboBox;
+                    combo = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "3", false)[0] as ComboBox;
                     if (combo.SelectedIndex == -1)
                     {
                         combo.Visible = true;
                         combo.Enabled = true;
-                        Button bt = tbDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "3", false)[0] as Button;
+                        Button bt = tcDirections.TabPages[tabNumber - 1].Controls.Find("btRemoveDir" + tabNumber.ToString() + "3", false)[0] as Button;
                         bt.Visible = true;
                         bt.Enabled = true;
                     }
@@ -898,7 +899,7 @@ namespace PK.Forms
         {
             int tabNumber = int.Parse((sender as Control).Name.Substring((sender as Control).Name.Length - 2, 1));
             int comboNumber = int.Parse((sender as Control).Name.Substring((sender as Control).Name.Length - 1, 1));
-            foreach (Control control in tbDirections.TabPages[tabNumber - 1].Controls)
+            foreach (Control control in tcDirections.TabPages[tabNumber - 1].Controls)
             {
                 ComboBox cb = control as ComboBox;
                 if ((cb!=null) && (cb.Name == "cbDirection" + tabNumber + comboNumber))
@@ -914,6 +915,7 @@ namespace PK.Forms
 
         private void SaveApplication()
         {
+            Cursor.Current = Cursors.WaitCursor;
             SaveBasic();
             SaveDiploma();
             SaveExams();
@@ -924,20 +926,25 @@ namespace PK.Forms
             if (cbMADIOlympiad.Checked || cbOlympiad.Checked)
                 SaveOlympic();
             SaveDirections();
+            Cursor.Current = Cursors.Default;
         }
 
         private void LoadApplication()
         {
+            Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
             LoadDocuments();
             LoadDirections();
+            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateApplication()
         {
+            Cursor.Current = Cursors.WaitCursor;
             UpdateBasic();
             UpdateDocuments();
             UpdateDirections();
+            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
@@ -1298,7 +1305,7 @@ namespace PK.Forms
                 agreedDate = DateTime.Now;
             else agreedDate = null;
 
-            foreach (TabPage tab in tbDirections.Controls)
+            foreach (TabPage tab in tcDirections.Controls)
             {
                 if ((tab.Name.Split('_')[1] != "paid") && (tab.Name.Split('_')[1] != "target"))
                     foreach (Control c in tab.Controls)
@@ -1308,10 +1315,10 @@ namespace PK.Forms
                             if (cb.SelectedIndex != -1)
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                    { "faculty_short_name", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item2 }, { "is_agreed_date", agreedDate},
-                                    { "direction_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item1},
-                                    { "edu_form_dict_id", 14}, { "edu_form_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item6},
-                                    { "edu_source_dict_id", 15}, { "edu_source_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item5} });
+                                    { "faculty_short_name", ((DirTuple)cb.SelectedValue).Item2 }, { "is_agreed_date", agreedDate},
+                                    { "direction_id", ((DirTuple)cb.SelectedValue).Item1},
+                                    { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((DirTuple)cb.SelectedValue).Item5},
+                                    { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((DirTuple)cb.SelectedValue).Item4} });
                             }
                     }
                 else if ((tab.Name.Split('_')[1] == "paid") && (tab.Name.Split('_')[1] != "target"))
@@ -1323,11 +1330,11 @@ namespace PK.Forms
                             if (cb.SelectedIndex != -1)
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                        { "faculty_short_name",  (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item2 },
-                                    { "is_agreed_date", agreedDate}, { "direction_id",(cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item1 },
-                                    { "edu_form_dict_id", 14}, { "edu_form_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item6},
-                                    { "edu_source_dict_id", 15}, { "edu_source_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item5},
-                                    { "profile_short_name", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item7},
+                                        { "faculty_short_name",  ((DirTuple)cb.SelectedValue).Item2 },
+                                    { "is_agreed_date", agreedDate}, { "direction_id",((DirTuple)cb.SelectedValue).Item1 },
+                                    { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((DirTuple)cb.SelectedValue).Item5},
+                                    { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((DirTuple)cb.SelectedValue).Item4},
+                                    { "profile_short_name", ((DirTuple)cb.SelectedValue).Item6},
                                     { "profile_actual", true}, });
                             }
                     }
@@ -1341,10 +1348,10 @@ namespace PK.Forms
                             if (cb.SelectedIndex != -1)
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                     { "faculty_short_name",  (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item2 },
-                                    { "is_agreed_date", agreedDate}, { "direction_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item1},
-                                    { "edu_form_dict_id", 14}, { "edu_form_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item6},
-                                    { "edu_source_dict_id", 15}, { "edu_source_id", (cb.SelectedValue as Tuple<uint, string, string, string, uint, uint, string>).Item5},
+                                     { "faculty_short_name",  ((DirTuple)cb.SelectedValue).Item2 },
+                                    { "is_agreed_date", agreedDate}, { "direction_id", ((DirTuple)cb.SelectedValue).Item1},
+                                    { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((DirTuple)cb.SelectedValue).Item5},
+                                    { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((DirTuple)cb.SelectedValue).Item4},
                                     { "target_organization_id", _TargetOrganizationID} });
                             }
                     }
@@ -1692,7 +1699,7 @@ namespace PK.Forms
                     ProfileName = s2[1].ToString()
                 }).Select(s => new
                 {
-                    Value = new Tuple<uint, string, string, uint, uint, string, string>(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                    Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
                     Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
                 }).ToList();
 
@@ -1710,7 +1717,7 @@ namespace PK.Forms
                     EduForm = (uint)s1[4],
                 }).Select(s => new
                 {
-                    Value = new Tuple<uint, string, string, uint, uint, string, string>(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
+                    Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
                     Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
                 }).ToList();
 
@@ -2199,7 +2206,7 @@ namespace PK.Forms
                 agreedDate = DateTime.Now;
             else agreedDate = null;
 
-            foreach (TabPage tab in tbDirections.Controls)
+            foreach (TabPage tab in tcDirections.Controls)
             {
                 if ((tab.Name.Split('_')[1] != "paid") && (tab.Name.Split('_')[1] != "target"))
                     foreach (Control c in tab.Controls)
@@ -2208,10 +2215,10 @@ namespace PK.Forms
                         if (cb != null)
                             if (cb.SelectedIndex != -1)
                             {
-                                newD.Add(new object[] { _ApplicationID , (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string, string>).Item2,
-                                    (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string, string>).Item1,
-                                    (uint)FIS_Dictionary.EDU_FORM, (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item5,
-                                    (uint)FIS_Dictionary.EDU_SOURCE, (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item4, agreedDate,
+                                newD.Add(new object[] { _ApplicationID , ((DirTuple)cb.SelectedValue).Item2,
+                                    ((DirTuple)cb.SelectedValue).Item1,
+                                    (uint)FIS_Dictionary.EDU_FORM, ((DirTuple)cb.SelectedValue).Item5,
+                                    (uint)FIS_Dictionary.EDU_SOURCE, ((DirTuple)cb.SelectedValue).Item4, agreedDate,
                                     null, null, false});
                             }
                     }
@@ -2223,11 +2230,11 @@ namespace PK.Forms
                         if (cb != null)
                             if (cb.SelectedIndex != -1)
                             {
-                                newD.Add(new object[] { _ApplicationID , (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string, string>).Item2,
-                                    (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string, string>).Item1,
-                                    (uint)FIS_Dictionary.EDU_FORM, (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string,string>).Item5,
-                                    (uint)FIS_Dictionary.EDU_SOURCE, (cb.SelectedValue as Tuple<uint, string, string,  uint, uint, string,string>).Item4,
-                                    agreedDate, (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item6, null, true});
+                                newD.Add(new object[] { _ApplicationID , ((DirTuple)cb.SelectedValue).Item2,
+                                    ((DirTuple)cb.SelectedValue).Item1,
+                                    (uint)FIS_Dictionary.EDU_FORM, ((DirTuple)cb.SelectedValue).Item5,
+                                    (uint)FIS_Dictionary.EDU_SOURCE, ((DirTuple)cb.SelectedValue).Item4,
+                                    agreedDate, ((DirTuple)cb.SelectedValue).Item6, null, true});
                             }
                     }
                 }
@@ -2239,10 +2246,10 @@ namespace PK.Forms
                         if (cb != null)
                             if (cb.SelectedIndex != -1)
                             {
-                                newD.Add(new object[] { _ApplicationID , (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item2,
-                                    (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item1,
-                                    (uint)FIS_Dictionary.EDU_FORM, (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item5,
-                                    (uint)FIS_Dictionary.EDU_SOURCE, (cb.SelectedValue as Tuple<uint, string, string, uint, uint, string, string>).Item4,
+                                newD.Add(new object[] { _ApplicationID , ((DirTuple)cb.SelectedValue).Item2,
+                                    ((DirTuple)cb.SelectedValue).Item1,
+                                    (uint)FIS_Dictionary.EDU_FORM, ((DirTuple)cb.SelectedValue).Item5,
+                                    (uint)FIS_Dictionary.EDU_SOURCE, ((DirTuple)cb.SelectedValue).Item4,
                                     agreedDate, null, _TargetOrganizationID, false});
                             }
                     }
@@ -2297,7 +2304,7 @@ namespace PK.Forms
                         ProfileName = s2[1].ToString()
                     }).Select(s => new
                     {
-                        Value = new Tuple<uint, string, string, uint, uint, string, string>(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                        Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
                         Display = "(" + s.Faculty + ", " + s.Level + ") " + s.ProfileName
                     }).ToList();
                 combobox.ValueMember = "Value";
@@ -2336,7 +2343,7 @@ namespace PK.Forms
                         EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm)
                     }).Select(s => new
                     {
-                        Value = new Tuple<uint, string, string, uint, uint, string, string>(s.Id, s.Faculty,s.Name, s.EduSource, s.EduForm, "", ""),
+                        Value = new DirTuple(s.Id, s.Faculty,s.Name, s.EduSource, s.EduForm, "", ""),
                         Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
                     }).ToList();
                 combobox.ValueMember = "Value";
@@ -2351,8 +2358,6 @@ namespace PK.Forms
                     placesCountColumnName = "places_o";
                 else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Целевой прием"))
                     placesCountColumnName = "places_oz";
-                else if ((eduForm == "Заочная форма") && (eduSource == "Целевой прием"))
-                    placesCountColumnName = "places_z";
 
                 var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
                     new List<Tuple<string, Relation, object>>
@@ -2373,7 +2378,7 @@ namespace PK.Forms
                         EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm)
                     }).Select(s => new
                     {
-                        Value = new Tuple<uint, string, string, uint, uint, string, string>(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
+                        Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
                         Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
                     }).ToList();
                 combobox.ValueMember = "Value";
