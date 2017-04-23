@@ -12,7 +12,6 @@ namespace PK.Forms
         private readonly string _UserLogin;
 
         private uint _CurrCampaignID;
-        private int _CurrCampaignStartYear;
 
         public Main(string userRole, string usersLogin)
         {
@@ -69,42 +68,44 @@ namespace PK.Forms
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
-            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time" });
+            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
+                });
             if (apps.Count > 0)
                 foreach (var application in apps)
                 {
-                    if (((DateTime)application[2]).Year == _CurrCampaignStartYear)
-                    {
-                        object[] names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
-                            })[0];
-                        var appDocuments = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+                    object[] names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
+                        new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
-                        });
-                        dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null, application[3]);
-                        foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
-                            appDocuments,
-                            docs => docs[0],
-                            appdocs => appdocs[0],
-                            (s1, s2) => new
-                            {
-                                Type = s1[1].ToString(),
-                                OriginalRecievedDate = s1[2] as DateTime?
-                            }
-                            ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
-                            if (((document.Value.Item1 == "school_certificate") || (document.Value.Item1 == "high_edu_diploma") || (document.Value.Item1 == "academic_diploma")) && (document.Value.Item2!=null))
-                                dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
-                        //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
-                        //{
-                        //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
-                        //}))
-                        //{
+                            new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
+                        })[0];
+                    var appDocuments = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
+                    });
+                    dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null,
+                        application[3], _DB_Helper.GetDictionaryItemName(FIS_Dictionary.APPLICATION_STATUS,(uint)application[5]));
+                    foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
+                        appDocuments,
+                        docs => docs[0],
+                        appdocs => appdocs[0],
+                        (s1, s2) => new
+                        {
+                            Type = s1[1].ToString(),
+                            OriginalRecievedDate = s1[2] as DateTime?
+                        }
+                        ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
+                        if (((document.Value.Item1 == "school_certificate") || (document.Value.Item1 == "high_edu_diploma") || (document.Value.Item1 == "academic_diploma")) && (document.Value.Item2!=null))
+                            dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
+                    //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                    //{
+                    //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
+                    //}))
+                    //{
 
-                        //}
-                    }
+                    //}
                 }
             dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
         }
@@ -135,7 +136,6 @@ namespace PK.Forms
                 if (campaigns.Count > 0)
                 {
                     _CurrCampaignID = (uint)campaigns[0][0];
-                    _CurrCampaignStartYear = int.Parse(campaigns[0][1].ToString());
                     UpdateApplicationsTable();
                 }
             }
@@ -297,6 +297,36 @@ namespace PK.Forms
                     matches = false;
                 row.Visible = matches;
             }
+        }
+
+        private void cbFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if ((sender as CheckBox).Checked)
+                if ((sender as CheckBox).Text == "Новые")
+                {
+                    cbPickUp.Checked = false;
+                    cbEnroll.Checked = false;
+                }
+            else if ((sender as CheckBox).Checked)
+                    if ((sender as CheckBox).Text == "Зачисленные")
+                    {
+                        cbNew.Checked = false;
+                        cbPickUp.Checked = false;                        
+                    }
+            else
+                    {
+                        cbNew.Checked = false;
+                        cbEnroll.Checked = false;
+                    }
+
+            foreach (DataGridViewRow row in dgvApplications.Rows)
+                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Новое"))
+                    row.Visible = false;
+                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Отозвано"))
+                    row.Visible = false;
+                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Принято"))
+                    row.Visible = false;
+                else row.Visible = true;
         }
     }
 }
