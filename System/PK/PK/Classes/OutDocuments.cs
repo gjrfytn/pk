@@ -132,12 +132,15 @@ namespace PK.Classes
                 });
             }
 
+            string doc = Utility.TempPath + "registrationJournal";
             DocumentCreator.Create(
                 Utility.DocumentsTemplatesPath + "RegistrationJournal.xml",
-                "registrationJournal",
+                doc,
                 null,
                 new List<string[]>[] { data }
                 );
+            doc += ".docx";
+            Utility.Print(doc);
         }
     }
 }

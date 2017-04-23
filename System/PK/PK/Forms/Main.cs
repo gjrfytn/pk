@@ -25,7 +25,7 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
 
-            System.IO.Directory.CreateDirectory(".\\temp");
+            System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);
 
             UpdateCampaignsList();
             dtpRegDate.Value = dtpRegDate.MinDate;
@@ -50,7 +50,7 @@ namespace PK.Forms
                             components.Dispose();
                     }
 
-                    System.IO.Directory.Delete(".\\temp", true);
+                    System.IO.Directory.Delete(Classes.Utility.TempPath, true);
                 }
                 finally
                 {

@@ -9,16 +9,15 @@
     </Font>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>12</Size>
     </Font>
-    <Font ID="UsualBold">
+    <Font ID="16">
       <Name>Arial</Name>
       <Size>16</Size>
-      <Style>Bold</Style>
     </Font>
-    <Font ID="ID">
+    <Font ID="24">
       <Name>Arial</Name>
-      <Size>22</Size>
+      <Size>24</Size>
     </Font>
     <Font ID="Large">
       <Name>Arial</Name>
@@ -69,17 +68,19 @@
                   <Cell Column="0">
                     <Borders>
                       <Right>
-                        <Size>5</Size>
                         <Style>Dashed</Style>
                       </Right>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>UsualBold</FontID>
+                        <FontID>16</FontID>
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>0</Placeholder>
+                              <String>Иванов</String>
                             </Text>
                           </Part>
                           <Part>
@@ -89,12 +90,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <Placeholder>1</Placeholder>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
-                              <Placeholder>2</Placeholder>
+                              <String>И.И.</String>
                             </Text>
                           </Part>
                         </Parts>
@@ -104,84 +100,112 @@
                   <Cell Column="1">
                     <Borders>
                       <Left>
-                        <Size>5</Size>
                         <Style>Dashed</Style>
                       </Left>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>ID</FontID>
+                        <FontID>Large</FontID>
                         <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>3</Placeholder>
+                              <String>№</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>5</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String> |</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>АБР</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>|</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph/>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <String>Направление подготовки </String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>НАПРАВЛЕНИЕ</String>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
                       <Paragraph>
-                        <FontID>Small</FontID>
+                        <FontID>Usual</FontID>
                         <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>8</Placeholder>
+                              <String>Магистрская программа </String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>ПРОГРАММА</String>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
                       <Paragraph>
-                        <FontID>Small</FontID>
+                        <FontID>Usual</FontID>
                         <Alighment>Right</Alighment>
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>9</Placeholder>
+                              <String>Форма обучения </String>
                             </Text>
                           </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>10</Placeholder>
+                              <String>ОчнаЯ</String>
                             </Text>
                           </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>11</Placeholder>
+                              <String> </String>
                             </Text>
                           </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>12</Placeholder>
+                              <String>БюджеТ</String>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
+                      <Paragraph/>
                       <Paragraph>
                         <FontID>LargeBold</FontID>
                         <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
+                            <FontID>LargeBold</FontID>
                             <Text>
-                              <Placeholder>4</Placeholder>
+                              <String>Иванов</String>
                             </Text>
                           </Part>
                         </Parts>
@@ -192,7 +216,58 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>5</Placeholder>
+                              <String>Иван Иванович</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                      <Paragraph/>
+                      <Paragraph/>
+                    </Paragraphs>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>Dashed</Style>
+                      </Right>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>24</FontID>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <String>М</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>Dashed</Style>
+                      </Left>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Small</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <String>магистратура</String>
                             </Text>
                           </Part>
                         </Parts>
@@ -203,18 +278,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>6</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph>
-                        <FontID>Large</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>7</Placeholder>
+                              <String>2017</String>
                             </Text>
                           </Part>
                         </Parts>

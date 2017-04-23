@@ -64,6 +64,7 @@
         </Element>
         <Element>
           <Table>
+            <AutoFit>Contents</AutoFit>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>

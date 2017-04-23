@@ -6,6 +6,8 @@ namespace PK.Classes
 {
     static class Utility
     {
+        public const string TempPath = ".\\temp\\";
+
         public static readonly string DocumentsTemplatesPath = System.Configuration.ConfigurationManager.AppSettings["DocumentsTemplatesPath"];
         public static readonly string FIS_Login = System.Configuration.ConfigurationManager.AppSettings["FIS_Login"];
 

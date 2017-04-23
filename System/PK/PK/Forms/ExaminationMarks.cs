@@ -81,7 +81,7 @@ namespace PK.Forms
                     ((short)row.Cells[2].Value==-1)?"неявка": row.Cells[2].Value.ToString(),
                 });
 
-            string doc = ".\\temp\\AlphaMarks";
+            string doc = Classes.Utility.TempPath + "AlphaMarks";
             Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new List<string[]>[] { table });
             Classes.Utility.Print(doc + ".docx");
         }

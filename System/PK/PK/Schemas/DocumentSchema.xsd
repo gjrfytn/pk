@@ -9,6 +9,15 @@
       <xs:enumeration value="Violet"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="TTableAutoFit">
+    <xs:annotation>
+      <xs:documentation xml:lang="ru">Режим автоподбора ширины.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Contents"/>
+      <xs:enumeration value="Window"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="TFont">
     <xs:annotation>
       <xs:documentation xml:lang="ru">Параметры шрифта.</xs:documentation>
@@ -382,6 +391,11 @@
                                   </xs:annotation>
                                   <xs:complexType>
                                     <xs:all>
+                                      <xs:element name="AutoFit" type="TTableAutoFit" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Автоподбор ширины.</xs:documentation>
+                                        </xs:annotation>
+                                      </xs:element>
                                       <xs:element name="Borders" type="TTableBorders" minOccurs="0">
                                         <xs:annotation>
                                           <xs:documentation xml:lang="ru">Границы.</xs:documentation>
@@ -477,6 +491,11 @@
                                             </xs:element>
                                           </xs:choice>
                                         </xs:complexType>
+                                      </xs:element>
+                                      <xs:element name="AutoFit" type="TTableAutoFit" minOccurs="0">
+                                        <xs:annotation>
+                                          <xs:documentation xml:lang="ru">Автоподбор ширины.</xs:documentation>
+                                        </xs:annotation>
                                       </xs:element>
                                       <xs:element name="Borders" type="TTableBorders" minOccurs="0">
                                         <xs:annotation>
