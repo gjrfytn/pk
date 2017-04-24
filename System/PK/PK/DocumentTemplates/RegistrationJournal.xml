@@ -5,11 +5,11 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>10</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>10</Size>
       <Style>Bold</Style>
     </Font>
   </Fonts>
@@ -26,6 +26,7 @@
       <Structure>
         <Element>
           <Table>
+            <AutoFit>Contents</AutoFit>
             <Numeration>Number</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>

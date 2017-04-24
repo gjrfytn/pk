@@ -130,18 +130,6 @@ namespace PK.Classes
             return (uint)list[0][0];
         }
 
-        public int GetDirectionIDByName(string dirName)
-        {
-            List<object[]> dirList = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, new string[] { "id" }, new List<System.Tuple<string, Relation, object>>
-                {
-                    new System.Tuple<string, Relation, object>("name", Relation.EQUAL, dirName)
-                });
-            if (dirList.Count == 0)
-                return 0;
-            else
-                return int.Parse(dirList[0][0].ToString());
-        }
-
         public System.Tuple<string, string> GetDirectionNameAndCode(uint id)//TODO Нужны другие поля?
         {
             List<object[]> list = _DB_Connection.Select(

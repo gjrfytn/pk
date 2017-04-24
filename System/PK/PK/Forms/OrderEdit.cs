@@ -7,13 +7,15 @@ namespace PK.Forms
 {
     partial class OrderEdit : Form
     {
-        readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Helper _DB_Helper;
 
         public OrderEdit(Classes.DB_Connector connection, uint? id)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             cbDirOrProfile.ValueMember = "Value";
         }
@@ -47,7 +49,6 @@ namespace PK.Forms
 
         private void cbDirOrProfile_DropDown(object sender, EventArgs e)
         {
-            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
             int selectedIndex = cbDirOrProfile.SelectedIndex;
             cbDirOrProfile.DisplayMember = "Display";
 
@@ -57,7 +58,7 @@ namespace PK.Forms
                     new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_name" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
                         new Tuple<string, Relation, object>("places_paid_"+gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString(),
                         Relation.GREATER,0 )
                     }
@@ -68,23 +69,23 @@ namespace PK.Forms
                     new string[] { "direction_faculty", "direction_id", "places_" + gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag.ToString() },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID)
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
                     }
                     ).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                     .Where(s => s.Places > 0)
-                    .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + dbHelper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
+                    .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
             else
                 cbDirOrProfile.DataSource = _DB_Connection.Select(
                         DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
                         new string[] { "direction_faculty", "direction_id" },
                         new List<Tuple<string, Relation, object>>
                         {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
                         new Tuple<string, Relation, object>("places_" +gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString()+
                         "_"+gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString(),
                         Relation.GREATER,0 )
                         }
-                        ).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
+                        ).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
 
             cbDirOrProfile.SelectedIndex = selectedIndex;
         }
@@ -116,11 +117,16 @@ namespace PK.Forms
             else
                 eduForm = 10;
 
-            List<object[]> applicationsIDs;
+            List<object[]> campApplEntrIDs = _DB_Connection.Select(
+                DB_Table.APPLICATIONS,
+                new string[] { "id", "entrant_id" }//, TODO
+                //new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                );
+            List<object[]> filteredApplIDs;
             if (eduSource != 15)
             {
                 Tuple<string, uint> buf = (Tuple<string, uint>)cbDirOrProfile.SelectedValue;
-                applicationsIDs = _DB_Connection.Select(
+                filteredApplIDs = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
                     new List<Tuple<string, Relation, object>>
@@ -134,7 +140,7 @@ namespace PK.Forms
             else
             {
                 Tuple<string, uint, string> buf = (Tuple<string, uint, string>)cbDirOrProfile.SelectedValue;
-                applicationsIDs = _DB_Connection.Select(
+                filteredApplIDs = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
                     new List<Tuple<string, Relation, object>>
@@ -147,7 +153,9 @@ namespace PK.Forms
                     });
             }
 
-            var egeMarks = applicationsIDs.Join(
+            var applEntrIDs = campApplEntrIDs.Join(filteredApplIDs, k1 => k1[0], k2 => k2[0], (s1, s2) => s1);
+
+            var egeMarks = applEntrIDs.Join(
                 _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, "applications_id", "documents_id"),//TODO Не обязательно.
                 k1 => k1[0], k2 => k2[0], (s1, s2) => s2).Join(
                 _DB_Connection.Select(
@@ -162,14 +170,11 @@ namespace PK.Forms
                 k1 => k1[1], k2 => k2[0], (s1, s2) => new { ApplID = s1[0], Subject = s2[1], Value = s2[2] }
                 );
 
-            var entrants = applicationsIDs.Join(
-                _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
-                k1 => k1[0], k2 => k2[0], (s1, s2) => new { A_ID = s2[0], E_ID = s2[1] }
-                ).Join(
+            var entrants = applEntrIDs.Join(
                 _DB_Connection.Select(DB_Table.ENTRANTS, "id", "last_name", "first_name", "middle_name"),
-                k1 => k1.E_ID,
+                k1 => k1[1],
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = s1.A_ID, EntrID = s2[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
+                (s1, s2) => new { ApplID = s1[0], EntrID = s2[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
             var table = entrants.GroupJoin(

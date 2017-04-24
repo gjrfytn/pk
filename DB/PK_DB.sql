@@ -159,7 +159,6 @@ COMMENT = 'Целевые организации.';
 CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
   `campaign_id` INT UNSIGNED NOT NULL COMMENT 'ID приемной кампании.',
-  `name` VARCHAR(200) NOT NULL COMMENT 'Наименование (текстовое описание) приказа.',
   `number` VARCHAR(50) NOT NULL COMMENT 'Номер приказа.',
   `registration_date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
   `publication_date` DATE NOT NULL COMMENT 'Дата фактической публикации приказа.',
@@ -172,6 +171,8 @@ CREATE TABLE IF NOT EXISTS `PK_DB`.`orders` (
   `stage` INT UNSIGNED NOT NULL COMMENT 'Этап приема (В случае зачисления на места в рамках контрольных цифр (бюджет) по программам бакалавриата и программам специалитета по очной и очно-заочной формам обучения, принимает значения 1 или 2). Иначе принимает значение 0.',
   `type` ENUM('admission', 'exception', 'hostel') NOT NULL COMMENT 'Тип приказа (зачисление, исключение или выделение мест в общежитии).',
   `protocol_number` SMALLINT UNSIGNED NULL COMMENT 'Номер протокола, если приказ зарегестрирован, иначе - NULL.',
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
+  `profile_short_name` VARCHAR(5) NULL COMMENT 'Профиль.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`campaign_id` ASC),
   INDEX `corresp_edu_f_idx` (`education_form_dict_id` ASC, `education_form_id` ASC),
@@ -997,6 +998,98 @@ FROM
 WHERE
     dictionaries_items_dictionary_id = 14
         AND campaigns_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure get_application_docs
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_application_docs` (IN id INT UNSIGNED)
+BEGIN
+SELECT 
+    id,
+    type,
+    series,
+    number,
+    date,
+    organization,
+    original_recieved_date
+FROM
+    _applications_has_documents
+        JOIN
+    documents ON _applications_has_documents.documents_id = documents.id
+WHERE
+    applications_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure get_camp_dirs_name_code
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_camp_dirs_name_code` (IN id INT UNSIGNED)
+BEGIN
+SELECT 
+    name, code
+FROM
+    campaigns_directions_data
+        JOIN
+    dictionary_10_items ON campaigns_directions_data.direction_id = dictionary_10_items.id
+WHERE
+    campaign_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure get_application_profiles
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_application_profiles` (IN id INT UNSIGNED)
+BEGIN
+SELECT 
+    profiles.faculty_short_name,
+    profiles.direction_id,
+    profiles.short_name,
+    profiles.name,
+    profile_actual
+FROM
+    applications_entrances
+        JOIN
+    profiles ON applications_entrances.faculty_short_name = profiles.faculty_short_name
+        AND applications_entrances.direction_id = profiles.direction_id
+        AND applications_entrances.profile_short_name = profiles.short_name
+WHERE
+    application_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure get_application_directions
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `PK_DB`$$
+CREATE PROCEDURE `get_application_directions` (IN id INT UNSIGNED)
+BEGIN
+SELECT 
+    faculty_short_name, dictionary_10_items.id, name, code
+FROM
+    applications_entrances
+        JOIN
+    dictionary_10_items ON applications_entrances.direction_id = dictionary_10_items.id
+WHERE
+    application_id = id;
 END$$
 
 DELIMITER ;

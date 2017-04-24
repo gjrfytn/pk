@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+
 using DirTuple = System.Tuple<uint, string, string, uint, uint, string, string>;
 
 namespace PK.Forms
@@ -557,7 +558,7 @@ namespace PK.Forms
                         null
                         ));
 
-                                List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+                List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
 
                 foreach (TabPage tab in tcDirections.Controls)
                     if (tab.Controls.Cast<Control>().Any(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1))
@@ -570,20 +571,13 @@ namespace PK.Forms
                             string buf = cb.Text + " " + tbEduDocSeries.Text + " " + tbEduDocNumber.Text;
                             if (cb.Text.Contains("Оригинал"))
                             {
-                                DateTime origDate = (DateTime)_DB_Connection.Select(
-                                    DB_Table._APPLICATIONS_HAS_DOCUMENTS,
-                                    new string[] { "documents_id" },
-                                    new List<Tuple<string, Relation, object>>
-                                    {
-                                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID)
-                                    }).Join(
-                                    _DB_Connection.Select(DB_Table.DOCUMENTS, "id", "type", "original_recieved_date")
-                                    .Where(d => d[1].ToString() == "school_certificate" || d[1].ToString() == "high_edu_diploma" || d[1].ToString() == "academic_diploma"),
-                                    k1 => k1[0],
-                                    k2 => k2[0],
-                                    (s1, s2) => s2[2]
-                                    ).Single();
-									inventoryTableParams[1].Add(new string[] { buf + " Дата ориг.: " + origDate.ToShortDateString() });
+                                DateTime origDate = (DateTime)_DB_Connection.RunProcedure("get_application_docs", _ApplicationID).Where(
+                                    d => d[1].ToString() == "school_certificate" ||
+                                    d[1].ToString() == "high_edu_diploma" ||
+                                    d[1].ToString() == "academic_diploma"
+                                    ).Single()[6];
+
+                                inventoryTableParams[1].Add(new string[] { buf + " Дата ориг.: " + origDate.ToShortDateString() });
                             }
                             else
                                 inventoryTableParams[1].Add(new string[] { buf });
@@ -638,9 +632,11 @@ namespace PK.Forms
                         parameters.ToArray(),
                         null
                         ));
-				List < string[] >[]   receiptTableParams = new List<string[]>[2];
+
+                List<string[]>[] receiptTableParams = new List<string[]>[2];
                 receiptTableParams[0] = new List<string[]>();
                 receiptTableParams[1] = inventoryTableParams[1];
+
                 foreach (TabPage tab in tcDirections.Controls)
                 {
                     var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
@@ -649,35 +645,18 @@ namespace PK.Forms
                         receiptTableParams[0].Add(new string[] { streams[tab].Item1 + " форма обучения" });
                         foreach (ComboBox cb in cbs)
                         {
-                            string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
-                            string name = cb.Text.Split(')')[1].Remove(0, 1);
+                            DirTuple dir = (DirTuple)cb.SelectedValue;
                             if (tab.Name.Split('_')[1] != "paid")
                                 receiptTableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
-                            DB_Table.DIRECTIONS,
-                            new string[] { "short_name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  _DB_Helper.GetDirectionIDByName(name))
-                            })[0][0].ToString()+ " (" + faculty + ") " + name});
-                            else
-                            {
-								uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
-                                    new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
-                                })[0][0];
-
-                                receiptTableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
-                                    DB_Table.PROFILES,
+                                    DB_Table.DIRECTIONS,
                                     new string[] { "short_name" },
                                     new List<Tuple<string, Relation, object>>
                                     {
-                                        new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
-                                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dirID),
-                                        new Tuple<string, Relation, object>("name",Relation.EQUAL,name)
-                                    })[0][0].ToString()+ " (" + faculty + ") " + name});
-                            }
+                                        new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, dir.Item2),
+                                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dir.Item1)
+                                    })[0][0].ToString()+ " (" + dir.Item2 + ") " + dir.Item3});
+                            else
+                                receiptTableParams[0].Add(new string[] { "          - " + dir.Item6 + " (" + dir.Item2 + ") " + dir.Item7 });
                         }
                         receiptTableParams[0].Add(new string[] { "" });
                     }
@@ -690,7 +669,7 @@ namespace PK.Forms
                         null,
                         new string[]
                         {
-							_EntrantID.Value.ToString(),
+                            _EntrantID.Value.ToString(),
                             tbLastName.Text.ToUpper(),
                             (tbFirstName.Text+" "+tbMidleName.Text).ToUpper(),
                             _DB_Connection.Select(
@@ -711,7 +690,7 @@ namespace PK.Forms
                         new string[] { "institution_achievement_id" },
                         new List<Tuple<string, Relation, object>>
                         {
-                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ApplicationID)
+                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ApplicationID)
                         }),
                     k1 => k1[0],
                     k2 => k2[0],
@@ -751,35 +730,18 @@ namespace PK.Forms
                         byte count = 0;
                         foreach (ComboBox cb in cbs)
                         {
-                            string faculty = cb.Text.Split(')')[0].Split(',')[0].Substring(1);
-                            string name = cb.Text.Split(')')[1].Remove(0, 1);
+                            DirTuple dir = (DirTuple)cb.SelectedValue;
                             if (tab.Name.Split('_')[1] != "paid")
                                 parameters.Add(_DB_Connection.Select(
                                 DB_Table.DIRECTIONS,
                                 new string[] { "short_name" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  _DB_Helper.GetDirectionIDByName(name))
+                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, dir.Item2),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dir.Item1)
                                 })[0][0].ToString());
                             else
-                            {
-                                uint dirID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id" }, new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object> ("profiles_direction_faculty", Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("profiles_name", Relation.EQUAL, name)
-                            })[0][0];
-
-                                parameters.Add(_DB_Connection.Select(
-                                DB_Table.PROFILES,
-                                new string[] { "short_name" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dirID),
-                                new Tuple<string, Relation, object>("name",Relation.EQUAL,  name)
-                                })[0][0].ToString());
-                            }
+                                parameters.Add(dir.Item6);
 
                             count++;
                         }
@@ -792,7 +754,7 @@ namespace PK.Forms
                     }
                 }
 
-				while (parameters.Count != 40)
+                while (parameters.Count != 40)
                     parameters.Add("");
 
                 if (form.cbPercRecordBack.Checked)
