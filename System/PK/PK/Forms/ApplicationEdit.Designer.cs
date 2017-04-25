@@ -20,6 +20,7 @@
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
+            this.btGetIndex = new System.Windows.Forms.Button();
             this.tbHouse = new System.Windows.Forms.TextBox();
             this.tbTown = new System.Windows.Forms.TextBox();
             this.tbDistrict = new System.Windows.Forms.TextBox();
@@ -97,6 +98,9 @@
             this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
             this.tcDirections = new System.Windows.Forms.TabControl();
             this.tpDir_budget_o = new System.Windows.Forms.TabPage();
+            this.cbAgreed13 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed12 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed11 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir13 = new System.Windows.Forms.Button();
             this.btRemoveDir12 = new System.Windows.Forms.Button();
             this.btRemoveDir11 = new System.Windows.Forms.Button();
@@ -106,11 +110,14 @@
             this.cbDirection11 = new System.Windows.Forms.ComboBox();
             this.label32 = new System.Windows.Forms.Label();
             this.tpDir_paid_o = new System.Windows.Forms.TabPage();
+            this.cbAgreed21 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir21 = new System.Windows.Forms.Button();
             this.btAddDir2 = new System.Windows.Forms.Button();
             this.cbDirection21 = new System.Windows.Forms.ComboBox();
             this.label36 = new System.Windows.Forms.Label();
             this.tpDir_budget_oz = new System.Windows.Forms.TabPage();
+            this.cbAgreed32 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed31 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir32 = new System.Windows.Forms.Button();
             this.btRemoveDir31 = new System.Windows.Forms.Button();
             this.btAddDir3 = new System.Windows.Forms.Button();
@@ -118,21 +125,27 @@
             this.cbDirection31 = new System.Windows.Forms.ComboBox();
             this.label37 = new System.Windows.Forms.Label();
             this.tpDir_paid_oz = new System.Windows.Forms.TabPage();
+            this.cbAgreed41 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir41 = new System.Windows.Forms.Button();
             this.btAddDir4 = new System.Windows.Forms.Button();
             this.cbDirection41 = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
             this.tpDir_paid_z = new System.Windows.Forms.TabPage();
+            this.cbAgreed51 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir51 = new System.Windows.Forms.Button();
             this.btAddDir5 = new System.Windows.Forms.Button();
             this.cbDirection51 = new System.Windows.Forms.ComboBox();
             this.label39 = new System.Windows.Forms.Label();
             this.tpDir_quote_o = new System.Windows.Forms.TabPage();
+            this.cbAgreed61 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir61 = new System.Windows.Forms.Button();
             this.btAddDir6 = new System.Windows.Forms.Button();
             this.cbDirection61 = new System.Windows.Forms.ComboBox();
             this.label40 = new System.Windows.Forms.Label();
             this.tpDir_target_o = new System.Windows.Forms.TabPage();
+            this.cbAgreed73 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed72 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed71 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir73 = new System.Windows.Forms.Button();
             this.btRemoveDir72 = new System.Windows.Forms.Button();
             this.btRemoveDir71 = new System.Windows.Forms.Button();
@@ -142,11 +155,14 @@
             this.cbDirection71 = new System.Windows.Forms.ComboBox();
             this.label41 = new System.Windows.Forms.Label();
             this.tpDir_quote_oz = new System.Windows.Forms.TabPage();
+            this.cbAgreed81 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir81 = new System.Windows.Forms.Button();
             this.btAddDir8 = new System.Windows.Forms.Button();
             this.cbDirection81 = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
             this.tpDir_target_oz = new System.Windows.Forms.TabPage();
+            this.cbAgreed92 = new System.Windows.Forms.CheckBox();
+            this.cbAgreed91 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir92 = new System.Windows.Forms.Button();
             this.btRemoveDir91 = new System.Windows.Forms.Button();
             this.btAddDir9 = new System.Windows.Forms.Button();
@@ -272,6 +288,7 @@
             // 
             // gbAdress
             // 
+            this.gbAdress.Controls.Add(this.btGetIndex);
             this.gbAdress.Controls.Add(this.tbHouse);
             this.gbAdress.Controls.Add(this.tbTown);
             this.gbAdress.Controls.Add(this.tbDistrict);
@@ -290,10 +307,20 @@
             this.gbAdress.Margin = new System.Windows.Forms.Padding(4);
             this.gbAdress.Name = "gbAdress";
             this.gbAdress.Padding = new System.Windows.Forms.Padding(4);
-            this.gbAdress.Size = new System.Drawing.Size(1325, 47);
+            this.gbAdress.Size = new System.Drawing.Size(1336, 47);
             this.gbAdress.TabIndex = 13;
             this.gbAdress.TabStop = false;
             this.gbAdress.Text = "Адрес регистрации";
+            // 
+            // btGetIndex
+            // 
+            this.btGetIndex.Location = new System.Drawing.Point(1221, 18);
+            this.btGetIndex.Name = "btGetIndex";
+            this.btGetIndex.Size = new System.Drawing.Size(20, 23);
+            this.btGetIndex.TabIndex = 29;
+            this.btGetIndex.Text = ">";
+            this.btGetIndex.UseVisualStyleBackColor = true;
+            this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
             // 
             // tbHouse
             // 
@@ -351,7 +378,8 @@
             // 
             // tbPostcode
             // 
-            this.tbPostcode.Location = new System.Drawing.Point(1227, 19);
+            this.tbPostcode.Enabled = false;
+            this.tbPostcode.Location = new System.Drawing.Point(1241, 19);
             this.tbPostcode.Margin = new System.Windows.Forms.Padding(4);
             this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
@@ -361,7 +389,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(1160, 21);
+            this.label20.Location = new System.Drawing.Point(1155, 21);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(59, 16);
@@ -443,6 +471,7 @@
             this.tbPlaceOfBirth.Name = "tbPlaceOfBirth";
             this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 22);
             this.tbPlaceOfBirth.TabIndex = 11;
+            this.tbPlaceOfBirth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label13
             // 
@@ -520,6 +549,7 @@
             this.tbIssuedBy.Name = "tbIssuedBy";
             this.tbIssuedBy.Size = new System.Drawing.Size(445, 22);
             this.tbIssuedBy.TabIndex = 3;
+            this.tbIssuedBy.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label9
             // 
@@ -538,6 +568,7 @@
             this.tbSubdivisionCode.Name = "tbSubdivisionCode";
             this.tbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
             this.tbSubdivisionCode.TabIndex = 5;
+            this.tbSubdivisionCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label8
             // 
@@ -566,6 +597,7 @@
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 2;
+            this.tbIDDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // tbIDDocSeries
             // 
@@ -574,6 +606,7 @@
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 1;
+            this.tbIDDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label6
             // 
@@ -612,6 +645,7 @@
             this.tbMidleName.Name = "tbMidleName";
             this.tbMidleName.Size = new System.Drawing.Size(310, 22);
             this.tbMidleName.TabIndex = 8;
+            this.tbMidleName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label4
             // 
@@ -630,6 +664,7 @@
             this.tbLastName.Name = "tbLastName";
             this.tbLastName.Size = new System.Drawing.Size(308, 22);
             this.tbLastName.TabIndex = 6;
+            this.tbLastName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label3
             // 
@@ -648,6 +683,7 @@
             this.tbFirstName.Name = "tbFirstName";
             this.tbFirstName.Size = new System.Drawing.Size(310, 22);
             this.tbFirstName.TabIndex = 7;
+            this.tbFirstName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label2
             // 
@@ -723,6 +759,7 @@
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
             this.tbInstitutionLocation.Size = new System.Drawing.Size(294, 22);
             this.tbInstitutionLocation.TabIndex = 6;
+            this.tbInstitutionLocation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // cbGraduationYear
             // 
@@ -761,6 +798,7 @@
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
             this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
             this.tbInstitutionNumber.TabIndex = 5;
+            this.tbInstitutionNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label25
             // 
@@ -824,6 +862,7 @@
             this.tbEduDocNumber.Name = "tbEduDocNumber";
             this.tbEduDocNumber.Size = new System.Drawing.Size(148, 22);
             this.tbEduDocNumber.TabIndex = 2;
+            this.tbEduDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label23
             // 
@@ -842,6 +881,7 @@
             this.tbEduDocSeries.Name = "tbEduDocSeries";
             this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
             this.tbEduDocSeries.TabIndex = 1;
+            this.tbEduDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label22
             // 
@@ -1128,6 +1168,9 @@
             // 
             // tpDir_budget_o
             // 
+            this.tpDir_budget_o.Controls.Add(this.cbAgreed13);
+            this.tpDir_budget_o.Controls.Add(this.cbAgreed12);
+            this.tpDir_budget_o.Controls.Add(this.cbAgreed11);
             this.tpDir_budget_o.Controls.Add(this.btRemoveDir13);
             this.tpDir_budget_o.Controls.Add(this.btRemoveDir12);
             this.tpDir_budget_o.Controls.Add(this.btRemoveDir11);
@@ -1144,6 +1187,42 @@
             this.tpDir_budget_o.TabIndex = 0;
             this.tpDir_budget_o.Text = "Очная бюджетная";
             this.tpDir_budget_o.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed13
+            // 
+            this.cbAgreed13.AutoSize = true;
+            this.cbAgreed13.Enabled = false;
+            this.cbAgreed13.Location = new System.Drawing.Point(9, 124);
+            this.cbAgreed13.Name = "cbAgreed13";
+            this.cbAgreed13.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed13.TabIndex = 19;
+            this.cbAgreed13.UseVisualStyleBackColor = true;
+            this.cbAgreed13.Visible = false;
+            this.cbAgreed13.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed12
+            // 
+            this.cbAgreed12.AutoSize = true;
+            this.cbAgreed12.Enabled = false;
+            this.cbAgreed12.Location = new System.Drawing.Point(9, 88);
+            this.cbAgreed12.Name = "cbAgreed12";
+            this.cbAgreed12.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed12.TabIndex = 18;
+            this.cbAgreed12.UseVisualStyleBackColor = true;
+            this.cbAgreed12.Visible = false;
+            this.cbAgreed12.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed11
+            // 
+            this.cbAgreed11.AutoSize = true;
+            this.cbAgreed11.Enabled = false;
+            this.cbAgreed11.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed11.Name = "cbAgreed11";
+            this.cbAgreed11.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed11.TabIndex = 17;
+            this.cbAgreed11.UseVisualStyleBackColor = true;
+            this.cbAgreed11.Visible = false;
+            this.cbAgreed11.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir13
             // 
@@ -1204,10 +1283,10 @@
             this.cbDirection13.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection13.Enabled = false;
             this.cbDirection13.FormattingEnabled = true;
-            this.cbDirection13.Location = new System.Drawing.Point(10, 119);
+            this.cbDirection13.Location = new System.Drawing.Point(31, 119);
             this.cbDirection13.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection13.Name = "cbDirection13";
-            this.cbDirection13.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection13.Size = new System.Drawing.Size(492, 24);
             this.cbDirection13.TabIndex = 5;
             this.cbDirection13.Visible = false;
             // 
@@ -1216,10 +1295,10 @@
             this.cbDirection12.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection12.Enabled = false;
             this.cbDirection12.FormattingEnabled = true;
-            this.cbDirection12.Location = new System.Drawing.Point(10, 83);
+            this.cbDirection12.Location = new System.Drawing.Point(31, 83);
             this.cbDirection12.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection12.Name = "cbDirection12";
-            this.cbDirection12.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection12.Size = new System.Drawing.Size(492, 24);
             this.cbDirection12.TabIndex = 3;
             this.cbDirection12.Visible = false;
             // 
@@ -1228,10 +1307,10 @@
             this.cbDirection11.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection11.Enabled = false;
             this.cbDirection11.FormattingEnabled = true;
-            this.cbDirection11.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection11.Location = new System.Drawing.Point(31, 42);
             this.cbDirection11.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection11.Name = "cbDirection11";
-            this.cbDirection11.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection11.Size = new System.Drawing.Size(492, 24);
             this.cbDirection11.TabIndex = 1;
             this.cbDirection11.Visible = false;
             // 
@@ -1247,6 +1326,7 @@
             // 
             // tpDir_paid_o
             // 
+            this.tpDir_paid_o.Controls.Add(this.cbAgreed21);
             this.tpDir_paid_o.Controls.Add(this.btRemoveDir21);
             this.tpDir_paid_o.Controls.Add(this.btAddDir2);
             this.tpDir_paid_o.Controls.Add(this.cbDirection21);
@@ -1259,6 +1339,18 @@
             this.tpDir_paid_o.TabIndex = 1;
             this.tpDir_paid_o.Text = "Очная платная";
             this.tpDir_paid_o.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed21
+            // 
+            this.cbAgreed21.AutoSize = true;
+            this.cbAgreed21.Enabled = false;
+            this.cbAgreed21.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed21.Name = "cbAgreed21";
+            this.cbAgreed21.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed21.TabIndex = 18;
+            this.cbAgreed21.UseVisualStyleBackColor = true;
+            this.cbAgreed21.Visible = false;
+            this.cbAgreed21.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir21
             // 
@@ -1291,10 +1383,10 @@
             this.cbDirection21.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection21.Enabled = false;
             this.cbDirection21.FormattingEnabled = true;
-            this.cbDirection21.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection21.Location = new System.Drawing.Point(31, 42);
             this.cbDirection21.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection21.Name = "cbDirection21";
-            this.cbDirection21.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection21.Size = new System.Drawing.Size(492, 24);
             this.cbDirection21.TabIndex = 9;
             this.cbDirection21.Visible = false;
             // 
@@ -1310,6 +1402,8 @@
             // 
             // tpDir_budget_oz
             // 
+            this.tpDir_budget_oz.Controls.Add(this.cbAgreed32);
+            this.tpDir_budget_oz.Controls.Add(this.cbAgreed31);
             this.tpDir_budget_oz.Controls.Add(this.btRemoveDir32);
             this.tpDir_budget_oz.Controls.Add(this.btRemoveDir31);
             this.tpDir_budget_oz.Controls.Add(this.btAddDir3);
@@ -1323,6 +1417,30 @@
             this.tpDir_budget_oz.TabIndex = 2;
             this.tpDir_budget_oz.Text = "Очно-заочная бюджетная";
             this.tpDir_budget_oz.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed32
+            // 
+            this.cbAgreed32.AutoSize = true;
+            this.cbAgreed32.Enabled = false;
+            this.cbAgreed32.Location = new System.Drawing.Point(9, 88);
+            this.cbAgreed32.Name = "cbAgreed32";
+            this.cbAgreed32.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed32.TabIndex = 19;
+            this.cbAgreed32.UseVisualStyleBackColor = true;
+            this.cbAgreed32.Visible = false;
+            this.cbAgreed32.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed31
+            // 
+            this.cbAgreed31.AutoSize = true;
+            this.cbAgreed31.Enabled = false;
+            this.cbAgreed31.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed31.Name = "cbAgreed31";
+            this.cbAgreed31.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed31.TabIndex = 18;
+            this.cbAgreed31.UseVisualStyleBackColor = true;
+            this.cbAgreed31.Visible = false;
+            this.cbAgreed31.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir32
             // 
@@ -1369,10 +1487,10 @@
             this.cbDirection32.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection32.Enabled = false;
             this.cbDirection32.FormattingEnabled = true;
-            this.cbDirection32.Location = new System.Drawing.Point(10, 83);
+            this.cbDirection32.Location = new System.Drawing.Point(31, 83);
             this.cbDirection32.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection32.Name = "cbDirection32";
-            this.cbDirection32.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection32.Size = new System.Drawing.Size(492, 24);
             this.cbDirection32.TabIndex = 10;
             this.cbDirection32.Visible = false;
             // 
@@ -1381,10 +1499,10 @@
             this.cbDirection31.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection31.Enabled = false;
             this.cbDirection31.FormattingEnabled = true;
-            this.cbDirection31.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection31.Location = new System.Drawing.Point(31, 42);
             this.cbDirection31.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection31.Name = "cbDirection31";
-            this.cbDirection31.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection31.Size = new System.Drawing.Size(492, 24);
             this.cbDirection31.TabIndex = 9;
             this.cbDirection31.Visible = false;
             // 
@@ -1400,6 +1518,7 @@
             // 
             // tpDir_paid_oz
             // 
+            this.tpDir_paid_oz.Controls.Add(this.cbAgreed41);
             this.tpDir_paid_oz.Controls.Add(this.btRemoveDir41);
             this.tpDir_paid_oz.Controls.Add(this.btAddDir4);
             this.tpDir_paid_oz.Controls.Add(this.cbDirection41);
@@ -1411,6 +1530,18 @@
             this.tpDir_paid_oz.TabIndex = 3;
             this.tpDir_paid_oz.Text = "Очно-заочная платная";
             this.tpDir_paid_oz.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed41
+            // 
+            this.cbAgreed41.AutoSize = true;
+            this.cbAgreed41.Enabled = false;
+            this.cbAgreed41.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed41.Name = "cbAgreed41";
+            this.cbAgreed41.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed41.TabIndex = 18;
+            this.cbAgreed41.UseVisualStyleBackColor = true;
+            this.cbAgreed41.Visible = false;
+            this.cbAgreed41.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir41
             // 
@@ -1443,10 +1574,10 @@
             this.cbDirection41.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection41.Enabled = false;
             this.cbDirection41.FormattingEnabled = true;
-            this.cbDirection41.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection41.Location = new System.Drawing.Point(31, 42);
             this.cbDirection41.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection41.Name = "cbDirection41";
-            this.cbDirection41.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection41.Size = new System.Drawing.Size(492, 24);
             this.cbDirection41.TabIndex = 9;
             this.cbDirection41.Visible = false;
             // 
@@ -1462,6 +1593,7 @@
             // 
             // tpDir_paid_z
             // 
+            this.tpDir_paid_z.Controls.Add(this.cbAgreed51);
             this.tpDir_paid_z.Controls.Add(this.btRemoveDir51);
             this.tpDir_paid_z.Controls.Add(this.btAddDir5);
             this.tpDir_paid_z.Controls.Add(this.cbDirection51);
@@ -1473,6 +1605,18 @@
             this.tpDir_paid_z.TabIndex = 4;
             this.tpDir_paid_z.Text = "Заочная платная";
             this.tpDir_paid_z.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed51
+            // 
+            this.cbAgreed51.AutoSize = true;
+            this.cbAgreed51.Enabled = false;
+            this.cbAgreed51.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed51.Name = "cbAgreed51";
+            this.cbAgreed51.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed51.TabIndex = 18;
+            this.cbAgreed51.UseVisualStyleBackColor = true;
+            this.cbAgreed51.Visible = false;
+            this.cbAgreed51.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir51
             // 
@@ -1505,10 +1649,10 @@
             this.cbDirection51.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection51.Enabled = false;
             this.cbDirection51.FormattingEnabled = true;
-            this.cbDirection51.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection51.Location = new System.Drawing.Point(31, 42);
             this.cbDirection51.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection51.Name = "cbDirection51";
-            this.cbDirection51.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection51.Size = new System.Drawing.Size(492, 24);
             this.cbDirection51.TabIndex = 9;
             this.cbDirection51.Visible = false;
             // 
@@ -1524,6 +1668,7 @@
             // 
             // tpDir_quote_o
             // 
+            this.tpDir_quote_o.Controls.Add(this.cbAgreed61);
             this.tpDir_quote_o.Controls.Add(this.btRemoveDir61);
             this.tpDir_quote_o.Controls.Add(this.btAddDir6);
             this.tpDir_quote_o.Controls.Add(this.cbDirection61);
@@ -1536,6 +1681,18 @@
             this.tpDir_quote_o.TabIndex = 5;
             this.tpDir_quote_o.Text = "Очная бюджетная по особой квоте";
             this.tpDir_quote_o.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed61
+            // 
+            this.cbAgreed61.AutoSize = true;
+            this.cbAgreed61.Enabled = false;
+            this.cbAgreed61.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed61.Name = "cbAgreed61";
+            this.cbAgreed61.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed61.TabIndex = 18;
+            this.cbAgreed61.UseVisualStyleBackColor = true;
+            this.cbAgreed61.Visible = false;
+            this.cbAgreed61.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir61
             // 
@@ -1569,10 +1726,10 @@
             this.cbDirection61.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection61.Enabled = false;
             this.cbDirection61.FormattingEnabled = true;
-            this.cbDirection61.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection61.Location = new System.Drawing.Point(31, 42);
             this.cbDirection61.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection61.Name = "cbDirection61";
-            this.cbDirection61.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection61.Size = new System.Drawing.Size(492, 24);
             this.cbDirection61.TabIndex = 9;
             this.cbDirection61.Visible = false;
             // 
@@ -1589,6 +1746,9 @@
             // 
             // tpDir_target_o
             // 
+            this.tpDir_target_o.Controls.Add(this.cbAgreed73);
+            this.tpDir_target_o.Controls.Add(this.cbAgreed72);
+            this.tpDir_target_o.Controls.Add(this.cbAgreed71);
             this.tpDir_target_o.Controls.Add(this.btRemoveDir73);
             this.tpDir_target_o.Controls.Add(this.btRemoveDir72);
             this.tpDir_target_o.Controls.Add(this.btRemoveDir71);
@@ -1605,6 +1765,42 @@
             this.tpDir_target_o.TabIndex = 6;
             this.tpDir_target_o.Text = "Очная бюджетная форма целевой прием";
             this.tpDir_target_o.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed73
+            // 
+            this.cbAgreed73.AutoSize = true;
+            this.cbAgreed73.Enabled = false;
+            this.cbAgreed73.Location = new System.Drawing.Point(9, 124);
+            this.cbAgreed73.Name = "cbAgreed73";
+            this.cbAgreed73.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed73.TabIndex = 20;
+            this.cbAgreed73.UseVisualStyleBackColor = true;
+            this.cbAgreed73.Visible = false;
+            this.cbAgreed73.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed72
+            // 
+            this.cbAgreed72.AutoSize = true;
+            this.cbAgreed72.Enabled = false;
+            this.cbAgreed72.Location = new System.Drawing.Point(9, 88);
+            this.cbAgreed72.Name = "cbAgreed72";
+            this.cbAgreed72.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed72.TabIndex = 19;
+            this.cbAgreed72.UseVisualStyleBackColor = true;
+            this.cbAgreed72.Visible = false;
+            this.cbAgreed72.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed71
+            // 
+            this.cbAgreed71.AutoSize = true;
+            this.cbAgreed71.Enabled = false;
+            this.cbAgreed71.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed71.Name = "cbAgreed71";
+            this.cbAgreed71.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed71.TabIndex = 18;
+            this.cbAgreed71.UseVisualStyleBackColor = true;
+            this.cbAgreed71.Visible = false;
+            this.cbAgreed71.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir73
             // 
@@ -1666,10 +1862,10 @@
             this.cbDirection73.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection73.Enabled = false;
             this.cbDirection73.FormattingEnabled = true;
-            this.cbDirection73.Location = new System.Drawing.Point(10, 119);
+            this.cbDirection73.Location = new System.Drawing.Point(31, 119);
             this.cbDirection73.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection73.Name = "cbDirection73";
-            this.cbDirection73.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection73.Size = new System.Drawing.Size(492, 24);
             this.cbDirection73.TabIndex = 11;
             this.cbDirection73.Visible = false;
             // 
@@ -1678,10 +1874,10 @@
             this.cbDirection72.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection72.Enabled = false;
             this.cbDirection72.FormattingEnabled = true;
-            this.cbDirection72.Location = new System.Drawing.Point(10, 83);
+            this.cbDirection72.Location = new System.Drawing.Point(31, 83);
             this.cbDirection72.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection72.Name = "cbDirection72";
-            this.cbDirection72.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection72.Size = new System.Drawing.Size(492, 24);
             this.cbDirection72.TabIndex = 10;
             this.cbDirection72.Visible = false;
             // 
@@ -1690,10 +1886,10 @@
             this.cbDirection71.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection71.Enabled = false;
             this.cbDirection71.FormattingEnabled = true;
-            this.cbDirection71.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection71.Location = new System.Drawing.Point(31, 42);
             this.cbDirection71.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection71.Name = "cbDirection71";
-            this.cbDirection71.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection71.Size = new System.Drawing.Size(492, 24);
             this.cbDirection71.TabIndex = 9;
             this.cbDirection71.Visible = false;
             // 
@@ -1710,6 +1906,7 @@
             // 
             // tpDir_quote_oz
             // 
+            this.tpDir_quote_oz.Controls.Add(this.cbAgreed81);
             this.tpDir_quote_oz.Controls.Add(this.btRemoveDir81);
             this.tpDir_quote_oz.Controls.Add(this.btAddDir8);
             this.tpDir_quote_oz.Controls.Add(this.cbDirection81);
@@ -1722,6 +1919,18 @@
             this.tpDir_quote_oz.TabIndex = 7;
             this.tpDir_quote_oz.Text = "Очно-заочная бюджетная по особой квоте";
             this.tpDir_quote_oz.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed81
+            // 
+            this.cbAgreed81.AutoSize = true;
+            this.cbAgreed81.Enabled = false;
+            this.cbAgreed81.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed81.Name = "cbAgreed81";
+            this.cbAgreed81.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed81.TabIndex = 18;
+            this.cbAgreed81.UseVisualStyleBackColor = true;
+            this.cbAgreed81.Visible = false;
+            this.cbAgreed81.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir81
             // 
@@ -1755,10 +1964,10 @@
             this.cbDirection81.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection81.Enabled = false;
             this.cbDirection81.FormattingEnabled = true;
-            this.cbDirection81.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection81.Location = new System.Drawing.Point(31, 42);
             this.cbDirection81.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection81.Name = "cbDirection81";
-            this.cbDirection81.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection81.Size = new System.Drawing.Size(492, 24);
             this.cbDirection81.TabIndex = 9;
             this.cbDirection81.Visible = false;
             // 
@@ -1775,6 +1984,8 @@
             // 
             // tpDir_target_oz
             // 
+            this.tpDir_target_oz.Controls.Add(this.cbAgreed92);
+            this.tpDir_target_oz.Controls.Add(this.cbAgreed91);
             this.tpDir_target_oz.Controls.Add(this.btRemoveDir92);
             this.tpDir_target_oz.Controls.Add(this.btRemoveDir91);
             this.tpDir_target_oz.Controls.Add(this.btAddDir9);
@@ -1789,6 +2000,30 @@
             this.tpDir_target_oz.TabIndex = 8;
             this.tpDir_target_oz.Text = "Очно-заочная бюджетная целевой прием";
             this.tpDir_target_oz.UseVisualStyleBackColor = true;
+            // 
+            // cbAgreed92
+            // 
+            this.cbAgreed92.AutoSize = true;
+            this.cbAgreed92.Enabled = false;
+            this.cbAgreed92.Location = new System.Drawing.Point(9, 88);
+            this.cbAgreed92.Name = "cbAgreed92";
+            this.cbAgreed92.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed92.TabIndex = 19;
+            this.cbAgreed92.UseVisualStyleBackColor = true;
+            this.cbAgreed92.Visible = false;
+            this.cbAgreed92.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
+            // 
+            // cbAgreed91
+            // 
+            this.cbAgreed91.AutoSize = true;
+            this.cbAgreed91.Enabled = false;
+            this.cbAgreed91.Location = new System.Drawing.Point(9, 47);
+            this.cbAgreed91.Name = "cbAgreed91";
+            this.cbAgreed91.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed91.TabIndex = 18;
+            this.cbAgreed91.UseVisualStyleBackColor = true;
+            this.cbAgreed91.Visible = false;
+            this.cbAgreed91.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir92
             // 
@@ -1836,10 +2071,10 @@
             this.cbDirection92.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection92.Enabled = false;
             this.cbDirection92.FormattingEnabled = true;
-            this.cbDirection92.Location = new System.Drawing.Point(10, 83);
+            this.cbDirection92.Location = new System.Drawing.Point(31, 83);
             this.cbDirection92.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection92.Name = "cbDirection92";
-            this.cbDirection92.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection92.Size = new System.Drawing.Size(492, 24);
             this.cbDirection92.TabIndex = 10;
             this.cbDirection92.Visible = false;
             // 
@@ -1848,10 +2083,10 @@
             this.cbDirection91.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection91.Enabled = false;
             this.cbDirection91.FormattingEnabled = true;
-            this.cbDirection91.Location = new System.Drawing.Point(10, 42);
+            this.cbDirection91.Location = new System.Drawing.Point(31, 42);
             this.cbDirection91.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection91.Name = "cbDirection91";
-            this.cbDirection91.Size = new System.Drawing.Size(513, 24);
+            this.cbDirection91.Size = new System.Drawing.Size(492, 24);
             this.cbDirection91.TabIndex = 9;
             this.cbDirection91.Visible = false;
             // 
@@ -1946,6 +2181,7 @@
             this.tbExamsDocNumber.Name = "tbExamsDocNumber";
             this.tbExamsDocNumber.Size = new System.Drawing.Size(165, 22);
             this.tbExamsDocNumber.TabIndex = 3;
+            this.tbExamsDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // tbExamsDocSeries
             // 
@@ -1954,6 +2190,7 @@
             this.tbExamsDocSeries.Name = "tbExamsDocSeries";
             this.tbExamsDocSeries.Size = new System.Drawing.Size(113, 22);
             this.tbExamsDocSeries.TabIndex = 2;
+            this.tbExamsDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label35
             // 
@@ -2087,6 +2324,7 @@
             this.mtbHomePhone.Name = "mtbHomePhone";
             this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
             this.mtbHomePhone.TabIndex = 3;
+            this.mtbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // mtbMobilePhone
             // 
@@ -2095,6 +2333,7 @@
             this.mtbMobilePhone.Name = "mtbMobilePhone";
             this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
             this.mtbMobilePhone.TabIndex = 2;
+            this.mtbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label31
             // 
@@ -2535,5 +2774,21 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox cbAgreed13;
+        private System.Windows.Forms.CheckBox cbAgreed12;
+        private System.Windows.Forms.CheckBox cbAgreed11;
+        private System.Windows.Forms.CheckBox cbAgreed21;
+        private System.Windows.Forms.CheckBox cbAgreed32;
+        private System.Windows.Forms.CheckBox cbAgreed31;
+        private System.Windows.Forms.CheckBox cbAgreed41;
+        private System.Windows.Forms.CheckBox cbAgreed51;
+        private System.Windows.Forms.CheckBox cbAgreed61;
+        private System.Windows.Forms.CheckBox cbAgreed73;
+        private System.Windows.Forms.CheckBox cbAgreed72;
+        private System.Windows.Forms.CheckBox cbAgreed71;
+        private System.Windows.Forms.CheckBox cbAgreed81;
+        private System.Windows.Forms.CheckBox cbAgreed92;
+        private System.Windows.Forms.CheckBox cbAgreed91;
+        private System.Windows.Forms.Button btGetIndex;
     }
 }
