@@ -10,7 +10,6 @@ namespace PK.Classes
 
         public static readonly string DocumentsTemplatesPath = System.Configuration.ConfigurationManager.AppSettings["DocumentsTemplatesPath"];
         public static readonly string FIS_Login = System.Configuration.ConfigurationManager.AppSettings["FIS_Login"];
-        public static readonly string KLADR_DB_Name = System.Configuration.ConfigurationManager.AppSettings["KLADR_DB_Name"];
 
         /// <summary>
         /// Отображает диалоговое окно с кнопками "Да" и "Нет".

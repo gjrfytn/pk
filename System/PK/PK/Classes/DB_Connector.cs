@@ -15,7 +15,7 @@ namespace PK.Classes
             User = user;
             Password = password;
 
-            _Connection = new MySqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["pk_db"].ConnectionString + "; user = " + user + "; password = " + password);
+            _Connection = new MySqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["pk_db"].ConnectionString + " user = " + user + "; password = " + password);
             _Connection.Open();
         }
 

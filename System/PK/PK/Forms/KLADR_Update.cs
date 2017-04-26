@@ -43,37 +43,30 @@ namespace PK.Forms
                 return;
             }
 
-            try
-            {
-                MySqlConnection connection = new MySqlConnection(
-                System.Configuration.ConfigurationManager.ConnectionStrings["common"].ConnectionString +
+            if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
+                return;
+
+            MySqlConnection connection = new MySqlConnection(
+                System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString +
                 " user = " + _User + "; password = " + _Password + ";"
                 );
+            connection.Open();
+            MySqlTransaction transaction = connection.BeginTransaction();
+            MySqlCommand cmd = new MySqlCommand("", connection, transaction);
 
-                connection.Open();
-
-                MySqlCommand сmd = new MySqlCommand("SHOW DATABASES;", connection);
-                using (MySqlDataReader reader = сmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        if (reader.GetString(0) == Classes.Utility.KLADR_DB_Name)
-                        {
-                            MessageBox.Show("Для обновления КЛАДР необходимо вручную удалить старую версию базы данных (рекомендуется создать резервную копию).\nОперация отменена.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                    }
-                }
-
+            try
+            {
                 Cursor = Cursors.WaitCursor;
-                statusStrip_Label.Text = "Создание схемы...";
+                statusStrip_Label.Text = "Очистка БД...";
 
-                сmd.CommandText = Properties.Resources.kladr_db_creation;
-                сmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM subjects;";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM streets;";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM houses;";
+                cmd.ExecuteNonQuery();
 
                 uint total = 0;
-                MySqlCommand cmd = new MySqlCommand("", connection);
-
                 statusStrip_ProgressBar.Visible = true;
                 statusStrip_Label.Text = "Загрузка субъектов...";
                 uint count = 0;
@@ -146,11 +139,22 @@ namespace PK.Forms
                 }
                 total += count;
 
+                transaction.Commit();
+
                 MessageBox.Show("Всего записей: " + total, "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка:\n" + ex.Message + "\n\nВозможно, в базу данных были занесены неверные данные КЛАДР.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch (Exception ex2)
+                {
+                    MessageBox.Show("Не удалось откатить изменения:\n" + ex2.Message + "\n\nВозможно, в БД КЛАДР были занесены неверные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {

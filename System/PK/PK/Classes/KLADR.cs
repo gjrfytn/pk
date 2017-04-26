@@ -22,8 +22,8 @@ namespace PK.Classes
         public KLADR(string user, string password)
         {
             _Connection = new MySqlConnection(
-                System.Configuration.ConfigurationManager.ConnectionStrings["common"].ConnectionString +
-                " database = " + Utility.KLADR_DB_Name + "; user = " + user + "; password = " + password + ";"
+                System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString +
+                " user = " + user + "; password = " + password + ";"
                 );
             _Connection.Open();
         }
