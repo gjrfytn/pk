@@ -30,7 +30,7 @@
         {
             this.cbType = new System.Windows.Forms.ComboBox();
             this.tbNumber = new System.Windows.Forms.TextBox();
-            this.cbDirOrProfile = new System.Windows.Forms.ComboBox();
+            this.cbFDP = new System.Windows.Forms.ComboBox();
             this.gbEduSource = new System.Windows.Forms.GroupBox();
             this.rbQuota = new System.Windows.Forms.RadioButton();
             this.rbTarget = new System.Windows.Forms.RadioButton();
@@ -42,8 +42,10 @@
             this.rbO = new System.Windows.Forms.RadioButton();
             this.lNumber = new System.Windows.Forms.Label();
             this.lType = new System.Windows.Forms.Label();
-            this.lDirOrProfile = new System.Windows.Forms.Label();
+            this.lFDP = new System.Windows.Forms.Label();
             this.panel = new System.Windows.Forms.Panel();
+            this.dtpDate = new System.Windows.Forms.DateTimePicker();
+            this.lDate = new System.Windows.Forms.Label();
             this.bSave = new System.Windows.Forms.Button();
             this.cbShowAdmitted = new System.Windows.Forms.CheckBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -69,32 +71,30 @@
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
-            this.cbType.Items.AddRange(new object[] {
-            "Зачисление",
-            "Отчисление",
-            "Выделение мест в общежитии"});
             this.cbType.Location = new System.Drawing.Point(12, 64);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(136, 21);
             this.cbType.TabIndex = 1;
+            this.cbType.SelectedIndexChanged += new System.EventHandler(this.cbType_SelectedIndexChanged);
             // 
             // tbNumber
             // 
             this.tbNumber.Location = new System.Drawing.Point(12, 25);
+            this.tbNumber.MaxLength = 50;
             this.tbNumber.Name = "tbNumber";
             this.tbNumber.Size = new System.Drawing.Size(136, 20);
             this.tbNumber.TabIndex = 0;
             // 
-            // cbDirOrProfile
+            // cbFDP
             // 
-            this.cbDirOrProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDirOrProfile.FormattingEnabled = true;
-            this.cbDirOrProfile.Location = new System.Drawing.Point(443, 24);
-            this.cbDirOrProfile.Name = "cbDirOrProfile";
-            this.cbDirOrProfile.Size = new System.Drawing.Size(259, 21);
-            this.cbDirOrProfile.TabIndex = 4;
-            this.cbDirOrProfile.DropDown += new System.EventHandler(this.cbDirOrProfile_DropDown);
-            this.cbDirOrProfile.SelectedIndexChanged += new System.EventHandler(this.cbDirOrProfile_SelectedIndexChanged);
+            this.cbFDP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFDP.FormattingEnabled = true;
+            this.cbFDP.Location = new System.Drawing.Point(443, 24);
+            this.cbFDP.Name = "cbFDP";
+            this.cbFDP.Size = new System.Drawing.Size(259, 21);
+            this.cbFDP.TabIndex = 4;
+            this.cbFDP.DropDown += new System.EventHandler(this.cbDirOrProfile_DropDown);
+            this.cbFDP.SelectedIndexChanged += new System.EventHandler(this.cbDirOrProfile_SelectedIndexChanged);
             // 
             // gbEduSource
             // 
@@ -227,25 +227,27 @@
             this.lType.TabIndex = 8;
             this.lType.Text = "Тип:";
             // 
-            // lDirOrProfile
+            // lFDP
             // 
-            this.lDirOrProfile.AutoSize = true;
-            this.lDirOrProfile.Location = new System.Drawing.Point(440, 9);
-            this.lDirOrProfile.Name = "lDirOrProfile";
-            this.lDirOrProfile.Size = new System.Drawing.Size(75, 13);
-            this.lDirOrProfile.TabIndex = 9;
-            this.lDirOrProfile.Text = "Направление";
+            this.lFDP.AutoSize = true;
+            this.lFDP.Location = new System.Drawing.Point(440, 9);
+            this.lFDP.Name = "lFDP";
+            this.lFDP.Size = new System.Drawing.Size(78, 13);
+            this.lFDP.TabIndex = 9;
+            this.lFDP.Text = "Направление:";
             // 
             // panel
             // 
+            this.panel.Controls.Add(this.dtpDate);
+            this.panel.Controls.Add(this.lDate);
             this.panel.Controls.Add(this.bSave);
             this.panel.Controls.Add(this.cbShowAdmitted);
             this.panel.Controls.Add(this.tbNumber);
             this.panel.Controls.Add(this.cbType);
-            this.panel.Controls.Add(this.cbDirOrProfile);
+            this.panel.Controls.Add(this.cbFDP);
             this.panel.Controls.Add(this.gbEduSource);
             this.panel.Controls.Add(this.gbEduForm);
-            this.panel.Controls.Add(this.lDirOrProfile);
+            this.panel.Controls.Add(this.lFDP);
             this.panel.Controls.Add(this.lType);
             this.panel.Controls.Add(this.lNumber);
             this.panel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -253,6 +255,25 @@
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(1008, 143);
             this.panel.TabIndex = 10;
+            // 
+            // dtpDate
+            // 
+            this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDate.Location = new System.Drawing.Point(12, 111);
+            this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
+            this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.dtpDate.Name = "dtpDate";
+            this.dtpDate.Size = new System.Drawing.Size(90, 20);
+            this.dtpDate.TabIndex = 13;
+            // 
+            // lDate
+            // 
+            this.lDate.AutoSize = true;
+            this.lDate.Location = new System.Drawing.Point(12, 95);
+            this.lDate.Name = "lDate";
+            this.lDate.Size = new System.Drawing.Size(36, 13);
+            this.lDate.TabIndex = 12;
+            this.lDate.Text = "Дата:";
             // 
             // bSave
             // 
@@ -423,7 +444,7 @@
 
         private System.Windows.Forms.ComboBox cbType;
         private System.Windows.Forms.TextBox tbNumber;
-        private System.Windows.Forms.ComboBox cbDirOrProfile;
+        private System.Windows.Forms.ComboBox cbFDP;
         private System.Windows.Forms.GroupBox gbEduSource;
         private System.Windows.Forms.RadioButton rbQuota;
         private System.Windows.Forms.RadioButton rbTarget;
@@ -435,7 +456,7 @@
         private System.Windows.Forms.RadioButton rbO;
         private System.Windows.Forms.Label lNumber;
         private System.Windows.Forms.Label lType;
-        private System.Windows.Forms.Label lDirOrProfile;
+        private System.Windows.Forms.Label lFDP;
         private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.CheckBox cbShowAdmitted;
@@ -452,5 +473,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Russian;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Social;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Foreign;
+        private System.Windows.Forms.Label lDate;
+        private System.Windows.Forms.DateTimePicker dtpDate;
     }
 }
