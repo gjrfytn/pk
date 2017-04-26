@@ -210,9 +210,9 @@ namespace PK.Forms
             form.ShowDialog();
         }
 
-        private void toolStrip_FisImport_Click(object sender, EventArgs e)
+        private void toolStrip_FIS_Export_Click(object sender, EventArgs e)
         {
-            Classes.Utility.ConnectToFIS("****")?.Import(Classes.FIS_Packager.MakePackage(_DB_Connection));
+            Classes.Utility.ConnectToFIS("****")?.Export(Classes.FIS_Packager.MakePackage(_DB_Connection));
         }
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
@@ -327,6 +327,12 @@ namespace PK.Forms
                 else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Принято"))
                     row.Visible = false;
                 else row.Visible = true;
+        }
+
+        private void menuStrip_KLADR_Update_Click(object sender, EventArgs e)
+        {
+            KLADR_Update form = new KLADR_Update(_DB_Connection.User,_DB_Connection.Password);
+            form.ShowDialog();
         }
     }
 }

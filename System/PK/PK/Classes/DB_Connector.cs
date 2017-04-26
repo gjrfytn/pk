@@ -5,12 +5,17 @@ namespace PK.Classes
 {
     class DB_Connector : System.IDisposable
     {
+        public readonly string User;
+        public readonly string Password;
+
         private MySqlConnection _Connection;
 
         public DB_Connector(string user, string password)
         {
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["pk_db"].ConnectionString + "; user = " + user + "; password = " + password;
-            _Connection = new MySqlConnection(connString);
+            User = user;
+            Password = password;
+
+            _Connection = new MySqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["pk_db"].ConnectionString + "; user = " + user + "; password = " + password);
             _Connection.Open();
         }
 

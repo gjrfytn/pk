@@ -91,6 +91,32 @@ namespace PK.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на CREATE SCHEMA IF NOT EXISTS `kladr2` DEFAULT CHARACTER SET utf8 ;
+        ///USE `kladr2` ;
+        ///
+        ///CREATE TABLE IF NOT EXISTS `kladr2`.`houses` (
+        ///  `name` VARCHAR(75) NOT NULL,
+        ///  `code` CHAR(19) NOT NULL,
+        ///  `index` CHAR(6) NULL DEFAULT NULL,
+        ///  PRIMARY KEY (`code`))
+        ///ENGINE = InnoDB
+        ///DEFAULT CHARACTER SET = utf8;
+        ///
+        ///CREATE TABLE IF NOT EXISTS `kladr2`.`streets` (
+        ///  `name` VARCHAR(75) NOT NULL,
+        ///  `socr` VARCHAR(15) NOT NULL,
+        ///  `code` CHAR(17) NOT NULL,
+        ///  `index` CHAR(6) NULL DEFAULT NULL,
+        ///  PRIMARY KEY (`code`),
+        /// [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string kladr_db_creation {
+            get {
+                return ResourceManager.GetString("kladr_db_creation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap pen {
