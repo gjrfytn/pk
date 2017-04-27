@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+using RB_Tag = System.Tuple<string, uint>;
+using CB_B_Value = System.Tuple<string, uint>;
+using CB_P_Value = System.Tuple<string, uint, string>;
+
 namespace PK.Forms
 {
     partial class OrderEdit : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
+        private readonly string _EditInitNumber;
 
-        public OrderEdit(Classes.DB_Connector connection, uint? id)
+        public OrderEdit(Classes.DB_Connector connection, string number)
         {
+            _DB_Connection = connection;
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+
             #region Components
             InitializeComponent();
 
@@ -19,16 +27,64 @@ namespace PK.Forms
             cbType.ValueMember = "Item1";
             cbType.DataSource = new List<Tuple<string, string>>
             {
-                new Tuple<string, string>  ( "admission" ,"Зачисление" ),
-                new Tuple<string, string>  ( "exception" ,"Отчисление"),
+                new Tuple<string, string>( "admission" ,"Зачисление" ),
+                new Tuple<string, string>( "exception" ,"Отчисление"),
                 new Tuple<string, string>("hostel" ,"Выделение мест в общежитии" )
             };
+
+            rbBudget.Tag = new RB_Tag("budget", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB));
+            rbPaid.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP));
+            rbTarget.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT));
+            rbQuota.Tag = new RB_Tag("quota", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ));
+            rbO.Tag = new RB_Tag("o", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO));
+            rbOZ.Tag = new RB_Tag("oz", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ));
+            rbZ.Tag = new RB_Tag("z", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ));
             #endregion
 
-            _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-
             cbFDP.ValueMember = "Value";
+
+            _EditInitNumber = number;
+
+            if (number != null)
+            {
+                object[] order = _DB_Connection.Select(
+                    DB_Table.ORDERS,
+                    new string[] { "type", "date", "education_form_id", "finance_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("number",Relation.EQUAL,number)
+                    })[0];
+
+                tbNumber.Text = number;
+                dtpDate.Value = (DateTime)order[1];
+
+                string type = order[0].ToString();
+                cbType.SelectedValue = type;
+                if (type == "hostel")
+                {
+
+                }
+                else
+                {
+                    gbEduSource.Controls.Cast<RadioButton>().Single(rb => ((RB_Tag)rb.Tag).Item2 == (uint)order[3]).Checked = true;
+                    gbEduForm.Controls.Cast<RadioButton>().Single(rb => ((RB_Tag)rb.Tag).Item2 == (uint)order[2]).Checked = true;
+
+                    cbFDP_DropDown(null, null);
+                    if (rbPaid.Checked)
+                        cbFDP.SelectedValue = new CB_P_Value(order[4].ToString(), (uint)order[5], order[6].ToString());
+                    else
+                        cbFDP.SelectedValue = new CB_B_Value(order[4].ToString(), (uint)order[5]);
+
+                    foreach (uint applID in _DB_Connection.Select(
+                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        new string[] { "applications_id" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
+                        ).Select(s => (uint)s[0]))
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                            if ((uint)row.Cells["dataGridView_ID"].Value == applID)
+                                row.Cells["dataGridView_Added"].Value = true;
+                }
+            }
         }
 
         private void cbType_SelectedIndexChanged(object sender, EventArgs e)
@@ -79,7 +135,7 @@ namespace PK.Forms
             cbShowAdmitted.Enabled = rbPaid.Checked;
         }
 
-        private void cbDirOrProfile_DropDown(object sender, EventArgs e)
+        private void cbFDP_DropDown(object sender, EventArgs e)
         {
             int selectedIndex = cbFDP.SelectedIndex;
             cbFDP.DisplayMember = "Display";
@@ -105,8 +161,8 @@ namespace PK.Forms
                         new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                         new List<Tuple<string, Relation, object>>
                         {
-                        new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("places_paid_"+gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString(), Relation.GREATER,0 )
+                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
                         }).Select(
                         s => new
                         {
@@ -116,19 +172,19 @@ namespace PK.Forms
                                 new string[] { "name" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,s[0]),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,s[1]),
-                                new Tuple<string, Relation, object>("short_name",Relation.EQUAL,s[2])
+                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,s[0]),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,s[1]),
+                                    new Tuple<string, Relation, object>("short_name",Relation.EQUAL,s[2])
                                 })[0][0].ToString()
                         }
                         ).ToList();
                 else if (rbTarget.Checked)
                     cbFDP.DataSource = _DB_Connection.Select(
                         DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
-                        new string[] { "direction_faculty", "direction_id", "places_" + gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag.ToString() },
+                        new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
                         new List<Tuple<string, Relation, object>>
                         {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
                         }).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0)
                         .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
@@ -138,16 +194,16 @@ namespace PK.Forms
                             new string[] { "direction_faculty", "direction_id" },
                             new List<Tuple<string, Relation, object>>
                             {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                            new Tuple<string, Relation, object>("places_" +gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString()+
-                            "_"+gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag.ToString(),                            Relation.GREATER,0 )
+                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
+                                "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1,                            Relation.GREATER,0 )
                             }).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
             }
 
             cbFDP.SelectedIndex = selectedIndex;
         }
 
-        private void cbDirOrProfile_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbFDP_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataGridView.Rows.Clear();
 
@@ -235,7 +291,7 @@ namespace PK.Forms
                     _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
                     k1 => k1[1],
                     k2 => k2[0],
-                    (s1, s2) => new { ApplID = s1[0], EntrID = s2[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
+                    (s1, s2) => new { ApplID = s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                     );
 
                 var table = entrants.GroupJoin(
@@ -244,7 +300,7 @@ namespace PK.Forms
                     k2 => k2.ApplID,
                     (s1, s2) => new
                     {
-                        EntrID = s1.EntrID,
+                        ApplID = s1.ApplID,
                         Name = s1.Name,
                         Math = s2.FirstOrDefault(s => (uint)s.Subject == 2)?.Value, //TODO
                         Phys = s2.FirstOrDefault(s => (uint)s.Subject == 10)?.Value, //TODO
@@ -269,7 +325,7 @@ namespace PK.Forms
 
                     dataGridView.Rows.Add(
                         false,
-                        ent.EntrID,
+                        ent.ApplID,
                         ent.Name,
                         null,
                         MFR,
@@ -297,6 +353,7 @@ namespace PK.Forms
                     gbEduSource.Enabled = false;
                     gbEduForm.Enabled = false;
                     cbFDP.Enabled = false;
+                    bSave.Enabled = true;
                 }
                 else
                 {
@@ -310,8 +367,86 @@ namespace PK.Forms
                     gbEduSource.Enabled = true;
                     gbEduForm.Enabled = true;
                     cbFDP.Enabled = true;
+                    bSave.Enabled = false;
                 }
             }
+        }
+
+        private void bSave_Click(object sender, EventArgs e)
+        {
+            if (tbNumber.Text == "")
+            {
+                MessageBox.Show("Не заполнен номер приказа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cbFDP.SelectedIndex == -1)
+            {
+                MessageBox.Show("Не выбран факультет/направление/профиль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cbType.SelectedValue.ToString() == "hostel")
+            {
+                _DB_Connection.Insert(
+                    DB_Table.ORDERS,
+                    new Dictionary<string, object>
+                    {
+                        { "number", tbNumber.Text},
+                        { "type", cbType.SelectedValue},
+                        { "date", dtpDate.Value},
+                        { "campaign_id",_DB_Helper.CurrentCampaignID },
+                        { "faculty_short_name",cbFDP.SelectedValue }
+                    });
+            }
+            else
+            {
+                string faculty;
+                uint direction;
+                string profile;
+
+                if (rbPaid.Checked)
+                {
+                    CB_P_Value value = (CB_P_Value)cbFDP.SelectedValue;
+                    faculty = value.Item1;
+                    direction = value.Item2;
+                    profile = value.Item3;
+                }
+                else
+                {
+                    CB_B_Value value = (CB_B_Value)cbFDP.SelectedValue;
+                    faculty = value.Item1;
+                    direction = value.Item2;
+                    profile = null;
+                }
+
+                _DB_Connection.Insert(
+                    DB_Table.ORDERS,
+                    new Dictionary<string, object>
+                    {
+                        { "number", tbNumber.Text},
+                        { "type", cbType.SelectedValue},
+                        { "date", dtpDate.Value},
+                        { "education_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
+                        { "education_form_id",((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item2 },
+                        {"finance_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
+                        { "finance_source_id", ((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item2},
+                        { "campaign_id",_DB_Helper.CurrentCampaignID },
+                        { "faculty_short_name",faculty },
+                        { "direction_id", direction},
+                        { "profile_short_name",profile }
+                    });
+            }
+
+            foreach (DataGridViewRow row in dataGridView.Rows)
+                if ((bool)row.Cells["dataGridView_Added"].Value)
+                    _DB_Connection.Insert(
+                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        new Dictionary<string, object>
+                        {
+                            { "orders_number", tbNumber.Text},
+                            { "applications_id", row.Cells["dataGridView_ID"].Value}
+                        });
         }
     }
 }

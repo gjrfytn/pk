@@ -71,7 +71,7 @@
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
-            this.cbType.Location = new System.Drawing.Point(12, 64);
+            this.cbType.Location = new System.Drawing.Point(12, 24);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(136, 21);
             this.cbType.TabIndex = 1;
@@ -79,7 +79,7 @@
             // 
             // tbNumber
             // 
-            this.tbNumber.Location = new System.Drawing.Point(12, 25);
+            this.tbNumber.Location = new System.Drawing.Point(12, 64);
             this.tbNumber.MaxLength = 50;
             this.tbNumber.Name = "tbNumber";
             this.tbNumber.Size = new System.Drawing.Size(136, 20);
@@ -89,12 +89,12 @@
             // 
             this.cbFDP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFDP.FormattingEnabled = true;
-            this.cbFDP.Location = new System.Drawing.Point(443, 24);
+            this.cbFDP.Location = new System.Drawing.Point(428, 24);
             this.cbFDP.Name = "cbFDP";
             this.cbFDP.Size = new System.Drawing.Size(259, 21);
             this.cbFDP.TabIndex = 4;
-            this.cbFDP.DropDown += new System.EventHandler(this.cbDirOrProfile_DropDown);
-            this.cbFDP.SelectedIndexChanged += new System.EventHandler(this.cbDirOrProfile_SelectedIndexChanged);
+            this.cbFDP.DropDown += new System.EventHandler(this.cbFDP_DropDown);
+            this.cbFDP.SelectedIndexChanged += new System.EventHandler(this.cbFDP_SelectedIndexChanged);
             // 
             // gbEduSource
             // 
@@ -212,7 +212,7 @@
             // lNumber
             // 
             this.lNumber.AutoSize = true;
-            this.lNumber.Location = new System.Drawing.Point(12, 9);
+            this.lNumber.Location = new System.Drawing.Point(12, 48);
             this.lNumber.Name = "lNumber";
             this.lNumber.Size = new System.Drawing.Size(44, 13);
             this.lNumber.TabIndex = 7;
@@ -221,7 +221,7 @@
             // lType
             // 
             this.lType.AutoSize = true;
-            this.lType.Location = new System.Drawing.Point(12, 48);
+            this.lType.Location = new System.Drawing.Point(12, 9);
             this.lType.Name = "lType";
             this.lType.Size = new System.Drawing.Size(29, 13);
             this.lType.TabIndex = 8;
@@ -230,7 +230,7 @@
             // lFDP
             // 
             this.lFDP.AutoSize = true;
-            this.lFDP.Location = new System.Drawing.Point(440, 9);
+            this.lFDP.Location = new System.Drawing.Point(428, 9);
             this.lFDP.Name = "lFDP";
             this.lFDP.Size = new System.Drawing.Size(78, 13);
             this.lFDP.TabIndex = 9;
@@ -259,7 +259,7 @@
             // dtpDate
             // 
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDate.Location = new System.Drawing.Point(12, 111);
+            this.dtpDate.Location = new System.Drawing.Point(12, 103);
             this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
@@ -269,7 +269,7 @@
             // lDate
             // 
             this.lDate.AutoSize = true;
-            this.lDate.Location = new System.Drawing.Point(12, 95);
+            this.lDate.Location = new System.Drawing.Point(12, 87);
             this.lDate.Name = "lDate";
             this.lDate.Size = new System.Drawing.Size(36, 13);
             this.lDate.TabIndex = 12;
@@ -277,18 +277,20 @@
             // 
             // bSave
             // 
-            this.bSave.Location = new System.Drawing.Point(852, 62);
+            this.bSave.Enabled = false;
+            this.bSave.Location = new System.Drawing.Point(827, 61);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(75, 23);
             this.bSave.TabIndex = 11;
             this.bSave.Text = "Сохранить";
             this.bSave.UseVisualStyleBackColor = true;
+            this.bSave.Click += new System.EventHandler(this.bSave_Click);
             // 
             // cbShowAdmitted
             // 
             this.cbShowAdmitted.AutoSize = true;
             this.cbShowAdmitted.Enabled = false;
-            this.cbShowAdmitted.Location = new System.Drawing.Point(443, 95);
+            this.cbShowAdmitted.Location = new System.Drawing.Point(252, 114);
             this.cbShowAdmitted.Name = "cbShowAdmitted";
             this.cbShowAdmitted.Size = new System.Drawing.Size(157, 17);
             this.cbShowAdmitted.TabIndex = 10;

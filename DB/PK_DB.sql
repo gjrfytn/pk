@@ -320,20 +320,17 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`orders` (
   `type` ENUM('admission', 'exception', 'hostel') NOT NULL COMMENT 'Тип приказа (зачисление, исключение или выделение мест в общежитии).',
   `date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
   `protocol_number` SMALLINT UNSIGNED NULL COMMENT 'Номер протокола, если приказ зарегестрирован, иначе - NULL.',
-  `education_form_dict_id` INT UNSIGNED NOT NULL COMMENT '14',
-  `education_form_id` INT UNSIGNED NOT NULL COMMENT 'ИД Формы обучения (Справочник 14 \"Форма обучения\").',
-  `finance_source_dict_id` INT UNSIGNED NOT NULL COMMENT '15',
-  `finance_source_id` INT UNSIGNED NOT NULL COMMENT 'ИД источника финансирования (Справочник 15 \"Источник финансирования\").',
-  `education_level_dict_id` INT UNSIGNED NOT NULL COMMENT '2',
-  `education_level_id` INT UNSIGNED NOT NULL COMMENT 'ИД Уровня образования (Справочник 2 \"Уровень образования\").',
+  `education_form_dict_id` INT UNSIGNED NULL COMMENT '14',
+  `education_form_id` INT UNSIGNED NULL COMMENT 'ИД Формы обучения (Справочник 14 \"Форма обучения\").',
+  `finance_source_dict_id` INT UNSIGNED NULL COMMENT '15',
+  `finance_source_id` INT UNSIGNED NULL COMMENT 'ИД источника финансирования (Справочник 15 \"Источник финансирования\").',
   `campaign_id` INT UNSIGNED NOT NULL COMMENT 'ID приемной кампании.',
   `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
-  `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
+  `direction_id` INT UNSIGNED NULL COMMENT 'Направление.',
   `profile_short_name` VARCHAR(5) NULL COMMENT 'Профиль.',
   PRIMARY KEY (`number`),
   INDEX `corresp_edu_f_idx` (`education_form_dict_id` ASC, `education_form_id` ASC),
   INDEX `corresp_fin_s_idx` (`finance_source_dict_id` ASC, `finance_source_id` ASC),
-  INDEX `corresp_edu_l_idx` (`education_level_dict_id` ASC, `education_level_id` ASC),
   INDEX `orders_has_profiles_idx` (`campaign_id` ASC, `faculty_short_name` ASC, `direction_id` ASC, `profile_short_name` ASC),
   INDEX `orders_has_directions_idx` (`campaign_id` ASC, `faculty_short_name` ASC, `direction_id` ASC),
   CONSTRAINT `orders_corresp_edu_f`
@@ -343,11 +340,6 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`orders` (
     ON UPDATE NO ACTION,
   CONSTRAINT `orders_corresp_fin_s`
     FOREIGN KEY (`finance_source_id` , `finance_source_dict_id`)
-    REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `orders_corresp_edu_l`
-    FOREIGN KEY (`education_level_id` , `education_level_dict_id`)
     REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -661,6 +653,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`documents_subjects_data` (
   `subject_dict_id` INT UNSIGNED NOT NULL COMMENT '1',
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
   `value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
+  `checked` TINYINT(1) NOT NULL COMMENT 'Баллы ЕГЭ проверены в ФИС.',
   PRIMARY KEY (`document_id`, `subject_dict_id`, `subject_id`),
   INDEX `corresp_idx` (`subject_dict_id` ASC, `subject_id` ASC),
   INDEX `has_idx` (`document_id` ASC),
@@ -1216,16 +1209,147 @@ GRANT SELECT ON TABLE `pk_db`.`users` TO 'initial';
 GRANT SELECT ON TABLE `pk_db`.`roles_passwords` TO 'initial';
 CREATE USER 'registrator' IDENTIFIED BY 'reg1234';
 
-GRANT ALL ON pk_db.* TO 'registrator';
-GRANT ALL ON kladr.* TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`users` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries_items` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`institution_achievements` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`target_organizations` TO 'registrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications` TO 'registrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'registrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_10_items` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_19_items` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_olympic_profiles` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`_dictionary_olympic_profiles_has_dictionaries_items` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`faculties` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`profiles` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_faculties_data` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_data` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_profiles_data` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`directions` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`examinations` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`entrants_examinations_marks` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`constants` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` TO 'registrator';
+GRANT SELECT ON TABLE `kladr`.`subjects` TO 'registrator';
+GRANT SELECT ON TABLE `kladr`.`streets` TO 'registrator';
+GRANT SELECT ON TABLE `kladr`.`houses` TO 'registrator';
 CREATE USER 'inspector' IDENTIFIED BY 'ins1234';
 
-GRANT ALL ON pk_db.* TO 'inspector';
-GRANT ALL ON kladr.* TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`users` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`campaigns` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries_items` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`institution_achievements` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`target_organizations` TO 'inspector';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications` TO 'inspector';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_10_items` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_19_items` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_olympic_profiles` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`_dictionary_olympic_profiles_has_dictionaries_items` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`faculties` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`profiles` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_faculties_data` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_data` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_profiles_data` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`directions` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`examinations` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`entrants_examinations_marks` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`constants` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` TO 'inspector';
+GRANT SELECT ON TABLE `kladr`.`subjects` TO 'inspector';
+GRANT SELECT ON TABLE `kladr`.`streets` TO 'inspector';
+GRANT SELECT ON TABLE `kladr`.`houses` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'inspector';
+GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'inspector';
+GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_orders_has_applications` TO 'inspector';
 CREATE USER 'administrator' IDENTIFIED BY 'adm1234';
 
-GRANT ALL ON pk_db.* TO 'administrator';
-GRANT ALL ON kladr.* TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`users` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries_items` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionaries` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`institution_achievements` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`target_organizations` TO 'administrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications` TO 'administrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_10_items` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_19_items` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`dictionary_olympic_profiles` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`_dictionary_olympic_profiles_has_dictionaries_items` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`faculties` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`profiles` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_faculties_data` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_data` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_profiles_data` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`directions` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`examinations` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`entrants_examinations_marks` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`constants` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` TO 'administrator';
+GRANT SELECT ON TABLE `kladr`.`subjects` TO 'administrator';
+GRANT SELECT ON TABLE `kladr`.`streets` TO 'administrator';
+GRANT SELECT ON TABLE `kladr`.`houses` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'administrator';
+GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_orders_has_applications` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`users` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionaries_items` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionaries` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`_campaigns_has_dictionaries_items` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`institution_achievements` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`target_organizations` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionary_10_items` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionary_19_items` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionary_olympic_profiles` TO 'administrator';
+GRANT INSERT, UPDATE ON TABLE `pk_db`.`_dictionary_olympic_profiles_has_dictionaries_items` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`faculties` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`profiles` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns_faculties_data` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns_directions_data` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns_profiles_data` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`directions` TO 'administrator';
+GRANT DELETE, UPDATE, INSERT ON TABLE `pk_db`.`entrance_tests` TO 'administrator';
+GRANT UPDATE, INSERT ON TABLE `pk_db`.`constants` TO 'administrator';
+GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` TO 'administrator';
+GRANT DELETE, INSERT ON TABLE `kladr`.`subjects` TO 'administrator';
+GRANT DELETE, INSERT ON TABLE `kladr`.`streets` TO 'administrator';
+GRANT DELETE, INSERT ON TABLE `kladr`.`houses` TO 'administrator';
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

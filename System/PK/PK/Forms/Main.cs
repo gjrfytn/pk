@@ -182,7 +182,7 @@ namespace PK.Forms
 
         private void menuStrip_OlympDictionary_Click(object sender, EventArgs e)
         {
-            OlympicsDictionaryForm form = new OlympicsDictionaryForm(_DB_Connection);
+            OlympicsDictionary form = new OlympicsDictionary(_DB_Connection);
             form.ShowDialog();
         }
 
