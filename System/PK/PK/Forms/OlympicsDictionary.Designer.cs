@@ -1,6 +1,6 @@
 ﻿namespace PK
 {
-    partial class OlympicsDictionaryForm
+    partial class OlympicsDictionary
     {
         /// <summary>
         /// Required designer variable.

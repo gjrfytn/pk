@@ -11,7 +11,7 @@ namespace PK.Forms
     {
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private readonly Classes.KLADR _KLADR = new Classes.KLADR();
+        private readonly Classes.KLADR _KLADR;
 
         private uint? _ApplicationID;
         private uint? _EntrantID;
@@ -40,6 +40,7 @@ namespace PK.Forms
             }
 
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _KLADR = new Classes.KLADR(connection.User, connection.Password);
             _CurrCampainID = campaignID;
             _RegistratorLogin = registratorsLogin;
             _ApplicationID = applicationId;
