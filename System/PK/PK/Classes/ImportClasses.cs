@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    namespace ImportClasses
+    namespace FIS_ExportClasses
     {
         interface IXElemementConvertable
         {

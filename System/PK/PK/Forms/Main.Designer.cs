@@ -33,11 +33,11 @@
             this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_InstitutionAchievements = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_OutDocuments = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_RegJournal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_FisImport = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_OutDocuments = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_RegJournal = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_FIS_Export = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,6 +67,7 @@
             this.cbEnroll = new System.Windows.Forms.CheckBox();
             this.cbPickUp = new System.Windows.Forms.CheckBox();
             this.cbNew = new System.Windows.Forms.CheckBox();
+            this.menuStrip_KLADR_Update = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -107,8 +108,8 @@
             this.menuStrip_Campaign,
             this.menuStrip_Entrants,
             this.menuStrip_Univesity,
-            this.toolStrip_OutDocuments,
-            this.toolStrip_Administration,
+            this.menuStrip_OutDocuments,
+            this.menuStrip_Administration,
             this.menuStrip_Help});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -217,43 +218,44 @@
             this.menuStrip_InstitutionAchievements.Text = "Индивидуальные достижения";
             this.menuStrip_InstitutionAchievements.Click += new System.EventHandler(this.menuStrip_InstitutionAchievements_Click);
             // 
-            // toolStrip_OutDocuments
+            // menuStrip_OutDocuments
             // 
-            this.toolStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_RegJournal});
-            this.toolStrip_OutDocuments.Name = "toolStrip_OutDocuments";
-            this.toolStrip_OutDocuments.Size = new System.Drawing.Size(118, 20);
-            this.toolStrip_OutDocuments.Text = "Печатные формы";
+            this.menuStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_RegJournal});
+            this.menuStrip_OutDocuments.Name = "menuStrip_OutDocuments";
+            this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 20);
+            this.menuStrip_OutDocuments.Text = "Печатные формы";
             // 
-            // toolStrip_RegJournal
+            // menuStrip_RegJournal
             // 
-            this.toolStrip_RegJournal.Name = "toolStrip_RegJournal";
-            this.toolStrip_RegJournal.Size = new System.Drawing.Size(191, 22);
-            this.toolStrip_RegJournal.Text = "Журнал регистрации";
-            this.toolStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
+            this.menuStrip_RegJournal.Name = "menuStrip_RegJournal";
+            this.menuStrip_RegJournal.Size = new System.Drawing.Size(191, 22);
+            this.menuStrip_RegJournal.Text = "Журнал регистрации";
+            this.menuStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
             // 
-            // toolStrip_Administration
+            // menuStrip_Administration
             // 
-            this.toolStrip_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Users,
-            this.toolStrip_FisImport});
-            this.toolStrip_Administration.Name = "toolStrip_Administration";
-            this.toolStrip_Administration.Size = new System.Drawing.Size(134, 20);
-            this.toolStrip_Administration.Text = "Администрирование";
+            this.menuStrip_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip_Users,
+            this.menuStrip_FIS_Export,
+            this.menuStrip_KLADR_Update});
+            this.menuStrip_Administration.Name = "menuStrip_Administration";
+            this.menuStrip_Administration.Size = new System.Drawing.Size(134, 20);
+            this.menuStrip_Administration.Text = "Администрирование";
             // 
-            // toolStrip_Users
+            // menuStrip_Users
             // 
-            this.toolStrip_Users.Name = "toolStrip_Users";
-            this.toolStrip_Users.Size = new System.Drawing.Size(157, 22);
-            this.toolStrip_Users.Text = "Пользователи";
-            this.toolStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
+            this.menuStrip_Users.Name = "menuStrip_Users";
+            this.menuStrip_Users.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_Users.Text = "Пользователи";
+            this.menuStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
             // 
-            // toolStrip_FisImport
+            // menuStrip_FIS_Export
             // 
-            this.toolStrip_FisImport.Name = "toolStrip_FisImport";
-            this.toolStrip_FisImport.Size = new System.Drawing.Size(157, 22);
-            this.toolStrip_FisImport.Text = "Экспорт в ФИС";
-            this.toolStrip_FisImport.Click += new System.EventHandler(this.toolStrip_FisImport_Click);
+            this.menuStrip_FIS_Export.Name = "menuStrip_FIS_Export";
+            this.menuStrip_FIS_Export.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_FIS_Export.Text = "Экспорт в ФИС";
+            this.menuStrip_FIS_Export.Click += new System.EventHandler(this.toolStrip_FIS_Export_Click);
             // 
             // menuStrip_Help
             // 
@@ -508,6 +510,7 @@
             this.cbDateSearch.TabIndex = 13;
             this.cbDateSearch.UseVisualStyleBackColor = true;
             this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
+            //this.cbDateSearch.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // cbEnroll
             // 
@@ -541,6 +544,13 @@
             this.cbNew.Text = "Новые";
             this.cbNew.UseVisualStyleBackColor = true;
             this.cbNew.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
+            // 
+            // menuStrip_KLADR_Update
+            // 
+            this.menuStrip_KLADR_Update.Name = "menuStrip_KLADR_Update";
+            this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_KLADR_Update.Text = "Обновление КЛАДР";
+            this.menuStrip_KLADR_Update.Click += new System.EventHandler(this.menuStrip_KLADR_Update_Click);
             // 
             // Main
             // 
@@ -593,15 +603,15 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_DirDictionary;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Exams;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_OlympDictionary;
-        private System.Windows.Forms.ToolStripMenuItem toolStrip_Administration;
-        private System.Windows.Forms.ToolStripMenuItem toolStrip_Users;
-        private System.Windows.Forms.ToolStripMenuItem toolStrip_FisImport;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Administration;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Users;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_FIS_Export;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_InstitutionAchievements;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Orders;
         private System.Windows.Forms.DataGridView dgvApplications;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Constants;
-        private System.Windows.Forms.ToolStripMenuItem toolStrip_OutDocuments;
-        private System.Windows.Forms.ToolStripMenuItem toolStrip_RegJournal;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_OutDocuments;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_RegJournal;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbLastName;
         private System.Windows.Forms.TextBox tbFirstName;
@@ -628,6 +638,7 @@
         private System.Windows.Forms.CheckBox cbNew;
         private System.Windows.Forms.ToolStripButton toolStripMain_CreateMagApplication;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateMagApplication;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_KLADR_Update;
     }
 }
 

@@ -19,9 +19,12 @@ namespace PK.Classes
 
         private readonly MySqlConnection _Connection;
 
-        public KLADR()
+        public KLADR(string user, string password)
         {
-            _Connection = new MySqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString);
+            _Connection = new MySqlConnection(
+                System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString +
+                " user = " + user + "; password = " + password + ";"
+                );
             _Connection.Open();
         }
 

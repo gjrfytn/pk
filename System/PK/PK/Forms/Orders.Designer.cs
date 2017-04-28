@@ -57,8 +57,12 @@
             this.dataGridView.Location = new System.Drawing.Point(0, 25);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
+            this.dataGridView.RowHeadersVisible = false;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(669, 516);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_RowEnter);
+            this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             // 
             // dataGridView_Number
             // 
@@ -112,6 +116,7 @@
             this.toolStrip_Edit.Name = "toolStrip_Edit";
             this.toolStrip_Edit.Size = new System.Drawing.Size(107, 22);
             this.toolStrip_Edit.Text = "Редактировать";
+            this.toolStrip_Edit.Click += new System.EventHandler(this.toolStrip_Edit_Click);
             // 
             // toolStrip_Register
             // 
@@ -120,6 +125,7 @@
             this.toolStrip_Register.Name = "toolStrip_Register";
             this.toolStrip_Register.Size = new System.Drawing.Size(126, 22);
             this.toolStrip_Register.Text = "Зарегестрировать";
+            this.toolStrip_Register.Click += new System.EventHandler(this.toolStrip_Register_Click);
             // 
             // Orders
             // 

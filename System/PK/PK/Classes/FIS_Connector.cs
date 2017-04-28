@@ -161,7 +161,7 @@ namespace PK.Classes
                 });
         }
 
-        public void Import(ImportClasses.PackageData data)
+        public void Export(FIS_ExportClasses.PackageData data)
         {
             /*byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
                 new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
@@ -169,7 +169,7 @@ namespace PK.Classes
             XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
             System.Windows.Forms.MessageBox.Show(doc.ToString());*/
 
-            new ImportClasses.Root(new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
+            new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
         }
 
         private XDocument GetResponse(string uri, byte[] requestData)

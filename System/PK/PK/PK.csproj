@@ -72,6 +72,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\DBF_Reader.cs" />
     <Compile Include="Classes\ImportClasses.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="FIS_DictionaryEnum.cs" />
@@ -182,6 +183,12 @@
     <Compile Include="Forms\InstitutionAchievementsEdit.Designer.cs">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\KLADR_Update.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KLADR_Update.Designer.cs">
+      <DependentUpon>KLADR_Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MADIOlymps.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -242,11 +249,11 @@
     <Compile Include="Forms\TargetOrganizationEdit.Designer.cs">
       <DependentUpon>TargetOrganizationEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OlympicsDictionaryForm.cs">
+    <Compile Include="Forms\OlympicsDictionary.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OlympicsDictionaryForm.Designer.cs">
-      <DependentUpon>OlympicsDictionaryForm.cs</DependentUpon>
+    <Compile Include="Forms\OlympicsDictionary.Designer.cs">
+      <DependentUpon>OlympicsDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\FIS_Packager.cs" />
     <Compile Include="Program.cs" />
@@ -325,6 +332,9 @@
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\KLADR_Update.resx">
+      <DependentUpon>KLADR_Update.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MADIOlymps.resx">
       <DependentUpon>MADIOlymps.cs</DependentUpon>
     </EmbeddedResource>
@@ -342,6 +352,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ApplicationEdit.resx">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
@@ -355,8 +366,8 @@
     <EmbeddedResource Include="Forms\TargetOrganizationEdit.resx">
       <DependentUpon>TargetOrganizationEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OlympicsDictionaryForm.resx">
-      <DependentUpon>OlympicsDictionaryForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OlympicsDictionary.resx">
+      <DependentUpon>OlympicsDictionary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -468,6 +479,7 @@
     <None Include="Resources\seat.png" />
     <None Include="Resources\refresh.png" />
     <None Include="Resources\check.png" />
+    <None Include="Resources\kladr_db_creation.sql" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

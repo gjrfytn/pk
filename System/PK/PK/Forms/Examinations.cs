@@ -14,7 +14,7 @@ namespace PK.Forms
         {
             get
             {
-                return (uint)dataGridView.SelectedRows[0].Cells[0].Value;
+                return (uint)dataGridView.SelectedRows[0].Cells["dataGridView_ID"].Value;
             }
         }
 
@@ -42,7 +42,15 @@ namespace PK.Forms
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[0].Value } });
+            if (ExaminationHasMarks((uint)e.Row.Cells["dataGridView_ID"].Value))
+            {
+                MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+            else if (Classes.Utility.ShowUnrevertableActionMessageBox())
+                _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells["dataGridView_ID"].Value } });
+            else
+                e.Cancel = true;
         }
 
         private void toolStrip_Add_Click(object sender, EventArgs e)
@@ -89,7 +97,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>(
                         "subject_id",
                         Relation.EQUAL,
-                        _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[1].Value.ToString())
+                        _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells["dataGridView_Subject"].Value.ToString())
                         )
                 }
                 );
@@ -108,8 +116,8 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
                 }
-                ).Where(a => (DateTime)a[2] >= (DateTime)dataGridView.SelectedRows[0].Cells[3].Value &&
-               (DateTime)a[2] < (DateTime)dataGridView.SelectedRows[0].Cells[4].Value
+                ).Where(a => (DateTime)a[2] >= (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegStartDate"].Value &&
+               (DateTime)a[2] < (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegEndDate"].Value
                 );
 
             var applications2 = applications.Join(
