@@ -85,7 +85,7 @@
             this.cbFirstTime = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.grbApplication = new System.Windows.Forms.GroupBox();
+            this.gbApplication = new System.Windows.Forms.GroupBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.cbPrerogative = new System.Windows.Forms.CheckBox();
@@ -216,7 +216,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.gbEduDocument.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.grbApplication.SuspendLayout();
+            this.gbApplication.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.gbAttributes.SuspendLayout();
             this.tcDirections.SuspendLayout();
@@ -993,7 +993,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.grbApplication);
+            this.panel1.Controls.Add(this.gbApplication);
             this.panel1.Controls.Add(this.btClose);
             this.panel1.Controls.Add(this.gbCertificate);
             this.panel1.Controls.Add(this.gbPassport);
@@ -1007,24 +1007,24 @@
             this.panel1.Size = new System.Drawing.Size(1350, 692);
             this.panel1.TabIndex = 2;
             // 
-            // grbApplication
+            // gbApplication
             // 
-            this.grbApplication.BackColor = System.Drawing.Color.Ivory;
-            this.grbApplication.Controls.Add(this.pictureBox3);
-            this.grbApplication.Controls.Add(this.gbAttributes);
-            this.grbApplication.Controls.Add(this.tcDirections);
-            this.grbApplication.Controls.Add(this.gbExamsDoc);
-            this.grbApplication.Controls.Add(this.gbOther);
-            this.grbApplication.Controls.Add(this.cbFirstTime);
-            this.grbApplication.Controls.Add(this.label21);
-            this.grbApplication.Controls.Add(this.label28);
-            this.grbApplication.Controls.Add(this.cbForeignLanguage);
-            this.grbApplication.Location = new System.Drawing.Point(0, 289);
-            this.grbApplication.Name = "grbApplication";
-            this.grbApplication.Size = new System.Drawing.Size(1347, 332);
-            this.grbApplication.TabIndex = 2;
-            this.grbApplication.TabStop = false;
-            this.grbApplication.Text = "Из заявления";
+            this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.pictureBox3);
+            this.gbApplication.Controls.Add(this.gbAttributes);
+            this.gbApplication.Controls.Add(this.tcDirections);
+            this.gbApplication.Controls.Add(this.gbExamsDoc);
+            this.gbApplication.Controls.Add(this.gbOther);
+            this.gbApplication.Controls.Add(this.cbFirstTime);
+            this.gbApplication.Controls.Add(this.label21);
+            this.gbApplication.Controls.Add(this.label28);
+            this.gbApplication.Controls.Add(this.cbForeignLanguage);
+            this.gbApplication.Location = new System.Drawing.Point(0, 289);
+            this.gbApplication.Name = "gbApplication";
+            this.gbApplication.Size = new System.Drawing.Size(1347, 332);
+            this.gbApplication.TabIndex = 2;
+            this.gbApplication.TabStop = false;
+            this.gbApplication.Text = "Из заявления";
             // 
             // pictureBox3
             // 
@@ -2282,7 +2282,7 @@
             this.cbMedal.Name = "cbMedal";
             this.cbMedal.Size = new System.Drawing.Size(353, 20);
             this.cbMedal.TabIndex = 0;
-            this.cbMedal.Text = "Аттестат/Диплом с отлицием или золотая медаль";
+            this.cbMedal.Text = "Аттестат/Диплом с отличием или золотая медаль";
             this.cbMedal.UseVisualStyleBackColor = true;
             // 
             // cbSport
@@ -2546,7 +2546,7 @@
             this.MaximizeBox = false;
             this.Name = "ApplicationEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Заявление на поступление";
+            this.Text = "Заявление на поступление бакалавра";
             this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
@@ -2559,8 +2559,8 @@
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.grbApplication.ResumeLayout(false);
-            this.grbApplication.PerformLayout();
+            this.gbApplication.ResumeLayout(false);
+            this.gbApplication.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.gbAttributes.ResumeLayout(false);
             this.gbAttributes.PerformLayout();
@@ -2768,7 +2768,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
-        private System.Windows.Forms.GroupBox grbApplication;
+        private System.Windows.Forms.GroupBox gbApplication;
         private System.Windows.Forms.GroupBox gbIndividualAchievements;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;

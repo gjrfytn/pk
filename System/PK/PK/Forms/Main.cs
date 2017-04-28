@@ -25,10 +25,9 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
 
-            System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);
-
-            UpdateCampaignsList();
+            System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);            
             dtpRegDate.Value = dtpRegDate.MinDate;
+            SetCurrentCampaign();
         }
 
         #region IDisposable Support
@@ -110,56 +109,35 @@ namespace PK.Forms
             dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
         }
 
-        private void UpdateCampaignsList()
-        {
-            toolStripMain_cbCurrCampaign.Items.Clear();
-            List<object[]> campaigns = _DB_Connection.Select(DB_Table.CAMPAIGNS, "id", "name");
-            if (campaigns.Count > 0)
-            {
-                foreach (var campaign in campaigns)
-                {
-                    toolStripMain_cbCurrCampaign.Items.Insert(0, campaign[1]);
-                }
-                toolStripMain_cbCurrCampaign.SelectedIndex = 0;
-            }
-        }
-
-        private void toolStripMain_cbCurrCampaign_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (toolStripMain_cbCurrCampaign.SelectedIndex != -1)
-            {
-                List<object[]> campaigns = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "start_year" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("name", Relation.EQUAL, toolStripMain_cbCurrCampaign.SelectedItem.ToString())
-                    });
-                if (campaigns.Count > 0)
-                {
-                    _CurrCampaignID = (uint)campaigns[0][0];
-                    UpdateApplicationsTable();
-                }
-            }
-        }
-
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
         {
             Campaigns form = new Campaigns(_DB_Connection);
             form.ShowDialog();
-            UpdateCampaignsList();
+            SetCurrentCampaign();
         }
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
-            form.ShowDialog();
-            UpdateApplicationsTable();
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
         }
 
         private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
-            form.ShowDialog();
-            UpdateApplicationsTable();
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
         }
 
         private void menuStrip_TargetOrganizations_Click(object sender, EventArgs e)
@@ -217,8 +195,13 @@ namespace PK.Forms
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
-            InstitutionAchievementsEdit form = new InstitutionAchievementsEdit(_DB_Connection);
-            form.ShowDialog();
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                InstitutionAchievementsEdit form = new InstitutionAchievementsEdit(_DB_Connection);
+                form.ShowDialog();
+            }
         }
 
         private void menuStrip_Orders_Click(object sender, EventArgs e)
@@ -230,15 +213,36 @@ namespace PK.Forms
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
-            form.ShowDialog();
-            UpdateApplicationsTable();
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                if (!(bool)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "master_appl" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.SelectedRows[0].Cells[0].Value)
+                })[0][0])
+                {
+                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
+                    form.ShowDialog();
+                }
+                else
+                {
+                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.SelectedRows[0].Cells[0].Value);
+                    form.ShowDialog();
+                }
+                UpdateApplicationsTable();
+            }
         }
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
         {
-            Constants form = new Constants(_DB_Connection);
-            form.ShowDialog();
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                Constants form = new Constants(_DB_Connection, _CurrCampaignID);
+                form.ShowDialog();
+            }
         }
 
         private void toolStrip_RegJournal_Click(object sender, EventArgs e)
@@ -246,6 +250,30 @@ namespace PK.Forms
             DateChoice form = new DateChoice();
             form.ShowDialog();
             Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
+        }
+
+        private void menuStrip_CreateMagApplication_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
+        }
+
+        private void toolStripMain_CreateMagApplication_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
         }
 
         private void tbField_Leave(object sender, EventArgs e)
@@ -271,32 +299,13 @@ namespace PK.Forms
                 FilterAppsTable();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void cbDateSearch_CheckedChanged(object sender, EventArgs e)
         {
             dtpRegDate.Enabled = cbDateSearch.Checked;
             if (!dtpRegDate.Enabled)
                 dtpRegDate.Value = dtpRegDate.MinDate;
             else
                 dtpRegDate.Value = DateTime.Now;
-        }
-
-        private void FilterAppsTable()
-        {
-            foreach (DataGridViewRow row in dgvApplications.Rows)
-            {
-                bool matches = true;
-                if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
-                    matches = false;
-                else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
-                    matches = false;
-                else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
-                    matches = false;
-                else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
-                    matches = false;
-                else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date)) 
-                    matches = false;
-                row.Visible = matches;
-            }
         }
 
         private void cbFilter_CheckedChanged(object sender, EventArgs e)
@@ -327,6 +336,37 @@ namespace PK.Forms
                 else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Принято"))
                     row.Visible = false;
                 else row.Visible = true;
+        }
+
+        private void FilterAppsTable()
+        {
+            foreach (DataGridViewRow row in dgvApplications.Rows)
+            {
+                bool matches = true;
+                if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
+                    matches = false;
+                else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
+                    matches = false;
+                else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
+                    matches = false;
+                else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
+                    matches = false;
+                else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date)) 
+                    matches = false;
+                row.Visible = matches;
+            }
+        }
+
+        private void SetCurrentCampaign()
+        {
+            List<object[]> currCampaigns = _DB_Connection.Select(DB_Table.CONSTANTS, "current_campaign_id");
+            if (currCampaigns.Count > 0)
+            {
+                _CurrCampaignID = (uint)currCampaigns[0][0];
+                UpdateApplicationsTable();
+            }
+            else
+                _CurrCampaignID = 0;
         }
     }
 }

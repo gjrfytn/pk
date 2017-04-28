@@ -11,36 +11,18 @@ namespace PK.Forms
         private readonly Classes.DB_Helper _DB_Helper;
         private uint _CurrCampaignID;
 
-        public Constants(Classes.DB_Connector connection)
+        public Constants(Classes.DB_Connector connection, uint campaignID)
         {
             InitializeComponent();
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-
-            foreach (var campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, "name"))
-            {
-                cbCampaign.Items.Add(campaign[0]);
-            }
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbCampaign.SelectedIndex != -1)
-            {
-                _CurrCampaignID = (uint)_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                                        new Tuple<string, Relation, object>("name", Relation.EQUAL, cbCampaign.SelectedItem.ToString())
-                    })[0][0];
-                UpdateTable();
-            }
+            _CurrCampaignID = campaignID;            
+            UpdateTable();
         }
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if (cbCampaign.SelectedIndex == -1)
-                MessageBox.Show("Не выбрана кампания");
-            else if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark",
+            if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark",
                 "min_foreign_mark" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("current_campaign_id", Relation.EQUAL, _CurrCampaignID)

@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-using DirTuple = System.Tuple<uint, string, string, uint, uint, string, string>;
+using DirTuple = System.Tuple<uint, string, string, uint, uint, string, string>; //Id, Faculty, Name (направления), EduSource, EduForm, ProfileShortName, ProfileName
 
 namespace PK.Forms
 {
@@ -136,13 +136,13 @@ namespace PK.Forms
                 switch (tab.Name.Split('_')[2])
                 {
                     case "o":
-                        eduFormName = "Очная форма";
+                        eduFormName = Classes.DB_Helper.EduFormO;
                         break;
                     case "oz":
-                        eduFormName = "Очно-заочная (вечерняя)";
+                        eduFormName = Classes.DB_Helper.EduFormOZ;
                         break;
                     case "z":
-                        eduFormName = "Заочная форма";
+                        eduFormName = Classes.DB_Helper.EduFormZ;
                         break;
                 }
                 if (tab.Name.Split('_')[1] == "paid")
@@ -150,28 +150,28 @@ namespace PK.Forms
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
-                            FillDirectionsProfilesCombobox(cb, true, false, eduFormName, "");
+                            FillDirectionsProfilesCombobox(cb, true, eduFormName, "");
                     }
                 else if (tab.Name.Split('_')[1] == "budget")
                     foreach (Control c in tab.Controls)
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
-                            FillDirectionsProfilesCombobox(cb, false, false, eduFormName, "Бюджетные места");
+                            FillDirectionsProfilesCombobox(cb, false, eduFormName, Classes.DB_Helper.EduSourceB);
                     }
                 else if (tab.Name.Split('_')[1] == "target")
                     foreach (Control c in tab.Controls)
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
-                            FillDirectionsProfilesCombobox(cb, false,true, eduFormName, "Целевой прием");
+                            FillDirectionsProfilesCombobox(cb, false, eduFormName, Classes.DB_Helper.EduSourceT);
                     }
                 else if (tab.Name.Split('_')[1] == "quote")
                     foreach (Control c in tab.Controls)
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
-                            FillDirectionsProfilesCombobox(cb, false, false, eduFormName, "Квота приема лиц, имеющих особое право");
+                            FillDirectionsProfilesCombobox(cb, false, eduFormName, Classes.DB_Helper.EduSourceQ);
                     }
             }
             cbInstitutionType.SelectedIndex = 0;
@@ -215,8 +215,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
                 foreach (Control c in tcDirections.TabPages[7].Controls)
                 {
@@ -224,8 +227,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
             }
             else if ((cbQuote.Checked) && (_Loading))
@@ -238,8 +244,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
                 foreach (Control c in tcDirections.TabPages[7].Controls)
                 {
@@ -247,8 +256,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
             }
             else
@@ -261,8 +273,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = false;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = false;
+                    if (bt != null)
+                        bt.Enabled = false;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = false;
                 }
                 foreach (Control c in tcDirections.TabPages[7].Controls)
                 {
@@ -270,8 +285,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = false;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = false;
+                    if (bt != null)
+                        bt.Enabled = false;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = false;
                 }
             }
             DirectionDocEnableDisable();
@@ -374,8 +392,7 @@ namespace PK.Forms
                             || (cbQuote.Checked && !cbMedCertificate.Checked)
                             || rbCertificate.Checked && !cbCertificateCopy.Checked
                             || rbDiploma.Checked && !cbDiplomaCopy.Checked
-                            || rbSpravka.Checked && !cbCertificateHRD.Checked
-                            || !cbPhotos.Checked)
+                            || rbSpravka.Checked && !cbCertificateHRD.Checked)
                             MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
                         else if (_ApplicationID == null)
                         {
@@ -832,8 +849,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
                 foreach (Control c in tcDirections.TabPages[8].Controls)
                 {
@@ -841,8 +861,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
             }
             else if (!cbTarget.Checked && !_Loading)
@@ -853,8 +876,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = false;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = false;
+                    if (bt != null)
+                        bt.Enabled = false;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = false;
                 }
                 foreach (Control c in tcDirections.TabPages[8].Controls)
                 {
@@ -862,8 +888,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = false;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = false;
+                    if (bt != null)
+                        bt.Enabled = false;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = false; ;
                 }
             }
             else if (_Loading)
@@ -874,8 +903,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
                 foreach (Control c in tcDirections.TabPages[8].Controls)
                 {
@@ -883,8 +915,11 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = true;
                     Button bt = c as Button;
-                    if (cb != null)
-                        cb.Enabled = true;
+                    if (bt != null)
+                        bt.Enabled = true;
+                    Label lb = c as Label;
+                    if (lb != null)
+                        lb.Enabled = true;
                 }
             }
         }
@@ -1108,7 +1143,7 @@ namespace PK.Forms
 
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
-                { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
+                { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER, cbSex.SelectedItem.ToString())},
                 { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
@@ -1389,7 +1424,7 @@ namespace PK.Forms
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((DirTuple)cb.SelectedValue).Item5},
                                     { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((DirTuple)cb.SelectedValue).Item4},
                                     { "profile_short_name", ((DirTuple)cb.SelectedValue).Item6},
-                                    { "profile_actual", true}, });
+                                    { "profile_actual", true} });
                             }
                     }
                 }
@@ -1487,7 +1522,7 @@ namespace PK.Forms
                     tbIssuedBy.Text = document[5].ToString();
 
                     object[] passport = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id", "nationality_id",
-                        "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_index", "reg_flat" }, new List<Tuple<string, Relation, object>>
+                        "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_index", "reg_flat", "gender_id" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                         })[0];
@@ -1503,6 +1538,7 @@ namespace PK.Forms
                     tbHouse.Text = passport[9].ToString();
                     tbPostcode.Text = passport[10].ToString();
                     tbAppartment.Text = passport[11].ToString();
+                    cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.GENDER, (uint)passport[12]);
                 }
                 else if ((document[1].ToString() == "school_certificate") || (document[1].ToString() == "high_edu_diploma") || (document[1].ToString() == "academic_diploma"))
                 {
@@ -1792,6 +1828,8 @@ namespace PK.Forms
                         cbDirection11.SelectedValue = entrancesData.Value;
                         cbDirection11.Visible = true;
                         cbDirection11.Enabled = true;
+                        btRemoveDir11.Visible = true;
+                        btRemoveDir11.Enabled = true;
                         cbAgreed11.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1804,6 +1842,8 @@ namespace PK.Forms
                         cbDirection12.SelectedValue = entrancesData.Value;
                         cbDirection12.Visible = true;
                         cbDirection12.Enabled = true;
+                        btRemoveDir12.Visible = true;
+                        btRemoveDir12.Enabled = true;
                         cbAgreed12.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1816,6 +1856,8 @@ namespace PK.Forms
                         cbDirection13.SelectedValue = entrancesData.Value;
                         cbDirection13.Visible = true;
                         cbDirection13.Enabled = true;
+                        btRemoveDir13.Visible = true;
+                        btRemoveDir13.Enabled = true;
                         cbAgreed13.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1834,6 +1876,8 @@ namespace PK.Forms
                     cbDirection21.SelectedValue = entrancesData.Value;
                     cbDirection21.Visible = true;
                     cbDirection21.Enabled = true;
+                    btRemoveDir21.Visible = true;
+                    btRemoveDir21.Enabled = true;
                     cbAgreed21.Visible = true;
                     if ((apEntrData != null) && (apEntrData > agreedDate))
                     {
@@ -1853,6 +1897,8 @@ namespace PK.Forms
                         cbDirection31.SelectedValue = entrancesData.Value;
                         cbDirection31.Visible = true;
                         cbDirection31.Enabled = true;
+                        btRemoveDir31.Visible = true;
+                        btRemoveDir31.Enabled = true;
                         cbAgreed31.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1865,6 +1911,8 @@ namespace PK.Forms
                         cbDirection32.SelectedValue = entrancesData.Value;
                         cbDirection32.Visible = true;
                         cbDirection32.Enabled = true;
+                        btRemoveDir32.Visible = true;
+                        btRemoveDir32.Enabled = true;
                         cbAgreed32.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1883,6 +1931,8 @@ namespace PK.Forms
                     cbDirection41.SelectedValue = entrancesData.Value;
                     cbDirection41.Visible = true;
                     cbDirection41.Enabled = true;
+                    btRemoveDir41.Visible = true;
+                    btRemoveDir41.Enabled = true;
                     cbAgreed41.Visible = true;
                     if ((apEntrData != null) && (apEntrData > agreedDate))
                     {
@@ -1900,6 +1950,8 @@ namespace PK.Forms
                     cbDirection51.SelectedValue = entrancesData.Value;
                     cbDirection51.Visible = true;
                     cbDirection51.Enabled = true;
+                    btRemoveDir51.Visible = true;
+                    btRemoveDir51.Enabled = true;
                     cbAgreed51.Visible = true;
                     if ((apEntrData != null) && (apEntrData > agreedDate))
                     {
@@ -1920,6 +1972,8 @@ namespace PK.Forms
                         cbDirection61.SelectedValue = entrancesData.Value;
                         cbDirection61.Visible = true;
                         cbDirection61.Enabled = true;
+                        btRemoveDir61.Visible = true;
+                        btRemoveDir61.Enabled = true;
                         cbAgreed61.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1949,6 +2003,8 @@ namespace PK.Forms
                         cbDirection71.SelectedValue = entrancesData.Value;
                         cbDirection71.Visible = true;
                         cbDirection71.Enabled = true;
+                        btRemoveDir71.Visible = true;
+                        btRemoveDir71.Enabled = true;
                         cbAgreed71.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1961,6 +2017,8 @@ namespace PK.Forms
                         cbDirection72.SelectedValue = entrancesData.Value;
                         cbDirection72.Visible = true;
                         cbDirection72.Enabled = true;
+                        btRemoveDir72.Visible = true;
+                        btRemoveDir72.Enabled = true;
                         cbAgreed72.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1973,6 +2031,8 @@ namespace PK.Forms
                         cbDirection73.SelectedValue = entrancesData.Value;
                         cbDirection73.Visible = true;
                         cbDirection73.Enabled = true;
+                        btRemoveDir73.Visible = true;
+                        btRemoveDir73.Enabled = true;
                         cbAgreed73.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -1994,6 +2054,8 @@ namespace PK.Forms
                         cbDirection81.SelectedValue = entrancesData.Value;
                         cbDirection81.Visible = true;
                         cbDirection81.Enabled = true;
+                        btRemoveDir81.Visible = true;
+                        btRemoveDir81.Enabled = true;
                         cbAgreed81.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -2023,6 +2085,8 @@ namespace PK.Forms
                         cbDirection91.SelectedValue = entrancesData.Value;
                         cbDirection91.Visible = true;
                         cbDirection91.Enabled = true;
+                        btRemoveDir91.Visible = true;
+                        btRemoveDir91.Enabled = true;
                         cbAgreed91.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -2035,6 +2099,8 @@ namespace PK.Forms
                         cbDirection92.SelectedValue = entrancesData.Value;
                         cbDirection92.Visible = true;
                         cbDirection92.Enabled = true;
+                        btRemoveDir92.Visible = true;
+                        btRemoveDir92.Enabled = true;
                         cbAgreed92.Visible = true;
                         if ((apEntrData != null) && (apEntrData > agreedDate))
                         {
@@ -2484,13 +2550,13 @@ namespace PK.Forms
                 cb.SelectedIndex = 0;
         }
 
-        private void FillDirectionsProfilesCombobox(ComboBox combobox, bool isProfileList, bool isTarget, string eduForm, string eduSource)
+        private void FillDirectionsProfilesCombobox(ComboBox combobox, bool isProfileList, string eduForm, string eduSource)
         {
             string[][] eduLevelsCodes = new string[][] { new string[] { "03", Classes.DB_Helper.EduLevelB }, new string[] { "04", Classes.DB_Helper.EduLevelM }, new string[] { "05", Classes.DB_Helper.EduLevelS } };
 
             var directionsData = _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name", "code");
 
-            if (isProfileList && !isTarget)
+            if (isProfileList && eduSource != Classes.DB_Helper.EduSourceT)
             {
                 string placesCountColumnName = "";
                 if (eduForm == Classes.DB_Helper.EduFormO)
@@ -2530,7 +2596,7 @@ namespace PK.Forms
                 combobox.DataSource = selectedDirs;
                 combobox.SelectedIndex = -1;
             }
-            else if (!isTarget)
+            else if (eduSource != Classes.DB_Helper.EduSourceT)
             {
                 string placesCountColumnName = "";
                 if ((eduForm == "Очная форма") && (eduSource == "Бюджетные места"))
@@ -2569,7 +2635,7 @@ namespace PK.Forms
                 combobox.DataSource = selectedDirs;
                 combobox.SelectedIndex = -1;
             }
-            else if (isTarget)
+            else if (eduSource == Classes.DB_Helper.EduSourceT)
             {
                 string placesCountColumnName = "";
                 if ((eduForm == "Очная форма") && (eduSource == "Целевой прием"))
@@ -2598,7 +2664,7 @@ namespace PK.Forms
                     {
                         Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
                         Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
-                    }).ToList();
+                    }).Distinct().ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
                 combobox.DataSource = selectedDirs;
@@ -2627,8 +2693,8 @@ namespace PK.Forms
                     if (cb != null)
                         cb.Enabled = false;
                     Button bt = control as Button;
-                    if (cb != null)
-                        cb.Enabled = false;
+                    if (bt != null)
+                        bt.Enabled = false;
                 }
         }
 

@@ -48,11 +48,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbKafedra = new System.Windows.Forms.TextBox();
             this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_T = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_ShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_EduLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_FacultyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Kafedra = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -66,11 +66,11 @@
             this.dgvDirections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirections.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvDirections_ID,
-            this.dgvDirections_T,
+            this.dgvDirections_Type,
             this.dgvDirections_Name,
             this.dgvDirections_ShortName,
             this.dgvDirections_Code,
-            this.dgvDirections_Type,
+            this.dgvDirections_EduLevel,
             this.dgvDirections_FacultyName,
             this.dgvDirections_Kafedra});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -86,7 +86,7 @@
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.RowHeadersVisible = false;
             this.dgvDirections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDirections.Size = new System.Drawing.Size(1039, 335);
+            this.dgvDirections.Size = new System.Drawing.Size(997, 335);
             this.dgvDirections.TabIndex = 0;
             this.dgvDirections.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDirections_CellEndEdit);
             // 
@@ -104,7 +104,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Enabled = false;
-            this.label1.Location = new System.Drawing.Point(627, 367);
+            this.label1.Location = new System.Drawing.Point(604, 367);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 2;
@@ -114,7 +114,7 @@
             // 
             this.cbDirections.Enabled = false;
             this.cbDirections.FormattingEnabled = true;
-            this.cbDirections.Location = new System.Drawing.Point(507, 389);
+            this.cbDirections.Location = new System.Drawing.Point(484, 389);
             this.cbDirections.Name = "cbDirections";
             this.cbDirections.Size = new System.Drawing.Size(336, 21);
             this.cbDirections.TabIndex = 3;
@@ -173,7 +173,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(378, 428);
+            this.label2.Location = new System.Drawing.Point(355, 428);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 6;
@@ -182,7 +182,7 @@
             // tbName
             // 
             this.tbName.Enabled = false;
-            this.tbName.Location = new System.Drawing.Point(456, 425);
+            this.tbName.Location = new System.Drawing.Point(433, 425);
             this.tbName.MaxLength = 150;
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(351, 20);
@@ -203,7 +203,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Enabled = false;
-            this.label3.Location = new System.Drawing.Point(892, 390);
+            this.label3.Location = new System.Drawing.Point(850, 390);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 13);
             this.label3.TabIndex = 9;
@@ -213,7 +213,7 @@
             // 
             this.cbFaculties.Enabled = false;
             this.cbFaculties.FormattingEnabled = true;
-            this.cbFaculties.Location = new System.Drawing.Point(964, 386);
+            this.cbFaculties.Location = new System.Drawing.Point(922, 386);
             this.cbFaculties.Name = "cbFaculties";
             this.cbFaculties.Size = new System.Drawing.Size(88, 21);
             this.cbFaculties.TabIndex = 10;
@@ -231,7 +231,7 @@
             // tbShortName
             // 
             this.tbShortName.Enabled = false;
-            this.tbShortName.Location = new System.Drawing.Point(925, 425);
+            this.tbShortName.Location = new System.Drawing.Point(883, 425);
             this.tbShortName.MaxLength = 5;
             this.tbShortName.Name = "tbShortName";
             this.tbShortName.Size = new System.Drawing.Size(127, 20);
@@ -241,7 +241,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Enabled = false;
-            this.label4.Location = new System.Drawing.Point(845, 429);
+            this.label4.Location = new System.Drawing.Point(803, 429);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(74, 13);
             this.label4.TabIndex = 13;
@@ -274,14 +274,14 @@
             this.dgvDirections_ID.Visible = false;
             this.dgvDirections_ID.Width = 24;
             // 
-            // dgvDirections_T
+            // dgvDirections_Type
             // 
-            this.dgvDirections_T.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirections_T.HeaderText = "";
-            this.dgvDirections_T.Name = "dgvDirections_T";
-            this.dgvDirections_T.ReadOnly = true;
-            this.dgvDirections_T.Visible = false;
-            this.dgvDirections_T.Width = 5;
+            this.dgvDirections_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirections_Type.HeaderText = "";
+            this.dgvDirections_Type.Name = "dgvDirections_Type";
+            this.dgvDirections_Type.ReadOnly = true;
+            this.dgvDirections_Type.Visible = false;
+            this.dgvDirections_Type.Width = 5;
             // 
             // dgvDirections_Name
             // 
@@ -292,9 +292,9 @@
             // dgvDirections_ShortName
             // 
             this.dgvDirections_ShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_ShortName.HeaderText = "Сокращение";
+            this.dgvDirections_ShortName.HeaderText = "Сокр.";
             this.dgvDirections_ShortName.Name = "dgvDirections_ShortName";
-            this.dgvDirections_ShortName.Width = 80;
+            this.dgvDirections_ShortName.Width = 60;
             // 
             // dgvDirections_Code
             // 
@@ -304,13 +304,13 @@
             this.dgvDirections_Code.ReadOnly = true;
             this.dgvDirections_Code.Width = 90;
             // 
-            // dgvDirections_Type
+            // dgvDirections_EduLevel
             // 
-            this.dgvDirections_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Type.HeaderText = "Программа обучения";
-            this.dgvDirections_Type.Name = "dgvDirections_Type";
-            this.dgvDirections_Type.ReadOnly = true;
-            this.dgvDirections_Type.Width = 128;
+            this.dgvDirections_EduLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirections_EduLevel.HeaderText = "Программа обучения";
+            this.dgvDirections_EduLevel.Name = "dgvDirections_EduLevel";
+            this.dgvDirections_EduLevel.ReadOnly = true;
+            this.dgvDirections_EduLevel.Width = 128;
             // 
             // dgvDirections_FacultyName
             // 
@@ -333,7 +333,7 @@
             this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 458);
+            this.ClientSize = new System.Drawing.Size(1024, 458);
             this.Controls.Add(this.tbKafedra);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -384,11 +384,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbKafedra;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_T;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_ShortName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_EduLevel;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_FacultyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Kafedra;
     }

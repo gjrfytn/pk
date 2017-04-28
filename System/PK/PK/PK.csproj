@@ -82,6 +82,12 @@
     <Compile Include="Forms\ApplicationDocsPrint.Designer.cs">
       <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ApplicationMagEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApplicationMagEdit.Designer.cs">
+      <DependentUpon>ApplicationMagEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Authorization.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -273,6 +279,9 @@
     <Compile Include="Classes\Utility.cs" />
     <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
       <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ApplicationMagEdit.resx">
+      <DependentUpon>ApplicationMagEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Authorization.resx">
       <DependentUpon>Authorization.cs</DependentUpon>

@@ -36,6 +36,8 @@
             this.dgvCampaigns_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btCreatePriemComp = new System.Windows.Forms.Button();
             this.btUpdate = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbCurrentCampaign = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCampaigns)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,13 +52,13 @@
             this.dgvCampaigns_Timing,
             this.dgvCampaigns_EduLevels,
             this.dgvCampaigns_Status});
-            this.dgvCampaigns.Location = new System.Drawing.Point(12, 55);
+            this.dgvCampaigns.Location = new System.Drawing.Point(12, 76);
             this.dgvCampaigns.MultiSelect = false;
             this.dgvCampaigns.Name = "dgvCampaigns";
             this.dgvCampaigns.ReadOnly = true;
             this.dgvCampaigns.RowHeadersVisible = false;
             this.dgvCampaigns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvCampaigns.Size = new System.Drawing.Size(715, 382);
+            this.dgvCampaigns.Size = new System.Drawing.Size(715, 361);
             this.dgvCampaigns.TabIndex = 0;
             // 
             // dgvCampaigns_ID
@@ -100,7 +102,7 @@
             // 
             // btCreatePriemComp
             // 
-            this.btCreatePriemComp.Location = new System.Drawing.Point(149, 12);
+            this.btCreatePriemComp.Location = new System.Drawing.Point(138, 42);
             this.btCreatePriemComp.Name = "btCreatePriemComp";
             this.btCreatePriemComp.Size = new System.Drawing.Size(171, 23);
             this.btCreatePriemComp.TabIndex = 1;
@@ -110,7 +112,7 @@
             // 
             // btUpdate
             // 
-            this.btUpdate.Location = new System.Drawing.Point(450, 12);
+            this.btUpdate.Location = new System.Drawing.Point(439, 42);
             this.btUpdate.Name = "btUpdate";
             this.btUpdate.Size = new System.Drawing.Size(142, 23);
             this.btUpdate.TabIndex = 2;
@@ -118,11 +120,31 @@
             this.btUpdate.UseVisualStyleBackColor = true;
             this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(164, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(161, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Текущая приемная кампания:";
+            // 
+            // cbCurrentCampaign
+            // 
+            this.cbCurrentCampaign.FormattingEnabled = true;
+            this.cbCurrentCampaign.Location = new System.Drawing.Point(331, 12);
+            this.cbCurrentCampaign.Name = "cbCurrentCampaign";
+            this.cbCurrentCampaign.Size = new System.Drawing.Size(224, 21);
+            this.cbCurrentCampaign.TabIndex = 4;
+            this.cbCurrentCampaign.SelectionChangeCommitted += new System.EventHandler(this.cbCurrentCampaign_SelectionChangeCommitted);
+            // 
             // Campaigns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(739, 449);
+            this.Controls.Add(this.cbCurrentCampaign);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btUpdate);
             this.Controls.Add(this.btCreatePriemComp);
             this.Controls.Add(this.dgvCampaigns);
@@ -131,6 +153,7 @@
             this.Text = "Приемные кампании";
             ((System.ComponentModel.ISupportInitialize)(this.dgvCampaigns)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -144,5 +167,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvCampaigns_Timing;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvCampaigns_EduLevels;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvCampaigns_Status;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbCurrentCampaign;
     }
 }

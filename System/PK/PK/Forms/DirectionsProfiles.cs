@@ -31,12 +31,31 @@ namespace PK.Forms
                 MessageBox.Show("Не указано название профиля.");
             else if (tbShortName.Text == "")
                 MessageBox.Show("Не указано сокращенное название профиля.");
+            else if (rbMag.Checked && tbKafedra.Text == "")
+                MessageBox.Show("Не указана кафедра.");
+            else if (_DB_Connection.Select(DB_Table.PROFILES, new string[] { "direction_id" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("short_name", Relation.EQUAL, tbShortName.Text)
+            }).Count > 0)
+                MessageBox.Show("Профиль/программа с таким сокращением уже существует.");
             else
             {
-                _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object> { { "faculty_short_name", cbFaculties.SelectedItem.ToString() },
+                if (rbMag.Checked)
+                {
+                    _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object> { { "faculty_short_name", cbFaculties.SelectedItem.ToString() },
+                    { "direction_id", (cbDirections.SelectedValue as Tuple<uint, string>).Item1 },
+                    { "name", tbName.Text + "|" + tbKafedra.Text }, { "short_name", tbShortName.Text } });
+                }
+                else
+                {
+                    _DB_Connection.Insert(DB_Table.PROFILES, new Dictionary<string, object> { { "faculty_short_name", cbFaculties.SelectedItem.ToString() },
                     { "direction_id", (cbDirections.SelectedValue as Tuple<uint, string>).Item1 },
                     { "name", tbName.Text}, { "short_name", tbShortName.Text } });
-
+                }
+                tbKafedra.Text = "";
+                tbName.Text = "";
+                tbShortName.Text = "";
+                btAddProfile.Enabled = true;
                 EnableDisableControls(false);
                 UpdateTable();
             }
@@ -47,26 +66,27 @@ namespace PK.Forms
             EnableDisableControls(true);
             if (dgvDirections.SelectedRows.Count != 0)
             {
-                if (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == Classes.DB_Helper.EduLevelB)
+                if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelB)
                     rbBacc.Checked = true;
-                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == Classes.DB_Helper.EduLevelS)
+                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelS)
                     rbSpec.Checked = true;
-                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == Classes.DB_Helper.EduLevelM)
+                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelM)
                     rbMag.Checked = true;
                 cbDirections.SelectedIndex = cbDirections.FindString(_DB_Helper.GetDirectionNameAndCode((uint)dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value).Item2);
+                btAddProfile.Enabled = false;
             }
         }
 
         private void btDelete_Click(object sender, EventArgs e)
         {
-            if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[1].Value.ToString() == "Н"))
+            if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == "Н"))
                 MessageBox.Show("Выберите профиль");
             else
             {
                 _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
                 { { "faculty_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value},
                     { "direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value},
-                    { "name", dgvDirections.SelectedRows[0].Cells[dgvDirections_Name.Index].Value} });
+                    { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value} });
                 UpdateTable();
             }
         }
@@ -74,11 +94,23 @@ namespace PK.Forms
         private void rb_CheckedChanged(object sender, EventArgs e)
         {
             if (rbBacc.Checked)
+            {
                 FillDirCombobox("03");
+                tbKafedra.Enabled = false;
+                label5.Enabled = false;
+            }                
             else if (rbMag.Checked)
+            {
                 FillDirCombobox("04");
+                tbKafedra.Enabled = true;
+                label5.Enabled = true;
+            }                
             else if (rbSpec.Checked)
+            {
                 FillDirCombobox("05");
+                tbKafedra.Enabled = false;
+                label5.Enabled = false;
+            } 
         }
 
         private void dgvDirections_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -139,9 +171,14 @@ namespace PK.Forms
             foreach (object[] v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id", "faculty_short_name", "short_name"))
                 for (int i = 0; i < dgvDirections.Rows.Count; i++)
                 {
-                    if ((dgvDirections.Rows[i].Cells[1].Value.ToString() == "Н") && (dgvDirections.Rows[i].Cells[0].Value.ToString() == v[1].ToString()))
-                        dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0], v[3].ToString(),
-                            dgvDirections.Rows[i].Cells[4].Value, dgvDirections.Rows[i].Cells[5].Value, v[2]);
+                    if ((dgvDirections.Rows[i].Cells[dgvDirections_Type.Index].Value.ToString() == "Н")
+                        && (dgvDirections.Rows[i].Cells[dgvDirections_ID.Index].Value.ToString() == v[1].ToString()))
+                        if (dgvDirections.Rows[i].Cells[dgvDirections_EduLevel.Index].Value.ToString() != Classes.DB_Helper.EduLevelM)
+                            dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0], v[3].ToString(),
+                            dgvDirections.Rows[i].Cells[4].Value, dgvDirections.Rows[i].Cells[5].Value, v[2]);                    
+                        else
+                            dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0].ToString().Split('|')[0], v[3].ToString(),
+                            dgvDirections.Rows[i].Cells[4].Value, dgvDirections.Rows[i].Cells[5].Value, v[2], v[0].ToString().Split('|')[1]);
                 }
         }
 
@@ -181,37 +218,20 @@ namespace PK.Forms
 
         private void EnableDisableControls(bool enable)
         {
-            if (enable)
+            gbType.Enabled = enable;
+            cbDirections.Enabled = enable;
+            cbFaculties.Enabled = enable;
+            label1.Enabled = enable;
+            label2.Enabled = enable;
+            label3.Enabled = enable;
+            label4.Enabled = enable;
+            tbName.Enabled = enable;
+            tbShortName.Enabled = enable;
+            btSave.Enabled = enable;
+            if (!enable)
             {
-                gbType.Enabled = true;
-                cbDirections.Enabled = true;
-                cbFaculties.Enabled = true;
-                label1.Enabled = true;
-                label2.Enabled = true;
-                label3.Enabled = true;
-                label4.Enabled = true;
-                label5.Enabled = true;
-                tbName.Enabled = true;
-                tbShortName.Enabled = true;
-                tbKafedra.Enabled = true;
-                btSave.Enabled = true;
-            }
-            else
-            {
-                gbType.Enabled = false;
-                cbDirections.Enabled = false;
-                cbFaculties.Enabled = false;
-                label1.Enabled = false;
-                label2.Enabled = false;
-                label3.Enabled = false;
-                label4.Enabled = false;
-                label5.Enabled = false;
-                tbName.Enabled = false;
-                tbName.Clear();
-                tbShortName.Enabled = true;
-                tbShortName.Clear();
                 tbKafedra.Enabled = false;
-                btSave.Enabled = false;
+                label5.Enabled = false;
             }
         }
     }
