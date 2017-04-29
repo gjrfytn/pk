@@ -71,6 +71,9 @@ namespace PK.Classes
                     case Relation.EQUAL:
                         whereClause += " = '";
                         break;
+                    case Relation.NOT_EQUAL:
+                        whereClause += " != '";
+                        break;
                     case Relation.LESS:
                         whereClause += " < '";
                         break;
@@ -96,9 +99,9 @@ namespace PK.Classes
             return ExecuteSelect(cmd);
         }
 
-        public uint Insert(DB_Table table, Dictionary<string, object> columnsValues)
+        public uint Insert(DB_Table table, Dictionary<string, object> columnsValues, MySqlTransaction transaction = null)
         {
-            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string columns = "", values = "";
             byte count = 1;
             foreach (var cv in columnsValues)
@@ -117,9 +120,9 @@ namespace PK.Classes
             return (uint)cmd.LastInsertedId;
         }
 
-        public void Update(DB_Table table, Dictionary<string, object> columnsValues, Dictionary<string, object> whereColumnValues)
+        public void Update(DB_Table table, Dictionary<string, object> columnsValues, Dictionary<string, object> whereColumnValues, MySqlTransaction transaction = null)
         {
-            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string set = "";
             byte count = 1;
             foreach (var cv in columnsValues)
@@ -145,9 +148,9 @@ namespace PK.Classes
             cmd.ExecuteNonQuery();
         }
 
-        public void Delete(DB_Table table, Dictionary<string, object> whereColumnValues)
+        public void Delete(DB_Table table, Dictionary<string, object> whereColumnValues, MySqlTransaction transaction = null)
         {
-            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             byte count = 1;
             string where = "";
             foreach (var cv in whereColumnValues)
@@ -163,9 +166,9 @@ namespace PK.Classes
             cmd.ExecuteNonQuery();
         }
 
-        public void InsertOnDuplicateUpdate(DB_Table table, Dictionary<string, object> columnsValues)
+        public void InsertOnDuplicateUpdate(DB_Table table, Dictionary<string, object> columnsValues, MySqlTransaction transaction = null)
         {
-            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string columns = "", values = "", update = "";
             byte count = 1;
             foreach (var cv in columnsValues)
@@ -192,6 +195,11 @@ namespace PK.Classes
             MySqlCommand cmd = new MySqlCommand("CALL " + name + "(" + parameter + ");", _Connection);
 
             return ExecuteSelect(cmd);
+        }
+
+        public MySqlTransaction BeginTransaction()
+        {
+            return _Connection.BeginTransaction();
         }
 
         private static string GetTableName(DB_Table table) => System.Enum.GetName(typeof(DB_Table), table).ToLower();

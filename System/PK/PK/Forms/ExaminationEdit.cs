@@ -66,39 +66,50 @@ namespace PK.Forms
                         }
 
                     Dictionary<string, object> data = new Dictionary<string, object>
-                       {
-                        {"subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
+                    {
+                        { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
                         {"subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
                         {"date",dtpDate.Value},
                         {"reg_start_date",dtpRegStartDate.Value},
                         {"reg_end_date",dtpRegEndDate.Value}
-                       };
+                    };
 
-                    if (_ID.HasValue)
+                    using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
                     {
-                        _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } });
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                            if (!row.IsNewRow)
-                                _DB_Connection.InsertOnDuplicateUpdate(
+                        if (_ID.HasValue)
+                        {
+                            _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } }, transaction);
+                            foreach (DataGridViewRow row in dataGridView.Rows)
+                                if (!row.IsNewRow)
+                                    _DB_Connection.InsertOnDuplicateUpdate(
+                                        DB_Table.EXAMINATIONS_AUDIENCES,
+                                        new Dictionary<string, object>
+                                        {
+                                        { "examination_id", _ID },
+                                        { "number", row.Cells[0].Value },
+                                        { "capacity", row.Cells[1].Value }
+                                        },
+                                        transaction
+                                        );
+                        }
+                        else
+                        {
+                            uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data, transaction);
+                            foreach (DataGridViewRow row in dataGridView.Rows)
+                                if (!row.IsNewRow)
+                                    _DB_Connection.Insert(
                                     DB_Table.EXAMINATIONS_AUDIENCES,
-                                    new Dictionary<string, object> {
-                                { "examination_id", _ID },
-                                { "number", row.Cells[0].Value },
-                                { "capacity", row.Cells[1].Value }
-                                    });
-                    }
-                    else
-                    {
-                        uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data);
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                            if (!row.IsNewRow)
-                                _DB_Connection.Insert(
-                                DB_Table.EXAMINATIONS_AUDIENCES,
-                                new Dictionary<string, object> {
-                                { "examination_id", id },
-                                { "number", row.Cells[0].Value },
-                                { "capacity", row.Cells[1].Value }
-                                });
+                                    new Dictionary<string, object>
+                                    {
+                                    { "examination_id", id },
+                                    { "number", row.Cells[0].Value },
+                                    { "capacity", row.Cells[1].Value }
+                                    },
+                                    transaction
+                                    );
+                        }
+
+                        transaction.Commit();
                     }
 
                     DialogResult = DialogResult.OK;

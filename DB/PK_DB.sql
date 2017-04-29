@@ -381,8 +381,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `registration_time` DATETIME NOT NULL COMMENT 'Дата и время регистрации заявления.',
   `edit_time` DATETIME NULL COMMENT 'Дата изменения.',
   `needs_hostel` TINYINT(1) NOT NULL COMMENT 'Признак необходимости общежития.',
-  `status_dict_id` INT UNSIGNED NOT NULL COMMENT '4',
-  `status_id` INT UNSIGNED NOT NULL COMMENT 'Статус заявления (справочник №4).',
+  `status` ENUM('new', 'adm_budget', 'adm_paid', 'adm_both', 'withdrawn') NOT NULL DEFAULT 'new' COMMENT 'Статус заявления.',
   `comment` VARCHAR(4000) NULL COMMENT 'Комментарий к заявлению.',
   `language` ENUM('Английский', 'Немецкий', 'Французский') NULL COMMENT 'Изучаемый язык.',
   `registrator_login` VARCHAR(20) NOT NULL COMMENT 'Логин пользователя, занёсшего заявление.',
@@ -396,17 +395,11 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `recommendation` TINYINT(1) NULL COMMENT 'Рекомендация выпускающей кафедры.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`entrant_id` ASC),
-  INDEX `corresp_idx` (`status_dict_id` ASC, `status_id` ASC),
   INDEX `applications_registrered_idx` (`registrator_login` ASC),
   INDEX `applications_camp_idx` (`campaign_id` ASC),
   CONSTRAINT `applications_has`
     FOREIGN KEY (`entrant_id`)
     REFERENCES `pk_db`.`entrants` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `applications_corresp`
-    FOREIGN KEY (`status_id` , `status_dict_id`)
-    REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `applications_registrered`
@@ -454,7 +447,6 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications_entrances` (
   `target_organization_id` INT UNSIGNED NULL COMMENT 'ID организации целевого приема.',
   `is_agreed_date` DATETIME NULL COMMENT 'Дата согласия на зачисление (необходимо передать при наличии согласия на зачисление).',
   `is_disagreed_date` DATETIME NULL COMMENT 'Дата отказа от зачисления (необходимо передать при включении заявления в приказ об исключении).',
-  `profile_actual` TINYINT(1) NULL COMMENT 'Текущий выбор профиля абитуриентом.',
   PRIMARY KEY (`application_id`, `faculty_short_name`, `direction_id`, `edu_form_dict_id`, `edu_form_id`, `edu_source_dict_id`, `edu_source_id`),
   INDEX `targets_idx` (`target_organization_id` ASC),
   INDEX `has_idx` (`application_id` ASC),
