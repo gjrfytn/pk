@@ -145,5 +145,48 @@ namespace PK.Classes
 
             return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
         }
+
+        public void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldsNames, string[] keyFieldsNames, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            object nullObj = null;
+            Dictionary<string, object> whereColumns = keyFieldsNames.ToDictionary(k => k, v => nullObj);
+            foreach (object[] oldItem in oldDataList)
+            {
+                bool contains = false;
+                foreach (object[] newItem in newDataList)
+                {
+                    bool allEqual = true;
+                    for (int i = 0; i < fieldsNames.Length; ++i)
+                        if (keyFieldsNames.Contains(fieldsNames[i]) && oldItem[i].ToString() != newItem[i].ToString())
+                        {
+                            allEqual = false;
+                            break;
+                        }
+
+                    if (allEqual)
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+
+                if (!contains)
+                {
+                    for (byte k = 0; k < keyFieldsNames.Length; ++k)
+                        whereColumns[keyFieldsNames[k]] = oldItem[k];
+
+                    _DB_Connection.Delete(table, whereColumns, transaction);
+                }
+            }
+
+            Dictionary<string, object> columnsValues = fieldsNames.ToDictionary(k => k, v => nullObj);
+            foreach (object[] newItem in newDataList)
+            {
+                for (byte i = 0; i < fieldsNames.Length; ++i)
+                    columnsValues[fieldsNames[i]] = newItem[i];
+
+                _DB_Connection.InsertOnDuplicateUpdate(table, columnsValues, transaction);
+            }
+        }
     }
 }

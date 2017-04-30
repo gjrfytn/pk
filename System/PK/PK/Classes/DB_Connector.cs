@@ -62,39 +62,50 @@ namespace PK.Classes
             if (whereExpressions.Count == 0)
                 throw new System.ArgumentException("Список с параметрами фильтрации должен содержать хотя бы одно значение.", "whereExpressions");
 
+            MySqlCommand cmd = new MySqlCommand("", _Connection);
             string whereClause = "";
+            byte count = 1;
             foreach (var expr in whereExpressions)
             {
                 whereClause += expr.Item1;
-                switch (expr.Item2)
+                if (expr.Item2 == Relation.NOT_EQUAL && expr.Item3 == null)
                 {
-                    case Relation.EQUAL:
-                        whereClause += " = '";
-                        break;
-                    case Relation.NOT_EQUAL:
-                        whereClause += " != '";
-                        break;
-                    case Relation.LESS:
-                        whereClause += " < '";
-                        break;
-                    case Relation.GREATER:
-                        whereClause += " > '";
-                        break;
-                    case Relation.LESS_EQUAL:
-                        whereClause += " <= '";
-                        break;
-                    case Relation.GREATER_EQUAL:
-                        whereClause += " >= '";
-                        break;
-                    default:
-                        throw new System.Exception("Reached unreachable.");
+                    whereClause += " IS NOT NULL AND ";
                 }
-
-                whereClause += expr.Item3 + "' AND ";
+                else
+                {
+                    switch (expr.Item2)
+                    {
+                        case Relation.EQUAL:
+                            whereClause += " <=> ";
+                            break;
+                        case Relation.NOT_EQUAL:
+                            whereClause += " != ";
+                            break;
+                        case Relation.LESS:
+                            whereClause += " < ";
+                            break;
+                        case Relation.GREATER:
+                            whereClause += " > ";
+                            break;
+                        case Relation.LESS_EQUAL:
+                            whereClause += " <= ";
+                            break;
+                        case Relation.GREATER_EQUAL:
+                            whereClause += " >= ";
+                            break;
+                        default:
+                            throw new System.Exception("Reached unreachable.");
+                    }
+                    string paramName = "@p" + count;
+                    whereClause += paramName + " AND ";
+                    cmd.Parameters.AddWithValue(paramName, expr.Item3);
+                    count++;
+                }
             }
             whereClause = whereClause.Remove(whereClause.Length - 5);
 
-            MySqlCommand cmd = new MySqlCommand("SELECT " + string.Join(", ", fields) + " FROM " + GetTableName(table) + " WHERE " + whereClause + ";", _Connection);
+            cmd.CommandText = "SELECT " + string.Join(", ", fields) + " FROM " + GetTableName(table) + " WHERE " + whereClause + ";";
 
             return ExecuteSelect(cmd);
         }
@@ -193,6 +204,7 @@ namespace PK.Classes
         public List<object[]> RunProcedure(string name, object parameter)
         {
             MySqlCommand cmd = new MySqlCommand("CALL " + name + "(" + parameter + ");", _Connection);
+            //cmd.CommandType = System.Data.CommandType.StoredProcedure; //TODO ?
 
             return ExecuteSelect(cmd);
         }

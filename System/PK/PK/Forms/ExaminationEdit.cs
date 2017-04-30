@@ -78,19 +78,19 @@ namespace PK.Forms
                     {
                         if (_ID.HasValue)
                         {
-                            _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } }, transaction);
+                            string[] fields = { "examination_id", "number", "capacity" };
+                            List<object[]> oldL = _DB_Connection.Select(
+                                DB_Table.EXAMINATIONS_AUDIENCES,
+                                fields,
+                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, _ID) }
+                                );
+
+                            List<object[]> newL = new List<object[]>();
                             foreach (DataGridViewRow row in dataGridView.Rows)
                                 if (!row.IsNewRow)
-                                    _DB_Connection.InsertOnDuplicateUpdate(
-                                        DB_Table.EXAMINATIONS_AUDIENCES,
-                                        new Dictionary<string, object>
-                                        {
-                                        { "examination_id", _ID },
-                                        { "number", row.Cells[0].Value },
-                                        { "capacity", row.Cells[1].Value }
-                                        },
-                                        transaction
-                                        );
+                                    newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value });
+
+                            _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldL, newL, fields, new string[] { "examination_id", "number" }, transaction);
                         }
                         else
                         {
@@ -101,9 +101,9 @@ namespace PK.Forms
                                     DB_Table.EXAMINATIONS_AUDIENCES,
                                     new Dictionary<string, object>
                                     {
-                                    { "examination_id", id },
-                                    { "number", row.Cells[0].Value },
-                                    { "capacity", row.Cells[1].Value }
+                                        { "examination_id", id },
+                                        { "number", row.Cells[0].Value },
+                                        { "capacity", row.Cells[1].Value }
                                     },
                                     transaction
                                     );
