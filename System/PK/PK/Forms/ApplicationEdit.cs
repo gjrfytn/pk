@@ -505,21 +505,9 @@ namespace PK.Forms
         private void tbStreet_Enter(object sender, EventArgs e)
         {
             tbStreet.AutoCompleteCustomSource.Clear();
-            if (_Towns.ContainsKey(tbTown.Text))
-            {
-                if (_Towns[tbTown.Text] == null)
-                    tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbTown.Text, "").ToArray());
-                else
-                {
-                    string[] buf = tbTown.Text.Split('(');
-                    if (buf.Length==4)
-                        tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, _Towns[tbTown.Text], buf[0]+"("+buf[1]).ToArray());
-                    else
-                        tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, _Towns[tbTown.Text], tbTown.Text).ToArray());
-                }
-            }
-            else if(tbTown.Text=="")
-                tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, "", "").ToArray());
+
+            Tuple<string, string> buf = GetTownSettlement();
+            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2).ToArray());
 
             if (tbStreet.AutoCompleteCustomSource.Count == 0)
             {
@@ -600,9 +588,9 @@ namespace PK.Forms
                         if (cb == cbCertificateCopy)
                         {
                             string buf = cb.Text + " " + tbEduDocSeries.Text + " " + tbEduDocNumber.Text;
-                            if (cb.Text.Contains("Оригинал"))
+                            if (cbOriginal.Checked)
                             {
-                                DateTime origDate = (DateTime)_DB_Connection.RunProcedure("get_application_docs", _ApplicationID).Where(
+                                DateTime origDate = (DateTime)_DB_Connection.CallProcedure("get_application_docs", _ApplicationID).Where(
                                     d => d[1].ToString() == "school_certificate" ||
                                     d[1].ToString() == "high_edu_diploma" ||
                                     d[1].ToString() == "academic_diploma"
@@ -678,7 +666,7 @@ namespace PK.Forms
                         {
                             DirTuple dir = (DirTuple)cb.SelectedValue;
                             if (tab.Name.Split('_')[1] != "paid")
-                                receiptTableParams[0].Add(new string[] { "          - " + _DB_Connection.Select(
+                                receiptTableParams[0].Add(new string[] { "     - " + _DB_Connection.Select(
                                     DB_Table.DIRECTIONS,
                                     new string[] { "short_name" },
                                     new List<Tuple<string, Relation, object>>
@@ -687,7 +675,7 @@ namespace PK.Forms
                                         new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dir.Item1)
                                     })[0][0].ToString()+ " (" + dir.Item2 + ") " + dir.Item3});
                             else
-                                receiptTableParams[0].Add(new string[] { "          - " + dir.Item6 + " (" + dir.Item2 + ") " + dir.Item7 });
+                                receiptTableParams[0].Add(new string[] { "     - " + dir.Item6 + " (" + dir.Item2 + ") " + dir.Item7 });
                         }
                         receiptTableParams[0].Add(new string[] { "" });
                     }
@@ -797,7 +785,7 @@ namespace PK.Forms
                         null
                         ));
 
-                string doc = Classes.Utility.TempPath + "abitDocs";
+                string doc = Classes.Utility.TempPath + "abitDocs"+new Random().Next();
                 Classes.DocumentCreator.Create(doc, documents);
                 doc += ".docx";
 
@@ -980,12 +968,11 @@ namespace PK.Forms
             (sender as Control).Enabled = false;
             (sender as Control).Visible = false;
         }
-        
+
         private void btGetIndex_Click(object sender, EventArgs e)
         {
-            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text, tbHouse.Text);
-            if (tbPostcode.Text == "")
-                tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text, tbHouse.Text);
+            Tuple<string, string> buf = GetTownSettlement();
+            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, tbHouse.Text);
         }
 
         private void cbAgreed_CheckedChanged(object sender, EventArgs e)
@@ -2893,6 +2880,27 @@ namespace PK.Forms
                     if (bt != null)
                         bt.Enabled = false;
                 }
+        }
+
+        private Tuple<string, string> GetTownSettlement()
+        {
+            if (_Towns.ContainsKey(tbTown.Text))
+            {
+                if (_Towns[tbTown.Text] == null)
+                    return new Tuple<string, string>(tbTown.Text, "");
+                else
+                {
+                    string[] buf = tbTown.Text.Split('(');
+                    if (buf.Length == 4)
+                        return new Tuple<string, string>(_Towns[tbTown.Text], buf[0] + "(" + buf[1]);
+                    else
+                        return new Tuple<string, string>(_Towns[tbTown.Text], tbTown.Text);
+                }
+            }
+            else if (tbTown.Text == "")
+                return new Tuple<string, string>("", "");
+
+            return null;
         }
     }
 }

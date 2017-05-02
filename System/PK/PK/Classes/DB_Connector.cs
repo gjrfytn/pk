@@ -201,10 +201,11 @@ namespace PK.Classes
             cmd.ExecuteNonQuery();
         }
 
-        public List<object[]> RunProcedure(string name, object parameter)
+        public List<object[]> CallProcedure(string name, object parameter)
         {
-            MySqlCommand cmd = new MySqlCommand("CALL " + name + "(" + parameter + ");", _Connection);
-            //cmd.CommandType = System.Data.CommandType.StoredProcedure; //TODO ?
+            MySqlCommand cmd = new MySqlCommand(name, _Connection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("id", parameter);
 
             return ExecuteSelect(cmd);
         }

@@ -5,35 +5,35 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>14</Size>
+      <Size>12</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>14</Size>
+      <Size>12</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="UsualUnderline">
       <Name>Arial</Name>
-      <Size>14</Size>
+      <Size>12</Size>
       <Style>Underline</Style>
     </Font>
     <Font ID="18">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>14</Size>
     </Font>
     <Font ID="20Bold">
       <Name>Arial</Name>
-      <Size>20</Size>
+      <Size>18</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="LargeBold">
       <Name>Arial</Name>
-      <Size>22</Size>
+      <Size>20</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="LargeItalic">
       <Name>Arial</Name>
-      <Size>22</Size>
+      <Size>20</Size>
       <Style>Italic</Style>
     </Font>
   </Fonts>

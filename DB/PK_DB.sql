@@ -1038,6 +1038,11 @@ USE `pk_db` ;
 CREATE TABLE IF NOT EXISTS `pk_db`.`entrants_view` (`id` INT, `last_name` INT, `first_name` INT, `middle_name` INT, `series` INT, `number` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `pk_db`.`applications_ege_marks_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`applications_ege_marks_view` (`applications_id` INT, `subject_id` INT, `value` INT, `checked` INT);
+
+-- -----------------------------------------------------
 -- procedure get_campaign_edu_forms
 -- -----------------------------------------------------
 
@@ -1195,6 +1200,19 @@ CREATE  OR REPLACE VIEW `entrants_view` AS
         FROM
             documents
         JOIN identity_docs_additional_data ON documents.id = identity_docs_additional_data.document_id) AS docs_idents ON _applications_has_documents.documents_id = docs_idents.id) AS a_d_idents ON applications.id = a_d_idents.applications_id) AS appls_idents ON entrants.id = appls_idents.entrant_id;
+
+-- -----------------------------------------------------
+-- View `pk_db`.`applications_ege_marks_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pk_db`.`applications_ege_marks_view`;
+USE `pk_db`;
+CREATE  OR REPLACE VIEW `applications_ege_marks_view` AS
+    SELECT 
+        applications_id, subject_id, value, checked
+    FROM
+        _applications_has_documents
+            JOIN
+        documents_subjects_data ON _applications_has_documents.documents_id = documents_subjects_data.document_id;
 CREATE USER 'initial' IDENTIFIED BY '1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'initial';

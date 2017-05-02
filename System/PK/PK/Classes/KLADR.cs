@@ -220,7 +220,7 @@ namespace PK.Classes
                         foreach (string code in settlementsCodes)
                         {
                             cmd = new MySqlCommand(
-                             "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND INSTR(name,'" + house + "') != 0 AND " +
+                             "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND name REGEXP '.*[[:<:]]" + house + "[[:>:]].*' AND " +
                              _RawRegionCode + " = '" + regCode + "' AND " +
                              _RawDistrictCode + " = '" + distrCode + "' AND " +
                              _RawTownCode + " = '" + townCode + "' AND " +

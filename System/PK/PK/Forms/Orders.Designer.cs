@@ -37,6 +37,7 @@
             this.toolStrip_New = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Register = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +94,8 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStrip_New,
             this.toolStrip_Edit,
-            this.toolStrip_Register});
+            this.toolStrip_Register,
+            this.toolStrip_Print});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(669, 25);
@@ -127,6 +129,15 @@
             this.toolStrip_Register.Text = "Зарегестрировать";
             this.toolStrip_Register.Click += new System.EventHandler(this.toolStrip_Register_Click);
             // 
+            // toolStrip_Print
+            // 
+            this.toolStrip_Print.Image = global::PK.Properties.Resources.printer;
+            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Print.Name = "toolStrip_Print";
+            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
+            this.toolStrip_Print.Text = "Печать";
+            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
+            // 
             // Orders
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -156,5 +167,6 @@
         private System.Windows.Forms.ToolStripButton toolStrip_New;
         private System.Windows.Forms.ToolStripButton toolStrip_Edit;
         private System.Windows.Forms.ToolStripButton toolStrip_Register;
+        private System.Windows.Forms.ToolStripButton toolStrip_Print;
     }
 }

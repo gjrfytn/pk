@@ -12,10 +12,7 @@ namespace PK.Forms
 
         private uint SelectedExamID
         {
-            get
-            {
-                return (uint)dataGridView.SelectedRows[0].Cells["dataGridView_ID"].Value;
-            }
+            get { return (uint)dataGridView.SelectedRows[0].Cells["dataGridView_ID"].Value; }
         }
 
         public Examinations(Classes.DB_Connector connection)

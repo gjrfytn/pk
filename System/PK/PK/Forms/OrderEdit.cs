@@ -25,7 +25,8 @@ namespace PK.Forms
 
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private readonly string _EditInitNumber;
+
+        private string _EditNumber;
 
         public OrderEdit(Classes.DB_Connector connection, string number)
         {
@@ -53,9 +54,10 @@ namespace PK.Forms
             rbZ.Tag = new RB_Tag("z", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ));
             #endregion
 
+            cbFDP.DisplayMember = "Display";
             cbFDP.ValueMember = "Value";
 
-            _EditInitNumber = number;
+            _EditNumber = number;
 
             if (number != null)
             {
@@ -87,6 +89,8 @@ namespace PK.Forms
                     else
                         cbFDP.SelectedValue = new CB_B_Value(order[4].ToString(), (uint)order[5]);
 
+                    cbFDP_SelectionChangeCommitted(null, null);
+
                     foreach (uint applID in _DB_Connection.Select(
                         DB_Table._ORDERS_HAS_APPLICATIONS,
                         new string[] { "applications_id" },
@@ -96,18 +100,26 @@ namespace PK.Forms
                             if ((uint)row.Cells["dataGridView_ID"].Value == applID)
                                 row.Cells["dataGridView_Added"].Value = true;
                 }
+
+                cbType.Enabled = false;
+                gbEduSource.Enabled = false;
+                gbEduForm.Enabled = false;
+                cbFDP.Enabled = false;
+                bSave.Enabled = true;
             }
         }
 
         private void cbType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            rbBudget.Checked = true;
+            rbO.Checked = true;
+            cbFDP.SelectedIndex = -1;
+            dataGridView.Rows.Clear();
+
             if (cbType.SelectedValue.ToString() == "hostel")
             {
                 gbEduSource.Enabled = false;
                 gbEduForm.Enabled = false;
-                rbBudget.Checked = true;
-                rbO.Checked = true;
-                cbFDP.SelectedIndex = -1;
 
                 lFDP.Text = "Факультет:";
             }
@@ -125,7 +137,7 @@ namespace PK.Forms
             RadioButton rb = (RadioButton)sender;
             if (rb.Checked)
             {
-                cbFDP.DataSource = null;
+                cbFDP.SelectedIndex = -1;
                 dataGridView.Rows.Clear();
 
                 if (rb == rbPaid)
@@ -144,13 +156,12 @@ namespace PK.Forms
             rb_CheckedChanged(sender, e);
 
             lFDP.Text = rbPaid.Checked ? "Профиль" : "Направление";
-            cbShowAdmitted.Enabled = rbPaid.Checked;
+            cbShowAdmitted.Enabled = rbPaid.Checked && cbType.SelectedValue.ToString() == "admission";
         }
 
         private void cbFDP_DropDown(object sender, EventArgs e)
         {
             int selectedIndex = cbFDP.SelectedIndex;
-            cbFDP.DisplayMember = "Display";
 
             if (cbType.SelectedValue.ToString() == "hostel")
             {
@@ -178,7 +189,7 @@ namespace PK.Forms
                         }).Select(
                         s => new
                         {
-                            Value = new Tuple<string, uint, string>(s[0].ToString(), (uint)s[1], s[2].ToString()),
+                            Value = new CB_P_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
                             Display = s[0].ToString() + " " + _DB_Connection.Select(
                                 DB_Table.PROFILES,
                                 new string[] { "name" },
@@ -199,7 +210,7 @@ namespace PK.Forms
                             new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
                         }).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0)
-                        .Select(s => new { Value = new Tuple<string, uint>(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
+                        .Select(s => new { Value = new CB_B_Value(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
                 else
                     cbFDP.DataSource = _DB_Connection.Select(
                             DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
@@ -209,18 +220,15 @@ namespace PK.Forms
                                 new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
                                 "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1,                            Relation.GREATER,0 )
-                            }).Select(s => new { Value = new Tuple<string, uint>(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
+                            }).Select(s => new { Value = new CB_B_Value(s[0].ToString(), (uint)s[1]), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
             }
 
             cbFDP.SelectedIndex = selectedIndex;
         }
 
-        private void cbFDP_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbFDP_SelectionChangeCommitted(object sender, EventArgs e)
         {
             dataGridView.Rows.Clear();
-
-            if (cbFDP.SelectedIndex == -1)
-                return;
 
             uint[] applications;
             if (cbType.SelectedValue.ToString() == "admission")
@@ -236,20 +244,6 @@ namespace PK.Forms
                 applications = null;
             }
 
-            var egeMarks = applications.Join(
-                _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, "applications_id", "documents_id"),
-                k1 => k1, k2 => k2[0], (s1, s2) => s2
-                ).Join(
-                _DB_Connection.Select(
-                    DB_Table.DOCUMENTS,
-                    new string[] { "id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("type", Relation.EQUAL, "ege") }//TODO Не обязательно
-                    ),
-                k1 => k1[1], k2 => k2[0], (s1, s2) => s1).Join(
-                _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, "document_id", "subject_id", "value"),
-                k1 => k1[1], k2 => k2[0], (s1, s2) => new { ApplID = s1[0], Subject = s2[1], Value = s2[2] }
-                );
-
             var names = applications.Join(
                 _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
                 k1 => k1, k2 => k2[0], (s1, s2) => s2
@@ -257,23 +251,23 @@ namespace PK.Forms
                 _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
                 k1 => k1[1],
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
+                (s1, s2) => new { ApplID = (uint)s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
             var table = names.GroupJoin(
-                egeMarks,
-                k1 => k1.ApplID,
-                k2 => k2.ApplID,
-                (s1, s2) => new
-                {
-                    ApplID = s1.ApplID,
-                    Name = s1.Name,
-                    Math = s2.FirstOrDefault(s => (uint)s.Subject == 2)?.Value, //TODO
-                    Phys = s2.FirstOrDefault(s => (uint)s.Subject == 10)?.Value, //TODO
-                    Rus = s2.FirstOrDefault(s => (uint)s.Subject == 1)?.Value, //TODO
-                    Soc = s2.FirstOrDefault(s => (uint)s.Subject == 9)?.Value, //TODO
-                    For = s2.FirstOrDefault(s => (uint)s.Subject == 6)?.Value //TODO
-                });
+            _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),
+            k1 => k1.ApplID,
+            k2 => k2[0],
+            (s1, s2) => new
+            {
+                ApplID = s1.ApplID,
+                Name = s1.Name,
+                Math = s2.FirstOrDefault(s => (uint)s[1] == 2)?[2], //TODO
+                Phys = s2.FirstOrDefault(s => (uint)s[1] == 10)?[2], //TODO
+                Rus = s2.FirstOrDefault(s => (uint)s[1] == 1)?[2], //TODO
+                Soc = s2.FirstOrDefault(s => (uint)s[1] == 9)?[2], //TODO
+                For = s2.FirstOrDefault(s => (uint)s[1] == 6)?[2] //TODO
+            });
 
             foreach (var ent in table)
             {
@@ -351,89 +345,99 @@ namespace PK.Forms
                 return;
             }
 
+            string faculty;
+            uint direction;
+            string profile;
+            if (rbPaid.Checked)
+            {
+                CB_P_Value value = (CB_P_Value)cbFDP.SelectedValue;
+                faculty = value.Item1;
+                direction = value.Item2;
+                profile = value.Item3;
+            }
+            else
+            {
+                CB_B_Value value = (CB_B_Value)cbFDP.SelectedValue;
+                faculty = value.Item1;
+                direction = value.Item2;
+                profile = null;
+            }
+
+            Dictionary<string, object> values = new Dictionary<string, object>
+                            {
+                                { "type", cbType.SelectedValue},
+                                { "date", dtpDate.Value},
+                                { "education_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
+                                { "education_form_id",CheckedEduForm },
+                                { "finance_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
+                                { "finance_source_id", CheckedEduSource},
+                                { "campaign_id",_DB_Helper.CurrentCampaignID },
+                                { "faculty_short_name",faculty },
+                                { "direction_id", direction},
+                                { "profile_short_name",profile }
+                            };
+
             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
             {
                 if (cbType.SelectedValue.ToString() == "hostel")
+                    throw new NotImplementedException();
+
+                if (_EditNumber != null)
                 {
-                    _DB_Connection.Insert(
+                    if (tbNumber.Text != _EditNumber)
+                        values.Add("number", tbNumber.Text);
+
+                    _DB_Connection.Update(
                         DB_Table.ORDERS,
-                        new Dictionary<string, object>
-                        {
-                            { "number", tbNumber.Text},
-                            { "type", cbType.SelectedValue},
-                            { "date", dtpDate.Value},
-                            { "campaign_id",_DB_Helper.CurrentCampaignID },
-                            { "faculty_short_name",cbFDP.SelectedValue }
-                        },
+                        values,
+                        new Dictionary<string, object> { { "number", _EditNumber } },
                         transaction
                         );
+
+                    string[] fields = { "orders_number", "applications_id" };
+                    List<object[]> oldL = _DB_Connection.Select(
+                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        fields,
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, tbNumber.Text) }
+                        );
+
+                    List<object[]> newL = new List<object[]>();
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if ((bool)row.Cells["dataGridView_Added"].Value)
+                            newL.Add(new object[] { tbNumber.Text, row.Cells["dataGridView_ID"].Value });
+
+                    _DB_Helper.UpdateData(DB_Table._ORDERS_HAS_APPLICATIONS, oldL, newL, fields, fields, transaction);
                 }
                 else
                 {
-                    string faculty;
-                    uint direction;
-                    string profile;
+                    values.Add("number", tbNumber.Text);
 
-                    if (rbPaid.Checked)
-                    {
-                        CB_P_Value value = (CB_P_Value)cbFDP.SelectedValue;
-                        faculty = value.Item1;
-                        direction = value.Item2;
-                        profile = value.Item3;
-                    }
-                    else
-                    {
-                        CB_B_Value value = (CB_B_Value)cbFDP.SelectedValue;
-                        faculty = value.Item1;
-                        direction = value.Item2;
-                        profile = null;
-                    }
+                    _DB_Connection.Insert(DB_Table.ORDERS, values, transaction);
 
-                    _DB_Connection.Insert(
-                        DB_Table.ORDERS,
-                        new Dictionary<string, object>
-                        {
-                            { "number", tbNumber.Text},
-                            { "type", cbType.SelectedValue},
-                            { "date", dtpDate.Value},
-                            { "education_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
-                            { "education_form_id",CheckedEduForm },
-                            { "finance_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
-                            { "finance_source_id", CheckedEduSource},
-                            { "campaign_id",_DB_Helper.CurrentCampaignID },
-                            { "faculty_short_name",faculty },
-                            { "direction_id", direction},
-                            { "profile_short_name",profile }
-                        },
-                        transaction
-                        );
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if ((bool)row.Cells["dataGridView_Added"].Value)
+                            _DB_Connection.Insert(
+                                DB_Table._ORDERS_HAS_APPLICATIONS,
+                                new Dictionary<string, object>
+                                {
+                                    { "orders_number", tbNumber.Text},
+                                    { "applications_id", row.Cells["dataGridView_ID"].Value}
+                                },
+                                transaction
+                                );
                 }
 
-                foreach (DataGridViewRow row in dataGridView.Rows)
-                    if ((bool)row.Cells["dataGridView_Added"].Value)
-                        _DB_Connection.Insert(
-                            DB_Table._ORDERS_HAS_APPLICATIONS,
-                            new Dictionary<string, object>
-                            {
-                                { "orders_number", tbNumber.Text},
-                                { "applications_id", row.Cells["dataGridView_ID"].Value}
-                            },
-                            transaction
-                            );
+                transaction.Commit();
             }
+
+            _EditNumber = tbNumber.Text;
         }
 
         private uint[] GetAdmissionCandidates()
         {
             if (rbPaid.Checked)
             {
-                var campStatusApplications = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "id", "status" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
-                    ).Where(s => s[1].ToString() == "new" || s[1].ToString() == "adm_budget" || s[1].ToString() == "adm_paid" || s[1].ToString() == "adm_both").Select(s => (uint)s[0]);
-
-                Tuple<string, uint, string> buf = (Tuple<string, uint, string>)cbFDP.SelectedValue;
+                CB_P_Value buf = (CB_P_Value)cbFDP.SelectedValue;
                 var entranceApplications = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
@@ -446,49 +450,24 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,buf.Item3)
                     }).Select(s => (uint)s[0]);
 
-                return campStatusApplications.Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
+                return GetCampApplsWithStatuses("new", "adm_budget", "adm_paid", "adm_both").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
                     .Where(appl =>
                     {
-                        var orders = _DB_Connection.Select(
-                            DB_Table._ORDERS_HAS_APPLICATIONS,
-                            new string[] { "orders_number" },
-                            new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl) }
-                            ).Join(
-                            _DB_Connection.Select(
-                                DB_Table.ORDERS,
-                                new string[] { "number", "type", "date" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                    new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, buf.Item1),
-                                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, buf.Item2),
-                                    new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, buf.Item3)
-                                }),
-                            k1 => k1[0],
-                            k2 => k2[0],
-                            (s1, s2) => new { Type = s2[1].ToString(), Date = (DateTime)s2[2], }
-                            );
+                        var orders = GetAdmExcOrders(appl, buf);
+                        var admOrders = orders.Where(s => s.Item1 == "admission");
+                        if (admOrders.Count() == 0)
+                            return true;
 
-                        var admOrders = orders.Where(s => s.Type == "admission");
-                        var excOrders = orders.Where(s => s.Type == "exception");
+                        DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+                        var excOrders = orders.Where(s => s.Item1 == "exception");
+                        DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
 
-                        foreach (var order in admOrders)
-                            if (!excOrders.Any(o => o.Date > order.Date))//TODO >=?
-                                return false;
-
-                        return true;
+                        return lastAdmDate < lastExcDate;//TODO <=?
                     }).ToArray();
             }
             else
             {
-                var campStatusApplications = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "id", "status" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
-                    ).Where(s => s[1].ToString() == "new" || s[1].ToString() == "adm_paid").Select(s => (uint)s[0]);
-
-                Tuple<string, uint> buf = (Tuple<string, uint>)cbFDP.SelectedValue;
+                CB_B_Value buf = (CB_B_Value)cbFDP.SelectedValue;
                 var entranceApplications = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
@@ -502,60 +481,29 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("is_disagreed_date",Relation.EQUAL,null)
                     }).Select(s => (uint)s[0]);
 
-                return campStatusApplications.Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).ToArray();
+                return GetCampApplsWithStatuses("new", "adm_paid").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).ToArray();
             }
         }
 
         private uint[] GetExceptionCandidates()
         {
             if (rbPaid.Checked)
-            {
-                var campStatusApplications = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "id", "status" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
-                    ).Where(s => s[1].ToString() == "adm_paid" || s[1].ToString() == "adm_both").Select(s => (uint)s[0]);
-
-                Tuple<string, uint, string> buf = (Tuple<string, uint, string>)cbFDP.SelectedValue;
-
-                return campStatusApplications.Where(appl =>
+                return GetCampApplsWithStatuses("adm_paid", "adm_both").Where(appl =>
                 {
-                    var orders = _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
-                        new string[] { "orders_number" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl) }
-                        ).Join(
-                        _DB_Connection.Select(
-                            DB_Table.ORDERS,
-                            new string[] { "number", "type", "date" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, buf.Item1),
-                                new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, buf.Item2),
-                                new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, buf.Item3)
-                            }),
-                        k1 => k1[0],
-                        k2 => k2[0],
-                        (s1, s2) => new { Type = s2[1].ToString(), Date = (DateTime)s2[2], }
-                        );
+                    var orders = GetAdmExcOrders(appl, (CB_P_Value)cbFDP.SelectedValue);
+                    var admOrders = orders.Where(s => s.Item1 == "admission");
+                    if (admOrders.Count() == 0)
+                        return false;
 
-                    DateTime lastAdmDate = orders.Where(s => s.Type == "admission").Max(s => s.Date);
-                    DateTime lastExcDate = orders.Where(s => s.Type == "exception").Max(s => s.Date);
+                    DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+                    var excOrders = orders.Where(s => s.Item1 == "exception");
+                    DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
 
                     return lastAdmDate > lastExcDate;//TODO >=?
                 }).ToArray();
-            }
             else
             {
-                var campStatusApplications = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "id", "status" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
-                    ).Where(s => s[1].ToString() == "adm_budget" || s[1].ToString() == "adm_both").Select(s => (uint)s[0]);
-
-                Tuple<string, uint> buf = (Tuple<string, uint>)cbFDP.SelectedValue;
+                CB_B_Value buf = (CB_B_Value)cbFDP.SelectedValue;
                 var entranceApplications = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
@@ -568,35 +516,79 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("is_disagreed_date",Relation.NOT_EQUAL,null)
                     }).Select(s => (uint)s[0]);
 
-                return campStatusApplications.Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).Where(appl =>
+                return GetCampApplsWithStatuses("adm_budget", "adm_both").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).Where(appl =>
                 {
-                    var orders = _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
-                        new string[] { "orders_number" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl) }
-                        ).Join(
-                        _DB_Connection.Select(
-                            DB_Table.ORDERS,
-                            new string[] { "number", "type", "date" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                new Tuple<string, Relation, object>("education_source_id",Relation.EQUAL,CheckedEduSource),
-                                new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, buf.Item1),
-                                new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, buf.Item2)
-                            }),
-                        k1 => k1[0],
-                        k2 => k2[0],
-                        (s1, s2) => new { Type = s2[1].ToString(), Date = (DateTime)s2[2], }
-                        );
+                    var orders = GetAdmExcOrders(appl, buf);
+                    var admOrders = orders.Where(s => s.Item1 == "admission");
+                    if (admOrders.Count() == 0)
+                        return false;
 
-                    DateTime lastAdmDate = orders.Where(s => s.Type == "admission").Max(s => s.Date);
-                    DateTime lastExcDate = orders.Where(s => s.Type == "exception").Max(s => s.Date);
+                    DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+                    var excOrders = orders.Where(s => s.Item1 == "exception");
+                    DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
 
                     return lastAdmDate > lastExcDate;//TODO >=?
                 }).ToArray();
             }
+        }
+
+        private IEnumerable<uint> GetCampApplsWithStatuses(params string[] statuses)
+        {
+            return _DB_Connection.Select(
+                     DB_Table.APPLICATIONS,
+                     new string[] { "id", "status" },
+                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                     ).Where(s => statuses.Contains(s[1].ToString())).Select(s => (uint)s[0]);
+        }
+
+        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_P_Value profile)
+        {
+            return _DB_Connection.Select(
+                DB_Table._ORDERS_HAS_APPLICATIONS,
+                new string[] { "orders_number" },
+                            new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
+                            ).Join(
+                            _DB_Connection.Select(
+                                DB_Table.ORDERS,
+                                new string[] { "number", "type", "date" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                                    new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
+                                    new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
+                                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, profile.Item1),
+                                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, profile.Item2),
+                                    new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, profile.Item3)
+                                }),
+                            k1 => k1[0],
+                            k2 => k2[0],
+                            (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                            );
+        }
+
+        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_B_Value direction)
+        {
+            return _DB_Connection.Select(
+                         DB_Table._ORDERS_HAS_APPLICATIONS,
+                         new string[] { "orders_number" },
+                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
+                         ).Join(
+                         _DB_Connection.Select(
+                             DB_Table.ORDERS,
+                             new string[] { "number", "type", "date" },
+                             new List<Tuple<string, Relation, object>>
+                             {
+                                 new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                                 new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
+                                 new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
+                                 new Tuple<string, Relation, object>("education_source_id",Relation.EQUAL,CheckedEduSource),
+                                 new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, direction.Item1),
+                                 new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, direction.Item2)
+                             }),
+                         k1 => k1[0],
+                         k2 => k2[0],
+                         (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                         );
         }
     }
 }
