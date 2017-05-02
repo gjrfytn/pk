@@ -346,68 +346,27 @@ namespace PK.Forms
                     }
                 if (!found)
                     MessageBox.Show("Не выбрано ни одно направление или профиль.");                
+                else if (!cbPassportMatch.Checked && (tbExamsDocSeries.Text == "") && (tbExamsDocNumber.Text == ""))
+                    MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
+                else if (mtbEMail.Text == "")
+                    MessageBox.Show("Поле \"Email\" не заполнено");
+                else if (!cbAppAdmission.Checked
+                    || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPrerogative.Checked) && !cbDirectionDoc.Checked
+                    || (cbQuote.Checked && !cbMedCertificate.Checked)
+                    || rbCertificate.Checked && !cbCertificateCopy.Checked
+                    || rbDiploma.Checked && !cbDiplomaCopy.Checked
+                    || rbSpravka.Checked && !cbCertificateHRD.Checked)
+                    MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
+                else if (_ApplicationID == null)
+                {
+                    SaveApplication();
+                    btPrint.Enabled = true;
+                    ChangeAgreedChBs(true);
+                }
                 else
                 {
-                    bool stop = false;
-                    if (cbSport.Checked)
-                    {
-                        uint achevmentCategoryId = 0;
-                        switch (SportDoc.diplomaType)
-                        {
-                            case "Диплом чемпиона/призера Олимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
-                                break;
-                            case "Диплом чемпиона/призера Паралимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
-                                break;
-                            case "Диплом чемпиона/призера Сурдлимпийских игр":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
-                                break;
-                            case "Диплом чемпиона мира":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
-                                break;
-                            case "Диплом чемпиона Европы":
-                                achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
-                                break;
-                        }
-
-                        List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
-                            new List<Tuple<string, Relation, object>>
-                        {
-                        new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
-                        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryId),
-                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                        });
-
-                        if (achievments.Count == 0)
-                        {
-                            MessageBox.Show("Спортивное достижение \"" + _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, achevmentCategoryId) + "\" отсутствует для данной кампании в списке университета.");
-                            stop = true;
-                        }                            
-                    }
-                    if (!stop)
-                        if (!cbPassportMatch.Checked && (tbExamsDocSeries.Text == "") && (tbExamsDocNumber.Text == ""))
-                            MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
-                        else if (mtbEMail.Text == "")
-                            MessageBox.Show("Поле \"Email\" не заполнено");
-                        else if (!cbAppAdmission.Checked
-                            || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPrerogative.Checked) && !cbDirectionDoc.Checked
-                            || (cbQuote.Checked && !cbMedCertificate.Checked)
-                            || rbCertificate.Checked && !cbCertificateCopy.Checked
-                            || rbDiploma.Checked && !cbDiplomaCopy.Checked
-                            || rbSpravka.Checked && !cbCertificateHRD.Checked)
-                            MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
-                        else if (_ApplicationID == null)
-                        {
-                            SaveApplication();
-                            btPrint.Enabled = true;
-                            ChangeAgreedChBs(true);
-                        }
-                        else
-                        {
-                            _EditingDateTime = DateTime.Now;
-                            UpdateApplication();
-                        }
+                    _EditingDateTime = DateTime.Now;
+                    UpdateApplication();
                 }
             }
         }
@@ -1029,6 +988,108 @@ namespace PK.Forms
                 tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text, tbHouse.Text);
         }
 
+        private void cbAgreed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_Agreed)
+                if (((CheckBox)sender).Checked)
+                    if (!_Loading)
+                    {
+                        int agreedCount = 0;
+                        foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
+                        }))
+                            if ((data[0] as DateTime?) != null)
+                                agreedCount++;
+                        if (agreedCount >= _AgreedChangeMaxCount)
+                        {
+                            MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
+                            _Agreed = true;
+                            ((CheckBox)sender).Checked = false;
+                        }
+                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                        {
+                            UpdateDirections();
+                            foreach (Control control in ((CheckBox)sender).Parent.Controls)
+                            {
+                                ComboBox comboBox = control as ComboBox;
+                                if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
+                                    _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
+                                        new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
+                                        { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
+                                        { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 }, { "application_id", _ApplicationID } });
+                            }
+                            ChangeAgreedChBs(false);
+                            BlockDirChange();
+                        }
+                        else
+                        {
+                            _Agreed = true;
+                            ((CheckBox)sender).Checked = false;
+                        }
+                    }
+                    else
+                    {
+                        BlockDirChange();
+                        ((CheckBox)sender).Enabled = true;
+                    }
+                else
+                {
+                    int disagreedCount = 0;
+                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
+                            }))
+                        if ((data[0] as DateTime?) != null)
+                            disagreedCount++;
+                    if (disagreedCount >= _AgreedChangeMaxCount)
+                    {
+                        MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
+                        _Agreed = true;
+                        ((CheckBox)sender).Checked = true;
+                    }
+                    else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                    {
+                        foreach (Control control in ((CheckBox)sender).Parent.Controls)
+                        {
+                            ComboBox comboBox = control as ComboBox;
+                            if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
+                                _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
+                                    new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
+                                    { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
+                                    { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 }, { "application_id", _ApplicationID } });
+                        }
+                        if (disagreedCount < _AgreedChangeMaxCount - 1)
+                            ChangeAgreedChBs(true);
+                        else
+                            ((CheckBox)sender).Enabled = false;
+                    }
+                    else
+                    {
+                        _Agreed = true;
+                        ((CheckBox)sender).Checked = true;
+                    }
+                }
+            _Agreed = false;
+        }
+
+        private void tbNumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsNumber(e.KeyChar) || (e.KeyChar == '\b'))
+                return;
+            else
+                e.Handled = true;
+        }
+
+        private void tbCyrilic_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
+                return;
+            else
+                e.Handled = true;
+        }
+
+
         private void SaveApplication()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1063,86 +1124,6 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
-        {
-            List<object[]> oldList = oldDataList;
-            List<object[]> newList = newDataList;
-            int j = 0;
-            while (j < oldList.Count)
-            {
-                int index = 0;
-                bool keysMatch = true;
-                bool valuesMatch = true;
-
-                foreach (object[] newItem in newList)
-                {
-                    keysMatch = true;
-                    valuesMatch = true;
-                    index = newList.IndexOf(newItem);
-                    for (int i = 0; i < fieldNames.Length; i++)
-                    {
-                        if ((keyFieldsNames.Contains(fieldNames[i])) && (keysMatch) && (oldList[j][i].ToString() != newItem[i].ToString()))
-                        {
-                            keysMatch = false;
-                            break;
-                        }
-                        else if ((!keyFieldsNames.Contains(fieldNames[i])) && (valuesMatch) && (oldList[j][i] != null) && (newItem[i] != null) && (oldList[j][i].ToString() != newItem[i].ToString()))
-                            valuesMatch = false;
-                    }
-
-                    if (keysMatch && valuesMatch)
-                    {
-                        newList.RemoveAt(index);
-                        oldList.RemoveAt(oldList.IndexOf(oldList[j]));
-                        break;
-                    }
-                    else if (keysMatch && !valuesMatch)
-                    {
-                        Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
-                        Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
-
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            if (keyFieldsNames.Contains(fieldNames[i]))
-                                keyAndValues.Add(fieldNames[i], newItem[i]);
-                            else columnsAndValues.Add(fieldNames[i], newItem[i]);
-
-                        _DB_Connection.Update(table, columnsAndValues, keyAndValues);
-                        newList.RemoveAt(index);
-                        oldList.Remove(oldList[j]);
-                        break;
-                    }
-                }
-                if (!keysMatch)
-                    j++;
-            }
-            if ((oldList.Count > 0) && (newList.Count == 0))
-                foreach (object[] oldItem in oldList)
-                {
-                    Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
-                    for (int i = 0; i < fieldNames.Length; i++)
-                        if (keyFieldsNames.Contains(fieldNames[i]))
-                            keyAndValues.Add(fieldNames[i], oldItem[i]);
-
-                    _DB_Connection.Delete(table, keyAndValues);
-                }
-            else if (newList.Count > 0)
-                foreach (object[] newItem in newList)
-                {
-                    Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
-                    if (autoGeneratedKey)
-                    {
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            if (!keyFieldsNames.Contains(fieldNames[i]))
-                                columnsAndValues.Add(fieldNames[i], newItem[i]);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            columnsAndValues.Add(fieldNames[i], newItem[i]);
-                    }
-                    _DB_Connection.Insert(table, columnsAndValues);
-                }
-        }
 
         private void SaveBasic()
         {
@@ -1266,45 +1247,52 @@ namespace PK.Forms
 
         private void SaveSport()
         {
-            uint sportDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+            uint sportDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
                 { { "type", "sport" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName} });
             _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                { { "document_id", sportDocUid}, { "name", SportDoc.docName} });
-            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", sportDocUid } });
+                { { "document_id", sportDocID}, { "name", SportDoc.docName} });
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", sportDocID } });
 
             uint achevmentCategoryId = 0;
             switch (SportDoc.diplomaType)
             {
-                case "Диплом чемпиона/призера Олимпийских игр":
-                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
+                case Classes.DB_Helper.SportDocTypeOlympic:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementOlympic);
                     break;
-                case "Диплом чемпиона/призера Паралимпийских игр":
-                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
+                case Classes.DB_Helper.SportDocTypeParalympic:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementParalympic);
                     break;
-                case "Диплом чемпиона/призера Сурдлимпийских игр":
-                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
+                case Classes.DB_Helper.SportDocTypeDeaflympic:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementDeaflympic);
                     break;
-                case "Диплом чемпиона мира":
-                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
+                case Classes.DB_Helper.SportDocTypeWorldChampion:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementWorldChampion);
                     break;
-                case "Диплом чемпиона Европы":
-                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
+                case Classes.DB_Helper.SportDocTypeEuropeChampion:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementEuropeChampion);
+                    break;
+                case Classes.DB_Helper.SportAchievementGTO:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementGTO);
+                    break;
+                case Classes.DB_Helper.SportAchievementWorldChampionship:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementWorldChampionship);
+                    break;
+                case Classes.DB_Helper.SportAchievementEuropeChampionship:
+                    achevmentCategoryId = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementEuropeChampionship);
                     break;
             }
+                List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                    new List<Tuple<string, Relation, object>>
+                {
+                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryId)
+                });
 
-            List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
-                new List<Tuple<string, Relation, object>>
-            {
-                    new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
-                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryId)
-            });
-
-            uint achievementUid = 0;
-            if (achievments.Count != 0)
-                achievementUid = uint.Parse(achievments[0][0].ToString());
-
-            _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                    { "institution_achievement_id", achievementUid}, { "document_id", sportDocUid} });
+                if (achievments.Count == 0)
+                    MessageBox.Show("В данной кампании отсутствует спортивное достижение \"" + _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, achevmentCategoryId) + "\".");
+                else
+                    _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID },
+                        { "institution_achievement_id", uint.Parse(achievments[0][0].ToString())}, { "document_id", sportDocID} });
         }
 
         private void SaveOlympic()
@@ -1322,9 +1310,7 @@ namespace PK.Forms
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
-                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
-                    { "olympic_id", (uint)OlympicDoc.olympID},
-                    { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
+                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) }, { "olympic_id", (uint)OlympicDoc.olympID}, { "class_number", OlympicDoc.olympClass },                                        
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
@@ -1337,8 +1323,7 @@ namespace PK.Forms
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
                     { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) },
-                    { "olympic_id", (uint)OlympicDoc.olympID},
-                    { "class_number", OlympicDoc.olympClass }, { "olympic_profile", OlympicDoc.olympProfile },
+                    { "olympic_id", (uint)OlympicDoc.olympID}, { "class_number", OlympicDoc.olympClass },                  
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) },
                     { "olympic_subject_dict_id", (uint)FIS_Dictionary.SUBJECTS }, { "olympic_subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, OlympicDoc.olympDist) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
@@ -1346,11 +1331,11 @@ namespace PK.Forms
 
                     case "Диплом 4 этапа всеукраинской олимпиады":
                         docType = "ukraine_olympic";
-                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Диплом победителя/призера IV  всеукраинской ученической олимпиады");
+                        benefitDocType = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Диплом победителя/призера IV этапа всеукраинской ученической олимпиады");
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "diploma_type_dict_id", (uint)FIS_Dictionary.DIPLOMA_TYPE },
-                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) }, { "olympic_name", OlympicDoc.olympName }, { "olympic_profile", OlympicDoc.olympProfile },
+                    { "diploma_type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DIPLOMA_TYPE, OlympicDoc.diplomaType) }, { "olympic_name", OlympicDoc.olympName },
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) }});
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
                         break;
@@ -1361,7 +1346,6 @@ namespace PK.Forms
                         olympicDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", docType }, { "number", OlympicDoc.olympDocNumber } });
 
                         _DB_Connection.Insert(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", olympicDocId }, { "olympic_name", OlympicDoc.olympName },
-                            { "olympic_profile", OlympicDoc.olympProfile },
                     { "country_dict_id", (uint)FIS_Dictionary.COUNTRY }, { "country_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY, OlympicDoc.country) },
                     { "profile_dict_id", (uint)FIS_Dictionary.OLYMPICS_PROFILES }, { "profile_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, OlympicDoc.olympProfile) } });
                         _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", olympicDocId } });
@@ -1468,6 +1452,7 @@ namespace PK.Forms
                 }
             }
         }
+
 
         private void LoadBasic()
         {
@@ -1631,20 +1616,29 @@ namespace PK.Forms
 
                     switch (achievementName)
                     {
-                        case "Статус чемпиона и призера Олимпийских игр":
-                            SportDoc.diplomaType = "Диплом чемпиона/призера Олимпийских игр";
+                        case Classes.DB_Helper.SportAchievementOlympic:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportDocTypeOlympic;
                             break;
-                        case "Статус чемпиона и призера Паралимпийских игр":
-                            SportDoc.diplomaType = "Диплом чемпиона/призера Паралимпийских игр";
+                        case Classes.DB_Helper.SportAchievementParalympic:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportDocTypeParalympic;
                             break;
-                        case "Статус чемпиона и призера Сурдлимпийских игр":
-                            SportDoc.diplomaType = "Диплом чемпиона/призера Сурдлимпийских игр";
+                        case Classes.DB_Helper.SportAchievementDeaflympic:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportDocTypeDeaflympic;
                             break;
-                        case "Чемпион мира":
-                            SportDoc.diplomaType = "Диплом чемпиона мира";
+                        case Classes.DB_Helper.SportAchievementWorldChampion:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportDocTypeWorldChampion;
                             break;
-                        case "Чемпион Европы":
-                            SportDoc.diplomaType = "Диплом чемпиона Европы";
+                        case Classes.DB_Helper.SportDocTypeEuropeChampion:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportDocTypeEuropeChampion;
+                            break;
+                        case Classes.DB_Helper.SportAchievementGTO:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportAchievementGTO;
+                            break;
+                        case Classes.DB_Helper.SportAchievementWorldChampionship:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportAchievementWorldChampionship;
+                            break;
+                        case Classes.DB_Helper.SportAchievementEuropeChampionship:
+                            SportDoc.diplomaType = Classes.DB_Helper.SportAchievementEuropeChampionship;
                             break;
                     }
                     cbSport.Checked = true;
@@ -1710,12 +1704,15 @@ namespace PK.Forms
                 {
                     OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
                     foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "olympic_id", "class_number",
-                        "olympic_profile", "olympic_subject_id" }))
+                        "profile_id", "olympic_subject_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        }))
                     {
                         OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
                         OlympicDoc.olympID = int.Parse(olympDocData[1].ToString());
                         OlympicDoc.olympClass = int.Parse(olympDocData[2].ToString());
-                        OlympicDoc.olympProfile = olympDocData[3].ToString();
+                        OlympicDoc.olympProfile = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)olympDocData[3]);
                         OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[4]);
                         OlympicDoc.olympType = "Диплом победителя/призера олимпиады школьников";
                     }
@@ -1725,12 +1722,15 @@ namespace PK.Forms
                 {
                     OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
                     foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "olympic_id", "class_number",
-                        "olympic_profile", "olympic_subject_id" }))
+                        "profile_id", "olympic_subject_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        }))
                     {
                         OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
                         OlympicDoc.olympID = int.Parse(olympDocData[1].ToString());
                         OlympicDoc.olympClass = int.Parse(olympDocData[2].ToString());
-                        OlympicDoc.olympProfile = olympDocData[3].ToString();
+                        OlympicDoc.olympProfile = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)olympDocData[3]);
                         OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[4]);
                         OlympicDoc.olympType = "Диплом победителя/призера всероссийской олимпиады школьников";
                     }
@@ -1740,12 +1740,13 @@ namespace PK.Forms
                 {
                     OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
                     foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "diploma_type_id", "class_number",
-                        "olympic_profile", "olympic_subject_id", "olympic_name" }))
+                        "profile_id", "olympic_subject_id", "olympic_name" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        }))
                     {
                         OlympicDoc.diplomaType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DIPLOMA_TYPE, (uint)olympDocData[0]);
-                        OlympicDoc.olympClass = int.Parse(olympDocData[1].ToString());
-                        OlympicDoc.olympProfile = olympDocData[2].ToString();
-                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[3]);
+                        OlympicDoc.olympProfile = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)olympDocData[2]);
                         OlympicDoc.olympName = olympDocData[4].ToString();
                         OlympicDoc.olympType = "Диплом 4 этапа всеукраинской олимпиады";
                     }
@@ -1754,13 +1755,13 @@ namespace PK.Forms
                 else if (document[1].ToString() == "international_olympic")
                 {
                     OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
-                    OlympicDoc.olympDocNumber = int.Parse(document[3].ToString());
                     foreach (object[] olympDocData in _DB_Connection.Select(DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA, new string[] { "class_number",
-                        "olympic_profile", "olympic_subject_id", "olympic_name", "country_id" }))
+                        "profile_id", "olympic_subject_id", "olympic_name", "country_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        }))
                     {
-                        OlympicDoc.olympClass = int.Parse(olympDocData[0].ToString());
-                        OlympicDoc.olympProfile = olympDocData[1].ToString();
-                        OlympicDoc.olympDist = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)olympDocData[2]);
+                        OlympicDoc.olympProfile = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)olympDocData[1]);
                         OlympicDoc.olympName = olympDocData[3].ToString();
                         OlympicDoc.country = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)olympDocData[4]);
                         OlympicDoc.olympType = "Диплом международной олимпиады";
@@ -2206,7 +2207,7 @@ namespace PK.Forms
                         foreach (Control control in page.Controls)
                         {
                             ComboBox cb = control as ComboBox;
-                            if (cb != null && ((DirTuple)cb.SelectedValue).Item1 == (uint)appEntrData[0] && ((DirTuple)cb.SelectedValue).Item2 == appEntrData[1].ToString()
+                            if (cb != null && cb.SelectedValue != null && ((DirTuple)cb.SelectedValue).Item1 == (uint)appEntrData[0] && ((DirTuple)cb.SelectedValue).Item2 == appEntrData[1].ToString()
                                 && ((DirTuple)cb.SelectedValue).Item4 == (uint)appEntrData[5] && ((DirTuple)cb.SelectedValue).Item5 == (uint)appEntrData[4])
                                 foreach (Control c in page.Controls)
                                 {
@@ -2220,11 +2221,13 @@ namespace PK.Forms
                         }
                 else if (appEntrData[2] as DateTime? != null && appEntrData[7] as DateTime? != null)
                     disagreedTimes++;
-            if (agreedTimes == 0 || agreedTimes > disagreedTimes)
-                ChangeAgreedChBs(true);
-            else if (disagreedTimes >= 0)
+
+            if (agreedTimes != 0 || disagreedTimes != 0)
                 BlockDirChange();
+            if (agreedTimes == 0 && disagreedTimes < _AgreedChangeMaxCount)
+                ChangeAgreedChBs(true);
         }
+
 
         private void UpdateBasic()
         {
@@ -2360,20 +2363,29 @@ namespace PK.Forms
                             uint achevmentCategoryIdNew = 0;
                             switch (SportDoc.diplomaType)
                             {
-                                case "Диплом чемпиона/призера Олимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Олимпийских игр");
+                                case Classes.DB_Helper.SportDocTypeOlympic:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementOlympic);
                                     break;
-                                case "Диплом чемпиона/призера Паралимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Паралимпийских игр");
+                                case Classes.DB_Helper.SportDocTypeParalympic:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementParalympic);
                                     break;
-                                case "Диплом чемпиона/призера Сурдлимпийских игр":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Статус чемпиона и призера Сурдлимпийских игр");
+                                case Classes.DB_Helper.SportDocTypeDeaflympic:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementDeaflympic);
                                     break;
-                                case "Диплом чемпиона мира":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Мира");
+                                case Classes.DB_Helper.SportDocTypeWorldChampion:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementWorldChampion);
                                     break;
-                                case "Диплом чемпиона Европы":
-                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, "Чемпион Европы");
+                                case Classes.DB_Helper.SportDocTypeEuropeChampion:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementEuropeChampion);
+                                    break;
+                                case Classes.DB_Helper.SportAchievementGTO:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementGTO);
+                                    break;
+                                case Classes.DB_Helper.SportAchievementWorldChampionship:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementWorldChampionship);
+                                    break;
+                                case Classes.DB_Helper.SportAchievementEuropeChampionship:
+                                    achevmentCategoryIdNew = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.SportAchievementEuropeChampionship);
                                     break;
                             }
                             uint achevmentCategoryIdOld = (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
@@ -2412,8 +2424,6 @@ namespace PK.Forms
                         else
                         {
                             _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID } });
-                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
                             _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
                         }
                     }
@@ -2648,6 +2658,7 @@ namespace PK.Forms
             }
         }
 
+
         private void FillComboBox(ComboBox cb, FIS_Dictionary dictionary)
         {
             cb.Items.AddRange(_DB_Helper.GetDictionaryItems(dictionary).Values.ToArray());
@@ -2777,6 +2788,87 @@ namespace PK.Forms
             }
         }
 
+        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
+        {
+            List<object[]> oldList = oldDataList;
+            List<object[]> newList = newDataList;
+            int j = 0;
+            while (j < oldList.Count)
+            {
+                int index = 0;
+                bool keysMatch = true;
+                bool valuesMatch = true;
+
+                foreach (object[] newItem in newList)
+                {
+                    keysMatch = true;
+                    valuesMatch = true;
+                    index = newList.IndexOf(newItem);
+                    for (int i = 0; i < fieldNames.Length; i++)
+                    {
+                        if ((keyFieldsNames.Contains(fieldNames[i])) && (keysMatch) && (oldList[j][i].ToString() != newItem[i].ToString()))
+                        {
+                            keysMatch = false;
+                            break;
+                        }
+                        else if ((!keyFieldsNames.Contains(fieldNames[i])) && (valuesMatch) && (oldList[j][i] != null) && (newItem[i] != null) && (oldList[j][i].ToString() != newItem[i].ToString()))
+                            valuesMatch = false;
+                    }
+
+                    if (keysMatch && valuesMatch)
+                    {
+                        newList.RemoveAt(index);
+                        oldList.RemoveAt(oldList.IndexOf(oldList[j]));
+                        break;
+                    }
+                    else if (keysMatch && !valuesMatch)
+                    {
+                        Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
+                        Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
+
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            if (keyFieldsNames.Contains(fieldNames[i]))
+                                keyAndValues.Add(fieldNames[i], newItem[i]);
+                            else columnsAndValues.Add(fieldNames[i], newItem[i]);
+
+                        _DB_Connection.Update(table, columnsAndValues, keyAndValues);
+                        newList.RemoveAt(index);
+                        oldList.Remove(oldList[j]);
+                        break;
+                    }
+                }
+                if (!keysMatch)
+                    j++;
+            }
+            if ((oldList.Count > 0) && (newList.Count == 0))
+                foreach (object[] oldItem in oldList)
+                {
+                    Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
+                    for (int i = 0; i < fieldNames.Length; i++)
+                        if (keyFieldsNames.Contains(fieldNames[i]))
+                            keyAndValues.Add(fieldNames[i], oldItem[i]);
+
+                    _DB_Connection.Delete(table, keyAndValues);
+                }
+            else if (newList.Count > 0)
+                foreach (object[] newItem in newList)
+                {
+                    Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
+                    if (autoGeneratedKey)
+                    {
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            if (!keyFieldsNames.Contains(fieldNames[i]))
+                                columnsAndValues.Add(fieldNames[i], newItem[i]);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            columnsAndValues.Add(fieldNames[i], newItem[i]);
+                    }
+                    _DB_Connection.Insert(table, columnsAndValues);
+                }
+        }
+
         private void ChangeAgreedChBs(bool isEnabled)
         {
             if ((isEnabled && cbOriginal.Checked) || !isEnabled)
@@ -2801,104 +2893,6 @@ namespace PK.Forms
                     if (bt != null)
                         bt.Enabled = false;
                 }
-        }
-
-        private void cbAgreed_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_Agreed)
-                if (((CheckBox)sender).Checked)
-                    if (!_Loading)
-                    {
-                        int agreedCount = 0;
-                        foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date" }, new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
-                        }))
-                            if ((data[0] as DateTime?) != null)
-                                agreedCount++;
-                        if (agreedCount >= _AgreedChangeMaxCount)
-                        {
-                            MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
-                            _Agreed = true;
-                            ((CheckBox)sender).Checked = false;
-                        }
-                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
-                        {
-                            UpdateDirections();
-                            foreach (Control control in ((CheckBox)sender).Parent.Controls)
-                            {
-                                ComboBox comboBox = control as ComboBox;
-                                if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
-                                    _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
-                                        new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
-                                        { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
-                                        { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 } });
-                            }
-                            ChangeAgreedChBs(false);
-                            BlockDirChange();
-                        }
-                        else
-                        {
-                            _Agreed = true;
-                            ((CheckBox)sender).Checked = false;
-                        }
-                    }
-                    else
-                    {
-                        BlockDirChange();
-                        ((CheckBox)sender).Enabled = true;
-                    }
-                else
-                {
-                    int disagreedCount = 0;
-                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
-                            }))
-                        if ((data[0] as DateTime?) != null)
-                            disagreedCount++;
-                    if (disagreedCount >= _AgreedChangeMaxCount)
-                    {
-                        MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
-                        _Agreed = true;
-                        ((CheckBox)sender).Checked = true;
-                    }
-                    else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
-                        {
-                            foreach (Control control in ((CheckBox)sender).Parent.Controls)
-                            {
-                                ComboBox comboBox = control as ComboBox;
-                                if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
-                                    _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
-                                        new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
-                                        { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
-                                        { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 } });
-                            }
-                            ChangeAgreedChBs(true);
-                        }
-                    else
-                    {
-                        _Agreed = true;
-                        ((CheckBox)sender).Checked = true;
-                    }
-                }
-            _Agreed = false;
-        }
-
-        private void tbNumber_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (char.IsNumber(e.KeyChar) || (e.KeyChar == '\b'))
-                return;
-            else
-                e.Handled = true;
-        }
-
-        private void tbCyrilic_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if ((e.KeyChar > 'А' && e.KeyChar < 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
-                return;
-            else
-                e.Handled = true;
         }
     }
 }

@@ -16,9 +16,24 @@ namespace PK.Classes
         public const string EduSourceP = "С оплатой обучения";
         public const string EduSourceQ = "Квота приема лиц, имеющих особое право";
         public const string EduSourceT = "Целевой прием";
+
         public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
         public const string MADIOlympDocName = "Диплом участника олимпиад";
         public const string OlympAchievementName = "Участие в олимпиадах и иных конкурсах";
+        public const string SportAchievementOlympic = "Статус чемпиона и призера Олимпийских игр";
+        public const string SportAchievementParalympic = "Статус чемпиона и призера Паралимпийских игр";
+        public const string SportAchievementDeaflympic = "Статус чемпиона и призера Сурдлимпийских игр";
+        public const string SportAchievementWorldChampion = "Чемпион Мира";
+        public const string SportAchievementEuropeChampion = "Чемпион Европы";
+        public const string SportAchievementGTO = "Золотой знак отличия ГТО";
+        public const string SportAchievementWorldChampionship = "Победитель первенства мира";
+        public const string SportAchievementEuropeChampionship = "Победитель первенства Европы";
+
+        public const string SportDocTypeWorldChampion = "Диплом чемпиона мира";
+        public const string SportDocTypeEuropeChampion = "Диплом чемпиона Европы";
+        public const string SportDocTypeOlympic = "Диплом чемпиона/призера Олимпийских игр";
+        public const string SportDocTypeParalympic = "Диплом чемпиона/призера Паралимпийских игр";
+        public const string SportDocTypeDeaflympic = "Диплом чемпиона/призера Сурдлимпийских игр";
         #endregion
 
         public uint CurrentCampaignID

@@ -38,6 +38,7 @@
             this.menuStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_FIS_Export = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_KLADR_Update = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Dictionaries = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +68,6 @@
             this.cbEnroll = new System.Windows.Forms.CheckBox();
             this.cbPickUp = new System.Windows.Forms.CheckBox();
             this.cbNew = new System.Windows.Forms.CheckBox();
-            this.menuStrip_KLADR_Update = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -257,6 +257,13 @@
             this.menuStrip_FIS_Export.Text = "Экспорт в ФИС";
             this.menuStrip_FIS_Export.Click += new System.EventHandler(this.toolStrip_FIS_Export_Click);
             // 
+            // menuStrip_KLADR_Update
+            // 
+            this.menuStrip_KLADR_Update.Name = "menuStrip_KLADR_Update";
+            this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_KLADR_Update.Text = "Обновление КЛАДР";
+            this.menuStrip_KLADR_Update.Click += new System.EventHandler(this.menuStrip_KLADR_Update_Click);
+            // 
             // menuStrip_Help
             // 
             this.menuStrip_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -319,6 +326,7 @@
             this.dgvApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvApplications.Size = new System.Drawing.Size(1008, 385);
             this.dgvApplications.TabIndex = 2;
+            this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             // 
             // dgvApplications_ID
@@ -510,7 +518,6 @@
             this.cbDateSearch.TabIndex = 13;
             this.cbDateSearch.UseVisualStyleBackColor = true;
             this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
-            //this.cbDateSearch.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // cbEnroll
             // 
@@ -544,13 +551,6 @@
             this.cbNew.Text = "Новые";
             this.cbNew.UseVisualStyleBackColor = true;
             this.cbNew.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
-            // 
-            // menuStrip_KLADR_Update
-            // 
-            this.menuStrip_KLADR_Update.Name = "menuStrip_KLADR_Update";
-            this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(184, 22);
-            this.menuStrip_KLADR_Update.Text = "Обновление КЛАДР";
-            this.menuStrip_KLADR_Update.Click += new System.EventHandler(this.menuStrip_KLADR_Update_Click);
             // 
             // Main
             // 

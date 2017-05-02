@@ -10,13 +10,11 @@ namespace PK.Forms
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private readonly string _UserLogin;
-        private uint _CurrCampaignID;
 
-        private const string statusNew = "Новое";
-        private const string statusAdmBudget = "Зачислен на бюджет";
-        private const string statusAdmPaid = "Зачислен на платное";
-        private const string statusAdmBoth = "Зачислен на бюджет и платное";
-        private const string statusWithdraw = "Забрал документы";
+        private uint _CurrCampaignID;
+        private Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюдже" }, { "adm_paid", "Зачислен на платное" },
+            { "adm_both", "Зачислен на бюджет и платное" }, { "withdraw", "Забрал документы" } };
+        private uint _SelectedAppID;
 
         public Main(string userRole, string usersLogin)
         {
@@ -89,27 +87,11 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
-                    string status = "";
-                    switch (application[5].ToString())
-                    {
-                        case "new":
-                            status = statusNew;
-                            break;
-                        case "adm_budget":
-                            status = statusAdmBudget;
-                            break;
-                        case "adm_paid":
-                            status = statusAdmPaid;
-                            break;
-                        case "adm_both":
-                            status = statusAdmBoth;
-                            break;
-                        case "withdraw":
-                            status = statusWithdraw;
-                            break;
-                    }
+
+                    string status = _Statuses.First(x => x.Key == application[5].ToString()).Value;
                     dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null,
                         application[3], status);
+
                     foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
                         appDocuments,
                         docs => docs[0],
@@ -122,6 +104,7 @@ namespace PK.Forms
                         ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
                         if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma") && (document.Value.Item2 != null))
                             dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
+
                     //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
                     //{
                     //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
@@ -129,9 +112,13 @@ namespace PK.Forms
                     //{
 
                     //}
+                    if ((uint)dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
+                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Selected = true;
+                            
                 }
             dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
         }
+
 
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
         {
@@ -141,18 +128,6 @@ namespace PK.Forms
         }
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
-        {
-            if (_CurrCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
-                form.ShowDialog();
-                UpdateApplicationsTable();
-            }
-        }
-
-        private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
         {
             if (_CurrCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
@@ -206,17 +181,6 @@ namespace PK.Forms
             form.ShowDialog();
         }
 
-        private void toolStrip_Users_Click(object sender, EventArgs e)
-        {
-            Users form = new Users(_DB_Connection);
-            form.ShowDialog();
-        }
-
-        private void toolStrip_FIS_Export_Click(object sender, EventArgs e)
-        {
-            Classes.Utility.ConnectToFIS("****")?.Export(Classes.FIS_Packager.MakePackage(_DB_Connection));
-        }
-
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
             if (_CurrCampaignID == 0)
@@ -235,8 +199,84 @@ namespace PK.Forms
             UpdateApplicationsTable();
         }
 
+        private void menuStrip_Constants_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                Constants form = new Constants(_DB_Connection, _CurrCampaignID);
+                form.ShowDialog();
+            }
+        }
+
+        private void menuStrip_CreateMagApplication_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
+        }
+
+        private void menuStrip_KLADR_Update_Click(object sender, EventArgs e)
+        {
+            KLADR_Update form = new KLADR_Update(_DB_Connection.User, _DB_Connection.Password);
+            form.ShowDialog();
+        }
+
+
+        private void toolStrip_CreateApplication_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
+        }
+
+        private void toolStripMain_CreateMagApplication_Click(object sender, EventArgs e)
+        {
+            if (_CurrCampaignID == 0)
+                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
+            else
+            {
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                form.ShowDialog();
+                UpdateApplicationsTable();
+            }
+        }
+
+        private void toolStrip_Users_Click(object sender, EventArgs e)
+        {
+            Users form = new Users(_DB_Connection);
+            form.ShowDialog();
+        }
+
+        private void toolStrip_FIS_Export_Click(object sender, EventArgs e)
+        {
+            Classes.Utility.ConnectToFIS("****")?.Export(Classes.FIS_Packager.MakePackage(_DB_Connection));
+        }
+
+        private void toolStrip_RegJournal_Click(object sender, EventArgs e)
+        {
+            DateChoice form = new DateChoice();
+            form.ShowDialog();
+            Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
+        }
+
+
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (dgvApplications.SelectedRows.Count > 0)
+                _SelectedAppID = (uint)dgvApplications.SelectedRows[0].Cells[dgvApplications_ID.Index].Value;
+
             if (_CurrCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
@@ -258,52 +298,10 @@ namespace PK.Forms
             }
         }
 
-        private void menuStrip_Constants_Click(object sender, EventArgs e)
+        private void dgvApplications_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (_CurrCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                Constants form = new Constants(_DB_Connection, _CurrCampaignID);
-                form.ShowDialog();
-            }
-        }
-
-        private void toolStrip_RegJournal_Click(object sender, EventArgs e)
-        {
-            DateChoice form = new DateChoice();
-            form.ShowDialog();
-            Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
-        }
-
-        private void menuStrip_CreateMagApplication_Click(object sender, EventArgs e)
-        {
-            if (_CurrCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
-                form.ShowDialog();
-                UpdateApplicationsTable();
-            }
-        }
-
-        private void toolStripMain_CreateMagApplication_Click(object sender, EventArgs e)
-        {
-            if (_CurrCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
-                form.ShowDialog();
-                UpdateApplicationsTable();
-            }
-        }
-
-        private void menuStrip_KLADR_Update_Click(object sender, EventArgs e)
-        {
-            KLADR_Update form = new KLADR_Update(_DB_Connection.User, _DB_Connection.Password);
-            form.ShowDialog();
+            if (dgvApplications.SelectedRows.Count > 0)
+                _SelectedAppID = (uint)dgvApplications.SelectedRows[0].Cells[dgvApplications_ID.Index].Value;
         }
 
         private void tbField_Leave(object sender, EventArgs e)
@@ -359,16 +357,17 @@ namespace PK.Forms
                     }
 
             foreach (DataGridViewRow row in dgvApplications.Rows)
-                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusNew))
+                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "new").Value.ToString()))
                     row.Visible = false;
-                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusWithdraw))
+                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "withdraw").Value.ToString()))
                     row.Visible = false;
-                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmBudget
-                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmPaid
-                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmBoth))
+                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_budget").Value.ToString()
+                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_paid").Value.ToString()
+                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_both").Value.ToString()))
                     row.Visible = false;
                 else row.Visible = true;
         }
+
 
         private void FilterAppsTable()
         {

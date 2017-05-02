@@ -261,7 +261,7 @@ namespace PK.Forms
 
         private void tbCyrilic_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar > 'А' && e.KeyChar < 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё')) return;
+            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё')) return;
             else
                 e.Handled = true;
         }

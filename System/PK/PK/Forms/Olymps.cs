@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
+
+using OlympTuple = System.Tuple<uint, string>;
 
 namespace PK.Forms
 {
@@ -16,45 +19,46 @@ namespace PK.Forms
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _Parent = parent;
-
-            cbOlympType.SelectedIndex = 0;
-            cbDiplomaType.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.DIPLOMA_TYPE), null);
-            cbDiplomaType.DisplayMember = "Value";
-            cbDiplomaType.ValueMember = "Value";
-            cbDiplomaType.SelectedIndex = -1;
             
+            cbDiplomaType.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.DIPLOMA_TYPE).Values.ToArray());
             cbClass.SelectedItem = "10";
-
-            cbDiscipline.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS), null);
-            cbDiscipline.DisplayMember = "Value";
-            cbDiscipline.ValueMember = "Value";
-            cbDiscipline.SelectedIndex = -1;
-
-            cbCountry.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.COUNTRY), null);
-            cbCountry.DisplayMember = "Value";
-            cbCountry.ValueMember = "Value";
-
-            foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" }))
-                cbOlympID.Items.Add(record[0]);
+            cbDiscipline.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS).Values.ToArray());
+            cbCountry.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.COUNTRY).Values.ToArray());
 
             Forms.ApplicationEdit.ODoc loadedDocument = _Parent.OlympicDoc;
 
             if ((loadedDocument.olympType != null) && (loadedDocument.olympType != ""))
             {
                 cbOlympType.SelectedItem = loadedDocument.olympType;
-                tbOlympName.Text = loadedDocument.olympName;
                 tbDocNumber.Text = loadedDocument.olympDocNumber.ToString();
-                if ((loadedDocument.diplomaType !=null)&&(loadedDocument.diplomaType !=""))
-                    cbDiplomaType.SelectedValue = loadedDocument.diplomaType;
+
+                if ((loadedDocument.diplomaType != null) && (loadedDocument.diplomaType != ""))
+                    cbDiplomaType.SelectedItem = loadedDocument.diplomaType;
+
                 if (loadedDocument.olympID != 0)
-                    cbOlympID.SelectedItem = loadedDocument.olympID.ToString();
-                cbOlympProfile.SelectedValue = loadedDocument.olympProfile;
+                {
+                    tbOlympID.Text = loadedDocument.olympID.ToString();
+                    cbOlympName.SelectedIndex = cbOlympName.FindString(_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, loadedDocument.olympID)
+                        })[0][0].ToString());
+                    cbOlympProfile.SelectedIndex = cbOlympProfile.FindString(loadedDocument.olympProfile);
+                }
+                else
+                {
+                    if (loadedDocument.olympName != null)
+                        cbOlympName.Text = loadedDocument.olympName;
+                    cbOlympProfile.SelectedItem = loadedDocument.olympProfile;
+                }
+
                 if (loadedDocument.olympClass != 0)
                     cbClass.SelectedItem = loadedDocument.olympClass.ToString();
+
                 if ((loadedDocument.olympDist != null) && (loadedDocument.olympDist != ""))
-                    cbDiscipline.SelectedValue = loadedDocument.olympDist;
-                if ((loadedDocument.country !=null) && (loadedDocument.country != ""))
-                    cbCountry.SelectedValue = loadedDocument.country;
+                    cbDiscipline.SelectedItem = loadedDocument.olympDist;
+
+                if ((loadedDocument.country != null) && (loadedDocument.country != ""))
+                    cbCountry.SelectedItem = loadedDocument.country;
             }
         }
 
@@ -62,13 +66,11 @@ namespace PK.Forms
         {
             if (cbOlympType.SelectedItem.ToString() == "Диплом победителя/призера олимпиады школьников")
             {
-                tbOlympName.Enabled = false;
                 label2.Enabled = false;
                 tbDocNumber.Enabled = false;
                 label3.Enabled = false;
                 cbDiplomaType.Enabled = true;
                 label4.Enabled = true;
-                cbOlympID.Enabled = true;
                 label5.Enabled = true;
                 cbClass.Enabled = true;
                 label7.Enabled = true;
@@ -76,17 +78,25 @@ namespace PK.Forms
                 label8.Enabled = true;
                 cbCountry.Enabled = false;
                 label9.Enabled = false;
-                cbOlympProfile.DataSource = null;
+
+                cbOlympName.ValueMember = "Value";
+                cbOlympName.DisplayMember = "Name";
+                cbOlympName.DataSource = _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id", "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("year", Relation.EQUAL, DateTime.Now.Year)
+            }).Select(s => new
+            {
+                Name = s[1].ToString(),
+                Value = new OlympTuple((uint)s[0], Name)
+            }).ToArray();
             }
             else if (cbOlympType.SelectedItem.ToString() == "Диплом победителя/призера всероссийской олимпиады школьников")
             {
-                tbOlympName.Enabled = false;
                 label2.Enabled = false;
                 tbDocNumber.Enabled = true;
                 label3.Enabled = true;
                 cbDiplomaType.Enabled = true;
                 label4.Enabled = true;
-                cbOlympID.Enabled = true;
                 label5.Enabled = true;
                 cbClass.Enabled = true;
                 label7.Enabled = true;
@@ -94,17 +104,25 @@ namespace PK.Forms
                 label8.Enabled = true;
                 cbCountry.Enabled = false;
                 label9.Enabled = false;
-                cbOlympProfile.DataSource = null;
+
+                cbOlympName.ValueMember = "Value";
+                cbOlympName.DisplayMember = "Name";
+                cbOlympName.DataSource = _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id", "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("year", Relation.EQUAL, DateTime.Now.Year)
+            }).Select(s => new
+            {
+                Name = s[1].ToString(),
+                Value = new OlympTuple((uint)s[0], Name)
+            }).ToArray();
             }
             else if (cbOlympType.SelectedItem.ToString() == "Диплом 4 этапа всеукраинской олимпиады")
             {
-                tbOlympName.Enabled = true;
                 label2.Enabled = true;
                 tbDocNumber.Enabled = true;
                 label3.Enabled = true;
                 cbDiplomaType.Enabled = true;
                 label4.Enabled = true;
-                cbOlympID.Enabled = false;
                 label5.Enabled = false;
                 cbClass.Enabled = false;
                 label7.Enabled = false;
@@ -113,21 +131,19 @@ namespace PK.Forms
                 cbCountry.Enabled = false;
                 label9.Enabled = false;
 
+                cbOlympName.DataSource = null;
+                cbOlympName.Text = "";
+                tbOlympID.Text = "";
                 cbOlympProfile.DataSource = null;
-                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES), null);
-                cbOlympProfile.DisplayMember = "Value";
-                cbOlympProfile.ValueMember = "Value";
-                cbOlympProfile.SelectedIndex = -1;
+                cbOlympProfile.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES).Values.ToArray());
             }
             else if (cbOlympType.SelectedItem.ToString() == "Диплом международной олимпиады")
             {
-                tbOlympName.Enabled = true;
                 label2.Enabled = true;
                 tbDocNumber.Enabled = true;
                 label3.Enabled = true;
                 cbDiplomaType.Enabled = false;
                 label4.Enabled = false;
-                cbOlympID.Enabled = false;
                 label5.Enabled = false;
                 cbClass.Enabled = false;
                 label7.Enabled = false;
@@ -136,11 +152,11 @@ namespace PK.Forms
                 cbCountry.Enabled = true;
                 label9.Enabled = true;
 
+                cbOlympName.DataSource = null;
+                cbOlympName.Text = "";
+                tbOlympID.Text = "";
                 cbOlympProfile.DataSource = null;
-                cbOlympProfile.DataSource = new BindingSource(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES), null);
-                cbOlympProfile.DisplayMember = "Value";
-                cbOlympProfile.ValueMember = "Value";
-                cbOlympProfile.SelectedIndex = -1;
+                cbOlympProfile.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.OLYMPICS_PROFILES).Values.ToArray());
             }
         }
 
@@ -171,11 +187,11 @@ namespace PK.Forms
                         else
                         {
                             newDocument.olympType = cbOlympType.SelectedItem.ToString();
-                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            newDocument.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
-                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            newDocument.diplomaType = cbDiplomaType.SelectedItem.ToString();
+                            newDocument.olympID = int.Parse(tbOlympID.Text);
+                            newDocument.olympProfile = ((OlympTuple)cbOlympProfile.SelectedValue).Item2;
                             newDocument.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            newDocument.olympDist = cbDiscipline.SelectedValue.ToString();
+                            newDocument.olympDist = cbDiscipline.SelectedItem.ToString();
                             saved = true;
                         }
                         break;
@@ -187,39 +203,39 @@ namespace PK.Forms
                         {
                             newDocument.olympType = cbOlympType.SelectedItem.ToString();
                             newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            newDocument.olympID = int.Parse(cbOlympID.SelectedItem.ToString());
-                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            newDocument.diplomaType = cbDiplomaType.SelectedItem.ToString();
+                            newDocument.olympID = int.Parse(tbOlympID.Text);
+                            newDocument.olympProfile = ((OlympTuple)cbOlympProfile.SelectedValue).Item2;
                             newDocument.olympClass = int.Parse(cbClass.SelectedItem.ToString());
-                            newDocument.olympDist = cbDiscipline.SelectedValue.ToString();
+                            newDocument.olympDist = cbDiscipline.SelectedItem.ToString();
                             saved = true;
                         }
                         break;
                     case "Диплом 4 этапа всеукраинской олимпиады":
-                        if ((tbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbDiplomaType.SelectedIndex == -1)
+                        if ((cbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbDiplomaType.SelectedIndex == -1)
                             || (cbOlympProfile.SelectedIndex == -1))
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
                             newDocument.olympType = cbOlympType.SelectedItem.ToString();
-                            newDocument.olympName = tbOlympName.Text;
+                            newDocument.olympName = cbOlympName.Text;
                             newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            newDocument.diplomaType = cbDiplomaType.SelectedValue.ToString();
-                            newDocument.olympProfile = cbOlympProfile.SelectedValue.ToString();
+                            newDocument.diplomaType = cbDiplomaType.SelectedItem.ToString();
+                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
                             saved = true;
                         }
                         break;
                     case "Диплом международной олимпиады":
-                        if ((tbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbOlympProfile.SelectedIndex == -1)
+                        if ((cbOlympName.Text == "") || (tbDocNumber.Text == "") || (cbOlympProfile.SelectedIndex == -1)
                             || (cbCountry.SelectedIndex == -1))
                             MessageBox.Show("Все доступные поля должны быть заполнены");
                         else
                         {
                             newDocument.olympType = cbOlympType.SelectedItem.ToString();
-                            newDocument.olympName = tbOlympName.Text;
+                            newDocument.olympName = cbOlympName.Text;
                             newDocument.olympDocNumber = int.Parse(tbDocNumber.Text);
-                            newDocument.olympProfile = cbOlympProfile.SelectedValue.ToString();
-                            newDocument.country = cbCountry.SelectedValue.ToString();
+                            newDocument.olympProfile = cbOlympProfile.SelectedItem.ToString();
+                            newDocument.country = cbCountry.SelectedItem.ToString();
                             saved = true;
                         }
                         break;
@@ -231,30 +247,23 @@ namespace PK.Forms
             }
         }
 
-        private void cbOlympID_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbOlympName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((cbOlympID.SelectedIndex!=-1)&&(cbOlympID.SelectedItem.ToString()!=""))
-            if ((cbOlympType.SelectedItem.ToString() == "Диплом победителя/призера олимпиады школьников")
-                || (cbOlympType.SelectedItem.ToString() == "Диплом победителя/призера всероссийской олимпиады школьников"))
+            if ((OlympTuple)((ComboBox)sender).SelectedValue != null)
             {
-                cbOlympProfile.DataSource = null;
-                    cbOlympProfile.Items.Clear();
-                    //foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_OLYMPIC_PROFILES, new string[] { "profile_id" },
-                    //new System.Collections.Generic.List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, int.Parse(_DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id" },
-                    //    new System.Collections.Generic.List<Tuple<string, Relation, object>>
-                    //    {
-                    //        new Tuple<string, Relation, object>("olympic_number", Relation.EQUAL, int.Parse(cbOlympID.SelectedItem.ToString()))
-                    //    })[0][0].ToString()))
-                    //}))
-                    foreach (var record in _DB_Connection.Select(DB_Table.DICTIONARY_OLYMPIC_PROFILES, new string[] { "profile_id" },
-                        new System.Collections.Generic.List<Tuple<string, Relation, object>>
+                tbOlympID.Text = ((OlympTuple)((ComboBox)sender).SelectedValue).Item1.ToString();
+                cbOlympProfile.ValueMember = "Value";
+                cbOlympProfile.DisplayMember = "Name";
+
+                cbOlympProfile.DataSource = _DB_Connection.Select(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS, new string[] { "dictionary_olympic_profiles_profile_id" },
+                    new System.Collections.Generic.List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("olympic_id", Relation.EQUAL, (uint)(cbOlympID.SelectedItem))
-                    }))
-                    cbOlympProfile.Items.Add(_DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)(record[0])));
-                    cbOlympProfile.SelectedIndex = 0;
+                    new Tuple<string, Relation, object>("dictionary_olympic_profiles_olympic_id", Relation.EQUAL, ((OlympTuple)((ComboBox)sender).SelectedValue).Item1)
+                    }).Select(s => new
+                    {
+                        Name = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)s[0]),
+                        Value = new OlympTuple((uint)s[0], _DB_Helper.GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)s[0]))
+                    }).ToArray();
             }
         }
     }

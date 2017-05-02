@@ -38,15 +38,15 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbOlympName = new System.Windows.Forms.TextBox();
             this.tbDocNumber = new System.Windows.Forms.TextBox();
             this.cbDiplomaType = new System.Windows.Forms.ComboBox();
-            this.cbOlympID = new System.Windows.Forms.ComboBox();
             this.cbOlympProfile = new System.Windows.Forms.ComboBox();
             this.cbClass = new System.Windows.Forms.ComboBox();
             this.cbDiscipline = new System.Windows.Forms.ComboBox();
             this.cbCountry = new System.Windows.Forms.ComboBox();
             this.btSave = new System.Windows.Forms.Button();
+            this.cbOlympName = new System.Windows.Forms.ComboBox();
+            this.tbOlympID = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // cbOlympType
@@ -76,7 +76,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(28, 68);
+            this.label2.Location = new System.Drawing.Point(148, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(147, 13);
             this.label2.TabIndex = 2;
@@ -86,7 +86,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Enabled = false;
-            this.label3.Location = new System.Drawing.Point(28, 104);
+            this.label3.Location = new System.Drawing.Point(28, 122);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 13);
             this.label3.TabIndex = 3;
@@ -96,7 +96,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Enabled = false;
-            this.label4.Location = new System.Drawing.Point(244, 104);
+            this.label4.Location = new System.Drawing.Point(244, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 4;
@@ -106,7 +106,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Enabled = false;
-            this.label5.Location = new System.Drawing.Point(28, 141);
+            this.label5.Location = new System.Drawing.Point(28, 159);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(151, 13);
             this.label5.TabIndex = 5;
@@ -115,7 +115,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(28, 176);
+            this.label6.Location = new System.Drawing.Point(28, 194);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(117, 13);
             this.label6.TabIndex = 6;
@@ -125,7 +125,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Enabled = false;
-            this.label7.Location = new System.Drawing.Point(28, 211);
+            this.label7.Location = new System.Drawing.Point(28, 229);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(90, 13);
             this.label7.TabIndex = 7;
@@ -135,7 +135,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Enabled = false;
-            this.label8.Location = new System.Drawing.Point(195, 211);
+            this.label8.Location = new System.Drawing.Point(195, 229);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(73, 13);
             this.label8.TabIndex = 8;
@@ -145,24 +145,16 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Enabled = false;
-            this.label9.Location = new System.Drawing.Point(28, 246);
+            this.label9.Location = new System.Drawing.Point(28, 264);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(46, 13);
             this.label9.TabIndex = 9;
             this.label9.Text = "Страна:";
             // 
-            // tbOlympName
-            // 
-            this.tbOlympName.Enabled = false;
-            this.tbOlympName.Location = new System.Drawing.Point(181, 65);
-            this.tbOlympName.Name = "tbOlympName";
-            this.tbOlympName.Size = new System.Drawing.Size(227, 20);
-            this.tbOlympName.TabIndex = 10;
-            // 
             // tbDocNumber
             // 
             this.tbDocNumber.Enabled = false;
-            this.tbDocNumber.Location = new System.Drawing.Point(135, 101);
+            this.tbDocNumber.Location = new System.Drawing.Point(135, 119);
             this.tbDocNumber.Name = "tbDocNumber";
             this.tbDocNumber.Size = new System.Drawing.Size(104, 20);
             this.tbDocNumber.TabIndex = 11;
@@ -171,27 +163,15 @@
             // 
             this.cbDiplomaType.Enabled = false;
             this.cbDiplomaType.FormattingEnabled = true;
-            this.cbDiplomaType.Location = new System.Drawing.Point(326, 101);
+            this.cbDiplomaType.Location = new System.Drawing.Point(326, 119);
             this.cbDiplomaType.Name = "cbDiplomaType";
             this.cbDiplomaType.Size = new System.Drawing.Size(82, 21);
             this.cbDiplomaType.TabIndex = 12;
             // 
-            // cbOlympID
-            // 
-            this.cbOlympID.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbOlympID.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbOlympID.Enabled = false;
-            this.cbOlympID.FormattingEnabled = true;
-            this.cbOlympID.Location = new System.Drawing.Point(185, 138);
-            this.cbOlympID.Name = "cbOlympID";
-            this.cbOlympID.Size = new System.Drawing.Size(223, 21);
-            this.cbOlympID.TabIndex = 13;
-            this.cbOlympID.SelectedIndexChanged += new System.EventHandler(this.cbOlympID_SelectedIndexChanged);
-            // 
             // cbOlympProfile
             // 
             this.cbOlympProfile.FormattingEnabled = true;
-            this.cbOlympProfile.Location = new System.Drawing.Point(151, 173);
+            this.cbOlympProfile.Location = new System.Drawing.Point(151, 191);
             this.cbOlympProfile.Name = "cbOlympProfile";
             this.cbOlympProfile.Size = new System.Drawing.Size(257, 21);
             this.cbOlympProfile.TabIndex = 14;
@@ -206,7 +186,7 @@
             "9",
             "10",
             "11"});
-            this.cbClass.Location = new System.Drawing.Point(124, 208);
+            this.cbClass.Location = new System.Drawing.Point(124, 226);
             this.cbClass.Name = "cbClass";
             this.cbClass.Size = new System.Drawing.Size(55, 21);
             this.cbClass.TabIndex = 15;
@@ -215,7 +195,7 @@
             // 
             this.cbDiscipline.Enabled = false;
             this.cbDiscipline.FormattingEnabled = true;
-            this.cbDiscipline.Location = new System.Drawing.Point(274, 208);
+            this.cbDiscipline.Location = new System.Drawing.Point(274, 226);
             this.cbDiscipline.Name = "cbDiscipline";
             this.cbDiscipline.Size = new System.Drawing.Size(135, 21);
             this.cbDiscipline.TabIndex = 16;
@@ -224,14 +204,14 @@
             // 
             this.cbCountry.Enabled = false;
             this.cbCountry.FormattingEnabled = true;
-            this.cbCountry.Location = new System.Drawing.Point(80, 243);
+            this.cbCountry.Location = new System.Drawing.Point(80, 261);
             this.cbCountry.Name = "cbCountry";
-            this.cbCountry.Size = new System.Drawing.Size(247, 21);
+            this.cbCountry.Size = new System.Drawing.Size(328, 21);
             this.cbCountry.TabIndex = 17;
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(185, 283);
+            this.btSave.Location = new System.Drawing.Point(185, 300);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 18;
@@ -239,21 +219,38 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // MADIOlimps
+            // cbOlympName
+            // 
+            this.cbOlympName.FormattingEnabled = true;
+            this.cbOlympName.Location = new System.Drawing.Point(31, 83);
+            this.cbOlympName.Name = "cbOlympName";
+            this.cbOlympName.Size = new System.Drawing.Size(377, 21);
+            this.cbOlympName.TabIndex = 19;
+            this.cbOlympName.SelectedIndexChanged += new System.EventHandler(this.cbOlympName_SelectedIndexChanged);
+            // 
+            // tbOlympID
+            // 
+            this.tbOlympID.Enabled = false;
+            this.tbOlympID.Location = new System.Drawing.Point(185, 156);
+            this.tbOlympID.Name = "tbOlympID";
+            this.tbOlympID.Size = new System.Drawing.Size(223, 20);
+            this.tbOlympID.TabIndex = 20;
+            // 
+            // Olymps
             // 
             this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 318);
+            this.ClientSize = new System.Drawing.Size(437, 335);
+            this.Controls.Add(this.tbOlympID);
+            this.Controls.Add(this.cbOlympName);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.cbCountry);
             this.Controls.Add(this.cbDiscipline);
             this.Controls.Add(this.cbClass);
             this.Controls.Add(this.cbOlympProfile);
-            this.Controls.Add(this.cbOlympID);
             this.Controls.Add(this.cbDiplomaType);
             this.Controls.Add(this.tbDocNumber);
-            this.Controls.Add(this.tbOlympName);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -267,7 +264,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MADIOlimps";
+            this.Name = "Olymps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Олимпиады и конференции";
             this.ResumeLayout(false);
@@ -287,14 +284,14 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbOlympName;
         private System.Windows.Forms.TextBox tbDocNumber;
         private System.Windows.Forms.ComboBox cbDiplomaType;
-        private System.Windows.Forms.ComboBox cbOlympID;
         private System.Windows.Forms.ComboBox cbOlympProfile;
         private System.Windows.Forms.ComboBox cbClass;
         private System.Windows.Forms.ComboBox cbDiscipline;
         private System.Windows.Forms.ComboBox cbCountry;
         private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.ComboBox cbOlympName;
+        private System.Windows.Forms.TextBox tbOlympID;
     }
 }
