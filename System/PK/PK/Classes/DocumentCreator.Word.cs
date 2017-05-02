@@ -64,7 +64,7 @@ namespace PK.Classes
                             doc,
                             element.Element("Table"),
                             fonts,
-                            connection != null ? connection.RunProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
+                            connection != null ? connection.CallProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
                                 .ConvertAll(row => System.Array.ConvertAll(row, c => c.ToString()))
                                 : tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
                             );

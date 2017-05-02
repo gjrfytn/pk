@@ -94,7 +94,7 @@
             this.cbFDP.Size = new System.Drawing.Size(259, 21);
             this.cbFDP.TabIndex = 4;
             this.cbFDP.DropDown += new System.EventHandler(this.cbFDP_DropDown);
-            this.cbFDP.SelectedIndexChanged += new System.EventHandler(this.cbFDP_SelectedIndexChanged);
+            this.cbFDP.SelectionChangeCommitted += new System.EventHandler(this.cbFDP_SelectionChangeCommitted);
             // 
             // gbEduSource
             // 

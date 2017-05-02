@@ -78,6 +78,13 @@ namespace PK.Forms
                     {
                         if (_ID.HasValue)
                         {
+                            _DB_Connection.Update(
+                                DB_Table.EXAMINATIONS,
+                                data,
+                                new Dictionary<string, object> { { "id", _ID } },
+                                transaction
+                                );
+
                             string[] fields = { "examination_id", "number", "capacity" };
                             List<object[]> oldL = _DB_Connection.Select(
                                 DB_Table.EXAMINATIONS_AUDIENCES,

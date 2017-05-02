@@ -146,7 +146,13 @@ namespace PK.Classes
             return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
         }
 
-        public void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldsNames, string[] keyFieldsNames, MySql.Data.MySqlClient.MySqlTransaction transaction)
+        public void UpdateData(
+            DB_Table table,
+            List<object[]> oldDataList,
+            List<object[]> newDataList,
+            string[] fieldsNames,
+            string[] keyFieldsNames,
+            MySql.Data.MySqlClient.MySqlTransaction transaction = null)
         {
             object nullObj = null;
             Dictionary<string, object> whereColumns = keyFieldsNames.ToDictionary(k => k, v => nullObj);
