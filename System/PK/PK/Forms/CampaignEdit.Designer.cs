@@ -734,6 +734,7 @@
             this.dgvPaidPlaces_Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.dgvPaidPlaces_Select.HeaderText = "Выбрать";
             this.dgvPaidPlaces_Select.Name = "dgvPaidPlaces_Select";
+            this.dgvPaidPlaces_Select.Visible = false;
             this.dgvPaidPlaces_Select.Width = 57;
             // 
             // dgvPaidPlaces_Type
@@ -743,7 +744,7 @@
             this.dgvPaidPlaces_Type.Name = "dgvPaidPlaces_Type";
             this.dgvPaidPlaces_Type.ReadOnly = true;
             this.dgvPaidPlaces_Type.Visible = false;
-            this.dgvPaidPlaces_Type.Width = 51;
+            this.dgvPaidPlaces_Type.Width = 32;
             // 
             // dgvPaidPlaces_ID
             // 

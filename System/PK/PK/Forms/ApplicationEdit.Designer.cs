@@ -110,7 +110,6 @@
             this.cbDirection11 = new System.Windows.Forms.ComboBox();
             this.label32 = new System.Windows.Forms.Label();
             this.tpDir_paid_o = new System.Windows.Forms.TabPage();
-            this.cbAgreed21 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir21 = new System.Windows.Forms.Button();
             this.btAddDir2 = new System.Windows.Forms.Button();
             this.cbDirection21 = new System.Windows.Forms.ComboBox();
@@ -125,13 +124,11 @@
             this.cbDirection31 = new System.Windows.Forms.ComboBox();
             this.label37 = new System.Windows.Forms.Label();
             this.tpDir_paid_oz = new System.Windows.Forms.TabPage();
-            this.cbAgreed41 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir41 = new System.Windows.Forms.Button();
             this.btAddDir4 = new System.Windows.Forms.Button();
             this.cbDirection41 = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
             this.tpDir_paid_z = new System.Windows.Forms.TabPage();
-            this.cbAgreed51 = new System.Windows.Forms.CheckBox();
             this.btRemoveDir51 = new System.Windows.Forms.Button();
             this.btAddDir5 = new System.Windows.Forms.Button();
             this.cbDirection51 = new System.Windows.Forms.ComboBox();
@@ -1282,11 +1279,12 @@
             // 
             this.cbDirection13.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection13.Enabled = false;
+            this.cbDirection13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection13.FormattingEnabled = true;
             this.cbDirection13.Location = new System.Drawing.Point(31, 119);
             this.cbDirection13.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection13.Name = "cbDirection13";
-            this.cbDirection13.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection13.Size = new System.Drawing.Size(492, 23);
             this.cbDirection13.TabIndex = 5;
             this.cbDirection13.Visible = false;
             // 
@@ -1294,11 +1292,12 @@
             // 
             this.cbDirection12.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection12.Enabled = false;
+            this.cbDirection12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection12.FormattingEnabled = true;
             this.cbDirection12.Location = new System.Drawing.Point(31, 83);
             this.cbDirection12.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection12.Name = "cbDirection12";
-            this.cbDirection12.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection12.Size = new System.Drawing.Size(492, 23);
             this.cbDirection12.TabIndex = 3;
             this.cbDirection12.Visible = false;
             // 
@@ -1306,11 +1305,12 @@
             // 
             this.cbDirection11.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection11.Enabled = false;
+            this.cbDirection11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection11.FormattingEnabled = true;
             this.cbDirection11.Location = new System.Drawing.Point(31, 42);
             this.cbDirection11.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection11.Name = "cbDirection11";
-            this.cbDirection11.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection11.Size = new System.Drawing.Size(492, 23);
             this.cbDirection11.TabIndex = 1;
             this.cbDirection11.Visible = false;
             // 
@@ -1326,7 +1326,6 @@
             // 
             // tpDir_paid_o
             // 
-            this.tpDir_paid_o.Controls.Add(this.cbAgreed21);
             this.tpDir_paid_o.Controls.Add(this.btRemoveDir21);
             this.tpDir_paid_o.Controls.Add(this.btAddDir2);
             this.tpDir_paid_o.Controls.Add(this.cbDirection21);
@@ -1339,18 +1338,6 @@
             this.tpDir_paid_o.TabIndex = 1;
             this.tpDir_paid_o.Text = "Очная платная";
             this.tpDir_paid_o.UseVisualStyleBackColor = true;
-            // 
-            // cbAgreed21
-            // 
-            this.cbAgreed21.AutoSize = true;
-            this.cbAgreed21.Enabled = false;
-            this.cbAgreed21.Location = new System.Drawing.Point(9, 47);
-            this.cbAgreed21.Name = "cbAgreed21";
-            this.cbAgreed21.Size = new System.Drawing.Size(15, 14);
-            this.cbAgreed21.TabIndex = 18;
-            this.cbAgreed21.UseVisualStyleBackColor = true;
-            this.cbAgreed21.Visible = false;
-            this.cbAgreed21.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir21
             // 
@@ -1382,11 +1369,12 @@
             // 
             this.cbDirection21.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection21.Enabled = false;
+            this.cbDirection21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection21.FormattingEnabled = true;
             this.cbDirection21.Location = new System.Drawing.Point(31, 42);
             this.cbDirection21.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection21.Name = "cbDirection21";
-            this.cbDirection21.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection21.Size = new System.Drawing.Size(492, 23);
             this.cbDirection21.TabIndex = 9;
             this.cbDirection21.Visible = false;
             // 
@@ -1486,11 +1474,12 @@
             // 
             this.cbDirection32.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection32.Enabled = false;
+            this.cbDirection32.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection32.FormattingEnabled = true;
             this.cbDirection32.Location = new System.Drawing.Point(31, 83);
             this.cbDirection32.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection32.Name = "cbDirection32";
-            this.cbDirection32.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection32.Size = new System.Drawing.Size(492, 23);
             this.cbDirection32.TabIndex = 10;
             this.cbDirection32.Visible = false;
             // 
@@ -1498,11 +1487,12 @@
             // 
             this.cbDirection31.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection31.Enabled = false;
+            this.cbDirection31.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection31.FormattingEnabled = true;
             this.cbDirection31.Location = new System.Drawing.Point(31, 42);
             this.cbDirection31.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection31.Name = "cbDirection31";
-            this.cbDirection31.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection31.Size = new System.Drawing.Size(492, 23);
             this.cbDirection31.TabIndex = 9;
             this.cbDirection31.Visible = false;
             // 
@@ -1518,7 +1508,6 @@
             // 
             // tpDir_paid_oz
             // 
-            this.tpDir_paid_oz.Controls.Add(this.cbAgreed41);
             this.tpDir_paid_oz.Controls.Add(this.btRemoveDir41);
             this.tpDir_paid_oz.Controls.Add(this.btAddDir4);
             this.tpDir_paid_oz.Controls.Add(this.cbDirection41);
@@ -1530,18 +1519,6 @@
             this.tpDir_paid_oz.TabIndex = 3;
             this.tpDir_paid_oz.Text = "Очно-заочная платная";
             this.tpDir_paid_oz.UseVisualStyleBackColor = true;
-            // 
-            // cbAgreed41
-            // 
-            this.cbAgreed41.AutoSize = true;
-            this.cbAgreed41.Enabled = false;
-            this.cbAgreed41.Location = new System.Drawing.Point(9, 47);
-            this.cbAgreed41.Name = "cbAgreed41";
-            this.cbAgreed41.Size = new System.Drawing.Size(15, 14);
-            this.cbAgreed41.TabIndex = 18;
-            this.cbAgreed41.UseVisualStyleBackColor = true;
-            this.cbAgreed41.Visible = false;
-            this.cbAgreed41.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir41
             // 
@@ -1573,11 +1550,12 @@
             // 
             this.cbDirection41.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection41.Enabled = false;
+            this.cbDirection41.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection41.FormattingEnabled = true;
             this.cbDirection41.Location = new System.Drawing.Point(31, 42);
             this.cbDirection41.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection41.Name = "cbDirection41";
-            this.cbDirection41.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection41.Size = new System.Drawing.Size(492, 23);
             this.cbDirection41.TabIndex = 9;
             this.cbDirection41.Visible = false;
             // 
@@ -1593,7 +1571,6 @@
             // 
             // tpDir_paid_z
             // 
-            this.tpDir_paid_z.Controls.Add(this.cbAgreed51);
             this.tpDir_paid_z.Controls.Add(this.btRemoveDir51);
             this.tpDir_paid_z.Controls.Add(this.btAddDir5);
             this.tpDir_paid_z.Controls.Add(this.cbDirection51);
@@ -1605,18 +1582,6 @@
             this.tpDir_paid_z.TabIndex = 4;
             this.tpDir_paid_z.Text = "Заочная платная";
             this.tpDir_paid_z.UseVisualStyleBackColor = true;
-            // 
-            // cbAgreed51
-            // 
-            this.cbAgreed51.AutoSize = true;
-            this.cbAgreed51.Enabled = false;
-            this.cbAgreed51.Location = new System.Drawing.Point(9, 47);
-            this.cbAgreed51.Name = "cbAgreed51";
-            this.cbAgreed51.Size = new System.Drawing.Size(15, 14);
-            this.cbAgreed51.TabIndex = 18;
-            this.cbAgreed51.UseVisualStyleBackColor = true;
-            this.cbAgreed51.Visible = false;
-            this.cbAgreed51.CheckedChanged += new System.EventHandler(this.cbAgreed_CheckedChanged);
             // 
             // btRemoveDir51
             // 
@@ -1648,11 +1613,12 @@
             // 
             this.cbDirection51.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection51.Enabled = false;
+            this.cbDirection51.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection51.FormattingEnabled = true;
             this.cbDirection51.Location = new System.Drawing.Point(31, 42);
             this.cbDirection51.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection51.Name = "cbDirection51";
-            this.cbDirection51.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection51.Size = new System.Drawing.Size(492, 23);
             this.cbDirection51.TabIndex = 9;
             this.cbDirection51.Visible = false;
             // 
@@ -1725,11 +1691,12 @@
             // 
             this.cbDirection61.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection61.Enabled = false;
+            this.cbDirection61.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection61.FormattingEnabled = true;
             this.cbDirection61.Location = new System.Drawing.Point(31, 42);
             this.cbDirection61.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection61.Name = "cbDirection61";
-            this.cbDirection61.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection61.Size = new System.Drawing.Size(492, 23);
             this.cbDirection61.TabIndex = 9;
             this.cbDirection61.Visible = false;
             // 
@@ -1861,11 +1828,12 @@
             // 
             this.cbDirection73.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection73.Enabled = false;
+            this.cbDirection73.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection73.FormattingEnabled = true;
             this.cbDirection73.Location = new System.Drawing.Point(31, 119);
             this.cbDirection73.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection73.Name = "cbDirection73";
-            this.cbDirection73.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection73.Size = new System.Drawing.Size(492, 23);
             this.cbDirection73.TabIndex = 11;
             this.cbDirection73.Visible = false;
             // 
@@ -1873,11 +1841,12 @@
             // 
             this.cbDirection72.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection72.Enabled = false;
+            this.cbDirection72.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection72.FormattingEnabled = true;
             this.cbDirection72.Location = new System.Drawing.Point(31, 83);
             this.cbDirection72.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection72.Name = "cbDirection72";
-            this.cbDirection72.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection72.Size = new System.Drawing.Size(492, 23);
             this.cbDirection72.TabIndex = 10;
             this.cbDirection72.Visible = false;
             // 
@@ -1885,11 +1854,12 @@
             // 
             this.cbDirection71.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection71.Enabled = false;
+            this.cbDirection71.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection71.FormattingEnabled = true;
             this.cbDirection71.Location = new System.Drawing.Point(31, 42);
             this.cbDirection71.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection71.Name = "cbDirection71";
-            this.cbDirection71.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection71.Size = new System.Drawing.Size(492, 23);
             this.cbDirection71.TabIndex = 9;
             this.cbDirection71.Visible = false;
             // 
@@ -1963,11 +1933,12 @@
             // 
             this.cbDirection81.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection81.Enabled = false;
+            this.cbDirection81.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection81.FormattingEnabled = true;
             this.cbDirection81.Location = new System.Drawing.Point(31, 42);
             this.cbDirection81.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection81.Name = "cbDirection81";
-            this.cbDirection81.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection81.Size = new System.Drawing.Size(492, 23);
             this.cbDirection81.TabIndex = 9;
             this.cbDirection81.Visible = false;
             // 
@@ -2070,11 +2041,12 @@
             // 
             this.cbDirection92.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection92.Enabled = false;
+            this.cbDirection92.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection92.FormattingEnabled = true;
             this.cbDirection92.Location = new System.Drawing.Point(31, 83);
             this.cbDirection92.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection92.Name = "cbDirection92";
-            this.cbDirection92.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection92.Size = new System.Drawing.Size(492, 23);
             this.cbDirection92.TabIndex = 10;
             this.cbDirection92.Visible = false;
             // 
@@ -2082,11 +2054,12 @@
             // 
             this.cbDirection91.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDirection91.Enabled = false;
+            this.cbDirection91.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbDirection91.FormattingEnabled = true;
             this.cbDirection91.Location = new System.Drawing.Point(31, 42);
             this.cbDirection91.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection91.Name = "cbDirection91";
-            this.cbDirection91.Size = new System.Drawing.Size(492, 24);
+            this.cbDirection91.Size = new System.Drawing.Size(492, 23);
             this.cbDirection91.TabIndex = 9;
             this.cbDirection91.Visible = false;
             // 
@@ -2777,11 +2750,8 @@
         private System.Windows.Forms.CheckBox cbAgreed13;
         private System.Windows.Forms.CheckBox cbAgreed12;
         private System.Windows.Forms.CheckBox cbAgreed11;
-        private System.Windows.Forms.CheckBox cbAgreed21;
         private System.Windows.Forms.CheckBox cbAgreed32;
         private System.Windows.Forms.CheckBox cbAgreed31;
-        private System.Windows.Forms.CheckBox cbAgreed41;
-        private System.Windows.Forms.CheckBox cbAgreed51;
         private System.Windows.Forms.CheckBox cbAgreed61;
         private System.Windows.Forms.CheckBox cbAgreed73;
         private System.Windows.Forms.CheckBox cbAgreed72;

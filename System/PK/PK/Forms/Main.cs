@@ -10,8 +10,13 @@ namespace PK.Forms
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private readonly string _UserLogin;
-
         private uint _CurrCampaignID;
+
+        private const string statusNew = "Новое";
+        private const string statusAdmBudget = "Зачислен на бюджет";
+        private const string statusAdmPaid = "Зачислен на платное";
+        private const string statusAdmBoth = "Зачислен на бюджет и платное";
+        private const string statusWithdraw = "Забрал документы";
 
         public Main(string userRole, string usersLogin)
         {
@@ -67,7 +72,7 @@ namespace PK.Forms
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
-            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status_id" },
+            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
@@ -84,8 +89,27 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
+                    string status = "";
+                    switch (application[5].ToString())
+                    {
+                        case "new":
+                            status = statusNew;
+                            break;
+                        case "adm_budget":
+                            status = statusAdmBudget;
+                            break;
+                        case "adm_paid":
+                            status = statusAdmPaid;
+                            break;
+                        case "adm_both":
+                            status = statusAdmBoth;
+                            break;
+                        case "withdraw":
+                            status = statusWithdraw;
+                            break;
+                    }
                     dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null,
-                        application[3], _DB_Helper.GetDictionaryItemName(FIS_Dictionary.APPLICATION_STATUS,(uint)application[5]));
+                        application[3], status);
                     foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
                         appDocuments,
                         docs => docs[0],
@@ -96,7 +120,7 @@ namespace PK.Forms
                             OriginalRecievedDate = s1[2] as DateTime?
                         }
                         ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
-                        if (((document.Value.Item1 == "school_certificate") || (document.Value.Item1 == "high_edu_diploma") || (document.Value.Item1 == "academic_diploma")) && (document.Value.Item2!=null))
+                        if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma") && (document.Value.Item2 != null))
                             dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
                     //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
                     //{
@@ -335,11 +359,13 @@ namespace PK.Forms
                     }
 
             foreach (DataGridViewRow row in dgvApplications.Rows)
-                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Новое"))
+                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusNew))
                     row.Visible = false;
-                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Отозвано"))
+                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusWithdraw))
                     row.Visible = false;
-                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != "Принято"))
+                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmBudget
+                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmPaid
+                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != statusAdmBoth))
                     row.Visible = false;
                 else row.Visible = true;
         }

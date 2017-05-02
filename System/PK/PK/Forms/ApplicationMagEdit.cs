@@ -497,8 +497,7 @@ namespace PK.Forms
                 firstHightEdu = false;
 
             _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "entrant_id", _EntrantID.Value}, { "registration_time", DateTime.Now},
-                { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin}, { "campaign_id", _CurrCampainID }, { "recommendation", cbRecomendation.Checked },
-                { "status_dict_id", (uint)FIS_Dictionary.APPLICATION_STATUS},{ "status_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.APPLICATION_STATUS, "Новое")},
+                { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin}, { "campaign_id", _CurrCampainID }, { "recommendation", cbRecomendation.Checked },                
                 { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked}, { "master_appl", true } });
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
@@ -543,8 +542,7 @@ namespace PK.Forms
                             if (cb.SelectedIndex != -1)
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                    { "faculty_short_name", ((ProgramTuple)cb.SelectedValue).Item2 },
-                                    { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1}, { "profile_actual", true},
+                                    { "faculty_short_name", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((ProgramTuple)cb.SelectedValue).Item4},
                                     { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((ProgramTuple)cb.SelectedValue).Item3},
                                     { "target_organization_id", _TargetOrganizationID }, { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} });
@@ -560,11 +558,10 @@ namespace PK.Forms
                             {
                                 Control sdf = cb.Parent;
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "application_id", _ApplicationID },
-                                     { "faculty_short_name",  ((ProgramTuple)cb.SelectedValue).Item2 },
-                                    { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},
+                                     { "faculty_short_name",  ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((ProgramTuple)cb.SelectedValue).Item4},
                                     { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((ProgramTuple)cb.SelectedValue).Item3},
-                                    { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5}, { "profile_actual", true}  });
+                                    { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} });
                             }
                     }
                 }
@@ -814,7 +811,7 @@ namespace PK.Forms
             List<object[]> oldD = new List<object[]>();
             List<object[]> newD = new List<object[]>();
             string[] fieldsList = new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
-                "edu_source_dict_id", "edu_source_id", "profile_short_name", "target_organization_id", "profile_actual" };
+                "edu_source_dict_id", "edu_source_id", "profile_short_name", "target_organization_id" };
             foreach (object[] record in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, fieldsList, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object> ("application_id", Relation.EQUAL, _ApplicationID)
