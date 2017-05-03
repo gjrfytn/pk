@@ -47,10 +47,10 @@
             this.dgvConstants_ColumnName,
             this.dgvConstants_Name,
             this.dgvConstants_Value});
-            this.dgvConstants.Location = new System.Drawing.Point(12, 55);
+            this.dgvConstants.Location = new System.Drawing.Point(12, 34);
             this.dgvConstants.Name = "dgvConstants";
             this.dgvConstants.RowHeadersVisible = false;
-            this.dgvConstants.Size = new System.Drawing.Size(611, 270);
+            this.dgvConstants.Size = new System.Drawing.Size(611, 133);
             this.dgvConstants.TabIndex = 0;
             // 
             // dgvConstants_ColumnName
@@ -76,7 +76,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(281, 342);
+            this.btSave.Location = new System.Drawing.Point(284, 179);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 1;
@@ -87,7 +87,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(247, 9);
+            this.label1.Location = new System.Drawing.Point(136, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(161, 13);
             this.label1.TabIndex = 2;
@@ -98,7 +98,7 @@
             this.lbCurrentCampaign.AutoSize = true;
             this.lbCurrentCampaign.BackColor = System.Drawing.SystemColors.Control;
             this.lbCurrentCampaign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbCurrentCampaign.Location = new System.Drawing.Point(235, 30);
+            this.lbCurrentCampaign.Location = new System.Drawing.Point(303, 9);
             this.lbCurrentCampaign.Name = "lbCurrentCampaign";
             this.lbCurrentCampaign.Size = new System.Drawing.Size(183, 13);
             this.lbCurrentCampaign.TabIndex = 3;
@@ -108,11 +108,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(635, 377);
+            this.ClientSize = new System.Drawing.Size(635, 214);
             this.Controls.Add(this.lbCurrentCampaign);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.dgvConstants);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Constants";
             this.Text = "Основная информация";
             ((System.ComponentModel.ISupportInitialize)(this.dgvConstants)).EndInit();

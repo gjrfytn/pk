@@ -102,6 +102,7 @@ namespace PK.Forms
             }
         }
 
+
         private void btSave_Click(object sender, EventArgs e)
         {
             if ((tbLastName.Text == "") || (tbFirstName.Text == "") || (tbMidleName.Text == "") || (tbIDDocSeries.Text == "") || (tbIDDocNumber.Text == "")
@@ -165,9 +166,12 @@ namespace PK.Forms
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
-            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text, cbHouse.Text);
+            Tuple<string, string> buf = GetTownSettlement();
+            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, cbHouse.Text);
             if (tbPostcode.Text == "")
-                tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text, cbHouse.Text);
+                tbPostcode.Enabled = true;
+            else
+                tbPostcode.Enabled = false;
         }
 
         private void cbTarget_CheckedChanged(object sender, EventArgs e)
@@ -266,199 +270,6 @@ namespace PK.Forms
                 e.Handled = true;
         }
 
-        private void FillProgramsCombobox(ComboBox combobox, string eduForm, string eduSource)
-        {
-            var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
-
-            if (eduSource == Classes.DB_Helper.EduSourceB || eduSource == Classes.DB_Helper.EduSourceQ)
-            {
-                string placesCountColumnName = "";
-                if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceB))
-                    placesCountColumnName = "places_budget_o";
-                else if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceQ))
-                    placesCountColumnName = "places_quota_o";
-
-                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
-                   new List<Tuple<string, Relation, object>>
-                       {
-                            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                       }).Join(
-                    profilesData,
-                    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
-                    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
-                    (s1, s2) => new
-                    {
-                        Id = (uint)s1[0],
-                        Faculty = s1[1].ToString(),
-                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        ProfileShortName = s2[0].ToString(),
-                        ProfileName = s2[1].ToString().Split('|')[0],
-                        Kafedra = s2[1].ToString().Split('|')[1]
-                    }).Select(s => new
-                    {
-                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
-                    }).ToList();
-                combobox.ValueMember = "Value";
-                combobox.DisplayMember = "Display";
-                combobox.DataSource = selectedDirs;
-                combobox.SelectedIndex = -1;
-            }
-            else if (eduSource == Classes.DB_Helper.EduSourceT)
-            {
-                string placesCountColumnName = "places_o";
-
-                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
-                    new List<Tuple<string, Relation, object>>
-                       {
-                            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                       }).Join(
-                    profilesData,
-                    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
-                    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
-                    (s1, s2) => new
-                    {
-                        Id = (uint)s1[0],
-                        Faculty = s1[1].ToString(),
-                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        ProfileShortName = s2[0].ToString(),
-                        ProfileName = s2[1].ToString().Split('|')[0],
-                        Kafedra = s2[1].ToString().Split('|')[1]
-                    }).Select(s => new
-                    {
-                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
-                    }).Distinct().ToList();
-                combobox.ValueMember = "Value";
-                combobox.DisplayMember = "Display";
-                combobox.DataSource = selectedDirs;
-                combobox.SelectedIndex = -1;
-            }
-            else
-            {
-                string placesCountColumnName = "";
-
-                if (eduForm == Classes.DB_Helper.EduFormO)
-                    placesCountColumnName = "places_paid_o";
-                else if (eduForm == Classes.DB_Helper.EduFormOZ)
-                    placesCountColumnName = "places_paid_oz";
-                else if (eduForm == Classes.DB_Helper.EduFormZ)
-                    placesCountColumnName = "places_paid_z";
-                
-                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id", "profiles_direction_faculty", "profiles_short_name", placesCountColumnName },
-                   new List<Tuple<string, Relation, object>>
-                       {
-                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CurrCampainID),
-                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                       }).Join(
-                    profilesData,
-                    campProfiles => new Tuple<uint, string, string>((uint)campProfiles[0], campProfiles[1].ToString(), campProfiles[2].ToString()),
-                    profData => new Tuple<uint, string, string>((uint)profData[3], profData[2].ToString(), profData[0].ToString()),
-                    (s1, s2) => new
-                    {
-                        Id = (uint)s1[0],
-                        Faculty = s1[1].ToString(),
-                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        ProfileShortName = s1[2].ToString(),
-                        ProfileName = s2[1].ToString().Split('|')[0],
-                        Kafedra = s2[1].ToString().Split('|')[1]
-                    }).Select(s => new
-                    {
-                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
-                    }).ToList();
-                combobox.ValueMember = "Value";
-                combobox.DisplayMember = "Display";
-                combobox.DataSource = selectedDirs;
-                combobox.SelectedIndex = -1;
-            }
-        }
-
-        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
-        {
-            List<object[]> oldList = oldDataList;
-            List<object[]> newList = newDataList;
-            int j = 0;
-            while (j < oldList.Count)
-            {
-                int index = 0;
-                bool keysMatch = true;
-                bool valuesMatch = true;
-
-                foreach (object[] newItem in newList)
-                {
-                    keysMatch = true;
-                    valuesMatch = true;
-                    index = newList.IndexOf(newItem);
-                    for (int i = 0; i < fieldNames.Length; i++)
-                    {
-                        if ((keyFieldsNames.Contains(fieldNames[i])) && (keysMatch) && (oldList[j][i].ToString() != newItem[i].ToString()))
-                        {
-                            keysMatch = false;
-                            break;
-                        }
-                        else if ((!keyFieldsNames.Contains(fieldNames[i])) && (valuesMatch) && (oldList[j][i] != null) && (newItem[i] != null) && (oldList[j][i].ToString() != newItem[i].ToString()))
-                            valuesMatch = false;
-                    }
-
-                    if (keysMatch && valuesMatch)
-                    {
-                        newList.RemoveAt(index);
-                        oldList.RemoveAt(oldList.IndexOf(oldList[j]));
-                        break;
-                    }
-                    else if (keysMatch && !valuesMatch)
-                    {
-                        Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
-                        Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
-
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            if (keyFieldsNames.Contains(fieldNames[i]))
-                                keyAndValues.Add(fieldNames[i], newItem[i]);
-                            else columnsAndValues.Add(fieldNames[i], newItem[i]);
-
-                        _DB_Connection.Update(table, columnsAndValues, keyAndValues);
-                        newList.RemoveAt(index);
-                        oldList.Remove(oldList[j]);
-                        break;
-                    }
-                }
-                if (!keysMatch)
-                    j++;
-            }
-            if ((oldList.Count > 0) && (newList.Count == 0))
-                foreach (object[] oldItem in oldList)
-                {
-                    Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
-                    for (int i = 0; i < fieldNames.Length; i++)
-                        if (keyFieldsNames.Contains(fieldNames[i]))
-                            keyAndValues.Add(fieldNames[i], oldItem[i]);
-
-                    _DB_Connection.Delete(table, keyAndValues);
-                }
-            else if (newList.Count > 0)
-                foreach (object[] newItem in newList)
-                {
-                    Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
-                    if (autoGeneratedKey)
-                    {
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            if (!keyFieldsNames.Contains(fieldNames[i]))
-                                columnsAndValues.Add(fieldNames[i], newItem[i]);
-                    }
-                    else
-                    {
-                        for (int i = 0; i < fieldNames.Length; i++)
-                            columnsAndValues.Add(fieldNames[i], newItem[i]);
-                    }
-                    _DB_Connection.Insert(table, columnsAndValues);
-                }
-        }
         
         private void SaveApplication()
         {
@@ -488,6 +299,7 @@ namespace PK.Forms
             UpdateDirections();
             Cursor.Current = Cursors.Default;
         }
+
 
         private void SaveBasic()
         {
@@ -568,8 +380,10 @@ namespace PK.Forms
             }
         }
 
+
         private void LoadBasic()
         {
+            Text += " № " + _ApplicationID;
             object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id" }, 
                 new List<Tuple<string, Relation, object>>
                 {
@@ -796,14 +610,148 @@ namespace PK.Forms
             }
         }
 
+
         private void UpdateBasic()
         {
-            
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", GetNumber(true) }, { "mobile_phone", GetNumber(false) } },
+                new Dictionary<string, object> { { "id", _EntrantID } });
+
+            bool firstHightEdu = true;
+            if (cbFirstTime.SelectedItem.ToString() == "Повторно")
+                firstHightEdu = false;
+            Random randNumber = new Random();
+
+            _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "needs_hostel", cbHostelNeeded.Checked}, { "edit_time", _EditingDateTime},
+                { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked} }, new Dictionary<string, object> { { "id", _ApplicationID } });
         }
 
         private void UpdateDocuments()
         {
-            
+            List<object[]> appDocumentsLinks = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID)
+            });
+
+            bool qouteFound = false;
+
+            if (appDocumentsLinks.Count > 0)
+            {
+                List<object[]> appDocuments = new List<object[]>();
+                foreach (var documentID in appDocumentsLinks)
+                {
+                    appDocuments.Add(_DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "series", "number", "date", "organization", "original_recieved_date" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)documentID[0])
+                    })[0]);
+                }
+                foreach (object[] document in appDocuments)
+                {
+                    if (document[1].ToString() == "identity")
+                    {
+                        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} ,
+                            { "organization", tbIssuedBy.Text} }, new Dictionary<string, object> { { "id", (uint)document[0] } });
+
+                        _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
+                            { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
+                            { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
+                            { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                            { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
+                            { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
+                            { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
+                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
+                            new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                    }
+
+                    else if (document[1].ToString() == "high_edu_diploma")
+                    {
+                        if (document[6] as DateTime? != null)
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", "high_edu_diploma" },
+                                { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text }, { "date", dtpDiplomaDate.Value } },
+                                new Dictionary<string, object> { { "id", (uint)document[0] } });
+
+                        else if (document[6] as DateTime? == null)
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", "high_edu_diploma" },
+                                { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text }, { "date", dtpDiplomaDate.Value } },
+                                new Dictionary<string, object> { { "id", (uint)document[0] } });
+
+                        _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", tbSpecialty.Text } },
+                            new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                    }
+                    //else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
+                    //{
+                    //    if ((cbQuote.Checked) && (document[1].ToString() == "orphan") && (QuoteDoc.cause == "Сиротство"))
+                    //    {
+                    //        qouteFound = true;
+                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", QuoteDoc.orphanhoodDocDate }, { "organization", QuoteDoc.orphanhoodDocOrg } },
+                    //                new Dictionary<string, object> { { "id", (uint)document[0] } });
+
+                    //        _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
+                    //        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+
+                    //        _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                    //            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                    //            { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                    //        new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                    //    }
+                    //    else if ((cbQuote.Checked) && ((document[1].ToString() == "disability") || (document[1].ToString() == "medical")) && (QuoteDoc.cause == "Медецинские показатели"))
+                    //    {
+                    //        qouteFound = true;
+                    //        uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
+                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", QuoteDoc.conclusionNumber }, { "date", QuoteDoc.conclusionDate } },
+                    //            new Dictionary<string, object> { { "id", allowEducationDocUid } });
+
+                    //        if (document[1].ToString() == "disability")
+                    //        {
+                    //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
+                    //                new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+
+                    //            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
+                    //            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP,QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+
+                    //            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                    //                { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
+                    //                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                    //                new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                    //        }
+                    //        else if (document[1].ToString() == "medical")
+                    //        {
+                    //            qouteFound = true;
+                    //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
+                    //                new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+
+                    //            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                    //                { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
+                    //                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                    //                new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                    //        }
+                    //    }
+                    //    else if (document[1].ToString() == "orphan")
+                    //    {
+                    //        _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                    //    }
+                    //    else
+                    //    {
+                    //        uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
+                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", QuoteDoc.conclusionNumber }, { "date", QuoteDoc.conclusionDate } },
+                    //            new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                    //        _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
+                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
+                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                    //    }
+                    //}
+                }
+            }
+                if (cbSpecialRights.Checked && !qouteFound)
+                {
+                    SaveQuote();
+                }
         }
 
         private void UpdateDirections()
@@ -849,6 +797,247 @@ namespace PK.Forms
             }
             UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, false, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
                 "edu_source_dict_id", "edu_source_id" });
+        }
+
+
+        private void FillProgramsCombobox(ComboBox combobox, string eduForm, string eduSource)
+        {
+            var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
+
+            if (eduSource == Classes.DB_Helper.EduSourceB || eduSource == Classes.DB_Helper.EduSourceQ)
+            {
+                string placesCountColumnName = "";
+                if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceB))
+                    placesCountColumnName = "places_budget_o";
+                else if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceQ))
+                    placesCountColumnName = "places_quota_o";
+
+                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                   new List<Tuple<string, Relation, object>>
+                       {
+                            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
+                       }).Join(
+                    profilesData,
+                    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
+                    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
+                    (s1, s2) => new
+                    {
+                        Id = (uint)s1[0],
+                        Faculty = s1[1].ToString(),
+                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                        ProfileShortName = s2[0].ToString(),
+                        ProfileName = s2[1].ToString().Split('|')[0],
+                        Kafedra = s2[1].ToString().Split('|')[1]
+                    }).Select(s => new
+                    {
+                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                    }).ToList();
+                combobox.ValueMember = "Value";
+                combobox.DisplayMember = "Display";
+                combobox.DataSource = selectedDirs;
+                combobox.SelectedIndex = -1;
+            }
+            else if (eduSource == Classes.DB_Helper.EduSourceT)
+            {
+                string placesCountColumnName = "places_o";
+
+                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                    new List<Tuple<string, Relation, object>>
+                       {
+                            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
+                       }).Join(
+                    profilesData,
+                    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
+                    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
+                    (s1, s2) => new
+                    {
+                        Id = (uint)s1[0],
+                        Faculty = s1[1].ToString(),
+                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                        ProfileShortName = s2[0].ToString(),
+                        ProfileName = s2[1].ToString().Split('|')[0],
+                        Kafedra = s2[1].ToString().Split('|')[1]
+                    }).Select(s => new
+                    {
+                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                    }).Distinct().ToList();
+                combobox.ValueMember = "Value";
+                combobox.DisplayMember = "Display";
+                combobox.DataSource = selectedDirs;
+                combobox.SelectedIndex = -1;
+            }
+            else
+            {
+                string placesCountColumnName = "";
+
+                if (eduForm == Classes.DB_Helper.EduFormO)
+                    placesCountColumnName = "places_paid_o";
+                else if (eduForm == Classes.DB_Helper.EduFormOZ)
+                    placesCountColumnName = "places_paid_oz";
+                else if (eduForm == Classes.DB_Helper.EduFormZ)
+                    placesCountColumnName = "places_paid_z";
+
+                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id", "profiles_direction_faculty", "profiles_short_name", placesCountColumnName },
+                   new List<Tuple<string, Relation, object>>
+                       {
+                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CurrCampainID),
+                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
+                       }).Join(
+                    profilesData,
+                    campProfiles => new Tuple<uint, string, string>((uint)campProfiles[0], campProfiles[1].ToString(), campProfiles[2].ToString()),
+                    profData => new Tuple<uint, string, string>((uint)profData[3], profData[2].ToString(), profData[0].ToString()),
+                    (s1, s2) => new
+                    {
+                        Id = (uint)s1[0],
+                        Faculty = s1[1].ToString(),
+                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                        ProfileShortName = s1[2].ToString(),
+                        ProfileName = s2[1].ToString().Split('|')[0],
+                        Kafedra = s2[1].ToString().Split('|')[1]
+                    }).Select(s => new
+                    {
+                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                    }).ToList();
+                combobox.ValueMember = "Value";
+                combobox.DisplayMember = "Display";
+                combobox.DataSource = selectedDirs;
+                combobox.SelectedIndex = -1;
+            }
+        }
+
+        private string GetNumber(bool home)
+        {
+            MaskedTextBox textBox;
+            if (home)
+                textBox = mtbHomePhone;
+            else
+                textBox = mtbMobilePhone;
+
+            string number = "";
+            for (int i = 1; i <= 3; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            for (int i = 5; i <= 7; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            for (int i = 9; i <= 10; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            if (textBox.Text.Length >= 14)
+                for (int i = 12; i <= 13; i++)
+                    if (char.IsDigit(textBox.Text[i]))
+                        number += textBox.Text[i];
+            return number;
+        }
+
+        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
+        {
+            List<object[]> oldList = oldDataList;
+            List<object[]> newList = newDataList;
+            int j = 0;
+            while (j < oldList.Count)
+            {
+                int index = 0;
+                bool keysMatch = true;
+                bool valuesMatch = true;
+
+                foreach (object[] newItem in newList)
+                {
+                    keysMatch = true;
+                    valuesMatch = true;
+                    index = newList.IndexOf(newItem);
+                    for (int i = 0; i < fieldNames.Length; i++)
+                    {
+                        if ((keyFieldsNames.Contains(fieldNames[i])) && (keysMatch) && (oldList[j][i].ToString() != newItem[i].ToString()))
+                        {
+                            keysMatch = false;
+                            break;
+                        }
+                        else if ((!keyFieldsNames.Contains(fieldNames[i])) && (valuesMatch) && (oldList[j][i] != null) && (newItem[i] != null) && (oldList[j][i].ToString() != newItem[i].ToString()))
+                            valuesMatch = false;
+                    }
+
+                    if (keysMatch && valuesMatch)
+                    {
+                        newList.RemoveAt(index);
+                        oldList.RemoveAt(oldList.IndexOf(oldList[j]));
+                        break;
+                    }
+                    else if (keysMatch && !valuesMatch)
+                    {
+                        Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
+                        Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
+
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            if (keyFieldsNames.Contains(fieldNames[i]))
+                                keyAndValues.Add(fieldNames[i], newItem[i]);
+                            else columnsAndValues.Add(fieldNames[i], newItem[i]);
+
+                        _DB_Connection.Update(table, columnsAndValues, keyAndValues);
+                        newList.RemoveAt(index);
+                        oldList.Remove(oldList[j]);
+                        break;
+                    }
+                }
+                if (!keysMatch)
+                    j++;
+            }
+            if ((oldList.Count > 0) && (newList.Count == 0))
+                foreach (object[] oldItem in oldList)
+                {
+                    Dictionary<string, object> keyAndValues = new Dictionary<string, object>();
+                    for (int i = 0; i < fieldNames.Length; i++)
+                        if (keyFieldsNames.Contains(fieldNames[i]))
+                            keyAndValues.Add(fieldNames[i], oldItem[i]);
+
+                    _DB_Connection.Delete(table, keyAndValues);
+                }
+            else if (newList.Count > 0)
+                foreach (object[] newItem in newList)
+                {
+                    Dictionary<string, object> columnsAndValues = new Dictionary<string, object>();
+                    if (autoGeneratedKey)
+                    {
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            if (!keyFieldsNames.Contains(fieldNames[i]))
+                                columnsAndValues.Add(fieldNames[i], newItem[i]);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < fieldNames.Length; i++)
+                            columnsAndValues.Add(fieldNames[i], newItem[i]);
+                    }
+                    _DB_Connection.Insert(table, columnsAndValues);
+                }
+        }
+
+        private Tuple<string, string> GetTownSettlement()
+        {
+            if (_Towns.ContainsKey(tbTown.Text))
+            {
+                if (_Towns[tbTown.Text] == null)
+                    return new Tuple<string, string>(tbTown.Text, "");
+                else
+                {
+                    string[] buf = tbTown.Text.Split('(');
+                    if (buf.Length == 4)
+                        return new Tuple<string, string>(_Towns[tbTown.Text], buf[0] + "(" + buf[1]);
+                    else
+                        return new Tuple<string, string>(_Towns[tbTown.Text], tbTown.Text);
+                }
+            }
+            else if (tbTown.Text == "")
+                return new Tuple<string, string>("", "");
+
+            return null;
         }
     }
 }

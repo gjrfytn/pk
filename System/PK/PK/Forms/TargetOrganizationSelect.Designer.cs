@@ -91,6 +91,8 @@
             this.Controls.Add(this.lbSelection);
             this.Controls.Add(this.btSelect);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TargetOrganizationSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Выбор целевой организации";

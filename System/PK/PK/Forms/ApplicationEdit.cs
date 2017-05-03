@@ -15,10 +15,10 @@ namespace PK.Forms
             public string cause;
 
             public string medCause;
-            public int medDocSerie;
-            public int medDocNumber;
+            public string medDocSerie;
+            public string medDocNumber;
             public string disabilityGroup;
-            public int conclusionNumber;
+            public string conclusionNumber;
             public DateTime conclusionDate;
 
             public string orphanhoodDocType;
@@ -120,12 +120,15 @@ namespace PK.Forms
                 (DateTime.Now.Year - 4).ToString(),
                 (DateTime.Now.Year - 5).ToString(),
             };
-
-            dgvExams.Rows.Add("Математика", null, null, (byte)0, 32);
-            dgvExams.Rows.Add("Русский язык", null, null, (byte)0, 32);
-            dgvExams.Rows.Add("Физика", null, null, (byte)0, 32);
-            dgvExams.Rows.Add("Обществознание", null, null, (byte)0, 32);
-            dgvExams.Rows.Add("Иностранный язык", null, null, (byte)0, 32);
+            object[] minMarks;
+            if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { }).Count > 0)
+                minMarks = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" })[0];
+            else minMarks = new object[] { 0, 0, 0, 0, 0 };
+            dgvExams.Rows.Add("Математика", null, null, (byte)0, minMarks[0], false);
+            dgvExams.Rows.Add("Русский язык", null, null, (byte)0, minMarks[1], false);
+            dgvExams.Rows.Add("Физика", null, null, (byte)0, minMarks[2], false);
+            dgvExams.Rows.Add("Обществознание", null, null, (byte)0, minMarks[3], false);
+            dgvExams.Rows.Add("Иностранный язык", null, null, (byte)0, minMarks[4], false);
 
             for (int j = 0; j < dgvExams.Rows.Count; j++)
             {
@@ -345,28 +348,40 @@ namespace PK.Forms
                             found = true;
                     }
                 if (!found)
-                    MessageBox.Show("Не выбрано ни одно направление или профиль.");                
+                    MessageBox.Show("Не выбрано ни одно направление или профиль.");
                 else if (!cbPassportMatch.Checked && (tbExamsDocSeries.Text == "") && (tbExamsDocNumber.Text == ""))
                     MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
                 else if (mtbEMail.Text == "")
                     MessageBox.Show("Поле \"Email\" не заполнено");
                 else if (!cbAppAdmission.Checked
                     || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPrerogative.Checked) && !cbDirectionDoc.Checked
-                    || (cbQuote.Checked && !cbMedCertificate.Checked)
-                    || rbCertificate.Checked && !cbCertificateCopy.Checked
-                    || rbDiploma.Checked && !cbDiplomaCopy.Checked
+                    || cbQuote.Checked && !cbMedCertificate.Checked
+                    || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
                     || rbSpravka.Checked && !cbCertificateHRD.Checked)
                     MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
-                else if (_ApplicationID == null)
-                {
-                    SaveApplication();
-                    btPrint.Enabled = true;
-                    ChangeAgreedChBs(true);
-                }
                 else
                 {
-                    _EditingDateTime = DateTime.Now;
-                    UpdateApplication();
+                    foreach (TabPage page in tcDirections.TabPages)
+                        foreach (Control control in page.Controls)
+                        {
+                            CheckBox checkBox = control as CheckBox;
+                            if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
+                            {
+                                MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
+                            }
+                        }
+
+                    if (_ApplicationID == null)
+                    {
+                        SaveApplication();
+                        btPrint.Enabled = true;
+                        ChangeAgreedChBs(true);
+                    }
+                    else
+                    {
+                        _EditingDateTime = DateTime.Now;
+                        UpdateApplication();
+                    }
                 }
             }
         }
@@ -399,31 +414,6 @@ namespace PK.Forms
             }
         }
 
-        private void EduDocTypeChanged()
-        {
-            if (rbCertificate.Checked)
-                cbCertificateCopy.Enabled = true;
-            else
-            {
-                cbCertificateCopy.Enabled = false;
-                cbCertificateCopy.Checked = false;
-            }
-            if (rbDiploma.Checked)
-                cbDiplomaCopy.Enabled = true;
-            else
-            {
-                cbDiplomaCopy.Enabled = false;
-                cbDiplomaCopy.Checked = false;
-            }
-            if (rbSpravka.Checked)
-                cbCertificateHRD.Enabled = true;
-            else
-            {
-                cbCertificateHRD.Enabled = false;
-                cbCertificateHRD.Checked = false;
-            }
-        }
-
         private void DirectionDocEnableDisable()
         {
             if (((cbChernobyl.Checked) || (cbQuote.Checked) || (cbOlympiad.Checked) || (cbPrerogative.Checked))&&(!_Loading))
@@ -440,19 +430,34 @@ namespace PK.Forms
             }
         }
 
-        private void rbCertificate_CheckedChanged(object sender, EventArgs e)
+        private void rb_CheckedChanged(object sender, EventArgs e)
         {
-            EduDocTypeChanged();
-        }
-
-        private void rbDiploma_CheckedChanged(object sender, EventArgs e)
-        {
-            EduDocTypeChanged();
-        }
-
-        private void rbSpravka_CheckedChanged(object sender, EventArgs e)
-        {
-            EduDocTypeChanged();
+            if (rbCertificate.Checked)
+            {
+                if (cbOriginal.Checked)
+                    cbEduDoc.Text = "Оригинал аттестата";
+                else
+                    cbEduDoc.Text = "Копия аттестата";
+                cbEduDoc.Enabled = true;
+                cbCertificateHRD.Enabled = false;
+                cbCertificateHRD.Checked = false;
+            }
+            else if (rbDiploma.Checked)
+            {
+                if (cbOriginal.Checked)
+                    cbEduDoc.Text = "Оригинал диплома";
+                else
+                    cbEduDoc.Text = "Копия диплома";
+                cbEduDoc.Enabled = true;
+                cbCertificateHRD.Enabled = false;
+                cbCertificateHRD.Checked = false;
+            }
+            else if (rbSpravka.Checked)
+            {
+                cbCertificateHRD.Enabled = true;
+                cbEduDoc.Enabled = false;
+                cbEduDoc.Checked = false;
+            }
         }
 
         private void cbChernobyl_CheckedChanged(object sender, EventArgs e)
@@ -515,15 +520,15 @@ namespace PK.Forms
             }
         }
 
-        private void tbHouse_Enter(object sender, EventArgs e)
+        private void cbHouse_Enter(object sender, EventArgs e)
         {
-            tbHouse.AutoCompleteCustomSource.Clear();
-            tbHouse.AutoCompleteCustomSource.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text).ToArray());
-            tbHouse.AutoCompleteCustomSource.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text).ToArray());
+            cbHouse.Items.Clear();
+            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text).ToArray());
+            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text).ToArray());
 
-            if (tbHouse.AutoCompleteCustomSource.Count == 0)
+            if (cbHouse.Items.Count == 0)
             {
-                toolTip.Show("Не найдено адресов.", tbHouse, 3000);
+                toolTip.Show("Не найдено адресов.", cbHouse, 3000);
             }
         }
 
@@ -585,7 +590,7 @@ namespace PK.Forms
 
                 foreach (CheckBox cb in gbWithdrawDocs.Controls)
                     if (cb.Checked)
-                        if (cb == cbCertificateCopy)
+                        if (cb == cbEduDoc)
                         {
                             string buf = cb.Text + " " + tbEduDocSeries.Text + " " + tbEduDocNumber.Text;
                             if (cbOriginal.Checked)
@@ -884,20 +889,6 @@ namespace PK.Forms
             }
         }
 
-        private void cbOriginal_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbOriginal.Checked)
-            {
-                cbCertificateCopy.Text = "Оригинал аттестата";
-                cbDiplomaCopy.Text = "Оригинал диплома";
-            }
-            else
-            {
-                cbCertificateCopy.Text = "Копия аттестата";
-                cbDiplomaCopy.Text = "Копия диплома";
-            }
-        }
-
         private void btAddDir_Click(object sender, EventArgs e)
         {
             int tabNumber = int.Parse((sender as Control).Name.Substring((sender as Control).Name.Length - 1, 1));
@@ -972,7 +963,11 @@ namespace PK.Forms
         private void btGetIndex_Click(object sender, EventArgs e)
         {
             Tuple<string, string> buf = GetTownSettlement();
-            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, tbHouse.Text);
+            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, cbHouse.Text);
+            if (tbPostcode.Text == "")
+                tbPostcode.Enabled = true;
+            else
+                tbPostcode.Enabled = false;
         }
 
         private void cbAgreed_CheckedChanged(object sender, EventArgs e)
@@ -1076,6 +1071,11 @@ namespace PK.Forms
                 e.Handled = true;
         }
 
+        private void tbKLADR_Leave(object sender, EventArgs e)
+        {
+            tbPostcode.Text = "";
+        }
+
 
         private void SaveApplication()
         {
@@ -1114,7 +1114,7 @@ namespace PK.Forms
 
         private void SaveBasic()
         {
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", mtbHomePhone.Text }, { "mobile_phone", mtbMobilePhone.Text } });
+            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", GetNumber(true) }, { "mobile_phone", GetNumber(false) } });
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
@@ -1138,7 +1138,7 @@ namespace PK.Forms
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
-                { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
+                { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
 
             if (cbPhotos.Checked)
             {
@@ -1443,6 +1443,7 @@ namespace PK.Forms
 
         private void LoadBasic()
         {
+            Text += " № " + _ApplicationID;
             object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu",
                 "mcado", "chernobyl", "passing_examinations", "priority_right", "special_conditions", "entrant_id" }, new List<Tuple<string, Relation, object>>
                 {
@@ -1482,7 +1483,7 @@ namespace PK.Forms
             if (_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
@@ -1528,7 +1529,7 @@ namespace PK.Forms
                     tbDistrict.Text = passport[6].ToString();
                     tbTown.Text = passport[7].ToString();
                     tbStreet.Text = passport[8].ToString();
-                    tbHouse.Text = passport[9].ToString();
+                    cbHouse.Text = passport[9].ToString();
                     tbPostcode.Text = passport[10].ToString();
                     tbAppartment.Text = passport[11].ToString();
                     cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.GENDER, (uint)passport[12]);
@@ -1538,12 +1539,12 @@ namespace PK.Forms
                     if (document[1].ToString() == "school_certificate")
                     {
                         rbCertificate.Checked = true;
-                        cbCertificateCopy.Checked = true;
+                        cbEduDoc.Checked = true;
                     }
                     else if (document[1].ToString() == "high_edu_diploma")
                     {
                         rbDiploma.Checked = true;
-                        cbDiplomaCopy.Checked = true;
+                        cbEduDoc.Checked = true;
                     }
                     else if (document[1].ToString() == "academic_diploma")
                     {
@@ -1570,15 +1571,22 @@ namespace PK.Forms
                 {
                     tbExamsDocSeries.Text = document[2].ToString();
                     tbExamsDocNumber.Text = document[3].ToString();
+                    if (tbExamsDocSeries.Text == tbIDDocSeries.Text && tbExamsDocNumber.Text == tbIDDocNumber.Text && cbExamsDocType.SelectedItem.ToString() == cbIDDocType.SelectedItem.ToString())
+                        cbPassportMatch.Checked = true;
 
-                    List<object[]> subjects = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "subject_id", "value" }, new List<Tuple<string, Relation, object>>
+                    List<object[]> subjects = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "subject_id", "value", "checked" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     });
                     foreach (var subject in subjects)
                         foreach (DataGridViewRow row in dgvExams.Rows)
-                            if (row.Cells[0].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)subject[0]))
-                                row.Cells[3].Value = (byte)(uint)subject[1];
+                            if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)subject[0]))
+                            {
+                                row.Cells[dgvExams_EGE.Index].Value = (byte)(uint)subject[1];
+                                row.Cells[dgvExams_Cheched.Index].Value = (bool)subject[2];
+                                if ((bool)subject[2])
+                                    row.ReadOnly = true;
+                            }
                 }
                 else if (document[1].ToString() == "photos")
                     cbPhotos.Checked = true;
@@ -1650,8 +1658,8 @@ namespace PK.Forms
                     QuoteDoc.cause = "Медицинские показатели";
                     QuoteDoc.medCause = "Справква об установлении инвалидности";
                     cbQuote.Checked = true;
-                    QuoteDoc.medDocSerie = int.Parse(document[2].ToString());
-                    QuoteDoc.medDocNumber = int.Parse(document[3].ToString());
+                    QuoteDoc.medDocSerie = document[2].ToString();
+                    QuoteDoc.medDocNumber = document[3].ToString();
                     QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "dictionaries_item_id" },
                         new List<Tuple<string, Relation, object>>
                         {
@@ -1666,7 +1674,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                         new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности"))
                     }))[0][0])})[0];
-                    QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
+                    QuoteDoc.conclusionNumber = allowDocument[0].ToString();
                     QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
                 }
                 else if (document[1].ToString() == "medical")
@@ -1674,8 +1682,8 @@ namespace PK.Forms
                     QuoteDoc.cause = "Медицинские показатели";
                     QuoteDoc.medCause = "Заключение психолого-медико-педагогической комиссии";
                     cbQuote.Checked = true;
-                    QuoteDoc.medDocSerie = int.Parse(document[2].ToString());
-                    QuoteDoc.medDocNumber = int.Parse(document[3].ToString());
+                    QuoteDoc.medDocSerie = document[2].ToString();
+                    QuoteDoc.medDocNumber = document[3].ToString();
                     object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("id", Relation.EQUAL,
@@ -1684,7 +1692,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                         new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
                     }))[0][0])})[0];
-                    QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
+                    QuoteDoc.conclusionNumber = allowDocument[0].ToString();
                     QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
                 }
                 else if (document[1].ToString() == "olympic")
@@ -2202,6 +2210,7 @@ namespace PK.Forms
                                     if (chb != null && chb.Name == "cbAgreed" + cb.Name.Substring(11))
                                     {
                                         chb.Checked = true;
+                                        cbAgreed.Checked = true;
                                         agreedTimes++;
                                     }
                                 }
@@ -2218,8 +2227,8 @@ namespace PK.Forms
 
         private void UpdateBasic()
         {
-            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", mtbHomePhone.Text }, { "mobile_phone", mtbMobilePhone.Text } },
-    new Dictionary<string, object> { { "id", _EntrantID } });
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", GetNumber(true) }, { "mobile_phone", GetNumber(false) } },
+                new Dictionary<string, object> { { "id", _EntrantID } });
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -2269,7 +2278,7 @@ namespace PK.Forms
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
-                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", tbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
+                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } });
                     }
 
@@ -2291,7 +2300,7 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "original_recieved_date", null }, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
-                        else if ((document[6] as DateTime?) != null && (cbOriginal.Checked))
+                        else if ((document[6] as DateTime?) == null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "original_recieved_date", DateTime.Now }, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } });
@@ -2327,7 +2336,7 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", tbExamsDocSeries.Text }, { "number", tbExamsDocNumber.Text } },
                                 new Dictionary<string, object> { { "id", (uint)document[0] } });
                         }
-                        string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value", "checked" };
+                        string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value" };
                         string[] keysNames = new string[] { "document_id", "subject_dict_id", "subject_id" };
                         List<object[]> oldData = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, fieldNames, new List<Tuple<string, Relation, object>>
                             {
@@ -2880,6 +2889,31 @@ namespace PK.Forms
                     if (bt != null)
                         bt.Enabled = false;
                 }
+        }
+
+        private string GetNumber(bool home)
+        {
+            MaskedTextBox textBox;
+            if (home)
+                textBox = mtbHomePhone;
+            else
+                textBox = mtbMobilePhone;
+
+            string number = "";
+            for (int i = 1; i <= 3; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            for (int i = 5; i <= 7; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            for (int i = 9; i <= 10; i++)
+                if (char.IsDigit(textBox.Text[i]))
+                    number += textBox.Text[i];
+            if (textBox.Text.Length >= 14)
+                for (int i = 12; i <= 13; i++)
+                    if (char.IsDigit(textBox.Text[i]))
+                        number += textBox.Text[i];
+            return number;
         }
 
         private Tuple<string, string> GetTownSettlement()

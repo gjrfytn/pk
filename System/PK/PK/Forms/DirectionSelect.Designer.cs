@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.dgvDirectionSelection = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btSelect = new System.Windows.Forms.Button();
             this.dgvDirectionSelection_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirectionSelection_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirectionSelection_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirectionSelection_Faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btSelect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirectionSelection)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,25 +56,6 @@
             this.dgvDirectionSelection.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDirectionSelection.Size = new System.Drawing.Size(612, 353);
             this.dgvDirectionSelection.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(261, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Выберите направление:";
-            // 
-            // btSelect
-            // 
-            this.btSelect.Location = new System.Drawing.Point(286, 390);
-            this.btSelect.Name = "btSelect";
-            this.btSelect.Size = new System.Drawing.Size(75, 23);
-            this.btSelect.TabIndex = 2;
-            this.btSelect.Text = "Выбрать";
-            this.btSelect.UseVisualStyleBackColor = true;
-            this.btSelect.Click += new System.EventHandler(this.btSelect_Click);
             // 
             // dgvDirectionSelection_ID
             // 
@@ -104,6 +85,25 @@
             this.dgvDirectionSelection_Faculty.Name = "dgvDirectionSelection_Faculty";
             this.dgvDirectionSelection_Faculty.ReadOnly = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(261, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(129, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Выберите направление:";
+            // 
+            // btSelect
+            // 
+            this.btSelect.Location = new System.Drawing.Point(286, 390);
+            this.btSelect.Name = "btSelect";
+            this.btSelect.Size = new System.Drawing.Size(75, 23);
+            this.btSelect.TabIndex = 2;
+            this.btSelect.Text = "Выбрать";
+            this.btSelect.UseVisualStyleBackColor = true;
+            this.btSelect.Click += new System.EventHandler(this.btSelect_Click);
+            // 
             // DirectionSelect
             // 
             this.AcceptButton = this.btSelect;
@@ -114,6 +114,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvDirectionSelection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "DirectionSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Выбор направления";

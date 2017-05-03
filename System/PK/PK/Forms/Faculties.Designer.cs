@@ -177,6 +177,8 @@
             this.Controls.Add(this.dgvFaculties);
             this.Controls.Add(this.btNewFaculty);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Faculties";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Факультеты";

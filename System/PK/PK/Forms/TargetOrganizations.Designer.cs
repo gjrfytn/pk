@@ -106,6 +106,8 @@
             this.Controls.Add(this.btNewTargetOrganization);
             this.Controls.Add(this.dgvTargetOrganizations);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TargetOrganizations";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Целевые организации";

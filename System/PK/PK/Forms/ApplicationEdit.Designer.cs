@@ -20,8 +20,8 @@
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
+            this.cbHouse = new System.Windows.Forms.ComboBox();
             this.btGetIndex = new System.Windows.Forms.Button();
-            this.tbHouse = new System.Windows.Forms.TextBox();
             this.tbTown = new System.Windows.Forms.TextBox();
             this.tbDistrict = new System.Windows.Forms.TextBox();
             this.tbStreet = new System.Windows.Forms.TextBox();
@@ -173,6 +173,7 @@
             this.dgvExams_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_EGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Min = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_Cheched = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tbExamsDocNumber = new System.Windows.Forms.TextBox();
             this.tbExamsDocSeries = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -199,8 +200,7 @@
             this.cbMedCertificate = new System.Windows.Forms.CheckBox();
             this.cbDirectionDoc = new System.Windows.Forms.CheckBox();
             this.cbCertificateHRD = new System.Windows.Forms.CheckBox();
-            this.cbDiplomaCopy = new System.Windows.Forms.CheckBox();
-            this.cbCertificateCopy = new System.Windows.Forms.CheckBox();
+            this.cbEduDoc = new System.Windows.Forms.CheckBox();
             this.cbPassportCopy = new System.Windows.Forms.CheckBox();
             this.cbAppAdmission = new System.Windows.Forms.CheckBox();
             this.btSave = new System.Windows.Forms.Button();
@@ -285,8 +285,8 @@
             // 
             // gbAdress
             // 
+            this.gbAdress.Controls.Add(this.cbHouse);
             this.gbAdress.Controls.Add(this.btGetIndex);
-            this.gbAdress.Controls.Add(this.tbHouse);
             this.gbAdress.Controls.Add(this.tbTown);
             this.gbAdress.Controls.Add(this.tbDistrict);
             this.gbAdress.Controls.Add(this.tbStreet);
@@ -309,6 +309,15 @@
             this.gbAdress.TabStop = false;
             this.gbAdress.Text = "Адрес регистрации";
             // 
+            // cbHouse
+            // 
+            this.cbHouse.FormattingEnabled = true;
+            this.cbHouse.Location = new System.Drawing.Point(948, 20);
+            this.cbHouse.Name = "cbHouse";
+            this.cbHouse.Size = new System.Drawing.Size(44, 24);
+            this.cbHouse.TabIndex = 29;
+            this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
+            // 
             // btGetIndex
             // 
             this.btGetIndex.Location = new System.Drawing.Point(1221, 18);
@@ -318,17 +327,6 @@
             this.btGetIndex.Text = ">";
             this.btGetIndex.UseVisualStyleBackColor = true;
             this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
-            // 
-            // tbHouse
-            // 
-            this.tbHouse.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbHouse.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbHouse.Location = new System.Drawing.Point(944, 19);
-            this.tbHouse.Margin = new System.Windows.Forms.Padding(4);
-            this.tbHouse.Name = "tbHouse";
-            this.tbHouse.Size = new System.Drawing.Size(44, 22);
-            this.tbHouse.TabIndex = 4;
-            this.tbHouse.Enter += new System.EventHandler(this.tbHouse_Enter);
             // 
             // tbTown
             // 
@@ -340,6 +338,7 @@
             this.tbTown.Size = new System.Drawing.Size(150, 22);
             this.tbTown.TabIndex = 2;
             this.tbTown.Enter += new System.EventHandler(this.tbTown_Enter);
+            this.tbTown.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
             // tbDistrict
             // 
@@ -351,6 +350,7 @@
             this.tbDistrict.Size = new System.Drawing.Size(150, 22);
             this.tbDistrict.TabIndex = 1;
             this.tbDistrict.Enter += new System.EventHandler(this.tbDistrict_Enter);
+            this.tbDistrict.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
             // tbStreet
             // 
@@ -362,6 +362,7 @@
             this.tbStreet.Size = new System.Drawing.Size(150, 22);
             this.tbStreet.TabIndex = 3;
             this.tbStreet.Enter += new System.EventHandler(this.tbStreet_Enter);
+            this.tbStreet.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
             // tbRegion
             // 
@@ -372,6 +373,7 @@
             this.tbRegion.Name = "tbRegion";
             this.tbRegion.Size = new System.Drawing.Size(150, 22);
             this.tbRegion.TabIndex = 0;
+            this.tbRegion.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
             // tbPostcode
             // 
@@ -400,6 +402,7 @@
             this.tbAppartment.Name = "tbAppartment";
             this.tbAppartment.Size = new System.Drawing.Size(36, 22);
             this.tbAppartment.TabIndex = 5;
+            this.tbAppartment.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
             // label19
             // 
@@ -468,7 +471,6 @@
             this.tbPlaceOfBirth.Name = "tbPlaceOfBirth";
             this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 22);
             this.tbPlaceOfBirth.TabIndex = 11;
-            this.tbPlaceOfBirth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label13
             // 
@@ -546,7 +548,6 @@
             this.tbIssuedBy.Name = "tbIssuedBy";
             this.tbIssuedBy.Size = new System.Drawing.Size(445, 22);
             this.tbIssuedBy.TabIndex = 3;
-            this.tbIssuedBy.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label9
             // 
@@ -565,7 +566,6 @@
             this.tbSubdivisionCode.Name = "tbSubdivisionCode";
             this.tbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
             this.tbSubdivisionCode.TabIndex = 5;
-            this.tbSubdivisionCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label8
             // 
@@ -594,7 +594,6 @@
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 2;
-            this.tbIDDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // tbIDDocSeries
             // 
@@ -603,7 +602,6 @@
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 1;
-            this.tbIDDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label6
             // 
@@ -756,7 +754,6 @@
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
             this.tbInstitutionLocation.Size = new System.Drawing.Size(294, 22);
             this.tbInstitutionLocation.TabIndex = 6;
-            this.tbInstitutionLocation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // cbGraduationYear
             // 
@@ -795,7 +792,6 @@
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
             this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
             this.tbInstitutionNumber.TabIndex = 5;
-            this.tbInstitutionNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label25
             // 
@@ -850,7 +846,7 @@
             this.cbOriginal.TabIndex = 3;
             this.cbOriginal.Text = "Оригинал";
             this.cbOriginal.UseVisualStyleBackColor = true;
-            this.cbOriginal.CheckedChanged += new System.EventHandler(this.cbOriginal_CheckedChanged);
+            this.cbOriginal.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // tbEduDocNumber
             // 
@@ -859,7 +855,6 @@
             this.tbEduDocNumber.Name = "tbEduDocNumber";
             this.tbEduDocNumber.Size = new System.Drawing.Size(148, 22);
             this.tbEduDocNumber.TabIndex = 2;
-            this.tbEduDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label23
             // 
@@ -878,7 +873,6 @@
             this.tbEduDocSeries.Name = "tbEduDocSeries";
             this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
             this.tbEduDocSeries.TabIndex = 1;
-            this.tbEduDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label22
             // 
@@ -914,7 +908,7 @@
             this.rbSpravka.TabIndex = 2;
             this.rbSpravka.Text = "Справка";
             this.rbSpravka.UseVisualStyleBackColor = true;
-            this.rbSpravka.CheckedChanged += new System.EventHandler(this.rbSpravka_CheckedChanged);
+            this.rbSpravka.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbDiploma
             // 
@@ -926,7 +920,7 @@
             this.rbDiploma.TabIndex = 1;
             this.rbDiploma.Text = "Диплом";
             this.rbDiploma.UseVisualStyleBackColor = true;
-            this.rbDiploma.CheckedChanged += new System.EventHandler(this.rbDiploma_CheckedChanged);
+            this.rbDiploma.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbCertificate
             // 
@@ -940,7 +934,7 @@
             this.rbCertificate.TabStop = true;
             this.rbCertificate.Text = "Аттестат";
             this.rbCertificate.UseVisualStyleBackColor = true;
-            this.rbCertificate.CheckedChanged += new System.EventHandler(this.rbCertificate_CheckedChanged);
+            this.rbCertificate.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // cbForeignLanguage
             // 
@@ -2104,12 +2098,13 @@
             this.dgvExams_Year,
             this.dgvExams_Exam,
             this.dgvExams_EGE,
-            this.dgvExams_Min});
-            this.dgvExams.Location = new System.Drawing.Point(89, 81);
+            this.dgvExams_Min,
+            this.dgvExams_Cheched});
+            this.dgvExams.Location = new System.Drawing.Point(58, 81);
             this.dgvExams.Margin = new System.Windows.Forms.Padding(4);
             this.dgvExams.Name = "dgvExams";
             this.dgvExams.RowHeadersVisible = false;
-            this.dgvExams.Size = new System.Drawing.Size(430, 136);
+            this.dgvExams.Size = new System.Drawing.Size(508, 136);
             this.dgvExams.TabIndex = 4;
             // 
             // dgvExams_Subject
@@ -2147,6 +2142,12 @@
             this.dgvExams_Min.Name = "dgvExams_Min";
             this.dgvExams_Min.ReadOnly = true;
             // 
+            // dgvExams_Cheched
+            // 
+            this.dgvExams_Cheched.HeaderText = "Проверено";
+            this.dgvExams_Cheched.Name = "dgvExams_Cheched";
+            this.dgvExams_Cheched.ReadOnly = true;
+            // 
             // tbExamsDocNumber
             // 
             this.tbExamsDocNumber.Location = new System.Drawing.Point(280, 51);
@@ -2154,7 +2155,6 @@
             this.tbExamsDocNumber.Name = "tbExamsDocNumber";
             this.tbExamsDocNumber.Size = new System.Drawing.Size(165, 22);
             this.tbExamsDocNumber.TabIndex = 3;
-            this.tbExamsDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // tbExamsDocSeries
             // 
@@ -2163,7 +2163,6 @@
             this.tbExamsDocSeries.Name = "tbExamsDocSeries";
             this.tbExamsDocSeries.Size = new System.Drawing.Size(113, 22);
             this.tbExamsDocSeries.TabIndex = 2;
-            this.tbExamsDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label35
             // 
@@ -2294,6 +2293,7 @@
             // 
             this.mtbHomePhone.Location = new System.Drawing.Point(649, 50);
             this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
+            this.mtbHomePhone.Mask = "(999)999-99-99";
             this.mtbHomePhone.Name = "mtbHomePhone";
             this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
             this.mtbHomePhone.TabIndex = 3;
@@ -2303,6 +2303,7 @@
             // 
             this.mtbMobilePhone.Location = new System.Drawing.Point(196, 50);
             this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
+            this.mtbMobilePhone.Mask = "(999)999-99-99";
             this.mtbMobilePhone.Name = "mtbMobilePhone";
             this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
             this.mtbMobilePhone.TabIndex = 2;
@@ -2367,8 +2368,7 @@
             this.gbWithdrawDocs.Controls.Add(this.cbMedCertificate);
             this.gbWithdrawDocs.Controls.Add(this.cbDirectionDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbCertificateHRD);
-            this.gbWithdrawDocs.Controls.Add(this.cbDiplomaCopy);
-            this.gbWithdrawDocs.Controls.Add(this.cbCertificateCopy);
+            this.gbWithdrawDocs.Controls.Add(this.cbEduDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
             this.gbWithdrawDocs.Location = new System.Drawing.Point(1, 619);
@@ -2394,7 +2394,7 @@
             // cbPhotos
             // 
             this.cbPhotos.AutoSize = true;
-            this.cbPhotos.Location = new System.Drawing.Point(716, 47);
+            this.cbPhotos.Location = new System.Drawing.Point(717, 48);
             this.cbPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.cbPhotos.Name = "cbPhotos";
             this.cbPhotos.Size = new System.Drawing.Size(143, 20);
@@ -2430,7 +2430,7 @@
             // 
             this.cbCertificateHRD.AutoSize = true;
             this.cbCertificateHRD.Enabled = false;
-            this.cbCertificateHRD.Location = new System.Drawing.Point(493, 48);
+            this.cbCertificateHRD.Location = new System.Drawing.Point(459, 48);
             this.cbCertificateHRD.Margin = new System.Windows.Forms.Padding(4);
             this.cbCertificateHRD.Name = "cbCertificateHRD";
             this.cbCertificateHRD.Size = new System.Drawing.Size(183, 20);
@@ -2438,29 +2438,17 @@
             this.cbCertificateHRD.Text = "Справка отдела кадров";
             this.cbCertificateHRD.UseVisualStyleBackColor = true;
             // 
-            // cbDiplomaCopy
+            // cbEduDoc
             // 
-            this.cbDiplomaCopy.AutoSize = true;
-            this.cbDiplomaCopy.Enabled = false;
-            this.cbDiplomaCopy.Location = new System.Drawing.Point(333, 48);
-            this.cbDiplomaCopy.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDiplomaCopy.Name = "cbDiplomaCopy";
-            this.cbDiplomaCopy.Size = new System.Drawing.Size(126, 20);
-            this.cbDiplomaCopy.TabIndex = 6;
-            this.cbDiplomaCopy.Text = "Копия диплома";
-            this.cbDiplomaCopy.UseVisualStyleBackColor = true;
-            // 
-            // cbCertificateCopy
-            // 
-            this.cbCertificateCopy.AutoSize = true;
-            this.cbCertificateCopy.Enabled = false;
-            this.cbCertificateCopy.Location = new System.Drawing.Point(164, 49);
-            this.cbCertificateCopy.Margin = new System.Windows.Forms.Padding(4);
-            this.cbCertificateCopy.Name = "cbCertificateCopy";
-            this.cbCertificateCopy.Size = new System.Drawing.Size(136, 20);
-            this.cbCertificateCopy.TabIndex = 5;
-            this.cbCertificateCopy.Text = "Копия аттестата";
-            this.cbCertificateCopy.UseVisualStyleBackColor = true;
+            this.cbEduDoc.AutoSize = true;
+            this.cbEduDoc.Enabled = false;
+            this.cbEduDoc.Location = new System.Drawing.Point(238, 48);
+            this.cbEduDoc.Margin = new System.Windows.Forms.Padding(4);
+            this.cbEduDoc.Name = "cbEduDoc";
+            this.cbEduDoc.Size = new System.Drawing.Size(136, 20);
+            this.cbEduDoc.TabIndex = 5;
+            this.cbEduDoc.Text = "Копия аттестата";
+            this.cbEduDoc.UseVisualStyleBackColor = true;
             // 
             // cbPassportCopy
             // 
@@ -2667,8 +2655,7 @@
         private System.Windows.Forms.CheckBox cbMedCertificate;
         private System.Windows.Forms.CheckBox cbDirectionDoc;
         private System.Windows.Forms.CheckBox cbCertificateHRD;
-        private System.Windows.Forms.CheckBox cbDiplomaCopy;
-        private System.Windows.Forms.CheckBox cbCertificateCopy;
+        private System.Windows.Forms.CheckBox cbEduDoc;
         private System.Windows.Forms.CheckBox cbPassportCopy;
         private System.Windows.Forms.CheckBox cbAppAdmission;
         private System.Windows.Forms.GroupBox gbExamsDoc;
@@ -2731,16 +2718,10 @@
         private System.Windows.Forms.ComboBox cbDirection12;
         private System.Windows.Forms.ComboBox cbDirection11;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox tbHouse;
         private System.Windows.Forms.TextBox tbTown;
         private System.Windows.Forms.TextBox tbDistrict;
         private System.Windows.Forms.TextBox tbStreet;
         private System.Windows.Forms.TextBox tbRegion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Subject;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvExams_Year;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
         private System.Windows.Forms.GroupBox gbApplication;
         private System.Windows.Forms.GroupBox gbIndividualAchievements;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -2760,5 +2741,12 @@
         private System.Windows.Forms.CheckBox cbAgreed92;
         private System.Windows.Forms.CheckBox cbAgreed91;
         private System.Windows.Forms.Button btGetIndex;
+        private System.Windows.Forms.ComboBox cbHouse;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Subject;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvExams_Year;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Cheched;
     }
 }

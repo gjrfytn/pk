@@ -310,7 +310,7 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // QuotDocsForm
+            // QuotDocs
             // 
             this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,7 +322,9 @@
             this.Controls.Add(this.pOrphanhood);
             this.Controls.Add(this.pMed);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "QuotDocsForm";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "QuotDocs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Особая квота";
             this.pOrphanhood.ResumeLayout(false);

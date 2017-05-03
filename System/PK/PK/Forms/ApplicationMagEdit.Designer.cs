@@ -379,7 +379,6 @@
             this.tbPlaceOfBirth.Name = "tbPlaceOfBirth";
             this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 22);
             this.tbPlaceOfBirth.TabIndex = 31;
-            this.tbPlaceOfBirth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label13
             // 
@@ -494,7 +493,6 @@
             this.tbSubdivisionCode.Name = "tbSubdivisionCode";
             this.tbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
             this.tbSubdivisionCode.TabIndex = 21;
-            this.tbSubdivisionCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label8
             // 
@@ -513,7 +511,6 @@
             this.tbIssuedBy.Name = "tbIssuedBy";
             this.tbIssuedBy.Size = new System.Drawing.Size(445, 22);
             this.tbIssuedBy.TabIndex = 17;
-            this.tbIssuedBy.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label9
             // 
@@ -552,7 +549,6 @@
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 14;
-            this.tbIDDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label6
             // 
@@ -571,7 +567,6 @@
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 12;
-            this.tbIDDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label5
             // 
@@ -705,7 +700,6 @@
             this.tbEduDocNumber.Name = "tbEduDocNumber";
             this.tbEduDocNumber.Size = new System.Drawing.Size(148, 22);
             this.tbEduDocNumber.TabIndex = 7;
-            this.tbEduDocNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label23
             // 
@@ -734,7 +728,6 @@
             this.tbEduDocSeries.Name = "tbEduDocSeries";
             this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
             this.tbEduDocSeries.TabIndex = 6;
-            this.tbEduDocSeries.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // gbAttributes
             // 
@@ -862,6 +855,7 @@
             // 
             this.mtbHomePhone.Location = new System.Drawing.Point(602, 13);
             this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
+            this.mtbHomePhone.Mask = "(999) 999-99-99";
             this.mtbHomePhone.Name = "mtbHomePhone";
             this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
             this.mtbHomePhone.TabIndex = 26;
@@ -871,6 +865,7 @@
             // 
             this.mtbMobilePhone.Location = new System.Drawing.Point(174, 12);
             this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
+            this.mtbMobilePhone.Mask = "(999) 999-99-99";
             this.mtbMobilePhone.Name = "mtbMobilePhone";
             this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
             this.mtbMobilePhone.TabIndex = 25;

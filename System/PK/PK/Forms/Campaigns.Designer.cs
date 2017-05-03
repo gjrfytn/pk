@@ -148,6 +148,9 @@
             this.Controls.Add(this.btUpdate);
             this.Controls.Add(this.btCreatePriemComp);
             this.Controls.Add(this.dgvCampaigns);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Campaigns";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приемные кампании";

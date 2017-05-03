@@ -248,6 +248,8 @@
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.dgvAchievements);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "InstitutionAchievementsEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Индивидуальные достижения";

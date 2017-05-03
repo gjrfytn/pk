@@ -121,11 +121,6 @@ namespace PK.Forms
             }
         }
 
-        private void dgvPaidPlaces_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            UpdateProfiliesTable();
-        }
-
         private void btSave_Click(object sender, EventArgs e)
         {
             bool progressEnabled = true;
@@ -194,13 +189,44 @@ namespace PK.Forms
             dgvDirections_OKOF.Visible = cbEduFormO.Checked;
             dgvTargetOrganizatons_OF.Visible = cbEduFormO.Checked;
             dgvPaidPlaces_OFPM.Visible = cbEduFormO.Checked;
+            if (!cbEduFormO.Checked)
+            {
+                foreach (DataGridViewRow row in dgvDirections.Rows)
+                {
+                    row.Cells[dgvDirections_OOOF.Index].Value = 0;
+                    row.Cells[dgvDirections_OKOF.Index].Value = 0;
+                }
+                foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
+                    if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
+                        row.Cells[dgvTargetOrganizatons_OF.Index].Value = 0;
+
+                foreach (DataGridViewRow row in dgvPaidPlaces.Rows)
+                    row.Cells[dgvPaidPlaces_OFPM.Index].Value = 0;
+            }
 
             dgvDirections_OOOZF.Visible = cbEduFormOZ.Checked;
             dgvDirections_OKOZF.Visible = cbEduFormOZ.Checked;
             dgvTargetOrganizatons_OZF.Visible = cbEduFormOZ.Checked;
             dgvPaidPlaces_OZFPM.Visible = cbEduFormOZ.Checked;
+            if (!cbEduFormOZ.Checked)
+            {
+                foreach (DataGridViewRow row in dgvDirections.Rows)
+                {
+                    row.Cells[dgvDirections_OOOZF.Index].Value = 0;
+                    row.Cells[dgvDirections_OKOZF.Index].Value = 0;
+                }
+                foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
+                    if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
+                        row.Cells[dgvTargetOrganizatons_OZF.Index].Value = 0;
+
+                foreach (DataGridViewRow row in dgvPaidPlaces.Rows)
+                    row.Cells[dgvPaidPlaces_OZFPM.Index].Value = 0;
+            }
 
             dgvPaidPlaces_ZFPM.Visible = cbEduFormZ.Checked;
+            if (!cbEduFormZ.Checked)
+                foreach (DataGridViewRow row in dgvPaidPlaces.Rows)
+                    row.Cells[dgvPaidPlaces_ZFPM.Index].Value = 0;
         }
 
         private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -253,32 +279,16 @@ namespace PK.Forms
         private void FillProfiliesTable ()
         {
             dgvPaidPlaces.Rows.Clear();
-            foreach (DataGridViewRow r in dgvDirections.Rows)
-            {
-                bool found = false;
-                foreach (DataGridViewRow v in dgvPaidPlaces.Rows)
-                    if (v.Cells[2].Value.ToString() == r.Cells[0].Value.ToString())
-                        found = true;
-                if (!found)
-                    dgvPaidPlaces.Rows.Add(false, "Н", r.Cells[0].Value.ToString(), r.Cells[2].Value.ToString(), 
-                        r.Cells[3].Value.ToString(), r.Cells[4].Value.ToString(), 0, 0, 0, "");
-                for (int i = 0; i < dgvPaidPlaces.Rows[dgvPaidPlaces.Rows.Count - 1].Cells.Count; i++)
-                {
-                    dgvPaidPlaces.Rows[dgvPaidPlaces.Rows.Count - 1].Cells[i].Style.Font = new Font(
-                        dgvPaidPlaces.Font.Name.ToString(),
-                        dgvPaidPlaces.Font.Size + 1,
-                        FontStyle.Bold);
-                    dgvPaidPlaces.Rows[dgvPaidPlaces.Rows.Count - 1].Cells[i].Style.BackColor = Color.LightGray;
-                }
-            }
             foreach (var v in _DB_Connection.Select(DB_Table.PROFILES, "name", "direction_id", "faculty_short_name", "short_name"))
-                for (int i = 0; i < dgvPaidPlaces.Rows.Count; i++)
-                {
-                    if ((dgvPaidPlaces.Rows[i].Cells[1].Value.ToString() == "Н")
-                        && (dgvPaidPlaces.Rows[i].Cells[2].Value.ToString() == v[1].ToString()))
-                        dgvPaidPlaces.Rows.Insert(i + 1, true, "П", dgvPaidPlaces.Rows[i].Cells[2].Value.ToString(), v[0].ToString(), 
-                            dgvPaidPlaces.Rows[i].Cells[4].Value.ToString(), v[2].ToString(), 0, 0, 0, v[3]);
-                }
+                foreach (DataGridViewRow row in dgvDirections.Rows)
+                    if (uint.Parse(row.Cells[dgvDirections_DirID.Index].Value.ToString()) == (uint)v[1] && row.Cells[dgvDirections_Fac.Index].Value.ToString() == v[2].ToString())
+                        dgvPaidPlaces.Rows.Add(v[1], v[0], _DB_Helper.GetDirectionNameAndCode((uint)v[1]).Item2, 
+                            _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "short_name" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, v[2].ToString()),
+                                new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, (uint)v[1])
+                            })[0][0],                            
+                            v[2], 0, 0, 0, v[3]);
         }
 
         private void FillFacultiesTable ()
@@ -296,26 +306,6 @@ namespace PK.Forms
                 dgvFacultities.Rows.Add(v[0].ToString(), v[1].ToString(), 0);
             }                
             dgvFacultities.Sort(dgvFacultities.Columns[1], ListSortDirection.Ascending);
-        }
-
-        private void UpdateProfiliesTable()
-        {
-            foreach (DataGridViewRow v in dgvPaidPlaces.Rows)
-            {
-                if (v.Cells[1].Value.ToString() == "Н")
-                {
-                    for (int i = 6; i <= 8; i++)
-                        v.Cells[i].Value = 0;
-
-                    foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                        if (v.Cells[2].Value.ToString() == r.Cells[2].Value.ToString())
-                            for (int i = 6; i <= 8; i++)
-                                if (r.Cells[i].Value.ToString() == "")
-                                    r.Cells[i].Value = 0;
-                                else
-                                    v.Cells[i].Value = (int.Parse(v.Cells[i].Value.ToString()) + int.Parse(r.Cells[i].Value.ToString())).ToString();
-                }
-            }
         }
 
         private void FillDistTable ()
@@ -515,7 +505,6 @@ namespace PK.Forms
         private void SaveProfiles()
         {
             foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                if ((r.Cells[1].Value.ToString() == "П") && ((bool)r.Cells[0].Value == true))
                     _DB_Connection.Insert(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
@@ -689,10 +678,10 @@ namespace PK.Forms
                     }
                     ))
                 foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                    if ((v[0].ToString() == r.Cells[dgvPaidPlaces_Fac.Index].Value.ToString()) && (v[1].ToString() == r.Cells[dgvPaidPlaces_ID.Index].Value.ToString()) && (v[2].ToString() == r.Cells[dgvPaidPlaces_ProfileShortName.Index].Value.ToString()))
-                        for (int i = 6; i < r.Cells.Count-1; i++)
-                            r.Cells[i].Value = v[i - 3].ToString();
-            UpdateProfiliesTable();
+                    if ((v[0].ToString() == r.Cells[dgvPaidPlaces_Fac.Index].Value.ToString()) && ((uint)v[1] == uint.Parse(r.Cells[dgvPaidPlaces_ID.Index].Value.ToString()))
+                        && (v[2].ToString() == r.Cells[dgvPaidPlaces_ProfileShortName.Index].Value.ToString()))
+                        for (int i = dgvPaidPlaces_OFPM.Index; i < r.Cells.Count-1; i++)
+                            r.Cells[i].Value = v[i - v.Length + dgvPaidPlaces_OFPM.Index - 1].ToString();
         }
 
         private void LoadEntranceTests()
@@ -943,7 +932,6 @@ namespace PK.Forms
 
             List<string[]> newList = new List<string[]>();
             foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
-                if (((bool)r.Cells[dgvPaidPlaces_Select.Index].Value) && (r.Cells[dgvPaidPlaces_Type.Index].Value.ToString() == "П"))
                     newList.Add(new string[] { r.Cells[dgvPaidPlaces_Fac.Index].Value.ToString(), r.Cells[dgvPaidPlaces_ID.Index].Value.ToString(),
                         r.Cells[dgvPaidPlaces_ProfileShortName.Index].Value.ToString(), r.Cells[dgvPaidPlaces_OFPM.Index].Value.ToString(),
                         r.Cells[dgvPaidPlaces_OZFPM.Index].Value.ToString(), r.Cells[dgvPaidPlaces_ZFPM.Index].Value.ToString()});

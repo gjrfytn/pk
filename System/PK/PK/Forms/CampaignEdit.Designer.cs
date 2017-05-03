@@ -70,6 +70,15 @@
             this.dgvEntranceTests_Third = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.label9 = new System.Windows.Forms.Label();
             this.dgvPaidPlaces = new System.Windows.Forms.DataGridView();
+            this.dgvPaidPlaces_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_DirShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_OFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_OZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_ZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_ProfileShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.dgvFacultities = new System.Windows.Forms.DataGridView();
             this.dgvFacultities_ShortFacName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -89,16 +98,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
-            this.dgvPaidPlaces_Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvPaidPlaces_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_Fac = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_OFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_OZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_ZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPaidPlaces_ProfileShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbEduForms.SuspendLayout();
             this.gbEduLevel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
@@ -112,7 +111,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(37, 24);
+            this.label1.Location = new System.Drawing.Point(9, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 0;
@@ -120,7 +119,7 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(115, 21);
+            this.tbName.Location = new System.Drawing.Point(87, 22);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(238, 20);
             this.tbName.TabIndex = 1;
@@ -128,7 +127,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(366, 24);
+            this.label2.Location = new System.Drawing.Point(338, 25);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 2;
@@ -137,7 +136,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(506, 24);
+            this.label3.Location = new System.Drawing.Point(478, 25);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(84, 13);
             this.label3.TabIndex = 3;
@@ -147,7 +146,7 @@
             // 
             this.cbStartYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStartYear.FormattingEnabled = true;
-            this.cbStartYear.Location = new System.Drawing.Point(438, 20);
+            this.cbStartYear.Location = new System.Drawing.Point(410, 21);
             this.cbStartYear.Name = "cbStartYear";
             this.cbStartYear.Size = new System.Drawing.Size(62, 21);
             this.cbStartYear.TabIndex = 4;
@@ -156,7 +155,7 @@
             // 
             this.cbEndYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEndYear.FormattingEnabled = true;
-            this.cbEndYear.Location = new System.Drawing.Point(596, 20);
+            this.cbEndYear.Location = new System.Drawing.Point(568, 21);
             this.cbEndYear.Name = "cbEndYear";
             this.cbEndYear.Size = new System.Drawing.Size(62, 21);
             this.cbEndYear.TabIndex = 5;
@@ -164,7 +163,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(37, 60);
+            this.label4.Location = new System.Drawing.Point(647, 25);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(135, 13);
             this.label4.TabIndex = 6;
@@ -176,11 +175,10 @@
             this.cbType.FormattingEnabled = true;
             this.cbType.Items.AddRange(new object[] {
             "Прием на обучение на бакалавриат/специалитет",
-            "Прием на обучение в магистратуру",
-            "Прием иностранцев по направлениям Минобрнауки"});
-            this.cbType.Location = new System.Drawing.Point(178, 57);
+            "Прием на обучение в магистратуру"});
+            this.cbType.Location = new System.Drawing.Point(788, 22);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(272, 21);
+            this.cbType.Size = new System.Drawing.Size(280, 21);
             this.cbType.TabIndex = 7;
             this.cbType.SelectedIndexChanged += new System.EventHandler(this.cbType_SelectedIndexChanged);
             // 
@@ -189,9 +187,9 @@
             this.gbEduForms.Controls.Add(this.cbEduFormO);
             this.gbEduForms.Controls.Add(this.cbEduFormZ);
             this.gbEduForms.Controls.Add(this.cbEduFormOZ);
-            this.gbEduForms.Location = new System.Drawing.Point(34, 91);
+            this.gbEduForms.Location = new System.Drawing.Point(244, 49);
             this.gbEduForms.Name = "gbEduForms";
-            this.gbEduForms.Size = new System.Drawing.Size(166, 89);
+            this.gbEduForms.Size = new System.Drawing.Size(373, 45);
             this.gbEduForms.TabIndex = 10;
             this.gbEduForms.TabStop = false;
             this.gbEduForms.Text = "Форма обучения";
@@ -210,7 +208,7 @@
             // cbEduFormZ
             // 
             this.cbEduFormZ.AutoSize = true;
-            this.cbEduFormZ.Location = new System.Drawing.Point(6, 65);
+            this.cbEduFormZ.Location = new System.Drawing.Point(263, 19);
             this.cbEduFormZ.Name = "cbEduFormZ";
             this.cbEduFormZ.Size = new System.Drawing.Size(105, 17);
             this.cbEduFormZ.TabIndex = 19;
@@ -221,7 +219,7 @@
             // cbEduFormOZ
             // 
             this.cbEduFormOZ.AutoSize = true;
-            this.cbEduFormOZ.Location = new System.Drawing.Point(6, 42);
+            this.cbEduFormOZ.Location = new System.Drawing.Point(106, 19);
             this.cbEduFormOZ.Name = "cbEduFormOZ";
             this.cbEduFormOZ.Size = new System.Drawing.Size(151, 17);
             this.cbEduFormOZ.TabIndex = 18;
@@ -234,9 +232,9 @@
             this.gbEduLevel.Controls.Add(this.cbEduLevelSpec);
             this.gbEduLevel.Controls.Add(this.cbEduLevelMag);
             this.gbEduLevel.Controls.Add(this.cbEduLevelBacc);
-            this.gbEduLevel.Location = new System.Drawing.Point(509, 91);
+            this.gbEduLevel.Location = new System.Drawing.Point(640, 49);
             this.gbEduLevel.Name = "gbEduLevel";
-            this.gbEduLevel.Size = new System.Drawing.Size(151, 89);
+            this.gbEduLevel.Size = new System.Drawing.Size(304, 45);
             this.gbEduLevel.TabIndex = 11;
             this.gbEduLevel.TabStop = false;
             this.gbEduLevel.Text = "Уровень образования";
@@ -245,7 +243,7 @@
             // 
             this.cbEduLevelSpec.AutoSize = true;
             this.cbEduLevelSpec.Enabled = false;
-            this.cbEduLevelSpec.Location = new System.Drawing.Point(7, 66);
+            this.cbEduLevelSpec.Location = new System.Drawing.Point(208, 19);
             this.cbEduLevelSpec.Name = "cbEduLevelSpec";
             this.cbEduLevelSpec.Size = new System.Drawing.Size(91, 17);
             this.cbEduLevelSpec.TabIndex = 2;
@@ -257,7 +255,7 @@
             // 
             this.cbEduLevelMag.AutoSize = true;
             this.cbEduLevelMag.Enabled = false;
-            this.cbEduLevelMag.Location = new System.Drawing.Point(7, 44);
+            this.cbEduLevelMag.Location = new System.Drawing.Point(105, 19);
             this.cbEduLevelMag.Name = "cbEduLevelMag";
             this.cbEduLevelMag.Size = new System.Drawing.Size(97, 17);
             this.cbEduLevelMag.TabIndex = 1;
@@ -280,7 +278,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(456, 60);
+            this.label5.Location = new System.Drawing.Point(12, 67);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(44, 13);
             this.label5.TabIndex = 12;
@@ -294,7 +292,7 @@
             "Набор не начался",
             "Идет набор",
             "Завершена"});
-            this.cbState.Location = new System.Drawing.Point(506, 57);
+            this.cbState.Location = new System.Drawing.Point(62, 64);
             this.cbState.Name = "cbState";
             this.cbState.Size = new System.Drawing.Size(152, 21);
             this.cbState.TabIndex = 13;
@@ -303,6 +301,7 @@
             // 
             this.dgvDirections.AllowUserToAddRows = false;
             this.dgvDirections.AllowUserToDeleteRows = false;
+            this.dgvDirections.AllowUserToResizeRows = false;
             this.dgvDirections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDirections.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvDirections_DirID,
@@ -320,21 +319,20 @@
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvDirections.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvDirections.Location = new System.Drawing.Point(0, 19);
             this.dgvDirections.Name = "dgvDirections";
             this.dgvDirections.RowHeadersVisible = false;
             this.dgvDirections.RowHeadersWidth = 20;
             this.dgvDirections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDirections.Size = new System.Drawing.Size(790, 296);
+            this.dgvDirections.Size = new System.Drawing.Size(1046, 296);
             this.dgvDirections.TabIndex = 1;
             this.dgvDirections.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvDirections.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvDirections_DirID
             // 
-            this.dgvDirections_DirID.Frozen = true;
             this.dgvDirections_DirID.HeaderText = "ID";
             this.dgvDirections_DirID.Name = "dgvDirections_DirID";
             this.dgvDirections_DirID.ReadOnly = true;
@@ -343,23 +341,19 @@
             // dgvDirections_Selected
             // 
             this.dgvDirections_Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirections_Selected.Frozen = true;
             this.dgvDirections_Selected.HeaderText = "";
             this.dgvDirections_Selected.Name = "dgvDirections_Selected";
             this.dgvDirections_Selected.Visible = false;
             // 
             // dgvDirections_Name
             // 
-            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Name.Frozen = true;
+            this.dgvDirections_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dgvDirections_Name.HeaderText = "Направление";
             this.dgvDirections_Name.Name = "dgvDirections_Name";
-            this.dgvDirections_Name.Width = 250;
             // 
             // dgvDirections_Code
             // 
             this.dgvDirections_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Code.Frozen = true;
             this.dgvDirections_Code.HeaderText = "Код направления";
             this.dgvDirections_Code.Name = "dgvDirections_Code";
             this.dgvDirections_Code.ReadOnly = true;
@@ -368,7 +362,6 @@
             // dgvDirections_Fac
             // 
             this.dgvDirections_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvDirections_Fac.Frozen = true;
             this.dgvDirections_Fac.HeaderText = "Факультет";
             this.dgvDirections_Fac.Name = "dgvDirections_Fac";
             this.dgvDirections_Fac.ReadOnly = true;
@@ -419,15 +412,15 @@
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.dgvDirections);
-            this.panel1.Location = new System.Drawing.Point(12, 192);
+            this.panel1.Location = new System.Drawing.Point(12, 100);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(808, 320);
+            this.panel1.Size = new System.Drawing.Size(1066, 450);
             this.panel1.TabIndex = 15;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(346, 1171);
+            this.label10.Location = new System.Drawing.Point(457, 1174);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(143, 13);
             this.label10.TabIndex = 19;
@@ -437,6 +430,7 @@
             // 
             this.dgvEntranceTests.AllowUserToAddRows = false;
             this.dgvEntranceTests.AllowUserToDeleteRows = false;
+            this.dgvEntranceTests.AllowUserToResizeRows = false;
             this.dgvEntranceTests.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEntranceTests.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvEntranceTests_ID,
@@ -449,7 +443,7 @@
             this.dgvEntranceTests.Location = new System.Drawing.Point(0, 1190);
             this.dgvEntranceTests.Name = "dgvEntranceTests";
             this.dgvEntranceTests.RowHeadersVisible = false;
-            this.dgvEntranceTests.Size = new System.Drawing.Size(788, 296);
+            this.dgvEntranceTests.Size = new System.Drawing.Size(1046, 296);
             this.dgvEntranceTests.TabIndex = 18;
             // 
             // dgvEntranceTests_ID
@@ -462,19 +456,18 @@
             // 
             // dgvEntranceTests_DirName
             // 
-            this.dgvEntranceTests_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvEntranceTests_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dgvEntranceTests_DirName.HeaderText = "Направление подготовки";
             this.dgvEntranceTests_DirName.Name = "dgvEntranceTests_DirName";
             this.dgvEntranceTests_DirName.ReadOnly = true;
-            this.dgvEntranceTests_DirName.Width = 300;
             // 
             // dgvEntranceTests_DirCode
             // 
-            this.dgvEntranceTests_DirCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvEntranceTests_DirCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvEntranceTests_DirCode.HeaderText = "Код направления";
             this.dgvEntranceTests_DirCode.Name = "dgvEntranceTests_DirCode";
             this.dgvEntranceTests_DirCode.ReadOnly = true;
-            this.dgvEntranceTests_DirCode.Width = 110;
+            this.dgvEntranceTests_DirCode.Width = 80;
             // 
             // dgvEntranceTests_FacultyNamr
             // 
@@ -486,26 +479,29 @@
             // 
             // dgvEntranceTests_First
             // 
-            this.dgvEntranceTests_First.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_First.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvEntranceTests_First.HeaderText = "Первая дисциплина";
             this.dgvEntranceTests_First.Name = "dgvEntranceTests_First";
+            this.dgvEntranceTests_First.Width = 130;
             // 
             // dgvEntranceTests_Second
             // 
-            this.dgvEntranceTests_Second.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_Second.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvEntranceTests_Second.HeaderText = "Вторая дисциплина";
             this.dgvEntranceTests_Second.Name = "dgvEntranceTests_Second";
+            this.dgvEntranceTests_Second.Width = 130;
             // 
             // dgvEntranceTests_Third
             // 
-            this.dgvEntranceTests_Third.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvEntranceTests_Third.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dgvEntranceTests_Third.HeaderText = "Третья дисциплина";
             this.dgvEntranceTests_Third.Name = "dgvEntranceTests_Third";
+            this.dgvEntranceTests_Third.Width = 130;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(284, 844);
+            this.label9.Location = new System.Drawing.Point(405, 844);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(246, 13);
             this.label9.TabIndex = 17;
@@ -515,13 +511,13 @@
             // 
             this.dgvPaidPlaces.AllowUserToAddRows = false;
             this.dgvPaidPlaces.AllowUserToDeleteRows = false;
+            this.dgvPaidPlaces.AllowUserToResizeRows = false;
             this.dgvPaidPlaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPaidPlaces.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dgvPaidPlaces_Select,
-            this.dgvPaidPlaces_Type,
             this.dgvPaidPlaces_ID,
             this.dgvPaidPlaces_Name,
             this.dgvPaidPlaces_Code,
+            this.dgvPaidPlaces_DirShortName,
             this.dgvPaidPlaces_Fac,
             this.dgvPaidPlaces_OFPM,
             this.dgvPaidPlaces_OZFPM,
@@ -533,21 +529,85 @@
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvPaidPlaces.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvPaidPlaces.Location = new System.Drawing.Point(0, 860);
             this.dgvPaidPlaces.Name = "dgvPaidPlaces";
             this.dgvPaidPlaces.RowHeadersVisible = false;
             this.dgvPaidPlaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPaidPlaces.Size = new System.Drawing.Size(788, 298);
+            this.dgvPaidPlaces.Size = new System.Drawing.Size(1046, 298);
             this.dgvPaidPlaces.TabIndex = 16;
-            this.dgvPaidPlaces.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaidPlaces_CellEndEdit);
             this.dgvPaidPlaces.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
+            // 
+            // dgvPaidPlaces_ID
+            // 
+            this.dgvPaidPlaces_ID.HeaderText = "ID";
+            this.dgvPaidPlaces_ID.Name = "dgvPaidPlaces_ID";
+            this.dgvPaidPlaces_ID.ReadOnly = true;
+            this.dgvPaidPlaces_ID.Visible = false;
+            // 
+            // dgvPaidPlaces_Name
+            // 
+            this.dgvPaidPlaces_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvPaidPlaces_Name.HeaderText = "Название направления/профиля";
+            this.dgvPaidPlaces_Name.Name = "dgvPaidPlaces_Name";
+            this.dgvPaidPlaces_Name.ReadOnly = true;
+            // 
+            // dgvPaidPlaces_Code
+            // 
+            this.dgvPaidPlaces_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_Code.HeaderText = "Код направления";
+            this.dgvPaidPlaces_Code.Name = "dgvPaidPlaces_Code";
+            this.dgvPaidPlaces_Code.ReadOnly = true;
+            this.dgvPaidPlaces_Code.Width = 80;
+            // 
+            // dgvPaidPlaces_DirShortName
+            // 
+            this.dgvPaidPlaces_DirShortName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_DirShortName.HeaderText = "Краткое название направления";
+            this.dgvPaidPlaces_DirShortName.Name = "dgvPaidPlaces_DirShortName";
+            this.dgvPaidPlaces_DirShortName.ReadOnly = true;
+            this.dgvPaidPlaces_DirShortName.Width = 80;
+            // 
+            // dgvPaidPlaces_Fac
+            // 
+            this.dgvPaidPlaces_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_Fac.HeaderText = "Факультет";
+            this.dgvPaidPlaces_Fac.Name = "dgvPaidPlaces_Fac";
+            this.dgvPaidPlaces_Fac.ReadOnly = true;
+            this.dgvPaidPlaces_Fac.Width = 80;
+            // 
+            // dgvPaidPlaces_OFPM
+            // 
+            this.dgvPaidPlaces_OFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_OFPM.HeaderText = "Платные места очная форма";
+            this.dgvPaidPlaces_OFPM.Name = "dgvPaidPlaces_OFPM";
+            this.dgvPaidPlaces_OFPM.Visible = false;
+            // 
+            // dgvPaidPlaces_OZFPM
+            // 
+            this.dgvPaidPlaces_OZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_OZFPM.HeaderText = "Платные места очно-заочная форма";
+            this.dgvPaidPlaces_OZFPM.Name = "dgvPaidPlaces_OZFPM";
+            this.dgvPaidPlaces_OZFPM.Visible = false;
+            // 
+            // dgvPaidPlaces_ZFPM
+            // 
+            this.dgvPaidPlaces_ZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvPaidPlaces_ZFPM.HeaderText = "Платные места заочная форма";
+            this.dgvPaidPlaces_ZFPM.Name = "dgvPaidPlaces_ZFPM";
+            this.dgvPaidPlaces_ZFPM.Visible = false;
+            // 
+            // dgvPaidPlaces_ProfileShortName
+            // 
+            this.dgvPaidPlaces_ProfileShortName.HeaderText = "Краткое имя профиля";
+            this.dgvPaidPlaces_ProfileShortName.Name = "dgvPaidPlaces_ProfileShortName";
+            this.dgvPaidPlaces_ProfileShortName.Visible = false;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(332, 663);
+            this.label8.Location = new System.Drawing.Point(436, 663);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(164, 13);
             this.label8.TabIndex = 15;
@@ -557,6 +617,7 @@
             // 
             this.dgvFacultities.AllowUserToAddRows = false;
             this.dgvFacultities.AllowUserToDeleteRows = false;
+            this.dgvFacultities.AllowUserToResizeRows = false;
             this.dgvFacultities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFacultities.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvFacultities_ShortFacName,
@@ -566,7 +627,7 @@
             this.dgvFacultities.Name = "dgvFacultities";
             this.dgvFacultities.RowHeadersVisible = false;
             this.dgvFacultities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvFacultities.Size = new System.Drawing.Size(533, 150);
+            this.dgvFacultities.Size = new System.Drawing.Size(786, 150);
             this.dgvFacultities.TabIndex = 14;
             this.dgvFacultities.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvFacultities.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
@@ -595,6 +656,7 @@
             // 
             // dgvTargetOrganizatons
             // 
+            this.dgvTargetOrganizatons.AllowUserToResizeRows = false;
             this.dgvTargetOrganizatons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTargetOrganizatons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgvTargetOrganizatons_ID,
@@ -612,7 +674,7 @@
             this.dgvTargetOrganizatons.RowHeadersVisible = false;
             this.dgvTargetOrganizatons.RowHeadersWidth = 20;
             this.dgvTargetOrganizatons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTargetOrganizatons.Size = new System.Drawing.Size(787, 297);
+            this.dgvTargetOrganizatons.Size = new System.Drawing.Size(1046, 297);
             this.dgvTargetOrganizatons.TabIndex = 4;
             this.dgvTargetOrganizatons.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTargetOrganizatons_CellContentClick);
             this.dgvTargetOrganizatons.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
@@ -704,7 +766,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(357, 326);
+            this.label7.Location = new System.Drawing.Point(466, 326);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(121, 13);
             this.label7.TabIndex = 3;
@@ -713,7 +775,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(336, 3);
+            this.label6.Location = new System.Drawing.Point(455, 3);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(145, 13);
             this.label6.TabIndex = 2;
@@ -721,7 +783,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(706, 91);
+            this.btSave.Location = new System.Drawing.Point(973, 62);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 16;
@@ -729,86 +791,12 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // dgvPaidPlaces_Select
-            // 
-            this.dgvPaidPlaces_Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvPaidPlaces_Select.HeaderText = "Выбрать";
-            this.dgvPaidPlaces_Select.Name = "dgvPaidPlaces_Select";
-            this.dgvPaidPlaces_Select.Visible = false;
-            this.dgvPaidPlaces_Select.Width = 57;
-            // 
-            // dgvPaidPlaces_Type
-            // 
-            this.dgvPaidPlaces_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvPaidPlaces_Type.HeaderText = "Тип";
-            this.dgvPaidPlaces_Type.Name = "dgvPaidPlaces_Type";
-            this.dgvPaidPlaces_Type.ReadOnly = true;
-            this.dgvPaidPlaces_Type.Visible = false;
-            this.dgvPaidPlaces_Type.Width = 32;
-            // 
-            // dgvPaidPlaces_ID
-            // 
-            this.dgvPaidPlaces_ID.HeaderText = "ID";
-            this.dgvPaidPlaces_ID.Name = "dgvPaidPlaces_ID";
-            this.dgvPaidPlaces_ID.ReadOnly = true;
-            this.dgvPaidPlaces_ID.Visible = false;
-            // 
-            // dgvPaidPlaces_Name
-            // 
-            this.dgvPaidPlaces_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvPaidPlaces_Name.HeaderText = "Название направления/профиля";
-            this.dgvPaidPlaces_Name.Name = "dgvPaidPlaces_Name";
-            this.dgvPaidPlaces_Name.ReadOnly = true;
-            // 
-            // dgvPaidPlaces_Code
-            // 
-            this.dgvPaidPlaces_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvPaidPlaces_Code.HeaderText = "Код";
-            this.dgvPaidPlaces_Code.Name = "dgvPaidPlaces_Code";
-            this.dgvPaidPlaces_Code.ReadOnly = true;
-            this.dgvPaidPlaces_Code.Width = 51;
-            // 
-            // dgvPaidPlaces_Fac
-            // 
-            this.dgvPaidPlaces_Fac.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvPaidPlaces_Fac.HeaderText = "Факультет";
-            this.dgvPaidPlaces_Fac.Name = "dgvPaidPlaces_Fac";
-            this.dgvPaidPlaces_Fac.ReadOnly = true;
-            this.dgvPaidPlaces_Fac.Width = 70;
-            // 
-            // dgvPaidPlaces_OFPM
-            // 
-            this.dgvPaidPlaces_OFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvPaidPlaces_OFPM.HeaderText = "Платные места очная форма";
-            this.dgvPaidPlaces_OFPM.Name = "dgvPaidPlaces_OFPM";
-            this.dgvPaidPlaces_OFPM.Visible = false;
-            // 
-            // dgvPaidPlaces_OZFPM
-            // 
-            this.dgvPaidPlaces_OZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvPaidPlaces_OZFPM.HeaderText = "Платные места очно-заочная форма";
-            this.dgvPaidPlaces_OZFPM.Name = "dgvPaidPlaces_OZFPM";
-            this.dgvPaidPlaces_OZFPM.Visible = false;
-            // 
-            // dgvPaidPlaces_ZFPM
-            // 
-            this.dgvPaidPlaces_ZFPM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvPaidPlaces_ZFPM.HeaderText = "Платные места заочная форма";
-            this.dgvPaidPlaces_ZFPM.Name = "dgvPaidPlaces_ZFPM";
-            this.dgvPaidPlaces_ZFPM.Visible = false;
-            // 
-            // dgvPaidPlaces_ProfileShortName
-            // 
-            this.dgvPaidPlaces_ProfileShortName.HeaderText = "Краткое имя профиля";
-            this.dgvPaidPlaces_ProfileShortName.Name = "dgvPaidPlaces_ProfileShortName";
-            this.dgvPaidPlaces_ProfileShortName.Visible = false;
-            // 
             // CampaignEdit
             // 
             this.AcceptButton = this.btSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 527);
+            this.ClientSize = new System.Drawing.Size(1080, 562);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.cbState);
@@ -878,25 +866,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_ShortFacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_FacName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvFacultities_HostelPlaces;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_FacultyNamr;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
         private System.Windows.Forms.CheckBox cbEduFormO;
         private System.Windows.Forms.CheckBox cbEduFormOZ;
         private System.Windows.Forms.CheckBox cbEduFormZ;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Name;
         private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_Select;
@@ -907,15 +879,30 @@
         private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_DirSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OZF;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvPaidPlaces_Select;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_DirShortName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Fac;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OZFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ZFPM;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ProfileShortName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_FacultyNamr;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
     }
 }

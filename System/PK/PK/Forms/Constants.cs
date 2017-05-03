@@ -16,7 +16,11 @@ namespace PK.Forms
             InitializeComponent();
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-            _CurrCampaignID = campaignID;            
+            _CurrCampaignID = campaignID;
+            lbCurrentCampaign.Text = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("id", Relation.EQUAL, _CurrCampaignID)
+            })[0][0].ToString();
             UpdateTable();
         }
 

@@ -36,7 +36,7 @@ namespace PK.Forms
                     }
                         
 
-            dgvDirections_.Sort(dgvDirections_.Columns[4], System.ComponentModel.ListSortDirection.Ascending);
+            dgvDirections_.Sort(dgvDirections_.Columns[dgvDirections_Code.Index], System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void btSave_Click(object sender, EventArgs e)

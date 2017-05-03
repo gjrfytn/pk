@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PK.Forms
@@ -19,14 +20,10 @@ namespace PK.Forms
             cbCause.SelectedIndex = 0;
             cbMedCause.SelectedIndex = 0;
 
-            cbOrphanhoodDocType.DataSource = new BindingSource(dbHelper.GetDictionaryItems(FIS_Dictionary.ORPHAN_DOC_TYPE), null);
-            cbOrphanhoodDocType.DisplayMember = "Value";
-            cbOrphanhoodDocType.ValueMember = "Value";
+            cbOrphanhoodDocType.DataSource = dbHelper.GetDictionaryItems(FIS_Dictionary.ORPHAN_DOC_TYPE).Values.ToArray();
             cbOrphanhoodDocType.SelectedIndex = 0;            
 
-            cbDisabilityGroup.DataSource = new BindingSource(dbHelper.GetDictionaryItems(FIS_Dictionary.DISABILITY_GROUP), null);
-            cbDisabilityGroup.DisplayMember = "Value";
-            cbDisabilityGroup.ValueMember = "Value";
+            cbDisabilityGroup.DataSource =dbHelper.GetDictionaryItems(FIS_Dictionary.DISABILITY_GROUP).Values.ToArray();
             cbDisabilityGroup.SelectedIndex = 0;
 
             Forms.ApplicationEdit.QDoc loadedDocument = _Parent.QuoteDoc;
@@ -34,10 +31,10 @@ namespace PK.Forms
             {
                 cbCause.SelectedItem = loadedDocument.cause;
                 cbMedCause.SelectedItem = loadedDocument.medCause;
-                tbMedDocSeries.Text = loadedDocument.medDocSerie.ToString();
-                tbMedDocNumber.Text = loadedDocument.medDocNumber.ToString();
+                tbMedDocSeries.Text = loadedDocument.medDocSerie;
+                tbMedDocNumber.Text = loadedDocument.medDocNumber;
                 cbDisabilityGroup.SelectedItem = loadedDocument.disabilityGroup;
-                tbConclusionNumber.Text = loadedDocument.conclusionNumber.ToString();
+                tbConclusionNumber.Text = loadedDocument.conclusionNumber;
                 dtpConclusionDate.Value = loadedDocument.conclusionDate;
             }
             else if (loadedDocument.cause == "Сиротство")
@@ -89,11 +86,11 @@ namespace PK.Forms
         {
             Forms.ApplicationEdit.QDoc newDocument;
             newDocument.cause = "";
-            newDocument.conclusionNumber = 0;
+            newDocument.conclusionNumber = "";
             newDocument.disabilityGroup = "";
             newDocument.medCause = "";
-            newDocument.medDocNumber = 0;
-            newDocument.medDocSerie = 0;
+            newDocument.medDocNumber = "";
+            newDocument.medDocSerie = "";
             newDocument.orphanhoodDocName = "";
             newDocument.orphanhoodDocOrg = "";
             newDocument.orphanhoodDocType = "";
@@ -125,8 +122,8 @@ namespace PK.Forms
                     else
                     {
                         newDocument.medCause = cbMedCause.SelectedItem.ToString();
-                        newDocument.medDocSerie = int.Parse(tbMedDocSeries.Text);
-                        newDocument.medDocNumber = int.Parse(tbMedDocNumber.Text);
+                        newDocument.medDocSerie = tbMedDocSeries.Text;
+                        newDocument.medDocNumber = tbMedDocNumber.Text;
                         newDocument.disabilityGroup = cbDisabilityGroup.SelectedValue.ToString();
                         saved = true;
                     }
@@ -138,7 +135,7 @@ namespace PK.Forms
                     else
                     {
                         newDocument.medCause = cbMedCause.SelectedItem.ToString();
-                        newDocument.medDocNumber = int.Parse(tbMedDocNumber.Text);
+                        newDocument.medDocNumber = tbMedDocNumber.Text;
                         saved = true;
                     }
                 }
@@ -148,7 +145,7 @@ namespace PK.Forms
                     MessageBox.Show("Все доступные поля должны быть заполнены");
                 else
                 {
-                    newDocument.conclusionNumber = int.Parse(tbConclusionNumber.Text);
+                    newDocument.conclusionNumber = tbConclusionNumber.Text;
                     newDocument.conclusionDate = dtpConclusionDate.Value;
                 }
             }

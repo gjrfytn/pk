@@ -45,6 +45,7 @@
             // rtbOrganizationName
             // 
             this.rtbOrganizationName.Location = new System.Drawing.Point(12, 56);
+            this.rtbOrganizationName.MaxLength = 250;
             this.rtbOrganizationName.Name = "rtbOrganizationName";
             this.rtbOrganizationName.Size = new System.Drawing.Size(343, 64);
             this.rtbOrganizationName.TabIndex = 1;
@@ -70,6 +71,8 @@
             this.Controls.Add(this.rtbOrganizationName);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TargetOrganizationEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Создание целевой организации";
