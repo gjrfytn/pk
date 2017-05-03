@@ -68,6 +68,7 @@
             this.cbEnroll = new System.Windows.Forms.CheckBox();
             this.cbPickUp = new System.Windows.Forms.CheckBox();
             this.cbNew = new System.Windows.Forms.CheckBox();
+            this.menuStrip_CheckEgeMarks = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -152,7 +153,8 @@
             // 
             this.menuStrip_Entrants.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_CreateBacApplication,
-            this.menuStrip_CreateMagApplication});
+            this.menuStrip_CreateMagApplication,
+            this.menuStrip_CheckEgeMarks});
             this.menuStrip_Entrants.Name = "menuStrip_Entrants";
             this.menuStrip_Entrants.Size = new System.Drawing.Size(93, 20);
             this.menuStrip_Entrants.Text = "Абитуриенты";
@@ -552,6 +554,13 @@
             this.cbNew.UseVisualStyleBackColor = true;
             this.cbNew.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
             // 
+            // menuStrip_CheckEgeMarks
+            // 
+            this.menuStrip_CheckEgeMarks.Name = "menuStrip_CheckEgeMarks";
+            this.menuStrip_CheckEgeMarks.Size = new System.Drawing.Size(236, 22);
+            this.menuStrip_CheckEgeMarks.Text = "Проверить оценки ЕГЭ";
+            this.menuStrip_CheckEgeMarks.Click += new System.EventHandler(this.menuStrip_CheckEgeMarks_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -639,6 +648,7 @@
         private System.Windows.Forms.ToolStripButton toolStripMain_CreateMagApplication;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateMagApplication;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_KLADR_Update;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_CheckEgeMarks;
     }
 }
 

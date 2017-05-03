@@ -296,6 +296,7 @@
             this.cbShowAdmitted.TabIndex = 10;
             this.cbShowAdmitted.Text = "Отображать зачисленных";
             this.cbShowAdmitted.UseVisualStyleBackColor = true;
+            this.cbShowAdmitted.CheckedChanged += new System.EventHandler(this.cbShowAdmitted_CheckedChanged);
             // 
             // dataGridView
             // 

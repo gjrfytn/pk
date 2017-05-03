@@ -228,75 +228,17 @@ namespace PK.Forms
 
         private void cbFDP_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            dataGridView.Rows.Clear();
-
-            uint[] applications;
             if (cbType.SelectedValue.ToString() == "admission")
             {
-                applications = GetAdmissionCandidates();
+                FillTable(GetAdmissionCandidates());
             }
             else if (cbType.SelectedValue.ToString() == "exception")
             {
-                applications = GetExceptionCandidates();
+                FillTable(GetExceptionCandidates());
             }
             else
             {
-                applications = null;
-            }
 
-            var names = applications.Join(
-                _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
-                k1 => k1, k2 => k2[0], (s1, s2) => s2
-                ).Join(
-                _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
-                k1 => k1[1],
-                k2 => k2[0],
-                (s1, s2) => new { ApplID = (uint)s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
-                );
-
-            var table = names.GroupJoin(
-            _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),
-            k1 => k1.ApplID,
-            k2 => k2[0],
-            (s1, s2) => new
-            {
-                ApplID = s1.ApplID,
-                Name = s1.Name,
-                Math = s2.FirstOrDefault(s => (uint)s[1] == 2)?[2], //TODO
-                Phys = s2.FirstOrDefault(s => (uint)s[1] == 10)?[2], //TODO
-                Rus = s2.FirstOrDefault(s => (uint)s[1] == 1)?[2], //TODO
-                Soc = s2.FirstOrDefault(s => (uint)s[1] == 9)?[2], //TODO
-                For = s2.FirstOrDefault(s => (uint)s[1] == 6)?[2] //TODO
-            });
-
-            foreach (var ent in table)
-            {
-                uint? MFR = null;
-                if (ent.Math != null && ent.Phys != null && ent.Rus != null)
-                    MFR = (uint)ent.Math + (uint)ent.Phys + (uint)ent.Rus;
-
-                uint? MOR = null;
-                if (ent.Math != null && ent.Soc != null && ent.Rus != null)
-                    MOR = (uint)ent.Math + (uint)ent.Soc + (uint)ent.Rus;
-
-                uint? ROI = null;
-                if (ent.Rus != null && ent.Soc != null && ent.For != null)
-                    ROI = (uint)ent.Rus + (uint)ent.Soc + (uint)ent.For;
-
-                dataGridView.Rows.Add(
-                    false,
-                    ent.ApplID,
-                    ent.Name,
-                    null,
-                    MFR,
-                    MOR,
-                    ROI,
-                    ent.Math,
-                    ent.Phys,
-                    ent.Rus,
-                    ent.Soc,
-                    ent.For
-                    );
             }
         }
 
@@ -433,6 +375,11 @@ namespace PK.Forms
             _EditNumber = tbNumber.Text;
         }
 
+        private void cbShowAdmitted_CheckedChanged(object sender, EventArgs e)
+        {
+            FillTable(GetAdmissionCandidates());
+        }
+
         private uint[] GetAdmissionCandidates()
         {
             if (rbPaid.Checked)
@@ -450,7 +397,13 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,buf.Item3)
                     }).Select(s => (uint)s[0]);
 
-                return GetCampApplsWithStatuses("new", "adm_budget", "adm_paid", "adm_both").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
+                string[] statuses;
+                if (cbShowAdmitted.Checked)
+                    statuses = new string[] { "new", "adm_budget", "adm_paid", "adm_both" };
+                else
+                    statuses = new string[] { "new" };
+
+                return GetCampApplsWithStatuses(statuses).Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
                     .Where(appl =>
                     {
                         var orders = GetAdmExcOrders(appl, buf);
@@ -589,6 +542,66 @@ namespace PK.Forms
                          k2 => k2[0],
                          (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
                          );
+        }
+
+        private void FillTable(uint[] applications)
+        {
+            dataGridView.Rows.Clear();
+
+            var names = applications.Join(
+                _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
+                k1 => k1, k2 => k2[0], (s1, s2) => s2
+                ).Join(
+                _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                k1 => k1[1],
+                k2 => k2[0],
+                (s1, s2) => new { ApplID = (uint)s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
+                );
+
+            var table = names.GroupJoin(
+                _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),
+                k1 => k1.ApplID,
+                k2 => k2[0],
+                (s1, s2) => new
+                {
+                    ApplID = s1.ApplID,
+                    Name = s1.Name,
+                    Math = s2.FirstOrDefault(s => (uint)s[1] == 2)?[2], //TODO
+                    Phys = s2.FirstOrDefault(s => (uint)s[1] == 10)?[2], //TODO
+                    Rus = s2.FirstOrDefault(s => (uint)s[1] == 1)?[2], //TODO
+                    Soc = s2.FirstOrDefault(s => (uint)s[1] == 9)?[2], //TODO
+                    For = s2.FirstOrDefault(s => (uint)s[1] == 6)?[2] //TODO
+                });
+
+            foreach (var ent in table)
+            {
+                uint? MFR = null;
+                if (ent.Math != null && ent.Phys != null && ent.Rus != null)
+                    MFR = (uint)ent.Math + (uint)ent.Phys + (uint)ent.Rus;
+
+                uint? MOR = null;
+                if (ent.Math != null && ent.Soc != null && ent.Rus != null)
+                    MOR = (uint)ent.Math + (uint)ent.Soc + (uint)ent.Rus;
+
+                uint? ROI = null;
+                if (ent.Rus != null && ent.Soc != null && ent.For != null)
+                    ROI = (uint)ent.Rus + (uint)ent.Soc + (uint)ent.For;
+
+                dataGridView.Rows.Add(
+                    false,
+                    ent.ApplID,
+                    ent.Name,
+                    null,
+                    MFR,
+                    MOR,
+                    ROI,
+                    ent.Math,
+                    ent.Phys,
+                    ent.Rus,
+                    ent.Soc,
+                    ent.For
+                    );
+            }
         }
     }
 }

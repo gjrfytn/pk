@@ -394,9 +394,13 @@ namespace PK.Classes
 
         private string GetTownCode(string regionCode, string distrCode, string town)
         {
+            string[] buf = town.Split(new string[] { " (" }, System.StringSplitOptions.None);
+            if (buf.Length == 1)
+                return null;
+
             MySqlCommand cmd = new MySqlCommand(
                  "SELECT " + _RawTownCode + " FROM subjects WHERE " + _WhereTown + " AND name = '" +
-                 town.Split(new string[] { " (" }, System.StringSplitOptions.None)[0] + "' AND " +
+                 string.Join(" (", buf.Take(buf.Length - 1)) + "' AND " +
                  _RawRegionCode + " = '" + regionCode + "' AND " +
                  _RawDistrictCode + " = '" + distrCode + "';",
                  _Connection
@@ -410,15 +414,16 @@ namespace PK.Classes
          всех нас. п. с таким названием и индексом (если есть).*/
         private List<string> GetSettlementCodes(string regionCode, string distrCode, string townCode, string settlement)
         {
-            string[] splitSettl = settlement.Split('(', ')', '[', ']');
-            if (splitSettl.Length == 1)
+            string[] buf = settlement.Split(new string[] { " (" }, System.StringSplitOptions.None);
+            if (buf.Length == 1)
                 return new List<string>();
 
-            string name = splitSettl[0].Remove(splitSettl[0].Length - 1);
-            string socr = splitSettl[1];
+            string name = string.Join(" (", buf.Take(buf.Length - 1));
+            string[] socrIndex = buf[buf.Length - 1].Split(')');
+            string socr = socrIndex[0];
             string index = "";
-            if (splitSettl.Length > 3)
-                index = splitSettl[3];
+            if (socrIndex[1].Length != 0)
+                index = socrIndex[1].Substring(2, 6);
 
             MySqlCommand cmd = new MySqlCommand(
                  "SELECT " + _RawSettlementCode + " FROM subjects WHERE " + _WhereSettlement +
@@ -445,12 +450,12 @@ namespace PK.Classes
 
         private string GetStreetCode(string regionCode, string distrCode, string townCode, string settlementCode, string street)
         {
-            string[] splitStreet = street.Split('(', ')');
-            if (splitStreet.Length == 1)
+            string[] buf = street.Split(new string[] { " (" }, System.StringSplitOptions.None);
+            if (buf.Length == 1)
                 return null;
 
-            string name = splitStreet[0].Remove(splitStreet[0].Length - 1);
-            string socr = splitStreet[1];
+            string name = string.Join(" (", buf.Take(buf.Length - 1));
+            string socr = buf[buf.Length - 1].Remove(buf[buf.Length - 1].Length - 1);
 
             MySqlCommand cmd = new MySqlCommand(
                  "SELECT " + _RawStreetCode + " FROM streets WHERE name = '" + name +

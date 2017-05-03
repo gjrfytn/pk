@@ -271,6 +271,91 @@ namespace PK.Forms
             Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
         }
 
+        private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)
+        {
+            var applications = _DB_Connection.Select(
+                DB_Table.APPLICATIONS,
+                new string[] { "id,entrant_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                ).Join(
+                _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                k1 => k1[1],
+                k2 => k2[0],
+                (s1, s2) => new { ApplID = (uint)s1[0], LastN = s2[1].ToString(), FirstN = s2[2].ToString(), MiddleN = s2[3].ToString(), }
+                );
+
+            var egeDocs = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
+                _DB_Connection.Select(
+                    DB_Table.DOCUMENTS,
+                    new string[] { "id", "series", "number" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("type", Relation.EQUAL, "ege") }
+                    ),
+                k1 => k1[1],
+                k2 => k2[0],
+                (s1, s2) => new { ApplID = (uint)s1[0], DocID = (uint)s2[0], Series = s2[1].ToString(), Number = s2[2].ToString() }
+                );
+
+            var marks = _DB_Connection.Select(
+                DB_Table.APPLICATIONS_EGE_MARKS_VIEW,
+                new string[] { "applications_id", "subject_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("checked", Relation.EQUAL, false) }
+                ).Select(s => new { ApplID = (uint)s[0], Subject = (uint)s[1] });
+
+            var applsEgeSubjects = applications.Join(
+                egeDocs,
+                k1 => k1.ApplID,
+                k2 => k2.ApplID,
+                (s1, s2) => new { s1, s2.DocID, s2.Series, s2.Number }
+                ).GroupJoin(
+                marks,
+                k1 => k1.s1.ApplID,
+                k2 => k2.ApplID,
+                (s1, s2) => new
+                {
+                    s1.s1.ApplID,
+                    s1.DocID,
+                    s1.Series,
+                    s1.Number,
+                    s1.s1.LastN,
+                    s1.s1.FirstN,
+                    s1.s1.MiddleN,
+                    Subjects = s2.Select(s => s.Subject)
+                });
+
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter("test.csv"))
+            {
+                foreach (var appl in applsEgeSubjects)
+                {
+                    writer.WriteLine(appl.LastN + "%" + appl.FirstN + "%" + appl.MiddleN + "%" + appl.Series + "%" + appl.Number);
+                }
+            }
+
+            List<string[]> lines = new List<string[]>();
+            using (System.IO.StreamReader reader = new System.IO.StreamReader("inputtest.csv"))
+            {
+                while (!reader.EndOfStream)
+                    lines.Add(reader.ReadLine().Split('%'));
+            }
+
+            foreach (var appl in applsEgeSubjects)
+            {
+                var applLines = lines.Where(
+                    s => s[0] == appl.LastN && s[1] == appl.FirstN && s[2] == appl.MiddleN && s[3] == appl.Series && s[4] == appl.Number
+                    );
+                foreach (uint subj in appl.Subjects)
+                {
+                    string[] buf = applLines.FirstOrDefault(s => s[5] == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, subj));
+                    if (buf != null)
+                    {
+                        /*_DB_Connection.Update(
+                            DB_Table.DOCUMENTS_SUBJECTS_DATA,
+                            new Dictionary<string, object> { {"value", buf[6]}, {"checked",true } },
+                            new Dictionary<string, object> { { "document_id",appl.DocID }, { "subject_id",subj } }
+                            );*/
+                    }
+                }
+            }
+        }
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
