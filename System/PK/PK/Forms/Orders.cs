@@ -65,6 +65,12 @@ namespace PK.Forms
             UpdateTable();
         }
 
+        private void toolStrip_Delete_Click(object sender, EventArgs e)
+        {
+            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+                _DB_Connection.Delete(DB_Table.ORDERS, new Dictionary<string, object> { { "number", SelectedOrderNumber } });
+        }
+
         private void toolStrip_Register_Click(object sender, EventArgs e)
         {
             ushort newProtocolNumber = (ushort)(_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Max(s => s[0] as ushort? != null ? (ushort)s[0] : 0) + 1);
@@ -79,13 +85,13 @@ namespace PK.Forms
             {
                 _DB_Connection.Update(
                     DB_Table.ORDERS,
-                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber } },
+                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber }, { "protocol_date", DateTime.Now.Date } },
                     new Dictionary<string, object> { { "number", number } },
                     transaction
                     );
 
                 var applications = _DB_Connection.Select(
-                    DB_Table._ORDERS_HAS_APPLICATIONS,
+                    DB_Table.ORDERS_HAS_APPLICATIONS,
                     new string[] { "applications_id" },
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
                     ).Join(
@@ -142,7 +148,7 @@ namespace PK.Forms
             string profile = order[7] as string;
 
             var applications = _DB_Connection.Select(
-                         DB_Table._ORDERS_HAS_APPLICATIONS,
+                         DB_Table.ORDERS_HAS_APPLICATIONS,
                          new string[] { "applications_id" },
                          new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, SelectedOrderNumber) }
                          ).Select(s => (uint)s[0]);
@@ -224,6 +230,7 @@ namespace PK.Forms
         {
             bool registered = dataGridView["dataGridView_ProtNumber", e.RowIndex].Value != null;
             toolStrip_Edit.Enabled = !registered;
+            toolStrip_Delete.Enabled = !registered;
             toolStrip_Register.Enabled = !registered;
             toolStrip_Print.Enabled = registered;
         }

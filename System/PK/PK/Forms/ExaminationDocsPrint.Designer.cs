@@ -87,6 +87,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExaminationDocsPrint";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Печать";
             this.ResumeLayout(false);
 

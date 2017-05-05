@@ -25,8 +25,7 @@ namespace PK.Forms
 
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-
-        private string _EditNumber;
+        private readonly string _EditNumber;
 
         public OrderEdit(Classes.DB_Connector connection, string number)
         {
@@ -92,7 +91,7 @@ namespace PK.Forms
                     cbFDP_SelectionChangeCommitted(null, null);
 
                     foreach (uint applID in _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        DB_Table.ORDERS_HAS_APPLICATIONS,
                         new string[] { "applications_id" },
                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
                         ).Select(s => (uint)s[0]))
@@ -338,7 +337,7 @@ namespace PK.Forms
 
                     string[] fields = { "orders_number", "applications_id" };
                     List<object[]> oldL = _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        DB_Table.ORDERS_HAS_APPLICATIONS,
                         fields,
                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, tbNumber.Text) }
                         );
@@ -348,7 +347,7 @@ namespace PK.Forms
                         if ((bool)row.Cells["dataGridView_Added"].Value)
                             newL.Add(new object[] { tbNumber.Text, row.Cells["dataGridView_ID"].Value });
 
-                    _DB_Helper.UpdateData(DB_Table._ORDERS_HAS_APPLICATIONS, oldL, newL, fields, fields, transaction);
+                    _DB_Helper.UpdateData(DB_Table.ORDERS_HAS_APPLICATIONS, oldL, newL, fields, fields, transaction);
                 }
                 else
                 {
@@ -359,7 +358,7 @@ namespace PK.Forms
                     foreach (DataGridViewRow row in dataGridView.Rows)
                         if ((bool)row.Cells["dataGridView_Added"].Value)
                             _DB_Connection.Insert(
-                                DB_Table._ORDERS_HAS_APPLICATIONS,
+                                DB_Table.ORDERS_HAS_APPLICATIONS,
                                 new Dictionary<string, object>
                                 {
                                     { "orders_number", tbNumber.Text},
@@ -372,7 +371,9 @@ namespace PK.Forms
                 transaction.Commit();
             }
 
-            _EditNumber = tbNumber.Text;
+            //_EditNumber = tbNumber.Text;
+            Classes.Utility.ShowChangesSavedMessage();
+            DialogResult = DialogResult.OK;
         }
 
         private void cbShowAdmitted_CheckedChanged(object sender, EventArgs e)
@@ -497,7 +498,7 @@ namespace PK.Forms
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_P_Value profile)
         {
             return _DB_Connection.Select(
-                DB_Table._ORDERS_HAS_APPLICATIONS,
+                DB_Table.ORDERS_HAS_APPLICATIONS,
                 new string[] { "orders_number" },
                             new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
                             ).Join(
@@ -522,7 +523,7 @@ namespace PK.Forms
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_B_Value direction)
         {
             return _DB_Connection.Select(
-                         DB_Table._ORDERS_HAS_APPLICATIONS,
+                         DB_Table.ORDERS_HAS_APPLICATIONS,
                          new string[] { "orders_number" },
                          new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
                          ).Join(

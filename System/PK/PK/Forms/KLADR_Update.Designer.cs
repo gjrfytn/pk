@@ -44,12 +44,12 @@
             this.statusStrip_Label = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip_ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip_ProgressLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog
             // 
             this.openFileDialog.DefaultExt = "dbf";
-            this.openFileDialog.FileName = "openFileDialog1";
             this.openFileDialog.Filter = "DBF-файлы|*.dbf|Все файлы|*.*";
             // 
             // lSubjects
@@ -201,7 +201,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "KLADR_Update";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Обновление КЛАДР";
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

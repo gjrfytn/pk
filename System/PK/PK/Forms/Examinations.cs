@@ -69,6 +69,12 @@ namespace PK.Forms
                 MessageBox.Show("Выберите экзамен.");
         }
 
+        private void toolStrip_Delete_Click(object sender, EventArgs e)
+        {
+            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+                _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", SelectedExamID } });
+        }
+
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 0)
@@ -79,6 +85,32 @@ namespace PK.Forms
 
             if (ExaminationHasMarks(SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
+
+            var applications = _DB_Connection.Select(
+                DB_Table.APPLICATIONS,
+                new string[] { "id", "registration_time" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
+                }
+                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegStartDate"].Value &&
+               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegEndDate"].Value
+                ).Select(s => (uint)s[0]);
+
+            uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells["dataGridView_Subject"].Value.ToString());
+
+            var alreadyPassedAppls = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS).Join(
+                _DB_Connection.Select(
+                    DB_Table.EXAMINATIONS,
+                    new string[] { "id", "date" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("subject_id", Relation.EQUAL, subjectID) }
+                    ).Where(s => ((DateTime)s[1]).Year == ((DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_Date"].Value).Year),
+                k1 => k1[1],
+                k2 => k2[0],
+                (s1, s2) => (uint)s1[0]
+                );
+
+            applications = applications.Except(alreadyPassedAppls);
 
             var applsDirections = _DB_Connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
@@ -91,48 +123,32 @@ namespace PK.Forms
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                    new Tuple<string, Relation, object>(
-                        "subject_id",
-                        Relation.EQUAL,
-                        _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells["dataGridView_Subject"].Value.ToString())
-                        )
-                }
-                );
+                    new Tuple<string, Relation, object>("subject_id",Relation.EQUAL,subjectID)
+                });
 
             var applsSubjects = applsDirections.Join(
                 subjectDirections,
                 k1 => new Tuple<object, object>(k1[1], k1[2]),
                 k2 => new Tuple<object, object>(k2[0], k2[1]),
-                (s1, s2) => s1[0]
+                (s1, s2) => (uint)s1[0]
                 ).Distinct();
 
-            var applications = _DB_Connection.Select(
-                DB_Table.APPLICATIONS,
-                new string[] { "id", "entrant_id", "registration_time" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
-                }
-                ).Where(a => (DateTime)a[2] >= (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegStartDate"].Value &&
-               (DateTime)a[2] < (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegEndDate"].Value
-                );
-
-            var applications2 = applications.Join(
+            applications = applications.Join(
                  applsSubjects,
-                 k1 => k1[0],
+                 k1 => k1,
                  k2 => k2,
-                 (s1, s2) => s1[1]
+                 (s1, s2) => s1
                  );
 
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
-                applications2,
+                applications,
                 en => en[0],
                 a => a,
                 (s1, s2) => s1[0]
               ).Distinct();//TODO Нужно?
 
             foreach (object entrID in entrantsIDs)
-                _DB_Connection.InsertOnDuplicateUpdate(
+                _DB_Connection.Insert(
                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
                     new Dictionary<string, object> { { "entrant_id", entrID }, { "examination_id", SelectedExamID } }
                     );
@@ -182,6 +198,7 @@ namespace PK.Forms
         {
             bool hasMarks = ExaminationHasMarks(SelectedExamID);
             toolStrip_Edit.Enabled = !hasMarks;
+            toolStrip_Delete.Enabled = !hasMarks;
             toolStrip_Marks.Enabled = hasMarks;
             toolStrip_Print.Enabled = hasMarks;
         }

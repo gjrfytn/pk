@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbSubject = new System.Windows.Forms.ComboBox();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.lSubject = new System.Windows.Forms.Label();
@@ -39,8 +41,6 @@
             this.dtpRegEndDate = new System.Windows.Forms.DateTimePicker();
             this.groupBox = new System.Windows.Forms.GroupBox();
             this.bSave = new System.Windows.Forms.Button();
-            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox.SuspendLayout();
             this.SuspendLayout();
@@ -49,6 +49,7 @@
             // 
             this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridView_Number,
@@ -63,13 +64,27 @@
             this.dataGridView.TabIndex = 1;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
+            // dataGridView_Number
+            // 
+            this.dataGridView_Number.DataPropertyName = "number";
+            this.dataGridView_Number.HeaderText = "Номер";
+            this.dataGridView_Number.Name = "dataGridView_Number";
+            this.dataGridView_Number.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridView_Capacity
+            // 
+            this.dataGridView_Capacity.DataPropertyName = "capacity";
+            this.dataGridView_Capacity.HeaderText = "Места";
+            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
+            this.dataGridView_Capacity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // cbSubject
             // 
             this.cbSubject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSubject.FormattingEnabled = true;
             this.cbSubject.Location = new System.Drawing.Point(148, 6);
             this.cbSubject.Name = "cbSubject";
-            this.cbSubject.Size = new System.Drawing.Size(150, 21);
+            this.cbSubject.Size = new System.Drawing.Size(167, 21);
             this.cbSubject.TabIndex = 4;
             // 
             // dtpDate
@@ -159,22 +174,6 @@
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);
             // 
-            // dataGridView_Number
-            // 
-            this.dataGridView_Number.DataPropertyName = "number";
-            this.dataGridView_Number.HeaderText = "Номер";
-            this.dataGridView_Number.Name = "dataGridView_Number";
-            this.dataGridView_Number.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridView_Number.Width = 50;
-            // 
-            // dataGridView_Capacity
-            // 
-            this.dataGridView_Capacity.DataPropertyName = "capacity";
-            this.dataGridView_Capacity.HeaderText = "Места";
-            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
-            this.dataGridView_Capacity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridView_Capacity.Width = 50;
-            // 
             // ExaminationEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -193,6 +192,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ExaminationEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Экзамен";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBox.ResumeLayout(false);

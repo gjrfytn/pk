@@ -46,7 +46,6 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -63,17 +62,16 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
-            this.dataGridView.Size = new System.Drawing.Size(931, 537);
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(1008, 536);
             this.dataGridView.TabIndex = 1;
             // 
             // dataGridView_ID
             // 
-            this.dataGridView_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_ID.FillWeight = 10F;
             this.dataGridView_ID.HeaderText = "ID";
-            this.dataGridView_ID.MinimumWidth = 50;
             this.dataGridView_ID.Name = "dataGridView_ID";
             this.dataGridView_ID.ReadOnly = true;
+            this.dataGridView_ID.Width = 50;
             // 
             // dataGridView_Name
             // 
@@ -85,46 +83,38 @@
             // 
             // dataGridView_Code
             // 
-            this.dataGridView_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Code.FillWeight = 10F;
             this.dataGridView_Code.HeaderText = "Код";
-            this.dataGridView_Code.MinimumWidth = 50;
             this.dataGridView_Code.Name = "dataGridView_Code";
             this.dataGridView_Code.ReadOnly = true;
+            this.dataGridView_Code.Width = 50;
             // 
             // dataGridView_QualCode
             // 
-            this.dataGridView_QualCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_QualCode.FillWeight = 10F;
             this.dataGridView_QualCode.HeaderText = "Код квалиф.";
-            this.dataGridView_QualCode.MinimumWidth = 50;
             this.dataGridView_QualCode.Name = "dataGridView_QualCode";
             this.dataGridView_QualCode.ReadOnly = true;
+            this.dataGridView_QualCode.Width = 95;
             // 
             // dataGridView_Period
             // 
-            this.dataGridView_Period.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Period.FillWeight = 5F;
             this.dataGridView_Period.HeaderText = "Период";
             this.dataGridView_Period.Name = "dataGridView_Period";
             this.dataGridView_Period.ReadOnly = true;
+            this.dataGridView_Period.Width = 50;
             // 
             // dataGridView_UGS_Code
             // 
-            this.dataGridView_UGS_Code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_UGS_Code.FillWeight = 10F;
             this.dataGridView_UGS_Code.HeaderText = "Код УГС";
-            this.dataGridView_UGS_Code.MinimumWidth = 50;
             this.dataGridView_UGS_Code.Name = "dataGridView_UGS_Code";
             this.dataGridView_UGS_Code.ReadOnly = true;
+            this.dataGridView_UGS_Code.Width = 75;
             // 
             // dataGridView_UGS_Name
             // 
-            this.dataGridView_UGS_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_UGS_Name.HeaderText = "Наимен. УГС";
-            this.dataGridView_UGS_Name.MinimumWidth = 100;
             this.dataGridView_UGS_Name.Name = "dataGridView_UGS_Name";
             this.dataGridView_UGS_Name.ReadOnly = true;
+            this.dataGridView_UGS_Name.Width = 200;
             // 
             // toolStrip
             // 
@@ -132,7 +122,7 @@
             this.toolStrip_Update});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(931, 25);
+            this.toolStrip.Size = new System.Drawing.Size(1008, 25);
             this.toolStrip.TabIndex = 2;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -149,10 +139,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(931, 562);
+            this.ClientSize = new System.Drawing.Size(1008, 561);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
             this.Name = "DirectionsDictionary";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Направления (справочник №10 ФИС)";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);

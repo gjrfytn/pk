@@ -45,7 +45,7 @@ namespace PK.Forms
                 ))
             {
                 object[] entrant = _DB_Connection.Select(
-                    DB_Table.ENTRANTS,
+                    DB_Table.ENTRANTS_VIEW,
                     new string[] { "last_name", "first_name", "middle_name" },
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, row[0]) }
                     )[0];

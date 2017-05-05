@@ -320,6 +320,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`orders` (
   `type` ENUM('admission', 'exception', 'hostel') NOT NULL COMMENT 'Тип приказа (зачисление, исключение или выделение мест в общежитии).',
   `date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
   `protocol_number` SMALLINT UNSIGNED NULL COMMENT 'Номер протокола, если приказ зарегестрирован, иначе - NULL.',
+  `protocol_date` DATE NULL COMMENT 'Дата протокола, если приказ зарегестрирован, иначе - NULL.',
   `education_form_dict_id` INT UNSIGNED NULL COMMENT '14',
   `education_form_id` INT UNSIGNED NULL COMMENT 'ИД Формы обучения (Справочник 14 \"Форма обучения\").',
   `finance_source_dict_id` INT UNSIGNED NULL COMMENT '15',
@@ -645,6 +646,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`documents_subjects_data` (
   `subject_dict_id` INT UNSIGNED NOT NULL COMMENT '1',
   `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
   `value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
+  `year` SMALLINT UNSIGNED NOT NULL COMMENT 'Год сдачи.',
   `checked` TINYINT(1) NOT NULL COMMENT 'Баллы ЕГЭ проверены в ФИС.',
   PRIMARY KEY (`document_id`, `subject_dict_id`, `subject_id`),
   INDEX `corresp_idx` (`subject_dict_id` ASC, `subject_id` ASC),
@@ -972,11 +974,12 @@ COMMENT = 'Пароли ролей (пользователей).';
 
 
 -- -----------------------------------------------------
--- Table `pk_db`.`_orders_has_applications`
+-- Table `pk_db`.`orders_has_applications`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pk_db`.`_orders_has_applications` (
-  `orders_number` VARCHAR(50) NOT NULL,
-  `applications_id` INT UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `pk_db`.`orders_has_applications` (
+  `orders_number` VARCHAR(50) NOT NULL COMMENT 'Приказ.',
+  `applications_id` INT UNSIGNED NOT NULL COMMENT 'Заявленеие.',
+  `record_book_number` CHAR(6) NULL COMMENT 'Номер зачётной книжки (для приказов о зачислении).',
   PRIMARY KEY (`orders_number`, `applications_id`),
   INDEX `fk_orders_has_applications_applications1_idx` (`applications_id` ASC),
   INDEX `fk_orders_has_applications_orders1_idx` (`orders_number` ASC),
@@ -990,7 +993,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`_orders_has_applications` (
     REFERENCES `pk_db`.`applications` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+COMMENT = 'Заявления в приказах.';
 
 USE `kladr` ;
 
@@ -1294,7 +1298,7 @@ GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'inspector';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'inspector';
 GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'inspector';
-GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_orders_has_applications` TO 'inspector';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders_has_applications` TO 'inspector';
 CREATE USER 'administrator' IDENTIFIED BY 'adm1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'administrator';
@@ -1336,7 +1340,7 @@ GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'administrator';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'administrator';
 GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'administrator';
-GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_orders_has_applications` TO 'administrator';
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders_has_applications` TO 'administrator';
 GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`users` TO 'administrator';
 GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns` TO 'administrator';
 GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionaries_items` TO 'administrator';

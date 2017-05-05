@@ -339,20 +339,29 @@ namespace PK.Forms
 
             foreach (var appl in applsEgeSubjects)
             {
-                var applLines = lines.Where(
+                var applResults = lines.Where(
                     s => s[0] == appl.LastN && s[1] == appl.FirstN && s[2] == appl.MiddleN && s[3] == appl.Series && s[4] == appl.Number
                     );
-                foreach (uint subj in appl.Subjects)
+
+                var subjects = applResults.GroupBy(
+                    k => _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, k[5]),
+                    el => new { Value = el[6], Year = el[7] },
+                    (k, g) => new { Subject = k, Results = g.OrderBy(s => s.Value) }
+                    );
+
+                foreach (var subj in subjects)
                 {
-                    string[] buf = applLines.FirstOrDefault(s => s[5] == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, subj));
-                    if (buf != null)
-                    {
-                        /*_DB_Connection.Update(
-                            DB_Table.DOCUMENTS_SUBJECTS_DATA,
-                            new Dictionary<string, object> { {"value", buf[6]}, {"checked",true } },
-                            new Dictionary<string, object> { { "document_id",appl.DocID }, { "subject_id",subj } }
-                            );*/
-                    }
+                    /*_DB_Connection.InsertOnDuplicateUpdate(
+                        DB_Table.DOCUMENTS_SUBJECTS_DATA,
+                        new Dictionary<string, object>
+                        {
+                            { "document_id", appl.DocID },
+                            { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                            { "subject_id", subj.Subject },
+                            { "value", subj.Results.Last() .Value},
+                            { "year", subj.Results.Last().Year },
+                            { "checked",true }
+                        });*/
                 }
             }
         }
