@@ -43,7 +43,7 @@ namespace PK.Forms
                 });
 
             _Entrants = _DB_Connection.Select(
-                DB_Table.ENTRANTS,
+                DB_Table.ENTRANTS_VIEW,
                 new string[] { "id", "last_name", "first_name", "middle_name" }
                 ).Join(
                 entrantsIDs,
