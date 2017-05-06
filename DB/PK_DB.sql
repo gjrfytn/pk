@@ -363,8 +363,9 @@ COMMENT = 'Приказы.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`entrants` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
+  `email` VARCHAR(150) NOT NULL COMMENT 'Электронный адрес.',
+  `personal_password` VARCHAR(12) NOT NULL COMMENT 'Пароль к личному кабинету.',
   `custom_information` VARCHAR(4000) NULL COMMENT 'Дополнительные сведения, предоставленные абитуриентом.',
-  `email` VARCHAR(150) NULL COMMENT 'Электронный адрес.',
   `home_phone` VARCHAR(10) NULL COMMENT 'Домашний телефон.',
   `mobile_phone` VARCHAR(10) NULL COMMENT 'Мобильный телефон.',
   PRIMARY KEY (`id`))
@@ -394,6 +395,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `special_conditions` TINYINT(1) NULL COMMENT 'ВИ с созданием специальных условий.',
   `master_appl` TINYINT(1) NOT NULL COMMENT 'Заявление на уровень магистра.',
   `recommendation` TINYINT(1) NULL COMMENT 'Рекомендация выпускающей кафедры.',
+  `withdraw_date` DATE NULL COMMENT 'Дата отзыва документов.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`entrant_id` ASC),
   INDEX `applications_registrered_idx` (`registrator_login` ASC),

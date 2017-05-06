@@ -35,6 +35,7 @@
             this.cbReceipt = new System.Windows.Forms.CheckBox();
             this.bOpen = new System.Windows.Forms.Button();
             this.bPrint = new System.Windows.Forms.Button();
+            this.cbAdmAgreement = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cbMoveJournal
@@ -99,7 +100,7 @@
             // 
             // bOpen
             // 
-            this.bOpen.Location = new System.Drawing.Point(119, 127);
+            this.bOpen.Location = new System.Drawing.Point(153, 149);
             this.bOpen.Name = "bOpen";
             this.bOpen.Size = new System.Drawing.Size(61, 23);
             this.bOpen.TabIndex = 5;
@@ -109,7 +110,7 @@
             // 
             // bPrint
             // 
-            this.bPrint.Location = new System.Drawing.Point(12, 127);
+            this.bPrint.Location = new System.Drawing.Point(12, 149);
             this.bPrint.Name = "bPrint";
             this.bPrint.Size = new System.Drawing.Size(79, 23);
             this.bPrint.TabIndex = 6;
@@ -117,11 +118,23 @@
             this.bPrint.UseVisualStyleBackColor = true;
             this.bPrint.Click += new System.EventHandler(this.bPrint_Click);
             // 
+            // cbAdmAgreement
+            // 
+            this.cbAdmAgreement.AutoSize = true;
+            this.cbAdmAgreement.Enabled = false;
+            this.cbAdmAgreement.Location = new System.Drawing.Point(12, 126);
+            this.cbAdmAgreement.Name = "cbAdmAgreement";
+            this.cbAdmAgreement.Size = new System.Drawing.Size(217, 17);
+            this.cbAdmAgreement.TabIndex = 7;
+            this.cbAdmAgreement.Text = "Заявление о согласии на зачисление";
+            this.cbAdmAgreement.UseVisualStyleBackColor = true;
+            // 
             // ApplicationDocsPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(192, 157);
+            this.ClientSize = new System.Drawing.Size(226, 179);
+            this.Controls.Add(this.cbAdmAgreement);
             this.Controls.Add(this.bPrint);
             this.Controls.Add(this.bOpen);
             this.Controls.Add(this.cbReceipt);
@@ -148,5 +161,6 @@
         public System.Windows.Forms.CheckBox cbPercRecordFace;
         public System.Windows.Forms.CheckBox cbPercRecordBack;
         public System.Windows.Forms.CheckBox cbReceipt;
+        public System.Windows.Forms.CheckBox cbAdmAgreement;
     }
 }

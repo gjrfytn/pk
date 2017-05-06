@@ -72,7 +72,10 @@ namespace PK.Forms
         private void toolStrip_Delete_Click(object sender, EventArgs e)
         {
             if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            {
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", SelectedExamID } });
+                UpdateTable();
+            }
         }
 
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
@@ -99,7 +102,11 @@ namespace PK.Forms
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells["dataGridView_Subject"].Value.ToString());
 
-            var alreadyPassedAppls = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS).Join(
+            var alreadyPassedAppls = _DB_Connection.Select(
+                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                new string[] { "entrant_id", "examination_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
+                ).Join(
                 _DB_Connection.Select(
                     DB_Table.EXAMINATIONS,
                     new string[] { "id", "date" },
@@ -148,7 +155,7 @@ namespace PK.Forms
               ).Distinct();//TODO Нужно?
 
             foreach (object entrID in entrantsIDs)
-                _DB_Connection.Insert(
+                _DB_Connection.InsertOnDuplicateUpdate(
                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
                     new Dictionary<string, object> { { "entrant_id", entrID }, { "examination_id", SelectedExamID } }
                     );
@@ -182,15 +189,27 @@ namespace PK.Forms
         private void UpdateTable()
         {
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
+            object[] curCampStartEnd = _DB_Connection.Select(
+                DB_Table.CAMPAIGNS,
+                new string[] { "start_year", "end_year" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                )[0];
 
             dataGridView.Rows.Clear();
-            foreach (object[] row in _DB_Connection.Select(DB_Table.EXAMINATIONS))
+            foreach (object[] row in _DB_Connection.Select(DB_Table.EXAMINATIONS,
+                new string[] { "id", "subject_id", "date", "reg_start_date", "reg_end_date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("date",Relation.GREATER_EQUAL,new DateTime((int)(uint)curCampStartEnd[0],1,1)),
+                    new Tuple<string, Relation, object>("date",Relation.LESS_EQUAL,new DateTime((int)(uint)curCampStartEnd[0],12,31)),
+                }
+                ))
                 dataGridView.Rows.Add(
                     row[0],
-                    subjects[(uint)row[2]],
+                    subjects[(uint)row[1]],
+                    row[2],
                     row[3],
-                    row[4],
-                    row[5]
+                    row[4]
                     );
         }
 

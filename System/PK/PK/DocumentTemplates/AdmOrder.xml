@@ -146,7 +146,7 @@
               </Part>
               <Part>
                 <Text>
-                  <String>ДАТА</String>
+                  <Placeholder>3</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -156,7 +156,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>3</Placeholder>
+                  <Placeholder>4</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -166,7 +166,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>4</Placeholder>
+                  <Placeholder>5</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -187,7 +187,7 @@
               <Part>
                 <FontID>UsualBold</FontID>
                 <Text>
-                  <Placeholder>5</Placeholder>
+                  <Placeholder>6</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -209,7 +209,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>6</Placeholder>
+                  <Placeholder>7</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -219,7 +219,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>7</Placeholder>
+                  <Placeholder>8</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -235,13 +235,13 @@
             <Parts>
               <Part>
                 <Text>
-                  <Placeholder>8</Placeholder>
+                  <Placeholder>9</Placeholder>
                 </Text>
               </Part>
               <Part>
                 <FontID>UsualBold</FontID>
                 <Text>
-                  <Placeholder>9</Placeholder>
+                  <Placeholder>10</Placeholder>
                 </Text>
               </Part>
             </Parts>

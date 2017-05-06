@@ -603,6 +603,8 @@ namespace PK.Forms
                     ent.For
                     );
             }
+
+            dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
     }
 }

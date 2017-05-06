@@ -554,6 +554,9 @@ namespace PK.Forms
         private void btPrint_Click(object sender, EventArgs e)
         {
             ApplicationDocsPrint form = new ApplicationDocsPrint();
+            form.cbAdmAgreement.Enabled = cbAgreed.Checked;
+            form.cbAdmAgreement.Checked = cbAgreed.Checked;
+
             DialogResult res = form.ShowDialog();
             if (res != DialogResult.Cancel)
             {
@@ -708,7 +711,9 @@ namespace PK.Forms
                         receiptTableParams
                         ));
 
-                string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                if (form.cbPercRecordBack.Checked)
+                {
+                    string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
                     _DB_Connection.Select(
                         DB_Table.INDIVIDUAL_ACHIEVEMENTS,
                         new string[] { "institution_achievement_id" },
@@ -721,67 +726,66 @@ namespace PK.Forms
                     (s1, s2) => s1[1]
                     ).Max()?.ToString();
 
-                parameters = new List<string>
-                {
-                    tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
-                    mtbHomePhone.Text,
-                    mtbMobilePhone.Text,
-                    cbQuote.Checked?"+":"",
-                    cbPrerogative.Checked?"+":"",
-                    dgvExams[3,0].Value.ToString(),
-                    cbHostelNeeded.Checked?"+":"",
-                    cbExams.Checked?"+":"",
-                    dgvExams[3,1].Value.ToString(),
-                    cbChernobyl.Checked?"+":"",
-                    cbMCDAO.Checked?"+":"",
-                    dgvExams[3,2].Value.ToString(),
-                    cbTarget.Checked?"+":"",
-                    cbOriginal.Checked?"+":"",
-                    dgvExams[3,3].Value.ToString(),
-                    dgvExams[3,4].Value.ToString(),
-                    indAchValue,
-                    ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,2].Value).ToString(),
-                    ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value).ToString(),
-                    ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
-                };
-
-                foreach (TabPage tab in tcDirections.Controls)
-                {
-                    var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
-                    if (cbs.Count() != 0)
+                    parameters = new List<string>
                     {
-                        parameters.Add(streams[tab].Item2);
-                        byte count = 0;
-                        foreach (ComboBox cb in cbs)
-                        {
-                            DirTuple dir = (DirTuple)cb.SelectedValue;
-                            if (tab.Name.Split('_')[1] != "paid")
-                                parameters.Add(_DB_Connection.Select(
-                                DB_Table.DIRECTIONS,
-                                new string[] { "short_name" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, dir.Item2),
-                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dir.Item1)
-                                })[0][0].ToString());
-                            else
-                                parameters.Add(dir.Item6);
+                        tbLastName.Text+" "+tbFirstName.Text+" "+tbMidleName.Text,
+                        mtbHomePhone.Text,
+                        mtbMobilePhone.Text,
+                        cbQuote.Checked?"+":"",
+                        cbPrerogative.Checked?"+":"",
+                        dgvExams[3,0].Value.ToString(),
+                        cbHostelNeeded.Checked?"+":"",
+                        cbExams.Checked?"+":"",
+                        dgvExams[3,1].Value.ToString(),
+                        cbChernobyl.Checked?"+":"",
+                        cbMCDAO.Checked?"+":"",
+                        dgvExams[3,2].Value.ToString(),
+                        cbTarget.Checked?"+":"",
+                        cbOriginal.Checked?"+":"",
+                        dgvExams[3,3].Value.ToString(),
+                        dgvExams[3,4].Value.ToString(),
+                        indAchValue,
+                        ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,2].Value).ToString(),
+                        ((byte)dgvExams[3,0].Value+(byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value).ToString(),
+                        ((byte)dgvExams[3,1].Value+(byte)dgvExams[3,3].Value+(byte)dgvExams[3,4].Value).ToString()
+                    };
 
-                            count++;
-                        }
-
-                        while (count != 3)
+                    foreach (TabPage tab in tcDirections.Controls)
+                    {
+                        var cbs = tab.Controls.Cast<Control>().Where(c => c.GetType() == typeof(ComboBox) && ((ComboBox)c).SelectedIndex != -1);
+                        if (cbs.Count() != 0)
                         {
-                            parameters.Add("");
-                            count++;
+                            parameters.Add(streams[tab].Item2);
+                            byte count = 0;
+                            foreach (ComboBox cb in cbs)
+                            {
+                                DirTuple dir = (DirTuple)cb.SelectedValue;
+                                if (tab.Name.Split('_')[1] != "paid")
+                                    parameters.Add(_DB_Connection.Select(
+                                        DB_Table.DIRECTIONS,
+                                        new string[] { "short_name" },
+                                        new List<Tuple<string, Relation, object>>
+                                        {
+                                            new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, dir.Item2),
+                                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,  dir.Item1)
+                                        })[0][0].ToString());
+                                else
+                                    parameters.Add(dir.Item6);
+
+                                count++;
+                            }
+
+                            while (count != 3)
+                            {
+                                parameters.Add("");
+                                count++;
+                            }
                         }
                     }
-                }
 
-                while (parameters.Count != 40)
-                    parameters.Add("");
+                    while (parameters.Count != 40)
+                        parameters.Add("");
 
-                if (form.cbPercRecordBack.Checked)
                     documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
                         Classes.Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
                         null,
@@ -789,8 +793,70 @@ namespace PK.Forms
                         parameters.ToArray(),
                         null
                         ));
+                }
 
-                string doc = Classes.Utility.TempPath + "abitDocs"+new Random().Next();
+                if (form.cbAdmAgreement.Checked)
+                {
+                    object[] agreedDir = _DB_Connection.Select(
+                        DB_Table.APPLICATIONS_ENTRANCES,
+                        new string[] { "faculty_short_name", "direction_id", "edu_form_id", "is_agreed_date" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID),
+                            new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
+                            new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
+                        })[0];
+
+                    string dirShortName = _DB_Connection.Select(
+                        DB_Table.DIRECTIONS,
+                        new string[] { "short_name" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir[1])
+                        })[0][0].ToString();
+
+                    var marks = _DB_Connection.Select(
+                        DB_Table.APPLICATIONS_EGE_MARKS_VIEW,
+                        new string[] { "subject_id", "value" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID) }
+                        ).Select(s => new { Subj = (uint)s[0], Value = (uint)s[1] });
+
+                    ushort sum = 0;
+                    foreach (object[] subj in _DB_Connection.Select(
+                        DB_Table.ENTRANCE_TESTS,
+                        new string[] { "subject_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir[0]),
+                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir[1])
+                        }
+                        ))
+                    {
+                        var mark = marks.SingleOrDefault(s => s.Subj == (uint)subj[0]);
+                        if (mark != null)
+                            sum += (ushort)mark.Value;
+                    }
+
+                    documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
+                        Classes.Utility.DocumentsTemplatesPath + "AdmAgreement.xml",
+                        null,
+                        null,
+                        new string[]
+                        {
+                            (tbLastName.Text + " " + tbFirstName.Text + " " + tbMidleName.Text).ToUpper(),
+                            _DB_Helper.GetDirectionNameAndCode((uint)agreedDir[1]).Item1+" ("+dirShortName+")",
+                            _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)agreedDir[2]),
+                            _ApplicationID.ToString(),
+                            sum.ToString(),
+                            tbLastName.Text.ToUpper()+" "+tbFirstName.Text[0]+"."+tbMidleName.Text[0]+".",
+                            ((DateTime) agreedDir[3]).ToShortDateString()
+                        },
+                        null
+                        ));
+                }
+
+                string doc = Classes.Utility.TempPath + "abitDocs" + new Random().Next();
                 Classes.DocumentCreator.Create(doc, documents);
                 doc += ".docx";
 

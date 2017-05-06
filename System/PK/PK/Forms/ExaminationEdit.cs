@@ -13,14 +13,28 @@ namespace PK.Forms
 
         public ExaminationEdit(Classes.DB_Connector connection, uint? id)
         {
+            _DB_Connection = connection;
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+
             #region Components
             InitializeComponent();
 
             dataGridView_Capacity.ValueType = typeof(ushort);
+
+            object[] curCampStartEnd = _DB_Connection.Select(
+                DB_Table.CAMPAIGNS,
+                new string[] { "start_year", "end_year" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                )[0];
+
+            dtpDate.MinDate = new DateTime((int)(uint)curCampStartEnd[0], 1, 1);
+            dtpDate.MaxDate = new DateTime((int)(uint)curCampStartEnd[0], 12, 31);
+            dtpRegStartDate.MinDate = dtpDate.MinDate;
+            dtpRegStartDate.MaxDate = dtpDate.MaxDate;
+            dtpRegEndDate.MinDate = dtpDate.MinDate;
+            dtpRegEndDate.MaxDate = dtpDate.MaxDate;
             #endregion
 
-            _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _ID = id;
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);

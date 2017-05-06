@@ -40,12 +40,12 @@ namespace PK.Classes
                 return Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
             }
 
-            public static DocX CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            public static DocX CreateFromTemplate(Dictionary<string, Font> fonts, XElement wordTemplateElement, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
             {
                 return Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
             }
 
-            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, List<string[]>[] tableParams, string resultFile)
+            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -256,7 +256,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     ));
             }
 
-            private static void AddTable(DocX doc, XElement tableElem, Dictionary<string, Font> fonts, List<string[]> rows)
+            private static void AddTable(DocX doc, XElement tableElem, Dictionary<string, Font> fonts, IEnumerable<string[]> rows)
             {
                 List<string> colNames;
                 Dictionary<byte, ushort> colWidths;

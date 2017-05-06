@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace PK.Forms
 {
@@ -51,6 +52,8 @@ namespace PK.Forms
                     )[0];
                 dataGridView.Rows.Add(row[0], entrant[0].ToString() + " " + entrant[1].ToString() + " " + entrant[2].ToString(), row[1]);
             }
+
+            dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
@@ -76,13 +79,13 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dataGridView.Rows)
                 table.Add(new string[]
                 {
-                    row.Cells[0].Value.ToString(),
-                    row.Cells[1].Value.ToString(),
-                    ((short)row.Cells[2].Value==-1)?"неявка": row.Cells[2].Value.ToString(),
+                    row.Cells["dataGridView_UID"].Value.ToString(),
+                    row.Cells["dataGridView_Name"].Value.ToString(),
+                    ((short)row.Cells["dataGridView_Mark"].Value==-1)?"неявка": row.Cells["dataGridView_Mark"].Value.ToString(),
                 });
 
-            string doc = Classes.Utility.TempPath + "AlphaMarks";
-            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new List<string[]>[] { table });
+            string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
+            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             Classes.Utility.Print(doc + ".docx");
         }
 
@@ -90,12 +93,7 @@ namespace PK.Forms
         {
             if (Classes.Utility.ShowUnrevertableActionMessageBox())
             {
-                foreach (object[] row in _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, "entrant_id", "examination_id"))
-                    _DB_Connection.Delete(
-                        DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                        new Dictionary<string, object> { { "entrant_id", row[0] }, { "examination_id", row[1] } }
-                        );
-
+                _DB_Connection.Delete(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new Dictionary<string, object> { { "examination_id", _ExaminationID } });
                 dataGridView.Rows.Clear();
             }
         }

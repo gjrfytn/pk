@@ -91,7 +91,6 @@ namespace PK.Forms
 
                         _EntrantsTable.Add(new string[]
                         {
-                            count.ToString(),
                             entr.Item1.ToString(),
                             name,
                             nameCodes[entr.Item2[0]]+nameCodes[entr.Item3[0]]+"."+_ExaminationID.ToString()+count.ToString(),
@@ -106,26 +105,26 @@ namespace PK.Forms
             }
         }
 
-        private void bAlphaCodes_Click(object sender, System.EventArgs e)
+        private void bAlphaCodes_Click(object sender, EventArgs e)
         {
-            string doc = Classes.Utility.TempPath + "AlphaCodes";
+            string doc = Classes.Utility.TempPath + "AlphaCodes" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
-                new List<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[2], s[3] }).ToList() }
+                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[2] }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
         }
 
         private void bAlphaAuditories_Click(object sender, EventArgs e)
         {
-            string doc = Classes.Utility.TempPath + "AlphaAuditories";
+            string doc = Classes.Utility.TempPath + "AlphaAuditories" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
-                new List<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[2], s[4] }).ToList() }
+                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[3] }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
         }
@@ -145,7 +144,7 @@ namespace PK.Forms
                 });
             }
 
-            string doc = Classes.Utility.TempPath + "AbitAudDistrib";
+            string doc = Classes.Utility.TempPath + "AbitAudDistrib" + new Random().Next();
             Classes.DocumentCreator.Create(
                Classes.Utility.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                doc,
@@ -165,14 +164,14 @@ namespace PK.Forms
         {
             foreach (Tuple<char, string> group in _Distribution)
             {
-                string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2;
+                string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
                 Classes.DocumentCreator.Create(
                     Classes.Utility.DocumentsTemplatesPath + "ExamCardsSheet.xml",
                     doc,
                     new string[] { group.Item2, group.Item1.ToString(), _ExamName, _ExamDate },
-                    new List<string[]>[]
+                    new IEnumerable<string[]>[]
                     {
-                        _EntrantsTable.Where(en=>en[2][0]== group.Item1&&en[4]==group.Item2).Select(s=>new string[] {s[1],s[2],s[5] }).ToList()
+                        _EntrantsTable.Where(en=>en[1][0]== group.Item1&&en[3]==group.Item2).Select(s=>new string[] {s[0],s[1],s[4] })
                     });
                 Classes.Utility.Print(doc + ".docx");
             }
