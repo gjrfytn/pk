@@ -64,7 +64,7 @@
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(1008, 536);
-            this.dataGridView.TabIndex = 1;
+            this.dataGridView.TabIndex = 0;
             // 
             // dataGridView_ID
             // 
@@ -123,7 +123,7 @@
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1008, 25);
-            this.toolStrip.TabIndex = 2;
+            this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "toolStrip1";
             // 
             // toolStrip_Update

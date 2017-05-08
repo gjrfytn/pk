@@ -58,7 +58,7 @@
             this.lSubjects.Location = new System.Drawing.Point(12, 28);
             this.lSubjects.Name = "lSubjects";
             this.lSubjects.Size = new System.Drawing.Size(60, 13);
-            this.lSubjects.TabIndex = 0;
+            this.lSubjects.TabIndex = 1;
             this.lSubjects.Text = "Субъекты:";
             // 
             // lStreets
@@ -67,7 +67,7 @@
             this.lStreets.Location = new System.Drawing.Point(28, 54);
             this.lStreets.Name = "lStreets";
             this.lStreets.Size = new System.Drawing.Size(44, 13);
-            this.lStreets.TabIndex = 1;
+            this.lStreets.TabIndex = 3;
             this.lStreets.Text = "Улицы:";
             // 
             // lHouses
@@ -76,7 +76,7 @@
             this.lHouses.Location = new System.Drawing.Point(33, 80);
             this.lHouses.Name = "lHouses";
             this.lHouses.Size = new System.Drawing.Size(39, 13);
-            this.lHouses.TabIndex = 2;
+            this.lHouses.TabIndex = 5;
             this.lHouses.Text = "Дома:";
             // 
             // tbSubjects
@@ -85,7 +85,7 @@
             this.tbSubjects.Name = "tbSubjects";
             this.tbSubjects.ReadOnly = true;
             this.tbSubjects.Size = new System.Drawing.Size(364, 20);
-            this.tbSubjects.TabIndex = 3;
+            this.tbSubjects.TabIndex = 8;
             // 
             // tbStreets
             // 
@@ -93,7 +93,7 @@
             this.tbStreets.Name = "tbStreets";
             this.tbStreets.ReadOnly = true;
             this.tbStreets.Size = new System.Drawing.Size(364, 20);
-            this.tbStreets.TabIndex = 4;
+            this.tbStreets.TabIndex = 9;
             // 
             // tbHouses
             // 
@@ -101,14 +101,14 @@
             this.tbHouses.Name = "tbHouses";
             this.tbHouses.ReadOnly = true;
             this.tbHouses.Size = new System.Drawing.Size(364, 20);
-            this.tbHouses.TabIndex = 5;
+            this.tbHouses.TabIndex = 10;
             // 
             // bSubjects
             // 
             this.bSubjects.Location = new System.Drawing.Point(448, 23);
             this.bSubjects.Name = "bSubjects";
             this.bSubjects.Size = new System.Drawing.Size(24, 23);
-            this.bSubjects.TabIndex = 6;
+            this.bSubjects.TabIndex = 2;
             this.bSubjects.Text = "...";
             this.bSubjects.UseVisualStyleBackColor = true;
             this.bSubjects.Click += new System.EventHandler(this.bSubjects_Click);
@@ -118,7 +118,7 @@
             this.bStreets.Location = new System.Drawing.Point(448, 49);
             this.bStreets.Name = "bStreets";
             this.bStreets.Size = new System.Drawing.Size(24, 23);
-            this.bStreets.TabIndex = 7;
+            this.bStreets.TabIndex = 4;
             this.bStreets.Text = "...";
             this.bStreets.UseVisualStyleBackColor = true;
             this.bStreets.Click += new System.EventHandler(this.bStreets_Click);
@@ -128,7 +128,7 @@
             this.bHouses.Location = new System.Drawing.Point(448, 75);
             this.bHouses.Name = "bHouses";
             this.bHouses.Size = new System.Drawing.Size(24, 23);
-            this.bHouses.TabIndex = 8;
+            this.bHouses.TabIndex = 6;
             this.bHouses.Text = "...";
             this.bHouses.UseVisualStyleBackColor = true;
             this.bHouses.Click += new System.EventHandler(this.bHouses_Click);
@@ -139,7 +139,7 @@
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(220, 13);
-            this.label1.TabIndex = 9;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Выберите DBF файлы с данными КЛАДР:";
             // 
             // bUpdate
@@ -147,7 +147,7 @@
             this.bUpdate.Location = new System.Drawing.Point(378, 106);
             this.bUpdate.Name = "bUpdate";
             this.bUpdate.Size = new System.Drawing.Size(64, 23);
-            this.bUpdate.TabIndex = 10;
+            this.bUpdate.TabIndex = 7;
             this.bUpdate.Text = "Обновить";
             this.bUpdate.UseVisualStyleBackColor = true;
             this.bUpdate.Click += new System.EventHandler(this.bUpdate_Click);

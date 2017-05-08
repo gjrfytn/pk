@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -60,35 +60,6 @@
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Print,
-            this.toolStrip_Clear});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(384, 25);
-            this.toolStrip.TabIndex = 2;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // toolStrip_Print
-            // 
-            this.toolStrip_Print.Image = global::PK.Properties.Resources.printer;
-            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Print.Name = "toolStrip_Print";
-            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
-            this.toolStrip_Print.Text = "Печать";
-            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
-            // 
-            // toolStrip_Clear
-            // 
-            this.toolStrip_Clear.Image = global::PK.Properties.Resources.cross;
-            this.toolStrip_Clear.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Clear.Name = "toolStrip_Clear";
-            this.toolStrip_Clear.Size = new System.Drawing.Size(122, 22);
-            this.toolStrip_Clear.Text = "Очистить оценки";
-            this.toolStrip_Clear.Click += new System.EventHandler(this.toolStrip_Clear_Click);
-            // 
             // dataGridView_UID
             // 
             this.dataGridView_UID.DataPropertyName = "entrant_id";
@@ -112,6 +83,35 @@
             this.dataGridView_Mark.HeaderText = "Оценка";
             this.dataGridView_Mark.Name = "dataGridView_Mark";
             this.dataGridView_Mark.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip_Print,
+            this.toolStrip_Clear});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(384, 25);
+            this.toolStrip.TabIndex = 1;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolStrip_Print
+            // 
+            this.toolStrip_Print.Image = global::PK.Properties.Resources.printer;
+            this.toolStrip_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Print.Name = "toolStrip_Print";
+            this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
+            this.toolStrip_Print.Text = "Печать";
+            this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
+            // 
+            // toolStrip_Clear
+            // 
+            this.toolStrip_Clear.Image = global::PK.Properties.Resources.cross;
+            this.toolStrip_Clear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Clear.Name = "toolStrip_Clear";
+            this.toolStrip_Clear.Size = new System.Drawing.Size(122, 22);
+            this.toolStrip_Clear.Text = "Очистить оценки";
+            this.toolStrip_Clear.Click += new System.EventHandler(this.toolStrip_Clear_Click);
             // 
             // ExaminationMarks
             // 

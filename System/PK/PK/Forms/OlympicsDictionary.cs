@@ -12,8 +12,6 @@ namespace PK
         {
             InitializeComponent();
 
-            toolStrip_Years.SelectedIndex = 1;
-
             _DB_Connection = dbConnection;
 
             UpdateOlympicsTable();
@@ -83,7 +81,7 @@ namespace PK
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            _Updater.UpdateOlympicsDictionary(byte.Parse(toolStrip_Years.Text));
+            _Updater.UpdateOlympicsDictionary();
             UpdateOlympicsTable();
             Cursor.Current = Cursors.Default;
         }

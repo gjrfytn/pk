@@ -77,6 +77,15 @@ namespace PK.Forms
         private void toolStrip_Register_Click(object sender, EventArgs e)
         {
             ushort newProtocolNumber = (ushort)(_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Max(s => s[0] as ushort? != null ? (ushort)s[0] : 0) + 1);
+
+            OrderRegistration form = new OrderRegistration();
+            form.tbNumber.Text = newProtocolNumber.ToString();
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            newProtocolNumber = ushort.Parse(form.tbNumber.Text);
+            DateTime protocolDate = form.dtpDate.Value;
             string number = SelectedOrderNumber;
             uint eduSource = (uint)_DB_Connection.Select(
                 DB_Table.ORDERS,
@@ -88,7 +97,7 @@ namespace PK.Forms
             {
                 _DB_Connection.Update(
                     DB_Table.ORDERS,
-                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber }, { "protocol_date", DateTime.Now.Date } },
+                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber }, { "protocol_date", protocolDate } },
                     new Dictionary<string, object> { { "number", number } },
                     transaction
                     );
@@ -168,7 +177,7 @@ namespace PK.Forms
 
             var marks = applications.GroupJoin(
                 dir_subjects.Join(
-                    _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),
+                    _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),//TODO exams
                     k1 => k1,
                     k2 => k2[1],
                     (s1, s2) => s2
@@ -182,12 +191,12 @@ namespace PK.Forms
                 _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
                 k1 => k1.ApplID,
                 k2 => k2[0],
-                (s1, s2) => new { A_ID = s1.ApplID, E_ID = s2[1], Sum = s1.MarksSum }
+                (s1, s2) => new { EntrID = s2[1], s1.MarksSum }
                 ).Join(
                 _DB_Connection.Select(DB_Table.ENTRANTS_VIEW),
-                k1 => k1.E_ID,
+                k1 => k1.EntrID,
                 k2 => k2[0],
-                (s1, s2) => new string[] { s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(), s1.Sum.ToString() }
+                (s1, s2) => new string[] { s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(), s1.MarksSum.ToString() }
                 );
 
             string doc = Classes.Utility.TempPath + "AdmOrder" + new Random().Next();

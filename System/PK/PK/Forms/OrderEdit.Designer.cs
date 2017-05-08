@@ -83,7 +83,7 @@
             this.tbNumber.MaxLength = 50;
             this.tbNumber.Name = "tbNumber";
             this.tbNumber.Size = new System.Drawing.Size(136, 20);
-            this.tbNumber.TabIndex = 0;
+            this.tbNumber.TabIndex = 3;
             // 
             // cbFDP
             // 
@@ -92,7 +92,7 @@
             this.cbFDP.Location = new System.Drawing.Point(431, 25);
             this.cbFDP.Name = "cbFDP";
             this.cbFDP.Size = new System.Drawing.Size(441, 21);
-            this.cbFDP.TabIndex = 4;
+            this.cbFDP.TabIndex = 9;
             this.cbFDP.DropDown += new System.EventHandler(this.cbFDP_DropDown);
             this.cbFDP.SelectionChangeCommitted += new System.EventHandler(this.cbFDP_SelectionChangeCommitted);
             // 
@@ -105,7 +105,7 @@
             this.gbEduSource.Location = new System.Drawing.Point(154, 9);
             this.gbEduSource.Name = "gbEduSource";
             this.gbEduSource.Size = new System.Drawing.Size(92, 119);
-            this.gbEduSource.TabIndex = 5;
+            this.gbEduSource.TabIndex = 6;
             this.gbEduSource.TabStop = false;
             this.gbEduSource.Text = "Основание";
             // 
@@ -166,7 +166,7 @@
             this.gbEduForm.Location = new System.Drawing.Point(252, 9);
             this.gbEduForm.Name = "gbEduForm";
             this.gbEduForm.Size = new System.Drawing.Size(170, 100);
-            this.gbEduForm.TabIndex = 6;
+            this.gbEduForm.TabIndex = 7;
             this.gbEduForm.TabStop = false;
             this.gbEduForm.Text = "Форма обучения";
             // 
@@ -215,7 +215,7 @@
             this.lNumber.Location = new System.Drawing.Point(12, 53);
             this.lNumber.Name = "lNumber";
             this.lNumber.Size = new System.Drawing.Size(44, 13);
-            this.lNumber.TabIndex = 7;
+            this.lNumber.TabIndex = 2;
             this.lNumber.Text = "Номер:";
             // 
             // lType
@@ -224,7 +224,7 @@
             this.lType.Location = new System.Drawing.Point(12, 9);
             this.lType.Name = "lType";
             this.lType.Size = new System.Drawing.Size(29, 13);
-            this.lType.TabIndex = 8;
+            this.lType.TabIndex = 0;
             this.lType.Text = "Тип:";
             // 
             // lFDP
@@ -233,7 +233,7 @@
             this.lFDP.Location = new System.Drawing.Point(428, 9);
             this.lFDP.Name = "lFDP";
             this.lFDP.Size = new System.Drawing.Size(78, 13);
-            this.lFDP.TabIndex = 9;
+            this.lFDP.TabIndex = 8;
             this.lFDP.Text = "Направление:";
             // 
             // panel
@@ -264,7 +264,7 @@
             this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
-            this.dtpDate.TabIndex = 13;
+            this.dtpDate.TabIndex = 5;
             // 
             // lDate
             // 
@@ -272,7 +272,7 @@
             this.lDate.Location = new System.Drawing.Point(12, 92);
             this.lDate.Name = "lDate";
             this.lDate.Size = new System.Drawing.Size(36, 13);
-            this.lDate.TabIndex = 12;
+            this.lDate.TabIndex = 4;
             this.lDate.Text = "Дата:";
             // 
             // bSave
@@ -281,7 +281,7 @@
             this.bSave.Location = new System.Drawing.Point(797, 114);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(75, 23);
-            this.bSave.TabIndex = 11;
+            this.bSave.TabIndex = 12;
             this.bSave.Text = "Сохранить";
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);

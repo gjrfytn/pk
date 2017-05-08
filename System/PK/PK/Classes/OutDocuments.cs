@@ -50,15 +50,14 @@ namespace PK.Classes
                 k2 => k2[0],
                 (s1, s2) => new
                 {
-                    ApplID = s1.ApplID,
-                    EntrID = s1.EntrID,
+                    s1.ApplID,
+                    s1.EntrID,
                     LastName = s2[1].ToString(),
                     FirstName = s2[2].ToString(),
                     MiddleName = s2[3].ToString(),
-                    HomePhone = s1.HomePhone,
-                    MobilePhone = s1.MobilePhone
-                }
-                );
+                    s1.HomePhone,
+                    s1.MobilePhone
+                });
 
             var applDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
                     connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date"),

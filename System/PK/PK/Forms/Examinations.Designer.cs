@@ -30,6 +30,11 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_RegStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_RegEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_Add = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
@@ -37,11 +42,6 @@
             this.toolStrip_Distribute = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Marks = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
-            this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_RegStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_RegEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -67,9 +67,50 @@
             this.dataGridView.RowHeadersWidth = 30;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(624, 436);
-            this.dataGridView.TabIndex = 0;
+            this.dataGridView.TabIndex = 1;
             this.dataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_RowEnter);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
+            // 
+            // dataGridView_ID
+            // 
+            this.dataGridView_ID.DataPropertyName = "id";
+            this.dataGridView_ID.HeaderText = "ID";
+            this.dataGridView_ID.Name = "dataGridView_ID";
+            this.dataGridView_ID.ReadOnly = true;
+            this.dataGridView_ID.Visible = false;
+            // 
+            // dataGridView_Subject
+            // 
+            this.dataGridView_Subject.HeaderText = "Дисциплина";
+            this.dataGridView_Subject.Name = "dataGridView_Subject";
+            this.dataGridView_Subject.ReadOnly = true;
+            this.dataGridView_Subject.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // dataGridView_Date
+            // 
+            this.dataGridView_Date.DataPropertyName = "date";
+            dataGridViewCellStyle1.NullValue = null;
+            this.dataGridView_Date.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView_Date.FillWeight = 60F;
+            this.dataGridView_Date.HeaderText = "Дата проведения";
+            this.dataGridView_Date.Name = "dataGridView_Date";
+            this.dataGridView_Date.ReadOnly = true;
+            // 
+            // dataGridView_RegStartDate
+            // 
+            this.dataGridView_RegStartDate.DataPropertyName = "reg_start_date";
+            this.dataGridView_RegStartDate.FillWeight = 65F;
+            this.dataGridView_RegStartDate.HeaderText = "Дата начала потока";
+            this.dataGridView_RegStartDate.Name = "dataGridView_RegStartDate";
+            this.dataGridView_RegStartDate.ReadOnly = true;
+            // 
+            // dataGridView_RegEndDate
+            // 
+            this.dataGridView_RegEndDate.DataPropertyName = "reg_end_date";
+            this.dataGridView_RegEndDate.FillWeight = 75F;
+            this.dataGridView_RegEndDate.HeaderText = "Дата окончания потока";
+            this.dataGridView_RegEndDate.Name = "dataGridView_RegEndDate";
+            this.dataGridView_RegEndDate.ReadOnly = true;
             // 
             // toolStrip
             // 
@@ -84,7 +125,7 @@
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(624, 25);
-            this.toolStrip.TabIndex = 1;
+            this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
             // toolStrip_Add
@@ -140,47 +181,6 @@
             this.toolStrip_Print.Size = new System.Drawing.Size(75, 22);
             this.toolStrip_Print.Text = "Печать...";
             this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
-            // 
-            // dataGridView_ID
-            // 
-            this.dataGridView_ID.DataPropertyName = "id";
-            this.dataGridView_ID.HeaderText = "ID";
-            this.dataGridView_ID.Name = "dataGridView_ID";
-            this.dataGridView_ID.ReadOnly = true;
-            this.dataGridView_ID.Visible = false;
-            // 
-            // dataGridView_Subject
-            // 
-            this.dataGridView_Subject.HeaderText = "Дисциплина";
-            this.dataGridView_Subject.Name = "dataGridView_Subject";
-            this.dataGridView_Subject.ReadOnly = true;
-            this.dataGridView_Subject.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // dataGridView_Date
-            // 
-            this.dataGridView_Date.DataPropertyName = "date";
-            dataGridViewCellStyle1.NullValue = null;
-            this.dataGridView_Date.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView_Date.FillWeight = 60F;
-            this.dataGridView_Date.HeaderText = "Дата проведения";
-            this.dataGridView_Date.Name = "dataGridView_Date";
-            this.dataGridView_Date.ReadOnly = true;
-            // 
-            // dataGridView_RegStartDate
-            // 
-            this.dataGridView_RegStartDate.DataPropertyName = "reg_start_date";
-            this.dataGridView_RegStartDate.FillWeight = 65F;
-            this.dataGridView_RegStartDate.HeaderText = "Дата начала потока";
-            this.dataGridView_RegStartDate.Name = "dataGridView_RegStartDate";
-            this.dataGridView_RegStartDate.ReadOnly = true;
-            // 
-            // dataGridView_RegEndDate
-            // 
-            this.dataGridView_RegEndDate.DataPropertyName = "reg_end_date";
-            this.dataGridView_RegEndDate.FillWeight = 75F;
-            this.dataGridView_RegEndDate.HeaderText = "Дата окончания потока";
-            this.dataGridView_RegEndDate.Name = "dataGridView_RegEndDate";
-            this.dataGridView_RegEndDate.ReadOnly = true;
             // 
             // Examinations
             // 

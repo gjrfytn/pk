@@ -115,7 +115,7 @@ namespace PK.Classes
                 );
         }
 
-        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(byte years)
+        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(params uint[] profiles)
         {
             //
             /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
@@ -132,13 +132,13 @@ namespace PK.Classes
            XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
             //
 
+            string[] strProfiles = System.Array.ConvertAll(profiles, s => s.ToString());
+
             XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 19 + ".xml");
 
             return doc.Root.Element("DictionaryItems").Elements()
-                .Where(//TODO нормальный фильтр
-                o => o.Element("Year") != null &&
-                ushort.Parse(o.Element("Year").Value) >= System.DateTime.Now.Year - (years - 1) &&
-                o.Element("Profiles").Elements().Any(p => p.Element("ProfileID").Value == "4" || p.Element("ProfileID").Value == "7")
+                .Where(
+                o => o.Element("Profiles").Elements().Any(p => strProfiles.Contains(p.Element("ProfileID").Value))
                 ).ToDictionary(
                 k1 => uint.Parse(k1.Element("OlympicID").Value),
                 v1 => new FIS_Olympic_TEMP

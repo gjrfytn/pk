@@ -144,9 +144,12 @@ namespace PK.Classes
             MessageBox.Show(addedReport + deletedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public void UpdateOlympicsDictionary(byte years)
+        public void UpdateOlympicsDictionary()
         {
-            Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems(years);
+            Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = _FIS_Connection.GetOlympicsDictionaryItems(
+                _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "физика"),
+                _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "математика")
+                );
             Dictionary<uint, FIS_Olympic_TEMP> dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
 
             string addedReport = "В справочник №" + 19 + " \"" + "Олимпиады" + "\" добавлены элементы:";

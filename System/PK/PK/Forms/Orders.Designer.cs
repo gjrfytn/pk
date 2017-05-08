@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_ProtNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_New = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Delete = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Register = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
-            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_ProtNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -62,9 +62,36 @@
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(524, 376);
-            this.dataGridView.TabIndex = 0;
+            this.dataGridView.TabIndex = 1;
             this.dataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_RowEnter);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
+            // 
+            // dataGridView_Number
+            // 
+            this.dataGridView_Number.FillWeight = 70F;
+            this.dataGridView_Number.HeaderText = "Номер";
+            this.dataGridView_Number.Name = "dataGridView_Number";
+            this.dataGridView_Number.ReadOnly = true;
+            // 
+            // dataGridView_Type
+            // 
+            this.dataGridView_Type.HeaderText = "Тип";
+            this.dataGridView_Type.Name = "dataGridView_Type";
+            this.dataGridView_Type.ReadOnly = true;
+            // 
+            // dataGridView_Date
+            // 
+            this.dataGridView_Date.FillWeight = 50F;
+            this.dataGridView_Date.HeaderText = "Дата";
+            this.dataGridView_Date.Name = "dataGridView_Date";
+            this.dataGridView_Date.ReadOnly = true;
+            // 
+            // dataGridView_ProtNumber
+            // 
+            this.dataGridView_ProtNumber.FillWeight = 70F;
+            this.dataGridView_ProtNumber.HeaderText = "Номер протокола";
+            this.dataGridView_ProtNumber.Name = "dataGridView_ProtNumber";
+            this.dataGridView_ProtNumber.ReadOnly = true;
             // 
             // toolStrip
             // 
@@ -77,7 +104,7 @@
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(524, 25);
-            this.toolStrip.TabIndex = 1;
+            this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
             // toolStrip_New
@@ -124,33 +151,6 @@
             this.toolStrip_Print.Size = new System.Drawing.Size(66, 22);
             this.toolStrip_Print.Text = "Печать";
             this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
-            // 
-            // dataGridView_Number
-            // 
-            this.dataGridView_Number.FillWeight = 70F;
-            this.dataGridView_Number.HeaderText = "Номер";
-            this.dataGridView_Number.Name = "dataGridView_Number";
-            this.dataGridView_Number.ReadOnly = true;
-            // 
-            // dataGridView_Type
-            // 
-            this.dataGridView_Type.HeaderText = "Тип";
-            this.dataGridView_Type.Name = "dataGridView_Type";
-            this.dataGridView_Type.ReadOnly = true;
-            // 
-            // dataGridView_Date
-            // 
-            this.dataGridView_Date.FillWeight = 50F;
-            this.dataGridView_Date.HeaderText = "Дата";
-            this.dataGridView_Date.Name = "dataGridView_Date";
-            this.dataGridView_Date.ReadOnly = true;
-            // 
-            // dataGridView_ProtNumber
-            // 
-            this.dataGridView_ProtNumber.FillWeight = 70F;
-            this.dataGridView_ProtNumber.HeaderText = "Номер протокола";
-            this.dataGridView_ProtNumber.Name = "dataGridView_ProtNumber";
-            this.dataGridView_ProtNumber.ReadOnly = true;
             // 
             // Orders
             // 
