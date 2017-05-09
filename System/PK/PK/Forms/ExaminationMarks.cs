@@ -18,7 +18,7 @@ namespace PK.Forms
             InitializeComponent();
 
             dataGridView_UID.ValueType = typeof(uint);
-            dataGridView_Mark.ValueType = typeof(sbyte);
+            dataGridView_Mark.ValueType = typeof(short); //sbyte почему-то превращается в short при значении -1 в ячейке.
             #endregion
 
             _DB_Connection = connection;
@@ -58,6 +58,9 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
+            if (dataGridView.IsCurrentCellDirty)
+                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
             Dictionary<uint, string> minMarksConsts = new Dictionary<uint, string>
             {
                 { 1,"min_russian_mark" },
@@ -79,9 +82,9 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dataGridView.Rows)
                 table.Add(new string[]
                 {
-                    row.Cells["dataGridView_UID"].Value.ToString(),
-                    row.Cells["dataGridView_Name"].Value.ToString(),
-                    ((short)row.Cells["dataGridView_Mark"].Value==-1)?"неявка": row.Cells["dataGridView_Mark"].Value.ToString(),
+                    row.Cells[dataGridView_UID.Index].Value.ToString(),
+                    row.Cells[dataGridView_Name.Index].Value.ToString(),
+                    ((short)row.Cells[dataGridView_Mark.Index].Value==-1)?"неявка": row.Cells[dataGridView_Mark.Index].Value.ToString(),
                 });
 
             string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
@@ -110,13 +113,18 @@ namespace PK.Forms
                     {
                         {dataGridView_UID.DataPropertyName,dataGridView[0,e.RowIndex].Value },
                         { "examination_id", _ExaminationID}
-                    }
-                    );
+                    });
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void ExaminationMarks_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dataGridView.IsCurrentCellDirty)
+                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
     }
 }

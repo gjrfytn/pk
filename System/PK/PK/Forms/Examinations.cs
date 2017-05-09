@@ -12,7 +12,7 @@ namespace PK.Forms
 
         private uint SelectedExamID
         {
-            get { return (uint)dataGridView.SelectedRows[0].Cells["dataGridView_ID"].Value; }
+            get { return (uint)dataGridView.SelectedRows[0].Cells[dataGridView_ID.Index].Value; }
         }
 
         public Examinations(Classes.DB_Connector connection)
@@ -39,13 +39,13 @@ namespace PK.Forms
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (ExaminationHasMarks((uint)e.Row.Cells["dataGridView_ID"].Value))
+            if (ExaminationHasMarks((uint)e.Row.Cells[dataGridView_ID.Index].Value))
             {
                 MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
             else if (Classes.Utility.ShowUnrevertableActionMessageBox())
-                _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells["dataGridView_ID"].Value } });
+                _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[dataGridView_ID.Index].Value } });
             else
                 e.Cancel = true;
         }
@@ -96,11 +96,11 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL,1)
                 }
-                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegStartDate"].Value &&
-               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_RegEndDate"].Value
+                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
+               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value
                 ).Select(s => (uint)s[0]);
 
-            uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells["dataGridView_Subject"].Value.ToString());
+            uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());
 
             var alreadyPassedAppls = _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
@@ -111,7 +111,7 @@ namespace PK.Forms
                     DB_Table.EXAMINATIONS,
                     new string[] { "id", "date" },
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("subject_id", Relation.EQUAL, subjectID) }
-                    ).Where(s => ((DateTime)s[1]).Year == ((DateTime)dataGridView.SelectedRows[0].Cells["dataGridView_Date"].Value).Year),
+                    ).Where(s => ((DateTime)s[1]).Year == ((DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_Date.Index].Value).Year),
                 k1 => k1[1],
                 k2 => k2[0],
                 (s1, s2) => (uint)s1[0]

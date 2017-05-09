@@ -125,6 +125,7 @@
             this.Name = "ExaminationMarks";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExaminationMarksForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExaminationMarks_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
