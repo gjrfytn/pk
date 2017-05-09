@@ -39,9 +39,9 @@ namespace PK.Forms
             cbType.ValueMember = "Item1";
             cbType.DataSource = new List<Tuple<string, string>>
             {
-                new Tuple<string, string>( "admission" ,"Зачисление" ),
-                new Tuple<string, string>( "exception" ,"Отчисление"),
-                new Tuple<string, string>("hostel" ,"Выделение мест в общежитии" )
+                Tuple.Create( "admission" ,"Зачисление" ),
+                Tuple.Create( "exception" ,"Отчисление"),
+                Tuple.Create("hostel" ,"Выделение мест в общежитии" )
             };
 
             rbBudget.Tag = new RB_Tag("budget", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB));
@@ -194,9 +194,9 @@ namespace PK.Forms
                                 new string[] { "name" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,s[0]),
-                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,s[1]),
-                                    new Tuple<string, Relation, object>("short_name",Relation.EQUAL,s[2])
+                                    Tuple.Create("faculty_short_name",Relation.EQUAL,s[0]),
+                                    Tuple.Create("direction_id",Relation.EQUAL,s[1]),
+                                    Tuple.Create("short_name",Relation.EQUAL,s[2])
                                 })[0][0].ToString()
                         }
                         ).ToList();
@@ -207,7 +207,7 @@ namespace PK.Forms
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
-                        }).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
+                        }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0)
                         .Select(s => new { Value = new CB_B_Value(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
                 else
@@ -514,7 +514,7 @@ namespace PK.Forms
                                 }),
                             k1 => k1[0],
                             k2 => k2[0],
-                            (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                            (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
                             );
         }
 
@@ -539,7 +539,7 @@ namespace PK.Forms
                              }),
                          k1 => k1[0],
                          k2 => k2[0],
-                         (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                         (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
                          );
         }
 

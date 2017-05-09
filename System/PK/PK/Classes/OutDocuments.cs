@@ -128,7 +128,7 @@ namespace PK.Classes
                     appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
                     string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
                     (eduDoc.Original!=null?"Оригинал ":"Копия ")+eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
-                    string.Join(", ",applEntr.Select(en=>streams[new Tuple<uint, uint>( (uint)en[0],(uint)en[1])]).Distinct())
+                    string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct())
                 });
             }
 

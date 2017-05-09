@@ -135,8 +135,8 @@ namespace PK.Forms
 
             var applsSubjects = applsDirections.Join(
                 subjectDirections,
-                k1 => new Tuple<object, object>(k1[1], k1[2]),
-                k2 => new Tuple<object, object>(k2[0], k2[1]),
+                k1 => Tuple.Create(k1[1], k1[2]),
+                k2 => Tuple.Create(k2[0], k2[1]),
                 (s1, s2) => (uint)s1[0]
                 ).Distinct();
 

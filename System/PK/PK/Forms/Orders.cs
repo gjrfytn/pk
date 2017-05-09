@@ -23,10 +23,10 @@ namespace PK.Forms
 
         private readonly Tuple<string, APPL_STATUS>[] _Statuses =
             {
-            new Tuple<string, APPL_STATUS>( "new" ,APPL_STATUS.NEW ),
-            new Tuple<string, APPL_STATUS>(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
-            new Tuple<string, APPL_STATUS>(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
-            new Tuple<string, APPL_STATUS>(  "adm_both" ,APPL_STATUS.ADM_BOTH )
+            Tuple.Create( "new" ,APPL_STATUS.NEW ),
+            Tuple.Create(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
+            Tuple.Create(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
+            Tuple.Create(  "adm_both" ,APPL_STATUS.ADM_BOTH )
         };
 
         private readonly Dictionary<string, string> _OrderTypes = new Dictionary<string, string>

@@ -49,8 +49,7 @@ namespace PK.Forms
                 entrantsIDs,
                 en => en[0],
                 i => i[0],
-                (s1, s2) => new Tuple<uint, string, string, string>
-                (
+                (s1, s2) => Tuple.Create(
                     (uint)s1[0],
                     s1[1].ToString(),
                     s1[2].ToString(),
@@ -87,7 +86,7 @@ namespace PK.Forms
                 foreach (Tuple<char, string> aud in _Distribution.FindAll(c => c.Item1 == name[0]))
                     if (fill[aud.Item2].Item1 < fill[aud.Item2].Item2)
                     {
-                        fill[aud.Item2] = new Tuple<ushort, ushort>((ushort)(fill[aud.Item2].Item1 + 1), fill[aud.Item2].Item2);
+                        fill[aud.Item2] = Tuple.Create((ushort)(fill[aud.Item2].Item1 + 1), fill[aud.Item2].Item2);
 
                         _EntrantsTable.Add(new string[]
                         {

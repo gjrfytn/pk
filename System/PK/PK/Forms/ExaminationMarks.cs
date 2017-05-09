@@ -48,7 +48,7 @@ namespace PK.Forms
                 object[] entrant = _DB_Connection.Select(
                     DB_Table.ENTRANTS_VIEW,
                     new string[] { "last_name", "first_name", "middle_name" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, row[0]) }
+                    new List<Tuple<string, Relation, object>> { Tuple.Create("id", Relation.EQUAL, row[0]) }
                     )[0];
                 dataGridView.Rows.Add(row[0], entrant[0].ToString() + " " + entrant[1].ToString() + " " + entrant[2].ToString(), row[1]);
             }

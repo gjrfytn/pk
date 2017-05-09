@@ -103,7 +103,7 @@
             this.bOpen.Location = new System.Drawing.Point(153, 149);
             this.bOpen.Name = "bOpen";
             this.bOpen.Size = new System.Drawing.Size(61, 23);
-            this.bOpen.TabIndex = 5;
+            this.bOpen.TabIndex = 7;
             this.bOpen.Text = "Открыть";
             this.bOpen.UseVisualStyleBackColor = true;
             this.bOpen.Click += new System.EventHandler(this.bOpen_Click);
@@ -125,7 +125,7 @@
             this.cbAdmAgreement.Location = new System.Drawing.Point(12, 126);
             this.cbAdmAgreement.Name = "cbAdmAgreement";
             this.cbAdmAgreement.Size = new System.Drawing.Size(217, 17);
-            this.cbAdmAgreement.TabIndex = 7;
+            this.cbAdmAgreement.TabIndex = 5;
             this.cbAdmAgreement.Text = "Заявление о согласии на зачисление";
             this.cbAdmAgreement.UseVisualStyleBackColor = true;
             // 
@@ -156,11 +156,11 @@
         #endregion
         private System.Windows.Forms.Button bOpen;
         private System.Windows.Forms.Button bPrint;
-        public System.Windows.Forms.CheckBox cbMoveJournal;
-        public System.Windows.Forms.CheckBox cbInventory;
-        public System.Windows.Forms.CheckBox cbPercRecordFace;
-        public System.Windows.Forms.CheckBox cbPercRecordBack;
-        public System.Windows.Forms.CheckBox cbReceipt;
-        public System.Windows.Forms.CheckBox cbAdmAgreement;
+        private System.Windows.Forms.CheckBox cbMoveJournal;
+        private System.Windows.Forms.CheckBox cbInventory;
+        private System.Windows.Forms.CheckBox cbPercRecordFace;
+        private System.Windows.Forms.CheckBox cbPercRecordBack;
+        private System.Windows.Forms.CheckBox cbReceipt;
+        private System.Windows.Forms.CheckBox cbAdmAgreement;
     }
 }
