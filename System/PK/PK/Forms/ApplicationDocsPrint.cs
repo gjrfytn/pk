@@ -54,6 +54,8 @@ namespace PK.Forms
                     { new Tuple<uint,uint>(12,16),Tuple.Create("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
                 };
 
+            string[] medCertDirections = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
+
             List<Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>> documents =
                 new List<Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>>();
 
@@ -101,61 +103,69 @@ namespace PK.Forms
                     OrigDate = s[6] as DateTime?
                 });
 
-            inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
-            if (entrances.Any(s => s.Directions.Any(en => en.AgreedDate != null && en.DisagreedDate == null)))
-                inventoryTableParams[1].Add(new string[] { "Заявление о согласии на зачисление" });
+            object[] applData = _DB_Connection.Select(
+                DB_Table.APPLICATIONS,
+                new string[] { "registration_time", "edit_time", "registrator_login", "needs_hostel", "mcado", "chernobyl", "passing_examinations", "priority_right" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _ID) }
+                )[0];
+            DateTime regTime = (DateTime)applData[0];
+            DateTime? editTime = applData[1] as DateTime?;
+            string registratorName = applData[2].ToString().Split(' ')[0];
+            bool hostel = (bool)applData[3];
+            bool mcado = (bool)applData[4];
+            bool chernobyl = (bool)applData[5];
+            bool passing = (bool)applData[6];
+            bool priority = (bool)applData[7];
 
             bool original = false;
             bool quota = false;
 
-            foreach (var document in docs)
-                if (document.Type == "identity")
-                    inventoryTableParams[1].Add(new string[] { "Копия паспорта" });
-                else if (document.Type == "school_certificate" || document.Type == "high_edu_diploma" || document.Type == "academic_diploma")
-                    if (document.Type == "academic_diploma")
-                        inventoryTableParams[1].Add(new string[] { "Справка отдела кадров" });
-                    else
-                    {
-                        string buf = document.Series + " " + document.Number;
-                        switch (document.Type)
-                        {
-                            case "school_certificate":
-                                buf = " аттестата " + buf;
-                                break;
-                            case "high_edu_diploma":
-                                buf = " диплома " + buf;
-                                break;
-                            case "academic_diploma":
-                                buf = " академической справки " + buf;
-                                break;
-                        }
+            inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
+            if (entrances.Any(s => s.Directions.Any(e => e.AgreedDate != null && e.DisagreedDate == null)))
+                inventoryTableParams[1].Add(new string[] { "Заявление о согласии на зачисление" });
 
-                        if (document.OrigDate.HasValue)
-                        {
-                            inventoryTableParams[1].Add(new string[] { "Оригинал" + buf + " Дата ориг.: " + document.OrigDate.Value.ToShortDateString() });
-                            original = true;
-                        }
-                        else
-                            inventoryTableParams[1].Add(new string[] { "Копия" + buf });
-                    }
-                else if (
-                    document.Type == "orphan" ||
-                    document.Type == "disability" ||
-                    document.Type == "medical" ||
-                    document.Type == "olympic" ||
-                    document.Type == "olympic_total" ||
-                    document.Type == "ukraine_olympic" ||
-                    document.Type == "international_olympic" ||
-                    document.Type == "olympic_total"
-                    )
-                    inventoryTableParams[1].Add(new string[] { "Направление ПК" });
-                else if (document.Type == "orphan" || document.Type == "disability" || document.Type == "medical")
+            if (docs.Any(s => s.Type == "identity"))
+                inventoryTableParams[1].Add(new string[] { "Копия паспорта" });
+
+            var eduDoc = docs.Single(s => s.Type == "school_certificate" || s.Type == "high_edu_diploma" || s.Type == "academic_diploma");
+            if (eduDoc.Type == "academic_diploma")
+                inventoryTableParams[1].Add(new string[] { "Справка отдела кадров" });
+            else
+            {
+                string buf = eduDoc.Series + " " + eduDoc.Number;
+                if (eduDoc.Type == "school_certificate")
+                    buf = " аттестата " + buf;
+                else
+                    buf = " диплома " + buf;
+
+                if (eduDoc.OrigDate.HasValue)
                 {
-                    inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
-                    quota = true;
+                    inventoryTableParams[1].Add(new string[] { "Оригинал" + buf + " Дата ориг.: " + eduDoc.OrigDate.Value.ToShortDateString() });
+                    original = true;
                 }
-                else if (document.Type == "photos")
-                    inventoryTableParams[1].Add(new string[] { "4 фотографии 3х4" });
+                else
+                    inventoryTableParams[1].Add(new string[] { "Копия" + buf });
+            }
+
+            if (chernobyl || priority || docs.Any(s =>
+              s.Type == "orphan" ||
+              s.Type == "disability" ||
+              s.Type == "medical" ||
+              s.Type == "olympic" ||
+              s.Type == "olympic_total" ||
+              s.Type == "ukraine_olympic" ||
+              s.Type == "international_olympic"
+            ))
+                inventoryTableParams[1].Add(new string[] { "Направление ПК" });
+
+            if (entrances.Any(s => s.Directions.Any(e => medCertDirections.Contains(dbHelper.GetDirectionNameAndCode(e.Direction).Item2))))
+            {
+                inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
+                quota = true;
+            }
+
+            if (docs.Any(s => s.Type == "photos"))
+                inventoryTableParams[1].Add(new string[] { "4 фотографии 3х4" });
 
             object[] entrant = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
@@ -178,20 +188,6 @@ namespace PK.Forms
                )[0];
             string homePhone = entrantData[0].ToString();
             string mobilePhone = entrantData[1].ToString();
-
-            object[] applData = _DB_Connection.Select(
-                DB_Table.APPLICATIONS,
-                new string[] { "registration_time", "edit_time", "registrator_login", "needs_hostel", "mcado", "chernobyl", "passing_examinations", "priority_right" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _ID) }
-                )[0];
-            DateTime regTime = (DateTime)applData[0];
-            DateTime? editTime = applData[1] as DateTime?;
-            string registratorName = applData[2].ToString().Split(' ')[0];
-            bool hostel = (bool)applData[3];
-            bool mcado = (bool)applData[4];
-            bool chernobyl = (bool)applData[5];
-            bool passing = (bool)applData[6];
-            bool priority = (bool)applData[7];
 
             if (cbInventory.Checked)
                 documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
