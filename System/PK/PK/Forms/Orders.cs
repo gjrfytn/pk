@@ -137,13 +137,19 @@ namespace PK.Forms
                             transaction
                             );
                 }
+                else
+                {
+                    throw new NotImplementedException();
+                }
 
                 transaction.Commit();
             }
             dataGridView.SelectedRows[0].Cells[dataGridView_ProtNumber.Index].Value = newProtocolNumber;
 
             toolStrip_Edit.Enabled = false;
+            toolStrip_Delete.Enabled = false;
             toolStrip_Register.Enabled = false;
+            toolStrip_Print.Enabled = true;
         }
 
         private void toolStrip_Print_Click(object sender, EventArgs e)

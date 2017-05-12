@@ -98,7 +98,7 @@ namespace PK.Classes
                 while (reader.Read())
                 {
                     results.Add(reader.GetString(0) + " (" + reader.GetString(1) + ")");
-                    indexes.Add(reader.GetValue(2)?.ToString() ?? "");
+                    indexes.Add(reader.GetValue(2).ToString());
                 }
             }
 
@@ -151,7 +151,7 @@ namespace PK.Classes
                 Dictionary<string, string> towns = new Dictionary<string, string>();
                 while (reader.Read())
                 {
-                    string code = reader.GetValue(2).ToString();
+                    string code = reader.GetString(2);
                     string townCode = code.Substring(5, 3);
                     string name = reader.GetString(0) + " (" + reader.GetString(1) + ")";
                     if (code.Substring(8) == "00000")
@@ -163,8 +163,8 @@ namespace PK.Classes
                     {
                         if (townCode == "000")
                         {
-                            string index = reader.GetValue(3)?.ToString();
-                            if (index != null)
+                            string index = reader.GetValue(3).ToString();
+                            if (index != "")
                             {
                                 string extendedName = name + " [" + index + "]";
                                 if (!_TownsAndSettls.ContainsKey(extendedName))
@@ -176,8 +176,8 @@ namespace PK.Classes
                             string extendedName = name + "(" + towns[townCode] + ")";
                             if (_TownsAndSettls.ContainsKey(extendedName))
                             {
-                                string index = reader.GetValue(3)?.ToString();
-                                if (index != null)
+                                string index = reader.GetValue(3).ToString();
+                                if (index != "")
                                 {
                                     extendedName = name + " [" + index + "]" + "(" + towns[townCode] + ")";
                                     if (!_TownsAndSettls.ContainsKey(extendedName))

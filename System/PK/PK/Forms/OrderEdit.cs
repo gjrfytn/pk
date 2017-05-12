@@ -31,6 +31,7 @@ namespace PK.Forms
         {
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _EditNumber = number;
 
             #region Components
             InitializeComponent();
@@ -51,31 +52,34 @@ namespace PK.Forms
             rbO.Tag = new RB_Tag("o", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO));
             rbOZ.Tag = new RB_Tag("oz", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ));
             rbZ.Tag = new RB_Tag("z", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ));
+
+            if (_EditNumber != null)
+                dtpDate.Tag = true;
+            else
+                dtpDate.Tag = false;
             #endregion
 
             cbFDP.DisplayMember = "Display";
             cbFDP.ValueMember = "Value";
 
-            _EditNumber = number;
-
-            if (number != null)
+            if (_EditNumber != null)
             {
                 object[] order = _DB_Connection.Select(
                     DB_Table.ORDERS,
                     new string[] { "type", "date", "education_form_id", "finance_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("number",Relation.EQUAL,number)
+                        new Tuple<string, Relation, object>("number",Relation.EQUAL,_EditNumber)
                     })[0];
 
-                tbNumber.Text = number;
+                tbNumber.Text = _EditNumber;
                 dtpDate.Value = (DateTime)order[1];
 
                 string type = order[0].ToString();
                 cbType.SelectedValue = type;
                 if (type == "hostel")
                 {
-
+                    throw new NotImplementedException();
                 }
                 else
                 {
@@ -93,7 +97,7 @@ namespace PK.Forms
                     foreach (uint applID in _DB_Connection.Select(
                         DB_Table.ORDERS_HAS_APPLICATIONS,
                         new string[] { "applications_id" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, _EditNumber) }
                         ).Select(s => (uint)s[0]))
                         foreach (DataGridViewRow row in dataGridView.Rows)
                             if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
@@ -237,7 +241,7 @@ namespace PK.Forms
             }
             else
             {
-
+                throw new NotImplementedException();
             }
         }
 
@@ -284,6 +288,9 @@ namespace PK.Forms
                 MessageBox.Show("Не выбран факультет/направление/профиль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            if (!(bool)dtpDate.Tag && !Classes.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
+                return;
 
             string faculty;
             uint direction;
@@ -456,7 +463,7 @@ namespace PK.Forms
             else
             {
                 CB_B_Value buf = (CB_B_Value)cbFDP.SelectedValue;
-                var entranceApplications = _DB_Connection.Select(
+                /*var entranceApplications = _DB_Connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "application_id" },
                     new List<Tuple<string, Relation, object>>
@@ -466,9 +473,9 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,buf.Item1),
                         new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,buf.Item2),
                         new Tuple<string, Relation, object>("is_disagreed_date",Relation.NOT_EQUAL,null)
-                    }).Select(s => (uint)s[0]);
+                    }).Select(s => (uint)s[0]);*/
 
-                return GetCampApplsWithStatuses("adm_budget", "adm_both").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).Where(appl =>
+                return GetCampApplsWithStatuses("adm_budget", "adm_both")/*.Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)*/.Where(appl =>
                 {
                     var orders = GetAdmExcOrders(appl, buf);
                     var admOrders = orders.Where(s => s.Item1 == "admission");
@@ -533,7 +540,7 @@ namespace PK.Forms
                                  new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
                                  new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
                                  new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                 new Tuple<string, Relation, object>("education_source_id",Relation.EQUAL,CheckedEduSource),
+                                 new Tuple<string, Relation, object>("finance_source_id",Relation.EQUAL,CheckedEduSource),
                                  new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, direction.Item1),
                                  new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, direction.Item2)
                              }),
@@ -676,6 +683,11 @@ namespace PK.Forms
                 return list.Max();
 
             return null;
+        }
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDate.Tag = true;
         }
     }
 }

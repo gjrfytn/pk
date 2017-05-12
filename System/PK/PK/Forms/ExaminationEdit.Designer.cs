@@ -96,6 +96,7 @@
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
             this.dtpDate.TabIndex = 3;
+            this.dtpDate.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // lSubject
             // 
@@ -142,6 +143,7 @@
             this.dtpRegStartDate.Name = "dtpRegStartDate";
             this.dtpRegStartDate.Size = new System.Drawing.Size(90, 20);
             this.dtpRegStartDate.TabIndex = 5;
+            this.dtpRegStartDate.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // dtpRegEndDate
             // 
@@ -152,6 +154,7 @@
             this.dtpRegEndDate.Name = "dtpRegEndDate";
             this.dtpRegEndDate.Size = new System.Drawing.Size(90, 20);
             this.dtpRegEndDate.TabIndex = 7;
+            this.dtpRegEndDate.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // groupBox
             // 

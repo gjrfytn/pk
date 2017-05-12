@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace PK
+namespace PK.Forms
 {
     partial class OlympicsDictionary : Form
     {

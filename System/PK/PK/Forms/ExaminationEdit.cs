@@ -15,6 +15,7 @@ namespace PK.Forms
         {
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _ID = id;
 
             #region Components
             InitializeComponent();
@@ -33,9 +34,18 @@ namespace PK.Forms
             dtpRegStartDate.MaxDate = dtpDate.MaxDate;
             dtpRegEndDate.MinDate = dtpDate.MinDate;
             dtpRegEndDate.MaxDate = dtpDate.MaxDate;
-            #endregion
 
-            _ID = id;
+            if (_ID.HasValue)
+            {
+                foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
+                    dtp.Tag = true;
+            }
+            else
+            {
+                foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
+                    dtp.Tag = false;
+            }
+            #endregion
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
 
@@ -87,6 +97,9 @@ namespace PK.Forms
                     MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
+            if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !Classes.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))
+                return;
 
             Dictionary<string, object> data = new Dictionary<string, object>
                     {
@@ -149,6 +162,11 @@ namespace PK.Forms
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void dtp_ValueChanged(object sender, EventArgs e)
+        {
+            ((DateTimePicker)sender).Tag = true;
         }
     }
 }
