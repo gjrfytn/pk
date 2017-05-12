@@ -65,7 +65,6 @@ namespace PK.Forms
         private uint? _TargetOrganizationID;
         private string _MADIOlympName;
         private bool _Agreed;
-        private Dictionary<string, string> _Towns = new Dictionary<string, string>();
 
         private const int _AgreedChangeMaxCount = 2;
 
@@ -483,23 +482,8 @@ namespace PK.Forms
         
         private void tbTown_Enter(object sender, EventArgs e)
         {
-            _Towns.Clear();
-
-            foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, ""))
-                _Towns.Add(settl, "");
-
-            foreach (string town in _KLADR.GetTowns(tbRegion.Text, tbDistrict.Text))
-            {
-                _Towns.Add(town, null);
-                foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, town))
-                    if(_Towns.ContainsKey(settl))
-                        _Towns.Add(settl+"("+town+")", town);
-                    else
-                        _Towns.Add(settl, town);
-            }
-
             tbTown.AutoCompleteCustomSource.Clear();
-            tbTown.AutoCompleteCustomSource.AddRange(_Towns.Keys.ToArray());
+            tbTown.AutoCompleteCustomSource.AddRange(_KLADR.GetTownsAndSettlements(tbRegion.Text,tbDistrict.Text).ToArray());
 
             if (tbTown.AutoCompleteCustomSource.Count == 0)
             {
@@ -510,9 +494,7 @@ namespace PK.Forms
         private void tbStreet_Enter(object sender, EventArgs e)
         {
             tbStreet.AutoCompleteCustomSource.Clear();
-
-            Tuple<string, string> buf = GetTownSettlement();
-            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2).ToArray());
+            tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbTown.Text).ToArray());
 
             if (tbStreet.AutoCompleteCustomSource.Count == 0)
             {
@@ -523,8 +505,7 @@ namespace PK.Forms
         private void cbHouse_Enter(object sender, EventArgs e)
         {
             cbHouse.Items.Clear();
-            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text).ToArray());
-            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text).ToArray());
+            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbTown.Text, tbStreet.Text).ToArray());
 
             if (cbHouse.Items.Count == 0)
             {
@@ -718,8 +699,7 @@ namespace PK.Forms
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
-            Tuple<string, string> buf = GetTownSettlement();
-            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, cbHouse.Text);
+            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, tbTown.Text, tbStreet.Text, cbHouse.Text);
             if (tbPostcode.Text == "")
                 tbPostcode.Enabled = true;
             else
@@ -2670,27 +2650,6 @@ namespace PK.Forms
                     if (char.IsDigit(textBox.Text[i]))
                         number += textBox.Text[i];
             return number;
-        }
-
-        private Tuple<string, string> GetTownSettlement()
-        {
-            if (_Towns.ContainsKey(tbTown.Text))
-            {
-                if (_Towns[tbTown.Text] == null)
-                    return new Tuple<string, string>(tbTown.Text, "");
-                else
-                {
-                    string[] buf = tbTown.Text.Split('(');
-                    if (buf.Length == 4)
-                        return new Tuple<string, string>(_Towns[tbTown.Text], buf[0] + "(" + buf[1]);
-                    else
-                        return new Tuple<string, string>(_Towns[tbTown.Text], tbTown.Text);
-                }
-            }
-            else if (tbTown.Text == "")
-                return new Tuple<string, string>("", "");
-
-            return null;
         }
     }
 }
