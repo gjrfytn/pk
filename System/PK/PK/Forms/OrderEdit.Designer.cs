@@ -71,7 +71,7 @@
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
-            this.cbType.Location = new System.Drawing.Point(12, 24);
+            this.cbType.Location = new System.Drawing.Point(12, 25);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(136, 21);
             this.cbType.TabIndex = 1;
@@ -79,20 +79,20 @@
             // 
             // tbNumber
             // 
-            this.tbNumber.Location = new System.Drawing.Point(12, 64);
+            this.tbNumber.Location = new System.Drawing.Point(12, 69);
             this.tbNumber.MaxLength = 50;
             this.tbNumber.Name = "tbNumber";
             this.tbNumber.Size = new System.Drawing.Size(136, 20);
-            this.tbNumber.TabIndex = 0;
+            this.tbNumber.TabIndex = 3;
             // 
             // cbFDP
             // 
             this.cbFDP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFDP.FormattingEnabled = true;
-            this.cbFDP.Location = new System.Drawing.Point(428, 24);
+            this.cbFDP.Location = new System.Drawing.Point(431, 25);
             this.cbFDP.Name = "cbFDP";
-            this.cbFDP.Size = new System.Drawing.Size(259, 21);
-            this.cbFDP.TabIndex = 4;
+            this.cbFDP.Size = new System.Drawing.Size(441, 21);
+            this.cbFDP.TabIndex = 9;
             this.cbFDP.DropDown += new System.EventHandler(this.cbFDP_DropDown);
             this.cbFDP.SelectionChangeCommitted += new System.EventHandler(this.cbFDP_SelectionChangeCommitted);
             // 
@@ -102,10 +102,10 @@
             this.gbEduSource.Controls.Add(this.rbTarget);
             this.gbEduSource.Controls.Add(this.rbPaid);
             this.gbEduSource.Controls.Add(this.rbBudget);
-            this.gbEduSource.Location = new System.Drawing.Point(154, 12);
+            this.gbEduSource.Location = new System.Drawing.Point(154, 9);
             this.gbEduSource.Name = "gbEduSource";
             this.gbEduSource.Size = new System.Drawing.Size(92, 119);
-            this.gbEduSource.TabIndex = 5;
+            this.gbEduSource.TabIndex = 6;
             this.gbEduSource.TabStop = false;
             this.gbEduSource.Text = "Основание";
             // 
@@ -163,10 +163,10 @@
             this.gbEduForm.Controls.Add(this.rbZ);
             this.gbEduForm.Controls.Add(this.rbOZ);
             this.gbEduForm.Controls.Add(this.rbO);
-            this.gbEduForm.Location = new System.Drawing.Point(252, 12);
+            this.gbEduForm.Location = new System.Drawing.Point(252, 9);
             this.gbEduForm.Name = "gbEduForm";
             this.gbEduForm.Size = new System.Drawing.Size(170, 100);
-            this.gbEduForm.TabIndex = 6;
+            this.gbEduForm.TabIndex = 7;
             this.gbEduForm.TabStop = false;
             this.gbEduForm.Text = "Форма обучения";
             // 
@@ -212,10 +212,10 @@
             // lNumber
             // 
             this.lNumber.AutoSize = true;
-            this.lNumber.Location = new System.Drawing.Point(12, 48);
+            this.lNumber.Location = new System.Drawing.Point(12, 53);
             this.lNumber.Name = "lNumber";
             this.lNumber.Size = new System.Drawing.Size(44, 13);
-            this.lNumber.TabIndex = 7;
+            this.lNumber.TabIndex = 2;
             this.lNumber.Text = "Номер:";
             // 
             // lType
@@ -224,7 +224,7 @@
             this.lType.Location = new System.Drawing.Point(12, 9);
             this.lType.Name = "lType";
             this.lType.Size = new System.Drawing.Size(29, 13);
-            this.lType.TabIndex = 8;
+            this.lType.TabIndex = 0;
             this.lType.Text = "Тип:";
             // 
             // lFDP
@@ -233,7 +233,7 @@
             this.lFDP.Location = new System.Drawing.Point(428, 9);
             this.lFDP.Name = "lFDP";
             this.lFDP.Size = new System.Drawing.Size(78, 13);
-            this.lFDP.TabIndex = 9;
+            this.lFDP.TabIndex = 8;
             this.lFDP.Text = "Направление:";
             // 
             // panel
@@ -253,35 +253,35 @@
             this.panel.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(1008, 143);
+            this.panel.Size = new System.Drawing.Size(884, 143);
             this.panel.TabIndex = 10;
             // 
             // dtpDate
             // 
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDate.Location = new System.Drawing.Point(12, 103);
+            this.dtpDate.Location = new System.Drawing.Point(12, 108);
             this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
-            this.dtpDate.TabIndex = 13;
+            this.dtpDate.TabIndex = 5;
             // 
             // lDate
             // 
             this.lDate.AutoSize = true;
-            this.lDate.Location = new System.Drawing.Point(12, 87);
+            this.lDate.Location = new System.Drawing.Point(12, 92);
             this.lDate.Name = "lDate";
             this.lDate.Size = new System.Drawing.Size(36, 13);
-            this.lDate.TabIndex = 12;
+            this.lDate.TabIndex = 4;
             this.lDate.Text = "Дата:";
             // 
             // bSave
             // 
             this.bSave.Enabled = false;
-            this.bSave.Location = new System.Drawing.Point(827, 61);
+            this.bSave.Location = new System.Drawing.Point(797, 114);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(75, 23);
-            this.bSave.TabIndex = 11;
+            this.bSave.TabIndex = 12;
             this.bSave.Text = "Сохранить";
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);
@@ -290,7 +290,7 @@
             // 
             this.cbShowAdmitted.AutoSize = true;
             this.cbShowAdmitted.Enabled = false;
-            this.cbShowAdmitted.Location = new System.Drawing.Point(252, 114);
+            this.cbShowAdmitted.Location = new System.Drawing.Point(259, 113);
             this.cbShowAdmitted.Name = "cbShowAdmitted";
             this.cbShowAdmitted.Size = new System.Drawing.Size(157, 17);
             this.cbShowAdmitted.TabIndex = 10;
@@ -302,7 +302,6 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -323,35 +322,32 @@
             this.dataGridView.Location = new System.Drawing.Point(0, 143);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersVisible = false;
-            this.dataGridView.Size = new System.Drawing.Size(1008, 418);
+            this.dataGridView.Size = new System.Drawing.Size(884, 418);
             this.dataGridView.TabIndex = 11;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
+            this.dataGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView_CurrentCellDirtyStateChanged);
             // 
             // dataGridView_Added
             // 
-            this.dataGridView_Added.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Added.FillWeight = 30F;
+            this.dataGridView_Added.FillWeight = 20F;
             this.dataGridView_Added.HeaderText = "В приказе";
             this.dataGridView_Added.Name = "dataGridView_Added";
             // 
             // dataGridView_ID
             // 
-            this.dataGridView_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_ID.FillWeight = 30F;
+            this.dataGridView_ID.FillWeight = 20F;
             this.dataGridView_ID.HeaderText = "ID";
             this.dataGridView_ID.Name = "dataGridView_ID";
             this.dataGridView_ID.ReadOnly = true;
             // 
             // dataGridView_Name
             // 
-            this.dataGridView_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_Name.HeaderText = "ФИО";
             this.dataGridView_Name.Name = "dataGridView_Name";
             this.dataGridView_Name.ReadOnly = true;
             // 
             // dataGridView_Status
             // 
-            this.dataGridView_Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_Status.FillWeight = 30F;
             this.dataGridView_Status.HeaderText = "Статус";
             this.dataGridView_Status.Name = "dataGridView_Status";
@@ -359,64 +355,56 @@
             // 
             // dataGridView_MFR
             // 
-            this.dataGridView_MFR.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_MFR.FillWeight = 25F;
+            this.dataGridView_MFR.FillWeight = 15F;
             this.dataGridView_MFR.HeaderText = "МФР";
             this.dataGridView_MFR.Name = "dataGridView_MFR";
             this.dataGridView_MFR.ReadOnly = true;
             // 
             // dataGridView_MOR
             // 
-            this.dataGridView_MOR.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_MOR.FillWeight = 25F;
+            this.dataGridView_MOR.FillWeight = 15F;
             this.dataGridView_MOR.HeaderText = "МОР";
             this.dataGridView_MOR.Name = "dataGridView_MOR";
             this.dataGridView_MOR.ReadOnly = true;
             // 
             // dataGridView_ROI
             // 
-            this.dataGridView_ROI.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_ROI.FillWeight = 25F;
+            this.dataGridView_ROI.FillWeight = 15F;
             this.dataGridView_ROI.HeaderText = "РОИ";
             this.dataGridView_ROI.Name = "dataGridView_ROI";
             this.dataGridView_ROI.ReadOnly = true;
             // 
             // dataGridView_Math
             // 
-            this.dataGridView_Math.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Math.FillWeight = 20F;
+            this.dataGridView_Math.FillWeight = 10F;
             this.dataGridView_Math.HeaderText = "М";
             this.dataGridView_Math.Name = "dataGridView_Math";
             this.dataGridView_Math.ReadOnly = true;
             // 
             // dataGridView_Physics
             // 
-            this.dataGridView_Physics.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Physics.FillWeight = 20F;
+            this.dataGridView_Physics.FillWeight = 10F;
             this.dataGridView_Physics.HeaderText = "Ф";
             this.dataGridView_Physics.Name = "dataGridView_Physics";
             this.dataGridView_Physics.ReadOnly = true;
             // 
             // dataGridView_Russian
             // 
-            this.dataGridView_Russian.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Russian.FillWeight = 20F;
+            this.dataGridView_Russian.FillWeight = 10F;
             this.dataGridView_Russian.HeaderText = "Р";
             this.dataGridView_Russian.Name = "dataGridView_Russian";
             this.dataGridView_Russian.ReadOnly = true;
             // 
             // dataGridView_Social
             // 
-            this.dataGridView_Social.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Social.FillWeight = 20F;
+            this.dataGridView_Social.FillWeight = 10F;
             this.dataGridView_Social.HeaderText = "О";
             this.dataGridView_Social.Name = "dataGridView_Social";
             this.dataGridView_Social.ReadOnly = true;
             // 
             // dataGridView_Foreign
             // 
-            this.dataGridView_Foreign.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridView_Foreign.FillWeight = 20F;
+            this.dataGridView_Foreign.FillWeight = 10F;
             this.dataGridView_Foreign.HeaderText = "И";
             this.dataGridView_Foreign.Name = "dataGridView_Foreign";
             this.dataGridView_Foreign.ReadOnly = true;
@@ -426,12 +414,14 @@
             this.AcceptButton = this.bSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 561);
+            this.ClientSize = new System.Drawing.Size(884, 561);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "OrderEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Приказ";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.gbEduSource.ResumeLayout(false);
             this.gbEduSource.PerformLayout();
             this.gbEduForm.ResumeLayout(false);
@@ -464,6 +454,8 @@
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.CheckBox cbShowAdmitted;
         private System.Windows.Forms.Button bSave;
+        private System.Windows.Forms.Label lDate;
+        private System.Windows.Forms.DateTimePicker dtpDate;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridView_Added;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Name;
@@ -476,7 +468,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Russian;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Social;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Foreign;
-        private System.Windows.Forms.Label lDate;
-        private System.Windows.Forms.DateTimePicker dtpDate;
     }
 }

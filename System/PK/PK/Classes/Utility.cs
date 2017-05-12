@@ -78,6 +78,14 @@ namespace PK.Classes
         }
 
         /// <summary>
+        /// Отображает окно, сообщающее об успешном сохранении данных.
+        /// </summary>
+        public static void ShowChangesSavedMessage()
+        {
+            MessageBox.Show("Изменения успешно сохранены.", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
         /// Распределяет абитуриентов по экзаменационным аудиториям.
         /// </summary>
         /// <param name="rooms">Аудитории (номер, кол-во мест).</param>

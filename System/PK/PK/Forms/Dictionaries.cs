@@ -22,7 +22,7 @@ namespace PK.Forms
         private void dgvDictionaries_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             dgvDictionaryItems.Rows.Clear();
-            foreach (var d in _DB_Helper.GetDictionaryItems((FIS_Dictionary)dgvDictionaries.Rows[e.RowIndex].Cells["dgvDictionaries_ID"].Value))
+            foreach (var d in _DB_Helper.GetDictionaryItems((FIS_Dictionary)dgvDictionaries.Rows[e.RowIndex].Cells[dgvDictionaries_ID.Index].Value))
                 dgvDictionaryItems.Rows.Add(d.Key, d.Value);
         }
 

@@ -115,6 +115,12 @@
     <Compile Include="Forms\DateChoice.Designer.cs">
       <DependentUpon>DateChoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EGE_Check.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EGE_Check.Designer.cs">
+      <DependentUpon>EGE_Check.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExaminationDocsPrint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,12 @@
     </Compile>
     <Compile Include="Forms\OrderEdit.Designer.cs">
       <DependentUpon>OrderEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OrderRegistration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OrderRegistration.Designer.cs">
+      <DependentUpon>OrderRegistration.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Orders.cs">
       <SubType>Form</SubType>
@@ -311,6 +323,9 @@
     <EmbeddedResource Include="Forms\DirectionSelect.resx">
       <DependentUpon>DirectionSelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EGE_Check.resx">
+      <DependentUpon>EGE_Check.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExaminationDocsPrint.resx">
       <DependentUpon>ExaminationDocsPrint.cs</DependentUpon>
     </EmbeddedResource>
@@ -340,6 +355,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OrderEdit.resx">
       <DependentUpon>OrderEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OrderRegistration.resx">
+      <DependentUpon>OrderRegistration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Orders.resx">
       <DependentUpon>Orders.cs</DependentUpon>
@@ -433,6 +451,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DocumentTemplates\AbitAudDistrib.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\AdmAgreement.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\AlphaAuditories.xml">

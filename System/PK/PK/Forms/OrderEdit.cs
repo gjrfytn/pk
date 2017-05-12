@@ -25,8 +25,7 @@ namespace PK.Forms
 
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-
-        private string _EditNumber;
+        private readonly string _EditNumber;
 
         public OrderEdit(Classes.DB_Connector connection, string number)
         {
@@ -40,9 +39,9 @@ namespace PK.Forms
             cbType.ValueMember = "Item1";
             cbType.DataSource = new List<Tuple<string, string>>
             {
-                new Tuple<string, string>( "admission" ,"Зачисление" ),
-                new Tuple<string, string>( "exception" ,"Отчисление"),
-                new Tuple<string, string>("hostel" ,"Выделение мест в общежитии" )
+                Tuple.Create( "admission" ,"Зачисление" ),
+                Tuple.Create( "exception" ,"Отчисление"),
+                Tuple.Create("hostel" ,"Выделение мест в общежитии" )
             };
 
             rbBudget.Tag = new RB_Tag("budget", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB));
@@ -92,13 +91,13 @@ namespace PK.Forms
                     cbFDP_SelectionChangeCommitted(null, null);
 
                     foreach (uint applID in _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        DB_Table.ORDERS_HAS_APPLICATIONS,
                         new string[] { "applications_id" },
                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
                         ).Select(s => (uint)s[0]))
                         foreach (DataGridViewRow row in dataGridView.Rows)
-                            if ((uint)row.Cells["dataGridView_ID"].Value == applID)
-                                row.Cells["dataGridView_Added"].Value = true;
+                            if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
+                                row.Cells[dataGridView_Added.Index].Value = true;
                 }
 
                 cbType.Enabled = false;
@@ -195,9 +194,9 @@ namespace PK.Forms
                                 new string[] { "name" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,s[0]),
-                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,s[1]),
-                                    new Tuple<string, Relation, object>("short_name",Relation.EQUAL,s[2])
+                                    Tuple.Create("faculty_short_name",Relation.EQUAL,s[0]),
+                                    Tuple.Create("direction_id",Relation.EQUAL,s[1]),
+                                    Tuple.Create("short_name",Relation.EQUAL,s[2])
                                 })[0][0].ToString()
                         }
                         ).ToList();
@@ -208,7 +207,7 @@ namespace PK.Forms
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
-                        }).GroupBy(k => new Tuple<object, object>(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
+                        }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0)
                         .Select(s => new { Value = new CB_B_Value(s.Faculty, s.DirID), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
                 else
@@ -242,34 +241,33 @@ namespace PK.Forms
             }
         }
 
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            if (dataGridView.IsCurrentCellDirty)
+                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1 && e.ColumnIndex == dataGridView_Added.Index)
             {
-                if ((bool)dataGridView[e.ColumnIndex, e.RowIndex]
-                    .GetEditedFormattedValue(e.RowIndex, DataGridViewDataErrorContexts.CurrentCellChange)
-                    )
-                {
-                    cbType.Enabled = false;
-                    gbEduSource.Enabled = false;
-                    gbEduForm.Enabled = false;
-                    cbFDP.Enabled = false;
-                    bSave.Enabled = true;
-                }
-                else
+                bool enable = false;
+                if (!(bool)dataGridView[e.ColumnIndex, e.RowIndex].Value)
                 {
                     foreach (DataGridViewRow row in dataGridView.Rows)
-                        if ((bool)row.Cells[e.ColumnIndex]
-                            .GetEditedFormattedValue(row.Index, DataGridViewDataErrorContexts.CurrentCellChange)
-                            )
+                        if ((bool)row.Cells[e.ColumnIndex].Value)
                             return;
 
-                    cbType.Enabled = true;
-                    gbEduSource.Enabled = true;
-                    gbEduForm.Enabled = true;
-                    cbFDP.Enabled = true;
-                    bSave.Enabled = false;
+                    enable = true;
                 }
+
+                lType.Enabled = enable;
+                cbType.Enabled = enable;
+                gbEduSource.Enabled = enable;
+                gbEduForm.Enabled = enable;
+                lFDP.Enabled = enable;
+                cbFDP.Enabled = enable;
+                bSave.Enabled = !enable;
             }
         }
 
@@ -338,17 +336,17 @@ namespace PK.Forms
 
                     string[] fields = { "orders_number", "applications_id" };
                     List<object[]> oldL = _DB_Connection.Select(
-                        DB_Table._ORDERS_HAS_APPLICATIONS,
+                        DB_Table.ORDERS_HAS_APPLICATIONS,
                         fields,
                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, tbNumber.Text) }
                         );
 
                     List<object[]> newL = new List<object[]>();
                     foreach (DataGridViewRow row in dataGridView.Rows)
-                        if ((bool)row.Cells["dataGridView_Added"].Value)
-                            newL.Add(new object[] { tbNumber.Text, row.Cells["dataGridView_ID"].Value });
+                        if ((bool)row.Cells[dataGridView_Added.Index].Value)
+                            newL.Add(new object[] { tbNumber.Text, row.Cells[dataGridView_ID.Index].Value });
 
-                    _DB_Helper.UpdateData(DB_Table._ORDERS_HAS_APPLICATIONS, oldL, newL, fields, fields, transaction);
+                    _DB_Helper.UpdateData(DB_Table.ORDERS_HAS_APPLICATIONS, oldL, newL, fields, fields, transaction);
                 }
                 else
                 {
@@ -357,13 +355,13 @@ namespace PK.Forms
                     _DB_Connection.Insert(DB_Table.ORDERS, values, transaction);
 
                     foreach (DataGridViewRow row in dataGridView.Rows)
-                        if ((bool)row.Cells["dataGridView_Added"].Value)
+                        if ((bool)row.Cells[dataGridView_Added.Index].Value)
                             _DB_Connection.Insert(
-                                DB_Table._ORDERS_HAS_APPLICATIONS,
+                                DB_Table.ORDERS_HAS_APPLICATIONS,
                                 new Dictionary<string, object>
                                 {
                                     { "orders_number", tbNumber.Text},
-                                    { "applications_id", row.Cells["dataGridView_ID"].Value}
+                                    { "applications_id", row.Cells[dataGridView_ID.Index].Value}
                                 },
                                 transaction
                                 );
@@ -372,7 +370,8 @@ namespace PK.Forms
                 transaction.Commit();
             }
 
-            _EditNumber = tbNumber.Text;
+            Classes.Utility.ShowChangesSavedMessage();
+            DialogResult = DialogResult.OK;
         }
 
         private void cbShowAdmitted_CheckedChanged(object sender, EventArgs e)
@@ -497,7 +496,7 @@ namespace PK.Forms
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_P_Value profile)
         {
             return _DB_Connection.Select(
-                DB_Table._ORDERS_HAS_APPLICATIONS,
+                DB_Table.ORDERS_HAS_APPLICATIONS,
                 new string[] { "orders_number" },
                             new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
                             ).Join(
@@ -515,14 +514,14 @@ namespace PK.Forms
                                 }),
                             k1 => k1[0],
                             k2 => k2[0],
-                            (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                            (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
                             );
         }
 
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_B_Value direction)
         {
             return _DB_Connection.Select(
-                         DB_Table._ORDERS_HAS_APPLICATIONS,
+                         DB_Table.ORDERS_HAS_APPLICATIONS,
                          new string[] { "orders_number" },
                          new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
                          ).Join(
@@ -540,7 +539,7 @@ namespace PK.Forms
                              }),
                          k1 => k1[0],
                          k2 => k2[0],
-                         (s1, s2) => new Tuple<string, DateTime>(s2[1].ToString(), (DateTime)s2[2])
+                         (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
                          );
         }
 
@@ -548,60 +547,135 @@ namespace PK.Forms
         {
             dataGridView.Rows.Clear();
 
-            var names = applications.Join(
+            var candidates = applications.Join(
                 _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
                 k1 => k1, k2 => k2[0], (s1, s2) => s2
                 ).Join(
                 _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
                 k1 => k1[1],
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = (uint)s1[0], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
+                (s1, s2) => new { ApplID = (uint)s1[0], EntrID = (uint)s1[1], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
-            var table = names.GroupJoin(
-                _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW),
-                k1 => k1.ApplID,
+            var egeMarks = _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked")
+                .Select(s => new { ApplID = (uint)s[0], Subj = (uint)s[1], Value = (uint)s[2], Checked = (bool)s[3] });
+
+            var examMarks = _DB_Connection.Select(
+                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                new string[] { "entrant_id", "examination_id", "mark" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
+                ).Join(
+                _DB_Connection.Select(DB_Table.EXAMINATIONS, "id", "subject_id"),
+                k1 => k1[1],
                 k2 => k2[0],
-                (s1, s2) => new
-                {
-                    ApplID = s1.ApplID,
-                    Name = s1.Name,
-                    Math = s2.FirstOrDefault(s => (uint)s[1] == 2)?[2], //TODO
-                    Phys = s2.FirstOrDefault(s => (uint)s[1] == 10)?[2], //TODO
-                    Rus = s2.FirstOrDefault(s => (uint)s[1] == 1)?[2], //TODO
-                    Soc = s2.FirstOrDefault(s => (uint)s[1] == 9)?[2], //TODO
-                    For = s2.FirstOrDefault(s => (uint)s[1] == 6)?[2] //TODO
-                });
+                (s1, s2) => new { EntrID = (uint)s1[0], Subj = (uint)s2[1], Mark = (short)s1[2] }
+                );
 
-            foreach (var ent in table)
+            var marks = candidates.Join(
+                egeMarks,
+                k1 => k1.ApplID,
+                k2 => k2.ApplID,
+                (s1, s2) => new { s1.ApplID, s1.EntrID, s1.Name, s2.Subj, Mark = (ushort)s2.Value, s2.Checked }
+                ).Concat(
+                candidates.Join(
+                    examMarks,
+                    k1 => k1.EntrID,
+                    k2 => k2.EntrID,
+                    (s1, s2) => new { s1.ApplID, s1.EntrID, s1.Name, s2.Subj, Mark = (ushort)s2.Mark, Checked = true }
+                    ));
+
+            IEnumerable<uint> dir_subjects;
+            if (rbPaid.Checked)
+                dir_subjects = _DB_Connection.Select(
+                    DB_Table.ENTRANCE_TESTS,
+                    new string[] { "subject_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item1),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item2)
+                    }).Select(s => (uint)s[0]);
+            else
+                dir_subjects = _DB_Connection.Select(
+                    DB_Table.ENTRANCE_TESTS,
+                    new string[] { "subject_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item1),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item2)
+                    }).Select(s => (uint)s[0]);
+
+            var table = marks.GroupBy(
+                k1 => k1.ApplID,
+                (k, g) =>
+                    new
+                    {
+                        ApplID = k,
+                        g.First().Name,
+                        Checked = !g.Any(s => s.Checked == false),
+                        Math = MaxOrNull(g.Where(s => s.Subj == 2).Select(s => s.Mark)), //TODO
+                        Phys = MaxOrNull(g.Where(s => s.Subj == 10).Select(s => s.Mark)), //TODO
+                        Rus = MaxOrNull(g.Where(s => s.Subj == 1).Select(s => s.Mark)), //TODO
+                        Soc = MaxOrNull(g.Where(s => s.Subj == 9).Select(s => s.Mark)), //TODO
+                        For = MaxOrNull(g.Where(s => s.Subj == 6).Select(s => s.Mark)) //TODO
+                    });
+
+            foreach (var appl in table)
             {
-                uint? MFR = null;
-                if (ent.Math != null && ent.Phys != null && ent.Rus != null)
-                    MFR = (uint)ent.Math + (uint)ent.Phys + (uint)ent.Rus;
+                ushort[] minMarks = Array.ConvertAll(
+                    _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
+                    s => (ushort)s
+                    );
+                bool belowMin = false;
+                if (appl.Math < minMarks[0])
+                    belowMin = true;
+                else if (appl.Rus < minMarks[1])
+                    belowMin = true;
+                else if (appl.Phys < minMarks[2])
+                    belowMin = true;
+                else if (appl.Soc < minMarks[3])
+                    belowMin = true;
+                else if (appl.For < minMarks[4])
+                    belowMin = true;
 
-                uint? MOR = null;
-                if (ent.Math != null && ent.Soc != null && ent.Rus != null)
-                    MOR = (uint)ent.Math + (uint)ent.Soc + (uint)ent.Rus;
+                ushort? MFR = null;
+                if (appl.Math != null && appl.Phys != null && appl.Rus != null)
+                    MFR = (ushort)(appl.Math + appl.Phys + appl.Rus);
 
-                uint? ROI = null;
-                if (ent.Rus != null && ent.Soc != null && ent.For != null)
-                    ROI = (uint)ent.Rus + (uint)ent.Soc + (uint)ent.For;
+                ushort? MOR = null;
+                if (appl.Math != null && appl.Soc != null && appl.Rus != null)
+                    MOR = (ushort)(appl.Math + appl.Soc + appl.Rus);
+
+                ushort? ROI = null;
+                if (appl.Rus != null && appl.Soc != null && appl.For != null)
+                    ROI = (ushort)(appl.Rus + appl.Soc + appl.For);
 
                 dataGridView.Rows.Add(
                     false,
-                    ent.ApplID,
-                    ent.Name,
-                    null,
+                    appl.ApplID,
+                    appl.Name,
+                    appl.Checked ? (belowMin ? "Ниже мин." : "OK") : "Непров. ЕГЭ",
                     MFR,
                     MOR,
                     ROI,
-                    ent.Math,
-                    ent.Phys,
-                    ent.Rus,
-                    ent.Soc,
-                    ent.For
+                    appl.Math,
+                    appl.Phys,
+                    appl.Rus,
+                    appl.Soc,
+                    appl.For
                     );
             }
+
+            dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
+        }
+
+        private ushort? MaxOrNull(IEnumerable<ushort> list)
+        {
+            if (list.Count() != 0)
+                return list.Max();
+
+            return null;
         }
     }
 }

@@ -19,18 +19,21 @@ namespace PK.Forms
 
         private void bSubjects_Click(object sender, EventArgs e)
         {
+            openFileDialog.Title = "Открыть файл с субъектами";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 tbSubjects.Text = openFileDialog.FileName;
         }
 
         private void bStreets_Click(object sender, EventArgs e)
         {
+            openFileDialog.Title = "Открыть файл с улицами";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 tbStreets.Text = openFileDialog.FileName;
         }
 
         private void bHouses_Click(object sender, EventArgs e)
         {
+            openFileDialog.Title = "Открыть файл с домами";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
                 tbHouses.Text = openFileDialog.FileName;
         }

@@ -36,7 +36,7 @@ namespace PK.Classes
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
         }
 
-        public static void Create(string templateFile, string resultFile, string[] singleParams, List<string[]>[] tableParams)
+        public static void Create(string templateFile, string resultFile, string[] singleParams, IEnumerable<string[]>[] tableParams)
         {
             XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 

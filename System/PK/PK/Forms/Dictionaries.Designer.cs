@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.dgvDictionaries = new System.Windows.Forms.DataGridView();
-            this.dgvDictionaries_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDictionaries_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDictionaryItems = new System.Windows.Forms.DataGridView();
-            this.dgvDictionaryItems_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDictionaryItems_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_Update = new System.Windows.Forms.ToolStripButton();
+            this.dgvDictionaries_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDictionaries_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDictionaryItems_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDictionaryItems_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaries)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaryItems)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -60,27 +60,9 @@
             this.dgvDictionaries.RowHeadersVisible = false;
             this.dgvDictionaries.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvDictionaries.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDictionaries.Size = new System.Drawing.Size(354, 583);
+            this.dgvDictionaries.Size = new System.Drawing.Size(380, 436);
             this.dgvDictionaries.TabIndex = 0;
             this.dgvDictionaries.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDictionaries_RowEnter);
-            // 
-            // dgvDictionaries_ID
-            // 
-            this.dgvDictionaries_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDictionaries_ID.FillWeight = 10F;
-            this.dgvDictionaries_ID.HeaderText = "ID";
-            this.dgvDictionaries_ID.MinimumWidth = 30;
-            this.dgvDictionaries_ID.Name = "dgvDictionaries_ID";
-            this.dgvDictionaries_ID.ReadOnly = true;
-            this.dgvDictionaries_ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dgvDictionaries_Name
-            // 
-            this.dgvDictionaries_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDictionaries_Name.HeaderText = "Наименование";
-            this.dgvDictionaries_Name.Name = "dgvDictionaries_Name";
-            this.dgvDictionaries_Name.ReadOnly = true;
-            this.dgvDictionaries_Name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // dgvDictionaryItems
             // 
@@ -94,33 +76,15 @@
             this.dgvDictionaryItems_ID,
             this.dgvDictionaryItems_Name});
             this.dgvDictionaryItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvDictionaryItems.Location = new System.Drawing.Point(354, 25);
+            this.dgvDictionaryItems.Location = new System.Drawing.Point(380, 25);
             this.dgvDictionaryItems.MultiSelect = false;
             this.dgvDictionaryItems.Name = "dgvDictionaryItems";
             this.dgvDictionaryItems.ReadOnly = true;
             this.dgvDictionaryItems.RowHeadersVisible = false;
             this.dgvDictionaryItems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvDictionaryItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDictionaryItems.Size = new System.Drawing.Size(454, 583);
+            this.dgvDictionaryItems.Size = new System.Drawing.Size(404, 436);
             this.dgvDictionaryItems.TabIndex = 1;
-            // 
-            // dgvDictionaryItems_ID
-            // 
-            this.dgvDictionaryItems_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDictionaryItems_ID.FillWeight = 10F;
-            this.dgvDictionaryItems_ID.HeaderText = "ID";
-            this.dgvDictionaryItems_ID.MinimumWidth = 50;
-            this.dgvDictionaryItems_ID.Name = "dgvDictionaryItems_ID";
-            this.dgvDictionaryItems_ID.ReadOnly = true;
-            this.dgvDictionaryItems_ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dgvDictionaryItems_Name
-            // 
-            this.dgvDictionaryItems_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDictionaryItems_Name.HeaderText = "Наименование";
-            this.dgvDictionaryItems_Name.Name = "dgvDictionaryItems_Name";
-            this.dgvDictionaryItems_Name.ReadOnly = true;
-            this.dgvDictionaryItems_Name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // toolStrip
             // 
@@ -128,7 +92,7 @@
             this.toolStrip_Update});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(808, 25);
+            this.toolStrip.Size = new System.Drawing.Size(784, 25);
             this.toolStrip.TabIndex = 2;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -141,15 +105,48 @@
             this.toolStrip_Update.Text = "Обновить";
             this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
             // 
+            // dgvDictionaries_ID
+            // 
+            this.dgvDictionaries_ID.HeaderText = "ID";
+            this.dgvDictionaries_ID.Name = "dgvDictionaries_ID";
+            this.dgvDictionaries_ID.ReadOnly = true;
+            this.dgvDictionaries_ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDictionaries_ID.Width = 35;
+            // 
+            // dgvDictionaries_Name
+            // 
+            this.dgvDictionaries_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvDictionaries_Name.HeaderText = "Наименование";
+            this.dgvDictionaries_Name.Name = "dgvDictionaries_Name";
+            this.dgvDictionaries_Name.ReadOnly = true;
+            this.dgvDictionaries_Name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // dgvDictionaryItems_ID
+            // 
+            this.dgvDictionaryItems_ID.HeaderText = "ID";
+            this.dgvDictionaryItems_ID.Name = "dgvDictionaryItems_ID";
+            this.dgvDictionaryItems_ID.ReadOnly = true;
+            this.dgvDictionaryItems_ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDictionaryItems_ID.Width = 50;
+            // 
+            // dgvDictionaryItems_Name
+            // 
+            this.dgvDictionaryItems_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvDictionaryItems_Name.HeaderText = "Наименование";
+            this.dgvDictionaryItems_Name.Name = "dgvDictionaryItems_Name";
+            this.dgvDictionaryItems_Name.ReadOnly = true;
+            this.dgvDictionaryItems_Name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
             // Dictionaries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 608);
+            this.ClientSize = new System.Drawing.Size(784, 461);
             this.Controls.Add(this.dgvDictionaryItems);
             this.Controls.Add(this.dgvDictionaries);
             this.Controls.Add(this.toolStrip);
             this.Name = "Dictionaries";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Справочники ФИС";
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaries)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDictionaryItems)).EndInit();

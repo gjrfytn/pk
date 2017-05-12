@@ -156,8 +156,10 @@
             this.ClientSize = new System.Drawing.Size(672, 436);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Users";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Пользователи";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.panel.ResumeLayout(false);

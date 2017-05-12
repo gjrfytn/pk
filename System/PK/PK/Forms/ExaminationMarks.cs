@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace PK.Forms
 {
@@ -17,7 +18,7 @@ namespace PK.Forms
             InitializeComponent();
 
             dataGridView_UID.ValueType = typeof(uint);
-            dataGridView_Mark.ValueType = typeof(sbyte);
+            dataGridView_Mark.ValueType = typeof(short); //sbyte почему-то превращается в short при значении -1 в ячейке.
             #endregion
 
             _DB_Connection = connection;
@@ -45,16 +46,21 @@ namespace PK.Forms
                 ))
             {
                 object[] entrant = _DB_Connection.Select(
-                    DB_Table.ENTRANTS,
+                    DB_Table.ENTRANTS_VIEW,
                     new string[] { "last_name", "first_name", "middle_name" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, row[0]) }
+                    new List<Tuple<string, Relation, object>> { Tuple.Create("id", Relation.EQUAL, row[0]) }
                     )[0];
                 dataGridView.Rows.Add(row[0], entrant[0].ToString() + " " + entrant[1].ToString() + " " + entrant[2].ToString(), row[1]);
             }
+
+            dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
+            if (dataGridView.IsCurrentCellDirty)
+                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
             Dictionary<uint, string> minMarksConsts = new Dictionary<uint, string>
             {
                 { 1,"min_russian_mark" },
@@ -76,13 +82,13 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dataGridView.Rows)
                 table.Add(new string[]
                 {
-                    row.Cells[0].Value.ToString(),
-                    row.Cells[1].Value.ToString(),
-                    ((short)row.Cells[2].Value==-1)?"неявка": row.Cells[2].Value.ToString(),
+                    row.Cells[dataGridView_UID.Index].Value.ToString(),
+                    row.Cells[dataGridView_Name.Index].Value.ToString(),
+                    ((short)row.Cells[dataGridView_Mark.Index].Value==-1)?"неявка": row.Cells[dataGridView_Mark.Index].Value.ToString(),
                 });
 
-            string doc = Classes.Utility.TempPath + "AlphaMarks";
-            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new List<string[]>[] { table });
+            string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
+            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             Classes.Utility.Print(doc + ".docx");
         }
 
@@ -90,12 +96,7 @@ namespace PK.Forms
         {
             if (Classes.Utility.ShowUnrevertableActionMessageBox())
             {
-                foreach (object[] row in _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, "entrant_id", "examination_id"))
-                    _DB_Connection.Delete(
-                        DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                        new Dictionary<string, object> { { "entrant_id", row[0] }, { "examination_id", row[1] } }
-                        );
-
+                _DB_Connection.Delete(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new Dictionary<string, object> { { "examination_id", _ExaminationID } });
                 dataGridView.Rows.Clear();
             }
         }
@@ -112,13 +113,18 @@ namespace PK.Forms
                     {
                         {dataGridView_UID.DataPropertyName,dataGridView[0,e.RowIndex].Value },
                         { "examination_id", _ExaminationID}
-                    }
-                    );
+                    });
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void ExaminationMarks_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dataGridView.IsCurrentCellDirty)
+                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
     }
 }

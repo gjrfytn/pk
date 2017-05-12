@@ -1340,7 +1340,6 @@
             this.cbDirection11.Size = new System.Drawing.Size(492, 23);
             this.cbDirection11.TabIndex = 1;
             this.cbDirection11.Visible = false;
-            this.cbDirection11.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
             // 
             // label32
             // 

@@ -36,6 +36,7 @@
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_New = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Delete = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Register = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -60,13 +61,14 @@
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(669, 516);
-            this.dataGridView.TabIndex = 0;
+            this.dataGridView.Size = new System.Drawing.Size(524, 376);
+            this.dataGridView.TabIndex = 1;
             this.dataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_RowEnter);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
             // 
             // dataGridView_Number
             // 
+            this.dataGridView_Number.FillWeight = 70F;
             this.dataGridView_Number.HeaderText = "Номер";
             this.dataGridView_Number.Name = "dataGridView_Number";
             this.dataGridView_Number.ReadOnly = true;
@@ -79,12 +81,14 @@
             // 
             // dataGridView_Date
             // 
+            this.dataGridView_Date.FillWeight = 50F;
             this.dataGridView_Date.HeaderText = "Дата";
             this.dataGridView_Date.Name = "dataGridView_Date";
             this.dataGridView_Date.ReadOnly = true;
             // 
             // dataGridView_ProtNumber
             // 
+            this.dataGridView_ProtNumber.FillWeight = 70F;
             this.dataGridView_ProtNumber.HeaderText = "Номер протокола";
             this.dataGridView_ProtNumber.Name = "dataGridView_ProtNumber";
             this.dataGridView_ProtNumber.ReadOnly = true;
@@ -94,12 +98,13 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStrip_New,
             this.toolStrip_Edit,
+            this.toolStrip_Delete,
             this.toolStrip_Register,
             this.toolStrip_Print});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(669, 25);
-            this.toolStrip.TabIndex = 1;
+            this.toolStrip.Size = new System.Drawing.Size(524, 25);
+            this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
             // toolStrip_New
@@ -107,8 +112,8 @@
             this.toolStrip_New.Image = global::PK.Properties.Resources.plus;
             this.toolStrip_New.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_New.Name = "toolStrip_New";
-            this.toolStrip_New.Size = new System.Drawing.Size(65, 22);
-            this.toolStrip_New.Text = "Новый";
+            this.toolStrip_New.Size = new System.Drawing.Size(74, 22);
+            this.toolStrip_New.Text = "Новый...";
             this.toolStrip_New.Click += new System.EventHandler(this.toolStrip_New_Click);
             // 
             // toolStrip_Edit
@@ -116,9 +121,18 @@
             this.toolStrip_Edit.Image = global::PK.Properties.Resources.pen;
             this.toolStrip_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStrip_Edit.Name = "toolStrip_Edit";
-            this.toolStrip_Edit.Size = new System.Drawing.Size(107, 22);
-            this.toolStrip_Edit.Text = "Редактировать";
+            this.toolStrip_Edit.Size = new System.Drawing.Size(116, 22);
+            this.toolStrip_Edit.Text = "Редактировать...";
             this.toolStrip_Edit.Click += new System.EventHandler(this.toolStrip_Edit_Click);
+            // 
+            // toolStrip_Delete
+            // 
+            this.toolStrip_Delete.Image = global::PK.Properties.Resources.cross;
+            this.toolStrip_Delete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_Delete.Name = "toolStrip_Delete";
+            this.toolStrip_Delete.Size = new System.Drawing.Size(71, 22);
+            this.toolStrip_Delete.Text = "Удалить";
+            this.toolStrip_Delete.Click += new System.EventHandler(this.toolStrip_Delete_Click);
             // 
             // toolStrip_Register
             // 
@@ -142,11 +156,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 541);
+            this.ClientSize = new System.Drawing.Size(524, 401);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Orders";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Приказы";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip.ResumeLayout(false);
@@ -159,14 +175,15 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ProtNumber;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton toolStrip_New;
         private System.Windows.Forms.ToolStripButton toolStrip_Edit;
         private System.Windows.Forms.ToolStripButton toolStrip_Register;
         private System.Windows.Forms.ToolStripButton toolStrip_Print;
+        private System.Windows.Forms.ToolStripButton toolStrip_Delete;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ProtNumber;
     }
 }

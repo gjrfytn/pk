@@ -18,6 +18,7 @@ namespace PK.Classes
         private const string _WhereSettlement = "SUBSTR(code, 12) = '00' AND " + _RawSettlementCode + " != '000'";
 
         private readonly MySqlConnection _Connection;
+        private readonly Dictionary<string, string> _TownsAndSettls = new Dictionary<string, string>();
 
         public KLADR(string user, string password)
         {
@@ -70,19 +71,10 @@ namespace PK.Classes
 
         public List<string> GetTowns(string region, string district)
         {
-            string regCode = GetRegionCode(region);
-            if (regCode == null)
-                return new List<string>();
-
+            string regCode;
             string distrCode;
-            if (district != "")
-            {
-                distrCode = GetDistrictCode(regCode, district);
-                if (distrCode == null)
-                    return new List<string>();
-            }
-            else
-                distrCode = "000";
+            if (!GetCodes(region, district, out regCode, out distrCode))
+                return new List<string>();
 
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM subjects WHERE " + _WhereTown + " AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "';", _Connection);
 
@@ -97,36 +89,113 @@ namespace PK.Classes
 
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr, `index` FROM subjects WHERE " + _WhereSettlement + " AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "' AND " + _RawTownCode + "='" + townCode + "';", _Connection);
 
+            List<string> results = new List<string>();
+            List<string> indexes = new List<string>();
             /*т.к. в одном субъекте могут быть нас. п. с одинаковыми названиями и категориями,
              мы прибавляем к одноимённым элементам их индекс.*/
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                List<string> results = new List<string>();
-                List<string> indexes = new List<string>();
                 while (reader.Read())
                 {
                     results.Add(reader.GetString(0) + " (" + reader.GetString(1) + ")");
                     indexes.Add(reader.GetValue(2)?.ToString() ?? "");
                 }
-
-                for (ushort i = 0; i < results.Count; ++i)
-                    if (results.Count(s => s == results[i]) > 1) //TODO Нужно? Если элемент повторяется.
-                    {
-                        for (ushort j = (ushort)(i + 1); j < results.Count; ++j) //Ищем повторения (до него их быть не может).
-                            if (results[i] == results[j])
-                                if (indexes[i] == indexes[j]) //Если у них совпадают ещё и индексы, то остаётся только исключить один из них из списка.
-                                {
-                                    results.RemoveAt(j);
-                                    j--;
-                                }
-                                else
-                                    results[j] += " [" + indexes[j] + "]";
-
-                        results[i] += " [" + indexes[i] + "]";
-                    }
-
-                return results;
             }
+
+            for (ushort i = 0; i < results.Count; ++i)
+                if (results.Count(s => s == results[i]) > 1) //TODO Нужно? Если элемент повторяется.
+                {
+                    for (ushort j = (ushort)(i + 1); j < results.Count; ++j) //Ищем повторения (до него их быть не может).
+                        if (results[i] == results[j])
+                            if (indexes[i] == indexes[j]) //Если у них совпадают ещё и индексы, то остаётся только исключить один из них из списка.
+                            {
+                                results.RemoveAt(j);
+                                j--;
+                            }
+                            else
+                                results[j] += " [" + indexes[j] + "]"; //TODO Пустой индекс
+
+                    results[i] += " [" + indexes[i] + "]";
+                }
+
+            return results;
+
+        }
+
+        public List<string> GetTownsAndSettlements(string region, string district)
+        {
+            //_Towns.Clear(); //TODO Оставлено для проверки, потом удалить
+
+            //foreach (string settl in GetSettlements(region, district, ""))
+            //    _Towns.Add(settl, "");
+
+            //foreach (string town in GetTowns(region, district))
+            //{
+            //    _Towns.Add(town, null);
+            //    foreach (string settl in GetSettlements(region, district, town))
+            //        if (_Towns.ContainsKey(settl))
+            //            _Towns.Add(settl + "(" + town + ")", town);
+            //        else
+            //            _Towns.Add(settl, town);
+            //}
+
+            string regCode, distrCode;
+            if (!GetCodes(region, district, out regCode, out distrCode))
+                return new List<string>();
+
+            MySqlCommand cmd = new MySqlCommand("SELECT name, socr, code, `index` FROM subjects WHERE (" + _WhereTown + " OR " + _WhereSettlement + ") AND " + _RawRegionCode + "='" + regCode + "' AND " + _RawDistrictCode + "='" + distrCode + "' ORDER BY code;", _Connection);
+
+            _TownsAndSettls.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                Dictionary<string, string> towns = new Dictionary<string, string>();
+                while (reader.Read())
+                {
+                    string code = reader.GetValue(2).ToString();
+                    string townCode = code.Substring(5, 3);
+                    string name = reader.GetString(0) + " (" + reader.GetString(1) + ")";
+                    if (code.Substring(8) == "00000")
+                    {
+                        towns.Add(townCode, name);
+                        _TownsAndSettls.Add(name, null);
+                    }
+                    else if (_TownsAndSettls.ContainsKey(name))
+                    {
+                        if (townCode == "000")
+                        {
+                            string index = reader.GetValue(3)?.ToString();
+                            if (index != null)
+                            {
+                                string extendedName = name + " [" + index + "]";
+                                if (!_TownsAndSettls.ContainsKey(extendedName))
+                                    _TownsAndSettls.Add(extendedName, "");
+                            }
+                        }
+                        else
+                        {
+                            string extendedName = name + "(" + towns[townCode] + ")";
+                            if (_TownsAndSettls.ContainsKey(extendedName))
+                            {
+                                string index = reader.GetValue(3)?.ToString();
+                                if (index != null)
+                                {
+                                    extendedName = name + " [" + index + "]" + "(" + towns[townCode] + ")";
+                                    if (!_TownsAndSettls.ContainsKey(extendedName))
+                                        _TownsAndSettls.Add(extendedName, towns[townCode]);
+                                }
+                            }
+                            else
+                                _TownsAndSettls.Add(extendedName, towns[townCode]);
+                        }
+                    }
+                    else if (townCode == "000")
+                        _TownsAndSettls.Add(name, "");
+                    else
+                        _TownsAndSettls.Add(name, towns[townCode]);
+                }
+            }
+
+            return _TownsAndSettls.Keys.ToList();
         }
 
         public List<string> GetStreets(string region, string district, string town, string settlement)
@@ -147,6 +216,12 @@ namespace PK.Classes
             MySqlCommand cmd = new MySqlCommand("SELECT name, socr FROM streets WHERE " + expr + ";", _Connection);
 
             return SelectNameSocr(cmd);
+        }
+
+        public List<string> GetStreets(string region, string district, string townAndSettlement)
+        {
+            System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            return GetStreets(region, district, buf.Item1, buf.Item2);
         }
 
         public List<string> GetHouses(string region, string district, string town, string settlement, string street)
@@ -193,6 +268,12 @@ namespace PK.Classes
 
                 return results;
             };
+        }
+
+        public List<string> GetHouses(string region, string district, string townAndSettlement, string street)
+        {
+            System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            return GetHouses(region, district, buf.Item1, buf.Item2, street);
         }
 
         public string GetIndex(string region, string district, string town, string settlement, string street, string house)
@@ -317,13 +398,18 @@ namespace PK.Classes
             return index;
         }
 
-        private bool GetCodes(string region, string district, string town, out string regCode, out string distrCode, out string townCode)
+        public string GetIndex(string region, string district, string townAndSettlement, string street, string house)
+        {
+            System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            return GetIndex(region, district, buf.Item1, buf.Item2, street, house);
+        }
+
+        private bool GetCodes(string region, string district, out string regCode, out string distrCode)
         {
             regCode = GetRegionCode(region);
             if (regCode == null)
             {
                 distrCode = null;
-                townCode = null;
                 return false;
             }
 
@@ -331,13 +417,21 @@ namespace PK.Classes
             {
                 distrCode = GetDistrictCode(regCode, district);
                 if (distrCode == null)
-                {
-                    townCode = null;
                     return false;
-                }
             }
             else
                 distrCode = "000";
+
+            return true;
+        }
+
+        private bool GetCodes(string region, string district, string town, out string regCode, out string distrCode, out string townCode)
+        {
+            if (!GetCodes(region, district, out regCode, out distrCode))
+            {
+                townCode = null;
+                return false;
+            }
 
             if (town != "")
             {
@@ -468,6 +562,27 @@ namespace PK.Classes
                  );
 
             return SelectOneString(cmd);
+        }
+
+        private System.Tuple<string, string> SplitTownAndSettlement(string townAndSettlement)
+        {
+            if (_TownsAndSettls.ContainsKey(townAndSettlement))
+            {
+                if (_TownsAndSettls[townAndSettlement] == null)
+                    return new System.Tuple<string, string>(townAndSettlement, "");
+                else
+                {
+                    string[] buf = townAndSettlement.Split('(');
+                    if (buf.Length == 4)
+                        return new System.Tuple<string, string>(_TownsAndSettls[townAndSettlement], buf[0] + "(" + buf[1]);
+                    else
+                        return new System.Tuple<string, string>(_TownsAndSettls[townAndSettlement], townAndSettlement);
+                }
+            }
+            else if (townAndSettlement == "")
+                return new System.Tuple<string, string>("", "");
+
+            return null;
         }
 
         private List<string> SelectNameSocr(MySqlCommand cmd)

@@ -145,7 +145,7 @@ namespace PK.Classes
             return (uint)list[0][0];
         }
 
-        public System.Tuple<string, string> GetDirectionNameAndCode(uint id)//TODO Нужны другие поля?
+        public System.Tuple<string, string> GetDirectionNameAndCode(uint id)
         {
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARY_10_ITEMS,

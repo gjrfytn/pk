@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbSubject = new System.Windows.Forms.ComboBox();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.lSubject = new System.Windows.Forms.Label();
@@ -39,8 +41,6 @@
             this.dtpRegEndDate = new System.Windows.Forms.DateTimePicker();
             this.groupBox = new System.Windows.Forms.GroupBox();
             this.bSave = new System.Windows.Forms.Button();
-            this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Capacity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox.SuspendLayout();
             this.SuspendLayout();
@@ -49,6 +49,7 @@
             // 
             this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridView_Number,
@@ -60,8 +61,22 @@
             this.dataGridView.RowHeadersWidth = 30;
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridView.Size = new System.Drawing.Size(132, 143);
-            this.dataGridView.TabIndex = 1;
+            this.dataGridView.TabIndex = 0;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
+            // 
+            // dataGridView_Number
+            // 
+            this.dataGridView_Number.DataPropertyName = "number";
+            this.dataGridView_Number.HeaderText = "Номер";
+            this.dataGridView_Number.Name = "dataGridView_Number";
+            this.dataGridView_Number.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridView_Capacity
+            // 
+            this.dataGridView_Capacity.DataPropertyName = "capacity";
+            this.dataGridView_Capacity.HeaderText = "Места";
+            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
+            this.dataGridView_Capacity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // cbSubject
             // 
@@ -69,8 +84,8 @@
             this.cbSubject.FormattingEnabled = true;
             this.cbSubject.Location = new System.Drawing.Point(148, 6);
             this.cbSubject.Name = "cbSubject";
-            this.cbSubject.Size = new System.Drawing.Size(150, 21);
-            this.cbSubject.TabIndex = 4;
+            this.cbSubject.Size = new System.Drawing.Size(167, 21);
+            this.cbSubject.TabIndex = 1;
             // 
             // dtpDate
             // 
@@ -80,7 +95,7 @@
             this.dtpDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
-            this.dtpDate.TabIndex = 5;
+            this.dtpDate.TabIndex = 3;
             // 
             // lSubject
             // 
@@ -88,7 +103,7 @@
             this.lSubject.Location = new System.Drawing.Point(69, 9);
             this.lSubject.Name = "lSubject";
             this.lSubject.Size = new System.Drawing.Size(73, 13);
-            this.lSubject.TabIndex = 7;
+            this.lSubject.TabIndex = 0;
             this.lSubject.Text = "Дисциплина:";
             // 
             // lDate
@@ -97,7 +112,7 @@
             this.lDate.Location = new System.Drawing.Point(106, 39);
             this.lDate.Name = "lDate";
             this.lDate.Size = new System.Drawing.Size(36, 13);
-            this.lDate.TabIndex = 8;
+            this.lDate.TabIndex = 2;
             this.lDate.Text = "Дата:";
             // 
             // lRegStartDate
@@ -106,7 +121,7 @@
             this.lRegStartDate.Location = new System.Drawing.Point(30, 65);
             this.lRegStartDate.Name = "lRegStartDate";
             this.lRegStartDate.Size = new System.Drawing.Size(112, 13);
-            this.lRegStartDate.TabIndex = 9;
+            this.lRegStartDate.TabIndex = 4;
             this.lRegStartDate.Text = "Дата начала потока:";
             // 
             // lRegEndDate
@@ -115,7 +130,7 @@
             this.lRegEndDate.Location = new System.Drawing.Point(12, 91);
             this.lRegEndDate.Name = "lRegEndDate";
             this.lRegEndDate.Size = new System.Drawing.Size(130, 13);
-            this.lRegEndDate.TabIndex = 10;
+            this.lRegEndDate.TabIndex = 6;
             this.lRegEndDate.Text = "Дата окончания потока:";
             // 
             // dtpRegStartDate
@@ -126,7 +141,7 @@
             this.dtpRegStartDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpRegStartDate.Name = "dtpRegStartDate";
             this.dtpRegStartDate.Size = new System.Drawing.Size(90, 20);
-            this.dtpRegStartDate.TabIndex = 11;
+            this.dtpRegStartDate.TabIndex = 5;
             // 
             // dtpRegEndDate
             // 
@@ -136,7 +151,7 @@
             this.dtpRegEndDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpRegEndDate.Name = "dtpRegEndDate";
             this.dtpRegEndDate.Size = new System.Drawing.Size(90, 20);
-            this.dtpRegEndDate.TabIndex = 12;
+            this.dtpRegEndDate.TabIndex = 7;
             // 
             // groupBox
             // 
@@ -145,7 +160,7 @@
             this.groupBox.Location = new System.Drawing.Point(321, 0);
             this.groupBox.Name = "groupBox";
             this.groupBox.Size = new System.Drawing.Size(138, 162);
-            this.groupBox.TabIndex = 3;
+            this.groupBox.TabIndex = 8;
             this.groupBox.TabStop = false;
             this.groupBox.Text = "Аудитории";
             // 
@@ -154,26 +169,10 @@
             this.bSave.Location = new System.Drawing.Point(12, 127);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(75, 23);
-            this.bSave.TabIndex = 13;
+            this.bSave.TabIndex = 9;
             this.bSave.Text = "Сохранить";
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);
-            // 
-            // dataGridView_Number
-            // 
-            this.dataGridView_Number.DataPropertyName = "number";
-            this.dataGridView_Number.HeaderText = "Номер";
-            this.dataGridView_Number.Name = "dataGridView_Number";
-            this.dataGridView_Number.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridView_Number.Width = 50;
-            // 
-            // dataGridView_Capacity
-            // 
-            this.dataGridView_Capacity.DataPropertyName = "capacity";
-            this.dataGridView_Capacity.HeaderText = "Места";
-            this.dataGridView_Capacity.Name = "dataGridView_Capacity";
-            this.dataGridView_Capacity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridView_Capacity.Width = 50;
             // 
             // ExaminationEdit
             // 
@@ -193,6 +192,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ExaminationEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Экзамен";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupBox.ResumeLayout(false);

@@ -12,8 +12,6 @@ namespace PK
         {
             InitializeComponent();
 
-            toolStrip_Years.SelectedIndex = 1;
-
             _DB_Connection = dbConnection;
 
             UpdateOlympicsTable();
@@ -27,7 +25,7 @@ namespace PK
                 new string[] { "profile_dict_id", "profile_id", "level_dict_id", "level_id" },
                 new System.Collections.Generic.List<System.Tuple<string, Relation, object>>
                 {
-                    new System.Tuple<string, Relation, object> ("olympic_id", Relation.EQUAL, dgvOlympics["dgvOlympics_ID",e.RowIndex].Value)
+                    new System.Tuple<string, Relation, object> ("olympic_id", Relation.EQUAL, dgvOlympics[dgvOlympics_ID.Index,e.RowIndex].Value)
                 }))
                 dgvProfiles.Rows.Add(
                     prof[0],
@@ -57,9 +55,9 @@ namespace PK
                     new string[] { "dictionaries_items_dictionary_id", "dictionaries_items_item_id" },
                     new System.Collections.Generic.List<System.Tuple<string, Relation, object>>
                     {
-                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_olympic_id", Relation.EQUAL, dgvOlympics.CurrentRow.Cells["dgvOlympics_ID"].Value),
-                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_profile_dict_id", Relation.EQUAL, dgvProfiles["dgvProfiles_Dict_ID",e.RowIndex].Value),
-                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_profile_id", Relation.EQUAL, dgvProfiles["dgvProfiles_ID",e.RowIndex].Value)
+                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_olympic_id", Relation.EQUAL, dgvOlympics.CurrentRow.Cells[dgvOlympics_ID.Index].Value),
+                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_profile_dict_id", Relation.EQUAL, dgvProfiles[dgvProfiles_Dict_ID.Index,e.RowIndex].Value),
+                        new System.Tuple<string, Relation, object> ("dictionary_olympic_profiles_profile_id", Relation.EQUAL, dgvProfiles[dgvProfiles_ID.Index,e.RowIndex].Value)
                     }))
                     lbSubjects.Items.Add(
                         _DB_Connection.Select(
@@ -83,7 +81,7 @@ namespace PK
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            _Updater.UpdateOlympicsDictionary(byte.Parse(toolStrip_Years.Text));
+            _Updater.UpdateOlympicsDictionary();
             UpdateOlympicsTable();
             Cursor.Current = Cursors.Default;
         }

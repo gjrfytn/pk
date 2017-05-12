@@ -17,9 +17,9 @@
     <Word>
       <Properties>
         <Margins>
-          <Left>10</Left>
+          <Left>20</Left>
           <Top>10</Top>
-          <Right>10</Right>
+          <Right>20</Right>
           <Bottom>10</Bottom>
         </Margins>
       </Properties>

@@ -42,7 +42,7 @@ namespace PK
         ENTRANTS_VIEW,
         ROLES_PASSWORDS,
         ORDERS,
-        _ORDERS_HAS_APPLICATIONS,
+        ORDERS_HAS_APPLICATIONS,
         APPLICATIONS_EGE_MARKS_VIEW
     }
 }

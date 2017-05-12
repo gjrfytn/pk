@@ -13,14 +13,28 @@ namespace PK.Forms
 
         public ExaminationEdit(Classes.DB_Connector connection, uint? id)
         {
+            _DB_Connection = connection;
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+
             #region Components
             InitializeComponent();
 
             dataGridView_Capacity.ValueType = typeof(ushort);
+
+            object[] curCampStartEnd = _DB_Connection.Select(
+                DB_Table.CAMPAIGNS,
+                new string[] { "start_year", "end_year" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                )[0];
+
+            dtpDate.MinDate = new DateTime((int)(uint)curCampStartEnd[0], 1, 1);
+            dtpDate.MaxDate = new DateTime((int)(uint)curCampStartEnd[0], 12, 31);
+            dtpRegStartDate.MinDate = dtpDate.MinDate;
+            dtpRegStartDate.MaxDate = dtpDate.MaxDate;
+            dtpRegEndDate.MinDate = dtpDate.MinDate;
+            dtpRegEndDate.MaxDate = dtpDate.MaxDate;
             #endregion
 
-            _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _ID = id;
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
@@ -55,17 +69,26 @@ namespace PK.Forms
 
         private void bSave_Click(object sender, EventArgs e)
         {
-            if (cbSubject.SelectedIndex != -1)
-                if (dataGridView.Rows.Count > 1)
-                {
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                        if (!row.IsNewRow && (row.Cells[0].Value == null || row.Cells[1].Value == null))
-                        {
-                            MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
+            if (cbSubject.SelectedIndex == -1)
+            {
+                MessageBox.Show("Не выбрана дисциплина.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                    Dictionary<string, object> data = new Dictionary<string, object>
+            if (dataGridView.Rows.Count < 2)
+            {
+                MessageBox.Show("Не добавлено ни одной аудитории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            foreach (DataGridViewRow row in dataGridView.Rows)
+                if (!row.IsNewRow && (row.Cells[0].Value == null || row.Cells[1].Value == null))
+                {
+                    MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+            Dictionary<string, object> data = new Dictionary<string, object>
                     {
                         { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
                         {"subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
@@ -74,57 +97,53 @@ namespace PK.Forms
                         {"reg_end_date",dtpRegEndDate.Value}
                     };
 
-                    using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-                    {
-                        if (_ID.HasValue)
-                        {
-                            _DB_Connection.Update(
-                                DB_Table.EXAMINATIONS,
-                                data,
-                                new Dictionary<string, object> { { "id", _ID } },
-                                transaction
-                                );
+            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+            {
+                if (_ID.HasValue)
+                {
+                    _DB_Connection.Update(
+                        DB_Table.EXAMINATIONS,
+                        data,
+                        new Dictionary<string, object> { { "id", _ID } },
+                        transaction
+                        );
 
-                            string[] fields = { "examination_id", "number", "capacity" };
-                            List<object[]> oldL = _DB_Connection.Select(
-                                DB_Table.EXAMINATIONS_AUDIENCES,
-                                fields,
-                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, _ID) }
-                                );
+                    string[] fields = { "examination_id", "number", "capacity" };
+                    List<object[]> oldL = _DB_Connection.Select(
+                        DB_Table.EXAMINATIONS_AUDIENCES,
+                        fields,
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, _ID) }
+                        );
 
-                            List<object[]> newL = new List<object[]>();
-                            foreach (DataGridViewRow row in dataGridView.Rows)
-                                if (!row.IsNewRow)
-                                    newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value });
+                    List<object[]> newL = new List<object[]>();
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if (!row.IsNewRow)
+                            newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value });
 
-                            _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldL, newL, fields, new string[] { "examination_id", "number" }, transaction);
-                        }
-                        else
-                        {
-                            uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data, transaction);
-                            foreach (DataGridViewRow row in dataGridView.Rows)
-                                if (!row.IsNewRow)
-                                    _DB_Connection.Insert(
-                                    DB_Table.EXAMINATIONS_AUDIENCES,
-                                    new Dictionary<string, object>
-                                    {
+                    _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldL, newL, fields, new string[] { "examination_id", "number" }, transaction);
+                }
+                else
+                {
+                    uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data, transaction);
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if (!row.IsNewRow)
+                            _DB_Connection.Insert(
+                            DB_Table.EXAMINATIONS_AUDIENCES,
+                            new Dictionary<string, object>
+                            {
                                         { "examination_id", id },
                                         { "number", row.Cells[0].Value },
                                         { "capacity", row.Cells[1].Value }
-                                    },
-                                    transaction
-                                    );
-                        }
-
-                        transaction.Commit();
-                    }
-
-                    DialogResult = DialogResult.OK;
+                            },
+                            transaction
+                            );
                 }
-                else
-                    MessageBox.Show("Не добавлено ни одной аудитории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            else
-                MessageBox.Show("Не выбрана дисциплина.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                transaction.Commit();
+            }
+
+            Classes.Utility.ShowChangesSavedMessage();
+            DialogResult = DialogResult.OK;
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
