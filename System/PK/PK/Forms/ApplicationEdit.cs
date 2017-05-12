@@ -66,7 +66,6 @@ namespace PK.Forms
         private string _MADIOlympName;
         private bool _Agreed;
         private QDoc _QuoteDoc;
-        private Dictionary<string, string> _Towns = new Dictionary<string, string>();
 
         private bool _DistrictNeedsReload;
         private bool _TownNeedsReload;
@@ -523,24 +522,8 @@ namespace PK.Forms
         {
             if (_TownNeedsReload)
             {
-                _Towns.Clear();
-                _TownNeedsReload = false;
-
-                foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, ""))
-                    _Towns.Add(settl, "");
-
-                foreach (string town in _KLADR.GetTowns(cbRegion.Text, cbDistrict.Text))
-                {
-                    _Towns.Add(town, null);
-                    foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, town))
-                        if (_Towns.ContainsKey(settl))
-                            _Towns.Add(settl + "(" + town + ")", town);
-                        else
-                            _Towns.Add(settl, town);
-                }
-
                 cbTown.Items.Clear();
-                cbTown.Items.AddRange(_Towns.Keys.ToArray());
+                cbTown.Items.AddRange(_KLADR.GetTownsAndSettlements(cbRegion.Text, cbDistrict.Text).ToArray());
 
                 if (cbTown.Items.Count == 0)
                 {
@@ -553,10 +536,8 @@ namespace PK.Forms
         {
             if (_StreetNeedsReload)
             {
-                cbStreet.Items.Clear();
-
-                Tuple<string, string> buf = GetTownSettlement();
-                cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, buf.Item1, buf.Item2).ToArray());
+                cbStreet.Items.Clear();                
+                cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text).ToArray());
 
                 if (cbStreet.Items.Count == 0)
                 {
@@ -571,8 +552,7 @@ namespace PK.Forms
             if (_HouseNeedsReload)
             {
                 cbHouse.Items.Clear();
-                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, "", cbStreet.Text).ToArray());
-                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, "", cbTown.Text, cbStreet.Text).ToArray());
+                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text).ToArray());
 
                 if (cbHouse.Items.Count == 0)
                 {
@@ -2723,27 +2703,6 @@ namespace PK.Forms
                     if (bt != null)
                         bt.Enabled = false;
                 }
-        }
-
-        private Tuple<string, string> GetTownSettlement()
-        {
-            if (_Towns.ContainsKey(cbTown.Text))
-            {
-                if (_Towns[cbTown.Text] == null)
-                    return new Tuple<string, string>(cbTown.Text, "");
-                else
-                {
-                    string[] buf = cbTown.Text.Split('(');
-                    if (buf.Length == 4)
-                        return new Tuple<string, string>(_Towns[cbTown.Text], buf[0] + "(" + buf[1]);
-                    else
-                        return new Tuple<string, string>(_Towns[cbTown.Text], cbTown.Text);
-                }
-            }
-            else if (cbTown.Text == "")
-                return new Tuple<string, string>("", "");
-
-            return null;
         }
     }
 }
