@@ -10,10 +10,11 @@ namespace PK.Forms
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
         private readonly string _UserLogin;
+        private readonly string _UserRole;
 
         private uint _CurrCampaignID;
-        private Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюдже" }, { "adm_paid", "Зачислен на платное" },
-            { "adm_both", "Зачислен на бюджет и платное" }, { "withdraw", "Забрал документы" } };
+        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюдже" }, { "adm_paid", "Зачислен на платное" },
+            { "adm_both", "Зачислен на бюджет и платное" }, { "withdrawn", "Забрал документы" } };
         private uint _SelectedAppID;
 
         public Main(string userRole, string usersLogin)
@@ -27,10 +28,13 @@ namespace PK.Forms
                 )[0][0].ToString());
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
+            _UserRole = userRole;
+            SetUserRole();
 
             System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);            
             dtpRegDate.Value = dtpRegDate.MinDate;
             SetCurrentCampaign();
+            rbNew.Checked = true;
         }
 
         #region IDisposable Support
@@ -88,7 +92,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
 
-                    string status = _Statuses.First(x => x.Key == application[5].ToString()).Value;
+                    string status = _Statuses[application[5].ToString()];
                     dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null,
                         application[3], status);
 
@@ -105,13 +109,21 @@ namespace PK.Forms
                         if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma") && (document.Value.Item2 != null))
                             dgvApplications.Rows[dgvApplications.Rows.Count-1].Cells[dgvApplications_Original.Index].Value = true;
 
-                    //foreach (object[] entrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
-                    //}))
-                    //{
+                    var directions = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
+                    string[] entrance = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
+                    }).Join(
+                        directions,
+                        entrances => new Tuple<uint,string>((uint)entrances[0], entrances[1].ToString()),
+                        dirs => new Tuple<uint,string>((uint)dirs[0], dirs[1].ToString()),
+                        (s1,s2) => s2[2].ToString()).ToArray();
+                    foreach (object shortName in entrance)
+                        if (dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value == null)
+                            dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = shortName;
+                        else
+                            dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value.ToString() + ", " + shortName;
 
-                    //}
                     if ((uint)dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                         dgvApplications.Rows[dgvApplications.Rows.Count - 1].Selected = true;
                             
@@ -380,6 +392,7 @@ namespace PK.Forms
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
+                FilterAppsTable();
             }
         }
 
@@ -421,36 +434,9 @@ namespace PK.Forms
                 dtpRegDate.Value = DateTime.Now;
         }
 
-        private void cbFilter_CheckedChanged(object sender, EventArgs e)
+        private void rbFilter_CheckedChanged(object sender, EventArgs e)
         {
-            if ((sender as CheckBox).Checked)
-                if ((sender as CheckBox).Text == "Новые")
-                {
-                    cbPickUp.Checked = false;
-                    cbEnroll.Checked = false;
-                }
-            else if ((sender as CheckBox).Checked)
-                    if ((sender as CheckBox).Text == "Зачисленные")
-                    {
-                        cbNew.Checked = false;
-                        cbPickUp.Checked = false;                        
-                    }
-            else
-                    {
-                        cbNew.Checked = false;
-                        cbEnroll.Checked = false;
-                    }
-
-            foreach (DataGridViewRow row in dgvApplications.Rows)
-                if (cbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "new").Value.ToString()))
-                    row.Visible = false;
-                else if (cbPickUp.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "withdraw").Value.ToString()))
-                    row.Visible = false;
-                else if (cbEnroll.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_budget").Value.ToString()
-                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_paid").Value.ToString()
-                    || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses.First(x => x.Key == "adm_both").Value.ToString()))
-                    row.Visible = false;
-                else row.Visible = true;
+            FilterAppsTable();
         }
 
 
@@ -458,18 +444,30 @@ namespace PK.Forms
         {
             foreach (DataGridViewRow row in dgvApplications.Rows)
             {
-                bool matches = true;
-                if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
-                    matches = false;
-                else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
-                    matches = false;
-                else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
-                    matches = false;
-                else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
-                    matches = false;
-                else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date)) 
-                    matches = false;
-                row.Visible = matches;
+                if (rbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["new"]))
+                        row.Visible = false;
+                    else if (rbWithdraw.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["withdrawn"]))
+                        row.Visible = false;
+                    else if (rbAdm.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_budget"]
+                        || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_paid"]
+                        || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_both"]))
+                        row.Visible = false;
+                    else row.Visible = true;
+                if (row.Visible)
+                {
+                    bool matches = true;
+                    if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
+                        matches = false;
+                    else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
+                        matches = false;
+                    else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
+                        matches = false;
+                    else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
+                        matches = false;
+                    else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
+                        matches = false;
+                    row.Visible = matches;
+                }
             }
         }
 
@@ -480,9 +478,58 @@ namespace PK.Forms
             {
                 _CurrCampaignID = (uint)currCampaigns[0][0];
                 UpdateApplicationsTable();
+                List<object[]> directions = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
+                });
+                if (directions.Count > 0 && _DB_Helper.GetDirectionNameAndCode((uint)directions[0][0]).Item2.Split('.')[1] != "04")
+                {
+                    toolStripMain_CreateApplication.Click -= new System.EventHandler(toolStripMain_CreateMagApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new System.EventHandler(toolStrip_CreateApplication_Click);
+                    toolStripMain_CreateApplication.Click += new System.EventHandler(toolStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateApplication_Click);
+                }
+                else
+                {
+                    toolStripMain_CreateApplication.Click -= new System.EventHandler(toolStripMain_CreateMagApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new System.EventHandler(toolStrip_CreateApplication_Click);
+                    toolStripMain_CreateApplication.Click += new System.EventHandler(toolStripMain_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateMagApplication_Click);
+                }
             }
             else
                 _CurrCampaignID = 0;
+
+        }
+
+        private void SetUserRole()
+        {
+            List<string> roles = new List<string>();
+            if (_UserRole == "registrator")
+                roles.Add("registrator");
+            else if (_UserRole == "inspector")
+                roles.AddRange(new string[] { "registrator", "inspector" });
+            else if (_UserRole == "administrator")
+                roles.AddRange(new string[] { "registrator", "inspector", "administrator" });
+
+            foreach (ToolStripMenuItem menuStrip in MainMenuStrip.Items)
+            {
+                foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
+                    if (submenuItem.Tag != null && !roles.Contains(submenuItem.Tag.ToString()))
+                        submenuItem.Enabled = false;
+
+                bool enabled = false;
+                foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
+                    if (submenuItem.Enabled)
+                            enabled = true;
+
+                if (!enabled)
+                    menuStrip.Enabled = false;
+            }
         }
     }
 }

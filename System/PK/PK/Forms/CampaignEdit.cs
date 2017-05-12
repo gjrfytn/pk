@@ -117,6 +117,10 @@ namespace PK.Forms
                     dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
                     dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OF.Index].Value = 0;
                     dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OZF.Index].Value = 0;
+                    //if (dgvTargetOrganizatons.CurrentRow.Cells[3].Value != null)
+                    //    if (dgvTargetOrganizatons.Rows.Count == 1)
+                    //        dgvTargetOrganizatons.Rows.Insert(1);
+                    //    else dgvTargetOrganizatons.Rows.Add();
                     break;
             }
         }

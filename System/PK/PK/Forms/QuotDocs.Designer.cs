@@ -283,7 +283,7 @@
             // 
             this.cbMedCause.FormattingEnabled = true;
             this.cbMedCause.Items.AddRange(new object[] {
-            "Справква об установлении инвалидности",
+            "Справка об установлении инвалидности",
             "Заключение психолого-медико-педагогической комиссии"});
             this.cbMedCause.Location = new System.Drawing.Point(18, 36);
             this.cbMedCause.Name = "cbMedCause";

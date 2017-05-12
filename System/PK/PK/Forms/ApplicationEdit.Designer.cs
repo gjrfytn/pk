@@ -20,12 +20,12 @@
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
+            this.cbStreet = new System.Windows.Forms.ComboBox();
+            this.cbTown = new System.Windows.Forms.ComboBox();
+            this.cbDistrict = new System.Windows.Forms.ComboBox();
+            this.cbRegion = new System.Windows.Forms.ComboBox();
             this.cbHouse = new System.Windows.Forms.ComboBox();
             this.btGetIndex = new System.Windows.Forms.Button();
-            this.tbTown = new System.Windows.Forms.TextBox();
-            this.tbDistrict = new System.Windows.Forms.TextBox();
-            this.tbStreet = new System.Windows.Forms.TextBox();
-            this.tbRegion = new System.Windows.Forms.TextBox();
             this.tbPostcode = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tbAppartment = new System.Windows.Forms.TextBox();
@@ -53,7 +53,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.dtpIDDocDate = new System.Windows.Forms.DateTimePicker();
-            this.tbMidleName = new System.Windows.Forms.TextBox();
+            this.tbMiddleName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tbLastName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -85,16 +85,18 @@
             this.cbFirstTime = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btWithdraw = new System.Windows.Forms.Button();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.btFillRand = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
-            this.cbPrerogative = new System.Windows.Forms.CheckBox();
+            this.cbPriority = new System.Windows.Forms.CheckBox();
             this.cbTarget = new System.Windows.Forms.CheckBox();
             this.cbOlympiad = new System.Windows.Forms.CheckBox();
             this.cbExams = new System.Windows.Forms.CheckBox();
             this.cbQuote = new System.Windows.Forms.CheckBox();
             this.cbChernobyl = new System.Windows.Forms.CheckBox();
-            this.cbMCDAO = new System.Windows.Forms.CheckBox();
+            this.cbMCADO = new System.Windows.Forms.CheckBox();
             this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
             this.tcDirections = new System.Windows.Forms.TabControl();
             this.tpDir_budget_o = new System.Windows.Forms.TabPage();
@@ -256,7 +258,7 @@
             this.gbPassport.Controls.Add(this.label6);
             this.gbPassport.Controls.Add(this.label5);
             this.gbPassport.Controls.Add(this.dtpIDDocDate);
-            this.gbPassport.Controls.Add(this.tbMidleName);
+            this.gbPassport.Controls.Add(this.tbMiddleName);
             this.gbPassport.Controls.Add(this.label4);
             this.gbPassport.Controls.Add(this.tbLastName);
             this.gbPassport.Controls.Add(this.label3);
@@ -285,12 +287,12 @@
             // 
             // gbAdress
             // 
+            this.gbAdress.Controls.Add(this.cbStreet);
+            this.gbAdress.Controls.Add(this.cbTown);
+            this.gbAdress.Controls.Add(this.cbDistrict);
+            this.gbAdress.Controls.Add(this.cbRegion);
             this.gbAdress.Controls.Add(this.cbHouse);
             this.gbAdress.Controls.Add(this.btGetIndex);
-            this.gbAdress.Controls.Add(this.tbTown);
-            this.gbAdress.Controls.Add(this.tbDistrict);
-            this.gbAdress.Controls.Add(this.tbStreet);
-            this.gbAdress.Controls.Add(this.tbRegion);
             this.gbAdress.Controls.Add(this.tbPostcode);
             this.gbAdress.Controls.Add(this.label20);
             this.gbAdress.Controls.Add(this.tbAppartment);
@@ -309,18 +311,68 @@
             this.gbAdress.TabStop = false;
             this.gbAdress.Text = "Адрес регистрации";
             // 
+            // cbStreet
+            // 
+            this.cbStreet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbStreet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbStreet.FormattingEnabled = true;
+            this.cbStreet.Location = new System.Drawing.Point(714, 18);
+            this.cbStreet.Name = "cbStreet";
+            this.cbStreet.Size = new System.Drawing.Size(165, 24);
+            this.cbStreet.TabIndex = 31;
+            this.cbStreet.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
+            // 
+            // cbTown
+            // 
+            this.cbTown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbTown.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbTown.FormattingEnabled = true;
+            this.cbTown.Location = new System.Drawing.Point(489, 18);
+            this.cbTown.Name = "cbTown";
+            this.cbTown.Size = new System.Drawing.Size(163, 24);
+            this.cbTown.TabIndex = 30;
+            this.cbTown.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
+            // 
+            // cbDistrict
+            // 
+            this.cbDistrict.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbDistrict.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbDistrict.FormattingEnabled = true;
+            this.cbDistrict.Location = new System.Drawing.Point(276, 18);
+            this.cbDistrict.Name = "cbDistrict";
+            this.cbDistrict.Size = new System.Drawing.Size(154, 24);
+            this.cbDistrict.TabIndex = 3;
+            this.cbDistrict.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
+            // 
+            // cbRegion
+            // 
+            this.cbRegion.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbRegion.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbRegion.FormattingEnabled = true;
+            this.cbRegion.Location = new System.Drawing.Point(62, 18);
+            this.cbRegion.Name = "cbRegion";
+            this.cbRegion.Size = new System.Drawing.Size(150, 24);
+            this.cbRegion.TabIndex = 29;
+            this.cbRegion.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            // 
             // cbHouse
             // 
+            this.cbHouse.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbHouse.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbHouse.FormattingEnabled = true;
-            this.cbHouse.Location = new System.Drawing.Point(948, 20);
+            this.cbHouse.Location = new System.Drawing.Point(924, 18);
             this.cbHouse.Name = "cbHouse";
-            this.cbHouse.Size = new System.Drawing.Size(44, 24);
+            this.cbHouse.Size = new System.Drawing.Size(108, 24);
             this.cbHouse.TabIndex = 29;
+            this.cbHouse.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
             // 
             // btGetIndex
             // 
-            this.btGetIndex.Location = new System.Drawing.Point(1221, 18);
+            this.btGetIndex.Location = new System.Drawing.Point(1246, 20);
             this.btGetIndex.Name = "btGetIndex";
             this.btGetIndex.Size = new System.Drawing.Size(20, 23);
             this.btGetIndex.TabIndex = 29;
@@ -328,67 +380,20 @@
             this.btGetIndex.UseVisualStyleBackColor = true;
             this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
             // 
-            // tbTown
-            // 
-            this.tbTown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbTown.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbTown.Location = new System.Drawing.Point(511, 22);
-            this.tbTown.Margin = new System.Windows.Forms.Padding(4);
-            this.tbTown.Name = "tbTown";
-            this.tbTown.Size = new System.Drawing.Size(150, 22);
-            this.tbTown.TabIndex = 2;
-            this.tbTown.Enter += new System.EventHandler(this.tbTown_Enter);
-            this.tbTown.Leave += new System.EventHandler(this.tbKLADR_Leave);
-            // 
-            // tbDistrict
-            // 
-            this.tbDistrict.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbDistrict.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbDistrict.Location = new System.Drawing.Point(288, 22);
-            this.tbDistrict.Margin = new System.Windows.Forms.Padding(4);
-            this.tbDistrict.Name = "tbDistrict";
-            this.tbDistrict.Size = new System.Drawing.Size(150, 22);
-            this.tbDistrict.TabIndex = 1;
-            this.tbDistrict.Enter += new System.EventHandler(this.tbDistrict_Enter);
-            this.tbDistrict.Leave += new System.EventHandler(this.tbKLADR_Leave);
-            // 
-            // tbStreet
-            // 
-            this.tbStreet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbStreet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbStreet.Location = new System.Drawing.Point(735, 21);
-            this.tbStreet.Margin = new System.Windows.Forms.Padding(4);
-            this.tbStreet.Name = "tbStreet";
-            this.tbStreet.Size = new System.Drawing.Size(150, 22);
-            this.tbStreet.TabIndex = 3;
-            this.tbStreet.Enter += new System.EventHandler(this.tbStreet_Enter);
-            this.tbStreet.Leave += new System.EventHandler(this.tbKLADR_Leave);
-            // 
-            // tbRegion
-            // 
-            this.tbRegion.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.tbRegion.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.tbRegion.Location = new System.Drawing.Point(69, 22);
-            this.tbRegion.Margin = new System.Windows.Forms.Padding(4);
-            this.tbRegion.Name = "tbRegion";
-            this.tbRegion.Size = new System.Drawing.Size(150, 22);
-            this.tbRegion.TabIndex = 0;
-            this.tbRegion.Leave += new System.EventHandler(this.tbKLADR_Leave);
-            // 
             // tbPostcode
             // 
             this.tbPostcode.Enabled = false;
-            this.tbPostcode.Location = new System.Drawing.Point(1241, 19);
+            this.tbPostcode.Location = new System.Drawing.Point(1266, 20);
             this.tbPostcode.Margin = new System.Windows.Forms.Padding(4);
             this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
-            this.tbPostcode.Size = new System.Drawing.Size(84, 22);
+            this.tbPostcode.Size = new System.Drawing.Size(59, 22);
             this.tbPostcode.TabIndex = 6;
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(1155, 21);
+            this.label20.Location = new System.Drawing.Point(1184, 23);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(59, 16);
@@ -397,7 +402,7 @@
             // 
             // tbAppartment
             // 
-            this.tbAppartment.Location = new System.Drawing.Point(1095, 19);
+            this.tbAppartment.Location = new System.Drawing.Point(1127, 20);
             this.tbAppartment.Margin = new System.Windows.Forms.Padding(4);
             this.tbAppartment.Name = "tbAppartment";
             this.tbAppartment.Size = new System.Drawing.Size(36, 22);
@@ -407,7 +412,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(1013, 22);
+            this.label19.Location = new System.Drawing.Point(1049, 23);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(74, 16);
@@ -417,7 +422,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(904, 24);
+            this.label18.Location = new System.Drawing.Point(886, 23);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(37, 16);
@@ -427,7 +432,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(675, 24);
+            this.label17.Location = new System.Drawing.Point(659, 23);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(52, 16);
@@ -437,7 +442,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(453, 25);
+            this.label16.Location = new System.Drawing.Point(437, 23);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(50, 16);
@@ -447,7 +452,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(228, 25);
+            this.label15.Location = new System.Drawing.Point(224, 23);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(52, 16);
@@ -457,7 +462,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(5, 25);
+            this.label14.Location = new System.Drawing.Point(5, 23);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(58, 16);
@@ -510,6 +515,8 @@
             this.dtpDateOfBirth.Name = "dtpDateOfBirth";
             this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 22);
             this.dtpDateOfBirth.TabIndex = 10;
+            this.dtpDateOfBirth.Tag = "false";
+            this.dtpDateOfBirth.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // label11
             // 
@@ -631,16 +638,18 @@
             this.dtpIDDocDate.Name = "dtpIDDocDate";
             this.dtpIDDocDate.Size = new System.Drawing.Size(108, 22);
             this.dtpIDDocDate.TabIndex = 4;
+            this.dtpIDDocDate.Tag = "false";
             this.dtpIDDocDate.Value = new System.DateTime(2017, 2, 28, 11, 49, 40, 0);
+            this.dtpIDDocDate.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
-            // tbMidleName
+            // tbMiddleName
             // 
-            this.tbMidleName.Location = new System.Drawing.Point(1016, 81);
-            this.tbMidleName.Margin = new System.Windows.Forms.Padding(4);
-            this.tbMidleName.Name = "tbMidleName";
-            this.tbMidleName.Size = new System.Drawing.Size(310, 22);
-            this.tbMidleName.TabIndex = 8;
-            this.tbMidleName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
+            this.tbMiddleName.Location = new System.Drawing.Point(1016, 81);
+            this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4);
+            this.tbMiddleName.Name = "tbMiddleName";
+            this.tbMiddleName.Size = new System.Drawing.Size(310, 22);
+            this.tbMiddleName.TabIndex = 8;
+            this.tbMiddleName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label4
             // 
@@ -732,7 +741,7 @@
             this.gbCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.gbCertificate.Name = "gbCertificate";
             this.gbCertificate.Padding = new System.Windows.Forms.Padding(4);
-            this.gbCertificate.Size = new System.Drawing.Size(1346, 102);
+            this.gbCertificate.Size = new System.Drawing.Size(1346, 78);
             this.gbCertificate.TabIndex = 1;
             this.gbCertificate.TabStop = false;
             this.gbCertificate.Text = "Из аттестата";
@@ -740,26 +749,26 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(13, 16);
+            this.pictureBox2.Location = new System.Drawing.Point(16, 17);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(54, 80);
+            this.pictureBox2.Size = new System.Drawing.Size(38, 54);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 28;
             this.pictureBox2.TabStop = false;
             // 
             // tbInstitutionLocation
             // 
-            this.tbInstitutionLocation.Location = new System.Drawing.Point(538, 74);
+            this.tbInstitutionLocation.Location = new System.Drawing.Point(936, 17);
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
-            this.tbInstitutionLocation.Size = new System.Drawing.Size(294, 22);
+            this.tbInstitutionLocation.Size = new System.Drawing.Size(193, 22);
             this.tbInstitutionLocation.TabIndex = 6;
             // 
             // cbGraduationYear
             // 
             this.cbGraduationYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGraduationYear.FormattingEnabled = true;
-            this.cbGraduationYear.Location = new System.Drawing.Point(991, 73);
+            this.cbGraduationYear.Location = new System.Drawing.Point(1257, 17);
             this.cbGraduationYear.Margin = new System.Windows.Forms.Padding(4);
             this.cbGraduationYear.Name = "cbGraduationYear";
             this.cbGraduationYear.Size = new System.Drawing.Size(80, 24);
@@ -768,17 +777,17 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(114, 77);
+            this.label27.Location = new System.Drawing.Point(694, 19);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(410, 16);
+            this.label27.Size = new System.Drawing.Size(234, 16);
             this.label27.TabIndex = 14;
-            this.label27.Text = "Где окончили учебное заведение (город, населенный пункт):";
+            this.label27.Text = "Где окончили учебное заведение:";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(871, 77);
+            this.label26.Location = new System.Drawing.Point(1142, 22);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(107, 16);
@@ -787,7 +796,7 @@
             // 
             // tbInstitutionNumber
             // 
-            this.tbInstitutionNumber.Location = new System.Drawing.Point(1092, 43);
+            this.tbInstitutionNumber.Location = new System.Drawing.Point(1049, 48);
             this.tbInstitutionNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
             this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
@@ -796,7 +805,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(895, 46);
+            this.label25.Location = new System.Drawing.Point(852, 51);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(193, 16);
@@ -820,7 +829,7 @@
             "Университет",
             "Академия",
             "Институт"});
-            this.cbInstitutionType.Location = new System.Drawing.Point(680, 42);
+            this.cbInstitutionType.Location = new System.Drawing.Point(633, 46);
             this.cbInstitutionType.Margin = new System.Windows.Forms.Padding(4);
             this.cbInstitutionType.Name = "cbInstitutionType";
             this.cbInstitutionType.Size = new System.Drawing.Size(195, 24);
@@ -829,7 +838,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(409, 46);
+            this.label24.Location = new System.Drawing.Point(362, 50);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(263, 16);
@@ -839,7 +848,7 @@
             // cbOriginal
             // 
             this.cbOriginal.AutoSize = true;
-            this.cbOriginal.Location = new System.Drawing.Point(821, 16);
+            this.cbOriginal.Location = new System.Drawing.Point(1213, 50);
             this.cbOriginal.Margin = new System.Windows.Forms.Padding(4);
             this.cbOriginal.Name = "cbOriginal";
             this.cbOriginal.Size = new System.Drawing.Size(91, 20);
@@ -850,16 +859,16 @@
             // 
             // tbEduDocNumber
             // 
-            this.tbEduDocNumber.Location = new System.Drawing.Point(636, 14);
+            this.tbEduDocNumber.Location = new System.Drawing.Point(546, 17);
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.Name = "tbEduDocNumber";
-            this.tbEduDocNumber.Size = new System.Drawing.Size(148, 22);
+            this.tbEduDocNumber.Size = new System.Drawing.Size(119, 22);
             this.tbEduDocNumber.TabIndex = 2;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(569, 18);
+            this.label23.Location = new System.Drawing.Point(493, 21);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(54, 16);
@@ -868,16 +877,16 @@
             // 
             // tbEduDocSeries
             // 
-            this.tbEduDocSeries.Location = new System.Drawing.Point(468, 15);
+            this.tbEduDocSeries.Location = new System.Drawing.Point(413, 17);
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.Name = "tbEduDocSeries";
-            this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
+            this.tbEduDocSeries.Size = new System.Drawing.Size(56, 22);
             this.tbEduDocSeries.TabIndex = 1;
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(409, 18);
+            this.label22.Location = new System.Drawing.Point(362, 20);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(51, 16);
@@ -889,7 +898,7 @@
             this.gbEduDocument.Controls.Add(this.rbSpravka);
             this.gbEduDocument.Controls.Add(this.rbDiploma);
             this.gbEduDocument.Controls.Add(this.rbCertificate);
-            this.gbEduDocument.Location = new System.Drawing.Point(115, 14);
+            this.gbEduDocument.Location = new System.Drawing.Point(74, 18);
             this.gbEduDocument.Margin = new System.Windows.Forms.Padding(4);
             this.gbEduDocument.Name = "gbEduDocument";
             this.gbEduDocument.Padding = new System.Windows.Forms.Padding(4);
@@ -943,7 +952,7 @@
             "Английский",
             "Немецкий",
             "Французский"});
-            this.cbForeignLanguage.Location = new System.Drawing.Point(536, 232);
+            this.cbForeignLanguage.Location = new System.Drawing.Point(539, 242);
             this.cbForeignLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.cbForeignLanguage.Name = "cbForeignLanguage";
             this.cbForeignLanguage.Size = new System.Drawing.Size(149, 24);
@@ -952,7 +961,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(394, 235);
+            this.label28.Location = new System.Drawing.Point(397, 245);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(134, 16);
@@ -966,7 +975,7 @@
             this.cbFirstTime.Items.AddRange(new object[] {
             "Впервые",
             "Повторно"});
-            this.cbFirstTime.Location = new System.Drawing.Point(231, 232);
+            this.cbFirstTime.Location = new System.Drawing.Point(234, 242);
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
             this.cbFirstTime.Size = new System.Drawing.Size(117, 24);
@@ -975,7 +984,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(13, 236);
+            this.label21.Location = new System.Drawing.Point(16, 246);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(210, 16);
@@ -984,6 +993,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btWithdraw);
             this.panel1.Controls.Add(this.gbApplication);
             this.panel1.Controls.Add(this.btClose);
             this.panel1.Controls.Add(this.gbCertificate);
@@ -998,9 +1008,21 @@
             this.panel1.Size = new System.Drawing.Size(1350, 692);
             this.panel1.TabIndex = 2;
             // 
+            // btWithdraw
+            // 
+            this.btWithdraw.Enabled = false;
+            this.btWithdraw.Location = new System.Drawing.Point(1159, 624);
+            this.btWithdraw.Name = "btWithdraw";
+            this.btWithdraw.Size = new System.Drawing.Size(160, 28);
+            this.btWithdraw.TabIndex = 7;
+            this.btWithdraw.Text = "Забрать документы";
+            this.btWithdraw.UseVisualStyleBackColor = true;
+            this.btWithdraw.Click += new System.EventHandler(this.btWithdraw_Click);
+            // 
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.btFillRand);
             this.gbApplication.Controls.Add(this.pictureBox3);
             this.gbApplication.Controls.Add(this.gbAttributes);
             this.gbApplication.Controls.Add(this.tcDirections);
@@ -1010,17 +1032,28 @@
             this.gbApplication.Controls.Add(this.label21);
             this.gbApplication.Controls.Add(this.label28);
             this.gbApplication.Controls.Add(this.cbForeignLanguage);
-            this.gbApplication.Location = new System.Drawing.Point(0, 289);
+            this.gbApplication.Location = new System.Drawing.Point(0, 262);
             this.gbApplication.Name = "gbApplication";
-            this.gbApplication.Size = new System.Drawing.Size(1347, 332);
+            this.gbApplication.Size = new System.Drawing.Size(1347, 359);
             this.gbApplication.TabIndex = 2;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
+            // btFillRand
+            // 
+            this.btFillRand.BackColor = System.Drawing.Color.DarkKhaki;
+            this.btFillRand.Location = new System.Drawing.Point(9, 173);
+            this.btFillRand.Name = "btFillRand";
+            this.btFillRand.Size = new System.Drawing.Size(93, 44);
+            this.btFillRand.TabIndex = 8;
+            this.btFillRand.Text = "Заполнить случайно";
+            this.btFillRand.UseVisualStyleBackColor = false;
+            this.btFillRand.Click += new System.EventHandler(this.btFillRand_Click);
+            // 
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(10, 40);
+            this.pictureBox3.Location = new System.Drawing.Point(13, 50);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(78, 104);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1029,15 +1062,15 @@
             // 
             // gbAttributes
             // 
-            this.gbAttributes.Controls.Add(this.cbPrerogative);
+            this.gbAttributes.Controls.Add(this.cbPriority);
             this.gbAttributes.Controls.Add(this.cbTarget);
             this.gbAttributes.Controls.Add(this.cbOlympiad);
             this.gbAttributes.Controls.Add(this.cbExams);
             this.gbAttributes.Controls.Add(this.cbQuote);
             this.gbAttributes.Controls.Add(this.cbChernobyl);
-            this.gbAttributes.Controls.Add(this.cbMCDAO);
+            this.gbAttributes.Controls.Add(this.cbMCADO);
             this.gbAttributes.Controls.Add(this.cbHostelNeeded);
-            this.gbAttributes.Location = new System.Drawing.Point(138, 1);
+            this.gbAttributes.Location = new System.Drawing.Point(130, 9);
             this.gbAttributes.Margin = new System.Windows.Forms.Padding(4);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Padding = new System.Windows.Forms.Padding(4);
@@ -1046,17 +1079,17 @@
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Признаки";
             // 
-            // cbPrerogative
+            // cbPriority
             // 
-            this.cbPrerogative.AutoSize = true;
-            this.cbPrerogative.Location = new System.Drawing.Point(943, 14);
-            this.cbPrerogative.Margin = new System.Windows.Forms.Padding(4);
-            this.cbPrerogative.Name = "cbPrerogative";
-            this.cbPrerogative.Size = new System.Drawing.Size(200, 20);
-            this.cbPrerogative.TabIndex = 7;
-            this.cbPrerogative.Text = "Преимущественное право";
-            this.cbPrerogative.UseVisualStyleBackColor = true;
-            this.cbPrerogative.CheckedChanged += new System.EventHandler(this.cbPrerogative_CheckedChanged);
+            this.cbPriority.AutoSize = true;
+            this.cbPriority.Location = new System.Drawing.Point(943, 14);
+            this.cbPriority.Margin = new System.Windows.Forms.Padding(4);
+            this.cbPriority.Name = "cbPriority";
+            this.cbPriority.Size = new System.Drawing.Size(200, 20);
+            this.cbPriority.TabIndex = 7;
+            this.cbPriority.Text = "Преимущественное право";
+            this.cbPriority.UseVisualStyleBackColor = true;
+            this.cbPriority.CheckedChanged += new System.EventHandler(this.cbPrerogative_CheckedChanged);
             // 
             // cbTarget
             // 
@@ -1117,16 +1150,16 @@
             this.cbChernobyl.UseVisualStyleBackColor = true;
             this.cbChernobyl.CheckedChanged += new System.EventHandler(this.cbChernobyl_CheckedChanged);
             // 
-            // cbMCDAO
+            // cbMCADO
             // 
-            this.cbMCDAO.AutoSize = true;
-            this.cbMCDAO.Location = new System.Drawing.Point(196, 14);
-            this.cbMCDAO.Margin = new System.Windows.Forms.Padding(4);
-            this.cbMCDAO.Name = "cbMCDAO";
-            this.cbMCDAO.Size = new System.Drawing.Size(75, 20);
-            this.cbMCDAO.TabIndex = 1;
-            this.cbMCDAO.Text = "МЦДАО";
-            this.cbMCDAO.UseVisualStyleBackColor = true;
+            this.cbMCADO.AutoSize = true;
+            this.cbMCADO.Location = new System.Drawing.Point(196, 14);
+            this.cbMCADO.Margin = new System.Windows.Forms.Padding(4);
+            this.cbMCADO.Name = "cbMCADO";
+            this.cbMCADO.Size = new System.Drawing.Size(75, 20);
+            this.cbMCADO.TabIndex = 1;
+            this.cbMCADO.Text = "МЦАДО";
+            this.cbMCADO.UseVisualStyleBackColor = true;
             // 
             // cbHostelNeeded
             // 
@@ -1150,7 +1183,7 @@
             this.tcDirections.Controls.Add(this.tpDir_target_o);
             this.tcDirections.Controls.Add(this.tpDir_quote_oz);
             this.tcDirections.Controls.Add(this.tpDir_target_oz);
-            this.tcDirections.Location = new System.Drawing.Point(108, 40);
+            this.tcDirections.Location = new System.Drawing.Point(111, 50);
             this.tcDirections.Margin = new System.Windows.Forms.Padding(4);
             this.tcDirections.Name = "tcDirections";
             this.tcDirections.SelectedIndex = 0;
@@ -1159,6 +1192,7 @@
             // 
             // tpDir_budget_o
             // 
+            this.tpDir_budget_o.BackColor = System.Drawing.Color.White;
             this.tpDir_budget_o.Controls.Add(this.cbAgreed13);
             this.tpDir_budget_o.Controls.Add(this.cbAgreed12);
             this.tpDir_budget_o.Controls.Add(this.cbAgreed11);
@@ -1177,7 +1211,6 @@
             this.tpDir_budget_o.Size = new System.Drawing.Size(587, 155);
             this.tpDir_budget_o.TabIndex = 0;
             this.tpDir_budget_o.Text = "Очная бюджетная";
-            this.tpDir_budget_o.UseVisualStyleBackColor = true;
             // 
             // cbAgreed13
             // 
@@ -1307,6 +1340,7 @@
             this.cbDirection11.Size = new System.Drawing.Size(492, 23);
             this.cbDirection11.TabIndex = 1;
             this.cbDirection11.Visible = false;
+            this.cbDirection11.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
             // 
             // label32
             // 
@@ -2078,7 +2112,7 @@
             this.gbExamsDoc.Controls.Add(this.cbExamsDocType);
             this.gbExamsDoc.Controls.Add(this.label33);
             this.gbExamsDoc.Controls.Add(this.cbPassportMatch);
-            this.gbExamsDoc.Location = new System.Drawing.Point(715, 40);
+            this.gbExamsDoc.Location = new System.Drawing.Point(718, 50);
             this.gbExamsDoc.Margin = new System.Windows.Forms.Padding(4);
             this.gbExamsDoc.Name = "gbExamsDoc";
             this.gbExamsDoc.Padding = new System.Windows.Forms.Padding(4);
@@ -2106,6 +2140,9 @@
             this.dgvExams.RowHeadersVisible = false;
             this.dgvExams.Size = new System.Drawing.Size(508, 136);
             this.dgvExams.TabIndex = 4;
+            this.dgvExams.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvExams_CellValidating);
+            this.dgvExams.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvExams_CellValueChanged);
+            this.dgvExams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvExams_Subject
             // 
@@ -2226,11 +2263,11 @@
             this.gbOther.Controls.Add(this.label30);
             this.gbOther.Controls.Add(this.label29);
             this.gbOther.Controls.Add(this.cbSpecialConditions);
-            this.gbOther.Location = new System.Drawing.Point(0, 256);
+            this.gbOther.Location = new System.Drawing.Point(3, 264);
             this.gbOther.Margin = new System.Windows.Forms.Padding(4);
             this.gbOther.Name = "gbOther";
             this.gbOther.Padding = new System.Windows.Forms.Padding(4);
-            this.gbOther.Size = new System.Drawing.Size(1340, 75);
+            this.gbOther.Size = new System.Drawing.Size(1340, 90);
             this.gbOther.TabIndex = 5;
             this.gbOther.TabStop = false;
             // 
@@ -2239,7 +2276,7 @@
             this.gbIndividualAchievements.Controls.Add(this.cbMedal);
             this.gbIndividualAchievements.Controls.Add(this.cbSport);
             this.gbIndividualAchievements.Controls.Add(this.cbMADIOlympiad);
-            this.gbIndividualAchievements.Location = new System.Drawing.Point(12, 0);
+            this.gbIndividualAchievements.Location = new System.Drawing.Point(11, 11);
             this.gbIndividualAchievements.Name = "gbIndividualAchievements";
             this.gbIndividualAchievements.Size = new System.Drawing.Size(827, 49);
             this.gbIndividualAchievements.TabIndex = 0;
@@ -2283,7 +2320,7 @@
             // 
             // mtbEMail
             // 
-            this.mtbEMail.Location = new System.Drawing.Point(1019, 49);
+            this.mtbEMail.Location = new System.Drawing.Point(1018, 62);
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
             this.mtbEMail.Size = new System.Drawing.Size(191, 22);
@@ -2291,7 +2328,7 @@
             // 
             // mtbHomePhone
             // 
-            this.mtbHomePhone.Location = new System.Drawing.Point(649, 50);
+            this.mtbHomePhone.Location = new System.Drawing.Point(648, 63);
             this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbHomePhone.Mask = "(999)999-99-99";
             this.mtbHomePhone.Name = "mtbHomePhone";
@@ -2301,7 +2338,7 @@
             // 
             // mtbMobilePhone
             // 
-            this.mtbMobilePhone.Location = new System.Drawing.Point(196, 50);
+            this.mtbMobilePhone.Location = new System.Drawing.Point(195, 63);
             this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbMobilePhone.Mask = "(999)999-99-99";
             this.mtbMobilePhone.Name = "mtbMobilePhone";
@@ -2312,7 +2349,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(959, 53);
+            this.label31.Location = new System.Drawing.Point(957, 62);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(49, 16);
@@ -2322,7 +2359,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(492, 54);
+            this.label30.Location = new System.Drawing.Point(491, 67);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(139, 16);
@@ -2332,7 +2369,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(35, 54);
+            this.label29.Location = new System.Drawing.Point(34, 67);
             this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(147, 16);
@@ -2342,7 +2379,7 @@
             // cbSpecialConditions
             // 
             this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(856, 22);
+            this.cbSpecialConditions.Location = new System.Drawing.Point(855, 35);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
@@ -2352,7 +2389,7 @@
             // 
             // btClose
             // 
-            this.btClose.Location = new System.Drawing.Point(1088, 657);
+            this.btClose.Location = new System.Drawing.Point(1191, 659);
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
@@ -2474,10 +2511,10 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(1143, 624);
+            this.btSave.Location = new System.Drawing.Point(945, 659);
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
-            this.btSave.Size = new System.Drawing.Size(177, 28);
+            this.btSave.Size = new System.Drawing.Size(168, 28);
             this.btSave.TabIndex = 4;
             this.btSave.Text = "Сохранить заявление";
             this.btSave.UseVisualStyleBackColor = true;
@@ -2486,10 +2523,10 @@
             // btPrint
             // 
             this.btPrint.Enabled = false;
-            this.btPrint.Location = new System.Drawing.Point(918, 624);
+            this.btPrint.Location = new System.Drawing.Point(933, 624);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
-            this.btPrint.Size = new System.Drawing.Size(217, 28);
+            this.btPrint.Size = new System.Drawing.Size(189, 28);
             this.btPrint.TabIndex = 5;
             this.btPrint.Text = "Распечатать документы";
             this.btPrint.UseVisualStyleBackColor = true;
@@ -2507,7 +2544,7 @@
             this.MaximizeBox = false;
             this.Name = "ApplicationEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Заявление на поступление бакалавра";
+            this.Text = "Заявление на поступление";
             this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
@@ -2572,7 +2609,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DateTimePicker dtpIDDocDate;
-        private System.Windows.Forms.TextBox tbMidleName;
+        private System.Windows.Forms.TextBox tbMiddleName;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbLastName;
         private System.Windows.Forms.Label label3;
@@ -2628,13 +2665,13 @@
         private System.Windows.Forms.CheckBox cbSport;
         private System.Windows.Forms.CheckBox cbMedal;
         private System.Windows.Forms.GroupBox gbAttributes;
-        private System.Windows.Forms.CheckBox cbPrerogative;
+        private System.Windows.Forms.CheckBox cbPriority;
         private System.Windows.Forms.CheckBox cbTarget;
         private System.Windows.Forms.CheckBox cbOlympiad;
         private System.Windows.Forms.CheckBox cbExams;
         private System.Windows.Forms.CheckBox cbQuote;
         private System.Windows.Forms.CheckBox cbChernobyl;
-        private System.Windows.Forms.CheckBox cbMCDAO;
+        private System.Windows.Forms.CheckBox cbMCADO;
         private System.Windows.Forms.CheckBox cbHostelNeeded;
         private System.Windows.Forms.TabControl tcDirections;
         private System.Windows.Forms.TabPage tpDir_budget_o;
@@ -2718,10 +2755,6 @@
         private System.Windows.Forms.ComboBox cbDirection12;
         private System.Windows.Forms.ComboBox cbDirection11;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox tbTown;
-        private System.Windows.Forms.TextBox tbDistrict;
-        private System.Windows.Forms.TextBox tbStreet;
-        private System.Windows.Forms.TextBox tbRegion;
         private System.Windows.Forms.GroupBox gbApplication;
         private System.Windows.Forms.GroupBox gbIndividualAchievements;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -2748,5 +2781,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Cheched;
+        private System.Windows.Forms.ComboBox cbRegion;
+        private System.Windows.Forms.ComboBox cbDistrict;
+        private System.Windows.Forms.ComboBox cbStreet;
+        private System.Windows.Forms.ComboBox cbTown;
+        private System.Windows.Forms.Button btWithdraw;
+        private System.Windows.Forms.Button btFillRand;
     }
 }

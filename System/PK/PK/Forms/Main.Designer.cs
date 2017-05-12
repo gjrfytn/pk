@@ -18,19 +18,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripMain_CreateApplication = new System.Windows.Forms.ToolStripButton();
-            this.toolStripMain_CreateMagApplication = new System.Windows.Forms.ToolStripButton();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Exams = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Orders = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip_CreateBacApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip_CreateMagApplication = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_CheckEgeMarks = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Univesity = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Constants = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Directions = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Faculties = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_TargetOrganizations = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_InstitutionAchievements = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OutDocuments = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,19 +43,6 @@
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvApplications = new System.Windows.Forms.DataGridView();
-            this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Original = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvApplications_Entrances = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_RegDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_EditDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_PickUpDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_DeductionDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_EnrollmentDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_RegistratorLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.tbLastName = new System.Windows.Forms.TextBox();
             this.tbFirstName = new System.Windows.Forms.TextBox();
@@ -65,10 +51,22 @@
             this.tbRegNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbDateSearch = new System.Windows.Forms.CheckBox();
-            this.cbEnroll = new System.Windows.Forms.CheckBox();
-            this.cbPickUp = new System.Windows.Forms.CheckBox();
-            this.cbNew = new System.Windows.Forms.CheckBox();
-            this.menuStrip_CheckEgeMarks = new System.Windows.Forms.ToolStripMenuItem();
+            this.rbNew = new System.Windows.Forms.RadioButton();
+            this.rbWithdraw = new System.Windows.Forms.RadioButton();
+            this.rbAdm = new System.Windows.Forms.RadioButton();
+            this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Entrances = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Original = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvApplications_RegDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_EditDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_PickUpDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_DeductionDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_EnrollmentDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_RegistratorLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -77,11 +75,11 @@
             // toolStrip
             // 
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMain_CreateApplication,
-            this.toolStripMain_CreateMagApplication});
-            this.toolStrip.Location = new System.Drawing.Point(0, 24);
+            this.toolStripMain_CreateApplication});
+            this.toolStrip.Location = new System.Drawing.Point(0, 25);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1008, 25);
+            this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip.Size = new System.Drawing.Size(1512, 25);
             this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -90,18 +88,8 @@
             this.toolStripMain_CreateApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMain_CreateApplication.Image")));
             this.toolStripMain_CreateApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripMain_CreateApplication.Name = "toolStripMain_CreateApplication";
-            this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(189, 22);
-            this.toolStripMain_CreateApplication.Text = "Создать заявление бакалавра";
-            this.toolStripMain_CreateApplication.Click += new System.EventHandler(this.toolStrip_CreateApplication_Click);
-            // 
-            // toolStripMain_CreateMagApplication
-            // 
-            this.toolStripMain_CreateMagApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMain_CreateMagApplication.Image")));
-            this.toolStripMain_CreateMagApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripMain_CreateMagApplication.Name = "toolStripMain_CreateMagApplication";
-            this.toolStripMain_CreateMagApplication.Size = new System.Drawing.Size(183, 22);
-            this.toolStripMain_CreateMagApplication.Text = "Создать заявление магистра";
-            this.toolStripMain_CreateMagApplication.Click += new System.EventHandler(this.toolStripMain_CreateMagApplication_Click);
+            this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMain_CreateApplication.Text = "Создать заявление";
             // 
             // menuStrip
             // 
@@ -114,7 +102,8 @@
             this.menuStrip_Help});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1008, 24);
+            this.menuStrip.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.menuStrip.Size = new System.Drawing.Size(1512, 25);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -125,13 +114,14 @@
             this.menuStrip_Campaign_Exams,
             this.menuStrip_Orders});
             this.menuStrip_Campaign.Name = "menuStrip_Campaign";
-            this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 20);
+            this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 19);
             this.menuStrip_Campaign.Text = "Приемная кампания";
             // 
             // menuStrip_Campaign_Campaigns
             // 
             this.menuStrip_Campaign_Campaigns.Name = "menuStrip_Campaign_Campaigns";
             this.menuStrip_Campaign_Campaigns.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Campaigns.Tag = "administrator";
             this.menuStrip_Campaign_Campaigns.Text = "Приемные кампании";
             this.menuStrip_Campaign_Campaigns.Click += new System.EventHandler(this.menuStrip_Campaign_Campaigns_Click);
             // 
@@ -139,6 +129,7 @@
             // 
             this.menuStrip_Campaign_Exams.Name = "menuStrip_Campaign_Exams";
             this.menuStrip_Campaign_Exams.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Exams.Tag = "inspector";
             this.menuStrip_Campaign_Exams.Text = "Экзамены";
             this.menuStrip_Campaign_Exams.Click += new System.EventHandler(this.menuStrip_Campaign_Exams_Click);
             // 
@@ -146,70 +137,76 @@
             // 
             this.menuStrip_Orders.Name = "menuStrip_Orders";
             this.menuStrip_Orders.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Orders.Tag = "inspector";
             this.menuStrip_Orders.Text = "Приказы";
             this.menuStrip_Orders.Click += new System.EventHandler(this.menuStrip_Orders_Click);
             // 
             // menuStrip_Entrants
             // 
             this.menuStrip_Entrants.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuStrip_CreateBacApplication,
-            this.menuStrip_CreateMagApplication,
+            this.menuStrip_CreateApplication,
             this.menuStrip_CheckEgeMarks});
             this.menuStrip_Entrants.Name = "menuStrip_Entrants";
-            this.menuStrip_Entrants.Size = new System.Drawing.Size(93, 20);
+            this.menuStrip_Entrants.Size = new System.Drawing.Size(93, 19);
             this.menuStrip_Entrants.Text = "Абитуриенты";
             // 
-            // menuStrip_CreateBacApplication
+            // menuStrip_CreateApplication
             // 
-            this.menuStrip_CreateBacApplication.Name = "menuStrip_CreateBacApplication";
-            this.menuStrip_CreateBacApplication.Size = new System.Drawing.Size(236, 22);
-            this.menuStrip_CreateBacApplication.Text = "Создать заявление бакалавра";
-            this.menuStrip_CreateBacApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
+            this.menuStrip_CreateApplication.Name = "menuStrip_CreateApplication";
+            this.menuStrip_CreateApplication.Size = new System.Drawing.Size(176, 22);
+            this.menuStrip_CreateApplication.Tag = "registrator";
+            this.menuStrip_CreateApplication.Text = "Создать заявление";
+            this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
             // 
-            // menuStrip_CreateMagApplication
+            // menuStrip_CheckEgeMarks
             // 
-            this.menuStrip_CreateMagApplication.Name = "menuStrip_CreateMagApplication";
-            this.menuStrip_CreateMagApplication.Size = new System.Drawing.Size(236, 22);
-            this.menuStrip_CreateMagApplication.Text = "Создать заявление магистра";
-            this.menuStrip_CreateMagApplication.Click += new System.EventHandler(this.menuStrip_CreateMagApplication_Click);
+            this.menuStrip_CheckEgeMarks.Name = "menuStrip_CheckEgeMarks";
+            this.menuStrip_CheckEgeMarks.Size = new System.Drawing.Size(176, 22);
+            this.menuStrip_CheckEgeMarks.Tag = "inspector";
+            this.menuStrip_CheckEgeMarks.Text = "Проверка ЕГЭ";
+            this.menuStrip_CheckEgeMarks.Click += new System.EventHandler(this.menuStrip_CheckEgeMarks_Click);
             // 
             // menuStrip_Univesity
             // 
             this.menuStrip_Univesity.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Constants,
-            this.menuStrip_Faculties,
             this.menuStrip_Directions,
+            this.menuStrip_Faculties,
             this.menuStrip_TargetOrganizations,
             this.menuStrip_InstitutionAchievements});
             this.menuStrip_Univesity.Name = "menuStrip_Univesity";
-            this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 20);
+            this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 19);
             this.menuStrip_Univesity.Text = "Университет";
             // 
             // menuStrip_Constants
             // 
             this.menuStrip_Constants.Name = "menuStrip_Constants";
             this.menuStrip_Constants.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Constants.Tag = "administrator";
             this.menuStrip_Constants.Text = "Основная информация";
             this.menuStrip_Constants.Click += new System.EventHandler(this.menuStrip_Constants_Click);
-            // 
-            // menuStrip_Faculties
-            // 
-            this.menuStrip_Faculties.Name = "menuStrip_Faculties";
-            this.menuStrip_Faculties.Size = new System.Drawing.Size(351, 22);
-            this.menuStrip_Faculties.Text = "Факультеты";
-            this.menuStrip_Faculties.Click += new System.EventHandler(this.menuStrip_Faculties_Click);
             // 
             // menuStrip_Directions
             // 
             this.menuStrip_Directions.Name = "menuStrip_Directions";
             this.menuStrip_Directions.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Directions.Tag = "administrator";
             this.menuStrip_Directions.Text = "Профили подготовки и магистерские программы";
             this.menuStrip_Directions.Click += new System.EventHandler(this.menuStrip_Directions_Click);
+            // 
+            // menuStrip_Faculties
+            // 
+            this.menuStrip_Faculties.Name = "menuStrip_Faculties";
+            this.menuStrip_Faculties.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Faculties.Tag = "administrator";
+            this.menuStrip_Faculties.Text = "Факультеты";
+            this.menuStrip_Faculties.Click += new System.EventHandler(this.menuStrip_Faculties_Click);
             // 
             // menuStrip_TargetOrganizations
             // 
             this.menuStrip_TargetOrganizations.Name = "menuStrip_TargetOrganizations";
             this.menuStrip_TargetOrganizations.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_TargetOrganizations.Tag = "administrator";
             this.menuStrip_TargetOrganizations.Text = "Целевые организации";
             this.menuStrip_TargetOrganizations.Click += new System.EventHandler(this.menuStrip_TargetOrganizations_Click);
             // 
@@ -217,6 +214,7 @@
             // 
             this.menuStrip_InstitutionAchievements.Name = "menuStrip_InstitutionAchievements";
             this.menuStrip_InstitutionAchievements.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_InstitutionAchievements.Tag = "administrator";
             this.menuStrip_InstitutionAchievements.Text = "Индивидуальные достижения";
             this.menuStrip_InstitutionAchievements.Click += new System.EventHandler(this.menuStrip_InstitutionAchievements_Click);
             // 
@@ -225,13 +223,14 @@
             this.menuStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_RegJournal});
             this.menuStrip_OutDocuments.Name = "menuStrip_OutDocuments";
-            this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 20);
+            this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 19);
             this.menuStrip_OutDocuments.Text = "Печатные формы";
             // 
             // menuStrip_RegJournal
             // 
             this.menuStrip_RegJournal.Name = "menuStrip_RegJournal";
             this.menuStrip_RegJournal.Size = new System.Drawing.Size(191, 22);
+            this.menuStrip_RegJournal.Tag = "inspector";
             this.menuStrip_RegJournal.Text = "Журнал регистрации";
             this.menuStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
             // 
@@ -242,13 +241,14 @@
             this.menuStrip_FIS_Export,
             this.menuStrip_KLADR_Update});
             this.menuStrip_Administration.Name = "menuStrip_Administration";
-            this.menuStrip_Administration.Size = new System.Drawing.Size(134, 20);
+            this.menuStrip_Administration.Size = new System.Drawing.Size(134, 19);
             this.menuStrip_Administration.Text = "Администрирование";
             // 
             // menuStrip_Users
             // 
             this.menuStrip_Users.Name = "menuStrip_Users";
             this.menuStrip_Users.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_Users.Tag = "administrator";
             this.menuStrip_Users.Text = "Пользователи";
             this.menuStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
             // 
@@ -256,6 +256,7 @@
             // 
             this.menuStrip_FIS_Export.Name = "menuStrip_FIS_Export";
             this.menuStrip_FIS_Export.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_FIS_Export.Tag = "administrator";
             this.menuStrip_FIS_Export.Text = "Экспорт в ФИС";
             this.menuStrip_FIS_Export.Click += new System.EventHandler(this.toolStrip_FIS_Export_Click);
             // 
@@ -263,6 +264,7 @@
             // 
             this.menuStrip_KLADR_Update.Name = "menuStrip_KLADR_Update";
             this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_KLADR_Update.Tag = "administrator";
             this.menuStrip_KLADR_Update.Text = "Обновление КЛАДР";
             this.menuStrip_KLADR_Update.Click += new System.EventHandler(this.menuStrip_KLADR_Update_Click);
             // 
@@ -273,13 +275,14 @@
             this.menuStrip_DirDictionary,
             this.menuStrip_OlympDictionary});
             this.menuStrip_Help.Name = "menuStrip_Help";
-            this.menuStrip_Help.Size = new System.Drawing.Size(65, 20);
+            this.menuStrip_Help.Size = new System.Drawing.Size(65, 19);
             this.menuStrip_Help.Text = "Справка";
             // 
             // menuStrip_Dictionaries
             // 
             this.menuStrip_Dictionaries.Name = "menuStrip_Dictionaries";
             this.menuStrip_Dictionaries.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_Dictionaries.Tag = "inspector";
             this.menuStrip_Dictionaries.Text = "Справочники ФИС";
             this.menuStrip_Dictionaries.Click += new System.EventHandler(this.menuStrip_Dictionaries_Click);
             // 
@@ -287,6 +290,7 @@
             // 
             this.menuStrip_DirDictionary.Name = "menuStrip_DirDictionary";
             this.menuStrip_DirDictionary.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_DirDictionary.Tag = "inspector";
             this.menuStrip_DirDictionary.Text = "Справочник направлений ФИС";
             this.menuStrip_DirDictionary.Click += new System.EventHandler(this.menuStrip_DirDictionary_Click);
             // 
@@ -294,6 +298,7 @@
             // 
             this.menuStrip_OlympDictionary.Name = "menuStrip_OlympDictionary";
             this.menuStrip_OlympDictionary.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_OlympDictionary.Tag = "inspector";
             this.menuStrip_OlympDictionary.Text = "Справочник олимпиад ФИС";
             this.menuStrip_OlympDictionary.Click += new System.EventHandler(this.menuStrip_OlympDictionary_Click);
             // 
@@ -311,8 +316,8 @@
             this.dgvApplications_LastName,
             this.dgvApplications_FirstName,
             this.dgvApplications_MiddleName,
-            this.dgvApplications_Original,
             this.dgvApplications_Entrances,
+            this.dgvApplications_Original,
             this.dgvApplications_RegDate,
             this.dgvApplications_EditDate,
             this.dgvApplications_PickUpDate,
@@ -320,131 +325,35 @@
             this.dgvApplications_EnrollmentDate,
             this.dgvApplications_RegistratorLogin,
             this.dgvApplications_Status});
-            this.dgvApplications.Location = new System.Drawing.Point(0, 76);
+            this.dgvApplications.Location = new System.Drawing.Point(0, 86);
+            this.dgvApplications.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgvApplications.MultiSelect = false;
             this.dgvApplications.Name = "dgvApplications";
             this.dgvApplications.ReadOnly = true;
             this.dgvApplications.RowHeadersVisible = false;
             this.dgvApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvApplications.Size = new System.Drawing.Size(1008, 385);
+            this.dgvApplications.Size = new System.Drawing.Size(1512, 623);
             this.dgvApplications.TabIndex = 2;
             this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             // 
-            // dgvApplications_ID
-            // 
-            this.dgvApplications_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvApplications_ID.HeaderText = "№ заявления";
-            this.dgvApplications_ID.Name = "dgvApplications_ID";
-            this.dgvApplications_ID.ReadOnly = true;
-            this.dgvApplications_ID.Width = 92;
-            // 
-            // dgvApplications_LastName
-            // 
-            this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_LastName.HeaderText = "Фамилия";
-            this.dgvApplications_LastName.Name = "dgvApplications_LastName";
-            this.dgvApplications_LastName.ReadOnly = true;
-            // 
-            // dgvApplications_FirstName
-            // 
-            this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_FirstName.HeaderText = "Имя";
-            this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
-            this.dgvApplications_FirstName.ReadOnly = true;
-            // 
-            // dgvApplications_MiddleName
-            // 
-            this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_MiddleName.HeaderText = "Отчество";
-            this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
-            this.dgvApplications_MiddleName.ReadOnly = true;
-            // 
-            // dgvApplications_Original
-            // 
-            this.dgvApplications_Original.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvApplications_Original.HeaderText = "Оригиналы";
-            this.dgvApplications_Original.Name = "dgvApplications_Original";
-            this.dgvApplications_Original.ReadOnly = true;
-            this.dgvApplications_Original.Width = 70;
-            // 
-            // dgvApplications_Entrances
-            // 
-            this.dgvApplications_Entrances.HeaderText = "Направления";
-            this.dgvApplications_Entrances.Name = "dgvApplications_Entrances";
-            this.dgvApplications_Entrances.ReadOnly = true;
-            // 
-            // dgvApplications_RegDate
-            // 
-            this.dgvApplications_RegDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvApplications_RegDate.HeaderText = "Дата подачи";
-            this.dgvApplications_RegDate.Name = "dgvApplications_RegDate";
-            this.dgvApplications_RegDate.ReadOnly = true;
-            this.dgvApplications_RegDate.Width = 88;
-            // 
-            // dgvApplications_EditDate
-            // 
-            this.dgvApplications_EditDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvApplications_EditDate.HeaderText = "Дата изменения";
-            this.dgvApplications_EditDate.Name = "dgvApplications_EditDate";
-            this.dgvApplications_EditDate.ReadOnly = true;
-            this.dgvApplications_EditDate.Width = 107;
-            // 
-            // dgvApplications_PickUpDate
-            // 
-            this.dgvApplications_PickUpDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvApplications_PickUpDate.HeaderText = "Забрал документы";
-            this.dgvApplications_PickUpDate.Name = "dgvApplications_PickUpDate";
-            this.dgvApplications_PickUpDate.ReadOnly = true;
-            this.dgvApplications_PickUpDate.Width = 70;
-            // 
-            // dgvApplications_DeductionDate
-            // 
-            this.dgvApplications_DeductionDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvApplications_DeductionDate.HeaderText = "Приказ об отчислении";
-            this.dgvApplications_DeductionDate.Name = "dgvApplications_DeductionDate";
-            this.dgvApplications_DeductionDate.ReadOnly = true;
-            this.dgvApplications_DeductionDate.Width = 80;
-            // 
-            // dgvApplications_EnrollmentDate
-            // 
-            this.dgvApplications_EnrollmentDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvApplications_EnrollmentDate.HeaderText = "Приказ о зачислении";
-            this.dgvApplications_EnrollmentDate.Name = "dgvApplications_EnrollmentDate";
-            this.dgvApplications_EnrollmentDate.ReadOnly = true;
-            this.dgvApplications_EnrollmentDate.Width = 80;
-            // 
-            // dgvApplications_RegistratorLogin
-            // 
-            this.dgvApplications_RegistratorLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvApplications_RegistratorLogin.HeaderText = "Регистратор";
-            this.dgvApplications_RegistratorLogin.Name = "dgvApplications_RegistratorLogin";
-            this.dgvApplications_RegistratorLogin.ReadOnly = true;
-            this.dgvApplications_RegistratorLogin.Width = 96;
-            // 
-            // dgvApplications_Status
-            // 
-            this.dgvApplications_Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvApplications_Status.HeaderText = "Статус";
-            this.dgvApplications_Status.Name = "dgvApplications_Status";
-            this.dgvApplications_Status.ReadOnly = true;
-            this.dgvApplications_Status.Width = 70;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 53);
+            this.label1.Location = new System.Drawing.Point(4, 55);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.Size = new System.Drawing.Size(59, 20);
             this.label1.TabIndex = 6;
             this.label1.Text = "Поиск:";
             // 
             // tbLastName
             // 
             this.tbLastName.ForeColor = System.Drawing.Color.Gray;
-            this.tbLastName.Location = new System.Drawing.Point(185, 52);
+            this.tbLastName.Location = new System.Drawing.Point(249, 52);
+            this.tbLastName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbLastName.Name = "tbLastName";
-            this.tbLastName.Size = new System.Drawing.Size(170, 20);
+            this.tbLastName.Size = new System.Drawing.Size(253, 26);
             this.tbLastName.TabIndex = 7;
             this.tbLastName.Tag = "Фамилия";
             this.tbLastName.Text = "Фамилия";
@@ -455,9 +364,10 @@
             // tbFirstName
             // 
             this.tbFirstName.ForeColor = System.Drawing.Color.Gray;
-            this.tbFirstName.Location = new System.Drawing.Point(370, 52);
+            this.tbFirstName.Location = new System.Drawing.Point(525, 52);
+            this.tbFirstName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbFirstName.Name = "tbFirstName";
-            this.tbFirstName.Size = new System.Drawing.Size(170, 20);
+            this.tbFirstName.Size = new System.Drawing.Size(253, 26);
             this.tbFirstName.TabIndex = 8;
             this.tbFirstName.Tag = "Имя";
             this.tbFirstName.Text = "Имя";
@@ -468,9 +378,10 @@
             // tbMiddleName
             // 
             this.tbMiddleName.ForeColor = System.Drawing.Color.Gray;
-            this.tbMiddleName.Location = new System.Drawing.Point(556, 52);
+            this.tbMiddleName.Location = new System.Drawing.Point(804, 52);
+            this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbMiddleName.Name = "tbMiddleName";
-            this.tbMiddleName.Size = new System.Drawing.Size(170, 20);
+            this.tbMiddleName.Size = new System.Drawing.Size(253, 26);
             this.tbMiddleName.TabIndex = 9;
             this.tbMiddleName.Tag = "Отчество";
             this.tbMiddleName.Text = "Отчество";
@@ -482,18 +393,20 @@
             // 
             this.dtpRegDate.Enabled = false;
             this.dtpRegDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpRegDate.Location = new System.Drawing.Point(875, 53);
+            this.dtpRegDate.Location = new System.Drawing.Point(1258, 50);
+            this.dtpRegDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dtpRegDate.Name = "dtpRegDate";
-            this.dtpRegDate.Size = new System.Drawing.Size(94, 20);
+            this.dtpRegDate.Size = new System.Drawing.Size(139, 26);
             this.dtpRegDate.TabIndex = 10;
             this.dtpRegDate.ValueChanged += new System.EventHandler(this.tbField_TextChanged);
             // 
             // tbRegNumber
             // 
             this.tbRegNumber.ForeColor = System.Drawing.Color.Gray;
-            this.tbRegNumber.Location = new System.Drawing.Point(67, 52);
+            this.tbRegNumber.Location = new System.Drawing.Point(71, 52);
+            this.tbRegNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbRegNumber.Name = "tbRegNumber";
-            this.tbRegNumber.Size = new System.Drawing.Size(100, 20);
+            this.tbRegNumber.Size = new System.Drawing.Size(148, 26);
             this.tbRegNumber.TabIndex = 11;
             this.tbRegNumber.Tag = "№ заявления";
             this.tbRegNumber.Text = "№ заявления";
@@ -505,67 +418,176 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.Gray;
-            this.label2.Location = new System.Drawing.Point(766, 55);
+            this.label2.Location = new System.Drawing.Point(1095, 53);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 13);
+            this.label2.Size = new System.Drawing.Size(152, 20);
             this.label2.TabIndex = 12;
             this.label2.Text = "Дата регистрации:";
             // 
             // cbDateSearch
             // 
             this.cbDateSearch.AutoSize = true;
-            this.cbDateSearch.Location = new System.Drawing.Point(750, 55);
+            this.cbDateSearch.Location = new System.Drawing.Point(1077, 56);
+            this.cbDateSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbDateSearch.Name = "cbDateSearch";
             this.cbDateSearch.Size = new System.Drawing.Size(15, 14);
             this.cbDateSearch.TabIndex = 13;
             this.cbDateSearch.UseVisualStyleBackColor = true;
             this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
             // 
-            // cbEnroll
+            // rbNew
             // 
-            this.cbEnroll.AutoSize = true;
-            this.cbEnroll.Location = new System.Drawing.Point(601, 29);
-            this.cbEnroll.Name = "cbEnroll";
-            this.cbEnroll.Size = new System.Drawing.Size(94, 17);
-            this.cbEnroll.TabIndex = 5;
-            this.cbEnroll.Text = "Зачисленные";
-            this.cbEnroll.UseVisualStyleBackColor = true;
-            this.cbEnroll.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
+            this.rbNew.AutoSize = true;
+            this.rbNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbNew.Location = new System.Drawing.Point(144, 26);
+            this.rbNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbNew.Name = "rbNew";
+            this.rbNew.Size = new System.Drawing.Size(69, 20);
+            this.rbNew.TabIndex = 14;
+            this.rbNew.TabStop = true;
+            this.rbNew.Text = "Новые";
+            this.rbNew.UseVisualStyleBackColor = true;
+            this.rbNew.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
             // 
-            // cbPickUp
+            // rbWithdraw
             // 
-            this.cbPickUp.AutoSize = true;
-            this.cbPickUp.Location = new System.Drawing.Point(453, 29);
-            this.cbPickUp.Name = "cbPickUp";
-            this.cbPickUp.Size = new System.Drawing.Size(142, 17);
-            this.cbPickUp.TabIndex = 4;
-            this.cbPickUp.Text = "Забравшие документы";
-            this.cbPickUp.UseVisualStyleBackColor = true;
-            this.cbPickUp.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
+            this.rbWithdraw.AutoSize = true;
+            this.rbWithdraw.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbWithdraw.Location = new System.Drawing.Point(213, 26);
+            this.rbWithdraw.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbWithdraw.Name = "rbWithdraw";
+            this.rbWithdraw.Size = new System.Drawing.Size(175, 20);
+            this.rbWithdraw.TabIndex = 15;
+            this.rbWithdraw.TabStop = true;
+            this.rbWithdraw.Text = "Забравшие документы";
+            this.rbWithdraw.UseVisualStyleBackColor = true;
+            this.rbWithdraw.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
             // 
-            // cbNew
+            // rbAdm
             // 
-            this.cbNew.AutoSize = true;
-            this.cbNew.Location = new System.Drawing.Point(387, 29);
-            this.cbNew.Name = "cbNew";
-            this.cbNew.Size = new System.Drawing.Size(60, 17);
-            this.cbNew.TabIndex = 3;
-            this.cbNew.Text = "Новые";
-            this.cbNew.UseVisualStyleBackColor = true;
-            this.cbNew.CheckedChanged += new System.EventHandler(this.cbFilter_CheckedChanged);
+            this.rbAdm.AutoSize = true;
+            this.rbAdm.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbAdm.Location = new System.Drawing.Point(387, 26);
+            this.rbAdm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbAdm.Name = "rbAdm";
+            this.rbAdm.Size = new System.Drawing.Size(115, 20);
+            this.rbAdm.TabIndex = 16;
+            this.rbAdm.TabStop = true;
+            this.rbAdm.Text = "Зачисленные";
+            this.rbAdm.UseVisualStyleBackColor = true;
+            this.rbAdm.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
             // 
-            // menuStrip_CheckEgeMarks
+            // dgvApplications_ID
             // 
-            this.menuStrip_CheckEgeMarks.Name = "menuStrip_CheckEgeMarks";
-            this.menuStrip_CheckEgeMarks.Size = new System.Drawing.Size(236, 22);
-            this.menuStrip_CheckEgeMarks.Text = "Проверить оценки ЕГЭ";
-            this.menuStrip_CheckEgeMarks.Click += new System.EventHandler(this.menuStrip_CheckEgeMarks_Click);
+            this.dgvApplications_ID.HeaderText = "УИН";
+            this.dgvApplications_ID.Name = "dgvApplications_ID";
+            this.dgvApplications_ID.ReadOnly = true;
+            this.dgvApplications_ID.Width = 50;
+            // 
+            // dgvApplications_LastName
+            // 
+            this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_LastName.HeaderText = "Фамилия";
+            this.dgvApplications_LastName.MinimumWidth = 100;
+            this.dgvApplications_LastName.Name = "dgvApplications_LastName";
+            this.dgvApplications_LastName.ReadOnly = true;
+            // 
+            // dgvApplications_FirstName
+            // 
+            this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_FirstName.FillWeight = 50F;
+            this.dgvApplications_FirstName.HeaderText = "Имя";
+            this.dgvApplications_FirstName.MinimumWidth = 100;
+            this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
+            this.dgvApplications_FirstName.ReadOnly = true;
+            // 
+            // dgvApplications_MiddleName
+            // 
+            this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_MiddleName.FillWeight = 50F;
+            this.dgvApplications_MiddleName.HeaderText = "Отчество";
+            this.dgvApplications_MiddleName.MinimumWidth = 100;
+            this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
+            this.dgvApplications_MiddleName.ReadOnly = true;
+            // 
+            // dgvApplications_Entrances
+            // 
+            this.dgvApplications_Entrances.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_Entrances.FillWeight = 50F;
+            this.dgvApplications_Entrances.HeaderText = "Направления";
+            this.dgvApplications_Entrances.MinimumWidth = 50;
+            this.dgvApplications_Entrances.Name = "dgvApplications_Entrances";
+            this.dgvApplications_Entrances.ReadOnly = true;
+            // 
+            // dgvApplications_Original
+            // 
+            this.dgvApplications_Original.HeaderText = "ОДО";
+            this.dgvApplications_Original.Name = "dgvApplications_Original";
+            this.dgvApplications_Original.ReadOnly = true;
+            this.dgvApplications_Original.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dgvApplications_Original.Width = 50;
+            // 
+            // dgvApplications_RegDate
+            // 
+            this.dgvApplications_RegDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_RegDate.HeaderText = "Дата подачи";
+            this.dgvApplications_RegDate.Name = "dgvApplications_RegDate";
+            this.dgvApplications_RegDate.ReadOnly = true;
+            this.dgvApplications_RegDate.Width = 133;
+            // 
+            // dgvApplications_EditDate
+            // 
+            this.dgvApplications_EditDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_EditDate.HeaderText = "Дата изменения";
+            this.dgvApplications_EditDate.Name = "dgvApplications_EditDate";
+            this.dgvApplications_EditDate.ReadOnly = true;
+            this.dgvApplications_EditDate.Width = 145;
+            // 
+            // dgvApplications_PickUpDate
+            // 
+            this.dgvApplications_PickUpDate.HeaderText = "Забрал документы";
+            this.dgvApplications_PickUpDate.Name = "dgvApplications_PickUpDate";
+            this.dgvApplications_PickUpDate.ReadOnly = true;
+            // 
+            // dgvApplications_DeductionDate
+            // 
+            this.dgvApplications_DeductionDate.HeaderText = "Приказ об отчислении";
+            this.dgvApplications_DeductionDate.Name = "dgvApplications_DeductionDate";
+            this.dgvApplications_DeductionDate.ReadOnly = true;
+            this.dgvApplications_DeductionDate.Width = 110;
+            // 
+            // dgvApplications_EnrollmentDate
+            // 
+            this.dgvApplications_EnrollmentDate.HeaderText = "Приказ о зачислении";
+            this.dgvApplications_EnrollmentDate.Name = "dgvApplications_EnrollmentDate";
+            this.dgvApplications_EnrollmentDate.ReadOnly = true;
+            this.dgvApplications_EnrollmentDate.Width = 110;
+            // 
+            // dgvApplications_RegistratorLogin
+            // 
+            this.dgvApplications_RegistratorLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvApplications_RegistratorLogin.HeaderText = "Регистратор";
+            this.dgvApplications_RegistratorLogin.Name = "dgvApplications_RegistratorLogin";
+            this.dgvApplications_RegistratorLogin.ReadOnly = true;
+            this.dgvApplications_RegistratorLogin.Width = 131;
+            // 
+            // dgvApplications_Status
+            // 
+            this.dgvApplications_Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_Status.HeaderText = "Статус";
+            this.dgvApplications_Status.Name = "dgvApplications_Status";
+            this.dgvApplications_Status.ReadOnly = true;
+            this.dgvApplications_Status.Width = 87;
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 461);
+            this.ClientSize = new System.Drawing.Size(1512, 709);
+            this.Controls.Add(this.rbAdm);
+            this.Controls.Add(this.rbWithdraw);
+            this.Controls.Add(this.rbNew);
             this.Controls.Add(this.cbDateSearch);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbRegNumber);
@@ -574,13 +596,12 @@
             this.Controls.Add(this.tbFirstName);
             this.Controls.Add(this.tbLastName);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.cbEnroll);
-            this.Controls.Add(this.cbPickUp);
-            this.Controls.Add(this.cbNew);
             this.Controls.Add(this.dgvApplications);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MainMenuStrip = this.menuStrip;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Main";
             this.Text = "ИС \"Приемная комиссия\"";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -602,7 +623,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Campaigns;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Entrants;
-        private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateBacApplication;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateApplication;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Univesity;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Faculties;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Directions;
@@ -629,12 +650,17 @@
         private System.Windows.Forms.TextBox tbRegNumber;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox cbDateSearch;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_KLADR_Update;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_CheckEgeMarks;
+        private System.Windows.Forms.RadioButton rbNew;
+        private System.Windows.Forms.RadioButton rbWithdraw;
+        private System.Windows.Forms.RadioButton rbAdm;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvApplications_Original;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Entrances;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvApplications_Original;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EditDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_PickUpDate;
@@ -642,13 +668,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EnrollmentDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
-        private System.Windows.Forms.CheckBox cbEnroll;
-        private System.Windows.Forms.CheckBox cbPickUp;
-        private System.Windows.Forms.CheckBox cbNew;
-        private System.Windows.Forms.ToolStripButton toolStripMain_CreateMagApplication;
-        private System.Windows.Forms.ToolStripMenuItem menuStrip_CreateMagApplication;
-        private System.Windows.Forms.ToolStripMenuItem menuStrip_KLADR_Update;
-        private System.Windows.Forms.ToolStripMenuItem menuStrip_CheckEgeMarks;
     }
 }
 

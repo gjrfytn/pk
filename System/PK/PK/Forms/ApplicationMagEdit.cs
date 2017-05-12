@@ -20,7 +20,16 @@ namespace PK.Forms
         private DateTime _EditingDateTime;
         private bool _Loading;
         private uint? _TargetOrganizationID;
+        private bool _Agreed;
+        private ApplicationEdit.QDoc _QuoteDoc;
         private Dictionary<string, string> _Towns = new Dictionary<string, string>();
+
+        private bool _DistrictNeedsReload;
+        private bool _TownNeedsReload;
+        private bool _StreetNeedsReload;
+        private bool _HouseNeedsReload;
+
+        private const int _AgreedChangeMaxCount = 2;
 
         public ApplicationMagEdit(Classes.DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
         {
@@ -52,7 +61,7 @@ namespace PK.Forms
             cbNationality.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.COUNTRY).Values.ToArray());
             cbNationality.SelectedIndex = 0;
             cbFirstTime.SelectedIndex = 0;
-            tbRegion.AutoCompleteCustomSource.AddRange(_KLADR.GetRegions().ToArray());
+            cbRegion.Items.AddRange(_KLADR.GetRegions().ToArray());
 
             foreach (TabPage tab in tcPrograms.Controls)
             {
@@ -105,8 +114,8 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if ((tbLastName.Text == "") || (tbFirstName.Text == "") || (tbMidleName.Text == "") || (tbIDDocSeries.Text == "") || (tbIDDocNumber.Text == "")
-                || (tbPlaceOfBirth.Text == "") || (tbRegion.Text == "") || (tbPostcode.Text == ""))
+            if ((tbLastName.Text == "") || (tbFirstName.Text == "") || (tbMiddleName.Text == "") || (tbIDDocSeries.Text == "") || (tbIDDocNumber.Text == "")
+                || (tbPlaceOfBirth.Text == "") || (cbRegion.Text == "") || (tbPostcode.Text == ""))
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
             else if (tbInstitution.Text == "")
                 MessageBox.Show("Обязательные поля в разделе \"Документ об образовании\" не заполнены.");
@@ -128,6 +137,7 @@ namespace PK.Forms
                 {
                     SaveApplication();
                     btPrint.Enabled = true;
+                    btWithdraw.Enabled = true;
                 }
                 else
                 {
@@ -151,23 +161,31 @@ namespace PK.Forms
         {
             if (cbSpecialRights.Checked && !_Loading)
             {
-                //QuotDocs form = new QuotDocs(_DB_Connection, this);
-                //form.ShowDialog();
+                QuotDocs form = new QuotDocs(_DB_Connection, _QuoteDoc);
+                form.ShowDialog();
+                ApplicationEdit.QDoc quoteDoc = form._Document;
+                _QuoteDoc.cause = quoteDoc.cause;
+                _QuoteDoc.medCause = quoteDoc.medCause;
+                _QuoteDoc.medDocSerie = quoteDoc.medDocSerie;
+                _QuoteDoc.medDocNumber = quoteDoc.medDocNumber;
+                _QuoteDoc.disabilityGroup = quoteDoc.disabilityGroup;
+                _QuoteDoc.conclusionDate = quoteDoc.conclusionDate;
+                _QuoteDoc.conclusionNumber = quoteDoc.conclusionNumber;
+                _QuoteDoc.orphanhoodDocDate = quoteDoc.orphanhoodDocDate;
+                _QuoteDoc.orphanhoodDocName = quoteDoc.orphanhoodDocName;
+                _QuoteDoc.orphanhoodDocOrg = quoteDoc.orphanhoodDocOrg;
+                _QuoteDoc.orphanhoodDocType = quoteDoc.orphanhoodDocType;
             }
             else if (!cbSpecialRights.Checked)
                 cbProgram_quote_o.SelectedIndex = -1;
-            foreach (Control c in tcPrograms.TabPages[5].Controls)
-            {
-                Control cb = c as Control;
-                if (cb != null)
-                    cb.Enabled = cbSpecialRights.Checked;
-            }
+            cbProgram_quote_o.Enabled = cbSpecialRights.Checked;
+            label35.Enabled = cbSpecialRights.Checked;
         }
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
             Tuple<string, string> buf = GetTownSettlement();
-            tbPostcode.Text = _KLADR.GetIndex(tbRegion.Text, tbDistrict.Text, buf.Item1, buf.Item2, tbStreet.Text, cbHouse.Text);
+            tbPostcode.Text = _KLADR.GetIndex(cbRegion.Text, cbDistrict.Text, buf.Item1, buf.Item2, cbStreet.Text, cbHouse.Text);
             if (tbPostcode.Text == "")
                 tbPostcode.Enabled = true;
             else
@@ -184,93 +202,312 @@ namespace PK.Forms
             }
             else if (!cbTarget.Checked)
                 cbProgram_target_o.SelectedIndex = -1;
-            foreach (Control c in tcPrograms.TabPages[4].Controls)
+            cbProgram_target_o.Enabled = cbTarget.Checked;
+            label34.Enabled = cbTarget.Checked;
+        }
+
+        private void cbDistrict_Enter(object sender, EventArgs e)
+        {
+            if (_DistrictNeedsReload)
             {
-                Control cb = c as Control;
-                if (cb != null)
-                    cb.Enabled = cbTarget.Checked;
+                cbDistrict.Items.Clear();
+                cbDistrict.Items.AddRange(_KLADR.GetDistricts(cbRegion.Text).ToArray());
+
+                if (cbDistrict.AutoCompleteCustomSource.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbDistrict, 3000);
+                }
+                _DistrictNeedsReload = false;
             }
         }
 
-        private void tbDistrict_Enter(object sender, EventArgs e)
+        private void cbTown_Enter(object sender, EventArgs e)
         {
-            tbDistrict.AutoCompleteCustomSource.Clear();
-            tbDistrict.AutoCompleteCustomSource.AddRange(_KLADR.GetDistricts(tbRegion.Text).ToArray());
-
-            if (tbDistrict.AutoCompleteCustomSource.Count == 0)
+            if (_TownNeedsReload)
             {
-                toolTip.Show("Не найдено адресов.", tbDistrict, 3000);
+                _TownNeedsReload = false;
+                _Towns.Clear();
+                foreach (string town in _KLADR.GetTowns(cbRegion.Text, cbDistrict.Text))
+                {
+                    _Towns.Add(town, null);
+                    foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, town))
+                        _Towns.Add(settl, town);
+                }
+
+                foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, ""))
+                    _Towns.Add(settl, "");
+
+                cbTown.Items.Clear();
+                cbTown.Items.AddRange(_Towns.Keys.ToArray());
+
+                if (cbTown.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbTown, 3000);
+                }
+                
             }
         }
 
-        private void tbTown_Enter(object sender, EventArgs e)
+        private void cbStreet_Enter(object sender, EventArgs e)
         {
-            _Towns.Clear();
-            foreach (string town in _KLADR.GetTowns(tbRegion.Text, tbDistrict.Text))
-            {
-                _Towns.Add(town, null);
-                foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, town))
-                    _Towns.Add(settl, town);
-            }
+            if (_StreetNeedsReload)
+            {                
+                cbStreet.Items.Clear();
+                if (_Towns.ContainsKey(cbTown.Text))
+                {
+                    if (_Towns[cbTown.Text] == null)
+                        cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text, "").ToArray());
+                    else
+                        cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, _Towns[cbTown.Text], cbTown.Text).ToArray());
+                }
+                else if (cbTown.Text == "")
+                    cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, "", "").ToArray());
 
-            foreach (string settl in _KLADR.GetSettlements(tbRegion.Text, tbDistrict.Text, ""))
-                _Towns.Add(settl, "");
-
-            tbTown.AutoCompleteCustomSource.Clear();
-            tbTown.AutoCompleteCustomSource.AddRange(_Towns.Keys.ToArray());
-
-            if (tbTown.AutoCompleteCustomSource.Count == 0)
-            {
-                toolTip.Show("Не найдено адресов.", tbTown, 3000);
-            }
-        }
-
-        private void tbStreet_Enter(object sender, EventArgs e)
-        {
-            tbStreet.AutoCompleteCustomSource.Clear();
-            if (_Towns.ContainsKey(tbTown.Text))
-            {
-                if (_Towns[tbTown.Text] == null)
-                    tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, tbTown.Text, "").ToArray());
-                else
-                    tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, _Towns[tbTown.Text], tbTown.Text).ToArray());
-            }
-            else if (tbTown.Text == "")
-                tbStreet.AutoCompleteCustomSource.AddRange(_KLADR.GetStreets(tbRegion.Text, tbDistrict.Text, "", "").ToArray());
-
-            if (tbStreet.AutoCompleteCustomSource.Count == 0)
-            {
-                toolTip.Show("Не найдено адресов.", tbStreet, 3000);
+                if (cbStreet.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbStreet, 3000);
+                }
+                _StreetNeedsReload = false;
             }
         }
 
         private void cbHouse_Enter(object sender, EventArgs e)
         {
-            cbHouse.Items.Clear();
-            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, tbTown.Text, "", tbStreet.Text).ToArray());
-            cbHouse.Items.AddRange(_KLADR.GetHouses(tbRegion.Text, tbDistrict.Text, "", tbTown.Text, tbStreet.Text).ToArray());
-
-            if (cbHouse.Items.Count == 0)
+            if (_HouseNeedsReload)
             {
-                toolTip.Show("Не найдено адресов.", cbHouse, 3000);
+                cbHouse.Text = "";
+                cbHouse.Items.Clear();
+                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, "", cbStreet.Text).ToArray());
+                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, "", cbTown.Text, cbStreet.Text).ToArray());
+
+                if (cbHouse.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbHouse, 3000);
+                }
+                _HouseNeedsReload = false;
             }
         }
 
         private void tbNumber_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Char.IsNumber(e.KeyChar) || (e.KeyChar == '\b')) return;
+            if (char.IsNumber(e.KeyChar) || (e.KeyChar == '\b'))
+                return;
             else
                 e.Handled = true;
         }
 
         private void tbCyrilic_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё')) return;
+            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
+                return;
             else
                 e.Handled = true;
         }
 
-        
+        private void cbAdress_TextChanged(object sender, EventArgs e)
+        {
+            if (((ComboBox)sender).Name != "cbHouse")
+            {
+                _HouseNeedsReload = true;
+                cbHouse.Text = "";
+                if (((ComboBox)sender).Name != "cbStreet")
+                {
+                    _StreetNeedsReload = true;
+                    cbStreet.Text = "";
+                    if (((ComboBox)sender).Name != "cbTown")
+                    {
+                        _TownNeedsReload = true;
+                        cbTown.Text = "";
+                        if (((ComboBox)sender).Name != "cbDistrict")
+                        {
+                            _DistrictNeedsReload = true;
+                            cbDistrict.Text = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btWithdraw_Click(object sender, EventArgs e)
+        {
+            if (Classes.Utility.ShowChoiceMessageWithConfirmation("Забрать документы?", "Забрать документы"))
+            {
+                UpdateApplication();
+                _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "status", "withdrawn" } }, new Dictionary<string, object>
+                { { "id", _ApplicationID } });
+
+                foreach (Control control in Controls)
+                    control.Enabled = false;
+                btClose.Enabled = true;
+            }
+        }
+
+        private void cbAgreed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_Agreed)
+                if (((CheckBox)sender).Checked)
+                    if (!_Loading)
+                    {
+                        int agreedCount = 0;
+                        foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
+                        }))
+                            if ((data[0] as DateTime?) != null)
+                                agreedCount++;
+                        if (agreedCount >= _AgreedChangeMaxCount)
+                        {
+                            MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
+                            _Agreed = true;
+                            ((CheckBox)sender).Checked = false;
+                        }
+                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                        {
+                            ChangeAgreedChBs(false);
+                            BlockDirChange();
+                        }
+                        else
+                        {
+                            _Agreed = true;
+                            ((CheckBox)sender).Checked = false;
+                        }
+                    }
+                    else
+                    {
+                        BlockDirChange();
+                        ((CheckBox)sender).Enabled = true;
+                    }
+                else
+                {
+                    int disagreedCount = 0;
+                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
+                            }))
+                        if ((data[0] as DateTime?) != null)
+                            disagreedCount++;
+                    if (disagreedCount >= _AgreedChangeMaxCount)
+                    {
+                        MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
+                        _Agreed = true;
+                        ((CheckBox)sender).Checked = true;
+                    }
+                    else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                    {
+                        if (disagreedCount < _AgreedChangeMaxCount - 1)
+                            ChangeAgreedChBs(true);
+                        else
+                            ((CheckBox)sender).Enabled = false;
+                        cbAgreed.Checked = false;
+                    }
+                    else
+                    {
+                        _Agreed = true;
+                        ((CheckBox)sender).Checked = true;
+                    }
+                }
+            _Agreed = false;
+        }
+
+        private void btFillRand_Click(object sender, EventArgs e)
+        {
+            tbLastName.Text = "";
+            tbFirstName.Text = "";
+            tbMiddleName.Text = "";
+            tbPlaceOfBirth.Text = "";
+            tbIssuedBy.Text = "";
+            tbInstitution.Text = "";
+            tbIDDocSeries.Text = "";
+            tbIDDocNumber.Text = "";
+            tbSubdivisionCode.Text = "";
+            tbEduDocSeries.Text = "";
+            tbEduDocNumber.Text = "";
+            tbSpecialty.Text = "";
+            tbPostcode.Text = "";
+            mtbEMail.Text = "";
+            mtbHomePhone.Text = "";
+            mtbMobilePhone.Text = "";
+
+            Random rand = new Random();
+            int stringLength = 10;
+            int numberLength = 5;
+            char[] cyrillicLetters = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т',
+                'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+            char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            char[] latinLetters = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+            string[] emailEndings = { "gmail.com", "yandex.ru", "rambler.ru", "list.ru", "mail.ru" };
+            for (int i = 0; i < stringLength; i++)
+            {
+                tbLastName.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbFirstName.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbMiddleName.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbPlaceOfBirth.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbIssuedBy.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbInstitution.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                tbSpecialty.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+            }
+            for (int i = 0; i < numberLength; i++)
+            {
+                tbIDDocSeries.Text += digits[rand.Next(digits.Length)];
+                tbIDDocNumber.Text += digits[rand.Next(digits.Length)];
+                tbSubdivisionCode.Text += digits[rand.Next(digits.Length)];
+                tbEduDocSeries.Text += digits[rand.Next(digits.Length)];
+                tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
+            }
+
+            for (int i = 0; i < 6; i++)
+                tbPostcode.Text += digits[rand.Next(digits.Length)];
+            for (int i = 0; i < 10; i++)
+                mtbEMail.Text += latinLetters[rand.Next(latinLetters.Length)];
+            mtbEMail.Text += "@" + emailEndings[rand.Next(emailEndings.Length)];
+            string phone = "";
+            if (rand.Next(2) > 0)
+                for (int i = 0; i < 10; i++)
+                    phone += digits[rand.Next(digits.Length)];
+            mtbHomePhone.Text = phone;
+            phone = "";
+            if (rand.Next(2) > 0)
+                for (int i = 0; i < 10; i++)
+                    phone += digits[rand.Next(digits.Length)];
+            mtbMobilePhone.Text = phone;
+
+            cbSex.SelectedIndex = rand.Next(cbSex.Items.Count);
+            cbRegion.SelectedIndex = rand.Next(cbRegion.Items.Count);
+            cbFirstTime.SelectedIndex = rand.Next(cbFirstTime.Items.Count);
+
+            int year = rand.Next(1990, DateTime.Now.Year - 16);
+            int month = rand.Next(1, 12);
+            int day = rand.Next(1, DateTime.DaysInMonth(year, month));
+            DateTime randDate = new DateTime(year, month, day);
+            dtpDateOfBirth.Value = randDate;
+
+            if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 14 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 20)
+                year = dtpDateOfBirth.Value.Year + 14;
+            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 20 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 45)
+                if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 20 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
+                    year = dtpDateOfBirth.Value.Year + 14;
+                else year = dtpDateOfBirth.Value.Year + 20;
+            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 45 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
+                year = dtpDateOfBirth.Value.Year + 20;
+            else year = dtpDateOfBirth.Value.Year + 45;
+            if (year == DateTime.Now.Year)
+                month = rand.Next(dtpDateOfBirth.Value.Month, DateTime.Now.Month);
+            else month = rand.Next(1, 12);
+            day = rand.Next(1, DateTime.DaysInMonth(year, month));
+            dtpIDDocDate.Value = new DateTime(year, month, day);
+
+            if (DateTime.Now.Year - dtpDateOfBirth.Value.Year < 18)
+                year = dtpDateOfBirth.Value.Year + rand.Next(3);
+            else year = rand.Next(dtpDateOfBirth.Value.Year, DateTime.Now.Year);
+            if (year == DateTime.Now.Year)
+                month = rand.Next(1, DateTime.Now.Month);
+            else month = rand.Next(1, 12);
+            if (year == DateTime.Now.Year && month == DateTime.Now.Month)
+                day = rand.Next(1, DateTime.Now.Day - 1);
+            else day = rand.Next(1, DateTime.DaysInMonth(year, month));
+        }
+
+
         private void SaveApplication()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -303,7 +540,8 @@ namespace PK.Forms
 
         private void SaveBasic()
         {
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", mtbHomePhone.Text }, { "mobile_phone", mtbMobilePhone.Text } });
+            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text },
+                { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
@@ -319,13 +557,13 @@ namespace PK.Forms
                 { "documents_id", idDocUid } });
 
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
-                { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
+                { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                 { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
                 { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
-                { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
-                { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
+                { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
+                { "reg_town", cbTown.Text}, { "reg_street", cbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
         }
 
         private void SaveDiploma()
@@ -384,11 +622,23 @@ namespace PK.Forms
         private void LoadBasic()
         {
             Text += " № " + _ApplicationID;
-            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id" }, 
+            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status" }, 
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, _ApplicationID)
                 })[0];
+
+            if (application[5].ToString() == "withdrawn")
+            {
+                foreach (Control control in Controls)
+                    control.Enabled = false;
+                btClose.Enabled = true;
+            }
+            else
+            {
+                btWithdraw.Enabled = true;
+                btPrint.Enabled = true;
+            }
 
             _EntrantID = (uint)application[4];
             cbHostelNeeded.Checked = (bool)application[0];
@@ -440,16 +690,16 @@ namespace PK.Forms
                     cbNationality.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)passport[2]);
                     dtpDateOfBirth.Value = (DateTime)passport[3];
                     tbPlaceOfBirth.Text = passport[4].ToString();
-                    tbRegion.Text = passport[5].ToString();
-                    tbDistrict.Text = passport[6].ToString();
-                    tbTown.Text = passport[7].ToString();
-                    tbStreet.Text = passport[8].ToString();
+                    cbRegion.Text = passport[5].ToString();
+                    cbDistrict.Text = passport[6].ToString();
+                    cbTown.Text = passport[7].ToString();
+                    cbStreet.Text = passport[8].ToString();
                     cbHouse.Text = passport[9].ToString();
                     tbPostcode.Text = passport[10].ToString();
                     tbAppartment.Text = passport[11].ToString();
                     tbLastName.Text = passport[12].ToString();
                     tbFirstName.Text = passport[13].ToString();
-                    tbMidleName.Text = passport[14].ToString();
+                    tbMiddleName.Text = passport[14].ToString();
                 }
                 else if (document[1].ToString() == "high_edu_diploma")
                 {
@@ -525,11 +775,12 @@ namespace PK.Forms
         private void LoadDirections()
         {          
             var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
-            var records = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date",
-            "profile_short_name", "edu_form_id", "edu_source_id", "target_organization_id"}, new List<Tuple<string, Relation, object>>
+            var appEntrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date",
+            "profile_short_name", "edu_form_id", "edu_source_id", "target_organization_id", "is_disagreed_date"}, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
-            }).Join(
+            });
+            var records = appEntrances.Join(
                 profilesData,
                 campDirs => new Tuple<uint, string, string>((uint)campDirs[0], campDirs[1].ToString(), campDirs[3].ToString()),
                 profsData => new Tuple<uint, string, string>((uint)profsData[3], profsData[2].ToString(), profsData[0].ToString()),
@@ -608,13 +859,37 @@ namespace PK.Forms
                     cbProgram_target_o.Enabled = true;                
                 }
             }
+            int disagreedTimes = 0;
+            int agreedTimes = 0;
+            foreach (object[] appEntrData in appEntrances)
+                if (appEntrData[2] as DateTime? != null && appEntrData[7] as DateTime? == null)
+                {
+                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrData[4]) == Classes.DB_Helper.EduFormO)
+                    {
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceB)
+                            cbAgreed_budget_o.Checked = true;
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceQ)
+                            cbAgreed_quote_o.Checked = true;
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceT)
+                            cbAgreed_target_o.Checked = true;
+                    }
+                    cbAgreed.Checked = true;
+                    agreedTimes++;
+                }
+                else if (appEntrData[2] as DateTime? != null && appEntrData[7] as DateTime? != null)
+                    disagreedTimes++;
+
+            if (agreedTimes != 0 || disagreedTimes != 0)
+                BlockDirChange();
+            if (agreedTimes == 0 && disagreedTimes < _AgreedChangeMaxCount)
+                ChangeAgreedChBs(true);
         }
 
 
         private void UpdateBasic()
         {
-            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", GetNumber(true) }, { "mobile_phone", GetNumber(false) } },
-                new Dictionary<string, object> { { "id", _EntrantID } });
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) },
+                { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, new Dictionary<string, object> { { "id", _EntrantID } });
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -653,13 +928,13 @@ namespace PK.Forms
                             { "organization", tbIssuedBy.Text} }, new Dictionary<string, object> { { "id", (uint)document[0] } });
 
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
-                            { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMidleName.Text},
+                            { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                             { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
                             { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
-                            { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", tbRegion.Text}, { "reg_district", tbDistrict.Text},
-                            { "reg_town", tbTown.Text}, { "reg_street", tbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
+                            { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
+                            { "reg_town", cbTown.Text}, { "reg_street", cbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } });
                     }
 
@@ -797,7 +1072,52 @@ namespace PK.Forms
             }
             UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, false, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
                 "edu_source_dict_id", "edu_source_id" });
-        }
+
+            if (cbAgreed_budget_o.Checked)
+                _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
+                    new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
+                    { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
+                    { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 } });
+            else if (cbAgreed_quote_o.Checked)
+                _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
+                    new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
+                    { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
+                    { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 } });
+            else if (cbAgreed_target_o.Checked)
+                _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
+                    new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
+                    { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
+                    { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 } });
+
+            foreach (object[] appEntrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "faculty_short_name", "direction_id", "edu_form_id", "edu_source_id", "is_agreed_date", "is_disagreed_date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
+                }))
+                if (appEntrance[4] as DateTime? != null && appEntrance[5] as DateTime? == null)
+                {
+                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrance[2]) == Classes.DB_Helper.EduFormO)
+                    {
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceB && !cbAgreed_budget_o.Checked)
+                            _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
+                                new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
+                                { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
+                                { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 } });
+
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceQ && !cbAgreed_quote_o.Checked)
+                            _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
+                                new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
+                                { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
+                                { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 } });
+
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceT && !cbAgreed_target_o.Checked)
+                            _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
+                                new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
+                                { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
+                                { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 } });
+                    }
+                }
+            }
 
 
         private void FillProgramsCombobox(ComboBox combobox, string eduForm, string eduSource)
@@ -913,31 +1233,6 @@ namespace PK.Forms
             }
         }
 
-        private string GetNumber(bool home)
-        {
-            MaskedTextBox textBox;
-            if (home)
-                textBox = mtbHomePhone;
-            else
-                textBox = mtbMobilePhone;
-
-            string number = "";
-            for (int i = 1; i <= 3; i++)
-                if (char.IsDigit(textBox.Text[i]))
-                    number += textBox.Text[i];
-            for (int i = 5; i <= 7; i++)
-                if (char.IsDigit(textBox.Text[i]))
-                    number += textBox.Text[i];
-            for (int i = 9; i <= 10; i++)
-                if (char.IsDigit(textBox.Text[i]))
-                    number += textBox.Text[i];
-            if (textBox.Text.Length >= 14)
-                for (int i = 12; i <= 13; i++)
-                    if (char.IsDigit(textBox.Text[i]))
-                        number += textBox.Text[i];
-            return number;
-        }
-
         private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
         {
             List<object[]> oldList = oldDataList;
@@ -1021,23 +1316,48 @@ namespace PK.Forms
 
         private Tuple<string, string> GetTownSettlement()
         {
-            if (_Towns.ContainsKey(tbTown.Text))
+            if (_Towns.ContainsKey(cbTown.Text))
             {
-                if (_Towns[tbTown.Text] == null)
-                    return new Tuple<string, string>(tbTown.Text, "");
+                if (_Towns[cbTown.Text] == null)
+                    return new Tuple<string, string>(cbTown.Text, "");
                 else
                 {
-                    string[] buf = tbTown.Text.Split('(');
+                    string[] buf = cbTown.Text.Split('(');
                     if (buf.Length == 4)
-                        return new Tuple<string, string>(_Towns[tbTown.Text], buf[0] + "(" + buf[1]);
+                        return new Tuple<string, string>(_Towns[cbTown.Text], buf[0] + "(" + buf[1]);
                     else
-                        return new Tuple<string, string>(_Towns[tbTown.Text], tbTown.Text);
+                        return new Tuple<string, string>(_Towns[cbTown.Text], cbTown.Text);
                 }
             }
-            else if (tbTown.Text == "")
+            else if (cbTown.Text == "")
                 return new Tuple<string, string>("", "");
 
             return null;
+        }
+
+        private void ChangeAgreedChBs(bool isEnabled)
+        {
+                foreach (TabPage page in tcPrograms.TabPages)
+                    foreach (Control control in page.Controls)
+                    {
+                        CheckBox cb = control as CheckBox;
+                        if (cb != null)
+                            cb.Enabled = isEnabled;
+                    }
+        }
+
+        private void BlockDirChange()
+        {
+            foreach (TabPage page in tcPrograms.TabPages)
+                foreach (Control control in page.Controls)
+                {
+                    ComboBox cb = control as ComboBox;
+                    if (cb != null)
+                        cb.Enabled = false;
+                    Button bt = control as Button;
+                    if (bt != null)
+                        bt.Enabled = false;
+                }
         }
     }
 }
