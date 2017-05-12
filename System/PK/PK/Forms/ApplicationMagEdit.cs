@@ -540,7 +540,13 @@ namespace PK.Forms
 
         private void SaveBasic()
         {
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text },
+            char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            int passwordLength = 12;
+            string password = "";
+            Random rand = new Random();
+            for (int i = 0; i < passwordLength; i++)
+                password += passwordChars[rand.Next(passwordChars.Length)];
+            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
                 { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
