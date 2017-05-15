@@ -57,16 +57,18 @@ namespace PK.Classes
         {
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
-            foreach (var admData in connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA)
-                .GroupBy(k => new System.Tuple<uint, uint>((uint)k[0], (uint)k[2]), (k, g) => new
+            foreach (var admData in connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, "campaign_id", "direction_id", "places_budget_o", "places_budget_oz", "places_quota_o", "places_quota_oz")
+                .GroupBy(
+                k => new System.Tuple<uint, uint>((uint)k[0],
+                (uint)k[1]), (k, g) => new
                 {
                     CampID = k.Item1,
                     DirID = k.Item2,
-                    BO = g.Sum(s => (ushort)s[3]),
-                    BOZ = g.Sum(s => (ushort)s[4]),
+                    BO = g.Sum(s => (ushort)s[2]),
+                    BOZ = g.Sum(s => (ushort)s[3]),
                     BZ = 0,
-                    QO = g.Sum(s => (ushort)s[5]),
-                    QOZ = g.Sum(s => (ushort)s[6]),
+                    QO = g.Sum(s => (ushort)s[4]),
+                    QOZ = g.Sum(s => (ushort)s[5]),
                     QZ = 0
                 }))
             {
@@ -99,11 +101,8 @@ namespace PK.Classes
                     target_oz += (ushort)targetRow[1];
                 }
 
-                uint levelID = 2;/*uint.Parse(connection.Select(
-                    DB_Table.DICTIONARY_10_ITEMS,
-                    new string[] { "code" },
-                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("id", Relation.EQUAL, row[2]) }
-                    )[0][0].ToString().Split('.')[1]);*///TODO Не так?
+                DB_Helper dbHelper = new DB_Helper(connection);
+                uint levelID = Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
 
                 admissionVolumes.Add(new AVItem(
                     new TUID(admData.CampID.ToString() + admData.DirID.ToString()),
@@ -196,24 +195,19 @@ namespace PK.Classes
                             new string[] { "subject_id", "priority" },
                             new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
                             ))
-                            entranceTests.Add(new EntranceTestItem(
-                                new TUID(compGroupUID + etRow[0].ToString()),
-                                1,//TODO ?
-                                (ushort)etRow[1],
-                                new TEntranceTestSubject((uint)etRow[0]),
-                                null //TODO Добавить!
-                                ));
+                            if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
+                                entranceTests.Add(new EntranceTestItem(
+                                    new TUID(compGroupUID + etRow[0].ToString()),
+                                    1,//TODO ?
+                                    (ushort)etRow[1],
+                                    new TEntranceTestSubject((uint)etRow[0]),
+                                    null //TODO Добавить!
+                                    ));
 
                         competitiveGroups.Add(new CompetitiveGroup(
                             new TUID(compGroupUID),
                             new TUID(admData.CampID.ToString()),
-                            admData.CampID.ToString() + " " +
-                            connection.Select(
-                                DB_Table.DICTIONARY_10_ITEMS,
-                                new string[] { "code" },
-                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("id", Relation.EQUAL, admData.DirID) }
-                                )[0][0].ToString() +
-                            " " + EduSourceLiterals[eduSource] + " " + EduFormLiterals[eduForm],
+                            dbHelper.GetDirectionNameAndCode(admData.DirID).Item2 + " " + EduSourceLiterals[eduSource] + " " + EduFormLiterals[eduForm],
                             levelID,
                             eduSource,
                             eduForm,
@@ -237,15 +231,14 @@ namespace PK.Classes
         {
             List<InstitutionAchievement> achievements = new List<InstitutionAchievement>();
 
-            foreach (object[] campRow in connection.Select(DB_Table.CAMPAIGNS, "id"))
-                foreach (object[] row in connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS))
-                    achievements.Add(new InstitutionAchievement(
-                        new TUID(row[0].ToString()),
-                        row[1].ToString(),
-                        (uint)row[3],
-                        (decimal)row[4],
-                        new TUID(campRow[0].ToString())
-                        ));
+            foreach (object[] row in connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "campaign_id", "name", "category_id", "value"))
+                achievements.Add(new InstitutionAchievement(
+                    new TUID(row[0].ToString()),
+                    row[2].ToString(),
+                    (uint)row[3],
+                    (ushort)row[4],
+                    new TUID(row[1].ToString())
+                    ));
 
             if (achievements.Count != 0)
                 return achievements;
@@ -257,7 +250,7 @@ namespace PK.Classes
         {
             List<TargetOrganizationImp> organizations = new List<TargetOrganizationImp>();
 
-            foreach (object[] row in connection.Select(DB_Table.TARGET_ORGANIZATIONS))
+            foreach (object[] row in connection.Select(DB_Table.TARGET_ORGANIZATIONS, "id", "name"))
                 organizations.Add(new TargetOrganizationImp(new TUID(row[0].ToString()), row[1].ToString()));
 
             if (organizations.Count != 0)
@@ -280,7 +273,7 @@ namespace PK.Classes
                     System.DateTime regDT = (System.DateTime)row[2];
 
                     List<FinSourceEduForm> finSourceEduForms = new List<FinSourceEduForm>();
-                    foreach (object[] entranceRow in connection.Select(DB_Table.APPLICATIONS_ENTRANCES))
+                    foreach (object[] entranceRow in connection.Select(DB_Table.APPLICATIONS_ENTRANCES,))
                         finSourceEduForms.Add(new FinSourceEduForm(new TUID(
                             connection.Select(
                             DB_Table.CAMPAIGNS,

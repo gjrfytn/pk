@@ -73,7 +73,7 @@
             this.dgvOlympics.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvOlympics.Size = new System.Drawing.Size(674, 454);
             this.dgvOlympics.TabIndex = 0;
-            this.dgvOlympics.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOlympics_RowEnter);
+            this.dgvOlympics.SelectionChanged += new System.EventHandler(this.dgvOlympics_SelectionChanged);
             // 
             // dgvOlympics_ID
             // 

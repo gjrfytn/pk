@@ -30,11 +30,12 @@ namespace PK.Forms
         {
             if (_Updater == null)
             {
-                Classes.FIS_Connector connector = Classes.Utility.ConnectToFIS("****");
-                if (connector == null)
+                string login;
+                string password;
+                if (!Classes.Utility.GetFIS_AuthData(out login, out password))
                     return;
 
-                _Updater = new Classes.DictionaryUpdater(_DB_Connection, connector);
+                _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
             }
 
             Cursor.Current = Cursors.WaitCursor;

@@ -158,14 +158,14 @@ namespace PK.Forms
             ))
                 inventoryTableParams[1].Add(new string[] { "Направление ПК" });
 
-            if (entrances.Any(s => s.Directions.Any(e => medCertDirections.Contains(dbHelper.GetDirectionNameAndCode(e.Direction).Item2))))
-            {
-                inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
-                quota = true;
-            }
+            //if (entrances.Any(s => s.Directions.Any(e => medCertDirections.Contains(dbHelper.GetDirectionNameAndCode(e.Direction).Item2))))
+            //    inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
 
             if (docs.Any(s => s.Type == "photos"))
                 inventoryTableParams[1].Add(new string[] { "4 фотографии 3х4" });
+
+            //if (docs.Any(s => s.Type == "orphan" || s.Type == "disability" || s.Type == "medical"))
+            //    quota = true;
 
             object[] entrant = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
@@ -196,27 +196,27 @@ namespace PK.Forms
                     null,
                     new string[]
                     {
-                            entrantID.ToString(),
-                            lastName.ToUpper(),
-                            (firstName+" "+middleName).ToUpper(),
-                            registratorName,
-                            SystemInformation.ComputerName,
-                            regTime.ToString()
+                        entrantID.ToString(),
+                        lastName.ToUpper(),
+                        (firstName+" "+middleName).ToUpper(),
+                        registratorName,
+                        SystemInformation.ComputerName,
+                        regTime.ToString()
                     },
                     inventoryTableParams
                     ));
 
             List<string> parameters = new List<string>
-                {
-                    lastName.ToUpper(),
-                    firstName[0]+".",
-                    middleName[0]+".",
-                    entrantID.ToString(),
-                    lastName,
-                    firstName,
-                    middleName,
-                    regTime.Year.ToString()
-                };
+            {
+                lastName.ToUpper(),
+                firstName[0]+".",
+                middleName.Length!=0?middleName[0]+".":"",
+                entrantID.ToString(),
+                lastName,
+                firstName,
+                middleName,
+                regTime.Year.ToString()
+            };
 
             foreach (string[] eduForm in inventoryTableParams[0])
                 parameters.Add(eduForm[0]);
@@ -272,13 +272,13 @@ namespace PK.Forms
                     null,
                     new string[]
                     {
-                            entrantID.ToString(),
-                            lastName.ToUpper(),
-                            (firstName+" "+middleName).ToUpper(),
-                            registratorName,
-                            SystemInformation.ComputerName,
-                            regTime.ToString(),
-                            editTime.ToString()
+                        entrantID.ToString(),
+                        lastName.ToUpper(),
+                        (firstName+" "+middleName).ToUpper(),
+                        registratorName,
+                        SystemInformation.ComputerName,
+                        regTime.ToString(),
+                        editTime.HasValue?editTime.ToString():"нет"
                     },
                     receiptTableParams
                     ));
@@ -291,7 +291,7 @@ namespace PK.Forms
                     new string[] { "institution_achievement_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ID)
+                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL,_ID)
                     }),
                 k1 => k1[0],
                 k2 => k2[0],
@@ -316,28 +316,28 @@ namespace PK.Forms
                 uint? soc = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?[1] as uint?;
                 uint? foreign = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?[1] as uint?;
                 parameters = new List<string>
-                    {
-                        lastName+" "+firstName+" "+middleName,
-                        homePhone,
-                        mobilePhone,
-                        quota?"+":"",
-                        priority?"+":"",
-                        math.ToString(),
-                        hostel?"+":"",
-                        passing?"+":"",
-                        rus.ToString(),
-                        chernobyl?"+":"",
-                        mcado?"+":"",
-                        phys.ToString(),
-                        target?"+":"",
-                        original?"+":"",
-                        soc.ToString(),
-                        foreign.ToString(),
-                        indAchValue,
-                        (math+rus+phys).ToString(),
-                        (math+rus+soc).ToString(),
-                        (rus+soc+foreign).ToString()
-                    };
+                {
+                    lastName +" "+firstName+" "+middleName,
+                    homePhone,
+                    mobilePhone,
+                    quota?"+":"",
+                    priority?"+":"",
+                    math.ToString(),
+                    hostel?"+":"",
+                    passing?"+":"",
+                    rus.ToString(),
+                    chernobyl?"+":"",
+                    mcado?"+":"",
+                    phys.ToString(),
+                    target?"+":"",
+                    original?"+":"",
+                    soc.ToString(),
+                    foreign.ToString(),
+                    indAchValue,
+                    (math+rus+phys).ToString(),
+                    (math+rus+soc).ToString(),
+                    (rus+soc+foreign).ToString()
+                };
 
                 foreach (var stream in entrances)
                 {
@@ -353,8 +353,8 @@ namespace PK.Forms
                                 new string[] { "short_name" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                            new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
-                                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.Direction)
+                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.Direction)
                                 })[0][0].ToString());
 
                         count++;
@@ -386,9 +386,9 @@ namespace PK.Forms
                     new string[] { "faculty_short_name", "direction_id", "edu_form_id", "is_agreed_date" },
                     new List<Tuple<string, Relation, object>>
                     {
-                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ID),
-                            new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
-                            new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ID),
+                        new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
+                        new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
                     })[0];
 
                 string dirShortName = _DB_Connection.Select(
@@ -396,7 +396,7 @@ namespace PK.Forms
                     new string[] { "short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
-                            new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir[1])
+                        new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir[1])
                     })[0][0].ToString();
 
                 var marks = _DB_Connection.Select(
@@ -411,9 +411,9 @@ namespace PK.Forms
                     new string[] { "subject_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
-                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir[0]),
-                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir[1])
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir[0]),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir[1])
                     }
                     ))
                 {
@@ -428,13 +428,13 @@ namespace PK.Forms
                     null,
                     new string[]
                     {
-                            (lastName + " " + firstName + " " + middleName).ToUpper(),
-                            dbHelper.GetDirectionNameAndCode((uint)agreedDir[1]).Item1+" ("+dirShortName+")",
-                            dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)agreedDir[2]),
-                            _ID.ToString(),
-                            sum.ToString(),
-                            lastName.ToUpper()+" "+firstName[0]+"."+middleName[0]+".",
-                            ((DateTime) agreedDir[3]).ToShortDateString()
+                        (lastName + " " + firstName + " " + middleName).ToUpper(),
+                        dbHelper.GetDirectionNameAndCode((uint)agreedDir[1]).Item1+" ("+dirShortName+")",
+                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)agreedDir[2]),
+                        _ID.ToString(),
+                        sum.ToString(),
+                        lastName.ToUpper()+" "+firstName[0]+"."+(middleName.Length!=0?middleName[0]+".":""),
+                        ((DateTime) agreedDir[3]).ToShortDateString()
                     },
                     null
                     ));

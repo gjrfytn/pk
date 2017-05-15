@@ -6,10 +6,17 @@ namespace PK.Classes
 {
     static class Utility
     {
+
         public const string TempPath = ".\\temp\\";
 
-        public static readonly string DocumentsTemplatesPath = System.Configuration.ConfigurationManager.AppSettings["DocumentsTemplatesPath"];
-        public static readonly string FIS_Login = System.Configuration.ConfigurationManager.AppSettings["FIS_Login"];
+        public static readonly string DocumentsTemplatesPath = Properties.Settings.Default.DocumentsTemplatesPath;
+
+        public static readonly Dictionary<string, uint> DirCodesEduLevels = new Dictionary<string, uint>
+        {
+            {"03", 2}, //Бакалавриат
+            {"05", 5}, //Специалитет
+            {"04", 4}  //TODO Магистратура?
+        };
 
         /// <summary>
         /// Отображает диалоговое окно с кнопками "Да" и "Нет".
@@ -163,28 +170,21 @@ namespace PK.Classes
             //p.Dispose();?
         }
 
-        public static FIS_Connector ConnectToFIS(string password)
+        public static bool GetFIS_AuthData(out string login, out string password)
         {
-            try
+            Forms.FIS_Authorization form = new Forms.FIS_Authorization();
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                return new FIS_Connector(FIS_Login, password);
+                login = form.tbLogin.Text;
+                password = form.tbPassword.Text;
+                return true;
             }
-            catch (System.Net.WebException ex)
+            else
             {
-                if (ShowChoiceMessageBox("Подключён ли компьютер к сети ФИС?", "Ошибка подключения"))
-                {
-                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                    MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                login = null;
+                password = null;
+                return false;
             }
-            catch (FIS_Connector.FIS_Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return null;
         }
     }
 }

@@ -49,10 +49,7 @@ namespace PK.Forms
             if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
                 return;
 
-            MySqlConnection connection = new MySqlConnection(
-                System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString +
-                " user = " + _User + "; password = " + _Password + ";"
-                );
+            MySqlConnection connection = new MySqlConnection(Properties.Settings.Default.kladr_CS + " user = " + _User + "; password = " + _Password + ";");
             connection.Open();
 
             using (MySqlTransaction transaction = connection.BeginTransaction())

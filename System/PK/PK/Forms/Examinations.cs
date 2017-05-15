@@ -147,6 +147,12 @@ namespace PK.Forms
                  (s1, s2) => s1
                  );
 
+            if (applications.Count() == 0)
+            {
+                MessageBox.Show("Ни один абитуриент не попал в экзамен по условиям фильтрации.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
                 applications,
                 en => en[0],

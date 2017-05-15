@@ -22,10 +22,7 @@ namespace PK.Classes
 
         public KLADR(string user, string password)
         {
-            _Connection = new MySqlConnection(
-                System.Configuration.ConfigurationManager.ConnectionStrings["kladr"].ConnectionString +
-                " user = " + user + "; password = " + password + ";"
-                );
+            _Connection = new MySqlConnection(Properties.Settings.Default.kladr_CS + " user = " + user + "; password = " + password + ";");
             _Connection.Open();
         }
 

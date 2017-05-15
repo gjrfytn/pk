@@ -183,6 +183,12 @@
       <DependentUpon>Faculties.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\FIS_Connector.cs" />
+    <Compile Include="Forms\FIS_Authorization.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FIS_Authorization.Designer.cs">
+      <DependentUpon>FIS_Authorization.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\InstitutionAchievementsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +302,7 @@
       <DependentUpon>Users.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Utility.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
       <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
     </EmbeddedResource>
@@ -343,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Faculties.resx">
       <DependentUpon>Faculties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FIS_Authorization.resx">
+      <DependentUpon>FIS_Authorization.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
@@ -430,7 +440,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

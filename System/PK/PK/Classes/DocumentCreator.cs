@@ -14,7 +14,7 @@ namespace PK.Classes
             public System.Drawing.Color? Color;
         }
 
-        private static readonly string SchemaPath = System.Configuration.ConfigurationManager.AppSettings["SchemasPath"] + "DocumentSchema.xsd";
+        private static readonly string SchemaPath = Properties.Settings.Default.SchemasPath + "DocumentSchema.xsd";
 
         private static readonly Dictionary<string, System.Drawing.Color> _Colors = new Dictionary<string, System.Drawing.Color>
         {

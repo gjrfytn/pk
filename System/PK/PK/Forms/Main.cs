@@ -273,7 +273,31 @@ namespace PK.Forms
 
         private void toolStrip_FIS_Export_Click(object sender, EventArgs e)
         {
-            Classes.Utility.ConnectToFIS("****")?.Export(Classes.FIS_Packager.MakePackage(_DB_Connection));
+            try
+            {
+                string login;
+                string password;
+                if (Classes.Utility.GetFIS_AuthData(out login, out password))
+                    MessageBox.Show(
+                        "Идентификатор пакета: " + Classes.FIS_Connector.Export(login, password, Classes.FIS_Packager.MakePackage(_DB_Connection)),
+                        "Пакет отправлен",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+            }
+            catch (System.Net.WebException ex)
+            {
+                if (Classes.Utility.ShowChoiceMessageBox("Подключён ли компьютер к сети ФИС?", "Ошибка подключения"))
+                {
+                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                    MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Classes.FIS_Connector.FIS_Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void toolStrip_RegJournal_Click(object sender, EventArgs e)

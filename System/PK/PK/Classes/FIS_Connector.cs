@@ -5,48 +5,25 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    class FIS_Connector
+    static class FIS_Connector
     {
         public class FIS_Exception : System.Exception
         {
             public FIS_Exception(string message) : base(message) { }
         }
 
-        private readonly string _Login;
-        private readonly string _Password;
-
-        public FIS_Connector(/*string address,*/string login, string password) //TODO
-        {
-            _Login = login;
-            _Password = password;
-            //
-            /*byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-                    @"<Root>
-                        <AuthData>
-                            <Login>" + _Login + @"</Login>
-                            <Pass>" + _Password + @"</Pass>
-                        </AuthData>
-                    </Root>"
-            );
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
-
-            if (doc.Root.Name == "Error")
-                throw new FIS_Exception(doc.Root.Element("ErrorText").Value);*/
-            //
-        }
-
-        public Dictionary<uint, string> GetDictionaries()
+        public static Dictionary<uint, string> GetDictionaries(string login, string password)
         {
             //
-            /*byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-                    @"<Root>
-                        <AuthData>
-                            <Login>" + _Login + @"</Login>
-                            <Pass>" + _Password + @"</Pass>
-                        </AuthData>
-                    </Root>"
-            );
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionary", byteArray);*/
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
+            //        @"<Root>
+            //            <AuthData>
+            //                <Login>" + login + @"</Login>
+            //                <Pass>" + password + @"</Pass>
+            //            </AuthData>
+            //        </Root>"
+            //);
+            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionary", byteArray);
             //
 
             XDocument doc = XDocument.Load("tempDictList.xml");
@@ -54,23 +31,23 @@ namespace PK.Classes
             return doc.Root.Elements().ToDictionary(k => uint.Parse(k.Element("Code").Value), v => v.Element("Name").Value);
         }
 
-        public Dictionary<uint, string> GetDictionaryItems(uint dictionaryID)
+        public static Dictionary<uint, string> GetDictionaryItems(string login, string password, uint dictionaryID)
         {
             if (dictionaryID == 10 || dictionaryID == 19)
                 throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
             //
-            /*byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-                    @"<Root>
-                    <GetDictionaryContent>
-                        <DictionaryCode>" + dictionaryID + @"</DictionaryCode>
-                    </GetDictionaryContent>
-                    <AuthData>
-                        <Login>" + _Login + @"</Login>
-                        <Pass>" + _Password + @"</Pass>
-                    </AuthData>
-                </Root>"
-            );
-          XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
+            //        @"<Root>
+            //        <GetDictionaryContent>
+            //            <DictionaryCode>" + dictionaryID + @"</DictionaryCode>
+            //        </GetDictionaryContent>
+            //        <AuthData>
+            //            <Login>" + login + @"</Login>
+            //            <Pass>" + password + @"</Pass>
+            //        </AuthData>
+            //    </Root>"
+            //);
+            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
             //
 
             XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + dictionaryID + ".xml");
@@ -82,21 +59,21 @@ namespace PK.Classes
             return new Dictionary<uint, string>();
         }
 
-        public Dictionary<uint, string[]> GetDirectionsDictionaryItems()
+        public static Dictionary<uint, string[]> GetDirectionsDictionaryItems(string login, string password)
         {
             //
-            /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-                     @"<Root>
-                     <GetDictionaryContent>
-                         <DictionaryCode>" + 10 + @"</DictionaryCode>
-                     </GetDictionaryContent>
-                     <AuthData>
-                         <Login>" + _Login + @"</Login>
-                         <Pass>" + _Password + @"</Pass>
-                     </AuthData>
-                 </Root>"
-             );
-           XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
+            //        @"<Root>
+            //         <GetDictionaryContent>
+            //             <DictionaryCode>" + 10 + @"</DictionaryCode>
+            //         </GetDictionaryContent>
+            //         <AuthData>
+            //             <Login>" + login + @"</Login>
+            //             <Pass>" + password + @"</Pass>
+            //         </AuthData>
+            //     </Root>"
+            //);
+            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
             //
 
             XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 10 + ".xml");
@@ -115,21 +92,21 @@ namespace PK.Classes
                 );
         }
 
-        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(params uint[] profiles)
+        public static Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(string login, string password, params uint[] profiles)
         {
             //
-            /* byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-                     @"<Root>
-                     <GetDictionaryContent>
-                         <DictionaryCode>" + 19 + @"</DictionaryCode>
-                     </GetDictionaryContent>
-                     <AuthData>
-                         <Login>" + _Login + @"</Login>
-                         <Pass>" + _Password + @"</Pass>
-                     </AuthData>
-                 </Root>"
-             );
-           XDocument doc=GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);*/
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
+            //        @"<Root>
+            //         <GetDictionaryContent>
+            //             <DictionaryCode>" + 19 + @"</DictionaryCode>
+            //         </GetDictionaryContent>
+            //         <AuthData>
+            //             <Login>" + login + @"</Login>
+            //             <Pass>" + password + @"</Pass>
+            //         </AuthData>
+            //     </Root>"
+            //);
+            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
             //
 
             string[] strProfiles = System.Array.ConvertAll(profiles, s => s.ToString());
@@ -161,18 +138,23 @@ namespace PK.Classes
                 });
         }
 
-        public void Export(FIS_ExportClasses.PackageData data)
+        public static string Export(string login, string password, FIS_ExportClasses.PackageData data)
         {
-            /*byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new ImportClasses.Root(
-                new ImportClasses.AuthData(_Login, _Password), data).ConvertToXElement().ToString());
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
+                new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
 
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
-            System.Windows.Forms.MessageBox.Show(doc.ToString());*/
+            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
 
-            new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
+            //if (doc.Root.Name == "Error")
+            //    throw new FIS_Exception(doc.Root.Element("ErrorText").Value);
+
+            //return doc.Root.Element("PackageID").Value;
+            return "";
+
+            //new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
         }
 
-        private XDocument GetResponse(string uri, byte[] requestData)
+        private static XDocument GetResponse(string uri, byte[] requestData)
         {
             WebRequest request = WebRequest.Create(uri);
             request.Method = "POST";
