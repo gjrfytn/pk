@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>48</Code>
+  <Name>Тип документа, подтверждающего участие в работах на радиационных объектах или воздействие радиации</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Подверженность воздействию радиации вследствие катастрофы на Чернобыльской АЭС</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Участие в испытаниях ядерного оружия, боевых радиоактивных веществ в атмосфере, ядерного оружия под землей</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Участие в учениях с применением ядерного оружия и боевых радиоактивных веществ до даты фактического прекращения указанных испытаний и учений</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Непосредственныое участние в ликвидации радиационных аварий на ядерных установках надводных и подводных кораблей и других военных объектах</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Участние в проведении и обеспечения работ по сбору и захоронению радиоактивных веществ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Участние в ликвидации последствий радиационных аварий</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

@@ -42,7 +42,7 @@ COMMENT = 'Пользователи ИС ПК МАДИ.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`dictionaries` (
   `id` INT UNSIGNED NOT NULL COMMENT 'Идентификатор справочника.',
-  `name` VARCHAR(100) NOT NULL COMMENT 'Наименование справочника.',
+  `name` VARCHAR(150) NOT NULL COMMENT 'Наименование справочника.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB
@@ -424,7 +424,7 @@ COMMENT = 'Заявления.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`documents` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор в ИС ОО.',
-  `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'parent_lost', 'pauper', 'phd_diploma', 'post_graduate_diploma', 'radiation_work', 'school_certificate', 'sport', 'state_employee', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student', 'photos') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nparent_lost\npauper\nphd_diploma\npost_graduate_diploma\nradiation_work\nschool_certificate\nsport\nstate_employee\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent\nphotos\n',
+  `type` ENUM('academic_diploma', 'allow_education', 'basic_diploma', 'compatriot', 'custom', 'disability', 'edu_custom', 'high_edu_diploma', 'incopl_high_edu_diploma', 'institution', 'international_olympic', 'medical', 'middle_edu_diploma', 'olympic', 'olympic_total', 'orphan', 'parents_lost', 'pauper', 'phd_diploma', 'post_graduate_diploma', 'radiation_work', 'school_certificate', 'sport', 'state_employee', 'ukraine_olympic', 'veteran', 'ege', 'gia', 'identity', 'military_card', 'student', 'photos') NOT NULL COMMENT 'Тип документа:\nacademic_diploma\nallow_education\nbasic_diploma\ncompatriot\ncustom\ndisability\nedu_custom\nhigh_edu_diploma\nincopl_high_edu_diploma\ninstitution\ninternational_olympic\nmedical\nmiddle_edu_diploma\nolympic\nolympic_total\norphan\nparents_lost\npauper\nphd_diploma\npost_graduate_diploma\nradiation_work\nschool_certificate\nsport\nstate_employee\nukraine_olympic\nveteran\nege\ngia\nidentity\nmilitary_card\nstudent\nphotos\n',
   `series` VARCHAR(20) NULL COMMENT 'Серия документа.',
   `number` VARCHAR(100) NULL COMMENT 'Номер документа.',
   `date` DATE NULL COMMENT 'Дата выдачи документа.',

@@ -2,26 +2,5 @@
 <DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Code>43</Code>
   <Name>Тип диплома в области спорта</Name>
-  <DictionaryItems>
-    <DictionaryItem>
-      <ID>20</ID>
-      <Name>Диплом чемпиона/призера Олимпийских игр</Name>
-    </DictionaryItem>
-    <DictionaryItem>
-      <ID>21</ID>
-      <Name>Диплом чемпиона/призера Паралимпийских игр</Name>
-    </DictionaryItem>
-    <DictionaryItem>
-      <ID>22</ID>
-      <Name>Диплом чемпиона/призера Сурдлимпийских игр</Name>
-    </DictionaryItem>
-    <DictionaryItem>
-      <ID>23</ID>
-      <Name>Диплом чемпиона мира</Name>
-    </DictionaryItem>
-    <DictionaryItem>
-      <ID>24</ID>
-      <Name>Диплом чемпиона Европы</Name>
-    </DictionaryItem>
-  </DictionaryItems>
+  <DictionaryItems />
 </DictionaryData>

@@ -19,5 +19,9 @@
       <ID>4</ID>
       <Name>Военнослужащие, участвовавшие в вылетах на боевые задания в Афганистан</Name>
     </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Инвалиды войны</Name>
+    </DictionaryItem>
   </DictionaryItems>
 </DictionaryData>

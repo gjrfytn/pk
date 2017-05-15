@@ -476,6 +476,10 @@
       <Name>Для конкурсов позднее 2016 года запрещено передавать признак IsForKrym</Name>
     </DictionaryItem>
     <DictionaryItem>
+      <ID>177</ID>
+      <Name>Минимальный балл (значение {0}) должен принимать значения от 0 до {1}</Name>
+    </DictionaryItem>
+    <DictionaryItem>
       <ID>1001</ID>
       <Name>Изменен конкурс у заявления, у которого имеются результаты вступительных испытаний</Name>
     </DictionaryItem>

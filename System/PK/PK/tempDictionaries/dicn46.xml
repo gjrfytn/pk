@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DictionaryData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Code>46</Code>
+  <Name>Тип документа, подтверждающего принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</Name>
+  <DictionaryItems>
+    <DictionaryItem>
+      <ID>1</ID>
+      <Name>Военнослужащие</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>2</ID>
+      <Name>Герои СССР, Герои РФ и полным кавалерам ордена Славы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>3</ID>
+      <Name>Сотрудники органов внутренних дел РФ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>4</ID>
+      <Name>Сотрудники Федеральной службы войск национальной гвардии РФ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>5</ID>
+      <Name>Сотрудники органов уголовно-исполнительной системы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>6</ID>
+      <Name>Сотрудники федеральной противопожарной службы Государственной противопожарной службы</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>7</ID>
+      <Name>Сотрудники органов по контролю за оборотом наркотических средств и психотропных веществ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>8</ID>
+      <Name>Сотрудники таможенных органов</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>9</ID>
+      <Name>Сотрудники Следственного комитета РФ</Name>
+    </DictionaryItem>
+    <DictionaryItem>
+      <ID>10</ID>
+      <Name>Прокурорские работники</Name>
+    </DictionaryItem>
+  </DictionaryItems>
+</DictionaryData>

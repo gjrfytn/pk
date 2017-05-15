@@ -627,7 +627,7 @@
 			</xs:element>
 		</xs:all>
 	</xs:complexType>
-	<xs:complexType name="TParentLostDocument">
+	<xs:complexType name="TParentsLostDocument">
 		<xs:all>
 			<xs:element name="UID" type="TUID">
 				<xs:annotation>
@@ -937,6 +937,11 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="StateServicePreparation" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="THighEduDiplomaDocument">
@@ -1237,6 +1242,11 @@
 					<xs:documentation>Средний балл</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="StateServicePreparation" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TBasicDiplomaDocument">
@@ -1310,6 +1320,11 @@
 			<xs:element name="GPA" type="xs:float" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Средний балл</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StateServicePreparation" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:all>
@@ -1889,7 +1904,7 @@
 																		<xs:documentation>Документ, подтверждающий наличие только одного родителя - инвалида I группы и принадлежность к числу малоимущих семей</xs:documentation>
 																	</xs:annotation>
 																</xs:element>
-																<xs:element name="ParentsLostDocument" type="TParentLostDocument">
+																<xs:element name="ParentsLostDocument" type="TParentsLostDocument">
 																	<xs:annotation>
 																		<xs:documentation>Документ, подтверждающий принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</xs:documentation>
 																	</xs:annotation>
@@ -2571,7 +2586,7 @@
 											</xs:annotation>
 											<xs:complexType>
 												<xs:sequence>
-													<xs:element name="ParentsLostDocument" type="TParentLostDocument" maxOccurs="unbounded">
+													<xs:element name="ParentsLostDocument" type="TParentsLostDocument" maxOccurs="unbounded">
 														<xs:annotation>
 															<xs:documentation>Документ, подтверждающий принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей</xs:documentation>
 														</xs:annotation>
@@ -2779,6 +2794,11 @@
 													<xs:element name="IADocumentUID" type="TUID">
 														<xs:annotation>
 															<xs:documentation>Идентификатор документа, подтверждающего индивидуальное достижение, в ИС ОО</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="isAdvantageRight" type="xs:boolean" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Подтверждает преимущественное право</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 												</xs:all>
