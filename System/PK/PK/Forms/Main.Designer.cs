@@ -530,19 +530,17 @@
             // 
             // dgvApplications_RegDate
             // 
-            this.dgvApplications_RegDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvApplications_RegDate.HeaderText = "Дата подачи";
             this.dgvApplications_RegDate.Name = "dgvApplications_RegDate";
             this.dgvApplications_RegDate.ReadOnly = true;
-            this.dgvApplications_RegDate.Width = 133;
+            this.dgvApplications_RegDate.Width = 120;
             // 
             // dgvApplications_EditDate
             // 
-            this.dgvApplications_EditDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvApplications_EditDate.HeaderText = "Дата изменения";
             this.dgvApplications_EditDate.Name = "dgvApplications_EditDate";
             this.dgvApplications_EditDate.ReadOnly = true;
-            this.dgvApplications_EditDate.Width = 145;
+            this.dgvApplications_EditDate.Width = 120;
             // 
             // dgvApplications_PickUpDate
             // 
@@ -555,14 +553,14 @@
             this.dgvApplications_DeductionDate.HeaderText = "Приказ об отчислении";
             this.dgvApplications_DeductionDate.Name = "dgvApplications_DeductionDate";
             this.dgvApplications_DeductionDate.ReadOnly = true;
-            this.dgvApplications_DeductionDate.Width = 110;
+            this.dgvApplications_DeductionDate.Width = 120;
             // 
             // dgvApplications_EnrollmentDate
             // 
             this.dgvApplications_EnrollmentDate.HeaderText = "Приказ о зачислении";
             this.dgvApplications_EnrollmentDate.Name = "dgvApplications_EnrollmentDate";
             this.dgvApplications_EnrollmentDate.ReadOnly = true;
-            this.dgvApplications_EnrollmentDate.Width = 110;
+            this.dgvApplications_EnrollmentDate.Width = 120;
             // 
             // dgvApplications_RegistratorLogin
             // 

@@ -1381,7 +1381,7 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dgvExams.Rows)
             {
                 if ((byte)row.Cells[3].Value != 0)
-                    _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object> { { "document_id", examsDocId},
+                    _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object> { { "document_id", examsDocId}, { "year", row.Cells[dgvExams_Year.Index].Value },
                         { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS} , { "subject_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString())} ,
                         { "value", row.Cells[3].Value}, { "checked", false } });
             }
@@ -1506,7 +1506,10 @@ namespace PK.Forms
 
         private void LoadExaminationsMarks()
         {
-            var exMarks = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new string[] { "examination_id", "mark" });
+            var exMarks = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new string[] { "examination_id", "mark" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
+            });
 
             var examinations = _DB_Connection.Select(DB_Table.EXAMINATIONS, new string[] { "id", "subject_id", "date" }).Join(
                 exMarks,
@@ -1605,7 +1608,7 @@ namespace PK.Forms
                     if (tbExamsDocSeries.Text == tbIDDocSeries.Text && tbExamsDocNumber.Text == tbIDDocNumber.Text && cbExamsDocType.SelectedItem.ToString() == cbIDDocType.SelectedItem.ToString())
                         cbPassportMatch.Checked = true;
 
-                    List<object[]> subjects = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "subject_id", "value", "checked" }, new List<Tuple<string, Relation, object>>
+                    List<object[]> subjects = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "subject_id", "value", "checked", "year" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     });
@@ -1614,7 +1617,8 @@ namespace PK.Forms
                             if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)subject[0]))
                             {
                                 row.Cells[dgvExams_EGE.Index].Value = (byte)(uint)subject[1];
-                                row.Cells[dgvExams_Cheched.Index].Value = (bool)subject[2];
+                                row.Cells[dgvExams_Checked.Index].Value = (bool)subject[2];
+                                row.Cells[dgvExams_Year.Index].Value = subject[3].ToString();
                                 if ((bool)subject[2])
                                     row.ReadOnly = true;
                             }
@@ -2194,7 +2198,7 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", tbExamsDocSeries.Text }, { "number", tbExamsDocNumber.Text } },
                                 new Dictionary<string, object> { { "id", (uint)document[0] } });
                         }
-                        string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value" };
+                        string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value", "year", "checked" };
                         string[] keysNames = new string[] { "document_id", "subject_dict_id", "subject_id" };
                         List<object[]> oldData = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, fieldNames, new List<Tuple<string, Relation, object>>
                             {
@@ -2205,9 +2209,9 @@ namespace PK.Forms
                         {
                             if (int.Parse(row.Cells[3].Value.ToString()) != 0)
                                 newData.Add(new object[] { (uint)document[0], 1, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString()),
-                                    row.Cells[3].Value, false });
+                                    row.Cells[3].Value, row.Cells[dgvExams_Year.Index].Value, (bool)row.Cells[dgvExams_Checked.Index].Value });
                         }
-                        UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, false, keysNames);
+                        _DB_Helper.UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, keysNames);
                     }
                     else if (document[1].ToString() == "sport")
                     {
@@ -2467,7 +2471,7 @@ namespace PK.Forms
                     }
                 }
             }
-            UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, false, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
+            _DB_Helper.UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
                 "edu_source_dict_id", "edu_source_id" });
             foreach (TabPage page in tcDirections.Controls)
             {
@@ -2665,7 +2669,7 @@ namespace PK.Forms
             List<object[]> oldList = oldDataList;
             List<object[]> newList = newDataList;
             int j = 0;
-            while (j < oldList.Count)
+            while (j < oldList.Count && newList.Count != 0)
             {
                 int index = 0;
                 bool keysMatch = true;

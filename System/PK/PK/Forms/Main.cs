@@ -74,7 +74,7 @@ namespace PK.Forms
         private void UpdateApplicationsTable()
         {
             dgvApplications.Rows.Clear();
-            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status" },
+            List<object[]> apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
@@ -92,9 +92,8 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
 
-                    string status = _Statuses[application[5].ToString()];
-                    dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, null, null, null,
-                        application[3], status);
+                    dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
+                        application[3], _Statuses[application[5].ToString()]);
 
                     foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
                         appDocuments,
@@ -124,11 +123,41 @@ namespace PK.Forms
                         else
                             dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value.ToString() + ", " + shortName;
 
+                    var appOrdersData = _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
+                    });
+                    var appOrders = _DB_Connection.Select(DB_Table.ORDERS, new string[] { "number", "type", "date" }).Join(
+                        appOrdersData,
+                        orders => orders[0],
+                        data => data[0],
+                        (s1,s2) => new Tuple<string,string,DateTime>(s1[0].ToString(), s1[1].ToString(), (DateTime)s1[2])
+                        ).ToArray();
+                    string admNumber = "";
+                    string exNumber = "";
+                    DateTime admData = DateTime.MinValue;
+                    DateTime exData = DateTime.MinValue;
+                    foreach (var order in appOrders)
+                        if (order.Item2 == "admission" && order.Item3 > admData)
+                        {
+                            admNumber = order.Item1;
+                            admData = order.Item3;
+                        }
+                        else if (order.Item2 == "exception" && order.Item3 > exData)
+                        {
+                            exNumber = order.Item1;
+                            exData = order.Item3;
+                        }
+
+                    if (admNumber != "")
+                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_EnrollmentDate.Index].Value = admData.ToShortDateString() + " " + admNumber;
+                    if (exNumber != "")
+                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_DeductionDate.Index].Value = exData.ToShortDateString() + " " + exNumber;
+
                     if ((uint)dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                         dgvApplications.Rows[dgvApplications.Rows.Count - 1].Selected = true;
-                            
                 }
-            dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
+            dgvApplications.Sort(dgvApplications_ID, System.ComponentModel.ListSortDirection.Ascending);
         }
 
 
@@ -391,6 +420,7 @@ namespace PK.Forms
 
         private void FilterAppsTable()
         {
+            ChangeColumnsVisible();
             foreach (DataGridViewRow row in dgvApplications.Rows)
             {
                 if (rbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["new"]))
@@ -398,8 +428,8 @@ namespace PK.Forms
                     else if (rbWithdraw.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["withdrawn"]))
                         row.Visible = false;
                     else if (rbAdm.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_budget"]
-                        || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_paid"]
-                        || row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_both"]))
+                        && row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_paid"]
+                        && row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_both"]))
                         row.Visible = false;
                     else row.Visible = true;
                 if (row.Visible)
@@ -479,6 +509,14 @@ namespace PK.Forms
                 if (!enabled)
                     menuStrip.Enabled = false;
             }
+        }
+
+        private void ChangeColumnsVisible()
+        {
+            dgvApplications_PickUpDate.Visible = rbWithdraw.Checked;
+            dgvApplications_EnrollmentDate.Visible = rbNew.Checked || rbAdm.Checked;
+            dgvApplications_DeductionDate.Visible = rbNew.Checked;
+            dgvApplications_Status.Visible = rbAdm.Checked;
         }
     }
 }

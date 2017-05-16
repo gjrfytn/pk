@@ -207,7 +207,7 @@
             this.dgvExams_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_EGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Min = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_Cheched = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvExams_Checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
@@ -2147,7 +2147,7 @@
             this.dgvExams_Exam,
             this.dgvExams_EGE,
             this.dgvExams_Min,
-            this.dgvExams_Cheched});
+            this.dgvExams_Checked});
             this.dgvExams.Location = new System.Drawing.Point(37, 81);
             this.dgvExams.Margin = new System.Windows.Forms.Padding(4);
             this.dgvExams.Name = "dgvExams";
@@ -2544,11 +2544,11 @@
             this.dgvExams_Min.ReadOnly = true;
             this.dgvExams_Min.Width = 94;
             // 
-            // dgvExams_Cheched
+            // dgvExams_Checked
             // 
-            this.dgvExams_Cheched.HeaderText = "Проверено";
-            this.dgvExams_Cheched.Name = "dgvExams_Cheched";
-            this.dgvExams_Cheched.ReadOnly = true;
+            this.dgvExams_Checked.HeaderText = "Проверено";
+            this.dgvExams_Checked.Name = "dgvExams_Checked";
+            this.dgvExams_Checked.ReadOnly = true;
             // 
             // ApplicationEdit
             // 
@@ -2804,6 +2804,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Cheched;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
     }
 }

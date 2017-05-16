@@ -46,8 +46,6 @@
             this.tbEduDocSeries = new System.Windows.Forms.TextBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.cbTarget = new System.Windows.Forms.CheckBox();
-            this.cbRecomendation = new System.Windows.Forms.CheckBox();
-            this.cbOlympic = new System.Windows.Forms.CheckBox();
             this.cbRedDiploma = new System.Windows.Forms.CheckBox();
             this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
             this.cbFirstTime = new System.Windows.Forms.ComboBox();
@@ -79,6 +77,10 @@
             this.cbProgram_quote_o = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.btClose = new System.Windows.Forms.Button();
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
@@ -136,10 +138,6 @@
             this.cbIDDocType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btWithdraw = new System.Windows.Forms.Button();
-            this.label32 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.gbEduDocument.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
@@ -302,12 +300,10 @@
             // gbAttributes
             // 
             this.gbAttributes.Controls.Add(this.cbTarget);
-            this.gbAttributes.Controls.Add(this.cbRecomendation);
-            this.gbAttributes.Controls.Add(this.cbOlympic);
             this.gbAttributes.Controls.Add(this.cbRedDiploma);
             this.gbAttributes.Location = new System.Drawing.Point(0, 21);
             this.gbAttributes.Name = "gbAttributes";
-            this.gbAttributes.Size = new System.Drawing.Size(1340, 65);
+            this.gbAttributes.Size = new System.Drawing.Size(324, 45);
             this.gbAttributes.TabIndex = 2;
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Индивидуальные достижения";
@@ -315,7 +311,7 @@
             // cbTarget
             // 
             this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(11, 42);
+            this.cbTarget.Location = new System.Drawing.Point(182, 18);
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
             this.cbTarget.Size = new System.Drawing.Size(128, 20);
@@ -323,27 +319,6 @@
             this.cbTarget.Text = "Целевой прием";
             this.cbTarget.UseVisualStyleBackColor = true;
             this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
-            // 
-            // cbRecomendation
-            // 
-            this.cbRecomendation.AutoSize = true;
-            this.cbRecomendation.Location = new System.Drawing.Point(772, 10);
-            this.cbRecomendation.Name = "cbRecomendation";
-            this.cbRecomendation.Size = new System.Drawing.Size(542, 52);
-            this.cbRecomendation.TabIndex = 2;
-            this.cbRecomendation.Text = resources.GetString("cbRecomendation.Text");
-            this.cbRecomendation.UseVisualStyleBackColor = true;
-            // 
-            // cbOlympic
-            // 
-            this.cbOlympic.AutoSize = true;
-            this.cbOlympic.Location = new System.Drawing.Point(180, 18);
-            this.cbOlympic.Name = "cbOlympic";
-            this.cbOlympic.Size = new System.Drawing.Size(576, 36);
-            this.cbOlympic.TabIndex = 1;
-            this.cbOlympic.Text = "Дипломы и награды научных конференций, выставок, конкурсов, олимпиад,\r\nпубликаций" +
-    " в научныхх журналах (по соответствующему направлению подготовки)";
-            this.cbOlympic.UseVisualStyleBackColor = true;
             // 
             // cbRedDiploma
             // 
@@ -358,7 +333,7 @@
             // cbSpecialConditions
             // 
             this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(704, 184);
+            this.cbSpecialConditions.Location = new System.Drawing.Point(871, 39);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
@@ -373,7 +348,7 @@
             this.cbFirstTime.Items.AddRange(new object[] {
             "Впервые",
             "Повторно"});
-            this.cbFirstTime.Location = new System.Drawing.Point(332, 220);
+            this.cbFirstTime.Location = new System.Drawing.Point(330, 178);
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
             this.cbFirstTime.Size = new System.Drawing.Size(127, 24);
@@ -382,7 +357,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(7, 223);
+            this.label26.Location = new System.Drawing.Point(5, 181);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(317, 16);
@@ -397,7 +372,7 @@
             this.gbOther.Controls.Add(this.mtbMobilePhone);
             this.gbOther.Controls.Add(this.label30);
             this.gbOther.Controls.Add(this.label29);
-            this.gbOther.Location = new System.Drawing.Point(477, 208);
+            this.gbOther.Location = new System.Drawing.Point(475, 166);
             this.gbOther.Name = "gbOther";
             this.gbOther.Size = new System.Drawing.Size(868, 41);
             this.gbOther.TabIndex = 6;
@@ -468,7 +443,7 @@
             this.tcPrograms.Controls.Add(this.tcPrograms_paid_z);
             this.tcPrograms.Controls.Add(this.tcPrograms_target_o);
             this.tcPrograms.Controls.Add(this.tcPrograms_quote_o);
-            this.tcPrograms.Location = new System.Drawing.Point(6, 89);
+            this.tcPrograms.Location = new System.Drawing.Point(5, 72);
             this.tcPrograms.Name = "tcPrograms";
             this.tcPrograms.SelectedIndex = 0;
             this.tcPrograms.Size = new System.Drawing.Size(1334, 90);
@@ -682,14 +657,48 @@
             this.gbApplication.Controls.Add(this.cbSpecialConditions);
             this.gbApplication.Location = new System.Drawing.Point(2, 272);
             this.gbApplication.Name = "gbApplication";
-            this.gbApplication.Size = new System.Drawing.Size(1346, 253);
+            this.gbApplication.Size = new System.Drawing.Size(1346, 210);
             this.gbApplication.TabIndex = 8;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
+            // textBox2
+            // 
+            this.textBox2.Enabled = false;
+            this.textBox2.Location = new System.Drawing.Point(793, 37);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(53, 22);
+            this.textBox2.TabIndex = 11;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(456, 37);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(53, 22);
+            this.textBox1.TabIndex = 10;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(528, 40);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(259, 16);
+            this.label36.TabIndex = 9;
+            this.label36.Text = "Балл за индивидуальные достижения:";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(328, 40);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(122, 16);
+            this.label32.TabIndex = 8;
+            this.label32.Text = "Балл за экзамен:";
+            // 
             // btClose
             // 
-            this.btClose.Location = new System.Drawing.Point(1156, 575);
+            this.btClose.Location = new System.Drawing.Point(1156, 529);
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
@@ -700,7 +709,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(902, 574);
+            this.btSave.Location = new System.Drawing.Point(902, 528);
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(177, 28);
@@ -712,7 +721,7 @@
             // btPrint
             // 
             this.btPrint.Enabled = false;
-            this.btPrint.Location = new System.Drawing.Point(890, 538);
+            this.btPrint.Location = new System.Drawing.Point(890, 492);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(197, 28);
@@ -730,7 +739,7 @@
             this.gbWithdrawDocs.Controls.Add(this.cbEduDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
-            this.gbWithdrawDocs.Location = new System.Drawing.Point(1, 528);
+            this.gbWithdrawDocs.Location = new System.Drawing.Point(1, 482);
             this.gbWithdrawDocs.Margin = new System.Windows.Forms.Padding(4);
             this.gbWithdrawDocs.Name = "gbWithdrawDocs";
             this.gbWithdrawDocs.Padding = new System.Windows.Forms.Padding(4);
@@ -1298,7 +1307,7 @@
             // btWithdraw
             // 
             this.btWithdraw.Enabled = false;
-            this.btWithdraw.Location = new System.Drawing.Point(1125, 538);
+            this.btWithdraw.Location = new System.Drawing.Point(1125, 492);
             this.btWithdraw.Name = "btWithdraw";
             this.btWithdraw.Size = new System.Drawing.Size(160, 28);
             this.btWithdraw.TabIndex = 14;
@@ -1306,45 +1315,11 @@
             this.btWithdraw.UseVisualStyleBackColor = true;
             this.btWithdraw.Click += new System.EventHandler(this.btWithdraw_Click);
             // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(10, 188);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(122, 16);
-            this.label32.TabIndex = 8;
-            this.label32.Text = "Балл за экзамен:";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(271, 188);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(259, 16);
-            this.label36.TabIndex = 9;
-            this.label36.Text = "Балл за индивидуальные достижения:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(138, 185);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(74, 22);
-            this.textBox1.TabIndex = 10;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(536, 185);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(76, 22);
-            this.textBox2.TabIndex = 11;
-            // 
             // ApplicationMagEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1350, 608);
+            this.ClientSize = new System.Drawing.Size(1350, 563);
             this.Controls.Add(this.btWithdraw);
             this.Controls.Add(this.gbPassport);
             this.Controls.Add(this.gbWithdrawDocs);
@@ -1405,8 +1380,6 @@
         private System.Windows.Forms.CheckBox cbHostelNeeded;
         private System.Windows.Forms.CheckBox cbSpecialRights;
         private System.Windows.Forms.GroupBox gbAttributes;
-        private System.Windows.Forms.CheckBox cbRecomendation;
-        private System.Windows.Forms.CheckBox cbOlympic;
         private System.Windows.Forms.CheckBox cbRedDiploma;
         private System.Windows.Forms.CheckBox cbSpecialConditions;
         private System.Windows.Forms.ComboBox cbFirstTime;

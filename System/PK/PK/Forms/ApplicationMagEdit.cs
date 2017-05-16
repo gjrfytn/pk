@@ -593,7 +593,7 @@ namespace PK.Forms
                 firstHightEdu = false;
 
             _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "entrant_id", _EntrantID.Value}, { "registration_time", DateTime.Now},
-                { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin}, { "campaign_id", _CurrCampainID }, { "recommendation", cbRecomendation.Checked },                
+                { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin}, { "campaign_id", _CurrCampainID },                
                 { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked}, { "master_appl", true } });
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
