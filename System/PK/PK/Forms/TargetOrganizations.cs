@@ -48,7 +48,7 @@ namespace PK.Forms
         {
             if (dgvTargetOrganizations.SelectedRows.Count == 0)
                 MessageBox.Show("Выберите строку");
-            else
+            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранную организацию?", "Удаление организации"))
             {
                 _DB_Connection.Delete(DB_Table.TARGET_ORGANIZATIONS, new Dictionary<string, object>
                 { { "id",dgvTargetOrganizations.SelectedRows[0].Cells[0].Value }, { "name", dgvTargetOrganizations.SelectedRows[0].Cells[1].Value} });

@@ -67,9 +67,6 @@
             this.tcPrograms_paid_o = new System.Windows.Forms.TabPage();
             this.cbProgram_paid_o = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
-            this.tcPrograms_paid_oz = new System.Windows.Forms.TabPage();
-            this.cbProgram_paid_oz = new System.Windows.Forms.ComboBox();
-            this.label32 = new System.Windows.Forms.Label();
             this.tcPrograms_paid_z = new System.Windows.Forms.TabPage();
             this.cbProgram_paid_z = new System.Windows.Forms.ComboBox();
             this.label33 = new System.Windows.Forms.Label();
@@ -139,13 +136,16 @@
             this.cbIDDocType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btWithdraw = new System.Windows.Forms.Button();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.gbEduDocument.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.tcPrograms.SuspendLayout();
             this.tcPrograms_budget_o.SuspendLayout();
             this.tcPrograms_paid_o.SuspendLayout();
-            this.tcPrograms_paid_oz.SuspendLayout();
             this.tcPrograms_paid_z.SuspendLayout();
             this.tcPrograms_target_o.SuspendLayout();
             this.tcPrograms_quote_o.SuspendLayout();
@@ -358,7 +358,7 @@
             // cbSpecialConditions
             // 
             this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(497, 186);
+            this.cbSpecialConditions.Location = new System.Drawing.Point(704, 184);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
@@ -373,16 +373,16 @@
             this.cbFirstTime.Items.AddRange(new object[] {
             "Впервые",
             "Повторно"});
-            this.cbFirstTime.Location = new System.Drawing.Point(332, 184);
+            this.cbFirstTime.Location = new System.Drawing.Point(332, 220);
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
-            this.cbFirstTime.Size = new System.Drawing.Size(128, 24);
+            this.cbFirstTime.Size = new System.Drawing.Size(127, 24);
             this.cbFirstTime.TabIndex = 5;
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(7, 187);
+            this.label26.Location = new System.Drawing.Point(7, 223);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(317, 16);
@@ -397,24 +397,24 @@
             this.gbOther.Controls.Add(this.mtbMobilePhone);
             this.gbOther.Controls.Add(this.label30);
             this.gbOther.Controls.Add(this.label29);
-            this.gbOther.Location = new System.Drawing.Point(6, 213);
+            this.gbOther.Location = new System.Drawing.Point(477, 208);
             this.gbOther.Name = "gbOther";
-            this.gbOther.Size = new System.Drawing.Size(1334, 41);
+            this.gbOther.Size = new System.Drawing.Size(868, 41);
             this.gbOther.TabIndex = 6;
             this.gbOther.TabStop = false;
             // 
             // mtbEMail
             // 
-            this.mtbEMail.Location = new System.Drawing.Point(1086, 13);
+            this.mtbEMail.Location = new System.Drawing.Point(703, 13);
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
-            this.mtbEMail.Size = new System.Drawing.Size(191, 22);
+            this.mtbEMail.Size = new System.Drawing.Size(141, 22);
             this.mtbEMail.TabIndex = 29;
             // 
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(1026, 17);
+            this.label31.Location = new System.Drawing.Point(646, 15);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(49, 16);
@@ -423,28 +423,28 @@
             // 
             // mtbHomePhone
             // 
-            this.mtbHomePhone.Location = new System.Drawing.Point(691, 13);
+            this.mtbHomePhone.Location = new System.Drawing.Point(477, 13);
             this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbHomePhone.Mask = "(999) 999-99-99";
             this.mtbHomePhone.Name = "mtbHomePhone";
-            this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
+            this.mtbHomePhone.Size = new System.Drawing.Size(116, 22);
             this.mtbHomePhone.TabIndex = 26;
             this.mtbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // mtbMobilePhone
             // 
-            this.mtbMobilePhone.Location = new System.Drawing.Point(174, 12);
+            this.mtbMobilePhone.Location = new System.Drawing.Point(168, 13);
             this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
             this.mtbMobilePhone.Mask = "(999) 999-99-99";
             this.mtbMobilePhone.Name = "mtbMobilePhone";
-            this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
+            this.mtbMobilePhone.Size = new System.Drawing.Size(118, 22);
             this.mtbMobilePhone.TabIndex = 25;
             this.mtbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(534, 17);
+            this.label30.Location = new System.Drawing.Point(330, 15);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(139, 16);
@@ -465,7 +465,6 @@
             // 
             this.tcPrograms.Controls.Add(this.tcPrograms_budget_o);
             this.tcPrograms.Controls.Add(this.tcPrograms_paid_o);
-            this.tcPrograms.Controls.Add(this.tcPrograms_paid_oz);
             this.tcPrograms.Controls.Add(this.tcPrograms_paid_z);
             this.tcPrograms.Controls.Add(this.tcPrograms_target_o);
             this.tcPrograms.Controls.Add(this.tcPrograms_quote_o);
@@ -507,6 +506,7 @@
             this.cbProgram_budget_o.Name = "cbProgram_budget_o";
             this.cbProgram_budget_o.Size = new System.Drawing.Size(1290, 24);
             this.cbProgram_budget_o.TabIndex = 1;
+            this.cbProgram_budget_o.SelectedIndexChanged += new System.EventHandler(this.cbProgram_SelectedIndexChanged);
             // 
             // label27
             // 
@@ -537,6 +537,7 @@
             this.cbProgram_paid_o.Name = "cbProgram_paid_o";
             this.cbProgram_paid_o.Size = new System.Drawing.Size(1290, 24);
             this.cbProgram_paid_o.TabIndex = 3;
+            this.cbProgram_paid_o.SelectedIndexChanged += new System.EventHandler(this.cbProgram_SelectedIndexChanged);
             // 
             // label28
             // 
@@ -546,35 +547,6 @@
             this.label28.Size = new System.Drawing.Size(178, 16);
             this.label28.TabIndex = 2;
             this.label28.Text = "Магистерская программа:";
-            // 
-            // tcPrograms_paid_oz
-            // 
-            this.tcPrograms_paid_oz.Controls.Add(this.cbProgram_paid_oz);
-            this.tcPrograms_paid_oz.Controls.Add(this.label32);
-            this.tcPrograms_paid_oz.Location = new System.Drawing.Point(4, 25);
-            this.tcPrograms_paid_oz.Name = "tcPrograms_paid_oz";
-            this.tcPrograms_paid_oz.Size = new System.Drawing.Size(1326, 61);
-            this.tcPrograms_paid_oz.TabIndex = 5;
-            this.tcPrograms_paid_oz.Text = "Очно-заочная платная форма";
-            this.tcPrograms_paid_oz.UseVisualStyleBackColor = true;
-            // 
-            // cbProgram_paid_oz
-            // 
-            this.cbProgram_paid_oz.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbProgram_paid_oz.FormattingEnabled = true;
-            this.cbProgram_paid_oz.Location = new System.Drawing.Point(30, 30);
-            this.cbProgram_paid_oz.Name = "cbProgram_paid_oz";
-            this.cbProgram_paid_oz.Size = new System.Drawing.Size(1290, 24);
-            this.cbProgram_paid_oz.TabIndex = 3;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(6, 6);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(178, 16);
-            this.label32.TabIndex = 2;
-            this.label32.Text = "Магистерская программа:";
             // 
             // tcPrograms_paid_z
             // 
@@ -596,6 +568,7 @@
             this.cbProgram_paid_z.Name = "cbProgram_paid_z";
             this.cbProgram_paid_z.Size = new System.Drawing.Size(1290, 24);
             this.cbProgram_paid_z.TabIndex = 3;
+            this.cbProgram_paid_z.SelectedIndexChanged += new System.EventHandler(this.cbProgram_SelectedIndexChanged);
             // 
             // label33
             // 
@@ -638,6 +611,7 @@
             this.cbProgram_target_o.Name = "cbProgram_target_o";
             this.cbProgram_target_o.Size = new System.Drawing.Size(1290, 24);
             this.cbProgram_target_o.TabIndex = 3;
+            this.cbProgram_target_o.SelectedIndexChanged += new System.EventHandler(this.cbProgram_SelectedIndexChanged);
             // 
             // label34
             // 
@@ -681,6 +655,7 @@
             this.cbProgram_quote_o.Name = "cbProgram_quote_o";
             this.cbProgram_quote_o.Size = new System.Drawing.Size(1290, 24);
             this.cbProgram_quote_o.TabIndex = 3;
+            this.cbProgram_quote_o.SelectedIndexChanged += new System.EventHandler(this.cbProgram_SelectedIndexChanged);
             // 
             // label35
             // 
@@ -695,6 +670,10 @@
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.textBox2);
+            this.gbApplication.Controls.Add(this.textBox1);
+            this.gbApplication.Controls.Add(this.label36);
+            this.gbApplication.Controls.Add(this.label32);
             this.gbApplication.Controls.Add(this.gbAttributes);
             this.gbApplication.Controls.Add(this.gbOther);
             this.gbApplication.Controls.Add(this.tcPrograms);
@@ -703,14 +682,14 @@
             this.gbApplication.Controls.Add(this.cbSpecialConditions);
             this.gbApplication.Location = new System.Drawing.Point(2, 272);
             this.gbApplication.Name = "gbApplication";
-            this.gbApplication.Size = new System.Drawing.Size(1346, 262);
+            this.gbApplication.Size = new System.Drawing.Size(1346, 253);
             this.gbApplication.TabIndex = 8;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
             // btClose
             // 
-            this.btClose.Location = new System.Drawing.Point(1157, 578);
+            this.btClose.Location = new System.Drawing.Point(1156, 575);
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
@@ -721,7 +700,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(903, 577);
+            this.btSave.Location = new System.Drawing.Point(902, 574);
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(177, 28);
@@ -733,7 +712,7 @@
             // btPrint
             // 
             this.btPrint.Enabled = false;
-            this.btPrint.Location = new System.Drawing.Point(891, 541);
+            this.btPrint.Location = new System.Drawing.Point(890, 538);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(197, 28);
@@ -751,7 +730,7 @@
             this.gbWithdrawDocs.Controls.Add(this.cbEduDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
-            this.gbWithdrawDocs.Location = new System.Drawing.Point(2, 531);
+            this.gbWithdrawDocs.Location = new System.Drawing.Point(1, 528);
             this.gbWithdrawDocs.Margin = new System.Windows.Forms.Padding(4);
             this.gbWithdrawDocs.Name = "gbWithdrawDocs";
             this.gbWithdrawDocs.Padding = new System.Windows.Forms.Padding(4);
@@ -1319,7 +1298,7 @@
             // btWithdraw
             // 
             this.btWithdraw.Enabled = false;
-            this.btWithdraw.Location = new System.Drawing.Point(1126, 541);
+            this.btWithdraw.Location = new System.Drawing.Point(1125, 538);
             this.btWithdraw.Name = "btWithdraw";
             this.btWithdraw.Size = new System.Drawing.Size(160, 28);
             this.btWithdraw.TabIndex = 14;
@@ -1327,11 +1306,45 @@
             this.btWithdraw.UseVisualStyleBackColor = true;
             this.btWithdraw.Click += new System.EventHandler(this.btWithdraw_Click);
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(10, 188);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(122, 16);
+            this.label32.TabIndex = 8;
+            this.label32.Text = "Балл за экзамен:";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(271, 188);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(259, 16);
+            this.label36.TabIndex = 9;
+            this.label36.Text = "Балл за индивидуальные достижения:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(138, 185);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(74, 22);
+            this.textBox1.TabIndex = 10;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Enabled = false;
+            this.textBox2.Location = new System.Drawing.Point(536, 185);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(76, 22);
+            this.textBox2.TabIndex = 11;
+            // 
             // ApplicationMagEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1350, 613);
+            this.ClientSize = new System.Drawing.Size(1350, 608);
             this.Controls.Add(this.btWithdraw);
             this.Controls.Add(this.gbPassport);
             this.Controls.Add(this.gbWithdrawDocs);
@@ -1358,8 +1371,6 @@
             this.tcPrograms_budget_o.PerformLayout();
             this.tcPrograms_paid_o.ResumeLayout(false);
             this.tcPrograms_paid_o.PerformLayout();
-            this.tcPrograms_paid_oz.ResumeLayout(false);
-            this.tcPrograms_paid_oz.PerformLayout();
             this.tcPrograms_paid_z.ResumeLayout(false);
             this.tcPrograms_paid_z.PerformLayout();
             this.tcPrograms_target_o.ResumeLayout(false);
@@ -1411,7 +1422,6 @@
         private System.Windows.Forms.TabPage tcPrograms_budget_o;
         private System.Windows.Forms.TabPage tcPrograms_paid_o;
         private System.Windows.Forms.TabPage tcPrograms_paid_z;
-        private System.Windows.Forms.TabPage tcPrograms_paid_oz;
         private System.Windows.Forms.TabPage tcPrograms_target_o;
         private System.Windows.Forms.TabPage tcPrograms_quote_o;
         private System.Windows.Forms.CheckBox cbTarget;
@@ -1423,8 +1433,6 @@
         private System.Windows.Forms.Button btPrint;
         private System.Windows.Forms.ComboBox cbProgram_paid_o;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.ComboBox cbProgram_paid_oz;
-        private System.Windows.Forms.Label label32;
         private System.Windows.Forms.ComboBox cbProgram_paid_z;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.ComboBox cbProgram_target_o;
@@ -1489,5 +1497,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btWithdraw;
         private System.Windows.Forms.Button btFillRand;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label32;
     }
 }

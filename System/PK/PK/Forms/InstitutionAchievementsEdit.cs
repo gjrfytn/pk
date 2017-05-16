@@ -219,5 +219,13 @@ namespace PK.Forms
             }
 
         }
+
+        private void dgvAchievements_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранное достижение?", "Удаление достижения"))
+                    return;
+                else e.Handled = true;
+        }
     }
 }

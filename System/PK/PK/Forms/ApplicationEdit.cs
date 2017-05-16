@@ -66,6 +66,7 @@ namespace PK.Forms
         private string _MADIOlympName;
         private bool _Agreed;
         private QDoc _QuoteDoc;
+        private string[] _DirsMed = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
 
         private bool _DistrictNeedsReload;
         private bool _TownNeedsReload;
@@ -218,7 +219,9 @@ namespace PK.Forms
             {
                 QuotDocs form = new QuotDocs(_DB_Connection, _QuoteDoc);
                 form.ShowDialog();
-                if (form.DialogResult == DialogResult.OK)
+                if (form.DialogResult != DialogResult.OK && (_QuoteDoc.cause == null || _QuoteDoc.cause == ""))
+                     cbQuote.Checked = false;
+                else
                 {
                     QDoc quoteDoc = form._Document;
                     _QuoteDoc.cause = quoteDoc.cause;
@@ -232,7 +235,6 @@ namespace PK.Forms
                     _QuoteDoc.orphanhoodDocName = quoteDoc.orphanhoodDocName;
                     _QuoteDoc.orphanhoodDocOrg = quoteDoc.orphanhoodDocOrg;
                     _QuoteDoc.orphanhoodDocType = quoteDoc.orphanhoodDocType;
-                    cbMedCertificate.Enabled = true;
                     foreach (Control c in tcDirections.TabPages[5].Controls)
                     {
                         ComboBox cb = c as ComboBox;
@@ -258,12 +260,10 @@ namespace PK.Forms
                             lb.Enabled = true;
                     }
                 }
-                else cbQuote.Checked = false;
+                
             }
             else if ((cbQuote.Checked) && (_Loading))
             {
-                cbMedCertificate.Enabled = true;
-                cbMedCertificate.Checked = true;
                 foreach (Control c in tcDirections.TabPages[5].Controls)
                 {
                     ComboBox cb = c as ComboBox;
@@ -291,8 +291,6 @@ namespace PK.Forms
             }
             else
             {
-                cbMedCertificate.Enabled = false;
-                cbMedCertificate.Checked = false;
                 foreach (Control c in tcDirections.TabPages[5].Controls)
                 {
                     ComboBox cb = c as ComboBox;
@@ -327,6 +325,8 @@ namespace PK.Forms
             {
                 SportDocs form = new SportDocs(_DB_Connection,this);
                 form.ShowDialog();
+                if (form.DialogResult != DialogResult.OK && (SportDoc.diplomaType == null || SportDoc.diplomaType == ""))
+                    cbSport.Checked = false;
             }
         }
 
@@ -336,7 +336,9 @@ namespace PK.Forms
             {
                 MADIOlymps form = new MADIOlymps(_DB_Connection, _MADIOlympName);
                 form.ShowDialog();
-                _MADIOlympName = form.OlympName;
+                if (form.DialogResult != DialogResult.OK && (form.OlympName == null || form.OlympName == ""))
+                    cbMADIOlympiad.Checked = false;                    
+                else _MADIOlympName = form.OlympName;
             }
         }
 
@@ -346,6 +348,8 @@ namespace PK.Forms
             {
                 Olymps form = new Olymps(_DB_Connection,this);
                 form.ShowDialog();
+                if (form.DialogResult != DialogResult.OK && (OlympicDoc.olympType == null || OlympicDoc.olympType == ""))
+                    cbOlympiad.Checked = false;
             }
             DirectionDocEnableDisable();
         }
@@ -375,7 +379,6 @@ namespace PK.Forms
                     MessageBox.Show("Поле \"Email\" не заполнено");
                 else if (!cbAppAdmission.Checked
                     || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked) && !cbDirectionDoc.Checked
-                    || cbQuote.Checked && !cbMedCertificate.Checked
                     || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
                     || rbSpravka.Checked && !cbCertificateHRD.Checked)
                     MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
@@ -593,31 +596,37 @@ namespace PK.Forms
             {
                 TargetOrganizationSelect form = new TargetOrganizationSelect(_DB_Connection,_TargetOrganizationID);
                 form.ShowDialog();
-                _TargetOrganizationID = form.OrganizationID;
-                foreach (Control c in tcDirections.TabPages[6].Controls)
+                if (form.DialogResult != DialogResult.OK && (form.OrganizationID == null || form.OrganizationID == 0))
+                    cbTarget.Checked = false;
+                else
                 {
-                    ComboBox cb = c as ComboBox;
-                    if (cb != null)
-                        cb.Enabled = true;
-                    Button bt = c as Button;
-                    if (bt != null)
-                        bt.Enabled = true;
-                    Label lb = c as Label;
-                    if (lb != null)
-                        lb.Enabled = true;
+                    _TargetOrganizationID = form.OrganizationID;
+                    foreach (Control c in tcDirections.TabPages[6].Controls)
+                    {
+                        ComboBox cb = c as ComboBox;
+                        if (cb != null)
+                            cb.Enabled = true;
+                        Button bt = c as Button;
+                        if (bt != null)
+                            bt.Enabled = true;
+                        Label lb = c as Label;
+                        if (lb != null)
+                            lb.Enabled = true;
+                    }
+                    foreach (Control c in tcDirections.TabPages[8].Controls)
+                    {
+                        ComboBox cb = c as ComboBox;
+                        if (cb != null)
+                            cb.Enabled = true;
+                        Button bt = c as Button;
+                        if (bt != null)
+                            bt.Enabled = true;
+                        Label lb = c as Label;
+                        if (lb != null)
+                            lb.Enabled = true;
+                    }
                 }
-                foreach (Control c in tcDirections.TabPages[8].Controls)
-                {
-                    ComboBox cb = c as ComboBox;
-                    if (cb != null)
-                        cb.Enabled = true;
-                    Button bt = c as Button;
-                    if (bt != null)
-                        bt.Enabled = true;
-                    Label lb = c as Label;
-                    if (lb != null)
-                        lb.Enabled = true;
-                }
+                
             }
             else if (!cbTarget.Checked && !_Loading)
             {
@@ -789,6 +798,7 @@ namespace PK.Forms
                             ChangeAgreedChBs(false);
                             BlockDirChange();
                             cbOriginal.Enabled = false;
+                            cbAgreed.Enabled = true;
                         }
                         else
                         {
@@ -832,6 +842,7 @@ namespace PK.Forms
                         else
                             ((CheckBox)sender).Enabled = false;
                         cbAgreed.Checked = false;
+                        cbAgreed.Enabled = false;
                         cbOriginal.Enabled = true;
                     }
                     else
@@ -1028,6 +1039,20 @@ namespace PK.Forms
             cbGraduationYear.SelectedItem = rand.Next(dtpDateOfBirth.Value.Year + 16, DateTime.Now.Year);
         }
 
+        private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbMedCertificate.Enabled = false;
+            foreach (TabPage page in tcDirections.TabPages)
+                foreach (Control control in page.Controls)
+                {
+                    ComboBox combo = control as ComboBox;
+                    if (combo != null && combo.SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)combo.SelectedValue).Item1).Item2))
+                        cbMedCertificate.Enabled = true;
+                }
+            if (!cbMedCertificate.Enabled)
+                cbMedCertificate.Checked = false;
+        }
+
 
         private void SaveApplication()
         {
@@ -1049,6 +1074,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
+            LoadExaminationsMarks();
             LoadDocuments();
             LoadDirections();
             Cursor.Current = Cursors.Default;
@@ -1066,14 +1092,31 @@ namespace PK.Forms
 
         private void SaveBasic()
         {
-            char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int passwordLength = 12;
-            string password = "";
-            Random rand = new Random();
-            for (int i = 0; i < passwordLength; i++)
-                password +=  passwordChars[rand.Next(passwordChars.Length)];
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
-                { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
+            List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
+                new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
+                new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
+            });
+            if (passportFound.Count > 0)
+                _EntrantID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "entrant_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                    new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])
+                })[0][0])})[0][0];
+            else
+            {
+                char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                int passwordLength = 12;
+                string password = "";
+                Random rand = new Random();
+                for (int i = 0; i < passwordLength; i++)
+                    password +=  passwordChars[rand.Next(passwordChars.Length)];
+                _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
+                    { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
+            }
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
@@ -1459,6 +1502,25 @@ namespace PK.Forms
                 })[0][0])
             }).Count > 0)
                 cbMedal.Checked = true;
+        }
+
+        private void LoadExaminationsMarks()
+        {
+            var exMarks = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new string[] { "examination_id", "mark" });
+
+            var examinations = _DB_Connection.Select(DB_Table.EXAMINATIONS, new string[] { "id", "subject_id", "date" }).Join(
+                exMarks,
+                ex => ex[0],
+                exM => exM[0],
+                (s1,s2) => new Tuple<uint,int,DateTime>((uint)s1[1], int.Parse(s2[1].ToString()), (DateTime)s1[2])
+                ).ToArray();
+            foreach (var examData in examinations)
+                foreach (DataGridViewRow row in dgvExams.Rows)
+                    if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, examData.Item1))
+                    {
+                        row.Cells[dgvExams_Exam.Index].Value = examData.Item2;
+                        row.Cells[dgvExams_Exam.Index].ToolTipText = examData.Item3.ToShortDateString();
+                    }
         }
 
         private void LoadDocuments()

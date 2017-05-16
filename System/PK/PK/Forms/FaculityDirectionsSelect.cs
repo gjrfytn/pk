@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace PK.Forms
 {
@@ -34,8 +35,6 @@ namespace PK.Forms
                         r.Cells[1].Value = true;
                         r.Cells[5].Value = v[2].ToString();
                     }
-                        
-
             dgvDirections_.Sort(dgvDirections_.Columns[dgvDirections_Code.Index], System.ComponentModel.ListSortDirection.Ascending);
         }
 
@@ -65,8 +64,39 @@ namespace PK.Forms
                         { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value }, { "short_name", r.Cells[5].Value.ToString()} });
 
                     else if ((!(bool)r.Cells[1].Value) && (found))
-                        _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object>
+                        try
+                        {
+                            _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object>
                             { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value } });
+                        }
+                        catch (MySqlException ex)
+                        {
+                            if (ex.Number == 1217 || ex.Number == 1451)
+                            {
+                                List<object[]> appEntrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "application_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, _FacultyShortName),
+                            new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, r.Cells[0].Value)
+                        });
+                                if (appEntrances.Count > 0)
+                                {
+                                    MessageBox.Show("На направление \"" + r.Cells[dgvDirections_Name.Index].Value + "\" подано заявление. Удаление невозможно.");
+                                    stop = true;
+                                }
+                                else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Направление имеет профиль или включено в кампанию. Выполнить удаление направления и связанных профилей?",
+                                    "Связь с кампанией"))
+                                {
+                                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                                    { { "profiles_direction_faculty", _FacultyShortName }, { "profiles_direction_id", r.Cells[0].Value } });
+                                    _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
+                                        { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value }});
+                                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "direction_faculty", _FacultyShortName },
+                                        { "direction_id", r.Cells[0].Value } });
+                                    _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object> { { "faculty_short_name", _FacultyShortName },
+                                        { "direction_id", r.Cells[0].Value } });
+                                }
+                            }
+                        }
                 }
             }
             if (!stop)

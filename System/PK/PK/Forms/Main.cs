@@ -13,7 +13,7 @@ namespace PK.Forms
         private readonly string _UserRole;
 
         private uint _CurrCampaignID;
-        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюдже" }, { "adm_paid", "Зачислен на платное" },
+        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюджет" }, { "adm_paid", "Зачислен на платное" },
             { "adm_both", "Зачислен на бюджет и платное" }, { "withdrawn", "Забрал документы" } };
         private uint _SelectedAppID;
 
@@ -148,6 +148,7 @@ namespace PK.Forms
                 ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
+                FilterAppsTable();
             }
         }
 
@@ -209,6 +210,7 @@ namespace PK.Forms
             Orders form = new Orders(_DB_Connection);
             form.ShowDialog();
             UpdateApplicationsTable();
+            FilterAppsTable();
         }
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
@@ -231,6 +233,7 @@ namespace PK.Forms
                 ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
+                FilterAppsTable();
             }
         }
 
@@ -250,6 +253,7 @@ namespace PK.Forms
                 ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
+                FilterAppsTable();
             }
         }
 
@@ -262,6 +266,7 @@ namespace PK.Forms
                 ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
+                FilterAppsTable();
             }
         }
 

@@ -23,6 +23,7 @@ namespace PK.Forms
         private bool _Agreed;
         private ApplicationEdit.QDoc _QuoteDoc;
         private Dictionary<string, string> _Towns = new Dictionary<string, string>();
+        private string[] _DirsMed = {  };
 
         private bool _DistrictNeedsReload;
         private bool _TownNeedsReload;
@@ -163,18 +164,23 @@ namespace PK.Forms
             {
                 QuotDocs form = new QuotDocs(_DB_Connection, _QuoteDoc);
                 form.ShowDialog();
-                ApplicationEdit.QDoc quoteDoc = form._Document;
-                _QuoteDoc.cause = quoteDoc.cause;
-                _QuoteDoc.medCause = quoteDoc.medCause;
-                _QuoteDoc.medDocSerie = quoteDoc.medDocSerie;
-                _QuoteDoc.medDocNumber = quoteDoc.medDocNumber;
-                _QuoteDoc.disabilityGroup = quoteDoc.disabilityGroup;
-                _QuoteDoc.conclusionDate = quoteDoc.conclusionDate;
-                _QuoteDoc.conclusionNumber = quoteDoc.conclusionNumber;
-                _QuoteDoc.orphanhoodDocDate = quoteDoc.orphanhoodDocDate;
-                _QuoteDoc.orphanhoodDocName = quoteDoc.orphanhoodDocName;
-                _QuoteDoc.orphanhoodDocOrg = quoteDoc.orphanhoodDocOrg;
-                _QuoteDoc.orphanhoodDocType = quoteDoc.orphanhoodDocType;
+                if (form.DialogResult != DialogResult.OK && (_QuoteDoc.cause == null || _QuoteDoc.cause == ""))
+                    cbSpecialRights.Checked = false;
+                else
+                {
+                    ApplicationEdit.QDoc quoteDoc = form._Document;
+                    _QuoteDoc.cause = quoteDoc.cause;
+                    _QuoteDoc.medCause = quoteDoc.medCause;
+                    _QuoteDoc.medDocSerie = quoteDoc.medDocSerie;
+                    _QuoteDoc.medDocNumber = quoteDoc.medDocNumber;
+                    _QuoteDoc.disabilityGroup = quoteDoc.disabilityGroup;
+                    _QuoteDoc.conclusionDate = quoteDoc.conclusionDate;
+                    _QuoteDoc.conclusionNumber = quoteDoc.conclusionNumber;
+                    _QuoteDoc.orphanhoodDocDate = quoteDoc.orphanhoodDocDate;
+                    _QuoteDoc.orphanhoodDocName = quoteDoc.orphanhoodDocName;
+                    _QuoteDoc.orphanhoodDocOrg = quoteDoc.orphanhoodDocOrg;
+                    _QuoteDoc.orphanhoodDocType = quoteDoc.orphanhoodDocType;
+                }
             }
             else if (!cbSpecialRights.Checked)
                 cbProgram_quote_o.SelectedIndex = -1;
@@ -198,7 +204,9 @@ namespace PK.Forms
             {
                 TargetOrganizationSelect form = new TargetOrganizationSelect(_DB_Connection, _TargetOrganizationID);
                 form.ShowDialog();
-                _TargetOrganizationID = form.OrganizationID;
+                if (form.DialogResult != DialogResult.OK && (form.OrganizationID == null || form.OrganizationID == 0))
+                    cbTarget.Checked = false;
+                else _TargetOrganizationID = form.OrganizationID;
             }
             else if (!cbTarget.Checked)
                 cbProgram_target_o.SelectedIndex = -1;
@@ -365,6 +373,7 @@ namespace PK.Forms
                         {
                             ChangeAgreedChBs(false);
                             BlockDirChange();
+                            cbAgreed.Enabled = true;
                         }
                         else
                         {
@@ -399,6 +408,7 @@ namespace PK.Forms
                         else
                             ((CheckBox)sender).Enabled = false;
                         cbAgreed.Checked = false;
+                        cbAgreed.Enabled = false;
                     }
                     else
                     {
@@ -507,6 +517,20 @@ namespace PK.Forms
             else day = rand.Next(1, DateTime.DaysInMonth(year, month));
         }
 
+        private void cbProgram_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbMedCertificate.Enabled = false;
+            foreach (TabPage page in tcPrograms.TabPages)
+                foreach (Control control in page.Controls)
+                {
+                    ComboBox combo = control as ComboBox;
+                    if (combo != null && combo.SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((ProgramTuple)combo.SelectedValue).Item1).Item2))
+                        cbMedCertificate.Enabled = true;
+                }
+            if (!cbMedCertificate.Enabled)
+                cbMedCertificate.Checked = false;
+        }
+
 
         private void SaveApplication()
         {
@@ -540,14 +564,30 @@ namespace PK.Forms
 
         private void SaveBasic()
         {
-            char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            int passwordLength = 12;
-            string password = "";
-            Random rand = new Random();
-            for (int i = 0; i < passwordLength; i++)
-                password += passwordChars[rand.Next(passwordChars.Length)];
-            _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
+            List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
+                new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
+                new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
+            });
+            if (passportFound.Count > 0)
+                _EntrantID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "entrant_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                    new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])
+                })[0][0])})[0][0];
+            {
+                char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                int passwordLength = 12;
+                string password = "";
+                Random rand = new Random();
+                for (int i = 0; i < passwordLength; i++)
+                    password += passwordChars[rand.Next(passwordChars.Length)];
+                _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
                 { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
+            }
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
@@ -821,14 +861,6 @@ namespace PK.Forms
                     cbProgram_paid_o.SelectedValue = entrancesData.Value;
                     cbProgram_paid_o.Visible = true;
                     cbProgram_paid_o.Enabled = true;
-                }
-
-                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ)))
-                {
-                    cbProgram_paid_oz.SelectedValue = entrancesData.Value;
-                    cbProgram_paid_oz.Visible = true;
-                    cbProgram_paid_oz.Enabled = true;
                 }
 
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))

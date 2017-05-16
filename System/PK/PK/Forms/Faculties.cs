@@ -119,7 +119,7 @@ namespace PK.Forms
         {
             if (dgvFaculties.SelectedRows.Count == 0)
                 MessageBox.Show("Выберите факультет");
-            else
+            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранный факультет?", "Удаление факультета"))
             {
                 _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object> { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value },
                     { "name", dgvFaculties.SelectedRows[0].Cells[1].Value} });

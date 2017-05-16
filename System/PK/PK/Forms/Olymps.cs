@@ -83,7 +83,7 @@ namespace PK.Forms
                 cbOlympName.DisplayMember = "Name";
                 cbOlympName.DataSource = _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_id", "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
             {
-                new Tuple<string, Relation, object>("year", Relation.EQUAL, DateTime.Now.Year)
+                new Tuple<string, Relation, object>("year", Relation.GREATER_EQUAL, DateTime.Now.Year -1)
             }).Select(s => new
             {
                 Name = s[1].ToString(),

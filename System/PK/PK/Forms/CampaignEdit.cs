@@ -49,7 +49,7 @@ namespace PK.Forms
             cbStartYear.SelectedIndex = 2;
             cbEndYear.SelectedIndex = 2;
 
-            ButtonsAppearanceChange(0);
+            ChangeButtonsAppearance(0);
 
             if (_CampaignId.HasValue)
             {
@@ -86,8 +86,7 @@ namespace PK.Forms
 
         private void dgvTargetOrganizatons_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count-1);
-
+            ChangeButtonsAppearance(dgvTargetOrganizatons.Rows.Count-1);
         }
 
         private void dgvTargetOrganizatons_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -117,10 +116,16 @@ namespace PK.Forms
                     dgvTargetOrganizatons.CurrentRow.Cells[6].Value = form2.DirectionFaculty;
                     dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OF.Index].Value = 0;
                     dgvTargetOrganizatons.CurrentRow.Cells[dgvTargetOrganizatons_OZF.Index].Value = 0;
-                    //if (dgvTargetOrganizatons.CurrentRow.Cells[3].Value != null)
-                    //    if (dgvTargetOrganizatons.Rows.Count == 1)
-                    //        dgvTargetOrganizatons.Rows.Insert(1);
-                    //    else dgvTargetOrganizatons.Rows.Add();
+                    if (dgvTargetOrganizatons.CurrentRow.Cells[3].Value != null)
+                    {
+                        dgvTargetOrganizatons.Rows.Add();
+                        foreach (DataGridViewCell cell in dgvTargetOrganizatons.Rows[dgvTargetOrganizatons.CurrentRow.Index].Cells)
+                        {
+                            dgvTargetOrganizatons.Rows[dgvTargetOrganizatons.CurrentRow.Index - 1].Cells[cell.ColumnIndex].Value = cell.Value;
+                            if (cell.ColumnIndex != dgvTargetOrganizatons_Select.Index && cell.ColumnIndex != dgvTargetOrganizatons_DirSelect.Index)
+                                cell.Value = "";
+                        }
+                    }
                     break;
             }
         }
@@ -251,7 +256,8 @@ namespace PK.Forms
             }
         }
 
-        private void ButtonsAppearanceChange(int rowindex)
+
+        private void ChangeButtonsAppearance(int rowindex)
         {
 
             //dgvTargetOrganizatons.Rows[rowindex].Cells[2].Style.Font = new Font("ESSTIXTwo", 11);
@@ -351,6 +357,7 @@ namespace PK.Forms
             dgvEntranceTests.Sort(dgvEntranceTests.Columns[1], ListSortDirection.Ascending);
         }
 
+
         private void SaveCampaign()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -426,6 +433,7 @@ namespace PK.Forms
             LoadProfiles();
             LoadEntranceTests();
         }
+
 
         private void SaveEduForms()
         {
@@ -583,6 +591,7 @@ namespace PK.Forms
                 }
         }
 
+
         private void LoadEduForms()
         {
             foreach (var v in _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
@@ -656,7 +665,7 @@ namespace PK.Forms
                 })[0][0].ToString(),
                 "", record[1], _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item1,
                 _DB_Helper.GetDirectionNameAndCode((uint)record[1]).Item2, record[0], "", record[3], record[4]);
-                ButtonsAppearanceChange(dgvTargetOrganizatons.Rows.Count - 2);
+                ChangeButtonsAppearance(dgvTargetOrganizatons.Rows.Count - 2);
             }
         }
 
@@ -699,6 +708,7 @@ namespace PK.Forms
                     if ((v[0].ToString() == r.Cells[0].Value.ToString()) && (v[4].ToString() == r.Cells[3].Value.ToString()))
                         r.Cells[3 + Convert.ToInt32(v[3])].Value = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)v[2]);
         }
+
 
         private void UpdateEduForms()
         {

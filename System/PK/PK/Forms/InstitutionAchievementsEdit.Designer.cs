@@ -66,6 +66,7 @@
             this.dgvAchievements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAchievements.Size = new System.Drawing.Size(935, 363);
             this.dgvAchievements.TabIndex = 0;
+            this.dgvAchievements.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvAchievements_KeyDown);
             // 
             // dgvAchievements_ID
             // 

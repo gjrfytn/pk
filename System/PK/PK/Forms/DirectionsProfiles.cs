@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace PK.Forms
 {
@@ -81,13 +82,43 @@ namespace PK.Forms
         {
             if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == "Н"))
                 MessageBox.Show("Выберите профиль");
-            else
+            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранный профиль?", "Удаление профиля"))
             {
-                _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
-                { { "faculty_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value},
-                    { "direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value},
-                    { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value} });
-                UpdateTable();
+                try
+                {
+                    _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
+                { { "faculty_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value },
+                    { "direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value },
+                    { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } });
+                    UpdateTable();
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number == 1217 || ex.Number == 1451)
+                    {
+                        List<object[]> appEntrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "application_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value),
+                            new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value),
+                            new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value)
+                        });
+                        if (appEntrances.Count > 0)
+                            MessageBox.Show("На данный профиль подано заявление. Удаление невозможно.");
+                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Профиль включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
+                        {
+                            _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                            { { "profiles_direction_faculty", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value },
+                                { "profiles_direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value },
+                                { "profiles_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } });
+
+                            _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
+                                { { "faculty_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value },
+                                { "direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value },
+                                { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } });
+                            UpdateTable();
+                        }
+                    }
+                }
             }
         }
 
