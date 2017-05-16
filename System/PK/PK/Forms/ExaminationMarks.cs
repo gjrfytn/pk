@@ -39,10 +39,7 @@ namespace PK.Forms
             foreach (object[] row in _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
                 new string[] { dataGridView_UID.DataPropertyName, dataGridView_Mark.DataPropertyName },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("examination_id", Relation.EQUAL,examinationID)
-                }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, examinationID) }
                 ))
             {
                 object[] entrant = _DB_Connection.Select(

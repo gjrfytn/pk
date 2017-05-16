@@ -108,7 +108,7 @@
         private System.Windows.Forms.Label lNumber;
         private System.Windows.Forms.Label lDate;
         private System.Windows.Forms.Button bOK;
-        public System.Windows.Forms.DateTimePicker dtpDate;
-        public System.Windows.Forms.TextBox tbNumber;
+        private System.Windows.Forms.DateTimePicker dtpDate;
+        private System.Windows.Forms.TextBox tbNumber;
     }
 }

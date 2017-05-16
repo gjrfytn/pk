@@ -92,7 +92,7 @@ namespace PK.Forms
                         {
                             entr.Item1.ToString(),
                             name,
-                            nameCodes[entr.Item2[0]]+nameCodes[entr.Item3[0]]+"."+_ExaminationID.ToString()+count.ToString(),
+                            nameCodes[char.ToUpper(entr.Item2[0])]+nameCodes[char.ToUpper(entr.Item3[0])]+"."+_ExaminationID.ToString()+count.ToString(),
                             aud.Item2,
                             fill[aud.Item2].Item1.ToString()
                         });

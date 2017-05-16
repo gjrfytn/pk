@@ -283,6 +283,15 @@ namespace PK.Forms
                     receiptTableParams
                     ));
 
+            var marks = Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ID }, dbHelper.CurrentCampaignID).GroupBy(
+                k => k.Item2,
+                (k, g) =>
+                new
+                {
+                    Subj = k,
+                    Mark = g.Any(s => s.Item4) ? g.Where(s => s.Item4).Max(s => s.Item3) : g.Max(s => s.Item3)
+                });
+
             if (cbPercRecordBack.Checked)
             {
                 string indAchValue = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
@@ -304,17 +313,11 @@ namespace PK.Forms
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ID) }
                 ).Any(s => s[0] as uint? != null);
 
-                List<object[]> marks = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS_EGE_MARKS_VIEW,
-                    new string[] { "subject_id", "value" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ID) }
-                    );
-
-                uint? math = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?[1] as uint?;
-                uint? rus = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?[1] as uint?;
-                uint? phys = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?[1] as uint?;
-                uint? soc = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?[1] as uint?;
-                uint? foreign = marks.SingleOrDefault(s => (uint)s[0] == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?[1] as uint?;
+                byte? math = MaxOrNull(marks.Where(s => s.Subj == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика")).Select(s => s.Mark));
+                byte? rus = MaxOrNull(marks.Where(s => s.Subj == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык")).Select(s => s.Mark));
+                byte? phys = MaxOrNull(marks.Where(s => s.Subj == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика")).Select(s => s.Mark));
+                byte? soc = MaxOrNull(marks.Where(s => s.Subj == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание")).Select(s => s.Mark));
+                byte? foreign = MaxOrNull(marks.Where(s => s.Subj == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык")).Select(s => s.Mark));
                 parameters = new List<string>
                 {
                     lastName +" "+firstName+" "+middleName,
@@ -399,12 +402,6 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir[1])
                     })[0][0].ToString();
 
-                var marks = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS_EGE_MARKS_VIEW,
-                    new string[] { "subject_id", "value" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ID) }
-                    ).Select(s => new { Subj = (uint)s[0], Value = (uint)s[1] });
-
                 ushort sum = 0;
                 foreach (object[] subj in _DB_Connection.Select(
                     DB_Table.ENTRANCE_TESTS,
@@ -419,7 +416,7 @@ namespace PK.Forms
                 {
                     var mark = marks.SingleOrDefault(s => s.Subj == (uint)subj[0]);
                     if (mark != null)
-                        sum += (ushort)mark.Value;
+                        sum += mark.Mark;
                 }
 
                 documents.Add(new Tuple<string, Classes.DB_Connector, uint?, string[], List<string[]>[]>(
@@ -445,6 +442,14 @@ namespace PK.Forms
             doc += ".docx";
 
             return doc;
+        }
+
+        private static byte? MaxOrNull(IEnumerable<byte> list)
+        {
+            if (list.Count() != 0)
+                return list.Max();
+
+            return null;
         }
     }
 }

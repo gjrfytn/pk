@@ -7,27 +7,10 @@ namespace PK.Forms
 {
     partial class Orders : Form
     {
-        [Flags]
-        private enum APPL_STATUS : byte
-        {
-            NEW = 0x0,
-            ADM_BUDGET = 0x1,
-            ADM_PAID = 0x2,
-            ADM_BOTH = ADM_BUDGET | ADM_PAID,
-        }
-
         private string SelectedOrderNumber
         {
             get { return dataGridView.SelectedRows[0].Cells[dataGridView_Number.Index].Value.ToString(); }
         }
-
-        private readonly Tuple<string, APPL_STATUS>[] _Statuses =
-            {
-            Tuple.Create( "new" ,APPL_STATUS.NEW ),
-            Tuple.Create(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
-            Tuple.Create(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
-            Tuple.Create(  "adm_both" ,APPL_STATUS.ADM_BOTH )
-        };
 
         private readonly Dictionary<string, string> _OrderTypes = new Dictionary<string, string>
         {
@@ -76,80 +59,20 @@ namespace PK.Forms
 
         private void toolStrip_Register_Click(object sender, EventArgs e)
         {
-            ushort newProtocolNumber = (ushort)(_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Max(s => s[0] as ushort? != null ? (ushort)s[0] : 0) + 1);
-
-            OrderRegistration form = new OrderRegistration();
-            form.tbNumber.Text = newProtocolNumber.ToString();
-
-            if (form.ShowDialog() != DialogResult.OK)
-                return;
-
-            newProtocolNumber = ushort.Parse(form.tbNumber.Text);
-            DateTime protocolDate = form.dtpDate.Value;
-            string number = SelectedOrderNumber;
-            uint eduSource = (uint)_DB_Connection.Select(
-                DB_Table.ORDERS,
-                new string[] { "finance_source_id" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, number) }
-                )[0][0];
-
-            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+            OrderRegistration form = new OrderRegistration(_DB_Connection, SelectedOrderNumber);
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                _DB_Connection.Update(
+                dataGridView.SelectedRows[0].Cells[dataGridView_ProtNumber.Index].Value = _DB_Connection.Select(
                     DB_Table.ORDERS,
-                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber }, { "protocol_date", protocolDate } },
-                    new Dictionary<string, object> { { "number", number } },
-                    transaction
-                    );
+                    new string[] { "protocol_number" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, SelectedOrderNumber) }
+                    )[0][0];
 
-                var applications = _DB_Connection.Select(
-                    DB_Table.ORDERS_HAS_APPLICATIONS,
-                    new string[] { "applications_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
-                    ).Join(
-                    _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "status"),
-                    k1 => k1[0], k2 => k2[0], (s1, s2) => new { ID = (uint)s2[0], Status = s2[1].ToString() }
-                    );
-
-                if (dataGridView.SelectedRows[0].Cells[dataGridView_Type.Index].Value.ToString() == _OrderTypes["admission"])
-                {
-                    foreach (var appl in applications)
-                        _DB_Connection.Update(
-                            DB_Table.APPLICATIONS,
-                            new Dictionary<string, object>
-                            {
-                                { "status",_Statuses.Single(s1=>s1.Item2== (_Statuses.Single(s2=>s2.Item1==appl.Status).Item2|(eduSource==15?APPL_STATUS.ADM_PAID:APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
-                            },
-                            new Dictionary<string, object> { { "id", appl.ID } },
-                            transaction
-                            );
-                }
-                else if (dataGridView.SelectedRows[0].Cells[dataGridView_Type.Index].Value.ToString() == _OrderTypes["exception"])
-                {
-                    foreach (var appl in applications)
-                        _DB_Connection.Update(
-                            DB_Table.APPLICATIONS,
-                            new Dictionary<string, object>
-                            {
-                                { "status", _Statuses.Single(s1 => s1.Item2 == (_Statuses.Single(s2 => s2.Item1 == appl.Status).Item2 & ~(eduSource == 15 ? APPL_STATUS.ADM_PAID : APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
-                            },
-                            new Dictionary<string, object> { { "id", appl.ID } },
-                            transaction
-                            );
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-
-                transaction.Commit();
+                toolStrip_Edit.Enabled = false;
+                toolStrip_Delete.Enabled = false;
+                toolStrip_Register.Enabled = false;
+                toolStrip_Print.Enabled = true;
             }
-            dataGridView.SelectedRows[0].Cells[dataGridView_ProtNumber.Index].Value = newProtocolNumber;
-
-            toolStrip_Edit.Enabled = false;
-            toolStrip_Delete.Enabled = false;
-            toolStrip_Register.Enabled = false;
-            toolStrip_Print.Enabled = true;
         }
 
         private void toolStrip_Print_Click(object sender, EventArgs e)

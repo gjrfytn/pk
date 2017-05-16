@@ -232,17 +232,11 @@ namespace PK.Forms
         private void cbFDP_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (cbType.SelectedValue.ToString() == "admission")
-            {
                 FillTable(GetAdmissionCandidates());
-            }
             else if (cbType.SelectedValue.ToString() == "exception")
-            {
                 FillTable(GetExceptionCandidates());
-            }
             else
-            {
-                throw new NotImplementedException();
-            }
+                FillTable(GetHostelCandidates());
         }
 
         private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -491,6 +485,42 @@ namespace PK.Forms
             }
         }
 
+        private uint[] GetHostelCandidates()
+        {
+            return GetCampApplsWithStatuses("adm_budget", "adm_both").Where(appl =>
+            {
+                var orders = GetAdmExcOrders(appl, cbFDP.SelectedValue.ToString());
+                var admOrders = orders.Where(s => s.Item1 == "admission");
+                if (admOrders.Count() == 0)
+                    return false;
+
+                DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+                var excOrders = orders.Where(s => s.Item1 == "exception");
+                DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
+
+                if (lastAdmDate > lastExcDate)//TODO >=?
+                    return _DB_Connection.Select(
+                        DB_Table.ORDERS_HAS_APPLICATIONS,
+                        new string[] { "orders_number" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl) }
+                        ).Join(
+                        _DB_Connection.Select(
+                            DB_Table.ORDERS,
+                            new string[] { "number" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                                new Tuple<string, Relation, object>("type", Relation.EQUAL, "hostel")
+                            }),
+                        k1 => k1[0],
+                        k2 => k2[0],
+                        (s1, s2) => s1[0]
+                        ).Count() == 0;
+                else
+                    return false;
+            }).ToArray();
+        }
+
         private IEnumerable<uint> GetCampApplsWithStatuses(params string[] statuses)
         {
             return _DB_Connection.Select(
@@ -550,6 +580,29 @@ namespace PK.Forms
                          );
         }
 
+        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, string faculty)
+        {
+            return _DB_Connection.Select(
+                         DB_Table.ORDERS_HAS_APPLICATIONS,
+                         new string[] { "orders_number" },
+                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
+                         ).Join(
+                         _DB_Connection.Select(
+                             DB_Table.ORDERS,
+                             new string[] { "number", "type", "date" },
+                             new List<Tuple<string, Relation, object>>
+                             {
+                                 new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                                 new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
+                                 new Tuple<string, Relation, object>("education_form_id", Relation.NOT_EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,Classes.DB_Helper.EduSourceP)),
+                                 new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, faculty)
+                             }),
+                         k1 => k1[0],
+                         k2 => k2[0],
+                         (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
+                         );
+        }
+
         private void FillTable(uint[] applications)
         {
             dataGridView.Rows.Clear();
@@ -564,32 +617,7 @@ namespace PK.Forms
                 (s1, s2) => new { ApplID = (uint)s1[0], EntrID = (uint)s1[1], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
-            var egeMarks = _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked")
-                .Select(s => new { ApplID = (uint)s[0], Subj = (uint)s[1], Value = (uint)s[2], Checked = (bool)s[3] });
-
-            var examMarks = _DB_Connection.Select(
-                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                new string[] { "entrant_id", "examination_id", "mark" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
-                ).Join(
-                _DB_Connection.Select(DB_Table.EXAMINATIONS, "id", "subject_id"),
-                k1 => k1[1],
-                k2 => k2[0],
-                (s1, s2) => new { EntrID = (uint)s1[0], Subj = (uint)s2[1], Mark = (short)s1[2] }
-                );
-
-            var marks = candidates.Join(
-                egeMarks,
-                k1 => k1.ApplID,
-                k2 => k2.ApplID,
-                (s1, s2) => new { s1.ApplID, s1.EntrID, s1.Name, s2.Subj, Mark = (ushort)s2.Value, s2.Checked }
-                ).Concat(
-                candidates.Join(
-                    examMarks,
-                    k1 => k1.EntrID,
-                    k2 => k2.EntrID,
-                    (s1, s2) => new { s1.ApplID, s1.EntrID, s1.Name, s2.Subj, Mark = (ushort)s2.Mark, Checked = true }
-                    ));
+            IEnumerable<Tuple<uint, uint, byte, bool>> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), _DB_Helper.CurrentCampaignID);
 
             IEnumerable<uint> dir_subjects;
             if (rbPaid.Checked)
@@ -613,27 +641,103 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item2)
                     }).Select(s => (uint)s[0]);
 
-            var table = marks.GroupBy(
+            var table = candidates.Join(
+                marks,
                 k1 => k1.ApplID,
-                (k, g) =>
-                    new
-                    {
-                        ApplID = k,
-                        g.First().Name,
-                        Checked = !g.Any(s => s.Checked == false),
-                        Math = MaxOrNull(g.Where(s => s.Subj == 2).Select(s => s.Mark)), //TODO
-                        Phys = MaxOrNull(g.Where(s => s.Subj == 10).Select(s => s.Mark)), //TODO
-                        Rus = MaxOrNull(g.Where(s => s.Subj == 1).Select(s => s.Mark)), //TODO
-                        Soc = MaxOrNull(g.Where(s => s.Subj == 9).Select(s => s.Mark)), //TODO
-                        For = MaxOrNull(g.Where(s => s.Subj == 6).Select(s => s.Mark)) //TODO
-                    });
+                k2 => k2.Item1,
+                (s1, s2) => new { s1.ApplID, s1.Name, Subj = s2.Item2, Mark = s2.Item3, Checked = s2.Item4 }
+                ).GroupBy(
+                k1 => k1.ApplID,
+                (k1, g1) =>
+                new
+                {
+                    ApplID = k1,
+                    g1.First().Name,
+                    Subjects = g1.GroupBy(
+                        k2 => k2.Subj,
+                        (k2, g2) =>
+                        new
+                        {
+                            Subj = k2,
+                            Mark = g2.Any(s => s.Checked) ? g2.Where(s => s.Checked).Max(s => s.Mark) : g2.Max(s => s.Mark),
+                            Checked = g2.Any(s => s.Checked)
+                        })
+                });
+
+            byte[] buf = Array.ConvertAll(
+                _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
+                s => (byte)(ushort)s
+                );
+            Dictionary<uint, byte> minMarks = new Dictionary<uint, byte>
+            {
+                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
+                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"),buf[1] },
+                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"),buf[2] },
+                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"),buf[3] },
+                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
+            };
 
             foreach (var appl in table)
             {
-                ushort[] minMarks = Array.ConvertAll(
-                    _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
-                    s => (ushort)s
-                    );
+                var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
+                if (appl_dir_subj.Count() == dir_subjects.Count())
+                {
+                    string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < minMarks[s.Subj]) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
+
+                    byte? math = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Mark as byte?;
+                    byte? rus = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Mark as byte?;
+                    byte? phys = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Mark as byte?;
+                    byte? soc = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?.Mark as byte?;
+                    byte? foreign = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?.Mark as byte?;
+
+                    ushort? MFR = null;
+                    if (math != null && phys != null && rus != null)
+                        MFR = (ushort)(math + phys + rus);
+
+                    ushort? MOR = null;
+                    if (math != null && soc != null && rus != null)
+                        MOR = (ushort)(math + soc + rus);
+
+                    ushort? ROI = null;
+                    if (rus != null && soc != null && foreign != null)
+                        ROI = (ushort)(rus + soc + foreign);
+
+                    dataGridView.Rows.Add(false, appl.ApplID, appl.Name, status, MFR, MOR, ROI, math, phys, rus, soc, foreign);
+                }
+            }
+            /*var table = candidates.Join(
+                marks,
+                k1 => k1.ApplID,
+                k2 => k2.Item1,
+                (s1, s2) => new { s1.ApplID, s1.Name, Subj = s2.Item2, Mark = s2.Item3, Checked = s2.Item4 }
+                ).GroupBy(
+                k1 => k1.ApplID,
+                (k, g) =>
+                new
+                {
+                    ApplID = k,
+                    g.First().Name,
+                    Checked = !g.Any(s => s.Checked == false),
+                    Math = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 2).Select(s => s.Mark)), //TODO
+                    Phys = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 10).Select(s => s.Mark)), //TODO
+                    Rus = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 1).Select(s => s.Mark)), //TODO
+                    Soc = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 9).Select(s => s.Mark)), //TODO
+                    For = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 6).Select(s => s.Mark)) //TODO                    
+                }).Where(
+                s => (s.Math != null || s.Math == null && !dir_subjects.Contains((uint)2)) &&
+                (s.Phys != null || s.Phys == null && !dir_subjects.Contains((uint)10)) &&
+                (s.Rus != null || s.Rus == null && !dir_subjects.Contains((uint)1)) &&
+                (s.Soc != null || s.Soc == null && !dir_subjects.Contains((uint)9)) &&
+                (s.For != null || s.For == null && !dir_subjects.Contains((uint)6))
+                );
+
+            ushort[] minMarks = Array.ConvertAll(
+                _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
+                s => (ushort)s
+                );
+
+            foreach (var appl in table)
+            {
                 bool belowMin = false;
                 if (appl.Math < minMarks[0])
                     belowMin = true;
@@ -672,17 +776,9 @@ namespace PK.Forms
                     appl.Soc,
                     appl.For
                     );
-            }
+            }*/
 
             dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
-        }
-
-        private ushort? MaxOrNull(IEnumerable<ushort> list)
-        {
-            if (list.Count() != 0)
-                return list.Max();
-
-            return null;
         }
 
         private void dtpDate_ValueChanged(object sender, EventArgs e)

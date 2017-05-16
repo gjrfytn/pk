@@ -159,67 +159,52 @@ namespace PK.Classes
             string profile = order[8] as string;
 
             var applications = connection.Select(
-                         DB_Table.ORDERS_HAS_APPLICATIONS,
-                         new string[] { "applications_id" },
-                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
-                         ).Join(
+                DB_Table.ORDERS_HAS_APPLICATIONS,
+                new string[] { "applications_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, number) }
+                ).Join(
                 connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
                 k1 => k1[0],
                 k2 => k2[0],
                 (s1, s2) => new { ApplID = (uint)s2[0], EntrID = (uint)s2[1] }
+                ).Join(
+                connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                k1 => k1.EntrID,
+                k2 => k2[0],
+                (s1, s2) => new { s1.ApplID, Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
             string doc;
             if (order[0].ToString() == "admission")
             {
                 var dir_subjects = connection.Select(
-                     DB_Table.ENTRANCE_TESTS,
-                     new string[] { "subject_id" },
-                     new List<Tuple<string, Relation, object>>
-                     {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
-                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
-                     }).Select(s => (uint)s[0]);
+                    DB_Table.ENTRANCE_TESTS,
+                    new string[] { "subject_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
+                    }).Select(s => (uint)s[0]);
 
-                var marks = applications.Join(
-                    connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value"),
+                IEnumerable<Tuple<uint, uint, byte, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
+
+                var table = applications.Join(
+                    marks.Join(
+                        dir_subjects,
+                        k1 => k1.Item2,
+                        k2 => k2,
+                        (s1, s2) => s1
+                        ).GroupBy(
+                        k => Tuple.Create(k.Item1, k.Item2),
+                        (k, g) => new { ApplID = g.First().Item1, Mark = g.Max(s => s.Item3) }
+                        ).GroupBy(
+                        k => k.ApplID,
+                        (k, g) => new { g.First().ApplID, Sum = g.Sum(s => s.Mark) }
+                        ),
                     k1 => k1.ApplID,
-                    k2 => k2[0],
-                    (s1, s2) => new { s1.ApplID, s1.EntrID, Subj = (uint)s2[1], Mark = (ushort)(uint)s2[2] }
-                    ).Concat(
-                    applications.Join(
-                        connection.Select(
-                            DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                            new string[] { "entrant_id", "examination_id", "mark" },
-                            new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
-                            ).Join(
-                            connection.Select(DB_Table.EXAMINATIONS, "id", "subject_id"),
-                            k1 => k1[1],
-                            k2 => k2[0],
-                            (s1, s2) => new { EntrID = (uint)s1[0], Subj = (uint)s2[1], Mark = (short)s1[2] }
-                            ),
-                        k1 => k1.EntrID,
-                        k2 => k2.EntrID,
-                        (s1, s2) => new { s1.ApplID, s1.EntrID, s2.Subj, Mark = (ushort)s2.Mark }
-                        ));
-
-                var table = marks.Join(
-                    dir_subjects,
-                    k1 => k1.Subj,
-                    k2 => k2,
-                    (s1, s2) => s1
-                    ).GroupBy(
-                    k => Tuple.Create(k.ApplID, k.Subj),
-                    (k, g) => new { g.First().ApplID, g.First().EntrID, Mark = g.Max(s => s.Mark) }
-                    ).GroupBy(
-                    k => k.ApplID,
-                    (k, g) => new { g.First().ApplID, g.First().EntrID, Sum = g.Sum(s => s.Mark) }
-                    ).Join(
-                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
-                    k1 => k1.EntrID,
-                    k2 => k2[0],
-                    (s1, s2) => new string[] { s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(), s1.Sum.ToString() }
+                    k2 => k2.ApplID,
+                    (s1, s2) => new string[] { s1.Name, s2.Sum.ToString() }
                     );
 
                 doc = Utility.TempPath + "AdmOrder" + new Random().Next();
@@ -250,13 +235,6 @@ namespace PK.Classes
             }
             else if (order[0].ToString() == "exception")
             {
-                var table = applications.Join(
-                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
-                    k1 => k1.EntrID,
-                    k2 => k2[0],
-                    (s1, s2) => new string[] { s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
-                    );
-
                 doc = Utility.TempPath + "ExcOrder" + new Random().Next();
                 DocumentCreator.Create(
                     Utility.DocumentsTemplatesPath + "ExcOrder.xml",
@@ -279,7 +257,7 @@ namespace PK.Classes
                             new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("short_name",Relation.EQUAL,profile) }
                             )[0][0].ToString():""
                     },
-                    new IEnumerable<string[]>[] { table }
+                    new IEnumerable<string[]>[] { applications.Select(s => new string[] { s.Name }) }
                     );
             }
             else
