@@ -170,21 +170,33 @@ namespace PK.Classes
             //p.Dispose();?
         }
 
-        public static bool GetFIS_AuthData(out string login, out string password)
+        public static bool TryAccessFIS_Function(System.Action<string, string> func)
         {
-            Forms.FIS_Authorization form = new Forms.FIS_Authorization();
-            if (form.ShowDialog() == DialogResult.OK)
+            try
             {
-                login = form.tbLogin.Text;
-                password = form.tbPassword.Text;
-                return true;
+                Forms.FIS_Authorization form = new Forms.FIS_Authorization();
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    func(form.tbLogin.Text, form.tbPassword.Text);
+                    return true;
+                }
             }
-            else
+            catch (System.Net.WebException ex)
             {
-                login = null;
-                password = null;
-                return false;
+                if (ShowChoiceMessageBox("Подключён ли компьютер к сети ФИС?", "Ошибка подключения"))
+                {
+                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                    MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            catch (FIS_Connector.FIS_Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return false;
         }
     }
 }

@@ -190,19 +190,19 @@ namespace PK.Forms
         private void menuStrip_Dictionaries_Click(object sender, EventArgs e)
         {
             Dictionaries form = new Dictionaries(_DB_Connection);
-            form.ShowDialog();
+            form.Show();
         }
 
         private void menuStrip_DirDictionary_Click(object sender, EventArgs e)
         {
             DirectionsDictionary form = new DirectionsDictionary(_DB_Connection);
-            form.ShowDialog();
+            form.Show();
         }
 
         private void menuStrip_OlympDictionary_Click(object sender, EventArgs e)
         {
             OlympicsDictionary form = new OlympicsDictionary(_DB_Connection);
-            form.ShowDialog();
+            form.Show();
         }
 
         private void menuStrip_Faculties_Click(object sender, EventArgs e)
@@ -307,31 +307,8 @@ namespace PK.Forms
 
         private void toolStrip_FIS_Export_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string login;
-                string password;
-                if (Classes.Utility.GetFIS_AuthData(out login, out password))
-                    MessageBox.Show(
-                        "Идентификатор пакета: " + Classes.FIS_Connector.Export(login, password, Classes.FIS_Packager.MakePackage(_DB_Connection)),
-                        "Пакет отправлен",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-            }
-            catch (System.Net.WebException ex)
-            {
-                if (Classes.Utility.ShowChoiceMessageBox("Подключён ли компьютер к сети ФИС?", "Ошибка подключения"))
-                {
-                    MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                    MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (Classes.FIS_Connector.FIS_Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            FIS_Export form = new FIS_Export(_DB_Connection);
+            form.ShowDialog();
         }
 
         private void toolStrip_RegJournal_Click(object sender, EventArgs e)

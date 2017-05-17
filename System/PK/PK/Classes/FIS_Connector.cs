@@ -138,20 +138,20 @@ namespace PK.Classes
                 });
         }
 
-        public static string Export(string login, string password, FIS_ExportClasses.PackageData data)
+        public static string Export(string adress, string login, string password, FIS_ExportClasses.PackageData data)
         {
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
-                new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
+            //    new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
 
-            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/import", byteArray);
+            //XDocument doc = GetResponse(adress+"/import/importservice.svc/import", byteArray);
 
             //if (doc.Root.Name == "Error")
             //    throw new FIS_Exception(doc.Root.Element("ErrorText").Value);
 
             //return doc.Root.Element("PackageID").Value;
-            return "";
 
-            //new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(_Login, _Password), data).ConvertToXElement().Save("testfile2.xml");
+            new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().Save("testfile2.xml");
+            return "";
         }
 
         private static XDocument GetResponse(string uri, byte[] requestData)

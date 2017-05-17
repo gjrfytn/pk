@@ -72,5 +72,18 @@ namespace PK.Properties {
                 this["FIS_Login"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>http://10.0.3.1:8080</string>
+  <string>http://priem.edu.ru:8000</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection FIS_Adresses {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["FIS_Adresses"]));
+            }
+        }
     }
 }

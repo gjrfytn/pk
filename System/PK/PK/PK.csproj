@@ -190,6 +190,12 @@
     <Compile Include="Forms\FIS_Authorization.Designer.cs">
       <DependentUpon>FIS_Authorization.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FIS_Export.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FIS_Export.Designer.cs">
+      <DependentUpon>FIS_Export.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\InstitutionAchievementsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -354,6 +360,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FIS_Authorization.resx">
       <DependentUpon>FIS_Authorization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FIS_Export.resx">
+      <DependentUpon>FIS_Export.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>

@@ -73,19 +73,16 @@ namespace PK.Forms
 
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
-            if (_Updater == null)
-            {
-                string login;
-                string password;
-                if (!Classes.Utility.GetFIS_AuthData(out login, out password))
-                    return;
-
-                _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
-            }
-
             Cursor.Current = Cursors.WaitCursor;
-            _Updater.UpdateOlympicsDictionary();
-            UpdateOlympicsTable();
+            if (Classes.Utility.TryAccessFIS_Function((login, password) =>
+            {
+                if (_Updater == null)
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
+
+                _Updater.UpdateOlympicsDictionary();
+            }))
+                UpdateOlympicsTable();
+
             Cursor.Current = Cursors.Default;
         }
 
