@@ -321,26 +321,26 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`orders` (
   `date` DATE NOT NULL COMMENT 'Дата регистрации приказа.',
   `protocol_number` SMALLINT UNSIGNED NULL COMMENT 'Номер протокола, если приказ зарегестрирован, иначе - NULL.',
   `protocol_date` DATE NULL COMMENT 'Дата протокола, если приказ зарегестрирован, иначе - NULL.',
-  `education_form_dict_id` INT UNSIGNED NULL COMMENT '14',
-  `education_form_id` INT UNSIGNED NULL COMMENT 'ИД Формы обучения (Справочник 14 \"Форма обучения\").',
-  `finance_source_dict_id` INT UNSIGNED NULL COMMENT '15',
-  `finance_source_id` INT UNSIGNED NULL COMMENT 'ИД источника финансирования (Справочник 15 \"Источник финансирования\").',
+  `edu_form_dict_id` INT UNSIGNED NOT NULL COMMENT '14',
+  `edu_form_id` INT UNSIGNED NOT NULL COMMENT 'ИД Формы обучения (Справочник 14 \"Форма обучения\").',
+  `edu_source_dict_id` INT UNSIGNED NOT NULL COMMENT '15',
+  `edu_source_id` INT UNSIGNED NOT NULL COMMENT 'ИД источника финансирования (Справочник 15 \"Источник финансирования\").',
   `campaign_id` INT UNSIGNED NOT NULL COMMENT 'ID приемной кампании.',
   `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
   `direction_id` INT UNSIGNED NULL COMMENT 'Направление.',
   `profile_short_name` VARCHAR(5) NULL COMMENT 'Профиль.',
   PRIMARY KEY (`number`),
-  INDEX `corresp_edu_f_idx` (`education_form_dict_id` ASC, `education_form_id` ASC),
-  INDEX `corresp_fin_s_idx` (`finance_source_dict_id` ASC, `finance_source_id` ASC),
+  INDEX `corresp_edu_f_idx` (`edu_form_dict_id` ASC, `edu_form_id` ASC),
+  INDEX `corresp_fin_s_idx` (`edu_source_dict_id` ASC, `edu_source_id` ASC),
   INDEX `orders_has_profiles_idx` (`campaign_id` ASC, `faculty_short_name` ASC, `direction_id` ASC, `profile_short_name` ASC),
   INDEX `orders_has_directions_idx` (`campaign_id` ASC, `faculty_short_name` ASC, `direction_id` ASC),
   CONSTRAINT `orders_corresp_edu_f`
-    FOREIGN KEY (`education_form_id` , `education_form_dict_id`)
+    FOREIGN KEY (`edu_form_id` , `edu_form_dict_id`)
     REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `orders_corresp_fin_s`
-    FOREIGN KEY (`finance_source_id` , `finance_source_dict_id`)
+    FOREIGN KEY (`edu_source_id` , `edu_source_dict_id`)
     REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,

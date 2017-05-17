@@ -49,11 +49,9 @@ namespace PK.Forms
             }
 
             Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
-            ushort newProtocolNumber = ushort.Parse(tbNumber.Text);
-            DateTime protocolDate = dtpDate.Value;
             object[] buf = _DB_Connection.Select(
                 DB_Table.ORDERS,
-                new string[] { "type", "finance_source_id", "faculty_short_name" },
+                new string[] { "type", "edu_source_id", "faculty_short_name" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, _Number) }
                 )[0];
 
@@ -115,6 +113,7 @@ namespace PK.Forms
                           new List<Tuple<string, Relation, object>>
                           {
                             new Tuple<string, Relation, object>("type",Relation.EQUAL,"hostel"),
+                            new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,faculty),
                             new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null)
                           }).Join(
                           _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS),
@@ -134,7 +133,7 @@ namespace PK.Forms
 
                 _DB_Connection.Update(
                     DB_Table.ORDERS,
-                    new Dictionary<string, object> { { "protocol_number", newProtocolNumber }, { "protocol_date", protocolDate } },
+                    new Dictionary<string, object> { { "protocol_number", ushort.Parse(tbNumber.Text) }, { "protocol_date", dtpDate.Value } },
                     new Dictionary<string, object> { { "number", _Number } },
                     transaction
                     );

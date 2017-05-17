@@ -149,14 +149,11 @@ namespace PK.Classes
 
             object[] order = connection.Select(
                     DB_Table.ORDERS,
-                    new string[] { "type", "date", "protocol_number", "protocol_date", "education_form_id", "finance_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
+                    new string[] { "type", "date", "protocol_number", "protocol_date", "edu_form_id", "edu_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("number",Relation.EQUAL,number)
                     })[0];
-
-            Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode((uint)order[7]);
-            string profile = order[8] as string;
 
             var applications = connection.Select(
                 DB_Table.ORDERS_HAS_APPLICATIONS,
@@ -175,96 +172,104 @@ namespace PK.Classes
                 );
 
             string doc;
-            if (order[0].ToString() == "admission")
+            List<string> paramaters = new List<string>
             {
-                var dir_subjects = connection.Select(
-                    DB_Table.ENTRANCE_TESTS,
-                    new string[] { "subject_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
-                    }).Select(s => (uint)s[0]);
+                ((DateTime)order[1]).ToShortDateString(),
+                number,
+                order[2].ToString(),
+                ((DateTime)order[3]).ToShortDateString()
+            };
 
-                IEnumerable<Tuple<uint, uint, byte, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
-
-                var table = applications.Join(
-                    marks.Join(
-                        dir_subjects,
-                        k1 => k1.Item2,
-                        k2 => k2,
-                        (s1, s2) => s1
-                        ).GroupBy(
-                        k => Tuple.Create(k.Item1, k.Item2),
-                        (k, g) => new { ApplID = g.First().Item1, Mark = g.Max(s => s.Item3) }
-                        ).GroupBy(
-                        k => k.ApplID,
-                        (k, g) => new { g.First().ApplID, Sum = g.Sum(s => s.Mark) }
-                        ),
-                    k1 => k1.ApplID,
-                    k2 => k2.ApplID,
-                    (s1, s2) => new string[] { s1.Name, s2.Sum.ToString() }
-                    );
-
-                doc = Utility.TempPath + "AdmOrder" + new Random().Next();
-                DocumentCreator.Create(
-                    Utility.DocumentsTemplatesPath + "AdmOrder.xml",
-                    doc,
-                    new string[]
-                    {
-                        ((DateTime)order[1]).ToShortDateString(),
-                        number,
-                        order[2].ToString(),
-                        ((DateTime)order[3]).ToShortDateString(),
-                        ((DateTime)order[1]).Year.ToString(),
-                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)order[4]).ToLower()+" обучения"+
-                        ((uint)order[5]==dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP)?" по договорам с оплатой стоимости обучения":""),
-                        order[6].ToString(),
-                        dirNameCode.Item2,
-                        dirNameCode.Item1,
-                        profile!=null?"Профиль: ":"",
-                        profile !=null?profile+" - "+connection.Select(
-                            DB_Table.PROFILES,
-                            new string[] { "name" },
-                            new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("short_name",Relation.EQUAL,profile) }
-                            )[0][0].ToString():""
-                    },
-                    new IEnumerable<string[]>[] { table }
-                    );
-            }
-            else if (order[0].ToString() == "exception")
+            if (order[0].ToString() == "hostel")
             {
-                doc = Utility.TempPath + "ExcOrder" + new Random().Next();
+                paramaters.AddRange(new string[]
+                {
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE,(uint)order[5]).ToLower(),
+                    order[6].ToString()
+                });
+
+                doc = Utility.TempPath + "HostelOrder" + new Random().Next();
                 DocumentCreator.Create(
-                    Utility.DocumentsTemplatesPath + "ExcOrder.xml",
+                    Utility.DocumentsTemplatesPath + "HostelOrder.xml",
                     doc,
-                    new string[]
-                    {
-                        ((DateTime)order[1]).ToShortDateString(),
-                        number,
-                        order[2].ToString(),
-                        ((DateTime)order[3]).ToShortDateString(),
-                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)order[4]).ToLower()+" обучения"+
-                        ((uint)order[5]==dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP)?" по договорам с оплатой стоимости обучения":""),
-                        order[6].ToString(),
-                        dirNameCode.Item2,
-                        dirNameCode.Item1,
-                        profile!=null?"Профиль: ":"",
-                        profile !=null?profile+" - "+connection.Select(
-                            DB_Table.PROFILES,
-                            new string[] { "name" },
-                            new List<Tuple<string, Relation, object>> {new Tuple<string, Relation, object>("short_name",Relation.EQUAL,profile) }
-                            )[0][0].ToString():""
-                    },
+                    paramaters.ToArray(),
                     new IEnumerable<string[]>[] { applications.Select(s => new string[] { s.Name }) }
                     );
             }
             else
             {
-                throw new NotImplementedException();
-            }
+                Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode((uint)order[7]);
+                string profile = order[8] as string;
 
+                if (order[0].ToString() == "admission")
+                    paramaters.Add(((DateTime)order[1]).Year.ToString());
+
+                paramaters.AddRange(new string[]
+                {
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)order[4]).ToLower() + " обучения" +
+                    ((uint)order[5] == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
+                    order[6].ToString(),
+                    dirNameCode.Item2,
+                    dirNameCode.Item1,
+                    profile != null ? "Профиль: " : "",
+                    profile != null ? profile + " - " + connection.Select(
+                        DB_Table.PROFILES,
+                        new string[] { "name" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("short_name", Relation.EQUAL, profile) }
+                        )[0][0].ToString() : ""
+                });
+
+                if (order[0].ToString() == "admission")
+                {
+                    var dir_subjects = connection.Select(
+                        DB_Table.ENTRANCE_TESTS,
+                        new string[] { "subject_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
+                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
+                        }).Select(s => (uint)s[0]);
+
+                    IEnumerable<Tuple<uint, uint, byte, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
+
+                    var table = applications.Join(
+                        marks.Join(
+                            dir_subjects,
+                            k1 => k1.Item2,
+                            k2 => k2,
+                            (s1, s2) => s1
+                            ).GroupBy(
+                            k => Tuple.Create(k.Item1, k.Item2),
+                            (k, g) => new { ApplID = g.First().Item1, Mark = g.Max(s => s.Item3) }
+                            ).GroupBy(
+                            k => k.ApplID,
+                            (k, g) => new { g.First().ApplID, Sum = g.Sum(s => s.Mark) }
+                            ),
+                        k1 => k1.ApplID,
+                        k2 => k2.ApplID,
+                        (s1, s2) => new string[] { s1.Name, s2.Sum.ToString() }
+                        );
+
+                    doc = Utility.TempPath + "AdmOrder" + new Random().Next();
+                    DocumentCreator.Create(
+                        Utility.DocumentsTemplatesPath + "AdmOrder.xml",
+                        doc,
+                        paramaters.ToArray(),
+                        new IEnumerable<string[]>[] { table }
+                        );
+                }
+                else
+                {
+                    doc = Utility.TempPath + "ExcOrder" + new Random().Next();
+                    DocumentCreator.Create(
+                        Utility.DocumentsTemplatesPath + "ExcOrder.xml",
+                        doc,
+                        paramaters.ToArray(),
+                        new IEnumerable<string[]>[] { applications.Select(s => new string[] { s.Name }) }
+                        );
+                }
+            }
             Utility.Print(doc + ".docx");
         }
     }

@@ -66,7 +66,7 @@ namespace PK.Forms
             {
                 object[] order = _DB_Connection.Select(
                     DB_Table.ORDERS,
-                    new string[] { "type", "date", "education_form_id", "finance_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
+                    new string[] { "type", "date", "edu_form_id", "edu_source_id", "faculty_short_name",/**/ "direction_id"/**/, "profile_short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("number",Relation.EQUAL,_EditNumber)
@@ -77,32 +77,29 @@ namespace PK.Forms
 
                 string type = order[0].ToString();
                 cbType.SelectedValue = type;
+
+                CheckedEduSource = (uint)order[3];
+                CheckedEduForm = (uint)order[2];
+
+                cbFDP_DropDown(null, null);
+
                 if (type == "hostel")
-                {
-                    throw new NotImplementedException();
-                }
+                    cbFDP.SelectedValue = order[4].ToString();
+                else if (rbPaid.Checked)
+                    cbFDP.SelectedValue = new CB_P_Value(order[4].ToString(), (uint)order[5], order[6].ToString());
                 else
-                {
-                    CheckedEduSource = (uint)order[3];
-                    CheckedEduForm = (uint)order[2];
+                    cbFDP.SelectedValue = new CB_B_Value(order[4].ToString(), (uint)order[5]);
 
-                    cbFDP_DropDown(null, null);
-                    if (rbPaid.Checked)
-                        cbFDP.SelectedValue = new CB_P_Value(order[4].ToString(), (uint)order[5], order[6].ToString());
-                    else
-                        cbFDP.SelectedValue = new CB_B_Value(order[4].ToString(), (uint)order[5]);
+                cbFDP_SelectionChangeCommitted(null, null);
 
-                    cbFDP_SelectionChangeCommitted(null, null);
-
-                    foreach (uint applID in _DB_Connection.Select(
-                        DB_Table.ORDERS_HAS_APPLICATIONS,
-                        new string[] { "applications_id" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, _EditNumber) }
-                        ).Select(s => (uint)s[0]))
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                            if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
-                                row.Cells[dataGridView_Added.Index].Value = true;
-                }
+                foreach (uint applID in _DB_Connection.Select(
+                    DB_Table.ORDERS_HAS_APPLICATIONS,
+                    new string[] { "applications_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, _EditNumber) }
+                    ).Select(s => (uint)s[0]))
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                        if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
+                            row.Cells[dataGridView_Added.Index].Value = true;
 
                 cbType.Enabled = false;
                 gbEduSource.Enabled = false;
@@ -121,17 +118,21 @@ namespace PK.Forms
 
             if (cbType.SelectedValue.ToString() == "hostel")
             {
-                gbEduSource.Enabled = false;
+                rbPaid.Enabled = false;
                 gbEduForm.Enabled = false;
 
                 lFDP.Text = "Факультет:";
+
+                dataGridView_Status.Visible = false;
             }
             else
             {
-                gbEduSource.Enabled = true;
+                rbPaid.Enabled = true;
                 gbEduForm.Enabled = true;
 
                 lFDP.Text = "Направление:";
+
+                dataGridView_Status.Visible = true;
             }
         }
 
@@ -287,42 +288,41 @@ namespace PK.Forms
                 return;
 
             string faculty;
-            uint direction;
-            string profile;
-            if (rbPaid.Checked)
-            {
-                CB_P_Value value = (CB_P_Value)cbFDP.SelectedValue;
-                faculty = value.Item1;
-                direction = value.Item2;
-                profile = value.Item3;
-            }
+            uint? direction = null;
+            string profile = null;
+            if (cbType.SelectedValue.ToString() != "hostel")
+                if (rbPaid.Checked)
+                {
+                    CB_P_Value value = (CB_P_Value)cbFDP.SelectedValue;
+                    faculty = value.Item1;
+                    direction = value.Item2;
+                    profile = value.Item3;
+                }
+                else
+                {
+                    CB_B_Value value = (CB_B_Value)cbFDP.SelectedValue;
+                    faculty = value.Item1;
+                    direction = value.Item2;
+                }
             else
-            {
-                CB_B_Value value = (CB_B_Value)cbFDP.SelectedValue;
-                faculty = value.Item1;
-                direction = value.Item2;
-                profile = null;
-            }
+                faculty = cbFDP.SelectedValue.ToString();
 
             Dictionary<string, object> values = new Dictionary<string, object>
-                            {
-                                { "type", cbType.SelectedValue},
-                                { "date", dtpDate.Value},
-                                { "education_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
-                                { "education_form_id",CheckedEduForm },
-                                { "finance_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
-                                { "finance_source_id", CheckedEduSource},
-                                { "campaign_id",_DB_Helper.CurrentCampaignID },
-                                { "faculty_short_name",faculty },
-                                { "direction_id", direction},
-                                { "profile_short_name",profile }
-                            };
+            {
+                { "type", cbType.SelectedValue},
+                { "date", dtpDate.Value},
+                { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
+                { "edu_form_id",CheckedEduForm },
+                { "edu_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
+                { "edu_source_id", CheckedEduSource},
+                { "campaign_id",_DB_Helper.CurrentCampaignID },
+                { "faculty_short_name",faculty },
+                { "direction_id", direction},
+                { "profile_short_name",profile }
+            };
 
             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
             {
-                if (cbType.SelectedValue.ToString() == "hostel")
-                    throw new NotImplementedException();
-
                 if (_EditNumber != null)
                 {
                     if (tbNumber.Text != _EditNumber)
@@ -380,7 +380,7 @@ namespace PK.Forms
             FillTable(GetAdmissionCandidates());
         }
 
-        private uint[] GetAdmissionCandidates()
+        private IEnumerable<uint> GetAdmissionCandidates()
         {
             if (rbPaid.Checked)
             {
@@ -406,7 +406,7 @@ namespace PK.Forms
                 return GetCampApplsWithStatuses(statuses).Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
                     .Where(appl =>
                     {
-                        var orders = GetAdmExcOrders(appl, buf);
+                        var orders = GetAdmExcOrders(appl);
                         var admOrders = orders.Where(s => s.Item1 == "admission");
                         if (admOrders.Count() == 0)
                             return true;
@@ -416,7 +416,7 @@ namespace PK.Forms
                         DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
 
                         return lastAdmDate < lastExcDate;//TODO <=?
-                    }).ToArray();
+                    });
             }
             else
             {
@@ -434,58 +434,34 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("is_disagreed_date",Relation.EQUAL,null)
                     }).Select(s => (uint)s[0]);
 
-                return GetCampApplsWithStatuses("new", "adm_paid").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1).ToArray();
+                return GetCampApplsWithStatuses("new", "adm_paid").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1);
             }
         }
 
-        private uint[] GetExceptionCandidates()
+        private IEnumerable<uint> GetExceptionCandidates()
         {
+            string[] statuses;
             if (rbPaid.Checked)
-                return GetCampApplsWithStatuses("adm_paid", "adm_both").Where(appl =>
-                {
-                    var orders = GetAdmExcOrders(appl, (CB_P_Value)cbFDP.SelectedValue);
-                    var admOrders = orders.Where(s => s.Item1 == "admission");
-                    if (admOrders.Count() == 0)
-                        return false;
-
-                    DateTime lastAdmDate = admOrders.Max(s => s.Item2);
-                    var excOrders = orders.Where(s => s.Item1 == "exception");
-                    DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
-
-                    return lastAdmDate > lastExcDate;//TODO >=?
-                }).ToArray();
+                statuses = new string[] { "adm_paid", "adm_both" };
             else
+                statuses = new string[] { "adm_budget", "adm_both" };
+
+            return GetCampApplsWithStatuses(statuses).Where(appl =>
             {
-                CB_B_Value buf = (CB_B_Value)cbFDP.SelectedValue;
-                /*var entranceApplications = _DB_Connection.Select(
-                    DB_Table.APPLICATIONS_ENTRANCES,
-                    new string[] { "application_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("edu_form_id",Relation.EQUAL,CheckedEduForm),
-                        new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
-                        new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,buf.Item1),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,buf.Item2),
-                        new Tuple<string, Relation, object>("is_disagreed_date",Relation.NOT_EQUAL,null)
-                    }).Select(s => (uint)s[0]);*/
+                var orders = GetAdmExcOrders(appl);
+                var admOrders = orders.Where(s => s.Item1 == "admission");
+                if (admOrders.Count() == 0)
+                    return false;
 
-                return GetCampApplsWithStatuses("adm_budget", "adm_both")/*.Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)*/.Where(appl =>
-                {
-                    var orders = GetAdmExcOrders(appl, buf);
-                    var admOrders = orders.Where(s => s.Item1 == "admission");
-                    if (admOrders.Count() == 0)
-                        return false;
+                DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+                var excOrders = orders.Where(s => s.Item1 == "exception");
+                DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
 
-                    DateTime lastAdmDate = admOrders.Max(s => s.Item2);
-                    var excOrders = orders.Where(s => s.Item1 == "exception");
-                    DateTime lastExcDate = excOrders.Count() != 0 ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
-
-                    return lastAdmDate > lastExcDate;//TODO >=?
-                }).ToArray();
-            }
+                return lastAdmDate > lastExcDate;//TODO >=?
+            });
         }
 
-        private uint[] GetHostelCandidates()
+        private IEnumerable<uint> GetHostelCandidates()
         {
             return GetCampApplsWithStatuses("adm_budget", "adm_both").Where(appl =>
             {
@@ -518,7 +494,7 @@ namespace PK.Forms
                         ).Count() == 0;
                 else
                     return false;
-            }).ToArray();
+            });
         }
 
         private IEnumerable<uint> GetCampApplsWithStatuses(params string[] statuses)
@@ -530,8 +506,25 @@ namespace PK.Forms
                      ).Where(s => statuses.Contains(s[1].ToString())).Select(s => (uint)s[0]);
         }
 
-        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_P_Value profile)
+        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID)
         {
+            string faculty;
+            uint direction;
+            string profile = null;
+            if (rbPaid.Checked)
+            {
+                CB_P_Value buf = (CB_P_Value)cbFDP.SelectedValue;
+                faculty = buf.Item1;
+                direction = buf.Item2;
+                profile = buf.Item3;
+            }
+            else
+            {
+                CB_B_Value buf = (CB_B_Value)cbFDP.SelectedValue;
+                faculty = buf.Item1;
+                direction = buf.Item2;
+            }
+
             return _DB_Connection.Select(
                 DB_Table.ORDERS_HAS_APPLICATIONS,
                 new string[] { "orders_number" },
@@ -544,40 +537,16 @@ namespace PK.Forms
                                 {
                                     new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
                                     new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                    new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, profile.Item1),
-                                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, profile.Item2),
-                                    new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, profile.Item3)
+                                    new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, CheckedEduForm),
+                                    new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
+                                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, faculty),
+                                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, direction),
+                                    new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, profile)
                                 }),
                             k1 => k1[0],
                             k2 => k2[0],
                             (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
                             );
-        }
-
-        private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, CB_B_Value direction)
-        {
-            return _DB_Connection.Select(
-                         DB_Table.ORDERS_HAS_APPLICATIONS,
-                         new string[] { "orders_number" },
-                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applicationID) }
-                         ).Join(
-                         _DB_Connection.Select(
-                             DB_Table.ORDERS,
-                             new string[] { "number", "type", "date" },
-                             new List<Tuple<string, Relation, object>>
-                             {
-                                 new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
-                                 new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                 new Tuple<string, Relation, object>("education_form_id", Relation.EQUAL, CheckedEduForm),
-                                 new Tuple<string, Relation, object>("finance_source_id",Relation.EQUAL,CheckedEduSource),
-                                 new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, direction.Item1),
-                                 new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, direction.Item2)
-                             }),
-                         k1 => k1[0],
-                         k2 => k2[0],
-                         (s1, s2) => Tuple.Create(s2[1].ToString(), (DateTime)s2[2])
-                         );
         }
 
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID, string faculty)
@@ -594,7 +563,8 @@ namespace PK.Forms
                              {
                                  new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
                                  new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                 new Tuple<string, Relation, object>("education_form_id", Relation.NOT_EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,Classes.DB_Helper.EduSourceP)),
+                                 new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, CheckedEduForm),
+                                 new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
                                  new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, faculty)
                              }),
                          k1 => k1[0],
@@ -603,7 +573,7 @@ namespace PK.Forms
                          );
         }
 
-        private void FillTable(uint[] applications)
+        private void FillTable(IEnumerable<uint> applications)
         {
             dataGridView.Rows.Clear();
 
@@ -618,28 +588,6 @@ namespace PK.Forms
                 );
 
             IEnumerable<Tuple<uint, uint, byte, bool>> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), _DB_Helper.CurrentCampaignID);
-
-            IEnumerable<uint> dir_subjects;
-            if (rbPaid.Checked)
-                dir_subjects = _DB_Connection.Select(
-                    DB_Table.ENTRANCE_TESTS,
-                    new string[] { "subject_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item1),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item2)
-                    }).Select(s => (uint)s[0]);
-            else
-                dir_subjects = _DB_Connection.Select(
-                    DB_Table.ENTRANCE_TESTS,
-                    new string[] { "subject_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item1),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item2)
-                    }).Select(s => (uint)s[0]);
 
             var table = candidates.Join(
                 marks,
@@ -670,20 +618,17 @@ namespace PK.Forms
                 );
             Dictionary<uint, byte> minMarks = new Dictionary<uint, byte>
             {
-                {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
                 {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"),buf[1] },
                 {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"),buf[2] },
                 {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"),buf[3] },
                 {_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
             };
 
-            foreach (var appl in table)
+            if (cbType.SelectedValue.ToString() == "hostel")
             {
-                var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
-                if (appl_dir_subj.Count() == dir_subjects.Count())
+                foreach (var appl in table)
                 {
-                    string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < minMarks[s.Subj]) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
-
                     byte? math = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Mark as byte?;
                     byte? rus = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Mark as byte?;
                     byte? phys = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Mark as byte?;
@@ -702,81 +647,62 @@ namespace PK.Forms
                     if (rus != null && soc != null && foreign != null)
                         ROI = (ushort)(rus + soc + foreign);
 
-                    dataGridView.Rows.Add(false, appl.ApplID, appl.Name, status, MFR, MOR, ROI, math, phys, rus, soc, foreign);
+                    dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, MFR, MOR, ROI, math, phys, rus, soc, foreign);
                 }
             }
-            /*var table = candidates.Join(
-                marks,
-                k1 => k1.ApplID,
-                k2 => k2.Item1,
-                (s1, s2) => new { s1.ApplID, s1.Name, Subj = s2.Item2, Mark = s2.Item3, Checked = s2.Item4 }
-                ).GroupBy(
-                k1 => k1.ApplID,
-                (k, g) =>
-                new
-                {
-                    ApplID = k,
-                    g.First().Name,
-                    Checked = !g.Any(s => s.Checked == false),
-                    Math = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 2).Select(s => s.Mark)), //TODO
-                    Phys = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 10).Select(s => s.Mark)), //TODO
-                    Rus = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 1).Select(s => s.Mark)), //TODO
-                    Soc = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 9).Select(s => s.Mark)), //TODO
-                    For = Classes.Utility.MaxOrNull(g.Where(s => s.Subj == 6).Select(s => s.Mark)) //TODO                    
-                }).Where(
-                s => (s.Math != null || s.Math == null && !dir_subjects.Contains((uint)2)) &&
-                (s.Phys != null || s.Phys == null && !dir_subjects.Contains((uint)10)) &&
-                (s.Rus != null || s.Rus == null && !dir_subjects.Contains((uint)1)) &&
-                (s.Soc != null || s.Soc == null && !dir_subjects.Contains((uint)9)) &&
-                (s.For != null || s.For == null && !dir_subjects.Contains((uint)6))
-                );
-
-            ushort[] minMarks = Array.ConvertAll(
-                _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
-                s => (ushort)s
-                );
-
-            foreach (var appl in table)
+            else
             {
-                bool belowMin = false;
-                if (appl.Math < minMarks[0])
-                    belowMin = true;
-                else if (appl.Rus < minMarks[1])
-                    belowMin = true;
-                else if (appl.Phys < minMarks[2])
-                    belowMin = true;
-                else if (appl.Soc < minMarks[3])
-                    belowMin = true;
-                else if (appl.For < minMarks[4])
-                    belowMin = true;
+                IEnumerable<uint> dir_subjects;
+                if (rbPaid.Checked)
+                    dir_subjects = _DB_Connection.Select(
+                        DB_Table.ENTRANCE_TESTS,
+                        new string[] { "subject_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item1),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_P_Value)cbFDP.SelectedValue).Item2)
+                        }).Select(s => (uint)s[0]);
+                else
+                    dir_subjects = _DB_Connection.Select(
+                        DB_Table.ENTRANCE_TESTS,
+                        new string[] { "subject_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item1),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_B_Value)cbFDP.SelectedValue).Item2)
+                        }).Select(s => (uint)s[0]);
 
-                ushort? MFR = null;
-                if (appl.Math != null && appl.Phys != null && appl.Rus != null)
-                    MFR = (ushort)(appl.Math + appl.Phys + appl.Rus);
+                foreach (var appl in table)
+                {
+                    var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
+                    if (appl_dir_subj.Count() == dir_subjects.Count())
+                    {
+                        string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < minMarks[s.Subj]) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
 
-                ushort? MOR = null;
-                if (appl.Math != null && appl.Soc != null && appl.Rus != null)
-                    MOR = (ushort)(appl.Math + appl.Soc + appl.Rus);
+                        byte? math = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Mark as byte?;
+                        byte? rus = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Mark as byte?;
+                        byte? phys = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Mark as byte?;
+                        byte? soc = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?.Mark as byte?;
+                        byte? foreign = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?.Mark as byte?;
 
-                ushort? ROI = null;
-                if (appl.Rus != null && appl.Soc != null && appl.For != null)
-                    ROI = (ushort)(appl.Rus + appl.Soc + appl.For);
+                        ushort? MFR = null;
+                        if (math != null && phys != null && rus != null)
+                            MFR = (ushort)(math + phys + rus);
 
-                dataGridView.Rows.Add(
-                    false,
-                    appl.ApplID,
-                    appl.Name,
-                    appl.Checked ? (belowMin ? "Ниже мин." : "OK") : "Непров. ЕГЭ",
-                    MFR,
-                    MOR,
-                    ROI,
-                    appl.Math,
-                    appl.Phys,
-                    appl.Rus,
-                    appl.Soc,
-                    appl.For
-                    );
-            }*/
+                        ushort? MOR = null;
+                        if (math != null && soc != null && rus != null)
+                            MOR = (ushort)(math + soc + rus);
+
+                        ushort? ROI = null;
+                        if (rus != null && soc != null && foreign != null)
+                            ROI = (ushort)(rus + soc + foreign);
+
+                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name, status, MFR, MOR, ROI, math, phys, rus, soc, foreign);
+                    }
+                }
+            }
 
             dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
