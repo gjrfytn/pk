@@ -16,8 +16,7 @@ namespace PK.Forms
             ADM_BOTH = ADM_BUDGET | ADM_PAID,
         }
 
-        private readonly Tuple<string, APPL_STATUS>[] _Statuses =
-            {
+        private readonly Tuple<string, APPL_STATUS>[] _Statuses =            {
             Tuple.Create( "new" ,APPL_STATUS.NEW ),
             Tuple.Create(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
             Tuple.Create(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
@@ -47,6 +46,14 @@ namespace PK.Forms
                 MessageBox.Show("Не заполнен номер протокола.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            if (_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Any(s => s[0].ToString() == tbNumber.Text))
+            {
+                MessageBox.Show("Протокол с таким номером уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
 
             Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
             object[] buf = _DB_Connection.Select(
@@ -140,6 +147,8 @@ namespace PK.Forms
 
                 transaction.Commit();
             }
+
+            Cursor.Current = Cursors.Default;
 
             DialogResult = DialogResult.OK;
         }

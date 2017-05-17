@@ -77,7 +77,9 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Classes.OutDocuments.Order(_DB_Connection, SelectedOrderNumber);
+            Cursor.Current = Cursors.Default;
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)

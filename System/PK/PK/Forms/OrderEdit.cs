@@ -165,6 +165,8 @@ namespace PK.Forms
 
         private void cbFDP_DropDown(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             int selectedIndex = cbFDP.SelectedIndex;
 
             if (cbType.SelectedValue.ToString() == "hostel")
@@ -228,16 +230,22 @@ namespace PK.Forms
             }
 
             cbFDP.SelectedIndex = selectedIndex;
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void cbFDP_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             if (cbType.SelectedValue.ToString() == "admission")
                 FillTable(GetAdmissionCandidates());
             else if (cbType.SelectedValue.ToString() == "exception")
                 FillTable(GetExceptionCandidates());
             else
                 FillTable(GetHostelCandidates());
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -284,8 +292,16 @@ namespace PK.Forms
                 return;
             }
 
+            if (_EditNumber != tbNumber.Text && _DB_Connection.Select(DB_Table.ORDERS, "number").Any(s => s[0].ToString() == tbNumber.Text))
+            {
+                MessageBox.Show("Приказ с таким номером уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (!(bool)dtpDate.Tag && !Classes.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
                 return;
+
+            Cursor.Current = Cursors.WaitCursor;
 
             string faculty;
             uint? direction = null;
@@ -371,13 +387,17 @@ namespace PK.Forms
                 transaction.Commit();
             }
 
+            Cursor.Current = Cursors.Default;
+
             Classes.Utility.ShowChangesSavedMessage();
             DialogResult = DialogResult.OK;
         }
 
         private void cbShowAdmitted_CheckedChanged(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             FillTable(GetAdmissionCandidates());
+            Cursor.Current = Cursors.Default;
         }
 
         private IEnumerable<uint> GetAdmissionCandidates()

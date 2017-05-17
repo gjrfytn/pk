@@ -49,6 +49,8 @@ namespace PK.Forms
             if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
                 return;
 
+            Cursor.Current = Cursors.WaitCursor;
+
             MySqlConnection connection = new MySqlConnection(Properties.Settings.Default.kladr_CS + " user = " + _User + "; password = " + _Password + ";");
             connection.Open();
 
@@ -57,7 +59,6 @@ namespace PK.Forms
                 MySqlCommand cmd = new MySqlCommand("", connection, transaction);
                 try
                 {
-                    Cursor = Cursors.WaitCursor;
                     statusStrip_Label.Text = "Очистка БД...";
 
                     cmd.CommandText = "DELETE FROM subjects;";
@@ -150,10 +151,11 @@ namespace PK.Forms
                 }
                 finally
                 {
-                    Cursor = Cursors.Default;
                     statusStrip_Label.Text = "Ожидание выбора...";
                     statusStrip_ProgressBar.Visible = false;
                     statusStrip_ProgressLabel.Text = "";
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }

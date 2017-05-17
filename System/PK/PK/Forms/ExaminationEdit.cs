@@ -101,14 +101,16 @@ namespace PK.Forms
             if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !Classes.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))
                 return;
 
+            Cursor.Current = Cursors.WaitCursor;
+
             Dictionary<string, object> data = new Dictionary<string, object>
-                    {
-                        { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
-                        {"subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
-                        {"date",dtpDate.Value},
-                        {"reg_start_date",dtpRegStartDate.Value},
-                        {"reg_end_date",dtpRegEndDate.Value}
-                    };
+            {
+                { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
+                { "subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
+                { "date",dtpDate.Value},
+                { "reg_start_date",dtpRegStartDate.Value},
+                { "reg_end_date",dtpRegEndDate.Value}
+            };
 
             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
             {
@@ -144,9 +146,9 @@ namespace PK.Forms
                             DB_Table.EXAMINATIONS_AUDIENCES,
                             new Dictionary<string, object>
                             {
-                                        { "examination_id", id },
-                                        { "number", row.Cells[0].Value },
-                                        { "capacity", row.Cells[1].Value }
+                                { "examination_id", id },
+                                { "number", row.Cells[0].Value },
+                                { "capacity", row.Cells[1].Value }
                             },
                             transaction
                             );
@@ -154,6 +156,8 @@ namespace PK.Forms
 
                 transaction.Commit();
             }
+
+            Cursor.Current = Cursors.Default;
 
             Classes.Utility.ShowChangesSavedMessage();
             DialogResult = DialogResult.OK;

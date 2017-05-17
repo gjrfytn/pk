@@ -20,6 +20,7 @@ namespace PK.Forms
         private void toolStrip_Update_Click(object sender, System.EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+
             if (Classes.Utility.TryAccessFIS_Function((login, password) =>
             {
                 if (_Updater == null)

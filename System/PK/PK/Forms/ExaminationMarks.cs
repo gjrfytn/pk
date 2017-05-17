@@ -55,6 +55,8 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             if (dataGridView.IsCurrentCellDirty)
                 dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
@@ -87,6 +89,8 @@ namespace PK.Forms
             string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
             Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             Classes.Utility.Print(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void toolStrip_Clear_Click(object sender, EventArgs e)

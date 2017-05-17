@@ -27,13 +27,19 @@ namespace PK.Forms
 
         private void bPrint_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Classes.Utility.Print(MakeDocuments());
+            Cursor.Current = Cursors.Default;
+
             DialogResult = DialogResult.OK;
         }
 
         private void bOpen_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             System.Diagnostics.Process.Start(MakeDocuments());
+            Cursor.Current = Cursors.Default;
+
             DialogResult = DialogResult.OK;
         }
 

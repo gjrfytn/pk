@@ -73,11 +73,15 @@ namespace PK.Forms
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName))
                 {
                     foreach (EGE_Result appl in _ApplsEgeResults)
                         writer.WriteLine(appl.Item4 + "%" + appl.Item5 + "%" + appl.Item6 + "%" + appl.Item2 + "%" + appl.Item3);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -85,6 +89,8 @@ namespace PK.Forms
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                Cursor.Current = Cursors.WaitCursor;
+
                 List<string[]> lines = new List<string[]>();
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName))
                 {
@@ -119,6 +125,8 @@ namespace PK.Forms
                             });
                     }
                 }
+
+                Cursor.Current = Cursors.Default;
             }
         }
     }

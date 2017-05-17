@@ -27,6 +27,8 @@ namespace PK.Forms
 
         private void bExport_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             Classes.Utility.TryAccessFIS_Function((login, password) =>
             {
                 if (Classes.Utility.ShowUnrevertableActionMessageBox())
@@ -43,6 +45,8 @@ namespace PK.Forms
                         MessageBoxIcon.Information
                         );
             });
+
+            Cursor.Current = Cursors.Default;
         }
     }
 }

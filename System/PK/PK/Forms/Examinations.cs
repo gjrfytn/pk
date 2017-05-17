@@ -89,6 +89,8 @@ namespace PK.Forms
             if (ExaminationHasMarks(SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
 
+            Cursor.Current = Cursors.WaitCursor;
+
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "registration_time" },
@@ -167,6 +169,8 @@ namespace PK.Forms
                     );
 
             ToggleButtons();
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void toolStrip_Marks_Click(object sender, EventArgs e)

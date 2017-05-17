@@ -106,6 +106,8 @@ namespace PK.Forms
 
         private void bAlphaCodes_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             string doc = Classes.Utility.TempPath + "AlphaCodes" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
@@ -114,10 +116,14 @@ namespace PK.Forms
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[2] }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void bAlphaAuditories_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             string doc = Classes.Utility.TempPath + "AlphaAuditories" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
@@ -126,10 +132,14 @@ namespace PK.Forms
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[3] }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void bAbitAudDistib_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             List<string[]> distribTable = new List<string[]>(_Audiences.Count);
             foreach (object[] aud in _Audiences)
             {
@@ -157,10 +167,14 @@ namespace PK.Forms
                new List<string[]>[] { distribTable }
                );
             Classes.Utility.Print(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void bExamCardsSheet_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             foreach (Tuple<char, string> group in _Distribution)
             {
                 string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
@@ -174,6 +188,8 @@ namespace PK.Forms
                     });
                 Classes.Utility.Print(doc + ".docx");
             }
+
+            Cursor.Current = Cursors.Default;
         }
     }
 }
