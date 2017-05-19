@@ -325,7 +325,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "QuotDocs";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Особая квота";
             this.pOrphanhood.ResumeLayout(false);
             this.pOrphanhood.PerformLayout();

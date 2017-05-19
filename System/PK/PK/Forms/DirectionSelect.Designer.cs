@@ -117,7 +117,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DirectionSelect";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Выбор направления";
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirectionSelection)).EndInit();
             this.ResumeLayout(false);

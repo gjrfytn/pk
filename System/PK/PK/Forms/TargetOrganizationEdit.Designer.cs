@@ -74,7 +74,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TargetOrganizationEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Создание целевой организации";
             this.ResumeLayout(false);
             this.PerformLayout();

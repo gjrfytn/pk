@@ -94,7 +94,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TargetOrganizationSelect";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Выбор целевой организации";
             this.ResumeLayout(false);
             this.PerformLayout();

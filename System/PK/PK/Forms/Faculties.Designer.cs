@@ -180,7 +180,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Faculties";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Факультеты";
             ((System.ComponentModel.ISupportInitialize)(this.dgvFaculties)).EndInit();
             this.ResumeLayout(false);

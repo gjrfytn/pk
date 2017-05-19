@@ -152,7 +152,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Campaigns";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Приемные кампании";
             ((System.ComponentModel.ISupportInitialize)(this.dgvCampaigns)).EndInit();
             this.ResumeLayout(false);

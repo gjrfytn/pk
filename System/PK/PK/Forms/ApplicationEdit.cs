@@ -111,6 +111,8 @@ namespace PK.Forms
             rbCertificate.Checked = false;
             rbCertificate.Checked = true;
             cbRegion.Items.AddRange(_KLADR.GetRegions().ToArray());
+            dtpDateOfBirth.MaxDate = DateTime.Now;
+            dtpIDDocDate.MaxDate = DateTime.Now;
 
             for (int i = DateTime.Now.Year; i >= 1950; i--)
                 cbGraduationYear.Items.Add(i);
@@ -510,6 +512,7 @@ namespace PK.Forms
         {
             if (_DistrictNeedsReload)
             {
+                _DistrictNeedsReload = false;
                 cbDistrict.Items.Clear();
                 cbDistrict.Items.AddRange(_KLADR.GetDistricts(cbRegion.Text).ToArray());
 
@@ -517,7 +520,6 @@ namespace PK.Forms
                 {
                     toolTip.Show("Не найдено адресов.", cbDistrict, 3000);
                 }
-                _DistrictNeedsReload = false;
             }
         }
         
@@ -525,6 +527,7 @@ namespace PK.Forms
         {
             if (_TownNeedsReload)
             {
+                _TownNeedsReload = false;
                 cbTown.Items.Clear();
                 cbTown.Items.AddRange(_KLADR.GetTownsAndSettlements(cbRegion.Text, cbDistrict.Text).ToArray());
 
@@ -539,6 +542,7 @@ namespace PK.Forms
         {
             if (_StreetNeedsReload)
             {
+                _StreetNeedsReload = false;
                 cbStreet.Items.Clear();                
                 cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text).ToArray());
 
@@ -546,7 +550,6 @@ namespace PK.Forms
                 {
                     toolTip.Show("Не найдено адресов.", cbStreet, 3000);
                 }
-                _StreetNeedsReload = false;
             }
         }
 
@@ -554,6 +557,7 @@ namespace PK.Forms
         {
             if (_HouseNeedsReload)
             {
+                _HouseNeedsReload = false;
                 cbHouse.Items.Clear();
                 cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text).ToArray());
 
@@ -561,7 +565,6 @@ namespace PK.Forms
                 {
                     toolTip.Show("Не найдено адресов.", cbHouse, 3000);
                 }
-                _HouseNeedsReload = false;
             }
         }
 
@@ -1049,7 +1052,7 @@ namespace PK.Forms
                     if (combo != null && combo.SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)combo.SelectedValue).Item1).Item2))
                         cbMedCertificate.Enabled = true;
                 }
-            if (!cbMedCertificate.Enabled)
+            if (!cbMedCertificate.Enabled && !_Loading)
                 cbMedCertificate.Checked = false;
         }
 
@@ -1066,6 +1069,8 @@ namespace PK.Forms
                 SaveSport();
             if (cbMADIOlympiad.Checked || cbOlympiad.Checked)
                 SaveOlympic();
+            if (cbMedCertificate.Checked)
+                SaveCertificate();
             SaveDirections();
             Cursor.Current = Cursors.Default;
         }
@@ -1385,6 +1390,13 @@ namespace PK.Forms
                         { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS} , { "subject_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString())} ,
                         { "value", row.Cells[3].Value}, { "checked", false } });
             }
+        }
+
+        private void SaveCertificate()
+        {
+            uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" } });
+            _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", spravkaID }, { "name", Classes.DB_Helper.MedCertificate } });
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", spravkaID } });
         }
 
         private void SaveDirections()
@@ -1714,12 +1726,20 @@ namespace PK.Forms
                 }
                 else if (document[1].ToString() == "medical")
                 {
-                    _QuoteDoc.cause = "Медицинские показатели";
-                    _QuoteDoc.medCause = "Заключение психолого-медико-педагогической комиссии";
-                    cbQuote.Checked = true;
-                    _QuoteDoc.medDocSerie = document[2].ToString();
-                    _QuoteDoc.medDocNumber = document[3].ToString();
-                    object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
+                    List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                    });
+                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        cbMedCertificate.Checked = true;
+                    else
+                    {
+                        _QuoteDoc.cause = "Медицинские показатели";
+                        _QuoteDoc.medCause = "Заключение психолого-медико-педагогической комиссии";
+                        cbQuote.Checked = true;
+                        _QuoteDoc.medDocSerie = document[2].ToString();
+                        _QuoteDoc.medDocNumber = document[3].ToString();
+                        object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("id", Relation.EQUAL,
                     (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
@@ -1727,8 +1747,9 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                         new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
                     }))[0][0])})[0];
-                    _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
-                    _QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
+                        _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
+                        _QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
+                    }
                 }
                 else if (document[1].ToString() == "olympic")
                 {
@@ -2114,6 +2135,7 @@ namespace PK.Forms
             bool sportFound = false;
             bool MADIOlympFound = false;
             bool olympFound = false;
+            bool certificateFound = false;
 
             if (appDocumentsLinks.Count > 0)
             {
@@ -2288,7 +2310,17 @@ namespace PK.Forms
 
                     else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
                     {
-                        if ((cbQuote.Checked) && (document[1].ToString() == "orphan") && (_QuoteDoc.cause == "Сиротство"))
+                        List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                            });
+                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        {
+                            certificateFound = true;
+                            if (!cbMedCertificate.Checked)
+                                _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                        }
+                        else if ((cbQuote.Checked) && (document[1].ToString() == "orphan") && (_QuoteDoc.cause == "Сиротство"))
                         {
                             qouteFound = true;
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", _QuoteDoc.orphanhoodDocDate }, { "organization", _QuoteDoc.orphanhoodDocOrg } },
@@ -2389,8 +2421,7 @@ namespace PK.Forms
                             _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
                         }
                     }
-                }
-				
+                }				
                 if (cbQuote.Checked && !qouteFound)
                 {
                     SaveQuote();
@@ -2406,6 +2437,10 @@ namespace PK.Forms
                 if (cbSport.Checked && !sportFound)
                 {
                     SaveSport();
+                }
+                if (cbMedCertificate.Checked && !certificateFound)
+                {
+                    SaveCertificate();
                 }
             }
         }
@@ -2504,7 +2539,8 @@ namespace PK.Forms
                             if ((comboBox != null) && (comboBox.Name == "cbDirection" + cb.Name.Substring(8)) && (comboBox.SelectedIndex != -1))
                                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                                     new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
-                                                { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", eduForm }, { "edu_source_id", eduSource } });
+                                    { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", eduForm }, { "edu_source_id", eduSource }, { "application_id", _ApplicationID } });
+                                        
                         }
                     }
                 }
@@ -2526,7 +2562,7 @@ namespace PK.Forms
                                     if ((uint)record[2] == eduForm && (uint)record[3] == eduSource && record[0].ToString() == ((DirTuple)combo.SelectedValue).Item2
                                         && (uint)record[1] == ((DirTuple)combo.SelectedValue).Item1 && record[4] as DateTime? != null && record[5] as DateTime? == null)
                                         _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
-                                    new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)combo.SelectedValue).Item2 },
+                                    new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)combo.SelectedValue).Item2 }, { "application_id", _ApplicationID },
                                                 { "direction_id", ((DirTuple)combo.SelectedValue).Item1 }, { "edu_form_id", eduForm }, { "edu_source_id", eduSource } });
                         }
                     }
@@ -2759,16 +2795,17 @@ namespace PK.Forms
 
         private void BlockDirChange()
         {
-            foreach (TabPage page in tcDirections.TabPages)
-                foreach (Control control in page.Controls)
-                {
-                    ComboBox cb = control as ComboBox;
-                    if (cb != null)
-                        cb.Enabled = false;
-                    Button bt = control as Button;
-                    if (bt != null)
-                        bt.Enabled = false;
-                }
+            //foreach (TabPage page in tcDirections.TabPages)
+            //    if (page.Name.Split('_')[1] != "paid")
+            //        foreach (Control control in page.Controls)
+            //        {
+            //            ComboBox cb = control as ComboBox;
+            //            if (cb != null)
+            //                cb.Enabled = false;
+            //            Button bt = control as Button;
+            //            if (bt != null)
+            //                bt.Enabled = false;
+            //        }
         }
     }
 }

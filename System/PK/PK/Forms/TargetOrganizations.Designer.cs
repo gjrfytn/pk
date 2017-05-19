@@ -109,7 +109,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TargetOrganizations";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Целевые организации";
             ((System.ComponentModel.ISupportInitialize)(this.dgvTargetOrganizations)).EndInit();
             this.ResumeLayout(false);

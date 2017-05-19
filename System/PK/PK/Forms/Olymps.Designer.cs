@@ -265,7 +265,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Olymps";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Олимпиады и конференции";
             this.ResumeLayout(false);
             this.PerformLayout();

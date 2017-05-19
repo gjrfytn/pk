@@ -252,7 +252,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "InstitutionAchievementsEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Индивидуальные достижения";
             ((System.ComponentModel.ISupportInitialize)(this.dgvAchievements)).EndInit();
             this.ResumeLayout(false);

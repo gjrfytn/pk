@@ -67,7 +67,7 @@ namespace PK.Forms
 
         private void cbMedCause_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbMedCause.SelectedItem.ToString() == "Справква об установлении инвалидности")
+            if (cbMedCause.SelectedItem.ToString() == "Справка об установлении инвалидности")
             {
                 tbMedDocSeries.Enabled = true;
                 cbDisabilityGroup.Enabled = true;
@@ -115,7 +115,7 @@ namespace PK.Forms
             else if (cbCause.SelectedItem.ToString() == "Медицинские показатели")
             {
                 _Document.cause = cbCause.SelectedItem.ToString();
-                if (cbMedCause.SelectedItem.ToString() == "Справква об установлении инвалидности")
+                if (cbMedCause.SelectedItem.ToString() == "Справка об установлении инвалидности")
                 {
                     if ((tbMedDocSeries.Text == "") || (tbMedDocNumber.Text == "") || (cbDisabilityGroup.SelectedIndex == -1))
                         MessageBox.Show("Все доступные поля должны быть заполнены");

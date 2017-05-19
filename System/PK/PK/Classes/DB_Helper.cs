@@ -34,6 +34,8 @@ namespace PK.Classes
         public const string SportDocTypeOlympic = "Диплом чемпиона/призера Олимпийских игр";
         public const string SportDocTypeParalympic = "Диплом чемпиона/призера Паралимпийских игр";
         public const string SportDocTypeDeaflympic = "Диплом чемпиона/призера Сурдлимпийских игр";
+
+        public const string MedCertificate = "Медицинская справка";
         #endregion
 
         public uint CurrentCampaignID

@@ -183,7 +183,7 @@
             this.btFillRand.Location = new System.Drawing.Point(1187, 24);
             this.btFillRand.Name = "btFillRand";
             this.btFillRand.Size = new System.Drawing.Size(93, 44);
-            this.btFillRand.TabIndex = 15;
+            this.btFillRand.TabIndex = 7;
             this.btFillRand.Text = "Заполнить случайно";
             this.btFillRand.UseVisualStyleBackColor = false;
             this.btFillRand.Click += new System.EventHandler(this.btFillRand_Click);
@@ -195,7 +195,7 @@
             this.cbSpecialRights.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialRights.Name = "cbSpecialRights";
             this.cbSpecialRights.Size = new System.Drawing.Size(120, 20);
-            this.cbSpecialRights.TabIndex = 17;
+            this.cbSpecialRights.TabIndex = 6;
             this.cbSpecialRights.Text = "Особые права";
             this.cbSpecialRights.UseVisualStyleBackColor = true;
             this.cbSpecialRights.CheckedChanged += new System.EventHandler(this.cbSpecialRights_CheckedChanged);
@@ -207,7 +207,7 @@
             this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
             this.cbHostelNeeded.Name = "cbHostelNeeded";
             this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
-            this.cbHostelNeeded.TabIndex = 16;
+            this.cbHostelNeeded.TabIndex = 5;
             this.cbHostelNeeded.Text = "Нуждается в общежитии";
             this.cbHostelNeeded.UseVisualStyleBackColor = true;
             // 
@@ -216,7 +216,7 @@
             this.tbSpecialty.Location = new System.Drawing.Point(196, 53);
             this.tbSpecialty.Name = "tbSpecialty";
             this.tbSpecialty.Size = new System.Drawing.Size(329, 22);
-            this.tbSpecialty.TabIndex = 15;
+            this.tbSpecialty.TabIndex = 4;
             // 
             // label25
             // 
@@ -231,9 +231,10 @@
             // 
             this.dtpDiplomaDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDiplomaDate.Location = new System.Drawing.Point(1014, 21);
+            this.dtpDiplomaDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpDiplomaDate.Name = "dtpDiplomaDate";
             this.dtpDiplomaDate.Size = new System.Drawing.Size(109, 22);
-            this.dtpDiplomaDate.TabIndex = 13;
+            this.dtpDiplomaDate.TabIndex = 3;
             // 
             // label24
             // 
@@ -249,7 +250,7 @@
             this.tbInstitution.Location = new System.Drawing.Point(102, 21);
             this.tbInstitution.Name = "tbInstitution";
             this.tbInstitution.Size = new System.Drawing.Size(234, 22);
-            this.tbInstitution.TabIndex = 11;
+            this.tbInstitution.TabIndex = 0;
             this.tbInstitution.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
             // 
             // label21
@@ -267,7 +268,7 @@
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.Name = "tbEduDocNumber";
             this.tbEduDocNumber.Size = new System.Drawing.Size(148, 22);
-            this.tbEduDocNumber.TabIndex = 7;
+            this.tbEduDocNumber.TabIndex = 2;
             // 
             // label23
             // 
@@ -295,7 +296,7 @@
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.Name = "tbEduDocSeries";
             this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
-            this.tbEduDocSeries.TabIndex = 6;
+            this.tbEduDocSeries.TabIndex = 1;
             // 
             // gbAttributes
             // 
@@ -304,7 +305,7 @@
             this.gbAttributes.Location = new System.Drawing.Point(0, 21);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Size = new System.Drawing.Size(324, 45);
-            this.gbAttributes.TabIndex = 2;
+            this.gbAttributes.TabIndex = 0;
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Индивидуальные достижения";
             // 
@@ -315,7 +316,7 @@
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
             this.cbTarget.Size = new System.Drawing.Size(128, 20);
-            this.cbTarget.TabIndex = 7;
+            this.cbTarget.TabIndex = 1;
             this.cbTarget.Text = "Целевой прием";
             this.cbTarget.UseVisualStyleBackColor = true;
             this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
@@ -384,7 +385,7 @@
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
             this.mtbEMail.Size = new System.Drawing.Size(141, 22);
-            this.mtbEMail.TabIndex = 29;
+            this.mtbEMail.TabIndex = 2;
             // 
             // label31
             // 
@@ -403,7 +404,7 @@
             this.mtbHomePhone.Mask = "(999) 999-99-99";
             this.mtbHomePhone.Name = "mtbHomePhone";
             this.mtbHomePhone.Size = new System.Drawing.Size(116, 22);
-            this.mtbHomePhone.TabIndex = 26;
+            this.mtbHomePhone.TabIndex = 1;
             this.mtbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // mtbMobilePhone
@@ -413,7 +414,7 @@
             this.mtbMobilePhone.Mask = "(999) 999-99-99";
             this.mtbMobilePhone.Name = "mtbMobilePhone";
             this.mtbMobilePhone.Size = new System.Drawing.Size(118, 22);
-            this.mtbMobilePhone.TabIndex = 25;
+            this.mtbMobilePhone.TabIndex = 0;
             this.mtbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             // 
             // label30
@@ -447,7 +448,7 @@
             this.tcPrograms.Name = "tcPrograms";
             this.tcPrograms.SelectedIndex = 0;
             this.tcPrograms.Size = new System.Drawing.Size(1334, 90);
-            this.tcPrograms.TabIndex = 7;
+            this.tcPrograms.TabIndex = 4;
             // 
             // tcPrograms_budget_o
             // 
@@ -658,7 +659,7 @@
             this.gbApplication.Location = new System.Drawing.Point(2, 272);
             this.gbApplication.Name = "gbApplication";
             this.gbApplication.Size = new System.Drawing.Size(1346, 210);
-            this.gbApplication.TabIndex = 8;
+            this.gbApplication.TabIndex = 2;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
@@ -668,7 +669,7 @@
             this.textBox2.Location = new System.Drawing.Point(793, 37);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(53, 22);
-            this.textBox2.TabIndex = 11;
+            this.textBox2.TabIndex = 2;
             // 
             // textBox1
             // 
@@ -676,7 +677,7 @@
             this.textBox1.Location = new System.Drawing.Point(456, 37);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(53, 22);
-            this.textBox1.TabIndex = 10;
+            this.textBox1.TabIndex = 1;
             // 
             // label36
             // 
@@ -702,7 +703,7 @@
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
-            this.btClose.TabIndex = 11;
+            this.btClose.TabIndex = 7;
             this.btClose.Text = "Закрыть";
             this.btClose.UseVisualStyleBackColor = true;
             this.btClose.Click += new System.EventHandler(this.btClose_Click);
@@ -713,7 +714,7 @@
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(177, 28);
-            this.btSave.TabIndex = 9;
+            this.btSave.TabIndex = 6;
             this.btSave.Text = "Сохранить заявление";
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
@@ -725,7 +726,7 @@
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(197, 28);
-            this.btPrint.TabIndex = 10;
+            this.btPrint.TabIndex = 4;
             this.btPrint.Text = "Распечатать документы";
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
@@ -744,29 +745,30 @@
             this.gbWithdrawDocs.Name = "gbWithdrawDocs";
             this.gbWithdrawDocs.Padding = new System.Windows.Forms.Padding(4);
             this.gbWithdrawDocs.Size = new System.Drawing.Size(789, 74);
-            this.gbWithdrawDocs.TabIndex = 12;
+            this.gbWithdrawDocs.TabIndex = 3;
             this.gbWithdrawDocs.TabStop = false;
             this.gbWithdrawDocs.Text = "Забираемые документы";
             // 
             // cbAgreed
             // 
             this.cbAgreed.AutoSize = true;
+            this.cbAgreed.Enabled = false;
             this.cbAgreed.Location = new System.Drawing.Point(509, 23);
             this.cbAgreed.Margin = new System.Windows.Forms.Padding(4);
             this.cbAgreed.Name = "cbAgreed";
             this.cbAgreed.Size = new System.Drawing.Size(274, 20);
-            this.cbAgreed.TabIndex = 1;
+            this.cbAgreed.TabIndex = 3;
             this.cbAgreed.Text = "Заявление о согласии на зачисление";
             this.cbAgreed.UseVisualStyleBackColor = true;
             // 
             // cbPhotos
             // 
             this.cbPhotos.AutoSize = true;
-            this.cbPhotos.Location = new System.Drawing.Point(344, 51);
+            this.cbPhotos.Location = new System.Drawing.Point(509, 51);
             this.cbPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.cbPhotos.Name = "cbPhotos";
             this.cbPhotos.Size = new System.Drawing.Size(143, 20);
-            this.cbPhotos.TabIndex = 8;
+            this.cbPhotos.TabIndex = 6;
             this.cbPhotos.Text = "4 фотографии 3х4";
             this.cbPhotos.UseVisualStyleBackColor = true;
             // 
@@ -774,11 +776,11 @@
             // 
             this.cbMedCertificate.AutoSize = true;
             this.cbMedCertificate.Enabled = false;
-            this.cbMedCertificate.Location = new System.Drawing.Point(161, 51);
+            this.cbMedCertificate.Location = new System.Drawing.Point(223, 51);
             this.cbMedCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.cbMedCertificate.Name = "cbMedCertificate";
             this.cbMedCertificate.Size = new System.Drawing.Size(172, 20);
-            this.cbMedCertificate.TabIndex = 3;
+            this.cbMedCertificate.TabIndex = 5;
             this.cbMedCertificate.Text = "Медицинская справка";
             this.cbMedCertificate.UseVisualStyleBackColor = true;
             // 
@@ -790,7 +792,7 @@
             this.cbDirectionDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirectionDoc.Name = "cbDirectionDoc";
             this.cbDirectionDoc.Size = new System.Drawing.Size(138, 20);
-            this.cbDirectionDoc.TabIndex = 2;
+            this.cbDirectionDoc.TabIndex = 4;
             this.cbDirectionDoc.Text = "Направление ПК";
             this.cbDirectionDoc.UseVisualStyleBackColor = true;
             // 
@@ -802,7 +804,7 @@
             this.cbEduDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbEduDoc.Name = "cbEduDoc";
             this.cbEduDoc.Size = new System.Drawing.Size(126, 20);
-            this.cbEduDoc.TabIndex = 5;
+            this.cbEduDoc.TabIndex = 2;
             this.cbEduDoc.Text = "Копия диплома";
             this.cbEduDoc.UseVisualStyleBackColor = true;
             // 
@@ -813,7 +815,7 @@
             this.cbPassportCopy.Margin = new System.Windows.Forms.Padding(4);
             this.cbPassportCopy.Name = "cbPassportCopy";
             this.cbPassportCopy.Size = new System.Drawing.Size(131, 20);
-            this.cbPassportCopy.TabIndex = 4;
+            this.cbPassportCopy.TabIndex = 1;
             this.cbPassportCopy.Text = "Копия паспорта";
             this.cbPassportCopy.UseVisualStyleBackColor = true;
             // 
@@ -864,7 +866,7 @@
             this.gbPassport.Name = "gbPassport";
             this.gbPassport.Padding = new System.Windows.Forms.Padding(4);
             this.gbPassport.Size = new System.Drawing.Size(1346, 182);
-            this.gbPassport.TabIndex = 13;
+            this.gbPassport.TabIndex = 0;
             this.gbPassport.TabStop = false;
             this.gbPassport.Text = "Из паспорта";
             // 
@@ -912,7 +914,7 @@
             this.cbStreet.Location = new System.Drawing.Point(714, 18);
             this.cbStreet.Name = "cbStreet";
             this.cbStreet.Size = new System.Drawing.Size(165, 24);
-            this.cbStreet.TabIndex = 31;
+            this.cbStreet.TabIndex = 3;
             this.cbStreet.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
             // 
@@ -924,7 +926,7 @@
             this.cbTown.Location = new System.Drawing.Point(489, 18);
             this.cbTown.Name = "cbTown";
             this.cbTown.Size = new System.Drawing.Size(163, 24);
-            this.cbTown.TabIndex = 30;
+            this.cbTown.TabIndex = 2;
             this.cbTown.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
             // 
@@ -936,7 +938,7 @@
             this.cbDistrict.Location = new System.Drawing.Point(276, 18);
             this.cbDistrict.Name = "cbDistrict";
             this.cbDistrict.Size = new System.Drawing.Size(154, 24);
-            this.cbDistrict.TabIndex = 3;
+            this.cbDistrict.TabIndex = 1;
             this.cbDistrict.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
             // 
@@ -948,7 +950,7 @@
             this.cbRegion.Location = new System.Drawing.Point(62, 18);
             this.cbRegion.Name = "cbRegion";
             this.cbRegion.Size = new System.Drawing.Size(150, 24);
-            this.cbRegion.TabIndex = 29;
+            this.cbRegion.TabIndex = 0;
             this.cbRegion.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             // 
             // cbHouse
@@ -959,7 +961,7 @@
             this.cbHouse.Location = new System.Drawing.Point(924, 18);
             this.cbHouse.Name = "cbHouse";
             this.cbHouse.Size = new System.Drawing.Size(108, 24);
-            this.cbHouse.TabIndex = 29;
+            this.cbHouse.TabIndex = 4;
             this.cbHouse.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
             // 
@@ -968,7 +970,7 @@
             this.btGetIndex.Location = new System.Drawing.Point(1246, 20);
             this.btGetIndex.Name = "btGetIndex";
             this.btGetIndex.Size = new System.Drawing.Size(20, 23);
-            this.btGetIndex.TabIndex = 29;
+            this.btGetIndex.TabIndex = 6;
             this.btGetIndex.Text = ">";
             this.btGetIndex.UseVisualStyleBackColor = true;
             this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
@@ -981,7 +983,7 @@
             this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
             this.tbPostcode.Size = new System.Drawing.Size(69, 22);
-            this.tbPostcode.TabIndex = 6;
+            this.tbPostcode.TabIndex = 7;
             // 
             // label20
             // 
@@ -1104,6 +1106,7 @@
             this.dtpDateOfBirth.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDateOfBirth.Location = new System.Drawing.Point(389, 109);
             this.dtpDateOfBirth.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpDateOfBirth.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpDateOfBirth.Name = "dtpDateOfBirth";
             this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 22);
             this.dtpDateOfBirth.TabIndex = 10;
@@ -1225,6 +1228,7 @@
             this.dtpIDDocDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpIDDocDate.Location = new System.Drawing.Point(850, 50);
             this.dtpIDDocDate.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpIDDocDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpIDDocDate.Name = "dtpIDDocDate";
             this.dtpIDDocDate.Size = new System.Drawing.Size(108, 22);
             this.dtpIDDocDate.TabIndex = 4;
@@ -1310,7 +1314,7 @@
             this.btWithdraw.Location = new System.Drawing.Point(1125, 492);
             this.btWithdraw.Name = "btWithdraw";
             this.btWithdraw.Size = new System.Drawing.Size(160, 28);
-            this.btWithdraw.TabIndex = 14;
+            this.btWithdraw.TabIndex = 5;
             this.btWithdraw.Text = "Забрать документы";
             this.btWithdraw.UseVisualStyleBackColor = true;
             this.btWithdraw.Click += new System.EventHandler(this.btWithdraw_Click);
@@ -1333,7 +1337,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ApplicationMagEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Заявление на поступление";
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();

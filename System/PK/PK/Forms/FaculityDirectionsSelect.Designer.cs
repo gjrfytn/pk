@@ -144,7 +144,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FaculityDirectionsSelect";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Выбор направлений факультета";
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections_)).EndInit();
             this.ResumeLayout(false);

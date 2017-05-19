@@ -134,7 +134,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SportDocs";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Достижения в области спорта";
             this.ResumeLayout(false);
             this.PerformLayout();

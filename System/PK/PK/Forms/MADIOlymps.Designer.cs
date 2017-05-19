@@ -59,7 +59,7 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
-            // MOlymps
+            // MADIOlymps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -70,8 +70,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MOlymps";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Name = "MADIOlymps";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Олимпиады и конференции МАДИ";
             this.ResumeLayout(false);
             this.PerformLayout();

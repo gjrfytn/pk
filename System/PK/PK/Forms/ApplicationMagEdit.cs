@@ -22,8 +22,7 @@ namespace PK.Forms
         private uint? _TargetOrganizationID;
         private bool _Agreed;
         private ApplicationEdit.QDoc _QuoteDoc;
-        private Dictionary<string, string> _Towns = new Dictionary<string, string>();
-        private string[] _DirsMed = {  };
+        private string[] _DirsMed = { "13.04.02", "23.04.01", "23.04.02", "23.04.03" };
 
         private bool _DistrictNeedsReload;
         private bool _TownNeedsReload;
@@ -63,6 +62,9 @@ namespace PK.Forms
             cbNationality.SelectedIndex = 0;
             cbFirstTime.SelectedIndex = 0;
             cbRegion.Items.AddRange(_KLADR.GetRegions().ToArray());
+            dtpDateOfBirth.MaxDate = DateTime.Now;
+            dtpIDDocDate.MaxDate = DateTime.Now;
+            dtpDiplomaDate.MaxDate = DateTime.Now;
 
             foreach (TabPage tab in tcPrograms.Controls)
             {
@@ -190,8 +192,7 @@ namespace PK.Forms
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
-            Tuple<string, string> buf = GetTownSettlement();
-            tbPostcode.Text = _KLADR.GetIndex(cbRegion.Text, cbDistrict.Text, buf.Item1, buf.Item2, cbStreet.Text, cbHouse.Text);
+            tbPostcode.Text = _KLADR.GetIndex(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text, cbHouse.Text);
             if (tbPostcode.Text == "")
                 tbPostcode.Enabled = true;
             else
@@ -218,6 +219,7 @@ namespace PK.Forms
         {
             if (_DistrictNeedsReload)
             {
+                _DistrictNeedsReload = false;
                 cbDistrict.Items.Clear();
                 cbDistrict.Items.AddRange(_KLADR.GetDistricts(cbRegion.Text).ToArray());
 
@@ -225,7 +227,6 @@ namespace PK.Forms
                 {
                     toolTip.Show("Не найдено адресов.", cbDistrict, 3000);
                 }
-                _DistrictNeedsReload = false;
             }
         }
 
@@ -234,48 +235,28 @@ namespace PK.Forms
             if (_TownNeedsReload)
             {
                 _TownNeedsReload = false;
-                _Towns.Clear();
-                foreach (string town in _KLADR.GetTowns(cbRegion.Text, cbDistrict.Text))
-                {
-                    _Towns.Add(town, null);
-                    foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, town))
-                        _Towns.Add(settl, town);
-                }
-
-                foreach (string settl in _KLADR.GetSettlements(cbRegion.Text, cbDistrict.Text, ""))
-                    _Towns.Add(settl, "");
-
                 cbTown.Items.Clear();
-                cbTown.Items.AddRange(_Towns.Keys.ToArray());
+                cbTown.Items.AddRange(_KLADR.GetTownsAndSettlements(cbRegion.Text, cbDistrict.Text).ToArray());
 
                 if (cbTown.Items.Count == 0)
                 {
                     toolTip.Show("Не найдено адресов.", cbTown, 3000);
                 }
-                
             }
         }
 
         private void cbStreet_Enter(object sender, EventArgs e)
         {
             if (_StreetNeedsReload)
-            {                
+            {
+                _StreetNeedsReload = false;
                 cbStreet.Items.Clear();
-                if (_Towns.ContainsKey(cbTown.Text))
-                {
-                    if (_Towns[cbTown.Text] == null)
-                        cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text, "").ToArray());
-                    else
-                        cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, _Towns[cbTown.Text], cbTown.Text).ToArray());
-                }
-                else if (cbTown.Text == "")
-                    cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, "", "").ToArray());
+                cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text).ToArray());
 
                 if (cbStreet.Items.Count == 0)
                 {
                     toolTip.Show("Не найдено адресов.", cbStreet, 3000);
                 }
-                _StreetNeedsReload = false;
             }
         }
 
@@ -283,16 +264,14 @@ namespace PK.Forms
         {
             if (_HouseNeedsReload)
             {
-                cbHouse.Text = "";
+                _HouseNeedsReload = false;
                 cbHouse.Items.Clear();
-                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, "", cbStreet.Text).ToArray());
-                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, "", cbTown.Text, cbStreet.Text).ToArray());
+                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text).ToArray());
 
                 if (cbHouse.Items.Count == 0)
                 {
                     toolTip.Show("Не найдено адресов.", cbHouse, 3000);
                 }
-                _HouseNeedsReload = false;
             }
         }
 
@@ -539,6 +518,8 @@ namespace PK.Forms
             SaveDiploma();
             if (cbSpecialRights.Checked)
                 SaveQuote();
+            if (cbMedCertificate.Checked)
+                SaveCertificate();
             SaveDirections();
             Cursor.Current = Cursors.Default;
         }
@@ -623,7 +604,59 @@ namespace PK.Forms
 
         private void SaveQuote()
         {
-            
+            if (_QuoteDoc.cause == "Сиротство")
+            {
+                uint orphDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "orphan" },
+                    { "date", _QuoteDoc.orphanhoodDocDate} , { "organization", _QuoteDoc.orphanhoodDocOrg} });
+                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", orphDocUid},
+                        { "name", _QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
+                        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)} });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", orphDocUid } });
+                _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                            { "reason_document_id", orphDocUid},{ "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+            }
+            else if (_QuoteDoc.cause == "Медицинские показатели")
+            {
+                uint allowEducationDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                    { { "number", _QuoteDoc.conclusionNumber}, { "date", _QuoteDoc.conclusionDate}, { "type", "allow_education"} });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
+
+                if (_QuoteDoc.medCause == "Справка об установлении инвалидности")
+                {
+                    uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "disability" },
+                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} });
+                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
+                            { "document_id", medDocUid}, { "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} });
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
+                    _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")},
+                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+                }
+                else if (_QuoteDoc.medCause == "Заключение психолого-медико-педагогической комиссии")
+                {
+                    uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" },
+                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} });
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
+                    _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
+                        { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                            { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")},
+                            { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+                }
+            }
+        }
+
+        private void SaveCertificate()
+        {
+                uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" } });
+                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", spravkaID }, { "name", Classes.DB_Helper.MedCertificate } });
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", spravkaID } });
         }
 
         private void SaveDirections()
@@ -704,6 +737,7 @@ namespace PK.Forms
 
         private void LoadDocuments()
         {
+            cbAppAdmission.Checked = true;
             List<object[]> appDocuments = new List<object[]>();
             foreach (var documentID in _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
             {
@@ -724,6 +758,7 @@ namespace PK.Forms
                     tbIDDocNumber.Text = document[3].ToString();
                     dtpIDDocDate.Value = (DateTime)document[4];
                     tbIssuedBy.Text = document[5].ToString();
+                    cbPassportCopy.Checked = true;
 
                     object[] passport = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id", "nationality_id",
                         "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_index", "reg_flat", "last_name", "first_name",
@@ -753,6 +788,8 @@ namespace PK.Forms
                     tbEduDocNumber.Text = document[3].ToString();
                     dtpDiplomaDate.Value = (DateTime)document[4];
                     tbInstitution.Text = document[5].ToString();
+                    cbEduDoc.Checked = true;
+
                     tbSpecialty.Text = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
@@ -760,60 +797,69 @@ namespace PK.Forms
                 }
                 else if (document[1].ToString() == "orphan")
                 {
-                    //QuoteDoc.cause = "Сиротство";
-                    //cbQuote.Checked = true;
-                    //QuoteDoc.orphanhoodDocDate = (DateTime)document[4];
-                    //QuoteDoc.orphanhoodDocOrg = document[5].ToString();
+                    _QuoteDoc.cause = "Сиротство";
+                    cbSpecialRights.Checked = true;
+                    _QuoteDoc.orphanhoodDocDate = (DateTime)document[4];
+                    _QuoteDoc.orphanhoodDocOrg = document[5].ToString();
 
-                    //object[] orphanDoc = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "dictionaries_item_id" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0]),
-                    //    new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.ORPHAN_DOC_TYPE)
-                    //})[0];
-                    //QuoteDoc.orphanhoodDocName = orphanDoc[0].ToString();
-                    //QuoteDoc.orphanhoodDocType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.ORPHAN_DOC_TYPE, (uint)orphanDoc[1]);
+                    object[] orphanDoc = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "dictionaries_item_id" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0]),
+                        new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.ORPHAN_DOC_TYPE)
+                    })[0];
+                    _QuoteDoc.orphanhoodDocName = orphanDoc[0].ToString();
+                    _QuoteDoc.orphanhoodDocType = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.ORPHAN_DOC_TYPE, (uint)orphanDoc[1]);
                 }
                 else if (document[1].ToString() == "disability")
                 {
-                    //QuoteDoc.cause = "Медицинские показатели";
-                    //QuoteDoc.medCause = "Справква об установлении инвалидности";
-                    //cbQuote.Checked = true;
-                    //QuoteDoc.medDocSerie = int.Parse(document[2].ToString());
-                    //QuoteDoc.medDocNumber = int.Parse(document[3].ToString());
-                    //QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "dictionaries_item_id" },
-                    //    new List<Tuple<string, Relation, object>>
-                    //    {
-                    //        new Tuple<string, Relation, object>("document_id", Relation.EQUAL,(uint)document[0]),
-                    //        new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.DISABILITY_GROUP)
-                    //    })[0][0]);
-                    //object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("id", Relation.EQUAL,
-                    //(uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                    //    new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности"))
-                    //}))[0][0])})[0];
-                    //QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
-                    //QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
+                    _QuoteDoc.cause = "Медицинские показатели";
+                    _QuoteDoc.medCause = "Справква об установлении инвалидности";
+                    cbSpecialRights.Checked = true;
+                    _QuoteDoc.medDocSerie = document[2].ToString();
+                    _QuoteDoc.medDocNumber = document[3].ToString();
+                    _QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "dictionaries_item_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL,(uint)document[0]),
+                            new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.DISABILITY_GROUP)
+                        })[0][0]);
+                    object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("id", Relation.EQUAL,
+                    (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности"))
+                    }))[0][0])})[0];
+                    _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
+                    _QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
                 }
                 else if (document[1].ToString() == "medical")
                 {
-                    //QuoteDoc.cause = "Медицинские показатели";
-                    //QuoteDoc.medCause = "Заключение психолого-медико-педагогической комиссии";
-                    //cbQuote.Checked = true;
-                    //QuoteDoc.medDocSerie = int.Parse(document[2].ToString());
-                    //QuoteDoc.medDocNumber = int.Parse(document[3].ToString());
-                    //object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("id", Relation.EQUAL,
-                    //(uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                    //    new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
-                    //}))[0][0])})[0];
-                    //QuoteDoc.conclusionNumber = int.Parse(allowDocument[0].ToString());
-                    //QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
+                    List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                    });
+                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        cbMedCertificate.Checked = true;
+                    else
+                    {
+                        _QuoteDoc.cause = "Медицинские показатели";
+                        _QuoteDoc.medCause = "Заключение психолого-медико-педагогической комиссии";
+                        cbSpecialRights.Checked = true;
+                        _QuoteDoc.medDocSerie = document[2].ToString();
+                        _QuoteDoc.medDocNumber = document[3].ToString();
+                        object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("id", Relation.EQUAL,
+                    (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                        new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
+                    }))[0][0])})[0];
+                        _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
+                        _QuoteDoc.conclusionDate = (DateTime)allowDocument[1];
+                    }
                 }
             }
         }
@@ -946,6 +992,7 @@ namespace PK.Forms
             });
 
             bool qouteFound = false;
+            bool certificateFound = false;
 
             if (appDocumentsLinks.Count > 0)
             {
@@ -991,80 +1038,94 @@ namespace PK.Forms
                         _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", tbSpecialty.Text } },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } });
                     }
-                    //else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
-                    //{
-                    //    if ((cbQuote.Checked) && (document[1].ToString() == "orphan") && (QuoteDoc.cause == "Сиротство"))
-                    //    {
-                    //        qouteFound = true;
-                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", QuoteDoc.orphanhoodDocDate }, { "organization", QuoteDoc.orphanhoodDocOrg } },
-                    //                new Dictionary<string, object> { { "id", (uint)document[0] } });
+                    else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
+                    {
+                        List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                            });
+                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        {
+                            certificateFound = true;
+                            if (!cbMedCertificate.Checked)
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                        }
+                        else if ((cbSpecialRights.Checked) && (document[1].ToString() == "orphan") && (_QuoteDoc.cause == "Сиротство"))
+                        {
+                            qouteFound = true;
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", _QuoteDoc.orphanhoodDocDate }, { "organization", _QuoteDoc.orphanhoodDocOrg } },
+                                    new Dictionary<string, object> { { "id", (uint)document[0] } });
 
-                    //        _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
-                    //        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", _QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                    //        _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
-                    //            { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
-                    //            { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                    //        new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                    //    }
-                    //    else if ((cbQuote.Checked) && ((document[1].ToString() == "disability") || (document[1].ToString() == "medical")) && (QuoteDoc.cause == "Медецинские показатели"))
-                    //    {
-                    //        qouteFound = true;
-                    //        uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
-                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", QuoteDoc.conclusionNumber }, { "date", QuoteDoc.conclusionDate } },
-                    //            new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
+                                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                            new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                        }
+                        else if ((cbSpecialRights.Checked) && ((document[1].ToString() == "disability") || (document[1].ToString() == "medical")) && (_QuoteDoc.cause == "Медецинские показатели"))
+                        {
+                            qouteFound = true;
+                            uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", _QuoteDoc.conclusionNumber }, { "date", _QuoteDoc.conclusionDate } },
+                                new Dictionary<string, object> { { "id", allowEducationDocUid } });
 
-                    //        if (document[1].ToString() == "disability")
-                    //        {
-                    //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
-                    //                new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            if (document[1].ToString() == "disability")
+                            {
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", _QuoteDoc.medDocSerie }, { "number", _QuoteDoc.medDocNumber } },
+                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                    //            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
-                    //            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP,QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
+                                { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                    //            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
-                    //                { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
-                    //                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                    //                new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                    //        }
-                    //        else if (document[1].ToString() == "medical")
-                    //        {
-                    //            qouteFound = true;
-                    //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", QuoteDoc.medDocSerie }, { "number", QuoteDoc.medDocNumber } },
-                    //                new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
+                                    { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                            }
+                            else if (document[1].ToString() == "medical")
+                            {
+                                qouteFound = true;
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", _QuoteDoc.medDocSerie }, { "number", _QuoteDoc.medDocNumber } },
+                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } });
 
-                    //            _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
-                    //                { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
-                    //                { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                    //                new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                    //        }
-                    //    }
-                    //    else if (document[1].ToString() == "orphan")
-                    //    {
-                    //        _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
-                    //    }
-                    //    else
-                    //    {
-                    //        uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
-                    //        _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", QuoteDoc.conclusionNumber }, { "date", QuoteDoc.conclusionDate } },
-                    //            new Dictionary<string, object> { { "id", allowEducationDocUid } });
-                    //        _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
-                    //        _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
-                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", allowEducationDocUid } });
-                    //        _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
-                    //    }
-                    //}
+                                _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
+                                    { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
+                                    { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
+                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                            }
+                        }
+                        else if (document[1].ToString() == "orphan")
+                        {
+                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                        }
+                        else
+                        {
+                            uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", _QuoteDoc.conclusionNumber }, { "date", _QuoteDoc.conclusionDate } },
+                                new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                        }
+                    }
                 }
             }
-                if (cbSpecialRights.Checked && !qouteFound)
-                {
-                    SaveQuote();
-                }
+            if (cbSpecialRights.Checked && !qouteFound)
+            {
+                SaveQuote();
+            }
+            if (cbMedCertificate.Checked && !certificateFound)
+            {
+                SaveCertificate();
+            }
         }
 
         private void UpdateDirections()
@@ -1115,17 +1176,17 @@ namespace PK.Forms
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
             else if (cbAgreed_quote_o.Checked)
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
             else if (cbAgreed_target_o.Checked)
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
 
             foreach (object[] appEntrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "faculty_short_name", "direction_id", "edu_form_id", "edu_source_id", "is_agreed_date", "is_disagreed_date" },
                 new List<Tuple<string, Relation, object>>
@@ -1140,19 +1201,19 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
 
                         else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceQ && !cbAgreed_quote_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
 
                         else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceT && !cbAgreed_target_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
                     }
                 }
             }
@@ -1352,27 +1413,6 @@ namespace PK.Forms
                 }
         }
 
-        private Tuple<string, string> GetTownSettlement()
-        {
-            if (_Towns.ContainsKey(cbTown.Text))
-            {
-                if (_Towns[cbTown.Text] == null)
-                    return new Tuple<string, string>(cbTown.Text, "");
-                else
-                {
-                    string[] buf = cbTown.Text.Split('(');
-                    if (buf.Length == 4)
-                        return new Tuple<string, string>(_Towns[cbTown.Text], buf[0] + "(" + buf[1]);
-                    else
-                        return new Tuple<string, string>(_Towns[cbTown.Text], cbTown.Text);
-                }
-            }
-            else if (cbTown.Text == "")
-                return new Tuple<string, string>("", "");
-
-            return null;
-        }
-
         private void ChangeAgreedChBs(bool isEnabled)
         {
                 foreach (TabPage page in tcPrograms.TabPages)
@@ -1386,16 +1426,17 @@ namespace PK.Forms
 
         private void BlockDirChange()
         {
-            foreach (TabPage page in tcPrograms.TabPages)
-                foreach (Control control in page.Controls)
-                {
-                    ComboBox cb = control as ComboBox;
-                    if (cb != null)
-                        cb.Enabled = false;
-                    Button bt = control as Button;
-                    if (bt != null)
-                        bt.Enabled = false;
-                }
+            //foreach (TabPage page in tcPrograms.TabPages)
+            //    if (page.Name.Split('_')[1] != "paid")
+            //        foreach (Control control in page.Controls)
+            //        {
+            //            ComboBox cb = control as ComboBox;
+            //            if (cb != null)
+            //                cb.Enabled = false;
+            //            Button bt = control as Button;
+            //            if (bt != null)
+            //                bt.Enabled = false;
+            //        }
         }
     }
 }

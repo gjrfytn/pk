@@ -170,6 +170,12 @@
             this.label43 = new System.Windows.Forms.Label();
             this.gbExamsDoc = new System.Windows.Forms.GroupBox();
             this.dgvExams = new System.Windows.Forms.DataGridView();
+            this.dgvExams_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_Year = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dgvExams_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_EGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_Min = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_Checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tbExamsDocNumber = new System.Windows.Forms.TextBox();
             this.tbExamsDocSeries = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -202,12 +208,6 @@
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.dgvExams_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_Year = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dgvExams_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_EGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_Min = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvExams_Checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
@@ -319,7 +319,7 @@
             this.cbStreet.Location = new System.Drawing.Point(714, 18);
             this.cbStreet.Name = "cbStreet";
             this.cbStreet.Size = new System.Drawing.Size(165, 24);
-            this.cbStreet.TabIndex = 31;
+            this.cbStreet.TabIndex = 3;
             this.cbStreet.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
             // 
@@ -331,7 +331,7 @@
             this.cbTown.Location = new System.Drawing.Point(489, 18);
             this.cbTown.Name = "cbTown";
             this.cbTown.Size = new System.Drawing.Size(163, 24);
-            this.cbTown.TabIndex = 30;
+            this.cbTown.TabIndex = 2;
             this.cbTown.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
             // 
@@ -343,7 +343,7 @@
             this.cbDistrict.Location = new System.Drawing.Point(276, 18);
             this.cbDistrict.Name = "cbDistrict";
             this.cbDistrict.Size = new System.Drawing.Size(154, 24);
-            this.cbDistrict.TabIndex = 3;
+            this.cbDistrict.TabIndex = 1;
             this.cbDistrict.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
             // 
@@ -355,7 +355,7 @@
             this.cbRegion.Location = new System.Drawing.Point(62, 18);
             this.cbRegion.Name = "cbRegion";
             this.cbRegion.Size = new System.Drawing.Size(150, 24);
-            this.cbRegion.TabIndex = 29;
+            this.cbRegion.TabIndex = 0;
             this.cbRegion.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             // 
             // cbHouse
@@ -366,7 +366,7 @@
             this.cbHouse.Location = new System.Drawing.Point(924, 18);
             this.cbHouse.Name = "cbHouse";
             this.cbHouse.Size = new System.Drawing.Size(108, 24);
-            this.cbHouse.TabIndex = 29;
+            this.cbHouse.TabIndex = 4;
             this.cbHouse.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
             this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
             // 
@@ -375,7 +375,7 @@
             this.btGetIndex.Location = new System.Drawing.Point(1246, 20);
             this.btGetIndex.Name = "btGetIndex";
             this.btGetIndex.Size = new System.Drawing.Size(20, 23);
-            this.btGetIndex.TabIndex = 29;
+            this.btGetIndex.TabIndex = 6;
             this.btGetIndex.Text = ">";
             this.btGetIndex.UseVisualStyleBackColor = true;
             this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
@@ -388,7 +388,7 @@
             this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
             this.tbPostcode.Size = new System.Drawing.Size(59, 22);
-            this.tbPostcode.TabIndex = 6;
+            this.tbPostcode.TabIndex = 7;
             // 
             // label20
             // 
@@ -512,6 +512,7 @@
             this.dtpDateOfBirth.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDateOfBirth.Location = new System.Drawing.Point(389, 109);
             this.dtpDateOfBirth.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpDateOfBirth.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpDateOfBirth.Name = "dtpDateOfBirth";
             this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 22);
             this.dtpDateOfBirth.TabIndex = 10;
@@ -635,6 +636,7 @@
             this.dtpIDDocDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpIDDocDate.Location = new System.Drawing.Point(828, 51);
             this.dtpIDDocDate.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpIDDocDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpIDDocDate.Name = "dtpIDDocDate";
             this.dtpIDDocDate.Size = new System.Drawing.Size(108, 22);
             this.dtpIDDocDate.TabIndex = 4;
@@ -762,7 +764,7 @@
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
             this.tbInstitutionLocation.Size = new System.Drawing.Size(193, 22);
-            this.tbInstitutionLocation.TabIndex = 6;
+            this.tbInstitutionLocation.TabIndex = 3;
             // 
             // cbGraduationYear
             // 
@@ -772,7 +774,7 @@
             this.cbGraduationYear.Margin = new System.Windows.Forms.Padding(4);
             this.cbGraduationYear.Name = "cbGraduationYear";
             this.cbGraduationYear.Size = new System.Drawing.Size(80, 24);
-            this.cbGraduationYear.TabIndex = 7;
+            this.cbGraduationYear.TabIndex = 4;
             // 
             // label27
             // 
@@ -800,7 +802,7 @@
             this.tbInstitutionNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
             this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
-            this.tbInstitutionNumber.TabIndex = 5;
+            this.tbInstitutionNumber.TabIndex = 6;
             // 
             // label25
             // 
@@ -833,7 +835,7 @@
             this.cbInstitutionType.Margin = new System.Windows.Forms.Padding(4);
             this.cbInstitutionType.Name = "cbInstitutionType";
             this.cbInstitutionType.Size = new System.Drawing.Size(195, 24);
-            this.cbInstitutionType.TabIndex = 4;
+            this.cbInstitutionType.TabIndex = 5;
             // 
             // label24
             // 
@@ -852,7 +854,7 @@
             this.cbOriginal.Margin = new System.Windows.Forms.Padding(4);
             this.cbOriginal.Name = "cbOriginal";
             this.cbOriginal.Size = new System.Drawing.Size(91, 20);
-            this.cbOriginal.TabIndex = 3;
+            this.cbOriginal.TabIndex = 7;
             this.cbOriginal.Text = "Оригинал";
             this.cbOriginal.UseVisualStyleBackColor = true;
             this.cbOriginal.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
@@ -2158,6 +2160,50 @@
             this.dgvExams.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvExams_CellValueChanged);
             this.dgvExams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
+            // dgvExams_Subject
+            // 
+            this.dgvExams_Subject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvExams_Subject.FillWeight = 200F;
+            this.dgvExams_Subject.HeaderText = "Предмет";
+            this.dgvExams_Subject.Name = "dgvExams_Subject";
+            this.dgvExams_Subject.ReadOnly = true;
+            // 
+            // dgvExams_Year
+            // 
+            this.dgvExams_Year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvExams_Year.HeaderText = "Год";
+            this.dgvExams_Year.Name = "dgvExams_Year";
+            this.dgvExams_Year.Width = 37;
+            // 
+            // dgvExams_Exam
+            // 
+            this.dgvExams_Exam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvExams_Exam.HeaderText = "Экзамен";
+            this.dgvExams_Exam.Name = "dgvExams_Exam";
+            this.dgvExams_Exam.ReadOnly = true;
+            this.dgvExams_Exam.Width = 91;
+            // 
+            // dgvExams_EGE
+            // 
+            this.dgvExams_EGE.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dgvExams_EGE.HeaderText = "ЕГЭ";
+            this.dgvExams_EGE.Name = "dgvExams_EGE";
+            this.dgvExams_EGE.Width = 60;
+            // 
+            // dgvExams_Min
+            // 
+            this.dgvExams_Min.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvExams_Min.HeaderText = "Минимум";
+            this.dgvExams_Min.Name = "dgvExams_Min";
+            this.dgvExams_Min.ReadOnly = true;
+            this.dgvExams_Min.Width = 94;
+            // 
+            // dgvExams_Checked
+            // 
+            this.dgvExams_Checked.HeaderText = "Проверено";
+            this.dgvExams_Checked.Name = "dgvExams_Checked";
+            this.dgvExams_Checked.ReadOnly = true;
+            // 
             // tbExamsDocNumber
             // 
             this.tbExamsDocNumber.Location = new System.Drawing.Point(280, 51);
@@ -2506,50 +2552,6 @@
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
-            // dgvExams_Subject
-            // 
-            this.dgvExams_Subject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvExams_Subject.FillWeight = 200F;
-            this.dgvExams_Subject.HeaderText = "Предмет";
-            this.dgvExams_Subject.Name = "dgvExams_Subject";
-            this.dgvExams_Subject.ReadOnly = true;
-            // 
-            // dgvExams_Year
-            // 
-            this.dgvExams_Year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvExams_Year.HeaderText = "Год";
-            this.dgvExams_Year.Name = "dgvExams_Year";
-            this.dgvExams_Year.Width = 37;
-            // 
-            // dgvExams_Exam
-            // 
-            this.dgvExams_Exam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvExams_Exam.HeaderText = "Экзамен";
-            this.dgvExams_Exam.Name = "dgvExams_Exam";
-            this.dgvExams_Exam.ReadOnly = true;
-            this.dgvExams_Exam.Width = 91;
-            // 
-            // dgvExams_EGE
-            // 
-            this.dgvExams_EGE.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dgvExams_EGE.HeaderText = "ЕГЭ";
-            this.dgvExams_EGE.Name = "dgvExams_EGE";
-            this.dgvExams_EGE.Width = 60;
-            // 
-            // dgvExams_Min
-            // 
-            this.dgvExams_Min.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvExams_Min.HeaderText = "Минимум";
-            this.dgvExams_Min.Name = "dgvExams_Min";
-            this.dgvExams_Min.ReadOnly = true;
-            this.dgvExams_Min.Width = 94;
-            // 
-            // dgvExams_Checked
-            // 
-            this.dgvExams_Checked.HeaderText = "Проверено";
-            this.dgvExams_Checked.Name = "dgvExams_Checked";
-            this.dgvExams_Checked.ReadOnly = true;
-            // 
             // ApplicationEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2561,7 +2563,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "ApplicationEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Заявление на поступление";
             this.Load += new System.EventHandler(this.ApplicationEdit_Load);
             this.gbPassport.ResumeLayout(false);

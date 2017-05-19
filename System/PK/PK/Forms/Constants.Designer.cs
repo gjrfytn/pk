@@ -117,6 +117,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Constants";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Основная информация";
             ((System.ComponentModel.ISupportInitialize)(this.dgvConstants)).EndInit();
             this.ResumeLayout(false);

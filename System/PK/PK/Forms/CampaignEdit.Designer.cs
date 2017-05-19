@@ -815,7 +815,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CampaignEdit";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Редактирование приемной кампании";
             this.Load += new System.EventHandler(this.CampaignEdit_Load);
             this.gbEduForms.ResumeLayout(false);
