@@ -1259,6 +1259,13 @@ GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` T
 GRANT SELECT ON TABLE `kladr`.`subjects` TO 'registrator';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'registrator';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'registrator';
+GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'registrator';
 CREATE USER 'inspector' IDENTIFIED BY 'ins1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'inspector';
@@ -1295,6 +1302,13 @@ GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` T
 GRANT SELECT ON TABLE `kladr`.`subjects` TO 'inspector';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'inspector';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'inspector';
+GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'inspector';
 GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'inspector';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'inspector';
@@ -1337,6 +1351,13 @@ GRANT SELECT ON TABLE `pk_db`.`campaigns_directions_target_organizations_data` T
 GRANT SELECT ON TABLE `kladr`.`subjects` TO 'administrator';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'administrator';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'administrator';
+GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'administrator';
 GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'administrator';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'administrator';

@@ -12,7 +12,14 @@ namespace PK.Forms
 
         public Authorization()
         {
+            #region Components
             InitializeComponent();
+
+            cbLogin.Text = Properties.Settings.Default.Login;
+
+            if (cbLogin.Text != "")
+                tbPassword.Select();
+            #endregion
 
             while (true)
             {
@@ -31,7 +38,7 @@ namespace PK.Forms
                     MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    if (Classes.Utility.ShowChoiceMessageBox("Закрыть приложение?","Действие"))
+                    if (Classes.Utility.ShowChoiceMessageBox("Закрыть приложение?", "Действие"))
                     {
                         Load += (s, e) => DialogResult = DialogResult.Abort;
                         break;
@@ -69,11 +76,15 @@ namespace PK.Forms
             object[] user = _DB_Connection.Select(DB_Table.USERS, "login", "password", "role").Find(x => x[0].ToString() == cbLogin.Text);
 
             if (user == null)
-                MessageBox.Show("Логин не найден.","Ошибка авторизации", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Логин не найден.", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (user[1].ToString() == tbPassword.Text)
             {
                 UsersRole = user[2].ToString();
                 UsersLogin = cbLogin.Text;
+
+                Properties.Settings.Default.Login = cbLogin.Text;
+                Properties.Settings.Default.Save();
+
                 DialogResult = DialogResult.OK;
             }
             else

@@ -74,7 +74,7 @@
   <ItemGroup>
     <Compile Include="Classes\DBF_Reader.cs" />
     <Compile Include="Classes\DB_Queries.cs" />
-    <Compile Include="Classes\ImportClasses.cs" />
+    <Compile Include="Classes\FIS_ExportClasses.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="FIS_DictionaryEnum.cs" />
     <Compile Include="FIS_Olympic_TEMP.cs" />

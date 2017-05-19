@@ -103,6 +103,7 @@ namespace PK.Forms
             var docs = _DB_Connection.CallProcedure("get_application_docs", _ID).Select(
                 s => new
                 {
+                    ID = (uint)s[0],
                     Type = s[1].ToString(),
                     Series = s[2].ToString(),
                     Number = s[3].ToString(),
@@ -164,14 +165,28 @@ namespace PK.Forms
             ))
                 inventoryTableParams[1].Add(new string[] { "Направление ПК" });
 
-            //if (entrances.Any(s => s.Directions.Any(e => medCertDirections.Contains(dbHelper.GetDirectionNameAndCode(e.Direction).Item2))))
-            //    inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
+            foreach (var medDoc in docs.Where(s => s.Type == "medical"))
+            {
+                List<object[]> certificateData = _DB_Connection.Select(
+                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                    new string[] { "name" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("document_id", Relation.EQUAL, medDoc.ID) }
+                    );
+
+                if (certificateData.Count > 0 && certificateData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                {
+                    inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
+                    break;
+                }
+                else
+                    quota = true;
+            }
 
             if (docs.Any(s => s.Type == "photos"))
                 inventoryTableParams[1].Add(new string[] { "4 фотографии 3х4" });
 
-            //if (docs.Any(s => s.Type == "orphan" || s.Type == "disability" || s.Type == "medical"))
-            //    quota = true;
+            if (docs.Any(s => s.Type == "orphan" || s.Type == "disability"))
+                quota = true;
 
             object[] entrant = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
