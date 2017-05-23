@@ -131,6 +131,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "FIS_Export";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Экспорт в ФИС";
             this.ResumeLayout(false);
             this.PerformLayout();

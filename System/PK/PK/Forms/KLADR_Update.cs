@@ -49,114 +49,134 @@ namespace PK.Forms
             if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
                 return;
 
-            Cursor.Current = Cursors.WaitCursor;
+            foreach (Button b in System.Linq.Enumerable.OfType<Button>(Controls))
+                b.Enabled = false;
 
+            statusStrip_ProgressBar.Visible = true;
+            statusStrip_Label.Text = "Очистка БД...";
+
+            backgroundWorker.RunWorkerAsync();
+        }
+
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
             MySqlConnection connection = new MySqlConnection(Properties.Settings.Default.kladr_CS + " user = " + _User + "; password = " + _Password + ";");
             connection.Open();
 
             using (MySqlTransaction transaction = connection.BeginTransaction())
             {
                 MySqlCommand cmd = new MySqlCommand("", connection, transaction);
-                try
+
+                cmd.CommandText = "DELETE FROM subjects;";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM streets;";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM houses;";
+                cmd.ExecuteNonQuery();
+
+                uint total = 0;
+                uint count = 0;
+                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbSubjects.Text))
                 {
-                    statusStrip_Label.Text = "Очистка БД...";
+                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка субъектов..."));
 
-                    cmd.CommandText = "DELETE FROM subjects;";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM streets;";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM houses;";
-                    cmd.ExecuteNonQuery();
-
-                    uint total = 0;
-                    statusStrip_ProgressBar.Visible = true;
-                    statusStrip_Label.Text = "Загрузка субъектов...";
-                    uint count = 0;
-                    using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbSubjects.Text))
+                    while (reader.ReadRow())
                     {
-                        statusStrip_ProgressBar.Value = 0;
-                        statusStrip_ProgressBar.Maximum = (int)reader.RowCount;
+                        cmd.CommandText = "INSERT INTO subjects (name, socr, code, `index`) VALUES ('" +
+                            reader.Value("NAME").ToString().Trim() + "', '" +
+                            reader.Value("SOCR").ToString().Trim() + "', '" +
+                            reader.Value("CODE").ToString() + "', " +
+                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
+                        cmd.ExecuteNonQuery();
 
-                        while (reader.ReadRow())
-                        {
-                            cmd.CommandText = "INSERT INTO subjects (name, socr, code, `index`) VALUES ('" +
-                                reader.Value("NAME").ToString().Trim() + "', '" +
-                                reader.Value("SOCR").ToString().Trim() + "', '" +
-                                reader.Value("CODE").ToString() + "', " +
-                                (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                            cmd.ExecuteNonQuery();
+                        count++;
 
-                            count++;
-                            statusStrip_ProgressBar.Value = (int)count;
-                            statusStrip_ProgressLabel.Text = count.ToString() + "/" + reader.RowCount;
-                            statusStrip.Update();
-                        }
+                        backgroundWorker.ReportProgress((int)count);
                     }
-                    total += count;
-
-                    statusStrip_Label.Text = "Загрузка улиц...";
-                    count = 0;
-                    using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbStreets.Text))
-                    {
-                        statusStrip_ProgressBar.Value = 0;
-                        statusStrip_ProgressBar.Maximum = (int)reader.RowCount;
-
-                        while (reader.ReadRow())
-                        {
-                            cmd.CommandText = "INSERT INTO streets (name, socr, code, `index`) VALUES ('" +
-                                reader.Value("NAME").ToString().Trim() + "', '" +
-                                reader.Value("SOCR").ToString().Trim() + "', '" +
-                                reader.Value("CODE").ToString() + "', " +
-                                (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                            cmd.ExecuteNonQuery();
-
-                            count++;
-                            statusStrip_ProgressBar.Value = (int)count;
-                            statusStrip_ProgressLabel.Text = count.ToString() + "/" + reader.RowCount;
-                            statusStrip.Update();
-                        }
-                    }
-                    total += count;
-
-                    statusStrip_Label.Text = "Загрузка домов...";
-                    count = 0;
-                    using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbHouses.Text))
-                    {
-                        statusStrip_ProgressBar.Value = 0;
-                        statusStrip_ProgressBar.Maximum = (int)reader.RowCount;
-
-                        while (reader.ReadRow())
-                        {
-                            cmd.CommandText = "INSERT INTO houses (name, code, `index`) VALUES ('" +
-                                reader.Value("NAME").ToString().Trim() + "', '" +
-                                reader.Value("CODE").ToString() + "', " +
-                                (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                            cmd.ExecuteNonQuery();
-
-                            count++;
-                            statusStrip_ProgressBar.Value = (int)count;
-                            statusStrip_ProgressLabel.Text = count.ToString() + "/" + reader.RowCount;
-                            statusStrip.Update();
-                        }
-                    }
-                    total += count;
-
-                    transaction.Commit();
-
-                    MessageBox.Show("Всего записей: " + total, "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex)
+                total += count;
+
+                count = 0;
+                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbStreets.Text))
                 {
-                    MessageBox.Show("Произошла ошибка:\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    statusStrip_Label.Text = "Ожидание выбора...";
-                    statusStrip_ProgressBar.Visible = false;
-                    statusStrip_ProgressLabel.Text = "";
+                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка улиц..."));
 
-                    Cursor.Current = Cursors.Default;
+                    while (reader.ReadRow())
+                    {
+                        cmd.CommandText = "INSERT INTO streets (name, socr, code, `index`) VALUES ('" +
+                            reader.Value("NAME").ToString().Trim() + "', '" +
+                            reader.Value("SOCR").ToString().Trim() + "', '" +
+                            reader.Value("CODE").ToString() + "', " +
+                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
+                        cmd.ExecuteNonQuery();
+
+                        count++;
+
+                        backgroundWorker.ReportProgress((int)count);
+                    }
                 }
+                total += count;
+
+                count = 0;
+                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbHouses.Text))
+                {
+                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка домов..."));
+
+                    while (reader.ReadRow())
+                    {
+                        cmd.CommandText = "INSERT INTO houses (name, code, `index`) VALUES ('" +
+                            reader.Value("NAME").ToString().Trim() + "', '" +
+                            reader.Value("CODE").ToString() + "', " +
+                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
+                        cmd.ExecuteNonQuery();
+
+                        count++;
+
+                        backgroundWorker.ReportProgress((int)count);
+                    }
+                }
+                total += count;
+
+                transaction.Commit();
+
+                e.Result = total;
+            }
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            if (e.UserState != null)
+            {
+                Tuple<int, string> buf = (Tuple<int, string>)e.UserState;
+                statusStrip_ProgressBar.Maximum = buf.Item1;
+                statusStrip_Label.Text = buf.Item2;
+            }
+
+            statusStrip_ProgressBar.Value = e.ProgressPercentage;
+            statusStrip_ProgressLabel.Text = e.ProgressPercentage + "/" + statusStrip_ProgressBar.Maximum;
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+                MessageBox.Show("Произошла ошибка:\n" + e.Error.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+                MessageBox.Show("Всего записей: " + e.Result.ToString(), "Обновление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            foreach (Button b in System.Linq.Enumerable.OfType<Button>(Controls))
+                b.Enabled = true;
+
+            statusStrip_Label.Text = "Ожидание выбора...";
+            statusStrip_ProgressBar.Visible = false;
+            statusStrip_ProgressLabel.Text = "";
+        }
+
+        private void KLADR_Update_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (backgroundWorker.IsBusy)
+            {
+                MessageBox.Show("Невозможно закрыть форму во время обновления.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
             }
         }
     }

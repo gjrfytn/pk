@@ -91,7 +91,7 @@
             // 
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDate.Location = new System.Drawing.Point(148, 33);
-            this.dtpDate.MaxDate = new System.DateTime(2050, 12, 31, 0, 0, 0, 0);
+            this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
@@ -138,7 +138,7 @@
             // 
             this.dtpRegStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpRegStartDate.Location = new System.Drawing.Point(148, 59);
-            this.dtpRegStartDate.MaxDate = new System.DateTime(2050, 12, 31, 0, 0, 0, 0);
+            this.dtpRegStartDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpRegStartDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpRegStartDate.Name = "dtpRegStartDate";
             this.dtpRegStartDate.Size = new System.Drawing.Size(90, 20);
@@ -149,7 +149,7 @@
             // 
             this.dtpRegEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpRegEndDate.Location = new System.Drawing.Point(148, 85);
-            this.dtpRegEndDate.MaxDate = new System.DateTime(2050, 12, 31, 0, 0, 0, 0);
+            this.dtpRegEndDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtpRegEndDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpRegEndDate.Name = "dtpRegEndDate";
             this.dtpRegEndDate.Size = new System.Drawing.Size(90, 20);

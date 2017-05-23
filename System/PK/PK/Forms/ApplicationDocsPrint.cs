@@ -174,10 +174,7 @@ namespace PK.Forms
                     );
 
                 if (certificateData.Count > 0 && certificateData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
-                {
                     inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
-                    break;
-                }
                 else
                     quota = true;
             }

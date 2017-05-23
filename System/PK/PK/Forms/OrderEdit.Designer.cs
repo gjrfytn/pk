@@ -261,7 +261,7 @@
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDate.Location = new System.Drawing.Point(12, 108);
             this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
-            this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.dtpDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
             this.dtpDate.TabIndex = 5;

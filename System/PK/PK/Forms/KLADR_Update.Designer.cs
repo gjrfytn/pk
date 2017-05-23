@@ -44,6 +44,7 @@
             this.statusStrip_Label = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip_ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip_ProgressLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -181,6 +182,13 @@
             this.statusStrip_ProgressLabel.Name = "statusStrip_ProgressLabel";
             this.statusStrip_ProgressLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
             // KLADR_Update
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +211,7 @@
             this.Name = "KLADR_Update";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Обновление КЛАДР";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KLADR_Update_FormClosing);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -228,5 +237,6 @@
         private System.Windows.Forms.ToolStripStatusLabel statusStrip_Label;
         private System.Windows.Forms.ToolStripProgressBar statusStrip_ProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel statusStrip_ProgressLabel;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
