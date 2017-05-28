@@ -231,7 +231,7 @@ namespace PK.Classes
                             new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
                         }).Select(s => (uint)s[0]);
 
-                    IEnumerable<Tuple<uint, uint, byte, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
+                    IEnumerable<Tuple<uint, uint, byte, bool,bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
 
                     var table = applications.Join(
                         marks.Join(

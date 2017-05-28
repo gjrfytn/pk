@@ -61,6 +61,10 @@
             this.dataGridView_Russian = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Social = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Foreign = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_IndAch = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Honors = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbEduSource.SuspendLayout();
             this.gbEduForm.SuspendLayout();
             this.panel.SuspendLayout();
@@ -318,7 +322,11 @@
             this.dataGridView_Physics,
             this.dataGridView_Russian,
             this.dataGridView_Social,
-            this.dataGridView_Foreign});
+            this.dataGridView_Foreign,
+            this.dataGridView_Sum,
+            this.dataGridView_Exam,
+            this.dataGridView_IndAch,
+            this.dataGridView_Honors});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 143);
             this.dataGridView.Name = "dataGridView";
@@ -410,6 +418,38 @@
             this.dataGridView_Foreign.Name = "dataGridView_Foreign";
             this.dataGridView_Foreign.ReadOnly = true;
             // 
+            // dataGridView_Sum
+            // 
+            this.dataGridView_Sum.FillWeight = 15F;
+            this.dataGridView_Sum.HeaderText = "Сумма";
+            this.dataGridView_Sum.Name = "dataGridView_Sum";
+            this.dataGridView_Sum.ReadOnly = true;
+            this.dataGridView_Sum.Visible = false;
+            // 
+            // dataGridView_Exam
+            // 
+            this.dataGridView_Exam.FillWeight = 15F;
+            this.dataGridView_Exam.HeaderText = "Оценка";
+            this.dataGridView_Exam.Name = "dataGridView_Exam";
+            this.dataGridView_Exam.ReadOnly = true;
+            this.dataGridView_Exam.Visible = false;
+            // 
+            // dataGridView_IndAch
+            // 
+            this.dataGridView_IndAch.FillWeight = 20F;
+            this.dataGridView_IndAch.HeaderText = "Достижение";
+            this.dataGridView_IndAch.Name = "dataGridView_IndAch";
+            this.dataGridView_IndAch.ReadOnly = true;
+            this.dataGridView_IndAch.Visible = false;
+            // 
+            // dataGridView_Honors
+            // 
+            this.dataGridView_Honors.FillWeight = 15F;
+            this.dataGridView_Honors.HeaderText = "Отличие";
+            this.dataGridView_Honors.Name = "dataGridView_Honors";
+            this.dataGridView_Honors.ReadOnly = true;
+            this.dataGridView_Honors.Visible = false;
+            // 
             // OrderEdit
             // 
             this.AcceptButton = this.bSave;
@@ -469,5 +509,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Russian;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Social;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Foreign;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Sum;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Exam;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_IndAch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Honors;
     }
 }

@@ -6,7 +6,7 @@ namespace PK.Classes
 {
     static class DB_Queries
     {
-        public static IEnumerable<Tuple<uint, uint, byte, bool>> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
+        public static IEnumerable<Tuple<uint, uint, byte, bool, bool>> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
         {
             object[] campStartEnd = connection.Select(
                 DB_Table.CAMPAIGNS,
@@ -18,7 +18,7 @@ namespace PK.Classes
                 connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked"),
                 k1 => k1,
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3] }
+                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3], Exam = false }
                 ).Concat(
                 applications.Join(
                 connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
@@ -39,8 +39,8 @@ namespace PK.Classes
                         ),
                     k1 => k1.EntrID,
                     k2 => k2.EntrID,
-                    (s1, s2) => new { s1.ApplID, s2.Subj, Mark = (byte)s2.Mark, Checked = true }
-                    )).Select(s => Tuple.Create(s.ApplID, s.Subj, s.Mark, s.Checked));
+                    (s1, s2) => new { s1.ApplID, s2.Subj, Mark = (byte)s2.Mark, Checked = true, Exam = true }
+                    )).Select(s => Tuple.Create(s.ApplID, s.Subj, s.Mark, s.Checked, s.Exam));
         }
     }
 }
