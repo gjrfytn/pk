@@ -998,6 +998,34 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`orders_has_applications` (
 ENGINE = InnoDB
 COMMENT = 'Заявления в приказах.';
 
+
+-- -----------------------------------------------------
+-- Table `pk_db`.`masters_exams_marks`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`masters_exams_marks` (
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT 'Кампания.',
+  `entrant_id` INT UNSIGNED NOT NULL COMMENT 'Абитуриент.',
+  `faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
+  `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
+  `profile_short_name` VARCHAR(5) NOT NULL COMMENT 'Программа обучения.',
+  `date` DATE NOT NULL COMMENT 'Дата экзамена.',
+  `mark` SMALLINT NOT NULL COMMENT 'Оценка.',
+  `bonus` SMALLINT UNSIGNED NOT NULL COMMENT 'Баллы за индивидуальное достижение.',
+  PRIMARY KEY (`campaign_id`, `entrant_id`, `faculty`, `direction_id`, `profile_short_name`),
+  INDEX `masters_exams_marks_has_camp_profile_idx` (`campaign_id` ASC, `faculty` ASC, `direction_id` ASC, `profile_short_name` ASC),
+  INDEX `masters_exams_marks_has_entrant_idx` (`entrant_id` ASC),
+  CONSTRAINT `masters_exams_marks_has_camp_profile`
+    FOREIGN KEY (`campaign_id` , `faculty` , `direction_id` , `profile_short_name`)
+    REFERENCES `pk_db`.`campaigns_profiles_data` (`campaigns_id` , `profiles_direction_faculty` , `profiles_direction_id` , `profiles_short_name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `masters_exams_marks_has_entrant`
+    FOREIGN KEY (`entrant_id`)
+    REFERENCES `pk_db`.`entrants` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `kladr` ;
 
 -- -----------------------------------------------------
@@ -1079,7 +1107,7 @@ USE `pk_db`$$
 CREATE PROCEDURE `get_application_docs` (IN id INT UNSIGNED)
 BEGIN
 SELECT 
-    id,
+    documents.id,
     type,
     series,
     number,
@@ -1315,6 +1343,7 @@ GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'inspect
 GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders_has_applications` TO 'inspector';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`masters_exams_marks` TO 'inspector';
 CREATE USER 'administrator' IDENTIFIED BY 'adm1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'administrator';
@@ -1364,6 +1393,7 @@ GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'adminis
 GRANT DELETE, INSERT, UPDATE, SELECT ON TABLE `pk_db`.`examinations_audiences` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`entrants_examinations_marks` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders_has_applications` TO 'administrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`masters_exams_marks` TO 'administrator';
 GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`users` TO 'administrator';
 GRANT DELETE, INSERT, UPDATE ON TABLE `pk_db`.`campaigns` TO 'administrator';
 GRANT INSERT, UPDATE ON TABLE `pk_db`.`dictionaries_items` TO 'administrator';

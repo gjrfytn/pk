@@ -130,8 +130,16 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Exams_Click(object sender, EventArgs e)
         {
-            Examinations form = new Examinations(_DB_Connection);
-            form.ShowDialog();
+            if (_DB_Helper.IsMasterCampaign(_DB_Helper.CurrentCampaignID))
+            {
+                MasterExaminations form = new MasterExaminations(_DB_Connection);
+                form.ShowDialog();
+            }
+            else
+            {
+                Examinations form = new Examinations(_DB_Connection);
+                form.ShowDialog();
+            }
         }
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)

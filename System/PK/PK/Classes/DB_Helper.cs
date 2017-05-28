@@ -211,5 +211,18 @@ namespace PK.Classes
                 _DB_Connection.InsertOnDuplicateUpdate(table, columnsValues, transaction);
             }
         }
+
+        public bool IsMasterCampaign(uint id)
+        {
+            return _DB_Connection.Select(
+                  DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS,
+                  new string[] { "dictionaries_items_item_id" },
+                  new List<System.Tuple<string, Relation, object>>
+                  {
+                      new System.Tuple<string, Relation, object> ("campaigns_id",Relation.EQUAL,id),
+                      new System.Tuple<string, Relation, object> ("dictionaries_items_dictionary_id",Relation.EQUAL,2),//TODO
+                      new System.Tuple<string, Relation, object> ("dictionaries_items_item_id",Relation.EQUAL,4)//TODO
+                  }).Any();
+        }
     }
 }
