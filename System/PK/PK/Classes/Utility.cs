@@ -18,6 +18,11 @@ namespace PK.Classes
             {"04", 4}  //TODO Магистратура?
         };
 
+        public static uint CurrentCampaignID
+        {
+            get { return Properties.Settings.Default.CampaignID; }
+        }
+
         /// <summary>
         /// Отображает диалоговое окно с кнопками "Да" и "Нет".
         /// </summary>

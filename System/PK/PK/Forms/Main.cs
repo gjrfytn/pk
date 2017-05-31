@@ -12,7 +12,6 @@ namespace PK.Forms
         private readonly string _UserLogin;
         private readonly string _UserRole;
 
-        private uint _CurrCampaignID;
         private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюджет" }, { "adm_paid", "Зачислен на платное" },
             { "adm_both", "Зачислен на бюджет и платное" }, { "withdrawn", "Забрал документы" } };
         private uint _SelectedAppID;
@@ -81,11 +80,11 @@ namespace PK.Forms
 
         private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
         {
-            if (_CurrCampaignID == 0)
+            if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
                 FilterAppsTable();
@@ -130,7 +129,7 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Exams_Click(object sender, EventArgs e)
         {
-            if (_DB_Helper.IsMasterCampaign(_DB_Helper.CurrentCampaignID))
+            if (_DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID))
             {
                 MasterExaminations form = new MasterExaminations(_DB_Connection);
                 form.ShowDialog();
@@ -144,7 +143,7 @@ namespace PK.Forms
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
-            if (_CurrCampaignID == 0)
+            if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
@@ -163,22 +162,22 @@ namespace PK.Forms
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
         {
-            if (_CurrCampaignID == 0)
+            if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                Constants form = new Constants(_DB_Connection, _CurrCampaignID);
+                Constants form = new Constants(_DB_Connection, Classes.Utility.CurrentCampaignID);
                 form.ShowDialog();
             }
         }
 
         private void menuStrip_CreateMagApplication_Click(object sender, EventArgs e)
         {
-            if (_CurrCampaignID == 0)
+            if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, null);
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
                 form.ShowDialog();
                 UpdateApplicationsTable();
                 FilterAppsTable();
@@ -221,7 +220,7 @@ namespace PK.Forms
         {
             _SelectedAppID = (uint)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
 
-            if (_CurrCampaignID == 0)
+            if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
@@ -230,12 +229,12 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.CurrentRow.Cells[0].Value)
                 })[0][0])
                 {
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 else
                 {
-                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, _CurrCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
@@ -296,7 +295,7 @@ namespace PK.Forms
             apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registrator_login", Relation.EQUAL, _UserLogin),
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, currDate)
                 });
@@ -304,14 +303,14 @@ namespace PK.Forms
                 apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, currDate)
                 });
             else
                 apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
                 });
             if (apps.Count > 0)
                 foreach (var application in apps)
@@ -428,41 +427,40 @@ namespace PK.Forms
 
         private void SetCurrentCampaign()
         {
-            List<object[]> currCampaigns = _DB_Connection.Select(DB_Table.CONSTANTS, "current_campaign_id");
-            if (currCampaigns.Count > 0)
+            if (Classes.Utility.CurrentCampaignID != 0)
             {
-                _CurrCampaignID = (uint)currCampaigns[0][0];
-                toolStripLabelCurrCampaign.Text = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
+                toolStrip_CurrCampaign.Text = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, _CurrCampaignID)
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
                 })[0][0].ToString();
+
                 UpdateApplicationsTable();
-                List<object[]> directions = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id" }, new List<Tuple<string, Relation, object>>
+
+                var eduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
-                });
-                if (directions.Count > 0 && _DB_Helper.GetDirectionNameAndCode((uint)directions[0][0]).Item2.Split('.')[1] != "04")
+                    new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
+                }).Select(s => (uint)s[0]);
+
+                if (!eduLevels.Contains(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM)))
                 {
-                    toolStripMain_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
-                    toolStripMain_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
-                    toolStripMain_CreateApplication.Click += new System.EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
+                    toolStripMain_CreateApplication.Click += new EventHandler(menuStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click += new EventHandler(menuStrip_CreateApplication_Click);
                 }
                 else
                 {
-                    toolStripMain_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
-                    toolStripMain_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
-                    toolStripMain_CreateApplication.Click += new System.EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateMagApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
+                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
+                    toolStripMain_CreateApplication.Click += new EventHandler(menuStrip_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
+                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
+                    menuStrip_CreateApplication.Click += new EventHandler(menuStrip_CreateMagApplication_Click);
                 }
             }
-            else
-                _CurrCampaignID = 0;
-
         }
 
         private void SetUserRole()

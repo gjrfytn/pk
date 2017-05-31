@@ -25,7 +25,7 @@ namespace PK.Forms
             object[] curCampStartEnd = _DB_Connection.Select(
                 DB_Table.CAMPAIGNS,
                 new string[] { "start_year", "end_year" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
                 )[0];
 
             dtpDate.MinDate = new DateTime((int)(uint)curCampStartEnd[0], 1, 1);

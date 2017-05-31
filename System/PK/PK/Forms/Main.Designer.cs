@@ -18,6 +18,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripMain_CreateApplication = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Label1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip_CurrCampaign = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip_Label2 = new System.Windows.Forms.ToolStripLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,9 +70,6 @@
             this.rbNew = new System.Windows.Forms.RadioButton();
             this.rbWithdraw = new System.Windows.Forms.RadioButton();
             this.rbAdm = new System.Windows.Forms.RadioButton();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabelCurrCampaign = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -79,9 +79,9 @@
             // 
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMain_CreateApplication,
-            this.toolStripLabel1,
-            this.toolStripLabelCurrCampaign,
-            this.toolStripLabel2});
+            this.toolStrip_Label1,
+            this.toolStrip_CurrCampaign,
+            this.toolStrip_Label2});
             this.toolStrip.Location = new System.Drawing.Point(0, 25);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -96,6 +96,25 @@
             this.toolStripMain_CreateApplication.Name = "toolStripMain_CreateApplication";
             this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(129, 22);
             this.toolStripMain_CreateApplication.Text = "Создать заявление";
+            // 
+            // toolStrip_Label1
+            // 
+            this.toolStrip_Label1.Name = "toolStrip_Label1";
+            this.toolStrip_Label1.Size = new System.Drawing.Size(173, 22);
+            this.toolStrip_Label1.Text = "Текущая приемная кампания:";
+            // 
+            // toolStrip_CurrCampaign
+            // 
+            this.toolStrip_CurrCampaign.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.toolStrip_CurrCampaign.Name = "toolStrip_CurrCampaign";
+            this.toolStrip_CurrCampaign.Size = new System.Drawing.Size(153, 22);
+            this.toolStrip_CurrCampaign.Text = "Выберите кампанию...";
+            // 
+            // toolStrip_Label2
+            // 
+            this.toolStrip_Label2.Name = "toolStrip_Label2";
+            this.toolStrip_Label2.Size = new System.Drawing.Size(51, 22);
+            this.toolStrip_Label2.Text = "Фильтр:";
             // 
             // menuStrip
             // 
@@ -587,25 +606,6 @@
             this.rbAdm.UseVisualStyleBackColor = false;
             this.rbAdm.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
             // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(173, 22);
-            this.toolStripLabel1.Text = "Текущая приемная кампания:";
-            // 
-            // toolStripLabelCurrCampaign
-            // 
-            this.toolStripLabelCurrCampaign.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toolStripLabelCurrCampaign.Name = "toolStripLabelCurrCampaign";
-            this.toolStripLabelCurrCampaign.Size = new System.Drawing.Size(102, 22);
-            this.toolStripLabelCurrCampaign.Text = "toolStripLabel2";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(51, 22);
-            this.toolStripLabel2.Text = "Фильтр:";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -694,9 +694,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EnrollmentDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabelCurrCampaign;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripLabel toolStrip_Label1;
+        private System.Windows.Forms.ToolStripLabel toolStrip_CurrCampaign;
+        private System.Windows.Forms.ToolStripLabel toolStrip_Label2;
     }
 }
 

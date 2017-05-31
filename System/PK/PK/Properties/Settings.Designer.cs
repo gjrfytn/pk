@@ -97,5 +97,17 @@ namespace PK.Properties {
                 this["Login"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public uint CampaignID {
+            get {
+                return ((uint)(this["CampaignID"]));
+            }
+            set {
+                this["CampaignID"] = value;
+            }
+        }
     }
 }

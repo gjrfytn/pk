@@ -920,18 +920,11 @@ COMMENT = 'Оценки абитуриентов по внутренним эк�
 -- Table `pk_db`.`constants`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`constants` (
-  `current_campaign_id` INT UNSIGNED NULL COMMENT 'ID текущей кампании.',
   `min_math_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по математике.',
   `min_russian_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по русскому языку.',
   `min_physics_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по физике.',
   `min_social_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по обществознанию.',
-  `min_foreign_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по иностранному языку.',
-  INDEX `constants_current_campaign_idx` (`current_campaign_id` ASC),
-  CONSTRAINT `constants_current_campaign`
-    FOREIGN KEY (`current_campaign_id`)
-    REFERENCES `pk_db`.`campaigns` (`id`)
-    ON DELETE SET NULL
-    ON UPDATE SET NULL)
+  `min_foreign_mark` SMALLINT UNSIGNED NOT NULL COMMENT 'Минимальный балл по иностранному языку.')
 ENGINE = InnoDB
 COMMENT = 'Константы.';
 
@@ -1008,9 +1001,9 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`masters_exams_marks` (
   `faculty` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
   `profile_short_name` VARCHAR(5) NOT NULL COMMENT 'Программа обучения.',
-  `date` DATE NOT NULL COMMENT 'Дата экзамена.',
-  `mark` SMALLINT NOT NULL COMMENT 'Оценка.',
-  `bonus` SMALLINT UNSIGNED NOT NULL COMMENT 'Баллы за индивидуальное достижение.',
+  `mark` SMALLINT NOT NULL DEFAULT -1 COMMENT 'Оценка.',
+  `bonus` SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Баллы за индивидуальное достижение.',
+  `date` DATE NULL COMMENT 'Дата экзамена.',
   PRIMARY KEY (`campaign_id`, `entrant_id`, `faculty`, `direction_id`, `profile_short_name`),
   INDEX `masters_exams_marks_has_camp_profile_idx` (`campaign_id` ASC, `faculty` ASC, `direction_id` ASC, `profile_short_name` ASC),
   INDEX `masters_exams_marks_has_entrant_idx` (`entrant_id` ASC),
@@ -1251,6 +1244,7 @@ CREATE USER 'initial' IDENTIFIED BY '1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'initial';
 GRANT SELECT ON TABLE `pk_db`.`roles_passwords` TO 'initial';
+GRANT INSERT, SELECT ON TABLE `pk_db`.`constants` TO 'initial';
 CREATE USER 'registrator' IDENTIFIED BY 'reg1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'registrator';
@@ -1421,3 +1415,13 @@ GRANT DELETE, INSERT ON TABLE `kladr`.`houses` TO 'administrator';
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `pk_db`.`constants`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `pk_db`;
+INSERT INTO `pk_db`.`constants` (`min_math_mark`, `min_russian_mark`, `min_physics_mark`, `min_social_mark`, `min_foreign_mark`) VALUES (0, 0, 0, 0, 0);
+
+COMMIT;
+

@@ -128,10 +128,8 @@ namespace PK.Forms
                 (DateTime.Now.Year - 4).ToString(),
                 (DateTime.Now.Year - 5).ToString(),
             };
-            object[] minMarks;
-            if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { }).Count > 0)
-                minMarks = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" })[0];
-            else minMarks = new object[] { 0, 0, 0, 0, 0 };
+
+            object[] minMarks = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" })[0];
             dgvExams.Rows.Add("Математика", null, null, (byte)0, minMarks[0], false);
             dgvExams.Rows.Add("Русский язык", null, null, (byte)0, minMarks[1], false);
             dgvExams.Rows.Add("Физика", null, null, (byte)0, minMarks[2], false);

@@ -38,11 +38,6 @@ namespace PK.Classes
         public const string MedCertificate = "Медицинская справка";
         #endregion
 
-        public uint CurrentCampaignID
-        {
-            get { return (uint)_DB_Connection.Select(DB_Table.CONSTANTS, "current_campaign_id")[0][0]; }
-        }
-
         private readonly DB_Connector _DB_Connection;
 
         public DB_Helper(DB_Connector connection)
@@ -158,7 +153,7 @@ namespace PK.Classes
                 });
 
             if (list.Count == 0)
-                throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.");
+                throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.", nameof(id));
 
             return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
         }
@@ -220,7 +215,7 @@ namespace PK.Classes
                   new List<System.Tuple<string, Relation, object>>
                   {
                       new System.Tuple<string, Relation, object> ("campaigns_id",Relation.EQUAL,id),
-                      new System.Tuple<string, Relation, object> ("dictionaries_items_dictionary_id",Relation.EQUAL,2),//TODO
+                      new System.Tuple<string, Relation, object> ("dictionaries_items_dictionary_id",Relation.EQUAL,FIS_Dictionary.EDU_LEVEL),
                       new System.Tuple<string, Relation, object> ("dictionaries_items_item_id",Relation.EQUAL,4)//TODO
                   }).Any();
         }

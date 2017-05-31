@@ -10,7 +10,6 @@ namespace PK.Forms
     partial class EGE_Check : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
         private readonly IEnumerable<EGE_Result> _ApplsEgeResults;
 
         public EGE_Check(Classes.DB_Connector connection)
@@ -18,12 +17,11 @@ namespace PK.Forms
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             var applications = connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id,entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
                     ).Join(
                     connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
                     k1 => k1[1],
@@ -105,7 +103,7 @@ namespace PK.Forms
                         );
 
                     var subjects = applResults.GroupBy(
-                        k => _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, k[5]),
+                        k => new Classes.DB_Helper(_DB_Connection).GetDictionaryItemID(FIS_Dictionary.SUBJECTS, k[5]),
                         el => new { Value = el[6], Year = el[7] },
                         (k, g) => new { Subject = k, Results = g.OrderBy(s => s.Value) }
                         );

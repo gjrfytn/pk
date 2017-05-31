@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PK.Forms
@@ -12,7 +8,6 @@ namespace PK.Forms
     partial class MasterExaminations : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
 
         public MasterExaminations(Classes.DB_Connector connection)
         {
@@ -25,12 +20,11 @@ namespace PK.Forms
             #endregion
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             var marks = _DB_Connection.Select(
                 DB_Table.MASTERS_EXAMS_MARKS,
                 new string[] { "entrant_id", "faculty", "direction_id", "profile_short_name", "date", "mark", "bonus" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
                 );
 
             var entrants = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name");
@@ -97,7 +91,7 @@ namespace PK.Forms
                     },
                     new Dictionary<string, object>
                     {
-                        {"campaign_id" ,_DB_Helper.CurrentCampaignID},
+                        {"campaign_id" ,Classes.Utility.CurrentCampaignID},
                         { "entrant_id" ,row.Cells[dataGridView_ID.Index].Value},
                         {"faculty" ,row.Cells[dataGridView_Faculty.Index].Value},
                         {"direction_id" ,row.Cells[dataGridView_Direction.Index].Value},

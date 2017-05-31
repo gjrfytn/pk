@@ -32,7 +32,7 @@ namespace PK.Forms
                     if (ex.Number == 1042 && !Classes.Utility.ShowChoiceMessageBox("Подключён ли кабель локальной сети к компьютеру?", "Ошибка подключения"))
                     {
                         MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        continue;
+                        continue; //TODO
                     }
 
                     MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -49,6 +49,9 @@ namespace PK.Forms
 
                 foreach (var v in _DB_Connection.Select(DB_Table.USERS, "login"))
                     cbLogin.Items.Add(v[0]);
+
+                AssureConstants();
+
                 break;
             }
         }
@@ -91,9 +94,16 @@ namespace PK.Forms
                 MessageBox.Show("Неверный пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        //private void Authorization_Load(object sender, EventArgs e)
-        //{
-        //    DialogResult = DialogResult.OK;
-        //}
+        private void AssureConstants()
+        {
+            string[] fields = { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" };
+
+            System.Collections.Generic.List<object[]> buf = _DB_Connection.Select(DB_Table.CONSTANTS, fields);
+            if (buf.Count == 0)
+                _DB_Connection.Insert(
+                    DB_Table.CONSTANTS,
+                    System.Linq.Enumerable.ToDictionary(fields, k => k, e => (object)0)
+                    );
+        }
     }
 }

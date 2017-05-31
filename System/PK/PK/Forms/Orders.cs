@@ -20,14 +20,12 @@ namespace PK.Forms
         };
 
         private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
 
         public Orders(Classes.DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             UpdateTable();
         }
@@ -114,7 +112,7 @@ namespace PK.Forms
                 new string[] { "number", "type", "date", "protocol_number" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID)
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
                 }))
                 dataGridView.Rows.Add(
                     row[0],

@@ -301,10 +301,9 @@ namespace PK.Forms
                     receiptTableParams
                     ));
 
-            var marks = Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ID }, dbHelper.CurrentCampaignID).GroupBy(
+            var marks = Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ID }, Classes.Utility.CurrentCampaignID).GroupBy(
                 k => k.Item2,
-                (k, g) =>
-                new
+                (k, g) =>                new
                 {
                     Subj = k,
                     Mark = g.Any(s => s.Item4) ? g.Where(s => s.Item4).Max(s => s.Item3) : g.Max(s => s.Item3)
@@ -426,7 +425,7 @@ namespace PK.Forms
                     new string[] { "subject_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
                         new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir[0]),
                         new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir[1])
                     }

@@ -226,12 +226,12 @@ namespace PK.Classes
                         new string[] { "subject_id" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
                             new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
                             new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
                         }).Select(s => (uint)s[0]);
 
-                    IEnumerable<Tuple<uint, uint, byte, bool,bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), dbHelper.CurrentCampaignID);
+                    IEnumerable<Tuple<uint, uint, byte, bool, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Utility.CurrentCampaignID);
 
                     var table = applications.Join(
                         marks.Join(

@@ -26,49 +26,30 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark",
-                "min_foreign_mark" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("current_campaign_id", Relation.EQUAL, _CurrCampaignID)
-                }).Count > 0)
-                _DB_Connection.Update(DB_Table.CONSTANTS, new Dictionary<string, object>
-                    {{ "min_math_mark", dgvConstants.Rows[0].Cells[2].Value }, { "min_russian_mark", dgvConstants.Rows[1].Cells[2].Value },
-                    { "min_physics_mark", dgvConstants.Rows[2].Cells[2].Value }, { "min_social_mark", dgvConstants.Rows[3].Cells[2].Value },
-                    { "min_foreign_mark", dgvConstants.Rows[4].Cells[2].Value } }, new Dictionary<string, object> { { "current_campaign_id", _CurrCampaignID } });
-            else
+            string[] fields = { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" };
+            object[] buf = _DB_Connection.Select(DB_Table.CONSTANTS, fields)[0];
+
+            Dictionary<string, object> values = new Dictionary<string, object>(fields.Length);
+            Dictionary<string, object> where = new Dictionary<string, object>(fields.Length);
+            for (byte i = 0; i < fields.Length; ++i)
             {
-                _DB_Connection.Insert(DB_Table.CONSTANTS, new Dictionary<string, object> { { "current_campaign_id", _CurrCampaignID },
-                    { "min_math_mark", dgvConstants.Rows[0].Cells[2].Value }, { "min_russian_mark", dgvConstants.Rows[1].Cells[2].Value },
-                    { "min_physics_mark", dgvConstants.Rows[2].Cells[2].Value }, { "min_social_mark", dgvConstants.Rows[3].Cells[2].Value },
-                    { "min_foreign_mark", dgvConstants.Rows[4].Cells[2].Value } });
+                values.Add(fields[i], dgvConstants[dgvConstants_Value.Index, i].Value);
+                where.Add(fields[i], buf[i]);
             }
+
+            _DB_Connection.Update(DB_Table.CONSTANTS, values, where);
         }
 
         private void UpdateTable()
         {
             dgvConstants.Rows.Clear();
 
-            List<object[]> constants = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark",
-                "min_foreign_mark" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("current_campaign_id", Relation.EQUAL, _CurrCampaignID)
-                });
-            if (constants.Count > 0)
-            {
-                dgvConstants.Rows.Add("min_math_mark", "Минибальный балл ЕГЭ по МАТЕМАТИКЕ", constants[0][0]);
-                dgvConstants.Rows.Add("min_russian_mark", "Минибальный балл ЕГЭ по РУССКОМУ ЯЗЫКУ", constants[0][1]);
-                dgvConstants.Rows.Add("min_physics_mark", "Минибальный балл ЕГЭ по ФИЗИКЕ", constants[0][2]);
-                dgvConstants.Rows.Add("min_social_mark", "Минибальный балл ЕГЭ по ОБЩЕСТВОЗНАНИЮ", constants[0][3]);
-                dgvConstants.Rows.Add("min_foreign_mark", "Минибальный балл ЕГЭ по ИНОСТРАННОМУ ЯЗЫКУ", constants[0][4]);
-            }
-            else
-            {
-                dgvConstants.Rows.Add("min_math_mark", "Минибальный балл ЕГЭ по МАТЕМАТИКЕ", 0);
-                dgvConstants.Rows.Add("min_russian_mark", "Минибальный балл ЕГЭ по РУССКОМУ ЯЗЫКУ", 0);
-                dgvConstants.Rows.Add("min_physics_mark", "Минибальный балл ЕГЭ по ФИЗИКЕ", 0);
-                dgvConstants.Rows.Add("min_social_mark", "Минибальный балл ЕГЭ по ОБЩЕСТВОЗНАНИЮ", 0);
-                dgvConstants.Rows.Add("min_foreign_mark", "Минибальный балл ЕГЭ по ИНОСТРАННОМУ ЯЗЫКУ", 0);
-            }
+            string[] subjects = { "МАТЕМАТИКЕ", "РУССКОМУ ЯЗЫКУ", "ФИЗИКЕ", "ОБЩЕСТВОЗНАНИЮ", "ИНОСТРАННОМУ ЯЗЫКУ" };
+            string[] fields = { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" };
+            object[] constants = _DB_Connection.Select(DB_Table.CONSTANTS, fields)[0];
+
+            for (byte i = 0; i < fields.Length; ++i)
+                dgvConstants.Rows.Add(fields[i], "Минимальный балл ЕГЭ по " + subjects[i], constants[i]);
         }
     }
 }

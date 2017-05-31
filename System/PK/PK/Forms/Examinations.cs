@@ -131,7 +131,7 @@ namespace PK.Forms
                 new string[] { "direction_faculty", "direction_id" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,_DB_Helper.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
                     new Tuple<string, Relation, object>("subject_id",Relation.EQUAL,subjectID)
                 });
 
@@ -202,7 +202,7 @@ namespace PK.Forms
             object[] curCampStartEnd = _DB_Connection.Select(
                 DB_Table.CAMPAIGNS,
                 new string[] { "start_year", "end_year" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, _DB_Helper.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
                 )[0];
 
             dataGridView.Rows.Clear();

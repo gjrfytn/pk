@@ -55,7 +55,6 @@ namespace PK.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
-            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
             object[] buf = _DB_Connection.Select(
                 DB_Table.ORDERS,
                 new string[] { "type", "edu_source_id", "faculty_short_name" },
@@ -110,7 +109,7 @@ namespace PK.Forms
                         new string[] { "hostel_places" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,dbHelper.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
                             new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,faculty)
                         })[0][0];
 

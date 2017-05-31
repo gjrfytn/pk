@@ -9,7 +9,6 @@ namespace PK.Forms
     {
         private readonly  Classes.DB_Connector _DB_Connection;
         private readonly Classes.DB_Helper _DB_Helper;
-        private uint? _CurrCampaignID;
 
         public Campaigns(Classes.DB_Connector connection)
         {
@@ -17,9 +16,6 @@ namespace PK.Forms
 
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
-            List<object[]> currCampaigns = _DB_Connection.Select(DB_Table.CONSTANTS, "current_campaign_id");
-            if (currCampaigns.Count > 0)
-                _CurrCampaignID = (uint)currCampaigns[0][0];
 
             UpdateTableAndCombobox();
         }
@@ -55,8 +51,11 @@ namespace PK.Forms
                 Value = (uint)s[0],
                 Display = s[1].ToString()
             }).ToArray();
-            if (_CurrCampaignID != null)
-                cbCurrentCampaign.SelectedValue = _CurrCampaignID;
+
+            if (Classes.Utility.CurrentCampaignID != 0)
+                cbCurrentCampaign.SelectedValue = Classes.Utility.CurrentCampaignID;
+            else
+                cbCurrentCampaign.SelectedIndex = -1;
         }
 
         private void btCreatePriemComp_Click(object sender, EventArgs e)
@@ -80,16 +79,10 @@ namespace PK.Forms
 
         private void cbCurrentCampaign_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != _CurrCampaignID)
+            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != Classes.Utility.CurrentCampaignID)
             {
-                if (_DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "current_campaign_id" }).Count > 0)
-                    _DB_Connection.Update(DB_Table.CONSTANTS, new Dictionary<string, object> { { "current_campaign_id", (uint)cbCurrentCampaign.SelectedValue } },
-                        new Dictionary<string, object> { { "current_campaign_id", _CurrCampaignID } });
-                else
-                    _DB_Connection.Insert(DB_Table.CONSTANTS, new Dictionary<string, object> { { "current_campaign_id", (uint)cbCurrentCampaign.SelectedValue },
-                        { "min_math_mark", 0 }, { "min_russian_mark", 0 }, { "min_physics_mark", 0 }, { "min_social_mark", 0 }, { "min_foreign_mark", 0 } });
-
-                _CurrCampaignID = (uint)cbCurrentCampaign.SelectedValue;
+                Properties.Settings.Default.CampaignID = (uint)cbCurrentCampaign.SelectedValue;
+                Properties.Settings.Default.Save();
             }
         }
     }
