@@ -408,7 +408,7 @@ namespace PK.Forms
             tbInstitution.Text = "";
             tbIDDocSeries.Text = "";
             tbIDDocNumber.Text = "";
-            tbSubdivisionCode.Text = "";
+            mtbSubdivisionCode.Text = "";
             tbEduDocSeries.Text = "";
             tbEduDocNumber.Text = "";
             tbSpecialty.Text = "";
@@ -439,13 +439,17 @@ namespace PK.Forms
             {
                 tbIDDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbIDDocNumber.Text += digits[rand.Next(digits.Length)];
-                tbSubdivisionCode.Text += digits[rand.Next(digits.Length)];
+                
                 tbEduDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
             }
-
+            string subCode = "";
             for (int i = 0; i < 6; i++)
+            {
                 tbPostcode.Text += digits[rand.Next(digits.Length)];
+                subCode += digits[rand.Next(digits.Length)];
+            }
+            mtbSubdivisionCode.Text = subCode;
             for (int i = 0; i < 10; i++)
                 mtbEMail.Text += latinLetters[rand.Next(latinLetters.Length)];
             mtbEMail.Text += "@" + emailEndings[rand.Next(emailEndings.Length)];
@@ -586,7 +590,7 @@ namespace PK.Forms
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                 { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
-                { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                { "subdivision_code", mtbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
@@ -695,6 +699,15 @@ namespace PK.Forms
                     }
                 }
             }
+            foreach (TabPage tab in tcPrograms.TabPages)
+                foreach (Control c in tab.Controls)
+                {
+                    ComboBox cb = c as ComboBox;
+                    if (cb != null && cb.SelectedIndex != -1)
+                        _DB_Connection.Insert(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
+                            { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
+                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } });
+                }
         }
 
 
@@ -766,7 +779,7 @@ namespace PK.Forms
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                         })[0];
-                    tbSubdivisionCode.Text = passport[0].ToString();
+                    mtbSubdivisionCode.Text = passport[0].ToString();
                     cbIDDocType.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IDENTITY_DOC_TYPE, (uint)passport[1]);
                     cbNationality.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)passport[2]);
                     dtpDateOfBirth.Value = (DateTime)passport[3];
@@ -1015,7 +1028,7 @@ namespace PK.Forms
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                             { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
-                            { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                            { "subdivision_code", mtbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
@@ -1216,7 +1229,33 @@ namespace PK.Forms
                                 { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
                     }
                 }
-            }
+            List<object[]> examsData = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name" },
+                new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID),
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
+            });
+            foreach (TabPage tab in tcPrograms.TabPages)
+                foreach (Control c in tab.Controls)
+                {                    
+                    ComboBox cb = c as ComboBox;
+                    if (cb != null && cb.SelectedIndex != -1)
+                    {
+                        bool found = false;
+                        foreach (object[] exam in examsData)
+                            if (exam[0].ToString() == ((ProgramTuple)cb.SelectedValue).Item2 && (uint)exam[1] == ((ProgramTuple)cb.SelectedValue).Item1
+                                && exam[2].ToString() == ((ProgramTuple)cb.SelectedValue).Item5)
+                            {
+                                found = true;
+                                break;
+                            }
+                        if (!found)
+                            _DB_Connection.Insert(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
+                            { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
+                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } });
+                    }                        
+                }
+        }
 
 
         private void FillProgramsCombobox(ComboBox combobox, string eduForm, string eduSource)

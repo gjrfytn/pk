@@ -45,7 +45,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.tbIssuedBy = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbSubdivisionCode = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbIDDocNumber = new System.Windows.Forms.TextBox();
@@ -208,6 +207,7 @@
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
@@ -238,6 +238,7 @@
             // gbPassport
             // 
             this.gbPassport.BackColor = System.Drawing.Color.SeaShell;
+            this.gbPassport.Controls.Add(this.mtbSubdivisionCode);
             this.gbPassport.Controls.Add(this.pictureBox1);
             this.gbPassport.Controls.Add(this.gbAdress);
             this.gbPassport.Controls.Add(this.tbPlaceOfBirth);
@@ -250,7 +251,6 @@
             this.gbPassport.Controls.Add(this.label10);
             this.gbPassport.Controls.Add(this.tbIssuedBy);
             this.gbPassport.Controls.Add(this.label9);
-            this.gbPassport.Controls.Add(this.tbSubdivisionCode);
             this.gbPassport.Controls.Add(this.label8);
             this.gbPassport.Controls.Add(this.label7);
             this.gbPassport.Controls.Add(this.tbIDDocNumber);
@@ -566,14 +566,6 @@
             this.label9.Size = new System.Drawing.Size(80, 16);
             this.label9.TabIndex = 16;
             this.label9.Text = "Кем выдан:";
-            // 
-            // tbSubdivisionCode
-            // 
-            this.tbSubdivisionCode.Location = new System.Drawing.Point(1222, 50);
-            this.tbSubdivisionCode.Margin = new System.Windows.Forms.Padding(4);
-            this.tbSubdivisionCode.Name = "tbSubdivisionCode";
-            this.tbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
-            this.tbSubdivisionCode.TabIndex = 5;
             // 
             // label8
             // 
@@ -2552,6 +2544,14 @@
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
+            // mtbSubdivisionCode
+            // 
+            this.mtbSubdivisionCode.Location = new System.Drawing.Point(1222, 52);
+            this.mtbSubdivisionCode.Mask = "999-999";
+            this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
+            this.mtbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
+            this.mtbSubdivisionCode.TabIndex = 28;
+            // 
             // ApplicationEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2621,7 +2621,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbIssuedBy;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbSubdivisionCode;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tbIDDocNumber;
@@ -2807,5 +2806,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
+        private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
     }
 }
