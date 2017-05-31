@@ -105,8 +105,18 @@ namespace PK.Classes
         /// <returns>Ассоциации (первая буква фамилии, номер аудитории). Если буквы повторяются то значит, что одна аудитория не вмещает всех с этой буквой.</returns>
         public static List<System.Tuple<char, string>> DistributeAbiturients(Dictionary<string, ushort> rooms, Dictionary<char, ushort> letters)
         {
+            #region Contracts
+            if (rooms == null)
+                throw new System.ArgumentNullException(nameof(rooms));
+            if (letters == null)
+                throw new System.ArgumentNullException(nameof(letters));
+            if (rooms.Count == 0)
+                throw new System.ArgumentException("Словарь с аудиториями должен содержать хотя бы один элемент.", nameof(rooms));
+            if (letters.Count == 0)
+                throw new System.ArgumentException("Словарь с группами должен содержать хотя бы один элемент.", nameof(letters));
             if (rooms.Sum(r => r.Value) < letters.Sum(l => l.Value))
                 throw new System.ArgumentException("Общее количество мест в аудиториях меньше общего количества абитуриентов.");
+            #endregion
 
             letters = letters.OrderByDescending(l => l.Value).ToDictionary(k => k.Key, v => v.Value);
             List<System.Tuple<char, string>> distributions = new List<System.Tuple<char, string>>();
@@ -163,6 +173,11 @@ namespace PK.Classes
 
         public static void Print(string file)
         {
+            #region Contracts
+            if (string.IsNullOrWhiteSpace(file))
+                throw new System.ArgumentException("Некорректное имя файла.", nameof(file));
+            #endregion
+
             // System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(file);
             // info.Verb = "Print";
             // info.CreateNoWindow = true;

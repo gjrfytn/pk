@@ -13,6 +13,15 @@ namespace PK.Classes
 
         public DictionaryUpdater(DB_Connector dbConnection, string fisLogin, string fisPassword)
         {
+            #region Contracts
+            if (dbConnection == null)
+                throw new System.ArgumentNullException(nameof(dbConnection));
+            if (string.IsNullOrWhiteSpace(fisLogin))
+                throw new System.ArgumentException("Некорректный логин.",nameof(fisLogin));
+            if (string.IsNullOrWhiteSpace(fisPassword))
+                throw new System.ArgumentException("Некорректный пароль.", nameof(fisPassword));
+            #endregion
+
             _DB_Connection = dbConnection;
             _FIS_Login = fisLogin;
             _FIS_Password = fisPassword;

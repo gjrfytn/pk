@@ -80,9 +80,9 @@ namespace PK.Properties {
   <string>http://10.0.3.1:8080</string>
   <string>http://priem.edu.ru:8000</string>
 </ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection FIS_Adresses {
+        public global::System.Collections.Specialized.StringCollection FIS_Addresses {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["FIS_Adresses"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["FIS_Addresses"]));
             }
         }
         

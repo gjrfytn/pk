@@ -42,6 +42,11 @@ namespace PK.Classes
 
         public DB_Helper(DB_Connector connection)
         {
+            #region Contracts
+            if (connection == null)
+                throw new System.ArgumentNullException(nameof(connection));
+            #endregion
+
             _DB_Connection = connection;
         }
 
@@ -127,6 +132,11 @@ namespace PK.Classes
 
         public uint GetDictionaryItemID(FIS_Dictionary dictionary, string itemName)
         {
+            #region Contracts
+            if (string.IsNullOrWhiteSpace(itemName))
+                throw new System.ArgumentException("Некорректное имя элемента.",nameof(itemName));
+            #endregion
+
             List<object[]> list = _DB_Connection.Select(
                 DB_Table.DICTIONARIES_ITEMS,
                 new string[] { "item_id" },
@@ -160,12 +170,31 @@ namespace PK.Classes
 
         public void UpdateData(
             DB_Table table,
-            List<object[]> oldDataList,
-            List<object[]> newDataList,
+            IEnumerable<object[]> oldDataList,
+            IEnumerable<object[]> newDataList,
             string[] fieldsNames,
             string[] keyFieldsNames,
             MySql.Data.MySqlClient.MySqlTransaction transaction = null)
         {
+            #region Contracts
+            if (oldDataList == null)
+                throw new System.ArgumentNullException(nameof(oldDataList));
+            if (newDataList == null)
+                throw new System.ArgumentNullException(nameof(newDataList));
+            if (fieldsNames == null)
+                throw new System.ArgumentNullException(nameof(fieldsNames));
+            if (keyFieldsNames == null)
+                throw new System.ArgumentNullException(nameof(keyFieldsNames));
+            if (oldDataList.Count() == 0)
+                throw new System.ArgumentException("Старый список должен содержать хотя бы один элемент.", nameof(oldDataList));
+            if (newDataList.Count() == 0)
+                throw new System.ArgumentException("Новый список должен содержать хотя бы один элемент.", nameof(newDataList));
+            if (fieldsNames.Length == 0)
+                throw new System.ArgumentException("Массив с именами полей должен содержать хотя бы один элемент.", nameof(fieldsNames));
+            if (keyFieldsNames.Length == 0)
+                throw new System.ArgumentException("Массив с именами ключевых полей должен содержать хотя бы один элемент.", nameof(keyFieldsNames));
+            #endregion
+
             object nullObj = null;
             Dictionary<string, object> whereColumns = keyFieldsNames.ToDictionary(k => k, v => nullObj);
             foreach (object[] oldItem in oldDataList)

@@ -24,32 +24,64 @@ namespace PK.Classes
 
         private static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
 
-        public static void Create(DB_Connector connection, string templateFile, string resultFile, uint id)
+        public static void Create(DB_Connector connection, string templateFile, string resultFile, uint id, bool readOnly = false)
         {
+            #region Contracts
+            CheckConnectionAndFilenames(connection, templateFile, resultFile);
+            #endregion
+
             XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
 
             if (template.Root.Element("Document").Element("Word") != null)
-                Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile).Save();
+            {
+                Novacode.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
+
+                if (readOnly)
+                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                doc.Save();
+            }
             else
-                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", nameof(templateFile));
         }
 
-        public static void Create(string templateFile, string resultFile, string[] singleParams, IEnumerable<string[]>[] tableParams)
+        public static void Create(string templateFile, string resultFile, string[] singleParams, IEnumerable<string[]>[] tableParams, bool readOnly = false)
         {
+            #region Contracts
+            CheckFilenames(templateFile, resultFile);
+            if (singleParams.Length == 0)
+                throw new System.ArgumentException("Массив с одиночными параметрами должен содержать хотя бы один элемент.", nameof(singleParams));
+            if (tableParams.Length == 0)
+                throw new System.ArgumentException("Массив с табличными параметрами должен содержать хотя бы один элемент.", nameof(tableParams));
+            #endregion
+
             XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
 
             if (template.Root.Element("Document").Element("Word") != null)
-                Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile).Save();
+            {
+                Novacode.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
+
+                if (readOnly)
+                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                doc.Save();
+            }
             else
-                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", nameof(templateFile));
         }
 
-        public static void Create(string resultFile, List<System.Tuple<string, DB_Connector, uint?, string[], List<string[]>[]>> documents)
+        public static void Create(string resultFile, IEnumerable<System.Tuple<string, DB_Connector, uint?, string[], List<string[]>[]>> documents, bool readOnly = false)
         {
+            #region Contracts
+            if (string.IsNullOrWhiteSpace(resultFile))
+                throw new System.ArgumentException("Некорректное имя выходного файла.", nameof(resultFile));
+            if (System.Linq.Enumerable.Count(documents) == 0)
+                throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
+            //TODO
+            #endregion
+
             Novacode.DocX doc = null;
             foreach (var document in documents)
             {
@@ -74,14 +106,20 @@ namespace PK.Classes
                     }
                 }
                 else
-                    throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", "templateFile");
+                    throw new System.ArgumentException("Эта перегрузка принимат только тип шаблонов \"Word\".", nameof(documents));
 
+                if (readOnly)
+                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
                 doc.Save();
             }
         }
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)
         {
+            #region Contracts
+            CheckConnectionAndFilenames(connection, templateFile, resultFile);
+            #endregion
+
             XDocument template = XDocument.Load(templateFile, LoadOptions.PreserveWhitespace);
 
             Validate(template);
@@ -89,7 +127,7 @@ namespace PK.Classes
             if (template.Root.Element("Document").Element("Excel") != null)
                 Excel.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Excel"), ids, resultFile);
             else
-                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Excel\".", "templateFile");
+                throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Excel\".", nameof(templateFile));
         }
 
         private static void Validate(XDocument doc)
@@ -180,6 +218,21 @@ namespace PK.Classes
                 return selectRes[0][0].ToString();
             else
                 return _PH_Functions[placeholderAndFunction[1]](selectRes[0][0]);
+        }
+
+        private static void CheckConnectionAndFilenames(DB_Connector connection, string templateFile, string resultFile)
+        {
+            if (connection == null)
+                throw new System.ArgumentNullException(nameof(connection));
+            CheckFilenames(templateFile, resultFile);
+        }
+
+        private static void CheckFilenames(string templateFile, string resultFile)
+        {
+            if (string.IsNullOrWhiteSpace(templateFile))
+                throw new System.ArgumentException("Некорректное имя файла шаблона.", nameof(templateFile));
+            if (string.IsNullOrWhiteSpace(resultFile))
+                throw new System.ArgumentException("Некорректное имя выходного файла.", nameof(resultFile));
         }
     }
 }

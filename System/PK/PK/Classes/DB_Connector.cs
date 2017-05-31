@@ -12,6 +12,13 @@ namespace PK.Classes
 
         public DB_Connector(string user, string password)
         {
+            #region Contracts
+            if (password == null)
+                throw new System.ArgumentNullException(nameof(password));
+            if (string.IsNullOrWhiteSpace(user))
+                throw new System.ArgumentException("Некорректное имя пользователя.", nameof(user));
+            #endregion
+
             User = user;
             Password = password;
 
@@ -43,6 +50,11 @@ namespace PK.Classes
 
         public List<object[]> Select(DB_Table table, params string[] fields)
         {
+            #region Contracts
+            if (fields == null)
+                throw new System.ArgumentNullException(nameof(fields));
+            #endregion
+
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             if (fields.Length == 0)
             {
@@ -57,10 +69,16 @@ namespace PK.Classes
 
         public List<object[]> Select(DB_Table table, string[] fields, List<System.Tuple<string, Relation, object>> whereExpressions)
         {
+            #region Contracts
+            if (fields == null)
+                throw new System.ArgumentNullException(nameof(fields));
+            if (whereExpressions == null)
+                throw new System.ArgumentNullException(nameof(whereExpressions));
             if (fields.Length == 0)
-                throw new System.ArgumentException("Массив с именами столбцов должен содержать хотя бы одно значение.", "fields");
+                throw new System.ArgumentException("Массив с именами столбцов должен содержать хотя бы один элемент.", nameof(fields));
             if (whereExpressions.Count == 0)
-                throw new System.ArgumentException("Список с параметрами фильтрации должен содержать хотя бы одно значение.", "whereExpressions");
+                throw new System.ArgumentException("Список с параметрами фильтрации должен содержать хотя бы один элемент.", nameof(whereExpressions));
+            #endregion
 
             MySqlCommand cmd = new MySqlCommand("", _Connection);
             string whereClause = "";
@@ -112,6 +130,13 @@ namespace PK.Classes
 
         public uint Insert(DB_Table table, Dictionary<string, object> columnsValues, MySqlTransaction transaction = null)
         {
+            #region Contracts
+            if (columnsValues == null)
+                throw new System.ArgumentNullException(nameof(columnsValues));
+            if (columnsValues.Count == 0)
+                throw new System.ArgumentException("Словарь с именами и значениями столбцов должен содержать хотя бы один элемент.", nameof(columnsValues));
+            #endregion
+
             MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string columns = "", values = "";
             byte count = 1;
@@ -133,6 +158,17 @@ namespace PK.Classes
 
         public void Update(DB_Table table, Dictionary<string, object> columnsValues, Dictionary<string, object> whereColumnValues, MySqlTransaction transaction = null)
         {
+            #region Contracts
+            if (columnsValues == null)
+                throw new System.ArgumentNullException(nameof(columnsValues));
+            if (whereColumnValues == null)
+                throw new System.ArgumentNullException(nameof(whereColumnValues));
+            if (columnsValues.Count == 0)
+                throw new System.ArgumentException("Словарь с именами и значениями столбцов должен содержать хотя бы один элемент.", nameof(columnsValues));
+            if (whereColumnValues.Count == 0)
+                throw new System.ArgumentException("Список с параметрами фильтрации должен содержать хотя бы один элемент.", nameof(whereColumnValues));
+            #endregion
+
             MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string set = "";
             byte count = 1;
@@ -161,6 +197,13 @@ namespace PK.Classes
 
         public void Delete(DB_Table table, Dictionary<string, object> whereColumnValues, MySqlTransaction transaction = null)
         {
+            #region Contracts
+            if (whereColumnValues == null)
+                throw new System.ArgumentNullException(nameof(whereColumnValues));
+            if (whereColumnValues.Count == 0)
+                throw new System.ArgumentException("Словарь с параметрами фильтрации должен содержать хотя бы один элемент.", nameof(whereColumnValues));
+            #endregion
+
             MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             byte count = 1;
             string where = "";
@@ -179,6 +222,13 @@ namespace PK.Classes
 
         public void InsertOnDuplicateUpdate(DB_Table table, Dictionary<string, object> columnsValues, MySqlTransaction transaction = null)
         {
+            #region Contracts
+            if (columnsValues == null)
+                throw new System.ArgumentNullException(nameof(columnsValues));
+            if (columnsValues.Count == 0)
+                throw new System.ArgumentException("Словарь с именами и значениями столбцов должен содержать хотя бы один элемент.", nameof(columnsValues));
+            #endregion
+
             MySqlCommand cmd = transaction != null ? new MySqlCommand("", _Connection, transaction) : new MySqlCommand("", _Connection);
             string columns = "", values = "", update = "";
             byte count = 1;
@@ -203,6 +253,11 @@ namespace PK.Classes
 
         public List<object[]> CallProcedure(string name, object parameter)
         {
+            #region Contracts
+            if (string.IsNullOrWhiteSpace(name))
+                throw new System.ArgumentException("Некорректное имя процедуры.", nameof(name));
+            #endregion
+
             MySqlCommand cmd = new MySqlCommand(name, _Connection);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("id", parameter);

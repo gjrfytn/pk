@@ -14,6 +14,10 @@ namespace PK.Classes
 
         public static Dictionary<uint, string> GetDictionaries(string login, string password)
         {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            #endregion
+
             //
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
             //        @"<Root>
@@ -33,8 +37,12 @@ namespace PK.Classes
 
         public static Dictionary<uint, string> GetDictionaryItems(string login, string password, uint dictionaryID)
         {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            #endregion
+
             if (dictionaryID == 10 || dictionaryID == 19)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", "dictionaryID");
+                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", nameof(dictionaryID));
             //
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
             //        @"<Root>
@@ -61,6 +69,10 @@ namespace PK.Classes
 
         public static Dictionary<uint, string[]> GetDirectionsDictionaryItems(string login, string password)
         {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            #endregion
+
             //
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
             //        @"<Root>
@@ -94,6 +106,14 @@ namespace PK.Classes
 
         public static Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(string login, string password, params uint[] profiles)
         {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            if (profiles == null)
+                throw new System.ArgumentNullException(nameof(profiles));
+            if (profiles.Length == 0)
+                throw new System.ArgumentException("Массив с профилями должен содержать хотя бы один элемент.", nameof(profiles));
+            #endregion
+
             //
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
             //        @"<Root>
@@ -138,12 +158,20 @@ namespace PK.Classes
                 });
         }
 
-        public static string Export(string adress, string login, string password, FIS_ExportClasses.PackageData data)
+        public static string Export(string address, string login, string password, FIS_ExportClasses.PackageData data)
         {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            if (data == null)
+                throw new System.ArgumentNullException(nameof(data));
+            if (string.IsNullOrWhiteSpace(address))
+                throw new System.ArgumentException("Некорректный адрес.", nameof(address));
+            #endregion
+
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
             //    new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
 
-            //XDocument doc = GetResponse(adress+"/import/importservice.svc/import", byteArray);
+            //XDocument doc = GetResponse(address + "/import/importservice.svc/import", byteArray);
 
             //if (doc.Root.Name == "Error")
             //    throw new FIS_Exception(doc.Root.Element("ErrorText").Value);
@@ -180,6 +208,14 @@ namespace PK.Classes
             response.Close();
 
             return doc;
+        }
+
+        private static void CheckLoginAndPassword(string login, string password)
+        {
+            if (string.IsNullOrWhiteSpace(login))
+                throw new System.ArgumentException("Некорректный логин.", nameof(login));
+            if (string.IsNullOrWhiteSpace(password))
+                throw new System.ArgumentException("Некорректный пароль.", nameof(password));
         }
     }
 }

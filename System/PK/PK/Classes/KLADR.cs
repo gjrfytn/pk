@@ -22,6 +22,13 @@ namespace PK.Classes
 
         public KLADR(string user, string password)
         {
+            #region Contracts
+            if (password == null)
+                throw new System.ArgumentNullException(nameof(password));
+            if (string.IsNullOrWhiteSpace(user))
+                throw new System.ArgumentException("Некорректное имя пользователя.", nameof(user));
+            #endregion
+
             _Connection = new MySqlConnection(Properties.Settings.Default.kladr_CS + " user = " + user + "; password = " + password + ";");
             _Connection.Open();
         }

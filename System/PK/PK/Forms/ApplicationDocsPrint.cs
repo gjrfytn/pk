@@ -303,7 +303,7 @@ namespace PK.Forms
 
             var marks = Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ID }, Classes.Utility.CurrentCampaignID).GroupBy(
                 k => k.Item2,
-                (k, g) =>                new
+                (k, g) => new
                 {
                     Subj = k,
                     Mark = g.Any(s => s.Item4) ? g.Where(s => s.Item4).Max(s => s.Item3) : g.Max(s => s.Item3)
@@ -455,7 +455,7 @@ namespace PK.Forms
             }
 
             string doc = Classes.Utility.TempPath + "abitDocs" + new Random().Next();
-            Classes.DocumentCreator.Create(doc, documents);
+            Classes.DocumentCreator.Create(doc, documents, true);
             doc += ".docx";
 
             return doc;

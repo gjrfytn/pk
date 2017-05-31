@@ -8,6 +8,11 @@ namespace PK.Classes
     {
         public static void RegistrationJournal(DB_Connector connection, DateTime date)
         {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            #endregion
+
             Dictionary<Tuple<uint, uint>, string> streams = new Dictionary<Tuple<uint, uint>, string>
             {
                 {new Tuple<uint,uint>(11,14),"ОБ" },
@@ -145,6 +150,13 @@ namespace PK.Classes
 
         public static void Order(DB_Connector connection, string number)
         {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(number))
+                throw new ArgumentException("Некорректный номер приказа.", nameof(number));
+            #endregion
+
             DB_Helper dbHelper = new DB_Helper(connection);
 
             object[] order = connection.Select(

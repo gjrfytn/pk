@@ -8,6 +8,15 @@ namespace PK.Classes
     {
         public static IEnumerable<Tuple<uint, uint, byte, bool, bool>> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
         {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            if (applications == null)
+                throw new ArgumentNullException(nameof(applications));
+            if (applications.Count() == 0)
+                throw new ArgumentException("Коллекция с заявлениями должена содержать хотя бы один элемент.", nameof(applications));
+            #endregion
+
             object[] campStartEnd = connection.Select(
                 DB_Table.CAMPAIGNS,
                 new string[] { "start_year", "end_year" },
