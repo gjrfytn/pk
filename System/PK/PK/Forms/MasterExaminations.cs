@@ -47,7 +47,7 @@ namespace PK.Forms
                     Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(),
                     Mark = (short)s1[5],
                     Bonus = (ushort)s1[6],
-                    Date = (DateTime)s1[4],
+                    Date = s1[4] as DateTime?,
                     Faculty = s1[1].ToString(),
                     Direction = (uint)s1[2],
                     Profile = s1[3].ToString()
