@@ -690,9 +690,6 @@
         private System.Windows.Forms.RadioButton rbNew;
         private System.Windows.Forms.RadioButton rbWithdraw;
         private System.Windows.Forms.RadioButton rbAdm;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabelCurrCampaign;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
@@ -707,12 +704,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EnrollmentDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
-<<<<<<< HEAD
         private System.Windows.Forms.ToolStripLabel toolStrip_Label1;
         private System.Windows.Forms.ToolStripLabel toolStrip_CurrCampaign;
         private System.Windows.Forms.ToolStripLabel toolStrip_Label2;
-=======
->>>>>>> e2b9600551e5c81a3603eb2557ec35b9ac1ec951
     }
 }
 
