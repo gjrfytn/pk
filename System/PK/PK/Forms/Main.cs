@@ -313,6 +313,9 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
                 });
+            var directions = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
+            var profiles = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
+
             if (apps.Count > 0)
                 foreach (var application in apps)
                 {
@@ -325,9 +328,8 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
-
-                    dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
-                        application[3], _Statuses[application[5].ToString()]);
+                        dgvApplications.Rows.Add(application[0], names[0], names[1], names[2], null, null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
+                            application[3], _Statuses[application[5].ToString()]);
 
                     foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
                         appDocuments,
@@ -342,21 +344,32 @@ namespace PK.Forms
                         if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma") && (document.Value.Item2 != null))
                             dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Original.Index].Value = true;
 
-                    var directions = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
-                    string[] entrance = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date", "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+
+                    var appDirections = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
-                    }).Join(
-                        directions,
-                        entrances => new Tuple<uint, string>((uint)entrances[0], entrances[1].ToString()),
-                        dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
-                        (s1, s2) => s2[2].ToString()).ToArray();
-                    foreach (object shortName in entrance)
-                        if (dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value == null)
-                            dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = shortName;
-                        else
-                            dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value.ToString() + ", " + shortName;
-
+                    });
+                    if (!dgvApplications_Programs.Visible)
+                    {
+                        string[] entrance = appDirections.Join(
+                            directions,
+                            entrances => new Tuple<uint, string>((uint)entrances[0], entrances[1].ToString()),
+                            dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
+                            (s1, s2) => s2[2].ToString()).ToArray();
+                        foreach (object shortName in entrance)
+                            if (dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value == null)
+                                dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = shortName;
+                            else
+                                dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value = dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Entrances.Index].Value.ToString() + ", " + shortName;
+                    }
+                    else
+                    {
+                        foreach (object[] appDir in appDirections)
+                            if (dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Programs.Index].Value == null)
+                                dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Programs.Index].Value = appDir[2];
+                            else
+                                dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Programs.Index].Value = dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_Programs.Index].Value + ", " + appDir[2].ToString();
+                    }
                     var appOrdersData = _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
@@ -372,12 +385,12 @@ namespace PK.Forms
                     DateTime admData = DateTime.MinValue;
                     DateTime exData = DateTime.MinValue;
                     foreach (var order in appOrders)
-                        if (order.Item2 == "admission" && order.Item3 > admData)
+                        if (order.Item2 == "admission" && order.Item3 > admData.Date)
                         {
                             admNumber = order.Item1;
                             admData = order.Item3;
                         }
-                        else if (order.Item2 == "exception" && order.Item3 > exData)
+                        else if (order.Item2 == "exception" && order.Item3 > exData.Date)
                         {
                             exNumber = order.Item1;
                             exData = order.Item3;
@@ -435,8 +448,7 @@ namespace PK.Forms
                 toolStripLabelCurrCampaign.Text = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, _CurrCampaignID)
-                })[0][0].ToString();
-                UpdateApplicationsTable();
+                })[0][0].ToString();                
                 List<object[]> directions = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampaignID)
@@ -449,6 +461,9 @@ namespace PK.Forms
                     menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
                     menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
                     menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateApplication_Click);
+                    dgvApplications_Original.Visible = true;
+                    dgvApplications_Entrances.Visible = true;
+                    dgvApplications_Programs.Visible = false;
                 }
                 else
                 {
@@ -458,11 +473,15 @@ namespace PK.Forms
                     menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateApplication_Click);
                     menuStrip_CreateApplication.Click -= new System.EventHandler(menuStrip_CreateMagApplication_Click);
                     menuStrip_CreateApplication.Click += new System.EventHandler(menuStrip_CreateMagApplication_Click);
+                    dgvApplications_Original.Visible = false;
+                    dgvApplications_Entrances.Visible = false;
+                    dgvApplications_Programs.Visible = true;
                 }
+                UpdateApplicationsTable();
+                FilterAppsTable();
             }
             else
                 _CurrCampaignID = 0;
-
         }
 
         private void SetUserRole()

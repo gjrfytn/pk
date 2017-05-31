@@ -131,6 +131,7 @@
             // 
             // cbCurrentCampaign
             // 
+            this.cbCurrentCampaign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCurrentCampaign.FormattingEnabled = true;
             this.cbCurrentCampaign.Location = new System.Drawing.Point(331, 12);
             this.cbCurrentCampaign.Name = "cbCurrentCampaign";

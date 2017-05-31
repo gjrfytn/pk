@@ -958,7 +958,7 @@ namespace PK.Forms
             tbInstitutionLocation.Text = "";
             tbIDDocSeries.Text = "";
             tbIDDocNumber.Text = "";
-            tbSubdivisionCode.Text = "";
+            mtbSubdivisionCode.Text = "";
             tbEduDocSeries.Text = "";
             tbEduDocNumber.Text = "";
             tbInstitutionNumber.Text = "";
@@ -987,17 +987,20 @@ namespace PK.Forms
             for (int i = 0; i < numberLength; i++)
             {
                 tbIDDocSeries.Text += digits[rand.Next(digits.Length)];
-                tbIDDocNumber.Text += digits[rand.Next(digits.Length)];
-                tbSubdivisionCode.Text += digits[rand.Next(digits.Length)];
+                tbIDDocNumber.Text += digits[rand.Next(digits.Length)];                
                 tbEduDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
                 tbExamsDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbExamsDocNumber.Text += digits[rand.Next(digits.Length)];
                 tbInstitutionNumber.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
             }
-
+            string subCode = "";
             for (int i = 0; i < 6; i++)
+            {
                 tbPostcode.Text += digits[rand.Next(digits.Length)];
+                subCode += digits[rand.Next(digits.Length)];
+            }
+            mtbSubdivisionCode.Text = subCode;
             for (int i = 0; i < 10; i++)
                 mtbEMail.Text += latinLetters[rand.Next(latinLetters.Length)];
             mtbEMail.Text += "@" + emailEndings[rand.Next(emailEndings.Length)];
@@ -1141,7 +1144,7 @@ namespace PK.Forms
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                 { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER, cbSex.SelectedItem.ToString())},
-                { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                { "subdivision_code", mtbSubdivisionCode.Text },{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
@@ -1566,7 +1569,7 @@ namespace PK.Forms
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                         })[0];
-                    tbSubdivisionCode.Text = passport[0].ToString();
+                    mtbSubdivisionCode.Text = passport[0].ToString();
                     cbIDDocType.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IDENTITY_DOC_TYPE, (uint)passport[1]);
                     cbNationality.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.COUNTRY, (uint)passport[2]);
                     dtpDateOfBirth.Value = (DateTime)passport[3];
@@ -2158,7 +2161,7 @@ namespace PK.Forms
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                             { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
-                            { "subdivision_code", tbSubdivisionCode.Text},{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                            { "subdivision_code", mtbSubdivisionCode.Text },{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},

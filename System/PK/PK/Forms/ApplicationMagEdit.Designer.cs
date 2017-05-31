@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationMagEdit));
             this.gbEduDocument = new System.Windows.Forms.GroupBox();
+            this.cbTarget = new System.Windows.Forms.CheckBox();
             this.btFillRand = new System.Windows.Forms.Button();
             this.cbSpecialRights = new System.Windows.Forms.CheckBox();
             this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
@@ -45,7 +46,6 @@
             this.label22 = new System.Windows.Forms.Label();
             this.tbEduDocSeries = new System.Windows.Forms.TextBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
-            this.cbTarget = new System.Windows.Forms.CheckBox();
             this.cbRedDiploma = new System.Windows.Forms.CheckBox();
             this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
             this.cbFirstTime = new System.Windows.Forms.ComboBox();
@@ -94,6 +94,7 @@
             this.cbPassportCopy = new System.Windows.Forms.CheckBox();
             this.cbAppAdmission = new System.Windows.Forms.CheckBox();
             this.gbPassport = new System.Windows.Forms.GroupBox();
+            this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
             this.cbStreet = new System.Windows.Forms.ComboBox();
@@ -121,7 +122,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.tbIssuedBy = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.tbSubdivisionCode = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbIDDocNumber = new System.Windows.Forms.TextBox();
@@ -157,6 +157,7 @@
             // gbEduDocument
             // 
             this.gbEduDocument.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.gbEduDocument.Controls.Add(this.cbTarget);
             this.gbEduDocument.Controls.Add(this.btFillRand);
             this.gbEduDocument.Controls.Add(this.cbSpecialRights);
             this.gbEduDocument.Controls.Add(this.cbHostelNeeded);
@@ -176,6 +177,18 @@
             this.gbEduDocument.TabIndex = 1;
             this.gbEduDocument.TabStop = false;
             this.gbEduDocument.Text = "Документ об образовании";
+            // 
+            // cbTarget
+            // 
+            this.cbTarget.AutoSize = true;
+            this.cbTarget.Location = new System.Drawing.Point(995, 58);
+            this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
+            this.cbTarget.Name = "cbTarget";
+            this.cbTarget.Size = new System.Drawing.Size(128, 20);
+            this.cbTarget.TabIndex = 1;
+            this.cbTarget.Text = "Целевой прием";
+            this.cbTarget.UseVisualStyleBackColor = true;
+            this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
             // 
             // btFillRand
             // 
@@ -300,26 +313,13 @@
             // 
             // gbAttributes
             // 
-            this.gbAttributes.Controls.Add(this.cbTarget);
             this.gbAttributes.Controls.Add(this.cbRedDiploma);
             this.gbAttributes.Location = new System.Drawing.Point(0, 21);
             this.gbAttributes.Name = "gbAttributes";
-            this.gbAttributes.Size = new System.Drawing.Size(324, 45);
+            this.gbAttributes.Size = new System.Drawing.Size(218, 45);
             this.gbAttributes.TabIndex = 0;
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Индивидуальные достижения";
-            // 
-            // cbTarget
-            // 
-            this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(182, 18);
-            this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
-            this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(128, 20);
-            this.cbTarget.TabIndex = 1;
-            this.cbTarget.Text = "Целевой прием";
-            this.cbTarget.UseVisualStyleBackColor = true;
-            this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
             // 
             // cbRedDiploma
             // 
@@ -666,23 +666,23 @@
             // textBox2
             // 
             this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(793, 37);
+            this.textBox2.Location = new System.Drawing.Point(755, 37);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(53, 22);
+            this.textBox2.Size = new System.Drawing.Size(60, 22);
             this.textBox2.TabIndex = 2;
             // 
             // textBox1
             // 
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(456, 37);
+            this.textBox1.Location = new System.Drawing.Point(374, 37);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(53, 22);
+            this.textBox1.Size = new System.Drawing.Size(62, 22);
             this.textBox1.TabIndex = 1;
             // 
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(528, 40);
+            this.label36.Location = new System.Drawing.Point(490, 40);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(259, 16);
             this.label36.TabIndex = 9;
@@ -691,7 +691,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(328, 40);
+            this.label32.Location = new System.Drawing.Point(246, 40);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(122, 16);
             this.label32.TabIndex = 8;
@@ -833,6 +833,7 @@
             // gbPassport
             // 
             this.gbPassport.BackColor = System.Drawing.Color.SeaShell;
+            this.gbPassport.Controls.Add(this.mtbSubdivisionCode);
             this.gbPassport.Controls.Add(this.pictureBox1);
             this.gbPassport.Controls.Add(this.gbAdress);
             this.gbPassport.Controls.Add(this.tbPlaceOfBirth);
@@ -845,7 +846,6 @@
             this.gbPassport.Controls.Add(this.label10);
             this.gbPassport.Controls.Add(this.tbIssuedBy);
             this.gbPassport.Controls.Add(this.label9);
-            this.gbPassport.Controls.Add(this.tbSubdivisionCode);
             this.gbPassport.Controls.Add(this.label8);
             this.gbPassport.Controls.Add(this.label7);
             this.gbPassport.Controls.Add(this.tbIDDocNumber);
@@ -869,6 +869,14 @@
             this.gbPassport.TabIndex = 0;
             this.gbPassport.TabStop = false;
             this.gbPassport.Text = "Из паспорта";
+            // 
+            // mtbSubdivisionCode
+            // 
+            this.mtbSubdivisionCode.Location = new System.Drawing.Point(1232, 52);
+            this.mtbSubdivisionCode.Mask = "999-999";
+            this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
+            this.mtbSubdivisionCode.Size = new System.Drawing.Size(105, 22);
+            this.mtbSubdivisionCode.TabIndex = 13;
             // 
             // pictureBox1
             // 
@@ -1159,14 +1167,6 @@
             this.label9.TabIndex = 16;
             this.label9.Text = "Кем выдан:";
             // 
-            // tbSubdivisionCode
-            // 
-            this.tbSubdivisionCode.Location = new System.Drawing.Point(1232, 50);
-            this.tbSubdivisionCode.Margin = new System.Windows.Forms.Padding(4);
-            this.tbSubdivisionCode.Name = "tbSubdivisionCode";
-            this.tbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
-            this.tbSubdivisionCode.TabIndex = 5;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -1456,7 +1456,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbIssuedBy;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbSubdivisionCode;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tbIDDocNumber;
@@ -1478,5 +1477,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
     }
 }
