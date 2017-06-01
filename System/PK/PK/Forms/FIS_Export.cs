@@ -13,20 +13,26 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
-            cbAdress.Items.AddRange(Properties.Settings.Default.FIS_Adresses.Cast<string>().ToArray());
-            cbAdress.SelectedIndex = 0;
+            cbAddress.Items.AddRange(Properties.Settings.Default.FIS_Addresses.Cast<string>().ToArray());
+            cbAddress.SelectedIndex = 0;
             #endregion
 
             _DB_Connection = connection;
         }
 
-        private void bOpenAdressPage_Click(object sender, EventArgs e)
+        private void bOpenAddressPage_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(cbAdress.Text);
+            System.Diagnostics.Process.Start(cbAddress.Text);
         }
 
         private void bExport_Click(object sender, EventArgs e)
         {
+            if (!cbCampaignData.Checked && !cbApplications.Checked && !cbOrders.Checked)
+            {
+                MessageBox.Show("Не отмечена информация к выгрузке.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Cursor.Current = Cursors.WaitCursor;
 
             Classes.Utility.TryAccessFIS_Function((login, password) =>
@@ -35,10 +41,10 @@ namespace PK.Forms
                     MessageBox.Show(
                         "Идентификатор пакета: " +
                         Classes.FIS_Connector.Export(
-                            cbAdress.Text,
+                            cbAddress.Text,
                             login,
                             password,
-                            Classes.FIS_Packager.MakePackage(_DB_Connection, cbCampaignData.Checked, cbApplications.Checked, cbOrders.Checked)
+                            Classes.FIS_Packager.MakePackage(_DB_Connection, Classes.Utility.CurrentCampaignID, cbCampaignData.Checked, cbApplications.Checked, cbOrders.Checked)
                             ),
                         "Пакет отправлен",
                         MessageBoxButtons.OK,

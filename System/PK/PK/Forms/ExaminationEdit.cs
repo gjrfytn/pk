@@ -92,10 +92,39 @@ namespace PK.Forms
             }
 
             foreach (DataGridViewRow row in dataGridView.Rows)
-                if (!row.IsNewRow && (row.Cells[0].Value == null || row.Cells[1].Value == null))
+                if (!row.IsNewRow)
                 {
-                    MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    bool error = false;
+                    if (row.Cells[0].Value == null || row.Cells[1].Value == null)
+                    {
+                        MessageBox.Show("Не заполнен номер или вместимость одной из аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        error = true;
+                    }
+                    else if (row.Cells[0].Value.ToString().Length > 5)
+                    {
+                        MessageBox.Show("Номер аудитории превышает максимальную длину.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        error = true;
+                    }
+                    else if ((ushort)row.Cells[1].Value == 0)
+                    {
+                        MessageBox.Show("Вместимость аудитории не может быть равна 0.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        error = true;
+                    }
+                    else
+                        for (byte i = 0; i < row.Index; ++i)
+                            if (dataGridView[0, i].Value.Equals(row.Cells[0].Value))
+                            {
+                                MessageBox.Show("Дублируются номера аудиторий.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                error = true;
+                                break;
+                            }
+
+                    if (error)
+                    {
+                        dataGridView.ClearSelection();
+                        row.Selected = true;
+                        return;
+                    }
                 }
 
             if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !Classes.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))

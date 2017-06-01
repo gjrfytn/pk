@@ -17,6 +17,12 @@ namespace PK.Forms
 
         private void bAuth_Click(object sender, EventArgs e)
         {
+            if (tbLogin.Text == "" || tbPassword.Text == "")
+            {
+                MessageBox.Show("Поля не могут быть пустыми.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Properties.Settings.Default.FIS_Login = tbLogin.Text;
             Properties.Settings.Default.Save();
 

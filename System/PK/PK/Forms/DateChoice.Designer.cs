@@ -37,7 +37,7 @@
             this.dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimePicker.Location = new System.Drawing.Point(12, 12);
             this.dateTimePicker.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
-            this.dateTimePicker.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.dateTimePicker.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dateTimePicker.Name = "dateTimePicker";
             this.dateTimePicker.Size = new System.Drawing.Size(100, 20);
             this.dateTimePicker.TabIndex = 0;

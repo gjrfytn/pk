@@ -157,5 +157,15 @@ namespace PK.Forms
             if (!char.IsNumber(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
         }
+
+        private void tbNumber_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ushort r;
+            if (!ushort.TryParse(tbNumber.Text, out r))
+            {
+                MessageBox.Show("Превышено максимальное значение номера.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+        }
     }
 }

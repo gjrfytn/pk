@@ -102,6 +102,28 @@ namespace PK.Forms
             Classes.Utility.ShowChangesSavedMessage();
         }
 
+        private void dataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView_Mark.Index)
+            {
+                short mark;
+                if (!short.TryParse(e.FormattedValue.ToString(), out mark) || mark > 100 || mark < -1)
+                {
+                    MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true;
+                }
+            }
+            else if (e.ColumnIndex == dataGridView_Bonus.Index)
+            {
+                ushort bonus;
+                if (!ushort.TryParse(e.FormattedValue.ToString(), out bonus) || bonus > 100) //TODO > 100?
+                {
+                    MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true;
+                }
+            }
+        }
+
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);

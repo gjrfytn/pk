@@ -20,6 +20,7 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
+            // Для отображения без компонента времени:
             dataGridView_Date.ValueType = typeof(DateTime);
             dataGridView_RegStartDate.ValueType = typeof(DateTime);
             dataGridView_RegEndDate.ValueType = typeof(DateTime);

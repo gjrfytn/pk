@@ -25,6 +25,7 @@
             // tbPassword
             // 
             this.tbPassword.Location = new System.Drawing.Point(69, 88);
+            this.tbPassword.MaxLength = 20;
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '*';
             this.tbPassword.Size = new System.Drawing.Size(148, 20);
@@ -54,6 +55,7 @@
             this.cbLogin.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbLogin.FormattingEnabled = true;
             this.cbLogin.Location = new System.Drawing.Point(69, 45);
+            this.cbLogin.MaxLength = 20;
             this.cbLogin.Name = "cbLogin";
             this.cbLogin.Size = new System.Drawing.Size(148, 21);
             this.cbLogin.TabIndex = 1;

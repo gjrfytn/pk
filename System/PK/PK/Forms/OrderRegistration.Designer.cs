@@ -58,7 +58,7 @@
             this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDate.Location = new System.Drawing.Point(118, 25);
             this.dtpDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
-            this.dtpDate.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.dtpDate.MinDate = new System.DateTime(2017, 1, 1, 0, 0, 0, 0);
             this.dtpDate.Name = "dtpDate";
             this.dtpDate.Size = new System.Drawing.Size(90, 20);
             this.dtpDate.TabIndex = 3;
@@ -78,9 +78,11 @@
             this.tbNumber.Location = new System.Drawing.Point(12, 25);
             this.tbNumber.MaxLength = 5;
             this.tbNumber.Name = "tbNumber";
+            this.tbNumber.ShortcutsEnabled = false;
             this.tbNumber.Size = new System.Drawing.Size(100, 20);
             this.tbNumber.TabIndex = 1;
             this.tbNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
+            this.tbNumber.Validating += new System.ComponentModel.CancelEventHandler(this.tbNumber_Validating);
             // 
             // OrderRegistration
             // 

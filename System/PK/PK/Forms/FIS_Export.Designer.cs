@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbAdress = new System.Windows.Forms.ComboBox();
+            this.cbAddress = new System.Windows.Forms.ComboBox();
             this.bExport = new System.Windows.Forms.Button();
-            this.lAdress = new System.Windows.Forms.Label();
-            this.bOpenAdressPage = new System.Windows.Forms.Button();
+            this.lAddress = new System.Windows.Forms.Label();
+            this.bOpenAddressPage = new System.Windows.Forms.Button();
             this.lExportData = new System.Windows.Forms.Label();
             this.cbCampaignData = new System.Windows.Forms.CheckBox();
             this.cbApplications = new System.Windows.Forms.CheckBox();
             this.cbOrders = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // cbAdress
+            // cbAddress
             // 
-            this.cbAdress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAdress.FormattingEnabled = true;
-            this.cbAdress.Location = new System.Drawing.Point(12, 25);
-            this.cbAdress.Name = "cbAdress";
-            this.cbAdress.Size = new System.Drawing.Size(150, 21);
-            this.cbAdress.TabIndex = 0;
+            this.cbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAddress.FormattingEnabled = true;
+            this.cbAddress.Location = new System.Drawing.Point(12, 25);
+            this.cbAddress.Name = "cbAddress";
+            this.cbAddress.Size = new System.Drawing.Size(150, 21);
+            this.cbAddress.TabIndex = 0;
             // 
             // bExport
             // 
@@ -57,24 +57,24 @@
             this.bExport.UseVisualStyleBackColor = true;
             this.bExport.Click += new System.EventHandler(this.bExport_Click);
             // 
-            // lAdress
+            // lAddress
             // 
-            this.lAdress.AutoSize = true;
-            this.lAdress.Location = new System.Drawing.Point(12, 9);
-            this.lAdress.Name = "lAdress";
-            this.lAdress.Size = new System.Drawing.Size(70, 13);
-            this.lAdress.TabIndex = 2;
-            this.lAdress.Text = "Адрес ФИС:";
+            this.lAddress.AutoSize = true;
+            this.lAddress.Location = new System.Drawing.Point(12, 9);
+            this.lAddress.Name = "lAddress";
+            this.lAddress.Size = new System.Drawing.Size(70, 13);
+            this.lAddress.TabIndex = 2;
+            this.lAddress.Text = "Адрес ФИС:";
             // 
-            // bOpenAdressPage
+            // bOpenAddressPage
             // 
-            this.bOpenAdressPage.Location = new System.Drawing.Point(168, 23);
-            this.bOpenAdressPage.Name = "bOpenAdressPage";
-            this.bOpenAdressPage.Size = new System.Drawing.Size(140, 23);
-            this.bOpenAdressPage.TabIndex = 3;
-            this.bOpenAdressPage.Text = "Открыть web-интерфейс";
-            this.bOpenAdressPage.UseVisualStyleBackColor = true;
-            this.bOpenAdressPage.Click += new System.EventHandler(this.bOpenAdressPage_Click);
+            this.bOpenAddressPage.Location = new System.Drawing.Point(168, 23);
+            this.bOpenAddressPage.Name = "bOpenAddressPage";
+            this.bOpenAddressPage.Size = new System.Drawing.Size(140, 23);
+            this.bOpenAddressPage.TabIndex = 3;
+            this.bOpenAddressPage.Text = "Открыть web-интерфейс";
+            this.bOpenAddressPage.UseVisualStyleBackColor = true;
+            this.bOpenAddressPage.Click += new System.EventHandler(this.bOpenAddressPage_Click);
             // 
             // lExportData
             // 
@@ -124,10 +124,10 @@
             this.Controls.Add(this.cbApplications);
             this.Controls.Add(this.cbCampaignData);
             this.Controls.Add(this.lExportData);
-            this.Controls.Add(this.bOpenAdressPage);
-            this.Controls.Add(this.lAdress);
+            this.Controls.Add(this.bOpenAddressPage);
+            this.Controls.Add(this.lAddress);
             this.Controls.Add(this.bExport);
-            this.Controls.Add(this.cbAdress);
+            this.Controls.Add(this.cbAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "FIS_Export";
@@ -140,10 +140,10 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cbAdress;
+        private System.Windows.Forms.ComboBox cbAddress;
         private System.Windows.Forms.Button bExport;
-        private System.Windows.Forms.Label lAdress;
-        private System.Windows.Forms.Button bOpenAdressPage;
+        private System.Windows.Forms.Label lAddress;
+        private System.Windows.Forms.Button bOpenAddressPage;
         private System.Windows.Forms.Label lExportData;
         private System.Windows.Forms.CheckBox cbCampaignData;
         private System.Windows.Forms.CheckBox cbApplications;

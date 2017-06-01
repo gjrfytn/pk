@@ -17,7 +17,6 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
-            dataGridView_UID.ValueType = typeof(uint);
             dataGridView_Mark.ValueType = typeof(short); //sbyte почему-то превращается в short при значении -1 в ячейке.
             #endregion
 
@@ -55,6 +54,9 @@ namespace PK.Forms
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
+            if (!TryApplyCellChanges())
+                return;
+
             Cursor.Current = Cursors.WaitCursor;
 
             if (dataGridView.IsCurrentCellDirty)
@@ -95,6 +97,9 @@ namespace PK.Forms
 
         private void toolStrip_Clear_Click(object sender, EventArgs e)
         {
+            if (!TryApplyCellChanges())
+                return;
+
             if (Classes.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new Dictionary<string, object> { { "examination_id", _ExaminationID } });
@@ -102,30 +107,49 @@ namespace PK.Forms
             }
         }
 
+        private void dataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView_Mark.Index)
+            {
+                short mark;
+                if (!short.TryParse(e.FormattedValue.ToString(), out mark) || mark > 100 || mark < -1)
+                {
+                    MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true;
+                }
+            }
+        }
+
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1)
                 _DB_Connection.Update(DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                    new Dictionary<string, object> { { dataGridView_Mark.DataPropertyName, dataGridView[e.ColumnIndex, e.RowIndex].Value } },
                     new Dictionary<string, object>
                     {
-                        {dataGridView_Mark.DataPropertyName,dataGridView[e.ColumnIndex,e.RowIndex].Value }
-                    },
-                    new Dictionary<string, object>
-                    {
-                        {dataGridView_UID.DataPropertyName,dataGridView[0,e.RowIndex].Value },
+                        { dataGridView_UID.DataPropertyName,dataGridView[dataGridView_UID.Index,e.RowIndex].Value },
                         { "examination_id", _ExaminationID}
                     });
         }
 
-        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
         private void ExaminationMarks_FormClosing(object sender, FormClosingEventArgs e)
         {
+            e.Cancel = !TryApplyCellChanges();
+        }
+
+        private bool TryApplyCellChanges()
+        {
             if (dataGridView.IsCurrentCellDirty)
-                dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                try
+                {
+                    dataGridView.CurrentCell = null;
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+
+            return true;
         }
     }
 }

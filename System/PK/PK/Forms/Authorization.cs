@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace PK.Forms
 {
@@ -76,13 +77,23 @@ namespace PK.Forms
 
         private void bAuth_Click(object sender, EventArgs e)
         {
-            object[] user = _DB_Connection.Select(DB_Table.USERS, "login", "password", "role").Find(x => x[0].ToString() == cbLogin.Text);
-
-            if (user == null)
-                MessageBox.Show("Логин не найден.", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (user[1].ToString() == tbPassword.Text)
+            if (cbLogin.Text == "" || tbPassword.Text == "")
             {
-                UsersRole = user[2].ToString();
+                MessageBox.Show("Поля не могут быть пустыми.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            List<object[]> results = _DB_Connection.Select(
+                DB_Table.USERS,
+                new string[] { "password", "role" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("login", Relation.EQUAL, cbLogin.Text) }
+                );
+
+            if (results.Count == 0)
+                MessageBox.Show("Логин не найден.", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (results[0][0].ToString() == tbPassword.Text)
+            {
+                UsersRole = results[0][1].ToString();
                 UsersLogin = cbLogin.Text;
 
                 Properties.Settings.Default.Login = cbLogin.Text;
@@ -91,14 +102,14 @@ namespace PK.Forms
                 DialogResult = DialogResult.OK;
             }
             else
-                MessageBox.Show("Неверный пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Неверный пароль.", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void AssureConstants()
         {
             string[] fields = { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" };
 
-            System.Collections.Generic.List<object[]> buf = _DB_Connection.Select(DB_Table.CONSTANTS, fields);
+            List<object[]> buf = _DB_Connection.Select(DB_Table.CONSTANTS, fields);
             if (buf.Count == 0)
                 _DB_Connection.Insert(
                     DB_Table.CONSTANTS,
