@@ -9,7 +9,7 @@ namespace PK.Classes
         private static readonly Dictionary<uint, char> EduFormLiterals = new Dictionary<uint, char>() { { 11, 'Д' }, { 12, 'В' }, { 10, 'З' } };
         private static readonly Dictionary<uint, string> EduSourceLiterals = new Dictionary<uint, string>() { { 14, "ОО" }, { 15, "СН" }, { 16, "ЦН" }, { 20, "КВ" } };
 
-        public static PackageData MakePackage(DB_Connector connection, bool campaignData, bool applications, bool orders)
+        public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, bool applications, bool orders)
         {
             return new PackageData(
                 campaignData ? PackCampaignInfo(connection) : null,
