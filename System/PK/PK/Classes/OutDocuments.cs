@@ -6,7 +6,511 @@ namespace PK.Classes
 {
     static class OutDocuments
     {
-        public static void RegistrationJournal(DB_Connector connection, DateTime date)
+        public class Entrant
+        {
+            class Stream
+            {
+                public class Entrance
+                {
+                    public readonly string Faculty;
+                    public readonly uint DirectionID;
+                    public readonly string Profile;
+                    public readonly DateTime? AgreedDate;
+                    public readonly DateTime? DisagreedDate;
+
+                    public Entrance(string faculty, uint directionID, string profile, DateTime? agreedDate, DateTime? disagreedDate)
+                    {
+                        Faculty = faculty;
+                        DirectionID = directionID;
+                        Profile = profile;
+                        AgreedDate = agreedDate;
+                        DisagreedDate = disagreedDate;
+                    }
+                }
+
+                public readonly uint EduForm;
+                public readonly uint EduSource;
+                public readonly System.Collections.ObjectModel.ReadOnlyCollection<Entrance> Directions;
+
+                //public readonly IEnumerable<Direction> Directions
+                //{
+                //    get { return _Directions.AsReadOnly(); }
+                //}
+
+                public Stream(uint eduForm, uint eduSource, System.Collections.ObjectModel.ReadOnlyCollection<Entrance> directions)
+                {
+                    EduForm = eduForm;
+                    EduSource = eduSource;
+                    Directions = directions;
+                }
+            }
+
+            class ApplicationData
+            {
+                public bool Hostel;
+                public bool MCADO;
+                public bool Chernobyl;
+                public bool PassingExam;
+                public bool Priority;
+                public bool Original;
+                public bool Quota;
+                public string LastName;
+                public string FirstName;
+                public string MiddleName;
+                public string HomePhone;
+                public string MobilePhone;
+            }
+
+            private static readonly Dictionary<Tuple<uint, uint>, Tuple<string, string>> _Streams = new Dictionary<Tuple<uint, uint>, Tuple<string, string>>
+            {
+                { new Tuple<uint,uint>(11,14),Tuple.Create("Очная (дневная) бюджетная","ОБ") },
+                { new Tuple<uint,uint>(11,15),Tuple.Create("Очная (дневная) платная","ОП") },
+                { new Tuple<uint,uint>(12,14),Tuple.Create("Очно-заочная (вечерняя) бюджетная","ОЗБ") },
+                { new Tuple<uint,uint>(12,15),Tuple.Create("Очно-заочная (вечерняя) платная","ОЗП") },
+                { new Tuple<uint,uint>(10,15),Tuple.Create("Заочная платная","ЗП") },
+                { new Tuple<uint,uint>(11,20),Tuple.Create("Квота, очная (дневная)","ОКВ") },
+                { new Tuple<uint,uint>(11,16),Tuple.Create("Целевой прием, очная (дневная)","ОЦП") },
+                { new Tuple<uint,uint>(12,20),Tuple.Create("Квота, очно-заочная (вечерняя)","ОЗКВ") },
+                { new Tuple<uint,uint>(12,16),Tuple.Create("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
+            };
+
+            public static string Documents(DB_Connector connection, uint applID, bool moveJournal, bool inventory, bool percRecordFace, bool receipt, bool percRecordBack, bool admAgreement)
+            {
+                #region Contracts
+                if (connection == null)
+                    throw new ArgumentNullException(nameof(connection));
+                #endregion
+
+                string[] medCertDirections = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
+
+                List<DocumentCreator.DocumentParameters> documents = new List<DocumentCreator.DocumentParameters>();
+
+                if (moveJournal)
+                    documents.Add(new DocumentCreator.DocumentParameters(
+                        Utility.DocumentsTemplatesPath + "MoveJournal.xml",
+                        connection,
+                        applID,
+                        null,
+                        null
+                        ));
+
+                List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+
+                IEnumerable<Stream> entrances = connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES,
+                    new string[] { "faculty_short_name", "direction_id", "edu_form_id", "edu_source_id", "profile_short_name", "is_agreed_date", "is_disagreed_date" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                    ).GroupBy(
+                    k => Tuple.Create(k[2], k[3]),
+                    el => new Stream.Entrance(
+                        el[0].ToString(),
+                        (uint)el[1],
+                        el[4].ToString(),
+                        el[5] as DateTime?,
+                        el[6] as DateTime?
+                        ),
+                    (k, g) => new Stream((uint)k.Item1, (uint)k.Item2, g.ToList().AsReadOnly())
+                    );
+
+                foreach (Stream stream in entrances)
+                    inventoryTableParams[0].Add(new string[] { _Streams[Tuple.Create(stream.EduForm, stream.EduSource)].Item1 + " форма обучения" });
+
+                var docs = connection.CallProcedure("get_application_docs", applID).Select(
+                    s => new
+                    {
+                        ID = (uint)s[0],
+                        Type = s[1].ToString(),
+                        Series = s[2].ToString(),
+                        Number = s[3].ToString(),
+                        OrigDate = s[6] as DateTime?
+                    });
+
+                object[] applDataBuf = connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "registration_time", "edit_time", "registrator_login", "needs_hostel", "mcado", "chernobyl", "passing_examinations", "priority_right" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                    )[0];
+
+                DateTime regTime = (DateTime)applDataBuf[0];
+                DateTime? editTime = applDataBuf[1] as DateTime?;
+                string registratorName = applDataBuf[2].ToString().Split(' ')[0];
+                ApplicationData applData = new ApplicationData
+                {
+                    Hostel = (bool)applDataBuf[3],
+                    MCADO = (bool)applDataBuf[4],
+                    Chernobyl = (bool)applDataBuf[5],
+                    PassingExam = (bool)applDataBuf[6],
+                    Priority = (bool)applDataBuf[7],
+                    Original = false,
+                    Quota = false,
+                };
+
+                inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
+                if (entrances.Any(s => s.Directions.Any(e => e.AgreedDate != null && e.DisagreedDate == null)))
+                    inventoryTableParams[1].Add(new string[] { "Заявление о согласии на зачисление" });
+
+                if (docs.Any(s => s.Type == "identity"))
+                    inventoryTableParams[1].Add(new string[] { "Копия паспорта" });
+
+                var eduDoc = docs.Single(s => s.Type == "school_certificate" || s.Type == "high_edu_diploma" || s.Type == "academic_diploma");
+                if (eduDoc.Type == "academic_diploma")
+                    inventoryTableParams[1].Add(new string[] { "Справка отдела кадров" });
+                else
+                {
+                    string buf = eduDoc.Series + " " + eduDoc.Number;
+                    if (eduDoc.Type == "school_certificate")
+                        buf = " аттестата " + buf;
+                    else
+                        buf = " диплома " + buf;
+
+                    if (eduDoc.OrigDate.HasValue)
+                    {
+                        inventoryTableParams[1].Add(new string[] { "Оригинал" + buf + " Дата ориг.: " + eduDoc.OrigDate.Value.ToShortDateString() });
+                        applData.Original = true;
+                    }
+                    else
+                        inventoryTableParams[1].Add(new string[] { "Копия" + buf });
+                }
+
+                if (applData.Chernobyl || applData.Priority || docs.Any(s =>
+                s.Type == "orphan" ||
+                s.Type == "disability" ||
+                s.Type == "medical" ||
+                s.Type == "olympic" ||
+                s.Type == "olympic_total" ||
+                s.Type == "ukraine_olympic" ||
+                s.Type == "international_olympic"
+                ))
+                    inventoryTableParams[1].Add(new string[] { "Направление ПК" });
+
+                foreach (var medDoc in docs.Where(s => s.Type == "medical"))
+                {
+                    List<object[]> certificateData = connection.Select(
+                        DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                        new string[] { "name" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("document_id", Relation.EQUAL, medDoc.ID) }
+                        );
+
+                    if (certificateData.Count > 0 && certificateData[0][0].ToString() == DB_Helper.MedCertificate)
+                        inventoryTableParams[1].Add(new string[] { "Медицинская справка" });
+                    else
+                        applData.Quota = true;
+                }
+
+                if (docs.Any(s => s.Type == "photos"))
+                    inventoryTableParams[1].Add(new string[] { "4 фотографии 3х4" });
+
+                if (docs.Any(s => s.Type == "orphan" || s.Type == "disability"))
+                    applData.Quota = true;
+
+                object[] entrant = connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                    ).Join(
+                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                    k1 => k1[0],
+                    k2 => k2[0],
+                    (s1, s2) => s2).First();
+
+                uint entrantID = (uint)entrant[0];
+                applData.LastName = entrant[1].ToString();
+                applData.FirstName = entrant[2].ToString();
+                applData.MiddleName = entrant[3].ToString();
+
+                object[] entrantData = connection.Select(
+                   DB_Table.ENTRANTS,
+                   new string[] { "home_phone", "mobile_phone" },
+                   new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, entrantID) }
+                   )[0];
+                applData.HomePhone = entrantData[0].ToString();
+                applData.MobilePhone = entrantData[1].ToString();
+
+                if (inventory)
+                    documents.Add(new DocumentCreator.DocumentParameters(
+                        Utility.DocumentsTemplatesPath + "Inventory.xml",
+                        null,
+                        null,
+                        new string[]
+                        {
+                            entrantID.ToString(),
+                            applData.LastName.ToUpper(),
+                            (applData.FirstName+" "+applData.MiddleName).ToUpper(),
+                            registratorName,
+                            System.Windows.Forms.SystemInformation.ComputerName,
+                            regTime.ToString()
+                        },
+                        inventoryTableParams
+                        ));
+
+                if (percRecordFace)
+                    AddPercRecordFace(documents, inventoryTableParams[0], regTime, applData, entrantID);
+
+                if (receipt)
+                    AddReceipt(documents, connection, inventoryTableParams[1], entrances, regTime, editTime, registratorName, applData, entrantID);
+
+                var marks = DB_Queries.GetMarks(connection, new uint[] { applID }, Utility.CurrentCampaignID).GroupBy(
+                    k => k.SubjID,
+                    (k, g) => Tuple.Create(k, g.Any(s => s.Checked) ? g.Where(s => s.Checked).Max(s => s.Value) : g.Max(s => s.Value))
+                    );
+
+                if (percRecordBack)
+                    AddPercRecordBack(documents, connection, applID, applData, entrances, marks);
+
+                if (admAgreement)
+                    AddAdmAgreement(documents, connection, applID, applData, marks);
+
+                string doc = Utility.TempPath + "abitDocs" + new Random().Next();
+                DocumentCreator.Create(doc, documents, true);
+                return doc + ".docx";
+            }
+
+            private static void AddPercRecordFace(List<DocumentCreator.DocumentParameters> documents, List<string[]> streamsTableParams, DateTime regTime, ApplicationData applData, uint entrantID)
+            {
+                List<string> parameters = new List<string>
+                {
+                    applData.LastName.ToUpper(),
+                    applData.FirstName[0]+".",
+                    applData.MiddleName.Length!=0?applData.MiddleName[0]+".":"",
+                    entrantID.ToString(),
+                    applData. LastName,
+                    applData.FirstName,
+                    applData. MiddleName,
+                    regTime.Year.ToString()
+                };
+
+                foreach (string[] eduStream in streamsTableParams)
+                    parameters.Add(eduStream[0]);
+
+                while (parameters.Count != 13)
+                    parameters.Add("");
+
+
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
+                    null,
+                    null,
+                    parameters.ToArray(),
+                    null
+                    ));
+            }
+
+            private static void AddReceipt(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                List<string[]> entrDocumentsTableParams,
+                IEnumerable<Stream> entrances,
+                DateTime regTime,
+                DateTime? editTime,
+                string registratorName,
+                ApplicationData applData,
+                uint entrantID)
+            {
+                List<string[]>[] receiptTableParams = new List<string[]>[2];
+                receiptTableParams[0] = new List<string[]>();
+                receiptTableParams[1] = entrDocumentsTableParams;
+
+                DB_Helper dbHelper = new DB_Helper(connection);
+                foreach (Stream stream in entrances)
+                {
+                    receiptTableParams[0].Add(new string[] { _Streams[Tuple.Create(stream.EduForm, stream.EduSource)].Item1 + " форма обучения" });
+                    foreach (Stream.Entrance entrance in stream.Directions)
+                    {
+                        if (stream.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                            receiptTableParams[0].Add(new string[] { "     - " + entrance.Profile + " (" + entrance.Faculty + ") " +
+                            DB_Queries.GetProfileName(connection,entrance.Faculty,entrance.DirectionID,entrance.Profile)});
+                        else
+                            receiptTableParams[0].Add(new string[] { "     - " + connection.Select(
+                                DB_Table.DIRECTIONS,
+                                new string[] { "short_name" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.DirectionID)
+                                })[0][0].ToString()+ " (" + entrance.Faculty + ") " + dbHelper.GetDirectionNameAndCode(entrance.DirectionID).Item1});
+                    }
+                    receiptTableParams[0].Add(new string[] { "" });
+                }
+
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Utility.DocumentsTemplatesPath + "Receipt.xml",
+                    null,
+                    null,
+                    new string[]
+                    {
+                        entrantID.ToString(),
+                        applData.LastName.ToUpper(),
+                        (applData.FirstName+" "+applData.MiddleName).ToUpper(),
+                        registratorName,
+                        System.Windows.Forms.SystemInformation.ComputerName,
+                        regTime.ToString(),
+                        editTime.HasValue?editTime.ToString():"нет"
+                    },
+                    receiptTableParams
+                    ));
+            }
+
+            private static void AddPercRecordBack(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                uint applID,
+                ApplicationData applData,
+                IEnumerable<Stream> entrances,
+                IEnumerable<Tuple<uint, byte>> marks)
+            {
+                List<string> parameters;
+                string indAchValue = connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                    connection.Select(
+                        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                        new string[] { "institution_achievement_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL, applID)
+                        }),
+                    k1 => k1[0],
+                    k2 => k2[0],
+                    (s1, s2) => s1[1]
+                    ).Max()?.ToString();
+
+                bool target = connection.Select(
+                DB_Table.APPLICATIONS_ENTRANCES,
+                new string[] { "target_organization_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                ).Any(s => s[0] as uint? != null);
+
+                DB_Helper dbHelper = new DB_Helper(connection);
+                byte? math = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика")).Select(s => s.Item2));
+                byte? rus = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык")).Select(s => s.Item2));
+                byte? phys = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика")).Select(s => s.Item2));
+                byte? soc = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание")).Select(s => s.Item2));
+                byte? foreign = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык")).Select(s => s.Item2));
+                parameters = new List<string>
+                {
+                    applData.LastName +" "+applData.FirstName+" "+applData.MiddleName,
+                    applData.HomePhone,
+                    applData.MobilePhone,
+                    applData.Quota?"+":"",
+                    applData.Priority?"+":"",
+                    math.ToString(),
+                    applData.Hostel?"+":"",
+                    applData.PassingExam?"+":"",
+                    rus.ToString(),
+                    applData.Chernobyl?"+":"",
+                    applData.MCADO?"+":"",
+                    phys.ToString(),
+                    target?"+":"",
+                    applData.Original?"+":"",
+                    soc.ToString(),
+                    foreign.ToString(),
+                    indAchValue,
+                    (math+rus+phys).ToString(),
+                    (math+rus+soc).ToString(),
+                    (rus+soc+foreign).ToString()
+                };
+
+                foreach (Stream stream in entrances)
+                {
+                    parameters.Add(_Streams[Tuple.Create(stream.EduForm, stream.EduSource)].Item2);
+                    byte count = 0;
+                    foreach (Stream.Entrance entrance in stream.Directions)
+                    {
+                        if (stream.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                            parameters.Add(entrance.Profile);
+                        else
+                            parameters.Add(connection.Select(
+                                DB_Table.DIRECTIONS,
+                                new string[] { "short_name" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.DirectionID)
+                                })[0][0].ToString());
+
+                        count++;
+                    }
+
+                    while (count != 3)
+                    {
+                        parameters.Add("");
+                        count++;
+                    }
+                }
+
+                while (parameters.Count != 40)
+                    parameters.Add("");
+
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
+                    null,
+                    null,
+                    parameters.ToArray(),
+                    null
+                    ));
+            }
+
+            private static void AddAdmAgreement(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                uint applID,
+                ApplicationData applData,
+                IEnumerable<Tuple<uint, byte>> marks)
+            {
+                object[] agreedDir = connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES,
+                    new string[] { "faculty_short_name", "direction_id", "edu_form_id", "is_agreed_date" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
+                        new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
+                        new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
+                    })[0];
+
+                string dirShortName = connection.Select(
+                    DB_Table.DIRECTIONS,
+                    new string[] { "short_name" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir[1])
+                    })[0][0].ToString();
+
+                ushort sum = 0;
+                foreach (object[] subj in connection.Select(
+                    DB_Table.ENTRANCE_TESTS,
+                    new string[] { "subject_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir[0]),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir[1])
+                    }
+                    ))
+                {
+                    var mark = marks.SingleOrDefault(s => s.Item1 == (uint)subj[0]);
+                    if (mark != null)
+                        sum += mark.Item2;
+                }
+
+                DB_Helper dbHelper = new DB_Helper(connection);
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Utility.DocumentsTemplatesPath + "AdmAgreement.xml",
+                    null,
+                    null,
+                    new string[]
+                    {
+                        (applData.LastName + " " + applData.FirstName + " " + applData.MiddleName).ToUpper(),
+                        dbHelper.GetDirectionNameAndCode((uint)agreedDir[1]).Item1+" ("+dirShortName+")",
+                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,(uint)agreedDir[2]),
+                        applID.ToString(),
+                        sum.ToString(),
+                        applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
+                        ((DateTime) agreedDir[3]).ToShortDateString()
+                    },
+                    null
+                    ));
+            }
+        }
+
+        public static string RegistrationJournal(DB_Connector connection, DateTime date)
         {
             #region Contracts
             if (connection == null)
@@ -144,11 +648,11 @@ namespace PK.Classes
                 null,
                 new List<string[]>[] { data }
                 );
-            doc += ".docx";
-            Utility.Print(doc);
+
+            return doc + ".docx";
         }
 
-        public static void Order(DB_Connector connection, string number)
+        public static string Order(DB_Connector connection, string number)
         {
             #region Contracts
             if (connection == null)
@@ -159,13 +663,24 @@ namespace PK.Classes
 
             DB_Helper dbHelper = new DB_Helper(connection);
 
-            object[] order = connection.Select(
+            var order = connection.Select(
                     DB_Table.ORDERS,
                     new string[] { "type", "date", "protocol_number", "protocol_date", "edu_form_id", "edu_source_id", "faculty_short_name", "direction_id", "profile_short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("number",Relation.EQUAL,number)
-                    })[0];
+                    }).Select(s => new
+                    {
+                        Type = s[0].ToString(),
+                        Date = (DateTime)s[1],
+                        ProtocolNumber = (ushort)s[2],
+                        ProtocolDate = (DateTime)s[3],
+                        EduForm = (uint)s[4],
+                        EduSource = (uint)s[5],
+                        Faculty = s[6].ToString(),
+                        Direction = s[7] as uint?,
+                        Profile = s[8] as string
+                    }).Single();
 
             var applications = connection.Select(
                 DB_Table.ORDERS_HAS_APPLICATIONS,
@@ -186,18 +701,18 @@ namespace PK.Classes
             string doc;
             List<string> paramaters = new List<string>
             {
-                ((DateTime)order[1]).ToShortDateString(),
+                order.Date.ToShortDateString(),
                 number,
-                order[2].ToString(),
-                ((DateTime)order[3]).ToShortDateString()
+                order.ProtocolNumber.ToString(),
+                order.ProtocolDate.ToShortDateString()
             };
 
-            if (order[0].ToString() == "hostel")
+            if (order.Type == "hostel")
             {
                 paramaters.AddRange(new string[]
                 {
-                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE,(uint)order[5]).ToLower(),
-                    order[6].ToString()
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE,order.EduSource).ToLower(),
+                    order.Faculty
                 });
 
                 doc = Utility.TempPath + "HostelOrder" + new Random().Next();
@@ -210,28 +725,23 @@ namespace PK.Classes
             }
             else
             {
-                Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode((uint)order[7]);
-                string profile = order[8] as string;
+                Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction.Value);
 
-                if (order[0].ToString() == "admission")
-                    paramaters.Add(((DateTime)order[1]).Year.ToString());
+                if (order.Type == "admission")
+                    paramaters.Add(order.Date.Year.ToString());
 
                 paramaters.AddRange(new string[]
                 {
-                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)order[4]).ToLower() + " обучения" +
-                    ((uint)order[5] == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
-                    order[6].ToString(),
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, order.EduForm).ToLower() + " обучения" +
+                    (order.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
+                    order.Faculty,
                     dirNameCode.Item2,
                     dirNameCode.Item1,
-                    profile != null ? "Профиль: " : "",
-                    profile != null ? profile + " - " + connection.Select(
-                        DB_Table.PROFILES,
-                        new string[] { "name" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("short_name", Relation.EQUAL, profile) }
-                        )[0][0].ToString() : ""
+                    order.Profile != null ? "Профиль: " : "",
+                    order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(connection,order.Faculty,order.Direction.Value,order.Profile) : ""
                 });
 
-                if (order[0].ToString() == "admission")
+                if (order.Type == "admission")
                 {
                     var dir_subjects = connection.Select(
                         DB_Table.ENTRANCE_TESTS,
@@ -239,21 +749,21 @@ namespace PK.Classes
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
-                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order[6]),
-                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order[7])
+                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order.Faculty),
+                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction)
                         }).Select(s => (uint)s[0]);
 
-                    IEnumerable<Tuple<uint, uint, byte, bool, bool>> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Utility.CurrentCampaignID);
+                    IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Utility.CurrentCampaignID);
 
                     var table = applications.Join(
                         marks.Join(
                             dir_subjects,
-                            k1 => k1.Item2,
+                            k1 => k1.SubjID,
                             k2 => k2,
                             (s1, s2) => s1
                             ).GroupBy(
-                            k => Tuple.Create(k.Item1, k.Item2),
-                            (k, g) => new { ApplID = g.First().Item1, Mark = g.Max(s => s.Item3) }
+                            k => Tuple.Create(k.ApplID, k.SubjID),
+                            (k, g) => new { g.First().ApplID, Mark = g.Max(s => s.Value) }
                             ).GroupBy(
                             k => k.ApplID,
                             (k, g) => new { g.First().ApplID, Sum = g.Sum(s => s.Mark) }
@@ -282,7 +792,16 @@ namespace PK.Classes
                         );
                 }
             }
-            Utility.Print(doc + ".docx");
+
+            return doc + ".docx";
+        }
+
+        private static byte? MaxOrNull(IEnumerable<byte> list)
+        {
+            if (list.Count() != 0)
+                return list.Max();
+
+            return null;
         }
     }
 }

@@ -542,6 +542,7 @@
     <None Include="Resources\refresh.png" />
     <None Include="Resources\check.png" />
     <None Include="Resources\kladr_db_creation.sql" />
+    <None Include="Resources\glass.png" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

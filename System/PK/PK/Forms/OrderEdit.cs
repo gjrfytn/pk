@@ -27,7 +27,7 @@ namespace PK.Forms
         private readonly string _EditNumber;
         private readonly bool _IsMaster;
 
-        public OrderEdit(Classes.DB_Connector connection, string number)
+        public OrderEdit(Classes.DB_Connector connection, string number, bool readOnly)
         {
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
@@ -57,6 +57,15 @@ namespace PK.Forms
                 dtpDate.Tag = true;
             else
                 dtpDate.Tag = false;
+
+            if (readOnly)
+            {
+                foreach (Control c in Controls)
+                    c.Enabled = false;
+
+                dataGridView.Enabled = true;
+                dataGridView.ReadOnly = true;
+            }
             #endregion
 
             cbFDP.DisplayMember = "Display";
@@ -216,15 +225,7 @@ namespace PK.Forms
                     s => new
                     {
                         Value = new CB_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
-                        Display = s[0].ToString() + " " + _DB_Connection.Select(
-                            DB_Table.PROFILES,
-                            new string[] { "name" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                Tuple.Create("faculty_short_name",Relation.EQUAL,s[0]),
-                                Tuple.Create("direction_id",Relation.EQUAL,s[1]),
-                                Tuple.Create("short_name",Relation.EQUAL,s[2])
-                            })[0][0].ToString()
+                        Display = s[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
                     }).ToList();
             else if (rbTarget.Checked)
                 cbFDP.DataSource = _DB_Connection.Select(
@@ -634,13 +635,13 @@ namespace PK.Forms
             }
             else
             {
-                IEnumerable<Tuple<uint, uint, byte, bool, bool>> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Utility.CurrentCampaignID);
+                IEnumerable<Classes.DB_Queries.Mark> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Utility.CurrentCampaignID);
 
                 var table = candidates.Join(
                     marks,
                     k1 => k1.ApplID,
-                    k2 => k2.Item1,
-                    (s1, s2) => new { s1.ApplID, s1.Name, Subj = s2.Item2, Mark = s2.Item3, Checked = s2.Item4 }
+                    k2 => k2.ApplID,
+                    (s1, s2) => new { s1.ApplID, s1.Name, s2.SubjID, s2.Value, s2.Checked }
                     ).GroupBy(
                     k1 => k1.ApplID,
                     (k1, g1) =>
@@ -649,12 +650,12 @@ namespace PK.Forms
                         ApplID = k1,
                         g1.First().Name,
                         Subjects = g1.GroupBy(
-                            k2 => k2.Subj,
+                            k2 => k2.SubjID,
                             (k2, g2) =>
                             new
                             {
                                 Subj = k2,
-                                Mark = g2.Any(s => s.Checked) ? g2.Where(s => s.Checked).Max(s => s.Mark) : g2.Max(s => s.Mark),
+                                Mark = g2.Any(s => s.Checked) ? g2.Where(s => s.Checked).Max(s => s.Value) : g2.Max(s => s.Value),
                                 Checked = g2.Any(s => s.Checked)
                             })
                     });

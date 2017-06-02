@@ -6,7 +6,25 @@ namespace PK.Classes
 {
     static class DB_Queries
     {
-        public static IEnumerable<Tuple<uint, uint, byte, bool, bool>> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
+        public class Mark
+        {
+            public readonly uint ApplID;
+            public readonly uint SubjID;
+            public readonly byte Value;
+            public readonly bool Checked;
+            public readonly bool FromExam;
+
+            public Mark(uint applID, uint subjID, byte value, bool checked_, bool fromExam)
+            {
+                ApplID = applID;
+                SubjID = subjID;
+                Value = value;
+                Checked = checked_;
+                FromExam = fromExam;
+            }
+        }
+
+        public static IEnumerable<Mark> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
         {
             #region Contracts
             if (connection == null)
@@ -49,7 +67,30 @@ namespace PK.Classes
                     k1 => k1.EntrID,
                     k2 => k2.EntrID,
                     (s1, s2) => new { s1.ApplID, s2.Subj, Mark = (byte)s2.Mark, Checked = true, Exam = true }
-                    )).Select(s => Tuple.Create(s.ApplID, s.Subj, s.Mark, s.Checked, s.Exam));
+                    )).Select(s => new Mark(s.ApplID, s.Subj, s.Mark, s.Checked, s.Exam));
+        }
+
+        //TODO faculty_short_name и direction_id будут не нужны, если краткое имя профиля уникально.
+        public static string GetProfileName(DB_Connector connection, string facultyShortName, uint directionID, string shortName)
+        {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            if (string.IsNullOrWhiteSpace(facultyShortName))
+                throw new ArgumentException("Некорректное краткое имя факультета.", nameof(facultyShortName));
+            if (string.IsNullOrWhiteSpace(shortName))
+                throw new ArgumentException("Некорректное краткое имя профиля.", nameof(shortName));
+            #endregion
+
+            return connection.Select(
+                DB_Table.PROFILES,
+                new string[] { "name" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,facultyShortName),
+                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,directionID),
+                    new Tuple<string, Relation, object>("short_name",Relation.EQUAL,shortName)
+                })[0][0].ToString();
         }
     }
 }

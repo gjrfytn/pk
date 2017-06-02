@@ -32,7 +32,7 @@ namespace PK.Forms
 
         private void toolStrip_New_Click(object sender, EventArgs e)
         {
-            OrderEdit form = new OrderEdit(_DB_Connection, null);
+            OrderEdit form = new OrderEdit(_DB_Connection, null, false);
             form.ShowDialog();
 
             UpdateTable();
@@ -40,7 +40,7 @@ namespace PK.Forms
 
         private void toolStrip_Edit_Click(object sender, EventArgs e)
         {
-            OrderEdit form = new OrderEdit(_DB_Connection, SelectedOrderNumber);
+            OrderEdit form = new OrderEdit(_DB_Connection, SelectedOrderNumber, dataGridView[dataGridView_ProtNumber.Index, dataGridView.SelectedRows[0].Index].Value != null);
             form.ShowDialog();
 
             UpdateTable();
@@ -66,7 +66,6 @@ namespace PK.Forms
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, SelectedOrderNumber) }
                     )[0][0];
 
-                toolStrip_Edit.Enabled = false;
                 toolStrip_Delete.Enabled = false;
                 toolStrip_Register.Enabled = false;
                 toolStrip_Print.Enabled = true;
@@ -76,7 +75,7 @@ namespace PK.Forms
         private void toolStrip_Print_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            Classes.OutDocuments.Order(_DB_Connection, SelectedOrderNumber);
+            Classes.Utility.Print(Classes.OutDocuments.Order(_DB_Connection, SelectedOrderNumber));
             Cursor.Current = Cursors.Default;
         }
 
@@ -96,7 +95,10 @@ namespace PK.Forms
         private void dataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             bool registered = dataGridView[dataGridView_ProtNumber.Index, e.RowIndex].Value != null;
-            toolStrip_Edit.Enabled = !registered;
+
+            toolStrip_Edit.Text = registered ? "Просмотреть..." : "Редактировать...";
+            toolStrip_Edit.Image = registered ? Properties.Resources.glass : Properties.Resources.pen;
+
             toolStrip_Delete.Enabled = !registered;
             toolStrip_Register.Enabled = !registered;
             toolStrip_Print.Enabled = registered;
@@ -106,10 +108,10 @@ namespace PK.Forms
         {
             dataGridView.Rows.Clear();
 
-            dataGridView.Rows.Clear();
+            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
             foreach (object[] row in _DB_Connection.Select(
                 DB_Table.ORDERS,
-                new string[] { "number", "type", "date", "protocol_number" },
+                new string[] { "number", "type", "date", "protocol_number", "edu_source_id", "edu_form_id", "faculty_short_name", "direction_id", "profile_short_name" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
@@ -118,7 +120,11 @@ namespace PK.Forms
                     row[0],
                     _OrderTypes[row[1].ToString()],
                     ((DateTime)row[2]).ToShortDateString(),
-                    row[3] as ushort?
+                    row[3] as ushort?,
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)row[4]),
+                    dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)row[5]),
+                    row[7] is uint ? row[6].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)row[7]).Item1 : null,
+                    row[8] is string ? Classes.DB_Queries.GetProfileName(_DB_Connection, row[6].ToString(), (uint)row[7], row[8].ToString()) : null
                     );
         }
     }

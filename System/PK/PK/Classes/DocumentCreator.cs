@@ -6,12 +6,56 @@ namespace PK.Classes
 {
     static partial class DocumentCreator
     {
+        public class DocumentParameters
+        {
+            public readonly string Template;
+            public readonly DB_Connector Connection;
+            public readonly uint? ID;
+            public readonly string[] SingleParameters;
+            public readonly List<string[]>[] TableParameters;
+
+            public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, List<string[]>[] tableParameters)
+            {
+                #region Contracts
+                if (string.IsNullOrWhiteSpace(template))
+                    throw new System.ArgumentException("Некорректное имя файла шаблона.", nameof(template));
+                if (connection == null ^ id == null)
+                    throw new System.ArgumentException("Подключение и ID нельзя передавать отдельно.");
+                else if (connection == null && id == null)
+                {
+                    if (singleParameters == null && tableParameters == null)
+                        throw new System.ArgumentException("Все аргументы, кроме имени шаблона, содержат null.");
+                    if (singleParameters != null && singleParameters.Length == 0)
+                        throw new System.ArgumentException("Массив с одиночными параметрами должен содержать хотя бы один элемент.", nameof(singleParameters));
+                    if (tableParameters != null && tableParameters.Length == 0)
+                        throw new System.ArgumentException("Массив с табличными параметрами должен содержать хотя бы один элемент.", nameof(tableParameters));
+                }
+                else if (singleParameters != null || tableParameters != null)
+                    throw new System.ArgumentException("Одиночные или табличные параметры нельзя передавать вместе с подключением и ID.");
+                #endregion
+
+                Template = template;
+                Connection = connection;
+                ID = id;
+                SingleParameters = singleParameters;
+                TableParameters = tableParameters;
+            }
+        }
+
         struct Font
         {
-            public string Name;
-            public ushort? Size;
-            public string Style;
-            public System.Drawing.Color? Color;
+            public readonly string Name;
+            public readonly ushort? Size;
+            public readonly string Style;
+            public readonly System.Drawing.Color? Color;
+
+            public Font(string name, ushort? size, string style, System.Drawing.Color? color)
+            {
+                Name = name;
+                Size = size;
+                Style = style;
+                Color = color;
+            }
         }
 
         private static readonly string SchemaPath = Properties.Settings.Default.SchemasPath + "DocumentSchema.xsd";
@@ -72,30 +116,29 @@ namespace PK.Classes
                 throw new System.ArgumentException("Эта перегрузка принимат только тип шаблона \"Word\".", nameof(templateFile));
         }
 
-        public static void Create(string resultFile, IEnumerable<System.Tuple<string, DB_Connector, uint?, string[], List<string[]>[]>> documents, bool readOnly = false)
+        public static void Create(string resultFile, IEnumerable<DocumentParameters> documents, bool readOnly = false)
         {
             #region Contracts
             if (string.IsNullOrWhiteSpace(resultFile))
                 throw new System.ArgumentException("Некорректное имя выходного файла.", nameof(resultFile));
             if (System.Linq.Enumerable.Count(documents) == 0)
                 throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
-            //TODO
             #endregion
 
             Novacode.DocX doc = null;
             foreach (var document in documents)
             {
-                XDocument template = XDocument.Load(document.Item1, LoadOptions.PreserveWhitespace);
+                XDocument template = XDocument.Load(document.Template, LoadOptions.PreserveWhitespace);
 
                 Validate(template);
 
                 if (template.Root.Element("Document").Element("Word") != null)
                 {
                     Novacode.DocX buf;
-                    if (document.Item2 != null)
-                        buf = Word.CreateFromTemplate(document.Item2, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.Item3.Value, resultFile);
+                    if (document.Connection != null)
+                        buf = Word.CreateFromTemplate(document.Connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.ID.Value, resultFile);
                     else
-                        buf = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.Item4, document.Item5, resultFile);
+                        buf = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.SingleParameters, document.TableParameters, resultFile);
 
                     if (doc == null)
                         doc = buf;
@@ -142,13 +185,12 @@ namespace PK.Classes
             foreach (XElement font in fonts.Elements())
             {
                 result.Add(font.Attribute("ID").Value,
-                    new Font
-                    {
-                        Name = font.Element("Name")?.Value ?? null,
-                        Size = font.Element("Size") != null ? (ushort?)ushort.Parse(font.Element("Size").Value) : null,
-                        Style = font.Element("Style")?.Value ?? null,
-                        Color = font.Element("Color") != null ? (System.Drawing.Color?)_Colors[font.Element("Color").Value] : null
-                    });
+                    new Font(
+                        font.Element("Name")?.Value ?? null,
+                        font.Element("Size") != null ? (ushort?)ushort.Parse(font.Element("Size").Value) : null,
+                        font.Element("Style")?.Value ?? null,
+                        font.Element("Color") != null ? (System.Drawing.Color?)_Colors[font.Element("Color").Value] : null
+                        ));
             }
 
             return result;

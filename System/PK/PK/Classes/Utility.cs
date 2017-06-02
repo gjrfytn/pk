@@ -178,12 +178,12 @@ namespace PK.Classes
                 throw new System.ArgumentException("Некорректное имя файла.", nameof(file));
             #endregion
 
-            // System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(file);
-            // info.Verb = "Print";
-            // info.CreateNoWindow = true;
-            // info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            // System.Diagnostics.Process.Start(info);
-            System.Diagnostics.Process.Start(file);
+            System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(file);
+            info.Verb = "Print";
+            info.CreateNoWindow = true;
+            info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            System.Diagnostics.Process.Start(info);
+            //System.Diagnostics.Process.Start(file);
 
             //p.WaitForExit();надо?
             //p.Close();?

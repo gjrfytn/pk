@@ -207,7 +207,7 @@ namespace PK.Forms
         {
             DateChoice form = new DateChoice();
             form.ShowDialog();
-            Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value);
+            Classes.Utility.Print(Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value));
         }
 
         private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)

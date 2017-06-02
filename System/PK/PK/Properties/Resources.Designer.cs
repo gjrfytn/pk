@@ -91,10 +91,20 @@ namespace PK.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на CREATE SCHEMA IF NOT EXISTS `kladr2` DEFAULT CHARACTER SET utf8 ;
-        ///USE `kladr2` ;
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap glass {
+            get {
+                object obj = ResourceManager.GetObject("glass", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на CREATE SCHEMA `kladr` DEFAULT CHARACTER SET utf8 ;
+        ///USE `kladr` ;
         ///
-        ///CREATE TABLE IF NOT EXISTS `kladr2`.`houses` (
+        ///CREATE TABLE `houses` (
         ///  `name` VARCHAR(75) NOT NULL,
         ///  `code` CHAR(19) NOT NULL,
         ///  `index` CHAR(6) NULL DEFAULT NULL,
@@ -102,13 +112,15 @@ namespace PK.Properties {
         ///ENGINE = InnoDB
         ///DEFAULT CHARACTER SET = utf8;
         ///
-        ///CREATE TABLE IF NOT EXISTS `kladr2`.`streets` (
+        ///CREATE TABLE `streets` (
         ///  `name` VARCHAR(75) NOT NULL,
         ///  `socr` VARCHAR(15) NOT NULL,
         ///  `code` CHAR(17) NOT NULL,
         ///  `index` CHAR(6) NULL DEFAULT NULL,
         ///  PRIMARY KEY (`code`),
-        /// [остаток строки не уместился]&quot;;.
+        ///  INDEX `name_idx` (`name` ASC))
+        ///ENGINE = InnoDB
+        ///DEFAULT CHA [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string kladr_db_creation {
             get {
