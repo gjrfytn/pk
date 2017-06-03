@@ -185,10 +185,6 @@ namespace PK.Classes
                 throw new System.ArgumentNullException(nameof(fieldsNames));
             if (keyFieldsNames == null)
                 throw new System.ArgumentNullException(nameof(keyFieldsNames));
-            if (oldDataList.Count() == 0)
-                throw new System.ArgumentException("Старый список должен содержать хотя бы один элемент.", nameof(oldDataList));
-            if (newDataList.Count() == 0)
-                throw new System.ArgumentException("Новый список должен содержать хотя бы один элемент.", nameof(newDataList));
             if (fieldsNames.Length == 0)
                 throw new System.ArgumentException("Массив с именами полей должен содержать хотя бы один элемент.", nameof(fieldsNames));
             if (keyFieldsNames.Length == 0)
