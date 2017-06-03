@@ -881,6 +881,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`examinations_audiences` (
   `examination_id` INT UNSIGNED NOT NULL COMMENT 'ID экзамена.',
   `number` VARCHAR(5) NOT NULL COMMENT 'Номер аудитории.',
   `capacity` SMALLINT UNSIGNED NOT NULL COMMENT 'Количество мест.',
+  `priority` SMALLINT UNSIGNED NOT NULL COMMENT 'Приоритет аудитории.',
   PRIMARY KEY (`examination_id`, `number`),
   INDEX `has` (`examination_id` ASC),
   CONSTRAINT `examinations_audiences_has`

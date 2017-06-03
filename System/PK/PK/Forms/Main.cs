@@ -78,13 +78,18 @@ namespace PK.Forms
             SetCurrentCampaign();
         }
 
-        private void menuStrip_CreateApplication_Click(object sender, EventArgs e)
+        private void CreateApplication_Click(object sender, EventArgs e)
         {
             if (Classes.Utility.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
+                Form form;
+                if (_DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID))
+                    form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
+                else
+                    form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
+
                 form.ShowDialog();
                 UpdateApplicationsTable();
                 FilterAppsTable();
@@ -168,19 +173,6 @@ namespace PK.Forms
             {
                 Constants form = new Constants(_DB_Connection, Classes.Utility.CurrentCampaignID);
                 form.ShowDialog();
-            }
-        }
-
-        private void menuStrip_CreateMagApplication_Click(object sender, EventArgs e)
-        {
-            if (Classes.Utility.CurrentCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
-                form.ShowDialog();
-                UpdateApplicationsTable();
-                FilterAppsTable();
             }
         }
 
@@ -447,37 +439,11 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
                 })[0][0].ToString();
 
-                var eduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
-                }).Select(s => (uint)s[0]);
+                bool master = _DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID);
+                dgvApplications_Original.Visible = !master;
+                dgvApplications_Entrances.Visible = !master;
+                dgvApplications_Programs.Visible = master;
 
-                if (!eduLevels.Contains(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM)))
-                {
-                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
-                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
-                    toolStripMain_CreateApplication.Click += new EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click += new EventHandler(menuStrip_CreateApplication_Click);
-					dgvApplications_Original.Visible = true;
-                    dgvApplications_Entrances.Visible = true;
-                    dgvApplications_Programs.Visible = false;
-				}
-                else
-                {
-                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
-                    toolStripMain_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
-                    toolStripMain_CreateApplication.Click += new EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateApplication_Click);
-                    menuStrip_CreateApplication.Click -= new EventHandler(menuStrip_CreateMagApplication_Click);
-                    menuStrip_CreateApplication.Click += new EventHandler(menuStrip_CreateMagApplication_Click);
-					dgvApplications_Original.Visible = false;
-                    dgvApplications_Entrances.Visible = false;
-                    dgvApplications_Programs.Visible = true;
-                }
-				
                 UpdateApplicationsTable();
                 FilterAppsTable();
             }

@@ -12,7 +12,7 @@ namespace PK.Forms
         private readonly string _ExamName;
         private readonly string _ExamDate;
         private readonly List<string[]> _EntrantsTable;
-        private readonly List<object[]> _Audiences;
+        private readonly IEnumerable<object[]> _Audiences;
         private readonly List<Tuple<char, string>> _Distribution;
         private readonly IEnumerable<Tuple<uint, string, string, string>> _Entrants;
 
@@ -57,11 +57,11 @@ namespace PK.Forms
                     ));
 
             _Audiences = _DB_Connection.Select(DB_Table.EXAMINATIONS_AUDIENCES,
-                new string[] { "number", "capacity" },
+                new string[] { "number", "capacity", "priority" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ExaminationID)
-                });
+                }).OrderBy(s => s[2]);
 
             _Distribution = Classes.Utility.DistributeAbiturients(
                  _Audiences.ToDictionary(k => k[0].ToString(), v => (ushort)v[1]),
@@ -140,7 +140,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            List<string[]> distribTable = new List<string[]>(_Audiences.Count);
+            List<string[]> distribTable = new List<string[]>(_Audiences.Count());
             foreach (object[] aud in _Audiences)
             {
                 var letters = _Distribution.Where(d => d.Item2 == aud[0].ToString()).Select(s => s.Item1);

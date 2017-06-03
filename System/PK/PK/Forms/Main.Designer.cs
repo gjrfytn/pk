@@ -97,6 +97,7 @@
             this.toolStripMain_CreateApplication.Name = "toolStripMain_CreateApplication";
             this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(129, 22);
             this.toolStripMain_CreateApplication.Text = "Создать заявление";
+            this.toolStripMain_CreateApplication.Click += new System.EventHandler(this.CreateApplication_Click);
             // 
             // toolStrip_Label1
             // 
@@ -182,7 +183,7 @@
             this.menuStrip_CreateApplication.Size = new System.Drawing.Size(176, 22);
             this.menuStrip_CreateApplication.Tag = "registrator";
             this.menuStrip_CreateApplication.Text = "Создать заявление";
-            this.menuStrip_CreateApplication.Click += new System.EventHandler(this.menuStrip_CreateApplication_Click);
+            this.menuStrip_CreateApplication.Click += new System.EventHandler(this.CreateApplication_Click);
             // 
             // menuStrip_CheckEgeMarks
             // 

@@ -58,8 +58,7 @@ namespace PK.Forms
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("id",Relation.EQUAL,_ID)
-                    }
-                    )[0];
+                    })[0];
 
                 cbSubject.SelectedItem = subjects[(uint)exam[0]];
                 dtpDate.Value = (DateTime)exam[1];
@@ -68,11 +67,11 @@ namespace PK.Forms
 
                 foreach (object[] row in _DB_Connection.Select(
                     DB_Table.EXAMINATIONS_AUDIENCES,
-                    new string[] { "number", "capacity" },
+                    new string[] { "number", "capacity", "priority" },
                     new List<Tuple<string, Relation, object>>
                     {
-                    new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ID)
-                    }))
+                        new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ID)
+                    }).OrderBy(s => s[2]))
                     dataGridView.Rows.Add(row[0], row[1]);
             }
         }
@@ -152,7 +151,7 @@ namespace PK.Forms
                         transaction
                         );
 
-                    string[] fields = { "examination_id", "number", "capacity" };
+                    string[] fields = { "examination_id", "number", "capacity", "priority" };
                     List<object[]> oldL = _DB_Connection.Select(
                         DB_Table.EXAMINATIONS_AUDIENCES,
                         fields,
@@ -162,7 +161,7 @@ namespace PK.Forms
                     List<object[]> newL = new List<object[]>();
                     foreach (DataGridViewRow row in dataGridView.Rows)
                         if (!row.IsNewRow)
-                            newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value });
+                            newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value, row.Index });
 
                     _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldL, newL, fields, new string[] { "examination_id", "number" }, transaction);
                 }
@@ -177,7 +176,8 @@ namespace PK.Forms
                             {
                                 { "examination_id", id },
                                 { "number", row.Cells[0].Value },
-                                { "capacity", row.Cells[1].Value }
+                                { "capacity", row.Cells[1].Value },
+                                { "priority", row.Index }
                             },
                             transaction
                             );
