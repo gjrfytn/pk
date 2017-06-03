@@ -7,10 +7,6 @@
       <Name>Arial</Name>
       <Size>6</Size>
     </Font>
-    <Font ID="Small">
-      <Name>Arial</Name>
-      <Size>10</Size>
-    </Font>
     <Font ID="Usual">
       <Name>Arial</Name>
       <Size>12</Size>
@@ -53,6 +49,9 @@
               <Left>
                 <Style>None</Style>
               </Left>
+              <Right>
+                <Style>None</Style>
+              </Right>
               <Bottom>
                 <Style>None</Style>
               </Bottom>
@@ -87,7 +86,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Иванов</String>
+                              <Placeholder>0</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -98,7 +97,17 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Иван Иванович</String>
+                              <Placeholder>1</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String> </String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <Placeholder>2</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -117,7 +126,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>НАПРАВЛЕНИЕ</String>
+                              <Placeholder>3</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -127,7 +136,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>ПРОГРАММА</String>
+                              <Placeholder>4</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -136,6 +145,9 @@
                   </Cell>
                   <Cell Column="2">
                     <Borders>
+                      <Right>
+                        <Style>Single</Style>
+                      </Right>
                       <Bottom>
                         <Style>Single</Style>
                       </Bottom>
@@ -147,7 +159,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>АБР</String>
+                              <Placeholder>5</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -200,7 +212,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>9999999999</String>
+                              <Placeholder>6</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -273,7 +285,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>9999999999</String>
+                              <Placeholder>7</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -285,9 +297,6 @@
                       <Right>
                         <Style>None</Style>
                       </Right>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
                     </Borders>
                   </Cell>
                   <Cell Column="3">
@@ -298,15 +307,327 @@
                       <Right>
                         <Style>None</Style>
                       </Right>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
                     </Borders>
                   </Cell>
                 </Cells>
               </Row>
               <Row>
                 <!--4-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Top>
+                        <Style>Dashed</Style>
+                      </Top>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--5-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <String>Документ о высшем образовании</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Bottom>
+                        <Style>Dashed</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>8</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String> </String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <Placeholder>9</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--6-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                      <Bottom>
+                        <Style>Dashed</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>10</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String> год</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Top>
+                        <Style>Dashed</Style>
+                      </Top>
+                      <Bottom>
+                        <Style>Dashed</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>11</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--7-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Top>
+                        <Style>Dashed</Style>
+                      </Top>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Top>
+                        <Style>Dashed</Style>
+                      </Top>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--8-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--9-->
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Right</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <String>Особая квота</String>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Bottom>
+                        <Style>Dashed</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>12</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="2">
+                    <Borders>
+                      <Right>
+                        <Style>None</Style>
+                      </Right>
+                    </Borders>
+                  </Cell>
+                  <Cell Column="3">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                    </Borders>
+                  </Cell>
+                </Cells>
+              </Row>
+              <Row>
+                <!--10-->
                 <Cells>
                   <Cell Column="0">
                     <Borders>
@@ -352,6 +673,9 @@
                       <Top>
                         <Style>Single</Style>
                       </Top>
+                      <Right>
+                        <Style>Single</Style>
+                      </Right>
                       <Bottom>
                         <Style>Single</Style>
                       </Bottom>
@@ -363,490 +687,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>10</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--5-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Документ о высшем образовании</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                      <Bottom>
-                        <Style>Dashed</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>3456 345663545</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Достижения</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--6-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                      <Bottom>
-                        <Style>Dashed</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>2017</String>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
-                              <String> год</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                      <Top>
-                        <Style>Dashed</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Dashed</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>БаклавриаТ</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>публикации, статьи</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>UsualBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>10</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--7-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Top>
-                        <Style>Dashed</Style>
-                      </Top>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                      <Top>
-                        <Style>Dashed</Style>
-                      </Top>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>доклады</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>UsualBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>10</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--8-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>мероприятия, выставки</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>UsualBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>10</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--9-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Особая квота</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                      <Bottom>
-                        <Style>Dashed</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Да_</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>конкурсы</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>UsualBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>10</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <Row>
-                <!--10-->
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Right>
-                        <Style>None</Style>
-                      </Right>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>None</Style>
-                      </Left>
-                      <Top>
-                        <Style>Dashed</Style>
-                      </Top>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>олимпиады</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Top>
-                        <Style>Single</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>Single</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>UsualBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>10</String>
+                              <Placeholder>13</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -894,7 +735,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Да_</String>
+                              <Placeholder>14</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -912,12 +753,11 @@
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>Small</FontID>
-                        <Alighment>Right</Alighment>
+                        <FontID>Usual</FontID>
                         <Parts>
                           <Part>
                             <Text>
-                              <String>рекомендации</String>
+                              <String>Другие достижения</String>
                             </Text>
                           </Part>
                         </Parts>
@@ -929,6 +769,9 @@
                       <Top>
                         <Style>Single</Style>
                       </Top>
+                      <Right>
+                        <Style>Single</Style>
+                      </Right>
                       <Bottom>
                         <Style>Single</Style>
                       </Bottom>
@@ -940,7 +783,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>10</String>
+                              <Placeholder>15</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -996,6 +839,9 @@
                       <Top>
                         <Style>Single</Style>
                       </Top>
+                      <Right>
+                        <Style>Single</Style>
+                      </Right>
                       <Bottom>
                         <Style>Single</Style>
                       </Bottom>
@@ -1007,7 +853,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>10</String>
+                              <Placeholder>16</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1076,6 +922,9 @@
                       <Top>
                         <Style>Single</Style>
                       </Top>
+                      <Right>
+                        <Style>Single</Style>
+                      </Right>
                       <Bottom>
                         <Style>Single</Style>
                       </Bottom>
@@ -1087,7 +936,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>10</String>
+                              <Placeholder>17</Placeholder>
                             </Text>
                           </Part>
                         </Parts>

@@ -94,7 +94,17 @@
                           </Part>
                           <Part>
                             <Text>
+                              <String>.</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
                               <Placeholder>2</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>.</String>
                             </Text>
                           </Part>
                         </Parts>

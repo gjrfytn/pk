@@ -152,7 +152,8 @@ namespace PK.Forms
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-
+            ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
+            form.ShowDialog();
         }
 
         private void btClose_Click(object sender, EventArgs e)

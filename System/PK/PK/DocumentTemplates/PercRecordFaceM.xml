@@ -80,7 +80,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Иванов</String>
+                              <Placeholder>0</Placeholder>
                             </Text>
                           </Part>
                           <Part>
@@ -90,7 +90,22 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>И.И.</String>
+                              <Placeholder>1</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>.</String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <Placeholder>2</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String>.</String>
                             </Text>
                           </Part>
                         </Parts>
@@ -118,7 +133,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>5</String>
+                              <Placeholder>3</Placeholder>
                             </Text>
                           </Part>
                           <Part>
@@ -128,7 +143,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>АБР</String>
+                              <Placeholder>4</Placeholder>
                             </Text>
                           </Part>
                           <Part>
@@ -150,7 +165,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>НАПРАВЛЕНИЕ</String>
+                              <Placeholder>5</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -161,12 +176,12 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Магистрская программа </String>
+                              <String>Магистерская программа </String>
                             </Text>
                           </Part>
                           <Part>
                             <Text>
-                              <String>ПРОГРАММА</String>
+                              <Placeholder>6</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -182,7 +197,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>ОчнаЯ</String>
+                              <Placeholder>7</Placeholder>
                             </Text>
                           </Part>
                           <Part>
@@ -192,7 +207,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>БюджеТ</String>
+                              <Placeholder>8</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -205,7 +220,7 @@
                           <Part>
                             <FontID>LargeBold</FontID>
                             <Text>
-                              <String>Иванов</String>
+                              <Placeholder>9</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -216,7 +231,17 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Иван Иванович</String>
+                              <Placeholder>10</Placeholder>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <String> </String>
+                            </Text>
+                          </Part>
+                          <Part>
+                            <Text>
+                              <Placeholder>11</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -278,7 +303,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>2017</String>
+                              <Placeholder>12</Placeholder>
                             </Text>
                           </Part>
                         </Parts>

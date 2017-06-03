@@ -55,7 +55,7 @@ namespace PK.Forms
                             components.Dispose();
                     }
 
-                    System.IO.Directory.Delete(Classes.Utility.TempPath, true);
+                    System.IO.Directory.Delete(Classes.Utility.TempPath, true); //TODO Исключение?
                 }
                 finally
                 {

@@ -242,7 +242,7 @@
         </Element>
         <Element>
           <Table>
-            <AutoFit>Window</AutoFit>
+            <AutoFit>Contents</AutoFit>
             <Numeration>Number</Numeration>
             <Placeholder>0</Placeholder>
             <Structure>
