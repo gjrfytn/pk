@@ -26,6 +26,11 @@ namespace PK.Classes
             {
                 Value = value;
             }
+
+            public TUID(uint value)
+            {
+                Value = value.ToString();
+            }
         }
 
         class TEntranceTestSubject : IXElemementsConvertable
@@ -57,9 +62,9 @@ namespace PK.Classes
         {
             public readonly string Value;
 
-            public TDateTime(ushort year, byte month, byte day, byte hour, byte minute, byte second)
+            public TDateTime(System.DateTime datetime)
             {
-                Value = year.ToString() + "-" + (month < 10 ? "0" : "") + month.ToString() + "-" + (day < 10 ? "0" : "") + day.ToString() + "T" + (hour < 10 ? "0" : "") + hour.ToString() + ":" + (minute < 10 ? "0" : "") + minute.ToString() + ":" + (second < 10 ? "0" : "") + second.ToString();
+                Value = datetime.ToString("yyyy-MM-ddTHH:mm:ss");
             }
         }
 
@@ -115,9 +120,9 @@ namespace PK.Classes
         {
             public readonly string Value;
 
-            public TDate(ushort year, byte month, byte day)
+            public TDate(System.DateTime date)
             {
-                Value = year.ToString() + "-" + (month < 10 ? "0" : "") + month.ToString() + "-" + (day < 10 ? "0" : "") + day.ToString();
+                Value = date.ToString("yyyy-MM-dd");
             }
         }
 
@@ -1507,7 +1512,7 @@ namespace PK.Classes
             public readonly List<CommonBenefitItem> CommonBenefit; //Сведения об общей льготе (без в.и.) (олимпиада школьников)
             public readonly List<EntranceTestItem> EntranceTestItems; //Вступительные испытания конкурса
 
-            public CompetitiveGroup(TUID uid, TUID campaignUID, string name, uint educationLevelID, uint educationSourceID, uint educationFormID, uint directionID, List<EduProgram> eduPrograms = null, bool? isForKrym = null, bool? isAdditional = null, CompetitiveGroupItem competitiveGroupItem = null, List<TargetOrganization> targetOrganizations = null, List<CommonBenefitItem> commonBenefit = null, List<EntranceTestItem> entranceTestItems = null)
+            public CompetitiveGroup(TUID uid, TUID campaignUID, string name, uint educationLevelID, uint educationSourceID, uint educationFormID, uint directionID, List<EduProgram> eduPrograms = null, bool? isAdditional = null, CompetitiveGroupItem competitiveGroupItem = null, List<TargetOrganization> targetOrganizations = null, List<CommonBenefitItem> commonBenefit = null, List<EntranceTestItem> entranceTestItems = null)
             {
                 UID = uid;
                 CampaignUID = campaignUID;
@@ -3035,7 +3040,7 @@ namespace PK.Classes
             public readonly uint? EducationLevelID; //ИД Уровня образования(Справочник 2 "Уровень образования")
             public readonly uint? Stage; //Этап приема (В случае зачисления на места в рамках контрольных цифр (бюджет) по программам бакалавриата и программам специалитета по очной и очно-заочной формам обучения, принимает значения 1 или 2). Иначе принимает значение 0.
 
-            public OrderOfException(TUID orderOfExceptionUID, TUID campaignUID, string orderName, string orderNumber = null, TDate orderDate = null, TDate orderDatePublished = null, uint? educationFormID = null, uint? financeSourceID = null, uint? educationLevelID = null, uint? stage = null, bool? isBeneficiary = null)
+            public OrderOfException(TUID orderOfExceptionUID, TUID campaignUID, string orderName, string orderNumber = null, TDate orderDate = null, TDate orderDatePublished = null, uint? educationFormID = null, uint? financeSourceID = null, uint? educationLevelID = null, uint? stage = null)
             {
                 OrderOfExceptionUID = orderOfExceptionUID;
                 CampaignUID = campaignUID;
