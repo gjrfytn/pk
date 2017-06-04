@@ -37,16 +37,10 @@ namespace PK.Forms
         }
 
         #region IDisposable Support
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (!IsDisposed)
             {
-                try
-                {
                     if (disposing)
                     {
                         _DB_Connection.Dispose();
@@ -56,11 +50,8 @@ namespace PK.Forms
                     }
 
                     System.IO.Directory.Delete(Classes.Utility.TempPath, true); //TODO Исключение?
-                }
-                finally
-                {
+
                     base.Dispose(disposing);
-                }
             }
         }
 
@@ -69,7 +60,6 @@ namespace PK.Forms
             Dispose(false);
         }
         #endregion
-
 
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
         {

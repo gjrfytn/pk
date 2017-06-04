@@ -114,6 +114,23 @@ namespace PK.Forms
             }
         }
 
+        #region IDisposable Support
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    _KLADR.Dispose();
+
+                    if (components != null)
+                        components.Dispose();
+                }
+
+                base.Dispose(disposing);
+            }
+        }
+        #endregion
 
         private void btSave_Click(object sender, EventArgs e)
         {

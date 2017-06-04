@@ -299,25 +299,7 @@ namespace PK.Forms
 
         private void bSave_Click(object sender, EventArgs e)
         {
-            if (tbNumber.Text == "")
-            {
-                MessageBox.Show("Не заполнен номер приказа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (cbFDP.SelectedIndex == -1)
-            {
-                MessageBox.Show("Не выбран факультет/направление/профиль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (_EditNumber != tbNumber.Text && _DB_Connection.Select(DB_Table.ORDERS, "number").Any(s => s[0].ToString() == tbNumber.Text))
-            {
-                MessageBox.Show("Приказ с таким номером уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!(bool)dtpDate.Tag && !Classes.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
+            if (!AssureSave())
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -407,9 +389,17 @@ namespace PK.Forms
 
         private void cbShowAdmitted_CheckedChanged(object sender, EventArgs e)
         {
+            if (cbFDP.SelectedIndex == -1)
+                return;
+
             Cursor.Current = Cursors.WaitCursor;
             FillTable(GetAdmissionCandidates());
             Cursor.Current = Cursors.Default;
+        }
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDate.Tag = true;
         }
 
         private IEnumerable<uint> GetAdmissionCandidates()
@@ -660,46 +650,26 @@ namespace PK.Forms
                             })
                     });
 
-                byte[] buf = Array.ConvertAll(
-                    _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
-                    s => (byte)(ushort)s
-                    );
-                Dictionary<uint, byte> minMarks = new Dictionary<uint, byte>
-                {
-                    { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
-                    { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"),buf[1] },
-                    { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"),buf[2] },
-                    { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"),buf[3] },
-                    { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
-                };
 
                 if (cbType.SelectedValue.ToString() == "hostel")
-                {
                     foreach (var appl in table)
-                    {
-                        byte? math = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Mark as byte?;
-                        byte? rus = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Mark as byte?;
-                        byte? phys = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Mark as byte?;
-                        byte? soc = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?.Mark as byte?;
-                        byte? foreign = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?.Mark as byte?;
-
-                        ushort? MFR = null;
-                        if (math != null && phys != null && rus != null)
-                            MFR = (ushort)(math + phys + rus);
-
-                        ushort? MOR = null;
-                        if (math != null && soc != null && rus != null)
-                            MOR = (ushort)(math + soc + rus);
-
-                        ushort? ROI = null;
-                        if (rus != null && soc != null && foreign != null)
-                            ROI = (ushort)(rus + soc + foreign);
-
-                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, MFR, MOR, ROI, math, phys, rus, soc, foreign);
-                    }
-                }
+                        AddBachelorRow(appl.ApplID, appl.Name, null, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
                 else
                 {
+                    byte[] buf = Array.ConvertAll(
+                        _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
+                        s => (byte)(ushort)s
+                        );
+
+                    Dictionary<uint, byte> minMarks = new Dictionary<uint, byte>
+                    {
+                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
+                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"),buf[1] },
+                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"),buf[2] },
+                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"),buf[3] },
+                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
+                    };
+
                     IEnumerable<uint> dir_subjects = _DB_Connection.Select(
                         DB_Table.ENTRANCE_TESTS,
                         new string[] { "subject_id" },
@@ -717,25 +687,7 @@ namespace PK.Forms
                         {
                             string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < minMarks[s.Subj]) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
 
-                            byte? math = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Mark as byte?;
-                            byte? rus = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Mark as byte?;
-                            byte? phys = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Mark as byte?;
-                            byte? soc = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?.Mark as byte?;
-                            byte? foreign = appl.Subjects.SingleOrDefault(s => s.Subj == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?.Mark as byte?;
-
-                            ushort? MFR = null;
-                            if (math != null && phys != null && rus != null)
-                                MFR = (ushort)(math + phys + rus);
-
-                            ushort? MOR = null;
-                            if (math != null && soc != null && rus != null)
-                                MOR = (ushort)(math + soc + rus);
-
-                            ushort? ROI = null;
-                            if (rus != null && soc != null && foreign != null)
-                                ROI = (ushort)(rus + soc + foreign);
-
-                            dataGridView.Rows.Add(false, appl.ApplID, appl.Name, status, MFR, MOR, ROI, math, phys, rus, soc, foreign);
+                            AddBachelorRow(appl.ApplID, appl.Name, status, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
                         }
                     }
                 }
@@ -744,9 +696,53 @@ namespace PK.Forms
             dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }
 
-        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        private void AddBachelorRow(uint applID, string name, string status, IEnumerable<Tuple<uint, byte>> applMarks)
         {
-            dtpDate.Tag = true;
+            byte? math = applMarks.SingleOrDefault(s => s.Item1 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))?.Item2 as byte?;
+            byte? rus = applMarks.SingleOrDefault(s => s.Item1 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))?.Item2 as byte?;
+            byte? phys = applMarks.SingleOrDefault(s => s.Item1 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))?.Item2 as byte?;
+            byte? soc = applMarks.SingleOrDefault(s => s.Item1 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))?.Item2 as byte?;
+            byte? foreign = applMarks.SingleOrDefault(s => s.Item1 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))?.Item2 as byte?;
+
+            ushort? MFR = null;
+            if (math != null && phys != null && rus != null)
+                MFR = (ushort)(math + phys + rus);
+
+            ushort? MOR = null;
+            if (math != null && soc != null && rus != null)
+                MOR = (ushort)(math + soc + rus);
+
+            ushort? ROI = null;
+            if (rus != null && soc != null && foreign != null)
+                ROI = (ushort)(rus + soc + foreign);
+
+            dataGridView.Rows.Add(false, applID, name, status, MFR, MOR, ROI, math, phys, rus, soc, foreign);
+        }
+
+        private bool AssureSave()
+        {
+            if (tbNumber.Text == "")
+            {
+                MessageBox.Show("Не заполнен номер приказа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (cbFDP.SelectedIndex == -1)
+            {
+                MessageBox.Show("Не выбран факультет/направление/профиль.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (_EditNumber != tbNumber.Text && _DB_Connection.Select(DB_Table.ORDERS, "number").Any(s => s[0].ToString() == tbNumber.Text))
+            {
+                MessageBox.Show("Приказ с таким номером уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!(bool)dtpDate.Tag && !Classes.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
+                return false;
+
+            return true;
         }
     }
 }

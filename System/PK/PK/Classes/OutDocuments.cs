@@ -725,8 +725,7 @@ namespace PK.Classes
                     EntrID = (uint)s1[1],
                     HomePhone = s2[1].ToString(),
                     MobilePhone = s2[2].ToString()
-                }
-                ).Join(
+                }).Join(
                 connection.Select(
                 DB_Table.ENTRANTS_VIEW,
                 "id", "last_name", "first_name", "middle_name"
@@ -755,8 +754,7 @@ namespace PK.Classes
                     DocSeries = s2[2].ToString(),
                     DocNumber = s2[3].ToString(),
                     Original = s2[4] as DateTime?
-                }
-                );
+                });
 
             foreach (var appl in applications)
             {
@@ -766,8 +764,7 @@ namespace PK.Classes
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id",Relation.EQUAL,applDocs.Single(d=>d.ApplID==appl.ApplID&&d.DocType=="identity").DocID)
-                    }
-                    )[0];
+                    })[0];
 
                 var eduDoc = applDocs.Single(d =>
                 d.ApplID == appl.ApplID &&
@@ -787,8 +784,6 @@ namespace PK.Classes
                         eduDocName = "аттестата";
                         break;
                     case "middle_edu_diploma":
-                        eduDocName = "диплома";
-                        break;
                     case "high_edu_diploma":
                         eduDocName = "диплома";
                         break;
@@ -802,8 +797,7 @@ namespace PK.Classes
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("application_id",Relation.EQUAL,appl.ApplID)
-                    }
-                    );
+                    });
 
                 data.Add(new string[]
                 {

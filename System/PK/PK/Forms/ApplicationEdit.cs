@@ -196,20 +196,20 @@ namespace PK.Forms
         }
 
         #region IDisposable Support
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!IsDisposed)
             {
-                _KLADR.Dispose();
+                if (disposing)
+                {
+                    _KLADR.Dispose();
 
-                if (components != null)
-                    components.Dispose();
+                    if (components != null)
+                        components.Dispose();
+                }
+
+                base.Dispose(disposing);
             }
-            base.Dispose(disposing);
         }
         #endregion
 

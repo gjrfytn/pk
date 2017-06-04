@@ -6,8 +6,30 @@ namespace PK.Classes
 {
     static class FIS_Packager
     {
-        private static readonly Dictionary<uint, char> _EduFormLiterals = new Dictionary<uint, char>() { { 11, 'Д' }, { 12, 'В' }, { 10, 'З' } };
-        private static readonly Dictionary<uint, string> _EduSourceLiterals = new Dictionary<uint, string>() { { 14, "ОО" }, { 15, "СН" }, { 16, "ЦН" }, { 20, "КВ" } };
+        struct EduSourcePlaces
+        {
+            public readonly ushort O;
+            public readonly ushort OZ;
+            public readonly ushort Z;
+
+            public EduSourcePlaces(ushort o, ushort oz, ushort z)
+            {
+                O = o;
+                OZ = o;
+                Z = z;
+            }
+        }
+
+        private static readonly Dictionary<uint, char> _EduFormLiterals = new Dictionary<uint, char>()
+        {
+            { 11, 'Д' }, { 12, 'В' }, { 10, 'З' }
+        };
+
+        private static readonly Dictionary<uint, string> _EduSourceLiterals = new Dictionary<uint, string>()
+        {
+            { 14, "ОО" }, { 15, "СН" }, { 16, "ЦН" }, { 20, "КВ" }
+        };
+
         private static readonly Dictionary<string, uint> _StatusesMap = new Dictionary<string, uint>()
         {
             { "new", 2 },
@@ -16,7 +38,6 @@ namespace PK.Classes
             { "adm_both", 4 },
             { "withdrawn", 6 },
         };
-
 
         public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, bool applications, bool orders)
         {
@@ -89,42 +110,12 @@ namespace PK.Classes
                 {
                     CampID = campaignID,
                     DirID = (uint)k,
-                    BO = g.Sum(s => (ushort)s[1]),
-                    BOZ = g.Sum(s => (ushort)s[2]),
-                    BZ = 0,
-                    QO = g.Sum(s => (ushort)s[3]),
-                    QOZ = g.Sum(s => (ushort)s[4]),
-                    QZ = 0
+                    BudgetPlaces = new EduSourcePlaces((ushort)g.Sum(s => (ushort)s[1]), (ushort)g.Sum(s => (ushort)s[2]), 0),
+                    QuotaPlaces = new EduSourcePlaces((ushort)g.Sum(s => (ushort)s[3]), (ushort)g.Sum(s => (ushort)s[4]), 0)
                 }))
             {
-                ushort paid_o = 0, paid_oz = 0, paid_z = 0;
-                foreach (object[] profRow in connection.Select(
-                    DB_Table.CAMPAIGNS_PROFILES_DATA,
-                    new string[] { "places_paid_o, places_paid_oz, places_paid_z" },
-                    new List<System.Tuple<string, Relation, object>>
-                    {
-                        new System.Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,admData.CampID),
-                        new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,admData.DirID)
-                    }))
-                {
-                    paid_o += (ushort)profRow[0];
-                    paid_oz += (ushort)profRow[1];
-                    paid_z += (ushort)profRow[2];
-                }
-
-                ushort target_o = 0, target_oz = 0, target_z = 0;
-                foreach (object[] targetRow in connection.Select(
-                    DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
-                    new string[] { "places_o, places_oz" },
-                    new List<System.Tuple<string, Relation, object>>
-                    {
-                        new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,admData.CampID),
-                        new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,admData.DirID)
-                    }))
-                {
-                    target_o += (ushort)targetRow[0];
-                    target_oz += (ushort)targetRow[1];
-                }
+                EduSourcePlaces paidPlaces = GetPaidPlaces(connection, admData.CampID, admData.DirID);
+                EduSourcePlaces targetPlaces = GetTargetPlaces(connection, admData.CampID, admData.DirID);
 
                 DB_Helper dbHelper = new DB_Helper(connection);
                 uint levelID = Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
@@ -134,81 +125,21 @@ namespace PK.Classes
                     new TUID(admData.CampID),
                     levelID,
                     admData.DirID,
-                    (ushort)admData.BO, (ushort)admData.BOZ, (ushort)admData.BZ,
-                    paid_o, paid_oz, paid_z,
-                    target_o, target_oz, target_z,
-                    (ushort)admData.QO, (ushort)admData.QOZ, (ushort)admData.QZ
+                    admData.BudgetPlaces.O, admData.BudgetPlaces.OZ, admData.BudgetPlaces.Z,
+                    paidPlaces.O, paidPlaces.OZ, paidPlaces.Z,
+                    targetPlaces.O, targetPlaces.OZ, targetPlaces.Z,
+                    admData.QuotaPlaces.O, admData.QuotaPlaces.OZ, admData.QuotaPlaces.Z
                     ));
 
-                foreach (object v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
+                foreach (CompetitiveGroupItem.Variants v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
                 {
                     uint eduForm, eduSource;
                     ushort places;
-                    switch ((CompetitiveGroupItem.Variants)v)
-                    {
-                        case CompetitiveGroupItem.Variants.NumberBudgetO:
-                            eduForm = 11;
-                            eduSource = 14;
-                            places = (ushort)admData.BO;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberBudgetOZ:
-                            eduForm = 12;
-                            eduSource = 14;
-                            places = (ushort)admData.BOZ;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberBudgetZ:
-                            eduForm = 10;
-                            eduSource = 14;
-                            places = (ushort)admData.BZ;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberPaidO:
-                            eduForm = 11;
-                            eduSource = 15;
-                            places = paid_o;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberPaidOZ:
-                            eduForm = 12;
-                            eduSource = 15;
-                            places = paid_oz;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberPaidZ:
-                            eduForm = 10;
-                            eduSource = 15;
-                            places = paid_z;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberQuotaO:
-                            eduForm = 11;
-                            eduSource = 20;
-                            places = (ushort)admData.QO;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberQuotaOZ:
-                            eduForm = 12;
-                            eduSource = 20;
-                            places = (ushort)admData.QOZ;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberQuotaZ:
-                            eduForm = 10;
-                            eduSource = 20;
-                            places = (ushort)admData.QZ;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberTargetO:
-                            eduForm = 11;
-                            eduSource = 16;
-                            places = target_o;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberTargetOZ:
-                            eduForm = 12;
-                            eduSource = 16;
-                            places = target_oz;
-                            break;
-                        case CompetitiveGroupItem.Variants.NumberTargetZ:
-                            eduForm = 10;
-                            eduSource = 16;
-                            places = target_z;
-                            break;
-                        default:
-                            throw new System.Exception("Unreachable reached.");
-                    }
+
+                    ChooseFormAndSourceAndPlaces(
+                        v, admData.BudgetPlaces, paidPlaces, admData.QuotaPlaces, targetPlaces,
+                        out eduForm, out eduSource, out places
+                        );
 
                     if (places != 0)
                     {
@@ -315,7 +246,7 @@ namespace PK.Classes
                     Email = s2[2].ToString()
                 });
 
-            var marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
+            IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
             foreach (var appl in applicationsBD)
             {
@@ -349,7 +280,7 @@ namespace PK.Classes
                                     k.Item1,
                                     //Utility.DirCodesEduLevels[new DB_Helper(connection).GetDirectionNameAndCode(k.Item1).Item2.Split('.')[1]],
                                     (uint)k.Item2,
-                                    (uint)k.Item3
+                                    k.Item3
                                     ),
                                 buf.TargetOrg != null ? new TUID(buf.TargetOrg) : null,
                                 buf.AgreedDate != null ? new TDateTime(buf.AgreedDate) : null,
@@ -357,184 +288,6 @@ namespace PK.Classes
                                 )
                         };
                     });
-
-                IdentityDocument identDoc = null;
-                EduDocument eduDoc = null;
-                OrphanDocument orphanDoc = null;
-                SportDocument sportDoc = null;
-                CustomDocument customDoc = null;
-                foreach (var doc in connection.CallProcedure("get_application_docs", appl.ID).Select(
-                    s => new
-                    {
-                        ID = (uint)s[0],
-                        Type = s[1].ToString(),
-                        Series = s[2].ToString(),
-                        Number = s[3].ToString(),
-                        Date = s[4] as System.DateTime?,
-                        Organization = s[5].ToString(),
-                        OrigDate = s[6] as System.DateTime?
-                    }))
-                    switch (doc.Type)
-                    {
-                        case "identity":
-                            {
-                                object[] idDoc = connection.Select(
-                                DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
-                                new string[] { "last_name", "first_name", "middle_name", "gender_id", "subdivision_code", "type_id", "nationality_id", "birth_date", "birth_place" },
-                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                                )[0];
-
-                                identDoc = new IdentityDocument(
-                                    new TUID(doc.ID),
-                                    idDoc[0].ToString(),
-                                    idDoc[1].ToString(),
-                                    doc.Number,
-                                    new TDate(doc.Date.Value),
-                                    (uint)idDoc[5],
-                                    (uint)idDoc[6],
-                                    new TDate((System.DateTime)idDoc[7]),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    idDoc[2].ToString(),
-                                    (uint)idDoc[3],
-                                    doc.Series,
-                                    idDoc[4].ToString(),
-                                    doc.Organization,
-                                    idDoc[8].ToString()
-                                    );
-                            }
-                            break;
-                        case "school_certificate":
-                        case "high_edu_diploma":
-                        case "academic_diploma":
-                            {
-                                uint year = (uint)connection.Select(
-                               DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                               new string[] { "year" },
-                               new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                               )[0][0];
-
-                                if (doc.Type == "academic_diploma")
-                                    eduDoc = new EduDocument(new TAcademicDiplomaDocument(
-                                        new TUID(doc.ID),
-                                        new TDocumentSeries(doc.Series),
-                                        new TDocumentNumber(doc.Number),
-                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                        null,
-                                        null,
-                                        doc.Organization
-                                        ));
-                                else if (doc.Type == "school_certificate")
-                                    eduDoc = new EduDocument(new TSchoolCertificateDocument(
-                                        new TUID(doc.ID),
-                                        new TDocumentNumber(doc.Number),
-                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                        new TDocumentSeries(doc.Series),
-                                        null,
-                                        doc.Organization,
-                                        year
-                                        ));
-                                else
-                                    eduDoc = new EduDocument(new THighEduDiplomaDocument(
-                                        new TUID(doc.ID),
-                                        new TDocumentSeries(doc.Series),
-                                        new TDocumentNumber(doc.Number),
-                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                        null,
-                                        doc.Organization,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        year
-                                        ));
-                            }
-                            break;
-                        case "orphan":
-                            {
-                                object[] data = connection.Select(
-                                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                                    new string[] { "name", "dictionaries_item_id" },
-                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                                    )[0];
-
-                                orphanDoc = new OrphanDocument(new TOrphanDocument(
-                                    new TUID(doc.ID),
-                                    (uint)data[1],
-                                    new TDocumentName(data[0].ToString()),
-                                    new TDate(doc.Date.Value),
-                                    doc.Organization
-                                    ));
-                            }
-                            break;
-                        case "sport":
-                            {
-                                object[] data = connection.Select(
-                                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                                    new string[] { "name", "dictionaries_item_id" },
-                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                                    )[0];
-
-                                sportDoc = new SportDocument(new TSportDocument(
-                                    new TUID(doc.ID),
-                                    123,//TODO (uint)data[1],
-                                    data[0].ToString(),
-                                    new TDate(doc.Date.Value),
-                                    doc.Organization
-                                    ));
-                            }
-                            break;
-                        case "custom":
-                            {
-                                object[] data = connection.Select(
-                                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                                    new string[] { "name", "text_data" },
-                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                                    )[0];
-
-                                customDoc = new CustomDocument(new TCustomDocument(
-                                    new TUID(doc.ID),
-                                    data[0].ToString(),
-                                    null, //TODO
-                                    null, //TODO
-                                    null,
-                                    null,
-                                    null,
-                                    data[1].ToString()
-                                    ));
-                            }
-                            break;
-                    }
-
-                List<EntranceTestResult> testsResults = new List<EntranceTestResult>();
-                foreach (var entr in finSourceEduForms)
-                {
-                    IEnumerable<uint> dir_subjects = connection.Select(
-                        DB_Table.ENTRANCE_TESTS,
-                        new string[] { "subject_id" },
-                        new List<System.Tuple<string, Relation, object>>
-                        {
-                            new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
-                            new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,entr.DirID)
-                        }).Select(s => (uint)s[0]).Distinct(); //TODO distinct
-
-                    foreach (var res in dir_subjects.Join(
-                        marks.Where(s => s.ApplID == appl.ID),
-                        k1 => k1,
-                        k2 => k2.SubjID,
-                        (s1, s2) => s2
-                        ).GroupBy(k => k.SubjID, (k, g) => g.First(s => s.Value == g.Max(m => m.Value))))
-                        testsResults.Add(new EntranceTestResult(
-                            new TUID(entr.FSEF.CompetitiveGroupUID.Value + res.SubjID.ToString()),
-                            res.Value,
-                            (uint)(res.FromExam ? 2 : 1),//TODO
-                            new TEntranceTestSubject(res.SubjID),
-                            1,
-                            entr.FSEF.CompetitiveGroupUID,
-                            //res.Item5 ? new ResultDocument(new TInstitutionDocument(new TDocumentNumber("1241415"))):null, TODO Для испытаний ОО
-                            null//,
-                                //TODO ? appl.SpecialCond
-                            ));
-                }
 
                 //Сохранять все документы?
 
@@ -587,40 +340,32 @@ namespace PK.Classes
                             ));//TODO Преимущественное право?
                 }
 
+                ApplicationDocuments docs = PackApplicationDocuments(connection, appl.ID);
+
+                List<EntranceTestResult> testsResults = PackApplicationTestResults(
+                    connection,
+                    campaignID,
+                    finSourceEduForms.Select(s => System.Tuple.Create(s.DirID, s.FSEF.CompetitiveGroupUID)),
+                    marks.Where(s => s.ApplID == appl.ID)
+                    );
+
                 applications.Add(new Application(
                     new TUID(appl.ID),
                     appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
-                        identDoc.LastName,
-                        identDoc.FirstName,
-                        identDoc.GenderID.Value,
+                        docs.IdentityDocument.LastName,
+                        docs.IdentityDocument.FirstName,
+                        docs.IdentityDocument.GenderID.Value,
                         new EmailOrMailAddress(appl.Email.ToString()),
-                        identDoc.MiddleName,
+                        docs.IdentityDocument.MiddleName,
                         appl.Info
                         ),
                     new TDateTime(appl.RegTime),
                     appl.Hostel,
                     appl.Status,
                     finSourceEduForms.Select(s => s.FSEF).ToList(),
-                    new ApplicationDocuments(
-                        identDoc,
-                        null, //TODO
-                        null,
-                        null,
-                       new List<EduDocument> { eduDoc },
-                        null,
-                        null,
-                       orphanDoc!=null? new List<OrphanDocument> { orphanDoc }:null,
-                        null,
-                       sportDoc != null ? new List<SportDocument> { sportDoc } : null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                       customDoc != null ? new List<CustomDocument> { customDoc } : null
-                        ),
+                    docs,
                     appl.Comment,
                     benefits,//TODO 
                     testsResults,
@@ -739,6 +484,331 @@ namespace PK.Classes
         private static TUID ComposeCompGroupUID(uint campID, uint dirID, /*uint level,*/ uint eduForm, uint eduSource)
         {
             return new TUID(campID.ToString() + dirID.ToString() + /*level.ToString() + */eduForm.ToString() + eduSource.ToString());
+        }
+
+        private static EduSourcePlaces GetPaidPlaces(DB_Connector connection, uint campaignID, uint directionID)
+        {
+            ushort o = 0, oz = 0, z = 0;
+            foreach (object[] row in connection.Select(
+                DB_Table.CAMPAIGNS_PROFILES_DATA,
+                new string[] { "places_paid_o, places_paid_oz, places_paid_z" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,campaignID),
+                    new System.Tuple<string, Relation, object>("profiles_direction_id",Relation.EQUAL,directionID)
+                }))
+            {
+                o += (ushort)row[0];
+                oz += (ushort)row[1];
+                z += (ushort)row[2];
+            }
+
+            return new EduSourcePlaces(o, oz, z);
+        }
+
+        private static EduSourcePlaces GetTargetPlaces(DB_Connector connection, uint campaignID, uint directionID)
+        {
+            ushort o = 0, oz = 0;
+            foreach (object[] row in connection.Select(
+                DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
+                new string[] { "places_o, places_oz" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
+                    new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,directionID)
+                }))
+            {
+                o += (ushort)row[0];
+                oz += (ushort)row[1];
+            }
+
+            return new EduSourcePlaces(o, oz, 0);
+        }
+
+        private static void ChooseFormAndSourceAndPlaces(
+            CompetitiveGroupItem.Variants variant,
+            EduSourcePlaces budget,
+            EduSourcePlaces paid,
+            EduSourcePlaces quota,
+            EduSourcePlaces target,
+            out uint eduForm,
+            out uint eduSource,
+            out ushort places)
+        {
+            switch (variant)
+            {
+                case CompetitiveGroupItem.Variants.NumberBudgetO:
+                    eduForm = 11;
+                    eduSource = 14;
+                    places = budget.O;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberBudgetOZ:
+                    eduForm = 12;
+                    eduSource = 14;
+                    places = budget.OZ;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberBudgetZ:
+                    eduForm = 10;
+                    eduSource = 14;
+                    places = budget.Z;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberPaidO:
+                    eduForm = 11;
+                    eduSource = 15;
+                    places = paid.O;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberPaidOZ:
+                    eduForm = 12;
+                    eduSource = 15;
+                    places = paid.OZ;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberPaidZ:
+                    eduForm = 10;
+                    eduSource = 15;
+                    places = paid.Z;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberQuotaO:
+                    eduForm = 11;
+                    eduSource = 20;
+                    places = quota.O;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberQuotaOZ:
+                    eduForm = 12;
+                    eduSource = 20;
+                    places = quota.OZ;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberQuotaZ:
+                    eduForm = 10;
+                    eduSource = 20;
+                    places = quota.Z;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberTargetO:
+                    eduForm = 11;
+                    eduSource = 16;
+                    places = target.O;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberTargetOZ:
+                    eduForm = 12;
+                    eduSource = 16;
+                    places = target.OZ;
+                    break;
+                case CompetitiveGroupItem.Variants.NumberTargetZ:
+                    eduForm = 10;
+                    eduSource = 16;
+                    places = target.Z;
+                    break;
+                default:
+                    throw new System.Exception("Unreachable reached.");
+            }
+        }
+
+        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, uint applicationID)
+        {
+            IdentityDocument identDoc = null;
+            EduDocument eduDoc = null;
+            OrphanDocument orphanDoc = null;
+            SportDocument sportDoc = null;
+            CustomDocument customDoc = null;
+            foreach (var doc in connection.CallProcedure("get_application_docs", applicationID).Select(
+                s => new
+                {
+                    ID = (uint)s[0],
+                    Type = s[1].ToString(),
+                    Series = s[2].ToString(),
+                    Number = s[3].ToString(),
+                    Date = s[4] as System.DateTime?,
+                    Organization = s[5].ToString(),
+                    OrigDate = s[6] as System.DateTime?
+                }))
+                switch (doc.Type)
+                {
+                    case "identity":
+                        {
+                            object[] idDoc = connection.Select(
+                            DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                            new string[] { "last_name", "first_name", "middle_name", "gender_id", "subdivision_code", "type_id", "nationality_id", "birth_date", "birth_place" },
+                            new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                            )[0];
+
+                            identDoc = new IdentityDocument(
+                                new TUID(doc.ID),
+                                idDoc[0].ToString(),
+                                idDoc[1].ToString(),
+                                doc.Number,
+                                new TDate(doc.Date.Value),
+                                (uint)idDoc[5],
+                                (uint)idDoc[6],
+                                new TDate((System.DateTime)idDoc[7]),
+                                doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                idDoc[2].ToString(),
+                                (uint)idDoc[3],
+                                doc.Series,
+                                idDoc[4].ToString(),
+                                doc.Organization,
+                                idDoc[8].ToString()
+                                );
+                        }
+                        break;
+                    case "school_certificate":
+                    case "high_edu_diploma":
+                    case "academic_diploma":
+                        {
+                            uint year = (uint)connection.Select(
+                           DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                           new string[] { "year" },
+                           new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                           )[0][0];
+
+                            if (doc.Type == "academic_diploma")
+                                eduDoc = new EduDocument(new TAcademicDiplomaDocument(
+                                    new TUID(doc.ID),
+                                    new TDocumentSeries(doc.Series),
+                                    new TDocumentNumber(doc.Number),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    null,
+                                    null,
+                                    doc.Organization
+                                    ));
+                            else if (doc.Type == "school_certificate")
+                                eduDoc = new EduDocument(new TSchoolCertificateDocument(
+                                    new TUID(doc.ID),
+                                    new TDocumentNumber(doc.Number),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    new TDocumentSeries(doc.Series),
+                                    null,
+                                    doc.Organization,
+                                    year
+                                    ));
+                            else
+                                eduDoc = new EduDocument(new THighEduDiplomaDocument(
+                                    new TUID(doc.ID),
+                                    new TDocumentSeries(doc.Series),
+                                    new TDocumentNumber(doc.Number),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    null,
+                                    doc.Organization,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    year
+                                    ));
+                        }
+                        break;
+                    case "orphan":
+                        {
+                            object[] data = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "name", "dictionaries_item_id" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                )[0];
+
+                            orphanDoc = new OrphanDocument(new TOrphanDocument(
+                                new TUID(doc.ID),
+                                (uint)data[1],
+                                new TDocumentName(data[0].ToString()),
+                                new TDate(doc.Date.Value),
+                                doc.Organization
+                                ));
+                        }
+                        break;
+                    case "sport":
+                        {
+                            object[] data = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "name", "dictionaries_item_id" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                )[0];
+
+                            sportDoc = new SportDocument(new TSportDocument(
+                                new TUID(doc.ID),
+                                123,//TODO (uint)data[1],
+                                data[0].ToString(),
+                                new TDate(doc.Date.Value),
+                                doc.Organization
+                                ));
+                        }
+                        break;
+                    case "custom":
+                        {
+                            object[] data = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "name", "text_data" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                )[0];
+
+                            customDoc = new CustomDocument(new TCustomDocument(
+                                new TUID(doc.ID),
+                                data[0].ToString(),
+                                null, //TODO
+                                null, //TODO
+                                null,
+                                null,
+                                null,
+                                data[1].ToString()
+                                ));
+                        }
+                        break;
+                }
+
+            return new ApplicationDocuments(
+                identDoc,
+                null, //TODO
+                null,
+                null,
+                new List<EduDocument> { eduDoc },
+                null,
+                null,
+                orphanDoc != null ? new List<OrphanDocument> { orphanDoc } : null,
+                null,
+                sportDoc != null ? new List<SportDocument> { sportDoc } : null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                customDoc != null ? new List<CustomDocument> { customDoc } : null
+                );
+        }
+
+        private static List<EntranceTestResult> PackApplicationTestResults(
+            DB_Connector connection,
+            uint campaignID,
+            IEnumerable<System.Tuple<uint, TUID>> directionsAndCompGroupsIDs,
+            IEnumerable<DB_Queries.Mark> applMarks)
+        {
+            List<EntranceTestResult> testsResults = new List<EntranceTestResult>();
+            foreach (var entr in directionsAndCompGroupsIDs)
+            {
+                IEnumerable<uint> dir_subjects = connection.Select(
+                    DB_Table.ENTRANCE_TESTS,
+                    new string[] { "subject_id" },
+                    new List<System.Tuple<string, Relation, object>>
+                    {
+                            new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
+                            new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,entr.Item1)
+                    }).Select(s => (uint)s[0]).Distinct(); //TODO distinct пока не поменяли связть таблицы
+
+                foreach (var res in dir_subjects.Join(
+                    applMarks,
+                    k1 => k1,
+                    k2 => k2.SubjID,
+                    (s1, s2) => s2
+                    ).GroupBy(k => k.SubjID, (k, g) => g.First(s => s.Value == g.Max(m => m.Value))))
+                    testsResults.Add(new EntranceTestResult(
+                        new TUID(entr.Item2.Value + res.SubjID.ToString()),
+                        res.Value,
+                        (uint)(res.FromExam ? 2 : 1),//TODO
+                        new TEntranceTestSubject(res.SubjID),
+                        1,
+                        entr.Item2,
+                        //res.Item5 ? new ResultDocument(new TInstitutionDocument(new TDocumentNumber("1241415"))):null, TODO Для испытаний ОО
+                        null//,
+                            //TODO ? appl.SpecialCond
+                        ));
+            }
+
+            return testsResults;
         }
     }
 }

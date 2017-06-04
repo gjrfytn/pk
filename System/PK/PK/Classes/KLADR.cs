@@ -34,18 +34,18 @@ namespace PK.Classes
         }
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool _Disposed = false;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_Disposed)
             {
                 if (disposing)
                 {
                     _Connection.Close();
                 }
 
-                disposedValue = true;
+                _Disposed = true;
             }
         }
 

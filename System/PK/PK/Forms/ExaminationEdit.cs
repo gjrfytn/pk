@@ -14,7 +14,6 @@ namespace PK.Forms
         public ExaminationEdit(Classes.DB_Connector connection, uint? id)
         {
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _ID = id;
 
             #region Components
@@ -35,17 +34,11 @@ namespace PK.Forms
             dtpRegEndDate.MinDate = dtpDate.MinDate;
             dtpRegEndDate.MaxDate = dtpDate.MaxDate;
 
-            if (_ID.HasValue)
-            {
-                foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
-                    dtp.Tag = true;
-            }
-            else
-            {
-                foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
-                    dtp.Tag = false;
-            }
+            foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
+                dtp.Tag = _ID.HasValue;
             #endregion
+
+            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
 
@@ -78,16 +71,76 @@ namespace PK.Forms
 
         private void bSave_Click(object sender, EventArgs e)
         {
+            if (!AssureSave())
+                return;
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
+                { "subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
+                { "date",dtpDate.Value},
+                { "reg_start_date",dtpRegStartDate.Value},
+                { "reg_end_date",dtpRegEndDate.Value}
+            };
+
+            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+            {
+                uint id;
+                if (_ID.HasValue)
+                {
+                    _DB_Connection.Update(DB_Table.EXAMINATIONS, data, new Dictionary<string, object> { { "id", _ID } }, transaction);
+                    id = _ID.Value;
+                }
+                else
+                    id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data, transaction);
+
+                string[] fields = { "examination_id", "number", "capacity", "priority" };
+                List<object[]> oldList = _DB_Connection.Select(
+                    DB_Table.EXAMINATIONS_AUDIENCES,
+                    fields,
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, id) }
+                    );
+
+                List<object[]> newList = new List<object[]>();
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                    if (!row.IsNewRow)
+                        newList.Add(new object[] { id, row.Cells[0].Value, row.Cells[1].Value, row.Index });
+
+                _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldList, newList, fields, new string[] { "examination_id", "number" }, transaction);
+
+                transaction.Commit();
+            }
+
+            Cursor.Current = Cursors.Default;
+
+            Classes.Utility.ShowChangesSavedMessage();
+            DialogResult = DialogResult.OK;
+        }
+
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void dtp_ValueChanged(object sender, EventArgs e)
+        {
+            ((DateTimePicker)sender).Tag = true;
+        }
+
+        private bool AssureSave()
+        {
             if (cbSubject.SelectedIndex == -1)
             {
                 MessageBox.Show("Не выбрана дисциплина.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return false;
             }
 
             if (dataGridView.Rows.Count < 2)
             {
                 MessageBox.Show("Не добавлено ни одной аудитории.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return false;
             }
 
             foreach (DataGridViewRow row in dataGridView.Rows)
@@ -122,84 +175,14 @@ namespace PK.Forms
                     {
                         dataGridView.ClearSelection();
                         row.Selected = true;
-                        return;
+                        return false;
                     }
                 }
 
             if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !Classes.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))
-                return;
+                return false;
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            Dictionary<string, object> data = new Dictionary<string, object>
-            {
-                { "subject_dict_id",(uint)FIS_Dictionary.SUBJECTS},
-                { "subject_id",_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS,cbSubject.Text)},
-                { "date",dtpDate.Value},
-                { "reg_start_date",dtpRegStartDate.Value},
-                { "reg_end_date",dtpRegEndDate.Value}
-            };
-
-            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-            {
-                if (_ID.HasValue)
-                {
-                    _DB_Connection.Update(
-                        DB_Table.EXAMINATIONS,
-                        data,
-                        new Dictionary<string, object> { { "id", _ID } },
-                        transaction
-                        );
-
-                    string[] fields = { "examination_id", "number", "capacity", "priority" };
-                    List<object[]> oldL = _DB_Connection.Select(
-                        DB_Table.EXAMINATIONS_AUDIENCES,
-                        fields,
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, _ID) }
-                        );
-
-                    List<object[]> newL = new List<object[]>();
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                        if (!row.IsNewRow)
-                            newL.Add(new object[] { _ID, row.Cells[0].Value, row.Cells[1].Value, row.Index });
-
-                    _DB_Helper.UpdateData(DB_Table.EXAMINATIONS_AUDIENCES, oldL, newL, fields, new string[] { "examination_id", "number" }, transaction);
-                }
-                else
-                {
-                    uint id = _DB_Connection.Insert(DB_Table.EXAMINATIONS, data, transaction);
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                        if (!row.IsNewRow)
-                            _DB_Connection.Insert(
-                            DB_Table.EXAMINATIONS_AUDIENCES,
-                            new Dictionary<string, object>
-                            {
-                                { "examination_id", id },
-                                { "number", row.Cells[0].Value },
-                                { "capacity", row.Cells[1].Value },
-                                { "priority", row.Index }
-                            },
-                            transaction
-                            );
-                }
-
-                transaction.Commit();
-            }
-
-            Cursor.Current = Cursors.Default;
-
-            Classes.Utility.ShowChangesSavedMessage();
-            DialogResult = DialogResult.OK;
-        }
-
-        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            MessageBox.Show("Некорректные данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
-        private void dtp_ValueChanged(object sender, EventArgs e)
-        {
-            ((DateTimePicker)sender).Tag = true;
+            return true;
         }
     }
 }
