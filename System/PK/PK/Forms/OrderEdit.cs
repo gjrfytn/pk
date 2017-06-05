@@ -670,15 +670,12 @@ namespace PK.Forms
                         { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
                     };
 
-                    IEnumerable<uint> dir_subjects = _DB_Connection.Select(
-                        DB_Table.ENTRANCE_TESTS,
-                        new string[] { "subject_id" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
-                            new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,((CB_Value)cbFDP.SelectedValue).Item1),
-                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,((CB_Value)cbFDP.SelectedValue).Item2)
-                        }).Select(s => (uint)s[0]);
+                    IEnumerable<uint> dir_subjects = Classes.DB_Queries.GetDirectionEntranceTests(
+                        _DB_Connection,
+                        Classes.Utility.CurrentCampaignID,
+                        ((CB_Value)cbFDP.SelectedValue).Item1,
+                        ((CB_Value)cbFDP.SelectedValue).Item2
+                        );
 
                     foreach (var appl in table)
                     {

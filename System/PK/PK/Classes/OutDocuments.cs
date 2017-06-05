@@ -60,6 +60,7 @@ namespace PK.Classes
                 public string MiddleName;
                 public string HomePhone;
                 public string MobilePhone;
+                public string Password;
             }
 
             private static readonly Dictionary<Tuple<uint, uint>, Tuple<string, string>> _Streams = new Dictionary<Tuple<uint, uint>, Tuple<string, string>>
@@ -153,7 +154,7 @@ namespace PK.Classes
                     PassingExam = applDataBuf[6] as bool?,
                     Priority = applDataBuf[7] as bool?,
                     Original = false,
-                    Quota = false,
+                    Quota = false
                 };
 
                 inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
@@ -231,11 +232,12 @@ namespace PK.Classes
 
                 object[] entrantData = connection.Select(
                    DB_Table.ENTRANTS,
-                   new string[] { "home_phone", "mobile_phone" },
+                   new string[] { "home_phone", "mobile_phone", "personal_password" },
                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData.EntrantID) }
                    )[0];
                 applData.HomePhone = entrantData[0].ToString();
                 applData.MobilePhone = entrantData[1].ToString();
+                applData.Password = entrantData[2].ToString();
 
                 if (inventory)
                     documents.Add(new DocumentCreator.DocumentParameters(
@@ -261,7 +263,19 @@ namespace PK.Classes
                         AddBachPercRecordFace(documents, inventoryTableParams[0], regTime, applID, applData);
 
                 if (receipt)
+                {
                     AddReceipt(documents, connection, inventoryTableParams[1], entrances, regTime, editTime, registratorName, applID, applData);
+
+                    object[] buf = connection.Select(
+                        DB_Table.APPLICATIONS,
+                        new string[] { "passing_examinations", "registration_time" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                        )[0];
+
+                    bool? passingExams = buf[0] as bool?;
+                    if (passingExams.HasValue && passingExams.Value)
+                        AddExamShedule(documents, connection, applID, (DateTime)buf[1]);
+                }
 
                 if (master)
                 {
@@ -410,7 +424,9 @@ namespace PK.Classes
                         registratorName,
                         System.Windows.Forms.SystemInformation.ComputerName,
                         regTime.ToString(),
-                        editTime.HasValue?editTime.ToString():"нет"
+                        editTime.HasValue?editTime.ToString():"нет",
+                        applData.EntrantID.ToString(),
+                        applData.Password
                     },
                     receiptTableParams
                     ));
@@ -586,18 +602,9 @@ namespace PK.Classes
                 GetAgreedDirData(connection, applID, out agreedDir, out dirShortName);
 
                 ushort sum = 0;
-                foreach (object[] subj in connection.Select(
-                    DB_Table.ENTRANCE_TESTS,
-                    new string[] { "subject_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,agreedDir.Item1),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir.Item2)
-                    }
-                    ))
+                foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
                 {
-                    var mark = marks.SingleOrDefault(s => s.Item1 == (uint)subj[0]);
+                    var mark = marks.SingleOrDefault(s => s.Item1 == subj);
                     if (mark != null)
                         sum += mark.Item2;
                 }
@@ -660,6 +667,46 @@ namespace PK.Classes
                         agreedDir.Item5.ToShortDateString()
                     },
                     null
+                    ));
+            }
+
+            private static void AddExamShedule(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                uint applID,
+                DateTime registrationTime)
+            {
+                var entrances = connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES,
+                    new string[] { "faculty_short_name", "direction_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
+                    }).Select(s => new { Faculty = s[0].ToString(), Direction = (uint)s[1] });
+
+                List<uint> subjects = new List<uint>();
+
+                foreach (var entrance in entrances)
+                    subjects.AddRange(DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, entrance.Faculty, entrance.Direction));
+
+                IEnumerable<DB_Queries.Exam> exams = DB_Queries.GetCampaignExams(connection, Utility.CurrentCampaignID).Where(s =>
+                registrationTime >= s.RegStartDate && registrationTime < s.RegEndDate + new TimeSpan(1, 0, 0, 0)
+                );
+
+                DB_Helper dbHelper = new DB_Helper(connection);
+                IEnumerable<string[]> table = subjects.Distinct().Join(
+                    exams,
+                    k1 => k1,
+                    k2 => k2.SubjID,
+                    (s1, s2) => new { Subj = s1, s2.Date }
+                    ).OrderBy(s => s.Date).Select(s => new string[] { dbHelper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, s.Subj), s.Date.ToShortDateString() });
+
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Utility.DocumentsTemplatesPath + "ExamShedule.xml",
+                    null,
+                    null,
+                    null,
+                    new List<string[]>[] { table.ToList() }
                     ));
             }
 
@@ -929,7 +976,7 @@ namespace PK.Classes
                             {
                                 new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("faculty",Relation.EQUAL,order.Faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction),
+                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction.Value),
                                 new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
                             }).Select(s => new { EntrID = (uint)s[0], Exam = (short)s[1], Bonus = (ushort)s[2] });
 
@@ -942,15 +989,7 @@ namespace PK.Classes
                     }
                     else
                     {
-                        var dir_subjects = connection.Select(
-                            DB_Table.ENTRANCE_TESTS,
-                            new string[] { "subject_id" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
-                                new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,order.Faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction)
-                            }).Select(s => (uint)s[0]);
+                        IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, order.Faculty, order.Direction.Value);
 
                         IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Utility.CurrentCampaignID);
 

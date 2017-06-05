@@ -200,27 +200,16 @@ namespace PK.Forms
         private void UpdateTable()
         {
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            object[] curCampStartEnd = _DB_Connection.Select(
-                DB_Table.CAMPAIGNS,
-                new string[] { "start_year", "end_year" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
-                )[0];
+            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Utility.CurrentCampaignID);
 
             dataGridView.Rows.Clear();
-            foreach (object[] row in _DB_Connection.Select(DB_Table.EXAMINATIONS,
-                new string[] { "id", "subject_id", "date", "reg_start_date", "reg_end_date" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("date",Relation.GREATER_EQUAL,new DateTime((int)(uint)curCampStartEnd[0],1,1)),
-                    new Tuple<string, Relation, object>("date",Relation.LESS_EQUAL,new DateTime((int)(uint)curCampStartEnd[0],12,31)),
-                }
-                ))
+            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Utility.CurrentCampaignID))
                 dataGridView.Rows.Add(
-                    row[0],
-                    subjects[(uint)row[1]],
-                    row[2],
-                    row[3],
-                    row[4]
+                    exam.ID,
+                    subjects[exam.SubjID],
+                    exam.Date,
+                    exam.RegStartDate,
+                    exam.RegEndDate
                     );
         }
 

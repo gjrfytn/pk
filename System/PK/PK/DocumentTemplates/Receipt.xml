@@ -219,6 +219,52 @@
           <Paragraph/>
         </Element>
         <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Проверить всю информацию можно в личном кабинете абитуриента по адресу: www.priem-madi.ru/тут_что-то_будет</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Логин: </String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <Placeholder>7</Placeholder>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Пароль: </String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <Placeholder>8</Placeholder>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
           <Paragraph/>
         </Element>
         <Element>

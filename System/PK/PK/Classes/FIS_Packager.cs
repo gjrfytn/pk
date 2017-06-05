@@ -780,14 +780,7 @@ namespace PK.Classes
             List<EntranceTestResult> testsResults = new List<EntranceTestResult>();
             foreach (var entr in directionsAndCompGroupsIDs)
             {
-                IEnumerable<uint> dir_subjects = connection.Select(
-                    DB_Table.ENTRANCE_TESTS,
-                    new string[] { "subject_id" },
-                    new List<System.Tuple<string, Relation, object>>
-                    {
-                            new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
-                            new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,entr.Item1)
-                    }).Select(s => (uint)s[0]).Distinct(); //TODO distinct пока не поменяли связть таблицы
+                IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, campaignID, entr.Item1).Distinct(); //TODO distinct пока не поменяли связть таблицы
 
                 foreach (var res in dir_subjects.Join(
                     applMarks,

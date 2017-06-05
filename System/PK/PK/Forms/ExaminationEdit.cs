@@ -21,14 +21,10 @@ namespace PK.Forms
 
             dataGridView_Capacity.ValueType = typeof(ushort);
 
-            object[] curCampStartEnd = _DB_Connection.Select(
-                DB_Table.CAMPAIGNS,
-                new string[] { "start_year", "end_year" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
-                )[0];
+            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Utility.CurrentCampaignID);
 
-            dtpDate.MinDate = new DateTime((int)(uint)curCampStartEnd[0], 1, 1);
-            dtpDate.MaxDate = new DateTime((int)(uint)curCampStartEnd[0], 12, 31);
+            dtpDate.MinDate = new DateTime((int)curCampStartEnd.Item1, 1, 1);
+            dtpDate.MaxDate = new DateTime((int)curCampStartEnd.Item2, 12, 31);
             dtpRegStartDate.MinDate = dtpDate.MinDate;
             dtpRegStartDate.MaxDate = dtpDate.MaxDate;
             dtpRegEndDate.MinDate = dtpDate.MinDate;

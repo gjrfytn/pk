@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Template
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
+  <Fonts>
+    <Font ID="Usual">
+      <Name>Arial</Name>
+      <Size>14</Size>
+    </Font>
+    <Font ID="Header">
+      <Name>Arial</Name>
+      <Size>16</Size>
+      <Style>Bold</Style>
+    </Font>
+  </Fonts>
+  <Document>
+    <Word>
+      <Properties>
+        <A5/>
+        <Album/>
+      </Properties>
+      <Structure>
+        <Element>
+          <Paragraph>
+            <FontID>Header</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Расписание экзаменов</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Table>
+            <AutoFit>Window</AutoFit>
+            <Placeholder>0</Placeholder>
+            <Borders>
+              <Left>
+                <Style>None</Style>
+              </Left>
+              <Top>
+                <Style>None</Style>
+              </Top>
+              <Right>
+                <Style>None</Style>
+              </Right>
+              <Bottom>
+                <Style>None</Style>
+              </Bottom>
+              <InsideH>
+                <Style>None</Style>
+              </InsideH>
+              <InsideV>
+                <Style>None</Style>
+              </InsideV>
+            </Borders>
+            <Structure>
+              <Column>
+                <Caption></Caption>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption></Caption>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+            </Structure>
+          </Table>
+        </Element>
+      </Structure>
+    </Word>
+  </Document>
+</Template>

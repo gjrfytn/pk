@@ -24,6 +24,24 @@ namespace PK.Classes
             }
         }
 
+        public class Exam
+        {
+            public readonly uint ID;
+            public readonly uint SubjID;
+            public readonly DateTime Date;
+            public readonly DateTime RegStartDate;
+            public readonly DateTime RegEndDate;
+
+            public Exam(uint id, uint subjID, DateTime date, DateTime regStartDate, DateTime regEndDate)
+            {
+                ID = id;
+                SubjID = subjID;
+                Date = date;
+                RegStartDate = regStartDate;
+                RegEndDate = regEndDate;
+            }
+        }
+
         public static IEnumerable<Mark> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
         {
             #region Contracts
@@ -91,6 +109,60 @@ namespace PK.Classes
                     new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,directionID),
                     new Tuple<string, Relation, object>("short_name",Relation.EQUAL,shortName)
                 })[0][0].ToString();
+        }
+
+        public static Tuple<uint, uint> GetCampaignStartEnd(DB_Connector connection, uint campaignID)
+        {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            #endregion
+
+            return connection.Select(
+                DB_Table.CAMPAIGNS,
+                new string[] { "start_year", "end_year" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, campaignID) }
+                ).Select(s => Tuple.Create((uint)s[0], (uint)s[1])).Single();
+        }
+
+        public static IEnumerable<Exam> GetCampaignExams(DB_Connector connection, uint campaignID)
+        {
+            Tuple<uint, uint> curCampStartEnd = GetCampaignStartEnd(connection, campaignID);
+
+            return connection.Select(DB_Table.EXAMINATIONS,
+                new string[] { "id", "subject_id", "date", "reg_start_date", "reg_end_date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("date",Relation.GREATER_EQUAL,new DateTime((int)curCampStartEnd.Item1,1,1)),
+                    new Tuple<string, Relation, object>("date",Relation.LESS_EQUAL,new DateTime((int)curCampStartEnd.Item2,12,31))
+                }).Select(s => new Exam((uint)s[0], (uint)s[1], (DateTime)s[2], (DateTime)s[3], (DateTime)s[4]));
+        }
+
+        //TODO faculty будет не нужно, если изменится связь таблицы.
+        public static IEnumerable<uint> GetDirectionEntranceTests(DB_Connector connection, uint campaignID, string faculty, uint direction)
+        {
+            return connection.Select(
+                DB_Table.ENTRANCE_TESTS,
+                new string[] { "subject_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
+                    new Tuple<string, Relation, object>("direction_faculty",Relation.EQUAL,faculty),
+                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,direction)
+                }).Select(s => (uint)s[0]);
+        }
+
+        //TODO  можно будет объединить с функцией выше, если изменится связь таблицы.
+        public static IEnumerable<uint> GetDirectionEntranceTests(DB_Connector connection, uint campaignID, uint direction)
+        {
+            return connection.Select(
+                DB_Table.ENTRANCE_TESTS,
+                new string[] { "subject_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
+                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,direction)
+                }).Select(s => (uint)s[0]);
         }
     }
 }
