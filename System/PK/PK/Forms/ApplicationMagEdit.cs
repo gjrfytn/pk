@@ -532,6 +532,95 @@ namespace PK.Forms
                 cbMedCertificate.Checked = false;
         }
 
+        private void btAddDir_Click(object sender, EventArgs e)
+        {
+            if (sender == btAddDir_budget_o)
+            {
+                cbProgram_budget_o.Visible = true;
+                cbProgram_budget_o.Enabled = true;
+                btRemoveDir_budget_o.Visible = true;
+                btRemoveDir_budget_o.Enabled = true;
+                cbAgreed_budget_o.Visible = true;
+            }
+            else if (sender == btAddDir_paid_o)
+            {
+                cbProgram_paid_o.Visible = true;
+                cbProgram_paid_o.Enabled = true;
+                btRemoveDir_paid_o.Visible = true;
+                btRemoveDir_paid_o.Enabled = true;
+            }
+            else if (sender == btAddDir_paid_z)
+            {
+                cbProgram_paid_z.Visible = true;
+                cbProgram_paid_z.Enabled = true;
+                btRemoveDir_paid_z.Visible = true;
+                btRemoveDir_paid_z.Enabled = true;
+            }
+            else if (sender == btAddDir_target_o)
+            {
+                cbProgram_target_o.Visible = true;
+                cbProgram_target_o.Enabled = true;
+                btRemoveDir_target_o.Visible = true;
+                btRemoveDir_target_o.Enabled = true;
+                cbAgreed_target_o.Visible = true;
+            }
+            else if (sender == btAddDir_quote_o)
+            {
+                cbProgram_quote_o.Visible = true;
+                cbProgram_quote_o.Enabled = true;
+                btRemoveDir_quote_o.Visible = true;
+                btRemoveDir_quote_o.Enabled = true;
+                cbAgreed_quote_o.Visible = true;
+            }
+        }
+
+        private void btRemoveDir_Click(object sender, EventArgs e)
+        {
+            if (sender == btRemoveDir_budget_o)
+            {
+                cbProgram_budget_o.SelectedIndex = -1;
+                cbProgram_budget_o.Visible = false;
+                cbProgram_budget_o.Enabled = false;
+                btRemoveDir_budget_o.Visible = false;
+                btRemoveDir_budget_o.Enabled = false;
+                cbAgreed_budget_o.Visible = false;
+            }
+            else if (sender == btRemoveDir_paid_o)
+            {
+                cbProgram_paid_o.SelectedIndex = -1;
+                cbProgram_paid_o.Visible = false;
+                cbProgram_paid_o.Enabled = false;
+                btRemoveDir_paid_o.Visible = false;
+                btRemoveDir_paid_o.Enabled = false;
+            }
+            else if (sender == btRemoveDir_paid_z)
+            {
+                cbProgram_paid_z.SelectedIndex = -1;
+                cbProgram_paid_z.Visible = false;
+                cbProgram_paid_z.Enabled = false;
+                btRemoveDir_paid_z.Visible = false;
+                btRemoveDir_paid_z.Enabled = false;
+            }
+            else if (sender == btRemoveDir_target_o)
+            {
+                cbProgram_target_o.SelectedIndex = -1;
+                cbProgram_target_o.Visible = false;
+                cbProgram_target_o.Enabled = false;
+                btRemoveDir_target_o.Visible = false;
+                btRemoveDir_target_o.Enabled = false;
+                cbAgreed_target_o.Visible = false;
+            }
+            else if (sender == btRemoveDir_quote_o)
+            {
+                cbProgram_quote_o.SelectedIndex = -1;
+                cbProgram_quote_o.Visible = false;
+                cbProgram_quote_o.Enabled = false;
+                btRemoveDir_quote_o.Visible = false;
+                btRemoveDir_quote_o.Enabled = false;
+                cbAgreed_quote_o.Visible = false;
+            }
+        }
+
 
         private void SaveApplication()
         {
@@ -551,6 +640,7 @@ namespace PK.Forms
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
             LoadDocuments();
+            LoadExamsMarks();
             LoadDirections();
             Cursor.Current = Cursors.Default;
         }
@@ -895,6 +985,43 @@ namespace PK.Forms
             }
         }
 
+        private void LoadExamsMarks()
+        {
+            //List<object[]> marks = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name", "mark", "bonus" },
+            //    new List<Tuple<string, Relation, object>>
+            //    {
+            //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+            //        new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
+            //    });
+            //if (marks.Count > 0)
+            //    foreach (object[] mark in marks)
+            //        foreach (TabPage page in tcPrograms.TabPages)
+            //        {
+            //            uint eduForm = 0;
+            //            uint eduSource = 0;
+            //            if (page.Name.Split('_')[1] == "budget")
+            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB);
+            //            if (page.Name.Split('_')[1] == "paid")
+            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP);
+            //            if (page.Name.Split('_')[1] == "target")
+            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT);
+            //            if (page.Name.Split('_')[1] == "quote")
+            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ);
+
+            //            if (page.Name.Split('_')[2] == "o")
+            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO);
+            //            if (page.Name.Split('_')[2] == "oz")
+            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ);
+            //            if (page.Name.Split('_')[2] == "z")
+            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ);
+            //            if (eduForm == (uint))
+            //                foreach (Control c in page.Controls)
+            //                {
+
+            //                }
+            //        }
+        }
+
         private void LoadDirections()
         {          
             var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
@@ -930,6 +1057,9 @@ namespace PK.Forms
                     cbProgram_budget_o.SelectedValue = entrancesData.Value;
                     cbProgram_budget_o.Visible = true;
                     cbProgram_budget_o.Enabled = true;
+                    cbAgreed_budget_o.Visible = true;
+                    btRemoveDir_budget_o.Visible = true;
+                    btRemoveDir_budget_o.Enabled = true;
                 }
 
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))
@@ -938,6 +1068,8 @@ namespace PK.Forms
                     cbProgram_paid_o.SelectedValue = entrancesData.Value;
                     cbProgram_paid_o.Visible = true;
                     cbProgram_paid_o.Enabled = true;
+                    btRemoveDir_paid_o.Visible = true;
+                    btRemoveDir_paid_o.Enabled = true;
                 }
 
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))
@@ -946,6 +1078,8 @@ namespace PK.Forms
                     cbProgram_paid_z.SelectedValue = entrancesData.Value;
                     cbProgram_paid_z.Visible = true;
                     cbProgram_paid_z.Enabled = true;
+                    btRemoveDir_paid_z.Visible = true;
+                    btRemoveDir_paid_z.Enabled = true;
                 }
 
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ))
@@ -955,6 +1089,9 @@ namespace PK.Forms
                     cbProgram_quote_o.SelectedValue = entrancesData.Value;
                     cbProgram_quote_o.Visible = true;
                     cbProgram_quote_o.Enabled = true;
+                    cbAgreed_quote_o.Visible = true;
+                    btRemoveDir_quote_o.Visible = true;
+                    btRemoveDir_quote_o.Enabled = true;
                 }
 
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT))
@@ -971,7 +1108,10 @@ namespace PK.Forms
                     })[0][0];
                     cbProgram_target_o.SelectedValue = entrancesData.Value;
                     cbProgram_target_o.Visible = true;
-                    cbProgram_target_o.Enabled = true;                
+                    cbProgram_target_o.Enabled = true;
+                    cbAgreed_target_o.Visible = true;
+                    btRemoveDir_target_o.Visible = true;
+                    btRemoveDir_target_o.Enabled = true;              
                 }
             }
             int disagreedTimes = 0;
@@ -1247,7 +1387,7 @@ namespace PK.Forms
                                 { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
                     }
                 }
-            List<object[]> examsData = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name" },
+            List<object[]> examsData = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name", "mark" },
                 new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID),
@@ -1272,6 +1412,25 @@ namespace PK.Forms
                             { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
                             { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } });
                     }                        
+                }
+            foreach (object[] magExam in examsData)
+                if (int.Parse(magExam[3].ToString()) != -1)
+                {
+                    bool found = false;
+                    foreach (TabPage tab in tcPrograms.TabPages)
+                        foreach (Control c in tab.Controls)
+                        {
+                            ComboBox cb = c as ComboBox;
+                            if (cb != null && cb.SelectedIndex != -1 && (magExam[0].ToString() == ((ProgramTuple)cb.SelectedValue).Item2
+                                && (uint)magExam[1] == ((ProgramTuple)cb.SelectedValue).Item1 && magExam[2].ToString() == ((ProgramTuple)cb.SelectedValue).Item5))
+                                {
+                                    found = true;
+                                    break;
+                                }
+                        }
+                    if (!found)
+                        _DB_Connection.Delete(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
+                            { "faculty", magExam[0].ToString() }, { "direction_id", (uint)magExam[1] }, { "profile_short_name", magExam[2].ToString() } });
                 }
         }
 
@@ -1394,7 +1553,7 @@ namespace PK.Forms
             List<object[]> oldList = oldDataList;
             List<object[]> newList = newDataList;
             int j = 0;
-            while (j < oldList.Count)
+            while (j < oldList.Count && newList.Count != 0)
             {
                 int index = 0;
                 bool keysMatch = true;

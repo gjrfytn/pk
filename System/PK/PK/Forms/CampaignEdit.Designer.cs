@@ -58,6 +58,7 @@
             this.dgvDirections_OOOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_OKOF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_OKOZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirections_Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvEntranceTests = new System.Windows.Forms.DataGridView();
@@ -79,6 +80,7 @@
             this.dgvPaidPlaces_OZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvPaidPlaces_ZFPM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvPaidPlaces_ProfileShortName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPaidPlaces_Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.dgvFacultities = new System.Windows.Forms.DataGridView();
             this.dgvFacultities_ShortFacName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,6 +97,7 @@
             this.dgvTargetOrganizatons_DirSelect = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dgvTargetOrganizatons_OF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvTargetOrganizatons_OZF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTargetOrganizatons_Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
@@ -312,7 +315,8 @@
             this.dgvDirections_OOOF,
             this.dgvDirections_OOOZF,
             this.dgvDirections_OKOF,
-            this.dgvDirections_OKOZF});
+            this.dgvDirections_OKOZF,
+            this.dgvDirections_Sum});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -398,6 +402,13 @@
             this.dgvDirections_OKOZF.Name = "dgvDirections_OKOZF";
             this.dgvDirections_OKOZF.Visible = false;
             this.dgvDirections_OKOZF.Width = 80;
+            // 
+            // dgvDirections_Sum
+            // 
+            this.dgvDirections_Sum.HeaderText = "Сумма";
+            this.dgvDirections_Sum.Name = "dgvDirections_Sum";
+            this.dgvDirections_Sum.ReadOnly = true;
+            this.dgvDirections_Sum.Width = 50;
             // 
             // panel1
             // 
@@ -522,7 +533,8 @@
             this.dgvPaidPlaces_OFPM,
             this.dgvPaidPlaces_OZFPM,
             this.dgvPaidPlaces_ZFPM,
-            this.dgvPaidPlaces_ProfileShortName});
+            this.dgvPaidPlaces_ProfileShortName,
+            this.dgvPaidPlaces_Sum});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -537,6 +549,7 @@
             this.dgvPaidPlaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPaidPlaces.Size = new System.Drawing.Size(1046, 298);
             this.dgvPaidPlaces.TabIndex = 16;
+            this.dgvPaidPlaces.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellEndEdit);
             this.dgvPaidPlaces.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
             // 
             // dgvPaidPlaces_ID
@@ -604,6 +617,13 @@
             this.dgvPaidPlaces_ProfileShortName.Name = "dgvPaidPlaces_ProfileShortName";
             this.dgvPaidPlaces_ProfileShortName.Visible = false;
             // 
+            // dgvPaidPlaces_Sum
+            // 
+            this.dgvPaidPlaces_Sum.HeaderText = "Сумма";
+            this.dgvPaidPlaces_Sum.Name = "dgvPaidPlaces_Sum";
+            this.dgvPaidPlaces_Sum.ReadOnly = true;
+            this.dgvPaidPlaces_Sum.Width = 50;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -668,7 +688,8 @@
             this.dgvTargetOrganizatons_faculty,
             this.dgvTargetOrganizatons_DirSelect,
             this.dgvTargetOrganizatons_OF,
-            this.dgvTargetOrganizatons_OZF});
+            this.dgvTargetOrganizatons_OZF,
+            this.dgvTargetOrganizatons_Sum});
             this.dgvTargetOrganizatons.Location = new System.Drawing.Point(0, 342);
             this.dgvTargetOrganizatons.Name = "dgvTargetOrganizatons";
             this.dgvTargetOrganizatons.RowHeadersVisible = false;
@@ -762,6 +783,13 @@
             this.dgvTargetOrganizatons_OZF.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvTargetOrganizatons_OZF.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dgvTargetOrganizatons_OZF.Visible = false;
+            // 
+            // dgvTargetOrganizatons_Sum
+            // 
+            this.dgvTargetOrganizatons_Sum.HeaderText = "Сумма";
+            this.dgvTargetOrganizatons_Sum.Name = "dgvTargetOrganizatons_Sum";
+            this.dgvTargetOrganizatons_Sum.ReadOnly = true;
+            this.dgvTargetOrganizatons_Sum.Width = 50;
             // 
             // label7
             // 
@@ -869,6 +897,33 @@
         private System.Windows.Forms.CheckBox cbEduFormO;
         private System.Windows.Forms.CheckBox cbEduFormOZ;
         private System.Windows.Forms.CheckBox cbEduFormZ;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_FacultyNamr;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Sum;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Code;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_DirShortName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Fac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OFPM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OZFPM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ZFPM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ProfileShortName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Sum;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Name;
         private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_Select;
@@ -879,30 +934,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn dgvTargetOrganizatons_DirSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_DirID;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dgvDirections_Selected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Fac;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OOOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_OKOZF;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_DirShortName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_Fac;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OFPM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_OZFPM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ZFPM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPaidPlaces_ProfileShortName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_DirCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvEntranceTests_FacultyNamr;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_First;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Second;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dgvEntranceTests_Third;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Sum;
     }
 }
