@@ -345,7 +345,7 @@
             // dataGridView_ID
             // 
             this.dataGridView_ID.FillWeight = 20F;
-            this.dataGridView_ID.HeaderText = "ID";
+            this.dataGridView_ID.HeaderText = "УИН";
             this.dataGridView_ID.Name = "dataGridView_ID";
             this.dataGridView_ID.ReadOnly = true;
             // 

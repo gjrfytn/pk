@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
+            this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_ApplID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -43,11 +44,13 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridView_UID,
+            this.dataGridView_ApplID,
             this.dataGridView_Name,
             this.dataGridView_Mark});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -59,30 +62,6 @@
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView_CellValidating);
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
-            // 
-            // dataGridView_UID
-            // 
-            this.dataGridView_UID.DataPropertyName = "entrant_id";
-            this.dataGridView_UID.FillWeight = 35F;
-            this.dataGridView_UID.HeaderText = "Рег. номер";
-            this.dataGridView_UID.Name = "dataGridView_UID";
-            this.dataGridView_UID.ReadOnly = true;
-            this.dataGridView_UID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dataGridView_Name
-            // 
-            this.dataGridView_Name.HeaderText = "ФИО";
-            this.dataGridView_Name.Name = "dataGridView_Name";
-            this.dataGridView_Name.ReadOnly = true;
-            this.dataGridView_Name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dataGridView_Mark
-            // 
-            this.dataGridView_Mark.DataPropertyName = "mark";
-            this.dataGridView_Mark.FillWeight = 20F;
-            this.dataGridView_Mark.HeaderText = "Оценка";
-            this.dataGridView_Mark.Name = "dataGridView_Mark";
-            this.dataGridView_Mark.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // toolStrip
             // 
@@ -113,6 +92,33 @@
             this.toolStrip_Clear.Text = "Очистить оценки";
             this.toolStrip_Clear.Click += new System.EventHandler(this.toolStrip_Clear_Click);
             // 
+            // dataGridView_UID
+            // 
+            this.dataGridView_UID.DataPropertyName = "entrant_id";
+            this.dataGridView_UID.HeaderText = "ID";
+            this.dataGridView_UID.Name = "dataGridView_UID";
+            this.dataGridView_UID.Visible = false;
+            // 
+            // dataGridView_ApplID
+            // 
+            this.dataGridView_ApplID.FillWeight = 20F;
+            this.dataGridView_ApplID.HeaderText = "УИН";
+            this.dataGridView_ApplID.Name = "dataGridView_ApplID";
+            this.dataGridView_ApplID.ReadOnly = true;
+            // 
+            // dataGridView_Name
+            // 
+            this.dataGridView_Name.HeaderText = "ФИО";
+            this.dataGridView_Name.Name = "dataGridView_Name";
+            this.dataGridView_Name.ReadOnly = true;
+            // 
+            // dataGridView_Mark
+            // 
+            this.dataGridView_Mark.DataPropertyName = "mark";
+            this.dataGridView_Mark.FillWeight = 20F;
+            this.dataGridView_Mark.HeaderText = "Оценка";
+            this.dataGridView_Mark.Name = "dataGridView_Mark";
+            // 
             // ExaminationMarks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -141,6 +147,7 @@
         private System.Windows.Forms.ToolStripButton toolStrip_Print;
         private System.Windows.Forms.ToolStripButton toolStrip_Clear;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_UID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ApplID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Mark;
     }

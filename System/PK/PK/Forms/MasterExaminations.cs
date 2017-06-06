@@ -25,49 +25,60 @@ namespace PK.Forms
                 DB_Table.MASTERS_EXAMS_MARKS,
                 new string[] { "entrant_id", "faculty", "direction_id", "profile_short_name", "date", "mark", "bonus" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
-                );
-
-            var entrants = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name");
-
-            var programs = _DB_Connection.Select(DB_Table.PROFILES, "faculty_short_name", "direction_id", "short_name", "name");
-
-            var table = marks.Join(
-                entrants,
+                ).GroupJoin(
+                _DB_Connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "id", "entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    ),
                 k1 => k1[0],
-                k2 => k2[0],
+                k2 => k2[1],
                 (s1, s2) => new
                 {
                     ID = (uint)s1[0],
-                    Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(),
+                    ApplIDs = string.Join(", ", s2.Select(s => s[0].ToString())),
                     Mark = (short)s1[5],
                     Bonus = (ushort)s1[6],
                     Date = s1[4] as DateTime?,
                     Faculty = s1[1].ToString(),
                     Direction = (uint)s1[2],
                     Profile = s1[3].ToString()
+                });
+
+            var table = marks.Join(
+                _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                k1 => k1.ID,
+                k2 => k2[0],
+                (s1, s2) => new
+                {
+                    Data = s1,
+                    Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString(),
                 }).Join(
-                programs,
-                k1 => Tuple.Create(k1.Faculty, k1.Direction, k1.Profile),
+                _DB_Connection.Select(DB_Table.PROFILES, "faculty_short_name", "direction_id", "short_name", "name"),
+                k1 => Tuple.Create(k1.Data.Faculty, k1.Data.Direction, k1.Data.Profile),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1], k2[2].ToString()),
                 (s1, s2) => new
                 {
-                    s1.ID,
-                    s1.Faculty,
-                    s1.Direction,
-                    s1.Profile,
+                    s1.Data,
                     s1.Name,
-                    s1.Mark,
-                    s1.Bonus,
-                    s1.Date,
                     Program = s2[3].ToString().Split('|')[0],
                     Chair = s2[3].ToString().Split('|')[1]
-                }
-                );
+                });
 
             foreach (var row in table)
-            {
-                dataGridView.Rows.Add(row.ID, row.Faculty, row.Direction, row.Profile, row.Name, row.Mark, row.Bonus, row.Date, row.Chair, row.Profile);
-            }
+                dataGridView.Rows.Add(
+                    row.Data.ID,
+                    row.Data.ApplIDs,
+                    row.Data.Faculty,
+                    row.Data.Direction,
+                    row.Data.Profile,
+                    row.Name,
+                    row.Data.Mark,
+                    row.Data.Bonus,
+                    row.Data.Date,
+                    row.Chair,
+                    row.Data.Profile
+                    );
         }
 
         private void bSetDate_Click(object sender, EventArgs e)

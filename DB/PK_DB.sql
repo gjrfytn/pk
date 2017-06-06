@@ -366,8 +366,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`entrants` (
   `email` VARCHAR(150) NOT NULL COMMENT 'Электронный адрес.',
   `personal_password` VARCHAR(12) NOT NULL COMMENT 'Пароль к личному кабинету.',
   `custom_information` VARCHAR(4000) NULL COMMENT 'Дополнительные сведения, предоставленные абитуриентом.',
-  `home_phone` VARCHAR(10) NULL COMMENT 'Домашний телефон.',
-  `mobile_phone` VARCHAR(10) NULL COMMENT 'Мобильный телефон.',
+  `home_phone` VARCHAR(15) NULL COMMENT 'Домашний телефон.',
+  `mobile_phone` VARCHAR(15) NULL COMMENT 'Мобильный телефон.',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 COMMENT = 'Абитуриенты.';
@@ -392,9 +392,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `chernobyl` TINYINT(1) NULL COMMENT 'Чернобыльская зона.',
   `passing_examinations` TINYINT(1) NULL COMMENT 'Сдаёт экзамены.',
   `priority_right` TINYINT(1) NULL COMMENT 'Преимущественное право.',
-  `special_conditions` TINYINT(1) NULL COMMENT 'ВИ с созданием специальных условий.',
+  `special_conditions` TINYINT(1) NOT NULL COMMENT 'ВИ с созданием специальных условий.',
   `master_appl` TINYINT(1) NOT NULL COMMENT 'Заявление на уровень магистра.',
-  `recommendation` TINYINT(1) NULL COMMENT 'Рекомендация выпускающей кафедры.',
   `withdraw_date` DATE NULL COMMENT 'Дата отзыва документов.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`entrant_id` ASC),

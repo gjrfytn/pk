@@ -118,33 +118,34 @@ namespace PK.Classes
                 throw new System.ArgumentException("Общее количество мест в аудиториях меньше общего количества абитуриентов.");
             #endregion
 
-            letters = letters.OrderByDescending(l => l.Value).ToDictionary(k => k.Key, v => v.Value);
+            Dictionary<string, ushort> roomsCopy = new Dictionary<string, ushort>(rooms);
+            Dictionary<char, ushort> lettersCopy = letters.OrderByDescending(l => l.Value).ToDictionary(k => k.Key, v => v.Value);
             List<System.Tuple<char, string>> distributions = new List<System.Tuple<char, string>>();
-            while (letters.Count != 0)
+            while (lettersCopy.Count != 0)
             {
                 Dictionary<char, ushort> excludedLetters = new Dictionary<char, ushort>();
                 Dictionary<char, byte> splitLetterCounts = new Dictionary<char, byte>();
                 string roomBuf = null;
-                foreach (var room in rooms)
+                foreach (var room in roomsCopy)
                 {
                     ifLabel:
-                    ushort lSum = (ushort)letters.Sum(l => l.Value);
+                    ushort lSum = (ushort)lettersCopy.Sum(l => l.Value);
                     if (lSum > room.Value)
                     {
-                        char letter = letters.Last().Key;
-                        if (letters.Count == 1)
+                        char letter = lettersCopy.Last().Key;
+                        if (lettersCopy.Count == 1)
                         {
                             if (!splitLetterCounts.ContainsKey(letter))
                                 splitLetterCounts.Add(letter, 0);
                             splitLetterCounts[letter]++;
 
-                            excludedLetters.Add(letter, (ushort)(letters[letter] - room.Value));
-                            letters[letter] = room.Value;
+                            excludedLetters.Add(letter, (ushort)(lettersCopy[letter] - room.Value));
+                            lettersCopy[letter] = room.Value;
                         }
                         else
                         {
-                            excludedLetters.Add(letter, letters[letter]);
-                            letters.Remove(letter);
+                            excludedLetters.Add(letter, lettersCopy[letter]);
+                            lettersCopy.Remove(letter);
                         }
 
                         goto ifLabel; //TODO ?
@@ -156,16 +157,16 @@ namespace PK.Classes
                     }
                 }
 
-                rooms.Remove(roomBuf);
+                roomsCopy.Remove(roomBuf);
 
-                foreach (var letter in letters)
+                foreach (var letter in lettersCopy)
                     distributions.Add(new System.Tuple<char, string>(letter.Key, roomBuf));
 
-                letters.Clear();
+                lettersCopy.Clear();
 
                 foreach (var el in excludedLetters)
-                    letters.Add(el.Key, el.Value);
-                letters = letters.OrderByDescending(a => a.Value).ToDictionary(k => k.Key, v => v.Value);
+                    lettersCopy.Add(el.Key, el.Value);
+                lettersCopy = lettersCopy.OrderByDescending(a => a.Value).ToDictionary(k => k.Key, v => v.Value);
             }
 
             return distributions;

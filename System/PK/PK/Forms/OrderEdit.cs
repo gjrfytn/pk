@@ -68,7 +68,6 @@ namespace PK.Forms
             }
             #endregion
 
-            cbFDP.DisplayMember = "Display";
             cbFDP.ValueMember = "Value";
 
             _IsMaster = _DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID);
@@ -89,6 +88,8 @@ namespace PK.Forms
                 dataGridView_Exam.Visible = true;
                 dataGridView_IndAch.Visible = true;
                 dataGridView_Honors.Visible = true;
+
+                lFDP.Text = "Программа:";
             }
 
             if (_EditNumber != null)
@@ -194,7 +195,7 @@ namespace PK.Forms
             cbShowAdmitted.Enabled = rbPaid.Checked && cbType.SelectedValue.ToString() == "admission";
         }
 
-        private void cbFDP_DropDown(object sender, EventArgs e) //TODO нужна проверка на кол-во мест?
+        private void cbFDP_DropDown(object sender, EventArgs e) //TODO рефакторинг
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -213,41 +214,111 @@ namespace PK.Forms
                     (s1, s2) => new { Value = s2[0], Display = s2[1] }
                     ).ToList();
             }
-            else if (rbPaid.Checked || _IsMaster)
-                cbFDP.DataSource = _DB_Connection.Select(
-                    DB_Table.CAMPAIGNS_PROFILES_DATA,
-                    new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
-                    }).Select(
-                    s => new
-                    {
-                        Value = new CB_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
-                        Display = s[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
-                    }).ToList();
-            else if (rbTarget.Checked)
-                cbFDP.DataSource = _DB_Connection.Select(
-                    DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
-                    new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
-                    }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
-                    .Where(s => s.Places > 0)
-                   .Select(s => new { Value = new CB_Value(s.Faculty, s.DirID, null), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
-            else
-                cbFDP.DataSource = _DB_Connection.Select(
-                    DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
+            else if (_IsMaster)
+            {
+                if (rbPaid.Checked)
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_PROFILES_DATA,
+                        new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
+                        }).Select(
+                        s => new
+                        {
+                            Value = new CB_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
+                            Display = s[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
+                        }).ToList();
+                else if (rbTarget.Checked)
+                {
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
+                        new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
+                        }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
+                        .Where(s => s.Places > 0).Join(
+                        _DB_Connection.Select(
+                            DB_Table.CAMPAIGNS_PROFILES_DATA,
+                            new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            }),
+                        k1 => Tuple.Create(k1.Faculty, k1.DirID),
+                        k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
+                        (s1, s2) => new
+                        {
+                            Value = new CB_Value(s2[0].ToString(), (uint)s2[1], s2[2].ToString()),
+                            Display = s2[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s2[0].ToString(), (uint)s2[1], s2[2].ToString())
+                        }).ToList();
+                }
+                else
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
                         new string[] { "direction_faculty", "direction_id" },
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
                             new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
-                            "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1,                            Relation.GREATER,0 )
-                        }).Select(s => new { Value = new CB_Value(s[0].ToString(), (uint)s[1], null), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
+                            "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
+                        }).Join(
+                        _DB_Connection.Select(
+                            DB_Table.CAMPAIGNS_PROFILES_DATA,
+                            new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            }),
+                        k1 => Tuple.Create(k1[0].ToString(), (uint)k1[1]),
+                        k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
+                        (s1, s2) => new
+                        {
+                            Value = new CB_Value(s2[0].ToString(), (uint)s2[1], s2[2].ToString()),
+                            Display = s2[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s2[0].ToString(), (uint)s2[1], s2[2].ToString())
+                        }).ToList();
+            }
+            else
+            {
+                if (rbPaid.Checked)
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_PROFILES_DATA,
+                        new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
+                        }).Select(
+                        s => new
+                        {
+                            Value = new CB_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
+                            Display = s[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
+                        }).ToList();
+                else if (rbTarget.Checked)
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
+                        new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
+                        }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
+                        .Where(s => s.Places > 0)
+                       .Select(s => new { Value = new CB_Value(s.Faculty, s.DirID, null), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
+                else
+                    cbFDP.DataSource = _DB_Connection.Select(
+                        DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
+                            new string[] { "direction_faculty", "direction_id" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
+                                "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
+                            }).Select(s => new { Value = new CB_Value(s[0].ToString(), (uint)s[1], null), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
+            }
 
+            cbFDP.DisplayMember = "Display";
             cbFDP.SelectedIndex = selectedIndex;
 
             Cursor.Current = Cursors.Default;

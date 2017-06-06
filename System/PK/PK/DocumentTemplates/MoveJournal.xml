@@ -52,7 +52,7 @@
             <Parts>
               <Part>
                 <Text>
-                  <Placeholder>applicationEntrLastName|UPPERCASE</Placeholder>
+                  <Placeholder>0</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -65,7 +65,7 @@
             <Parts>
               <Part>
                 <Text>
-                  <Placeholder>applicationEntrFirstName</Placeholder>
+                  <Placeholder>1</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -75,7 +75,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>applicationEntrMiddleName</Placeholder>
+                  <Placeholder>2</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -97,7 +97,7 @@
               <Part>
                 <FontID>LargeBold</FontID>
                 <Text>
-                  <Placeholder>applicationID</Placeholder>
+                  <Placeholder>3</Placeholder>
                 </Text>
               </Part>
             </Parts>
@@ -152,7 +152,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <Placeholder>PC_Name</Placeholder>
+                              <Placeholder>4</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -372,7 +372,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>applicationRegistrName|SPLIT_WHITESPACE_FIRST</Placeholder>
+                              <Placeholder>5</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -401,7 +401,7 @@
               </Part>
               <Part>
                 <Text>
-                  <Placeholder>applicationTime</Placeholder>
+                  <Placeholder>6</Placeholder>
                 </Text>
               </Part>
             </Parts>

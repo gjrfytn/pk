@@ -35,19 +35,39 @@ namespace PK.Forms
             _Date = (DateTime)exam[2];
             Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
 
-            foreach (object[] row in _DB_Connection.Select(
+            var marks = _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
                 new string[] { dataGridView_UID.DataPropertyName, dataGridView_Mark.DataPropertyName },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("examination_id", Relation.EQUAL, examinationID) }
-                ))
-            {
-                object[] entrant = _DB_Connection.Select(
-                    DB_Table.ENTRANTS_VIEW,
-                    new string[] { "last_name", "first_name", "middle_name" },
-                    new List<Tuple<string, Relation, object>> { Tuple.Create("id", Relation.EQUAL, row[0]) }
-                    )[0];
-                dataGridView.Rows.Add(row[0], entrant[0].ToString() + " " + entrant[1].ToString() + " " + entrant[2].ToString(), row[1]);
-            }
+                ).GroupJoin(
+                _DB_Connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "id", "entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    ),
+                k1 => k1[0],
+                k2 => k2[1],
+                (s1, s2) => new
+                {
+                    ID = (uint)s1[0],
+                    ApplIDs = string.Join(", ", s2.Select(s => s[0].ToString())),
+                    Mark = (short)s1[1]
+                });
+
+            var table = marks.Join(
+                _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                k1 => k1.ID,
+                k2 => k2[0],
+                (s1, s2) => new
+                {
+                    s1.ID,
+                    s1.ApplIDs,
+                    s1.Mark,
+                    Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString()
+                });
+
+            foreach (var row in table)
+                dataGridView.Rows.Add(row.ID, row.ApplIDs, row.Name, row.Mark);
 
             dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);
         }

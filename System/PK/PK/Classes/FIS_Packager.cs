@@ -753,7 +753,7 @@ namespace PK.Classes
 
             return new ApplicationDocuments(
                 identDoc,
-                null, //TODO
+                null,
                 null,
                 null,
                 new List<EduDocument> { eduDoc },

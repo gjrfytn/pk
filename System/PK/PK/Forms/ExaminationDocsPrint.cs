@@ -7,14 +7,31 @@ namespace PK.Forms
 {
     partial class ExaminationDocsPrint : Form
     {
+        class Entrant
+        {
+            public readonly string ApplIDs;
+            public readonly string Name;
+            public readonly string Code;
+            public readonly string Auditory;
+            public readonly ushort AudSeat;
+
+            public Entrant(string applIDs, string name, string code, string auditory, ushort audSeat)
+            {
+                ApplIDs = applIDs;
+                Name = name;
+                Code = code;
+                Auditory = auditory;
+                AudSeat = audSeat;
+            }
+        }
+
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly uint _ExaminationID;
         private readonly string _ExamName;
         private readonly string _ExamDate;
-        private readonly List<string[]> _EntrantsTable;
-        private readonly IEnumerable<object[]> _Audiences;
+        private readonly List<Entrant> _EntrantsTable;
+        private readonly Dictionary<string, ushort> _Audiences;
         private readonly List<Tuple<char, string>> _Distribution;
-        private readonly IEnumerable<Tuple<uint, string, string, string>> _Entrants;
 
         public ExaminationDocsPrint(Classes.DB_Connector connection, uint examinationID)
         {
@@ -42,30 +59,41 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ExaminationID)
                 });
 
-            _Entrants = _DB_Connection.Select(
+            var entrants = _DB_Connection.Select(
                 DB_Table.ENTRANTS_VIEW,
                 new string[] { "id", "last_name", "first_name", "middle_name" }
                 ).Join(
                 entrantsIDs,
                 en => en[0],
                 i => i[0],
-                (s1, s2) => Tuple.Create(
-                    (uint)s1[0],
-                    s1[1].ToString(),
-                    s1[2].ToString(),
-                    s1[3].ToString()
-                    ));
+                (s1, s2) => new { ID = (uint)s1[0], LastName = s1[1].ToString(), FirstName = s1[2].ToString(), MiddleName = s1[3].ToString() }
+                ).GroupJoin(
+                _DB_Connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "id", "entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    ),
+                k1 => k1.ID,
+                k2 => k2[1],
+                (s1, s2) => new
+                {
+                    s1.ID,
+                    s1.LastName,
+                    s1.FirstName,
+                    s1.MiddleName,
+                    ApplIDs = string.Join(", ", s2.Select(s => s[0].ToString()))
+                });
 
             _Audiences = _DB_Connection.Select(DB_Table.EXAMINATIONS_AUDIENCES,
                 new string[] { "number", "capacity", "priority" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ExaminationID)
-                }).OrderBy(s => s[2]);
+                }).OrderBy(s => s[2]).ToDictionary(k => k[0].ToString(), v => (ushort)v[1]);
 
             _Distribution = Classes.Utility.DistributeAbiturients(
-                 _Audiences.ToDictionary(k => k[0].ToString(), v => (ushort)v[1]),
-                 _Entrants.Select(en => en.Item2[0]).GroupBy(en => en).ToDictionary(k => k.Key, v => (ushort)v.Count())
+                 _Audiences,
+                 entrants.Select(en => char.ToUpper(en.LastName[0])).GroupBy(en => en).ToDictionary(k => k.Key, v => (ushort)v.Count())
                  );
 
             Dictionary<char, string> nameCodes = new Dictionary<char, string>
@@ -77,25 +105,23 @@ namespace PK.Forms
                 { 'Ю',"AC" },{'Я',"MK" }
             };
 
-            Dictionary<string, Tuple<ushort, ushort>> fill = _Audiences.ToDictionary(k => k[0].ToString(), v => new Tuple<ushort, ushort>(0, (ushort)v[1]));
-            _EntrantsTable = new List<string[]>(_Entrants.Count());
+            Dictionary<string, Tuple<ushort, ushort>> fill = _Audiences.ToDictionary(k => k.Key, v => new Tuple<ushort, ushort>(0, v.Value));
+            _EntrantsTable = new List<Entrant>(entrants.Count());
             ushort count = 1;
-            foreach (var entr in _Entrants)
+            foreach (var entr in entrants)
             {
-                string name = entr.Item2 + " " + entr.Item3 + " " + entr.Item4;
-                foreach (Tuple<char, string> aud in _Distribution.FindAll(c => c.Item1 == name[0]))
+                foreach (Tuple<char, string> aud in _Distribution.FindAll(c => c.Item1 == char.ToUpper(entr.LastName[0])))
                     if (fill[aud.Item2].Item1 < fill[aud.Item2].Item2)
                     {
                         fill[aud.Item2] = Tuple.Create((ushort)(fill[aud.Item2].Item1 + 1), fill[aud.Item2].Item2);
 
-                        _EntrantsTable.Add(new string[]
-                        {
-                            entr.Item1.ToString(),
-                            name,
-                            nameCodes[char.ToUpper(entr.Item2[0])]+nameCodes[char.ToUpper(entr.Item3[0])]+"."+_ExaminationID.ToString()+count.ToString(),
+                        _EntrantsTable.Add(new Entrant(
+                            entr.ApplIDs,
+                            entr.LastName + " " + entr.FirstName + " " + entr.MiddleName,
+                            nameCodes[char.ToUpper(entr.LastName[0])] + nameCodes[char.ToUpper(entr.FirstName[0])] + "." + _ExaminationID.ToString() + count.ToString(),
                             aud.Item2,
-                            fill[aud.Item2].Item1.ToString()
-                        });
+                            fill[aud.Item2].Item1
+                            ));
 
                         break;
                     }
@@ -113,7 +139,7 @@ namespace PK.Forms
                 Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
-                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[2] }).OrderBy(s => s[1]) }
+                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Code }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
 
@@ -129,7 +155,7 @@ namespace PK.Forms
                 Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
-                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s[0], s[1], s[3] }).OrderBy(s => s[1]) }
+                new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Auditory }).OrderBy(s => s[1]) }
                 );
             Classes.Utility.Print(doc + ".docx");
 
@@ -141,15 +167,15 @@ namespace PK.Forms
             Cursor.Current = Cursors.WaitCursor;
 
             List<string[]> distribTable = new List<string[]>(_Audiences.Count());
-            foreach (object[] aud in _Audiences)
+            foreach (var aud in _Audiences)
             {
-                var letters = _Distribution.Where(d => d.Item2 == aud[0].ToString()).Select(s => s.Item1);
+                var letters = _Distribution.Where(d => d.Item2 == aud.Key).Select(s => s.Item1);
                 distribTable.Add(new string[]
                 {
-                    aud[0].ToString(),
+                    aud.Key,
                     letters.Any()?letters.Aggregate("",(a,d)=> a+= d+", ",s=>s.Remove(s.Length- 2)):"-",
-                    aud[1].ToString(),
-                    _Entrants.Where(en=>letters.Contains(en.Item2[0])).Count().ToString()
+                    aud.Value.ToString(),
+                    _EntrantsTable.Where(en=>letters.Contains(char.ToUpper(en.Name[0]))).Count().ToString()
                 });
             }
 
@@ -161,8 +187,8 @@ namespace PK.Forms
                {
                    _ExamName,
                    _ExamDate,
-                   _Entrants.Count().ToString(),
-                   _Audiences.Sum(a=>(ushort)a[1]).ToString()
+                   _EntrantsTable.Count().ToString(),
+                   _Audiences.Sum(a=>a.Value).ToString()
                },
                new List<string[]>[] { distribTable }
                );
@@ -184,7 +210,7 @@ namespace PK.Forms
                     new string[] { group.Item2, group.Item1.ToString(), _ExamName, _ExamDate },
                     new IEnumerable<string[]>[]
                     {
-                        _EntrantsTable.Where(en=>en[1][0]== group.Item1&&en[3]==group.Item2).Select(s=>new string[] {s[0],s[1],s[4] })
+                        _EntrantsTable.Where(en=>char.ToUpper(en.Name[0])== group.Item1&&en.Auditory==group.Item2).Select(s=>new string[] {s.ApplIDs,s.Name,s.AudSeat.ToString() })
                     });
                 Classes.Utility.Print(doc + ".docx");
             }

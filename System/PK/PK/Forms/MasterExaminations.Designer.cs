@@ -34,6 +34,7 @@
             this.bSetDate = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridView_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_ApplD = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Direction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Profile = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -98,6 +99,7 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridView_ID,
+            this.dataGridView_ApplD,
             this.dataGridView_Faculty,
             this.dataGridView_Direction,
             this.dataGridView_Profile,
@@ -120,11 +122,17 @@
             // 
             // dataGridView_ID
             // 
-            this.dataGridView_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_ID.HeaderText = "Рег. номер";
+            this.dataGridView_ID.HeaderText = "ID";
             this.dataGridView_ID.Name = "dataGridView_ID";
-            this.dataGridView_ID.ReadOnly = true;
-            this.dataGridView_ID.Width = 50;
+            this.dataGridView_ID.Visible = false;
+            // 
+            // dataGridView_ApplD
+            // 
+            this.dataGridView_ApplD.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_ApplD.HeaderText = "УИН";
+            this.dataGridView_ApplD.Name = "dataGridView_ApplD";
+            this.dataGridView_ApplD.ReadOnly = true;
+            this.dataGridView_ApplD.Width = 50;
             // 
             // dataGridView_Faculty
             // 
@@ -211,6 +219,7 @@
         private System.Windows.Forms.Button bSetDate;
         private System.Windows.Forms.Button bSave;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_ApplD;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Faculty;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Direction;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Profile;

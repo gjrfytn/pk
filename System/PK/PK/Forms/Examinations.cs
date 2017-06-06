@@ -199,10 +199,9 @@ namespace PK.Forms
 
         private void UpdateTable()
         {
-            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Utility.CurrentCampaignID);
-
             dataGridView.Rows.Clear();
+
+            Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
             foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Utility.CurrentCampaignID))
                 dataGridView.Rows.Add(
                     exam.ID,

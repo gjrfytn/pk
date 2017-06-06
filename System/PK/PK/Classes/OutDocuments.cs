@@ -61,6 +61,9 @@ namespace PK.Classes
                 public string HomePhone;
                 public string MobilePhone;
                 public string Password;
+                public DateTime RegistrationTime;
+                public DateTime? EditTime;
+                public string RegistratorName;
             }
 
             private static readonly Dictionary<Tuple<uint, uint>, Tuple<string, string>> _Streams = new Dictionary<Tuple<uint, uint>, Tuple<string, string>>
@@ -95,16 +98,76 @@ namespace PK.Classes
                 else
                     medCertDirections = new string[] { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
 
+                object[] applDataBuf = connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "registration_time", "edit_time", "registrator_login", "needs_hostel", "mcado", "chernobyl", "passing_examinations", "priority_right" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                    )[0];
+
+                ApplicationData applData = new ApplicationData
+                {
+                    Hostel = (bool)applDataBuf[3],
+                    MCADO = applDataBuf[4] as bool?,
+                    Chernobyl = applDataBuf[5] as bool?,
+                    PassingExam = applDataBuf[6] as bool?,
+                    Priority = applDataBuf[7] as bool?,
+                    Original = false,
+                    Quota = false,
+                    RegistrationTime = (DateTime)applDataBuf[0],
+                    EditTime = applDataBuf[1] as DateTime?,
+                    RegistratorName = connection.Select(
+                        DB_Table.USERS,
+                        new string[] { "name" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("login", Relation.EQUAL, applDataBuf[2]) }
+                        )[0][0].ToString().Split(' ')[0]
+                };
+
+                object[] entrant = connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                    ).Join(
+                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                    k1 => k1[0],
+                    k2 => k2[0],
+                    (s1, s2) => s2).First();
+
+                applData.EntrantID = (uint)entrant[0];
+                applData.LastName = entrant[1].ToString();
+                applData.FirstName = entrant[2].ToString();
+                applData.MiddleName = entrant[3].ToString();
+
+                object[] entrantData = connection.Select(
+                   DB_Table.ENTRANTS,
+                   new string[] { "home_phone", "mobile_phone", "personal_password" },
+                   new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData.EntrantID) }
+                   )[0];
+
+                applData.HomePhone = entrantData[0].ToString();
+                applData.MobilePhone = entrantData[1].ToString();
+                applData.Password = entrantData[2].ToString();
+
                 List<DocumentCreator.DocumentParameters> documents = new List<DocumentCreator.DocumentParameters>();
 
                 if (moveJournal)
+                {
                     documents.Add(new DocumentCreator.DocumentParameters(
                         Utility.DocumentsTemplatesPath + "MoveJournal.xml",
-                        connection,
-                        applID,
                         null,
+                        null,
+                        new string[]
+                        {
+                            applData.LastName.ToUpper(),
+                            applData.FirstName,
+                            applData.MiddleName,
+                            applID.ToString()+(master?"м":""),
+                            System.Windows.Forms.SystemInformation.ComputerName,
+                            applData.RegistratorName,
+                            applData.RegistrationTime.ToString()
+                        },
                         null
                         ));
+                }
 
                 List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
 
@@ -136,26 +199,6 @@ namespace PK.Classes
                         Number = s[3].ToString(),
                         OrigDate = s[6] as DateTime?
                     });
-
-                object[] applDataBuf = connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "registration_time", "edit_time", "registrator_login", "needs_hostel", "mcado", "chernobyl", "passing_examinations", "priority_right" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
-                    )[0];
-
-                DateTime regTime = (DateTime)applDataBuf[0];
-                DateTime? editTime = applDataBuf[1] as DateTime?;
-                string registratorName = applDataBuf[2].ToString().Split(' ')[0];
-                ApplicationData applData = new ApplicationData
-                {
-                    Hostel = (bool)applDataBuf[3],
-                    MCADO = applDataBuf[4] as bool?,
-                    Chernobyl = applDataBuf[5] as bool?,
-                    PassingExam = applDataBuf[6] as bool?,
-                    Priority = applDataBuf[7] as bool?,
-                    Original = false,
-                    Quota = false
-                };
 
                 inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
                 if (entrances.Any(s => s.Directions.Any(e => e.AgreedDate != null && e.DisagreedDate == null)))
@@ -193,7 +236,7 @@ namespace PK.Classes
                     s.Type == "ukraine_olympic" ||
                     s.Type == "international_olympic"
                 ))
-                    inventoryTableParams[1].Add(new string[] { "Направление ПК" });
+                    inventoryTableParams[1].Add(new string[] { "Направление ПК" }); //TODO
 
                 foreach (var medDoc in docs.Where(s => s.Type == "medical"))
                 {
@@ -215,30 +258,6 @@ namespace PK.Classes
                 if (docs.Any(s => s.Type == "orphan" || s.Type == "disability"))
                     applData.Quota = true;
 
-                object[] entrant = connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
-                    ).Join(
-                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
-                    k1 => k1[0],
-                    k2 => k2[0],
-                    (s1, s2) => s2).First();
-
-                applData.EntrantID = (uint)entrant[0];
-                applData.LastName = entrant[1].ToString();
-                applData.FirstName = entrant[2].ToString();
-                applData.MiddleName = entrant[3].ToString();
-
-                object[] entrantData = connection.Select(
-                   DB_Table.ENTRANTS,
-                   new string[] { "home_phone", "mobile_phone", "personal_password" },
-                   new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData.EntrantID) }
-                   )[0];
-                applData.HomePhone = entrantData[0].ToString();
-                applData.MobilePhone = entrantData[1].ToString();
-                applData.Password = entrantData[2].ToString();
-
                 if (inventory)
                     documents.Add(new DocumentCreator.DocumentParameters(
                         Utility.DocumentsTemplatesPath + "Inventory.xml",
@@ -246,25 +265,25 @@ namespace PK.Classes
                         null,
                         new string[]
                         {
-                            applID.ToString(),
+                            applID.ToString()+(master?"м":""),
                             applData.LastName.ToUpper(),
                             (applData.FirstName+" "+applData.MiddleName).ToUpper(),
-                            registratorName,
+                            applData.RegistratorName,
                             System.Windows.Forms.SystemInformation.ComputerName,
-                            regTime.ToString()
+                            applData.RegistrationTime.ToString()
                         },
                         inventoryTableParams
                         ));
 
                 if (percRecordFace)
                     if (master)
-                        AddMastPercRecordFace(documents, connection, entrances, regTime, applID, applData);
+                        AddMastPercRecordFace(documents, connection, entrances, applID, applData);
                     else
-                        AddBachPercRecordFace(documents, inventoryTableParams[0], regTime, applID, applData);
+                        AddBachPercRecordFace(documents, inventoryTableParams[0], applID, applData);
 
                 if (receipt)
                 {
-                    AddReceipt(documents, connection, inventoryTableParams[1], entrances, regTime, editTime, registratorName, applID, applData);
+                    AddReceipt(documents, connection, inventoryTableParams[1], entrances, applID, applData, master);
 
                     object[] buf = connection.Select(
                         DB_Table.APPLICATIONS,
@@ -312,7 +331,7 @@ namespace PK.Classes
                 return doc + ".docx";
             }
 
-            private static void AddBachPercRecordFace(List<DocumentCreator.DocumentParameters> documents, List<string[]> streamsTableParams, DateTime regTime, uint applID, ApplicationData applData)
+            private static void AddBachPercRecordFace(List<DocumentCreator.DocumentParameters> documents, List<string[]> streamsTableParams, uint applID, ApplicationData applData)
             {
                 List<string> parameters = new List<string>
                 {
@@ -323,7 +342,7 @@ namespace PK.Classes
                     applData. LastName,
                     applData.FirstName,
                     applData. MiddleName,
-                    regTime.Year.ToString()
+                    applData.RegistrationTime.Year.ToString()
                 };
 
                 foreach (string[] eduStream in streamsTableParams)
@@ -342,7 +361,7 @@ namespace PK.Classes
                     ));
             }
 
-            private static void AddMastPercRecordFace(List<DocumentCreator.DocumentParameters> documents, DB_Connector connection, IEnumerable<Stream> entrances, DateTime regTime, uint applID, ApplicationData applData)
+            private static void AddMastPercRecordFace(List<DocumentCreator.DocumentParameters> documents, DB_Connector connection, IEnumerable<Stream> entrances, uint applID, ApplicationData applData)
             {
                 DB_Helper dbHelper = new DB_Helper(connection);
                 foreach (Stream stream in entrances)
@@ -353,7 +372,7 @@ namespace PK.Classes
                             applData.LastName,
                             applData.FirstName[0].ToString(),
                             applData.MiddleName.Length!=0?applData.MiddleName[0].ToString():"",
-                            applID.ToString(),
+                            applID.ToString()+"м",
                             entrance.Profile,
                             dbHelper.GetDirectionNameAndCode(entrance.DirectionID).Item1,
                             DB_Queries.GetProfileName(connection, entrance.Faculty, entrance.DirectionID, entrance.Profile),
@@ -362,7 +381,7 @@ namespace PK.Classes
                             applData. LastName,
                             applData.FirstName,
                             applData. MiddleName,
-                            regTime.Year.ToString()
+                            applData.RegistrationTime.Year.ToString()
                         };
 
                         documents.Add(new DocumentCreator.DocumentParameters(
@@ -380,11 +399,9 @@ namespace PK.Classes
                 DB_Connector connection,
                 List<string[]> entrDocumentsTableParams,
                 IEnumerable<Stream> entrances,
-                DateTime regTime,
-                DateTime? editTime,
-                string registratorName,
                 uint applID,
-                ApplicationData applData)
+                ApplicationData applData,
+                bool master)
             {
                 List<string[]>[] receiptTableParams = new List<string[]>[2];
                 receiptTableParams[0] = new List<string[]>();
@@ -418,15 +435,16 @@ namespace PK.Classes
                     null,
                     new string[]
                     {
-                        applID.ToString(),
+                        applID.ToString()+(master?"м":""),
                         applData.LastName.ToUpper(),
                         (applData.FirstName+" "+applData.MiddleName).ToUpper(),
-                        registratorName,
+                        applData.RegistratorName,
                         System.Windows.Forms.SystemInformation.ComputerName,
-                        regTime.ToString(),
-                        editTime.HasValue?editTime.ToString():"нет",
-                        applData.EntrantID.ToString(),
-                        applData.Password
+                        applData.RegistrationTime.ToString(),
+                        applData.EditTime.HasValue?applData.EditTime.ToString():"нет",
+                        master ?"":"Проверить всю информацию можно в личном кабинете абитуриента по адресу: www.priem-madi.ru/тут_что-то_будет",
+                        master ?"":"Логин: "+ applData.EntrantID.ToString(),
+                        master ?"":"Пароль: "+ applData.Password
                     },
                     receiptTableParams
                     ));
@@ -661,7 +679,7 @@ namespace PK.Classes
                         (applData.LastName + " " + applData.FirstName + " " + applData.MiddleName).ToUpper(),
                         dbHelper.GetDirectionNameAndCode(agreedDir.Item2).Item1+" ("+dirShortName+")",
                         dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.Item4),
-                        applID.ToString(),
+                        applID.ToString()+"м",
                         ((mark.Exam!=-1?mark.Exam:0)+mark.Bonus+redDiplomaMark).ToString(),
                         applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
                         agreedDir.Item5.ToShortDateString()
@@ -943,7 +961,7 @@ namespace PK.Classes
                     Utility.DocumentsTemplatesPath + "HostelOrder.xml",
                     doc,
                     paramaters.ToArray(),
-                    new IEnumerable<string[]>[] { applications.Select(s => new string[] { s.Name }) }
+                    new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
                     );
             }
             else
@@ -1008,8 +1026,8 @@ namespace PK.Classes
                                 ),
                             k1 => k1.ApplID,
                             k2 => k2.ApplID,
-                            (s1, s2) => new string[] { s1.Name, s2.Sum.ToString() }
-                            );
+                            (s1, s2) => new { s1.Name, s2.Sum }
+                            ).OrderByDescending(s => s.Sum).Select(s => new string[] { s.Name, s.Sum.ToString() });
                     }
 
                     doc = Utility.TempPath + "AdmOrder" + new Random().Next();
@@ -1027,7 +1045,7 @@ namespace PK.Classes
                         Utility.DocumentsTemplatesPath + "ExcOrder.xml",
                         doc,
                         paramaters.ToArray(),
-                        new IEnumerable<string[]>[] { applications.Select(s => new string[] { s.Name }) }
+                        new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
                         );
                 }
             }
