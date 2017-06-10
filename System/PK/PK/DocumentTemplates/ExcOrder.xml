@@ -100,7 +100,7 @@
         </Element>
         <Element>
           <Paragraph>
-            <Alighment>Both</Alighment>
+            <Alighment>Center</Alighment>
             <FontID>Usual</FontID>
             <Parts>
               <Part>
@@ -110,7 +110,7 @@
               </Part>
               <Part>
                 <Text>
-                  <String>          г. Москва          № </String>
+                  <String>               г. Москва               № </String>
                 </Text>
               </Part>
               <Part>

@@ -141,7 +141,7 @@ namespace PK.Forms
                 new string[] { _ExamName, _ExamDate },
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Code }).OrderBy(s => s[1]) }
                 );
-            Classes.Utility.Print(doc + ".docx");
+            System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;
         }
@@ -157,7 +157,7 @@ namespace PK.Forms
                 new string[] { _ExamName, _ExamDate },
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Auditory }).OrderBy(s => s[1]) }
                 );
-            Classes.Utility.Print(doc + ".docx");
+            System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;
         }
@@ -192,7 +192,7 @@ namespace PK.Forms
                },
                new List<string[]>[] { distribTable }
                );
-            Classes.Utility.Print(doc + ".docx");
+            System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;
         }
@@ -212,7 +212,7 @@ namespace PK.Forms
                     {
                         _EntrantsTable.Where(en=>char.ToUpper(en.Name[0])== group.Item1&&en.Auditory==group.Item2).Select(s=>new string[] {s.ApplIDs,s.Name,s.AudSeat.ToString() })
                     });
-                Classes.Utility.Print(doc + ".docx");
+                System.Diagnostics.Process.Start(doc + ".docx");
             }
 
             Cursor.Current = Cursors.Default;

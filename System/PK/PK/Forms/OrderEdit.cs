@@ -493,19 +493,7 @@ namespace PK.Forms
                     return GetCampApplsWithStatuses("new", "adm_budget", "adm_paid", "adm_both").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1);
 
                 return GetCampApplsWithStatuses("new").Join(entranceApplications, k1 => k1, k2 => k2, (s1, s2) => s1)
-                    .Where(appl =>
-                    {
-                        var orders = GetAdmExcOrders(appl);
-                        var admOrders = orders.Where(s => s.Item1 == "admission");
-                        if (admOrders.Count() == 0)
-                            return true;
-
-                        DateTime lastAdmDate = admOrders.Max(s => s.Item2);
-                        var excOrders = orders.Where(s => s.Item1 == "exception");
-                        DateTime lastExcDate = excOrders.Any() ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
-
-                        return lastAdmDate < lastExcDate;//TODO <=?
-                    });
+                    .Where(appl => !IsAdmittedTo(appl));
             }
             else
             {
@@ -526,19 +514,7 @@ namespace PK.Forms
             else
                 statuses = new string[] { "adm_budget", "adm_both" };
 
-            return GetCampApplsWithStatuses(statuses).Where(appl =>
-            {
-                var orders = GetAdmExcOrders(appl);
-                var admOrders = orders.Where(s => s.Item1 == "admission");
-                if (admOrders.Count() == 0)
-                    return false;
-
-                DateTime lastAdmDate = admOrders.Max(s => s.Item2);
-                var excOrders = orders.Where(s => s.Item1 == "exception");
-                DateTime lastExcDate = excOrders.Any() ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
-
-                return lastAdmDate > lastExcDate;//TODO >=?
-            });
+            return GetCampApplsWithStatuses(statuses).Where(appl => IsAdmittedTo(appl));
         }
 
         private IEnumerable<uint> GetHostelCandidates()
@@ -589,7 +565,6 @@ namespace PK.Forms
         private IEnumerable<Tuple<string, DateTime>> GetAdmExcOrders(uint applicationID)
         {
             CB_Value buf = (CB_Value)cbFDP.SelectedValue;
-
             return _DB_Connection.Select(
                 DB_Table.ORDERS_HAS_APPLICATIONS,
                 new string[] { "orders_number" },
@@ -604,7 +579,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
                         new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, CheckedEduForm),
                         new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
-                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, buf.Item1),
+                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL,buf.Item1),
                         new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, buf.Item2),
                         new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, buf.Item3)
                     }),
@@ -628,7 +603,7 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
                         new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, CheckedEduForm),
+                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM,Classes.DB_Helper.EduFormO)),
                         new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
                         new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, faculty)
                     }),
@@ -641,6 +616,9 @@ namespace PK.Forms
         private void FillTable(IEnumerable<uint> applications)
         {
             dataGridView.Rows.Clear();
+
+            if (applications.Count() == 0)
+                return;
 
             var candidates = applications.Join(
                 _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
@@ -811,6 +789,20 @@ namespace PK.Forms
                 return false;
 
             return true;
+        }
+
+        private bool IsAdmittedTo(uint applicationID)
+        {
+            var orders = GetAdmExcOrders(applicationID);
+            var admOrders = orders.Where(s => s.Item1 == "admission");
+            if (admOrders.Count() == 0)
+                return false;
+
+            DateTime lastAdmDate = admOrders.Max(s => s.Item2);
+            var excOrders = orders.Where(s => s.Item1 == "exception");
+            DateTime lastExcDate = excOrders.Any() ? excOrders.Max(s => s.Item2) : DateTime.MinValue;
+
+            return lastAdmDate > lastExcDate;//TODO >=?
         }
     }
 }

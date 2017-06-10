@@ -82,21 +82,22 @@ namespace PK.Forms
             if (dataGridView.IsCurrentCellDirty)
                 dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-            Dictionary<uint, string> minMarksConsts = new Dictionary<uint, string>
+            Dictionary<uint, Tuple<string, string>> subjConsts = new Dictionary<uint, Tuple<string, string>>
             {
-                { 1,"min_russian_mark" },
-                { 2,"min_math_mark" },
-                { 6,"min_foreign_mark" },
-                { 9,"min_social_mark" },
-                { 10,"min_physics_mark" }
+                { 1, Tuple.Create("min_russian_mark","русскому языку") },
+                { 2,Tuple.Create("min_math_mark","математике") },
+                { 6,Tuple.Create("min_foreign_mark","иностранному языку") },
+                { 9,Tuple.Create("min_social_mark","обществознанию") },
+                { 10,Tuple.Create("min_physics_mark" ,"физике")}
             };
 
             string[] singleParams = new string[]
             {
-                _DB_Connection.Select(DB_Table.CONSTANTS,minMarksConsts[_SubjectID])[0][0].ToString(),
+                _DB_Connection.Select(DB_Table.CONSTANTS,subjConsts[_SubjectID].Item1)[0][0].ToString(),
                 _Date.Year.ToString(),
                 _Date.ToShortDateString(),
-                new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID)
+                new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
+                subjConsts[_SubjectID].Item2
             };
 
             List<string[]> table = new List<string[]>(dataGridView.Rows.Count);
@@ -110,7 +111,7 @@ namespace PK.Forms
 
             string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
             Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
-            Classes.Utility.Print(doc + ".docx");
+            System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;
         }

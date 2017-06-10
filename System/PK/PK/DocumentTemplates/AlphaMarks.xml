@@ -45,9 +45,8 @@
                 </Text>
               </Part>
               <Part>
-                <FontID>UsualViolet</FontID>
                 <Text>
-                  <String>ПРЕДМЕТ</String>
+                  <Placeholder>4</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -58,7 +57,7 @@
               <Part>
                 <FontID>UsualRed</FontID>
                 <Text>
-                  <String>0</String>
+                  <Placeholder>0</Placeholder>
                 </Text>
               </Part>
               <Part>
@@ -92,7 +91,7 @@
               </Part>
               <Part>
                 <Text>
-                  <String>0</String>
+                  <Placeholder>0</Placeholder>
                 </Text>
               </Part>
               <Part>

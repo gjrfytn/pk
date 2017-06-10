@@ -195,8 +195,9 @@ namespace PK.Classes
                     {
                         ID = (uint)s[0],
                         Type = s[1].ToString(),
-                        Series = s[2].ToString(),
-                        Number = s[3].ToString(),
+                        Series = s[2] as string,
+                        Number = s[3] as string,
+                        Date = s[4] as DateTime?,
                         OrigDate = s[6] as DateTime?
                     });
 
@@ -302,10 +303,13 @@ namespace PK.Classes
 
                     if (percRecordBack)
                     {
-                        string eduDocSeries = "5555"; //TODO
-                        string eduDocNumber = "12341234";
-                        ushort eduDocYear = 2020;
+                        var highEduDoc = docs.Single(s => s.Type == "high_edu_diploma");
+
+                        string eduDocSeries = highEduDoc.Series;
+                        string eduDocNumber = highEduDoc.Number;
+                        ushort eduDocYear = (ushort)highEduDoc.Date.Value.Year;
                         string eduDocLevel = "TODO";
+
                         AddMastPercRecordBack(documents, connection, applData, entrances, eduDocSeries, eduDocNumber, eduDocYear, eduDocLevel, redDiplomaMark);
                     }
 
@@ -490,17 +494,17 @@ namespace PK.Classes
                     applData.MiddleName,
                     applData.HomePhone,
                     applData.MobilePhone,
-                    applData.Quota?"+":"",
-                    applData.Priority.Value?"+":"",
+                    applData.Quota?"XXX":"",
+                    applData.Priority.Value?"XXX":"",
                     math.ToString(),
-                    applData.Hostel?"+":"",
-                    applData.PassingExam.Value?"+":"",
+                    applData.Hostel?"XXX":"",
+                    applData.PassingExam.Value?"XXX":"",
                     rus.ToString(),
-                    applData.Chernobyl.Value?"+":"",
-                    applData.MCADO.Value?"+":"",
+                    applData.Chernobyl.Value?"XXX":"",
+                    applData.MCADO.Value?"XXX":"",
                     phys.ToString(),
-                    target?"+":"",
-                    applData.Original?"+":"",
+                    target?"XXX":"",
+                    applData.Original?"XXX":"",
                     soc.ToString(),
                     foreign.ToString(),
                     indAchValue,
@@ -816,8 +820,8 @@ namespace PK.Classes
                     ApplID = (uint)s1[0],
                     DocID = (uint)s2[0],
                     DocType = s2[1].ToString(),
-                    DocSeries = s2[2].ToString(),
-                    DocNumber = s2[3].ToString(),
+                    DocSeries = s2[2] as string,
+                    DocNumber = s2[3] as string,
                     Original = s2[4] as DateTime?
                 });
 
@@ -949,28 +953,17 @@ namespace PK.Classes
             };
 
             if (order.Type == "hostel")
-            {
                 paramaters.AddRange(new string[]
                 {
                     dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE,order.EduSource).ToLower(),
                     order.Faculty
                 });
-
-                doc = Utility.TempPath + "HostelOrder" + new Random().Next();
-                DocumentCreator.Create(
-                    Utility.DocumentsTemplatesPath + "HostelOrder.xml",
-                    doc,
-                    paramaters.ToArray(),
-                    new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
-                    );
-            }
             else
             {
-                Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction.Value);
-
                 if (order.Type == "admission")
                     paramaters.Add(order.Date.Year.ToString());
 
+                Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction.Value);
                 paramaters.AddRange(new string[]
                 {
                     forms[order.EduForm] + " обучения" +
@@ -981,10 +974,66 @@ namespace PK.Classes
                     order.Master?"Магистерская программа: " :(order.Profile != null ? "Профиль: " : ""),
                     order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(connection,order.Faculty,order.Direction.Value,order.Profile).Split('|')[0] : ""
                 });
+            }
 
-                if (order.Type == "admission")
+            if (order.Type == "exception")
+            {
+                doc = Utility.TempPath + "ExcOrder" + new Random().Next();
+                DocumentCreator.Create(
+                    Utility.DocumentsTemplatesPath + "ExcOrder.xml",
+                    doc,
+                    paramaters.ToArray(),
+                    new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
+                    );
+            }
+            else
+            {
+                IEnumerable<Tuple<string, ushort>> table;
+                if (order.Type == "hostel")
                 {
-                    IEnumerable<string[]> table;
+                    if (order.Master)
+                    {
+                        List<Tuple<string, ushort>> result=new List<Tuple<string, ushort>>();
+
+                        foreach (var appl in applications)
+                        {
+                            var orders=  connection.Select(
+                                DB_Table.ORDERS_HAS_APPLICATIONS,
+                                new string[] { "orders_number" },
+                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl.ApplID) }
+                                ).Join(
+                                connection.Select(
+                                    DB_Table.ORDERS,
+                                    new string[] { "number", "type", "date", "direction_id", "profile_short_name" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                                        new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
+                                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM,DB_Helper.EduFormO)),
+                                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, order.Faculty)
+                                    }),
+                                k1 => k1[0],
+                                k2 => k2[0],
+                                (s1, s2) => new {Type= s2[1].ToString(),Date= (DateTime)s2[2],Direction= (uint)s2[3],Profile=s2[4].ToString() }
+                                ).GroupBy(
+                                k=>Tuple.Create(k.Direction,k.Profile),
+                                (k,g)=>new
+                                {
+                                    
+                                }                                );
+                        }
+
+                        table = result;
+
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+                else
+                {
                     if (order.Master)
                     {
                         var marks = connection.Select(
@@ -1002,8 +1051,8 @@ namespace PK.Classes
                             marks,
                             k1 => k1.EntrID,
                             k2 => k2.EntrID,
-                            (s1, s2) => new string[] { s1.Name, (s2.Exam + s2.Bonus).ToString() } //TODO диплом с отличием
-                            );
+                            (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus))
+                            ); //TODO диплом с отличием
                     }
                     else
                     {
@@ -1026,28 +1075,18 @@ namespace PK.Classes
                                 ),
                             k1 => k1.ApplID,
                             k2 => k2.ApplID,
-                            (s1, s2) => new { s1.Name, s2.Sum }
-                            ).OrderByDescending(s => s.Sum).Select(s => new string[] { s.Name, s.Sum.ToString() });
+                            (s1, s2) => Tuple.Create(s1.Name, (ushort)s2.Sum)
+                            );
                     }
-
-                    doc = Utility.TempPath + "AdmOrder" + new Random().Next();
-                    DocumentCreator.Create(
-                        Utility.DocumentsTemplatesPath + "AdmOrder.xml",
-                        doc,
-                        paramaters.ToArray(),
-                        new IEnumerable<string[]>[] { table }
-                        );
                 }
-                else
-                {
-                    doc = Utility.TempPath + "ExcOrder" + new Random().Next();
-                    DocumentCreator.Create(
-                        Utility.DocumentsTemplatesPath + "ExcOrder.xml",
-                        doc,
-                        paramaters.ToArray(),
-                        new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
-                        );
-                }
+                string filename = order.Type == "admission" ? "AdmOrder" : "HostelOrder";
+                doc = Utility.TempPath + filename + new Random().Next();
+                DocumentCreator.Create(
+                    Utility.DocumentsTemplatesPath + filename + ".xml",
+                    doc,
+                    paramaters.ToArray(),
+                    new IEnumerable<string[]>[] { table.OrderByDescending(s => s.Item2).Select(s => new string[] { s.Item1, s.Item2.ToString() }) }
+                    );
             }
 
             return doc + ".docx";

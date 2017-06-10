@@ -11,8 +11,8 @@
       <Name>Arial</Name>
       <Size>12</Size>
     </Font>
-    <Font ID="16">
-      <Name>Arial</Name>
+    <Font ID="Mono">
+      <Name>Courier</Name>
       <Size>16</Size>
     </Font>
     <Font ID="24">
@@ -76,7 +76,7 @@
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>16</FontID>
+                        <FontID>Mono</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -85,7 +85,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>--</String>
+                              <String>-</String>
                             </Text>
                           </Part>
                           <Part>
@@ -95,17 +95,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>.</String>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
                               <Placeholder>2</Placeholder>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
-                              <String>.</String>
                             </Text>
                           </Part>
                         </Parts>

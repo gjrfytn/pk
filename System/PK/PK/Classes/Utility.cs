@@ -124,40 +124,37 @@ namespace PK.Classes
             while (lettersCopy.Count != 0)
             {
                 Dictionary<char, ushort> excludedLetters = new Dictionary<char, ushort>();
-                Dictionary<char, byte> splitLetterCounts = new Dictionary<char, byte>();
                 string roomBuf = null;
-                foreach (var room in roomsCopy)
+                var room = roomsCopy.First();
+                while (roomBuf == null)
                 {
-                    ifLabel:
-                    ushort lSum = (ushort)lettersCopy.Sum(l => l.Value);
-                    if (lSum > room.Value)
+                    if (lettersCopy.Sum(l => l.Value) > room.Value)
                     {
                         char letter = lettersCopy.Last().Key;
                         if (lettersCopy.Count == 1)
                         {
-                            if (!splitLetterCounts.ContainsKey(letter))
-                                splitLetterCounts.Add(letter, 0);
-                            splitLetterCounts[letter]++;
-
-                            excludedLetters.Add(letter, (ushort)(lettersCopy[letter] - room.Value));
-                            lettersCopy[letter] = room.Value;
+                            var sufficientRoom = roomsCopy.FirstOrDefault(r => r.Value >= lettersCopy[letter]);
+                            if (sufficientRoom.Value == 0)
+                            {
+                                excludedLetters.Add(letter, (ushort)(lettersCopy[letter] - room.Value));
+                                lettersCopy[letter] = room.Value;
+                            }
+                            else
+                                roomBuf = sufficientRoom.Key;
                         }
                         else
                         {
                             excludedLetters.Add(letter, lettersCopy[letter]);
                             lettersCopy.Remove(letter);
                         }
-
-                        goto ifLabel; //TODO ?
                     }
                     else
-                    {
                         roomBuf = room.Key;
-                        break;
-                    }
                 }
 
-                roomsCopy.Remove(roomBuf);
+                roomsCopy[roomBuf] -= (ushort)lettersCopy.Sum(l => l.Value);
+                if (roomsCopy[roomBuf] == 0)
+                    roomsCopy.Remove(roomBuf);
 
                 foreach (var letter in lettersCopy)
                     distributions.Add(new System.Tuple<char, string>(letter.Key, roomBuf));

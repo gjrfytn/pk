@@ -11,8 +11,8 @@
       <Name>Arial</Name>
       <Size>16</Size>
     </Font>
-    <Font ID="UsualBold">
-      <Name>Arial</Name>
+    <Font ID="MonoBold">
+      <Name>Courier</Name>
       <Size>16</Size>
       <Style>Bold</Style>
     </Font>
@@ -75,7 +75,7 @@
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>UsualBold</FontID>
+                        <FontID>MonoBold</FontID>
                         <Parts>
                           <Part>
                             <Text>
@@ -84,7 +84,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>--</String>
+                              <String>-</String>
                             </Text>
                           </Part>
                           <Part>
@@ -94,17 +94,7 @@
                           </Part>
                           <Part>
                             <Text>
-                              <String>.</String>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
                               <Placeholder>2</Placeholder>
-                            </Text>
-                          </Part>
-                          <Part>
-                            <Text>
-                              <String>.</String>
                             </Text>
                           </Part>
                         </Parts>
