@@ -18,6 +18,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationEdit));
             this.gbPassport = new System.Windows.Forms.GroupBox();
+            this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.gbAdress = new System.Windows.Forms.GroupBox();
             this.cbStreet = new System.Windows.Forms.ComboBox();
@@ -207,7 +208,7 @@
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAdress.SuspendLayout();
@@ -274,6 +275,14 @@
             this.gbPassport.TabIndex = 0;
             this.gbPassport.TabStop = false;
             this.gbPassport.Text = "Из паспорта";
+            // 
+            // mtbSubdivisionCode
+            // 
+            this.mtbSubdivisionCode.Location = new System.Drawing.Point(1222, 52);
+            this.mtbSubdivisionCode.Mask = "999-999";
+            this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
+            this.mtbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
+            this.mtbSubdivisionCode.TabIndex = 28;
             // 
             // pictureBox1
             // 
@@ -2544,13 +2553,10 @@
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
-            // mtbSubdivisionCode
+            // backgroundWorker
             // 
-            this.mtbSubdivisionCode.Location = new System.Drawing.Point(1222, 52);
-            this.mtbSubdivisionCode.Mask = "999-999";
-            this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
-            this.mtbSubdivisionCode.Size = new System.Drawing.Size(104, 22);
-            this.mtbSubdivisionCode.TabIndex = 28;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // ApplicationEdit
             // 
@@ -2807,5 +2813,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
         private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }

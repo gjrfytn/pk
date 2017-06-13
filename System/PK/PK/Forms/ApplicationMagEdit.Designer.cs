@@ -151,6 +151,7 @@
             this.cbIDDocType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btWithdraw = new System.Windows.Forms.Button();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.gbEduDocument.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
@@ -1632,6 +1633,11 @@
             this.btWithdraw.UseVisualStyleBackColor = true;
             this.btWithdraw.Click += new System.EventHandler(this.btWithdraw_Click);
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
             // ApplicationMagEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1817,5 +1823,6 @@
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.Button btAddDir_quote_o;
         private System.Windows.Forms.Label label44;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }

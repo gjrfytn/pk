@@ -210,11 +210,38 @@ namespace PK.Forms
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
-            tbPostcode.Text = _KLADR.GetIndex(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text, cbHouse.Text);
+            tbPostcode.Text = "Поиск...";
+            btGetIndex.Enabled = false;
+            cbRegion.Enabled = false;
+            cbDistrict.Enabled = false;
+            cbTown.Enabled = false;
+            cbStreet.Enabled = false;
+            cbHouse.Enabled = false;
+            tbAppartment.Enabled = false;
+            backgroundWorker.RunWorkerAsync(Tuple.Create(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text, cbHouse.Text));
+        }
+
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            var adress = (Tuple<string, string, string, string, string>)e.Argument;
+            e.Result = _KLADR.GetIndex(adress.Item1, adress.Item2, adress.Item3, adress.Item4, adress.Item5);
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            tbPostcode.Text = e.Result.ToString();
             if (tbPostcode.Text == "")
                 tbPostcode.Enabled = true;
             else
                 tbPostcode.Enabled = false;
+
+            btGetIndex.Enabled = true;
+            cbRegion.Enabled = true;
+            cbDistrict.Enabled = true;
+            cbTown.Enabled = true;
+            cbStreet.Enabled = true;
+            cbHouse.Enabled = true;
+            tbAppartment.Enabled = true;
         }
 
         private void cbTarget_CheckedChanged(object sender, EventArgs e)
