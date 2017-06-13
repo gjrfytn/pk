@@ -47,12 +47,6 @@ namespace PK.Forms
                 return;
             }
 
-            if (_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Any(s => s[0].ToString() == tbNumber.Text))
-            {
-                MessageBox.Show("Протокол с таким номером уже существует.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             Cursor.Current = Cursors.WaitCursor;
 
             object[] buf = _DB_Connection.Select(

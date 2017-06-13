@@ -94,9 +94,11 @@ namespace PK.Classes
         {
             #region Contracts
             CheckFilenames(templateFile, resultFile);
-            if (singleParams.Length == 0)
+            if (singleParams == null && tableParams == null)
+                throw new System.ArgumentException("Необходимо передать хотя бы один одиночный или табличный параметр.");
+            if (singleParams != null && singleParams.Length == 0)
                 throw new System.ArgumentException("Массив с одиночными параметрами должен содержать хотя бы один элемент.", nameof(singleParams));
-            if (tableParams.Length == 0)
+            if (tableParams != null && tableParams.Length == 0)
                 throw new System.ArgumentException("Массив с табличными параметрами должен содержать хотя бы один элемент.", nameof(tableParams));
             #endregion
 

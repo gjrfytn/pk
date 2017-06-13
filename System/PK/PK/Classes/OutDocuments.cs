@@ -917,8 +917,8 @@ namespace PK.Classes
                     {
                         Type = s[0].ToString(),
                         Date = (DateTime)s[1],
-                        ProtocolNumber = (ushort)s[2],
-                        ProtocolDate = (DateTime)s[3],
+                        ProtocolNumber = s[2] as ushort?,
+                        ProtocolDate = s[3] as DateTime?,
                         EduForm = (uint)s[4],
                         EduSource = (uint)s[5],
                         Faculty = s[6].ToString(),
@@ -948,8 +948,8 @@ namespace PK.Classes
             {
                 order.Date.ToShortDateString(),
                 number,
-                order.ProtocolNumber.ToString(),
-                order.ProtocolDate.ToShortDateString()
+                order.ProtocolNumber.HasValue?order.ProtocolNumber.Value.ToString():"НЕТ",
+                order.ProtocolDate.HasValue?order.ProtocolDate.Value.ToShortDateString():"НЕТ"
             };
 
             if (order.Type == "hostel")

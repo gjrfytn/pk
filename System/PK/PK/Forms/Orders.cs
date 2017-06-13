@@ -101,7 +101,7 @@ namespace PK.Forms
 
             toolStrip_Delete.Enabled = !registered;
             toolStrip_Register.Enabled = !registered;
-            toolStrip_Print.Enabled = registered;
+
         }
 
         private void UpdateTable()
