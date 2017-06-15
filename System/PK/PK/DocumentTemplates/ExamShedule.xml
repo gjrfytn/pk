@@ -68,6 +68,21 @@
             </Structure>
           </Table>
         </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph>
+            <FontID>Usual</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Для допуска на экзамен при себе необходимо иметь расписку и паспорт. Аудитории объявляются в день проведения экзамена.</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
       </Structure>
     </Word>
   </Document>

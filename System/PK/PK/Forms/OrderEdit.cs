@@ -705,20 +705,6 @@ namespace PK.Forms
                         AddBachelorRow(appl.ApplID, appl.Name, null, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
                 else
                 {
-                    byte[] buf = Array.ConvertAll(
-                        _DB_Connection.Select(DB_Table.CONSTANTS, "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark")[0],
-                        s => (byte)(ushort)s
-                        );
-
-                    Dictionary<uint, byte> minMarks = new Dictionary<uint, byte>
-                    {
-                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"),buf[0] },
-                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"),buf[1] },
-                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"),buf[2] },
-                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"),buf[3] },
-                        { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"),buf[4] }
-                    };
-
                     IEnumerable<uint> dir_subjects = Classes.DB_Queries.GetDirectionEntranceTests(
                         _DB_Connection,
                         Classes.Utility.CurrentCampaignID,
@@ -731,7 +717,7 @@ namespace PK.Forms
                         var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
                         if (appl_dir_subj.Count() == dir_subjects.Count())
                         {
-                            string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < minMarks[s.Subj]) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
+                            string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < _DB_Helper.GetMinMark(s.Subj)) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
 
                             AddBachelorRow(appl.ApplID, appl.Name, status, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
                         }

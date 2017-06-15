@@ -82,22 +82,22 @@ namespace PK.Forms
             if (dataGridView.IsCurrentCellDirty)
                 dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-            Dictionary<uint, Tuple<string, string>> subjConsts = new Dictionary<uint, Tuple<string, string>>
+            Dictionary<uint, string> subjConsts = new Dictionary<uint, string>
             {
-                { 1, Tuple.Create("min_russian_mark","русскому языку") },
-                { 2,Tuple.Create("min_math_mark","математике") },
-                { 6,Tuple.Create("min_foreign_mark","иностранному языку") },
-                { 9,Tuple.Create("min_social_mark","обществознанию") },
-                { 10,Tuple.Create("min_physics_mark" ,"физике")}
+                { 1, "русскому языку" },
+                { 2, "математике" },
+                { 6, "иностранному языку" },
+                { 9, "обществознанию" },
+                { 10, "физике"}
             };
 
             string[] singleParams = new string[]
             {
-                _DB_Connection.Select(DB_Table.CONSTANTS,subjConsts[_SubjectID].Item1)[0][0].ToString(),
+                new Classes.DB_Helper(_DB_Connection).GetMinMark(_SubjectID).ToString(),
                 _Date.Year.ToString(),
                 _Date.ToShortDateString(),
                 new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
-                subjConsts[_SubjectID].Item2
+                subjConsts[_SubjectID]
             };
 
             List<string[]> table = new List<string[]>(dataGridView.Rows.Count);

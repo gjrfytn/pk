@@ -134,7 +134,7 @@ namespace PK.Classes
         {
             #region Contracts
             if (string.IsNullOrWhiteSpace(itemName))
-                throw new System.ArgumentException("Некорректное имя элемента.",nameof(itemName));
+                throw new System.ArgumentException("Некорректное имя элемента.", nameof(itemName));
             #endregion
 
             List<object[]> list = _DB_Connection.Select(
