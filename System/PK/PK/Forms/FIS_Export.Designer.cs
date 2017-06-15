@@ -129,6 +129,7 @@
             this.Controls.Add(this.bExport);
             this.Controls.Add(this.cbAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.Name = "FIS_Export";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

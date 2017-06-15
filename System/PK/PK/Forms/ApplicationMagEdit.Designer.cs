@@ -1653,6 +1653,7 @@
             this.Controls.Add(this.gbEduDocument);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ApplicationMagEdit";

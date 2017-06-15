@@ -62,6 +62,7 @@
             this.Controls.Add(this.button);
             this.Controls.Add(this.dateTimePicker);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "DateChoice";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Выберите дату";

@@ -131,6 +131,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SportDocs";

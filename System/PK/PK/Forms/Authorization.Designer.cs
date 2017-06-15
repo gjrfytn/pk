@@ -82,6 +82,7 @@
             this.Controls.Add(this.cbLogin);
             this.Controls.Add(this.bAuth);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Authorization";

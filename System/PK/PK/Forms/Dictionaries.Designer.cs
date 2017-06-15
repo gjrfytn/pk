@@ -145,6 +145,7 @@
             this.Controls.Add(this.dgvDictionaryItems);
             this.Controls.Add(this.dgvDictionaries);
             this.Controls.Add(this.toolStrip);
+            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "Dictionaries";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Справочники ФИС";

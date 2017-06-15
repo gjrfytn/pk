@@ -95,6 +95,7 @@
             this.Controls.Add(this.lDate);
             this.Controls.Add(this.lNumber);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OrderRegistration";

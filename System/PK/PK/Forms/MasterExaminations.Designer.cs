@@ -202,6 +202,7 @@
             this.ClientSize = new System.Drawing.Size(884, 561);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
+            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "MasterExaminations";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Оценки магистров";

@@ -143,6 +143,7 @@
             this.Controls.Add(this.cbInventory);
             this.Controls.Add(this.cbMoveJournal);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ApplicationDocsPrint";

@@ -177,6 +177,7 @@
             this.Controls.Add(this.dgvFaculties);
             this.Controls.Add(this.btNewFaculty);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Faculties";

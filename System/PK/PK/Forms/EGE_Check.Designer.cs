@@ -74,6 +74,7 @@
             this.Controls.Add(this.bImport);
             this.Controls.Add(this.bExport);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EGE_Check";

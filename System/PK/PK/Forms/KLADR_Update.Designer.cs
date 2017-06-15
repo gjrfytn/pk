@@ -207,6 +207,7 @@
             this.Controls.Add(this.lStreets);
             this.Controls.Add(this.lSubjects);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.Name = "KLADR_Update";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

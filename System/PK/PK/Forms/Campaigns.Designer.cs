@@ -150,6 +150,7 @@
             this.Controls.Add(this.btCreatePriemComp);
             this.Controls.Add(this.dgvCampaigns);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Campaigns";

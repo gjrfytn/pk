@@ -91,6 +91,7 @@
             this.Controls.Add(this.lbSelection);
             this.Controls.Add(this.btSelect);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TargetOrganizationSelect";

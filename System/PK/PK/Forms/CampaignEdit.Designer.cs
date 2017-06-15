@@ -840,6 +840,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gbEduForms);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CampaignEdit";

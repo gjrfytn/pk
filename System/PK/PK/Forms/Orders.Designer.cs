@@ -198,6 +198,7 @@
             this.ClientSize = new System.Drawing.Size(984, 461);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.toolStrip);
+            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "Orders";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Приказы";

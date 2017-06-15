@@ -193,6 +193,7 @@
             this.Controls.Add(this.cbSubject);
             this.Controls.Add(this.groupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
             this.Name = "ExaminationEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -228,6 +228,7 @@
             this.Controls.Add(this.dgvOlympics);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.toolStrip);
+            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "OlympicsDictionary";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Олимпиады (справочник №19 ФИС)";
