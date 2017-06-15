@@ -244,5 +244,20 @@ namespace PK.Classes
                       new System.Tuple<string, Relation, object> ("dictionaries_items_item_id",Relation.EQUAL,4)//TODO
                   }).Any();
         }
+
+        //TODO Contracts
+        public ushort GetMinMark(uint subjectID)
+        {
+            Dictionary<uint, string> constMap = new Dictionary<uint, string>
+            {
+                { 1, "min_russian_mark" },
+                { 2, "min_math_mark" },
+                { 6, "min_foreign_mark" },
+                { 9, "min_social_mark" },
+                { 10, "min_physics_mark" }
+            };
+
+            return (ushort)_DB_Connection.Select(DB_Table.CONSTANTS, constMap[subjectID])[0][0];
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace PK.Classes
             public EduSourcePlaces(ushort o, ushort oz, ushort z)
             {
                 O = o;
-                OZ = o;
+                OZ = oz;
                 Z = z;
             }
         }
@@ -125,10 +125,18 @@ namespace PK.Classes
                     new TUID(admData.CampID),
                     levelID,
                     admData.DirID,
-                    admData.BudgetPlaces.O, admData.BudgetPlaces.OZ, admData.BudgetPlaces.Z,
-                    paidPlaces.O, paidPlaces.OZ, paidPlaces.Z,
-                    targetPlaces.O, targetPlaces.OZ, targetPlaces.Z,
-                    admData.QuotaPlaces.O, admData.QuotaPlaces.OZ, admData.QuotaPlaces.Z
+                    admData.BudgetPlaces.O != 0 ? (ushort?)admData.BudgetPlaces.O : null,
+                    admData.BudgetPlaces.OZ != 0 ? (ushort?)admData.BudgetPlaces.OZ : null,
+                    admData.BudgetPlaces.Z != 0 ? (ushort?)admData.BudgetPlaces.Z : null,
+                    paidPlaces.O != 0 ? (ushort?)paidPlaces.O : null,
+                    paidPlaces.OZ != 0 ? (ushort?)paidPlaces.OZ : null,
+                    paidPlaces.Z != 0 ? (ushort?)paidPlaces.Z : null,
+                    targetPlaces.O != 0 ? (ushort?)targetPlaces.O : null,
+                    targetPlaces.OZ != 0 ? (ushort?)targetPlaces.OZ : null,
+                    targetPlaces.Z != 0 ? (ushort?)targetPlaces.Z : null,
+                    admData.QuotaPlaces.O != 0 ? (ushort?)admData.QuotaPlaces.O : null,
+                    admData.QuotaPlaces.OZ != 0 ? (ushort?)admData.QuotaPlaces.OZ : null,
+                    admData.QuotaPlaces.Z != 0 ? (ushort?)admData.QuotaPlaces.Z : null
                     ));
 
                 foreach (CompetitiveGroupItem.Variants v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
@@ -141,8 +149,16 @@ namespace PK.Classes
                         out eduForm, out eduSource, out places
                         );
 
+
                     if (places != 0)
                     {
+                        CompetitiveGroupItem compGroupItem = null;
+                        List<TargetOrganization> organizations = null;
+                        if (eduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
+                            organizations = GetTargetOrganizations(connection, campaignID, admData.DirID);
+                        else
+                            compGroupItem = new CompetitiveGroupItem(v, places);
+
                         TUID compGroupUID = ComposeCompGroupUID(admData.CampID, admData.DirID, eduForm, eduSource);
 
                         List<EntranceTestItem> entranceTests = new List<EntranceTestItem>();
@@ -154,10 +170,10 @@ namespace PK.Classes
                             if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
                                 entranceTests.Add(new EntranceTestItem(
                                     new TUID(compGroupUID.Value + etRow[0].ToString()),
-                                    1,//TODO ?
+                                    1,
                                     (ushort)etRow[1],
                                     new TEntranceTestSubject((uint)etRow[0]),
-                                    null //TODO Добавить!
+                                    dbHelper.GetMinMark((uint)etRow[0])
                                     ));
 
                         competitiveGroups.Add(new CompetitiveGroup(
@@ -169,10 +185,10 @@ namespace PK.Classes
                             eduForm,
                             admData.DirID,
                             null,
-                            null, //TODO ?
-                            new CompetitiveGroupItem((CompetitiveGroupItem.Variants)v, places),
-                            null,//TODO ?
-                            null,//TODO ?
+                            null,
+                            compGroupItem,
+                            organizations,
+                            null,
                             entranceTests
                             ));
                     }
@@ -180,7 +196,7 @@ namespace PK.Classes
             }
 
             if (admissionVolumes.Count != 0)
-                return new AdmissionInfo(admissionVolumes, null, competitiveGroups.Count != 0 ? competitiveGroups : null);//TODO null
+                return new AdmissionInfo(admissionVolumes, null, competitiveGroups.Count != 0 ? competitiveGroups : null);
 
             return null;
         }
@@ -523,6 +539,41 @@ namespace PK.Classes
             }
 
             return new EduSourcePlaces(o, oz, 0);
+        }
+
+        private static List<TargetOrganization> GetTargetOrganizations(DB_Connector connection, uint campaignID, uint directionID)
+        {
+            List<TargetOrganization> organizations = new List<TargetOrganization>();
+            foreach (var organization in connection.Select(
+                DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA,
+                new string[] { "target_organization_id", "places_o", "places_oz" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
+                    new System.Tuple<string, Relation, object>("direction_id",Relation.EQUAL,directionID)
+                }).GroupBy(
+                k => k[0],
+                (k, g) => new
+                {
+                    ID = g.First()[0].ToString(),
+                    O = (ushort)g.Sum(s => (ushort)s[1]),
+                    OZ = (ushort)g.Sum(s => (ushort)s[2])
+                }))
+            {
+                if (organization.O != 0)
+                    organizations.Add(new TargetOrganization(
+                        new TUID(organization.ID),
+                        new CompetitiveGroupTargetItem(CompetitiveGroupTargetItem.Variants.NumberTargetO, organization.O)
+                        ));
+
+                if (organization.OZ != 0)
+                    organizations.Add(new TargetOrganization(
+                        new TUID(organization.ID),
+                        new CompetitiveGroupTargetItem(CompetitiveGroupTargetItem.Variants.NumberTargetOZ, organization.OZ)
+                        ));
+            }
+
+            return organizations;
         }
 
         private static void ChooseFormAndSourceAndPlaces(
