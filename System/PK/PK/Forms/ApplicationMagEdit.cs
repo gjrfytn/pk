@@ -33,10 +33,24 @@ namespace PK.Forms
 
         public ApplicationMagEdit(Classes.DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
         {
+            _DB_Connection = connection;
+            _RegistratorLogin = registratorsLogin;
+
+            #region Components
             InitializeComponent();
 
-            _DB_Connection = connection;
+            if (_DB_Connection.Select(
+                DB_Table.USERS,
+                new string[] { "role" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("login", Relation.EQUAL, _RegistratorLogin) }
+                )[0][0].ToString() == "registrator")
+                btWithdraw.Visible = false;
 
+#if !DEBUG
+            btFillRand.Visible = false;
+#endif
+            #endregion
+            
             if (_DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS).Count == 0)
             {
                 MessageBox.Show("Справочник направлний ФИС пуст. Чтобы загрузить его, выберите:\nГлавное Меню -> Справка -> Справочник направлений ФИС -> Обновить");
@@ -51,7 +65,6 @@ namespace PK.Forms
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _KLADR = new Classes.KLADR(connection.User, connection.Password);
             _CurrCampainID = campaignID;
-            _RegistratorLogin = registratorsLogin;
             _ApplicationID = applicationId;
 
             cbIDDocType.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.IDENTITY_DOC_TYPE).Values.ToArray());
@@ -223,8 +236,8 @@ namespace PK.Forms
 
         private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            var adress = (Tuple<string, string, string, string, string>)e.Argument;
-            e.Result = _KLADR.GetIndex(adress.Item1, adress.Item2, adress.Item3, adress.Item4, adress.Item5);
+            var address = (Tuple<string, string, string, string, string>)e.Argument;
+            e.Result = _KLADR.GetIndex(address.Item1, address.Item2, address.Item3, address.Item4, address.Item5);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -328,15 +341,15 @@ namespace PK.Forms
                 e.Handled = true;
         }
 
-        private void tbCyrilic_KeyPress(object sender, KeyPressEventArgs e)
+        private void tbCyrillic_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
+            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == '-') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
                 return;
             else
                 e.Handled = true;
         }
 
-        private void cbAdress_TextChanged(object sender, EventArgs e)
+        private void cbAddress_TextChanged(object sender, EventArgs e)
         {
             if (((ComboBox)sender).Name != "cbHouse")
             {
@@ -648,6 +661,31 @@ namespace PK.Forms
             }
         }
 
+        private void cbIDDocType_SelectedIndexChanged(object sender, EventArgs e)//TODO
+        {
+            if (cbIDDocType.Text == "Паспорт гражданина РФ")
+            {
+                if (tbIDDocSeries.TextLength > 4)
+                    tbIDDocSeries.Clear();
+
+                tbIDDocSeries.MaxLength = 4;
+
+                if (tbIDDocNumber.TextLength > 6)
+                    tbIDDocNumber.Clear();
+
+                tbIDDocNumber.MaxLength = 6;
+            }
+            else
+            {
+                tbIDDocSeries.MaxLength = 20;
+                tbIDDocNumber.MaxLength = 100;
+            }
+        }
+
+        private void ApplicationMagEdit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
+        }
 
         private void SaveApplication()
         {
@@ -1191,6 +1229,7 @@ namespace PK.Forms
 
             bool qouteFound = false;
             bool certificateFound = false;
+            bool photosFound = false;
 
             if (appDocumentsLinks.Count > 0)
             {
@@ -1314,6 +1353,12 @@ namespace PK.Forms
                             _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
                         }
                     }
+                    else if (document[1].ToString() == "photos")
+                    {
+                        photosFound = true;
+                        if (!cbPhotos.Checked)
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                    }
                 }
             }
             if (cbSpecialRights.Checked && !qouteFound)
@@ -1324,6 +1369,15 @@ namespace PK.Forms
             {
                 SaveCertificate();
             }
+
+            if (cbPhotos.Checked && !photosFound)
+                _DB_Connection.Insert(
+                    DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                    new Dictionary<string, object>
+                    {
+                            { "applications_id", _ApplicationID },
+                            { "documents_id", _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "photos" } })}
+                    });
         }
 
         private void UpdateDirections()

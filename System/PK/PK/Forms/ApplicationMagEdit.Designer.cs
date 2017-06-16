@@ -109,7 +109,7 @@
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.gbAdress = new System.Windows.Forms.GroupBox();
+            this.gbAddress = new System.Windows.Forms.GroupBox();
             this.cbStreet = new System.Windows.Forms.ComboBox();
             this.cbTown = new System.Windows.Forms.ComboBox();
             this.cbDistrict = new System.Windows.Forms.ComboBox();
@@ -165,7 +165,7 @@
             this.gbWithdrawDocs.SuspendLayout();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.gbAdress.SuspendLayout();
+            this.gbAddress.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbEduDocument
@@ -199,7 +199,7 @@
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
             this.cbTarget.Size = new System.Drawing.Size(128, 20);
-            this.cbTarget.TabIndex = 1;
+            this.cbTarget.TabIndex = 7;
             this.cbTarget.Text = "Целевой прием";
             this.cbTarget.UseVisualStyleBackColor = true;
             this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
@@ -278,7 +278,7 @@
             this.tbInstitution.Name = "tbInstitution";
             this.tbInstitution.Size = new System.Drawing.Size(234, 22);
             this.tbInstitution.TabIndex = 0;
-            this.tbInstitution.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrilic_KeyPress);
+            this.tbInstitution.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
             // label21
             // 
@@ -1149,7 +1149,7 @@
             this.gbPassport.BackColor = System.Drawing.Color.SeaShell;
             this.gbPassport.Controls.Add(this.mtbSubdivisionCode);
             this.gbPassport.Controls.Add(this.pictureBox1);
-            this.gbPassport.Controls.Add(this.gbAdress);
+            this.gbPassport.Controls.Add(this.gbAddress);
             this.gbPassport.Controls.Add(this.tbPlaceOfBirth);
             this.gbPassport.Controls.Add(this.label13);
             this.gbPassport.Controls.Add(this.cbNationality);
@@ -1189,8 +1189,8 @@
             this.mtbSubdivisionCode.Location = new System.Drawing.Point(1232, 52);
             this.mtbSubdivisionCode.Mask = "999-999";
             this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
-            this.mtbSubdivisionCode.Size = new System.Drawing.Size(105, 22);
-            this.mtbSubdivisionCode.TabIndex = 13;
+            this.mtbSubdivisionCode.Size = new System.Drawing.Size(60, 22);
+            this.mtbSubdivisionCode.TabIndex = 5;
             // 
             // pictureBox1
             // 
@@ -1202,31 +1202,31 @@
             this.pictureBox1.TabIndex = 27;
             this.pictureBox1.TabStop = false;
             // 
-            // gbAdress
+            // gbAddress
             // 
-            this.gbAdress.Controls.Add(this.cbStreet);
-            this.gbAdress.Controls.Add(this.cbTown);
-            this.gbAdress.Controls.Add(this.cbDistrict);
-            this.gbAdress.Controls.Add(this.cbRegion);
-            this.gbAdress.Controls.Add(this.cbHouse);
-            this.gbAdress.Controls.Add(this.btGetIndex);
-            this.gbAdress.Controls.Add(this.tbPostcode);
-            this.gbAdress.Controls.Add(this.label20);
-            this.gbAdress.Controls.Add(this.tbAppartment);
-            this.gbAdress.Controls.Add(this.label19);
-            this.gbAdress.Controls.Add(this.label18);
-            this.gbAdress.Controls.Add(this.label17);
-            this.gbAdress.Controls.Add(this.label16);
-            this.gbAdress.Controls.Add(this.label15);
-            this.gbAdress.Controls.Add(this.label14);
-            this.gbAdress.Location = new System.Drawing.Point(1, 132);
-            this.gbAdress.Margin = new System.Windows.Forms.Padding(4);
-            this.gbAdress.Name = "gbAdress";
-            this.gbAdress.Padding = new System.Windows.Forms.Padding(4);
-            this.gbAdress.Size = new System.Drawing.Size(1345, 47);
-            this.gbAdress.TabIndex = 13;
-            this.gbAdress.TabStop = false;
-            this.gbAdress.Text = "Адрес регистрации";
+            this.gbAddress.Controls.Add(this.cbStreet);
+            this.gbAddress.Controls.Add(this.cbTown);
+            this.gbAddress.Controls.Add(this.cbDistrict);
+            this.gbAddress.Controls.Add(this.cbRegion);
+            this.gbAddress.Controls.Add(this.cbHouse);
+            this.gbAddress.Controls.Add(this.btGetIndex);
+            this.gbAddress.Controls.Add(this.tbPostcode);
+            this.gbAddress.Controls.Add(this.label20);
+            this.gbAddress.Controls.Add(this.tbAppartment);
+            this.gbAddress.Controls.Add(this.label19);
+            this.gbAddress.Controls.Add(this.label18);
+            this.gbAddress.Controls.Add(this.label17);
+            this.gbAddress.Controls.Add(this.label16);
+            this.gbAddress.Controls.Add(this.label15);
+            this.gbAddress.Controls.Add(this.label14);
+            this.gbAddress.Location = new System.Drawing.Point(1, 132);
+            this.gbAddress.Margin = new System.Windows.Forms.Padding(4);
+            this.gbAddress.Name = "gbAddress";
+            this.gbAddress.Padding = new System.Windows.Forms.Padding(4);
+            this.gbAddress.Size = new System.Drawing.Size(1345, 47);
+            this.gbAddress.TabIndex = 13;
+            this.gbAddress.TabStop = false;
+            this.gbAddress.Text = "Адрес регистрации";
             // 
             // cbStreet
             // 
@@ -1237,7 +1237,7 @@
             this.cbStreet.Name = "cbStreet";
             this.cbStreet.Size = new System.Drawing.Size(165, 24);
             this.cbStreet.TabIndex = 3;
-            this.cbStreet.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbStreet.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
             // 
             // cbTown
@@ -1249,7 +1249,7 @@
             this.cbTown.Name = "cbTown";
             this.cbTown.Size = new System.Drawing.Size(163, 24);
             this.cbTown.TabIndex = 2;
-            this.cbTown.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbTown.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
             // 
             // cbDistrict
@@ -1261,7 +1261,7 @@
             this.cbDistrict.Name = "cbDistrict";
             this.cbDistrict.Size = new System.Drawing.Size(154, 24);
             this.cbDistrict.TabIndex = 1;
-            this.cbDistrict.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbDistrict.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
             // 
             // cbRegion
@@ -1273,7 +1273,7 @@
             this.cbRegion.Name = "cbRegion";
             this.cbRegion.Size = new System.Drawing.Size(150, 24);
             this.cbRegion.TabIndex = 0;
-            this.cbRegion.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbRegion.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             // 
             // cbHouse
             // 
@@ -1284,7 +1284,7 @@
             this.cbHouse.Name = "cbHouse";
             this.cbHouse.Size = new System.Drawing.Size(108, 24);
             this.cbHouse.TabIndex = 4;
-            this.cbHouse.TextChanged += new System.EventHandler(this.cbAdress_TextChanged);
+            this.cbHouse.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
             // 
             // btGetIndex
@@ -1505,6 +1505,7 @@
             // 
             this.tbIDDocNumber.Location = new System.Drawing.Point(1232, 20);
             this.tbIDDocNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.tbIDDocNumber.MaxLength = 100;
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 2;
@@ -1513,6 +1514,7 @@
             // 
             this.tbIDDocSeries.Location = new System.Drawing.Point(995, 20);
             this.tbIDDocSeries.Margin = new System.Windows.Forms.Padding(4);
+            this.tbIDDocSeries.MaxLength = 20;
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 1;
@@ -1611,6 +1613,7 @@
             this.cbIDDocType.Name = "cbIDDocType";
             this.cbIDDocType.Size = new System.Drawing.Size(613, 24);
             this.cbIDDocType.TabIndex = 0;
+            this.cbIDDocType.SelectedIndexChanged += new System.EventHandler(this.cbIDDocType_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -1659,6 +1662,7 @@
             this.Name = "ApplicationMagEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Заявление на поступление";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplicationMagEdit_FormClosing);
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
             this.gbAttributes.ResumeLayout(false);
@@ -1683,8 +1687,8 @@
             this.gbPassport.ResumeLayout(false);
             this.gbPassport.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.gbAdress.ResumeLayout(false);
-            this.gbAdress.PerformLayout();
+            this.gbAddress.ResumeLayout(false);
+            this.gbAddress.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1750,7 +1754,7 @@
         private System.Windows.Forms.CheckBox cbAppAdmission;
         private System.Windows.Forms.GroupBox gbPassport;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.GroupBox gbAdress;
+        private System.Windows.Forms.GroupBox gbAddress;
         private System.Windows.Forms.ComboBox cbStreet;
         private System.Windows.Forms.ComboBox cbTown;
         private System.Windows.Forms.ComboBox cbDistrict;

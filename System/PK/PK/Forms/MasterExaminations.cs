@@ -142,7 +142,7 @@ namespace PK.Forms
 
         private void MasterExaminations_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !Classes.Utility.ShowChangesLossMessageBox();
+            e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
     }
 }

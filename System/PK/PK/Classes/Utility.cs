@@ -56,13 +56,13 @@ namespace PK.Classes
         }
 
         /// <summary>
-        /// Отображает диалоговое окно, предупреждающее о потере несохранённых данных, с кнопками "Да" и "Нет".
+        /// Отображает диалоговое окно, запрашивающее подтверждение закрытия формы, с кнопками "Да" и "Нет".
         /// </summary>
         /// <returns><c>true</c>, если нажата кнопка "Да".</returns>
-        public static bool ShowChangesLossMessageBox()
+        public static bool ShowFormCloseMessageBox()
         {
             return MessageBox.Show(
-                  "Все несохранённые данные будут потеряны. Вы уверены?",
+                  "Вы уверены, что хотите закрыть форму?",
                   "Внимание",
                   MessageBoxButtons.YesNo,
                   MessageBoxIcon.Warning,
