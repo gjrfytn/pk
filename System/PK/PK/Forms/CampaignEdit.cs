@@ -135,12 +135,12 @@ namespace PK.Forms
         {
             bool progressEnabled = true;
 
-            if ((!_CampaignId.HasValue)&&(!(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
+            if (_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
                         new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object> ("name", Relation.EQUAL, tbName.Text)
-                            }).Count == 0)))
-                MessageBox.Show("Компания с таким именем уже существует.");
+                            }).Count != 0)
+                MessageBox.Show("Кампания с таким именем уже существует.");
             else
             {
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
@@ -168,7 +168,7 @@ namespace PK.Forms
                             }
                         else
                         {
-                            UpdateCampaing();
+                            UpdateCampaign();
                         }
                 }
             }            
@@ -450,7 +450,7 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void UpdateCampaing()
+        private void UpdateCampaign()
         {
             Cursor.Current = Cursors.WaitCursor;
             _DB_Connection.Update(DB_Table.CAMPAIGNS, new Dictionary<string, object>
@@ -579,14 +579,11 @@ namespace PK.Forms
         private void SaveTargetOrganizations()
         {
             foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
-                if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
-                {
                     if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
                         _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId},
                             { "direction_faculty", row.Cells[dgvTargetOrganizatons_faculty.Index].Value}, { "direction_id", row.Cells[dgvTargetOrganizatons_DirID.Index].Value},
                             { "target_organization_id", row.Cells[dgvTargetOrganizatons_ID.Index].Value},
                             { "places_o", row.Cells[dgvTargetOrganizatons_OF.Index].Value}, { "places_oz", row.Cells[dgvTargetOrganizatons_OZF.Index].Value } });
-                }
         }
 
         private void SaveProfiles()
@@ -947,7 +944,7 @@ namespace PK.Forms
                 });
             List<string[]> newList = new List<string[]>();
             foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
-                if (row.Index < dgvTargetOrganizatons.Rows.Count - 2)
+                if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
                     newList.Add(new string[] { row.Cells[6].Value.ToString(), row.Cells[3].Value.ToString(), row.Cells[0].Value.ToString(), row.Cells[8].Value.ToString(), row.Cells[9].Value.ToString() });
             int j = 0;
             while (j < oldList.Count)
