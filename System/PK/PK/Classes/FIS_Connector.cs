@@ -168,18 +168,15 @@ namespace PK.Classes
                 throw new System.ArgumentException("Некорректный адрес.", nameof(address));
             #endregion
 
-            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
-            //    new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
+                new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
 
-            //XDocument doc = GetResponse(address + "/import/importservice.svc/import", byteArray);
+            XDocument doc = GetResponse(address + "/import/importservice.svc/import", byteArray);
 
-            //if (doc.Root.Name == "Error")
-            //    throw new FIS_Exception(doc.Root.Element("ErrorText").Value);
+            if (doc.Root.Name == "Error")
+                throw new FIS_Exception(doc.Root.Element("ErrorText").Value);
 
-            //return doc.Root.Element("PackageID").Value;
-
-            new FIS_ExportClasses.Root(new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().Save("testfile2.xml");
-            return "";
+            return doc.Root.Element("PackageID").Value;
         }
 
         private static XDocument GetResponse(string uri, byte[] requestData)

@@ -225,6 +225,9 @@ namespace PK.Classes
         public List<string> GetStreets(string region, string district, string townAndSettlement)
         {
             System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            if (buf == null)
+                return new List<string>();
+
             return GetStreets(region, district, buf.Item1, buf.Item2);
         }
 
@@ -277,6 +280,9 @@ namespace PK.Classes
         public List<string> GetHouses(string region, string district, string townAndSettlement, string street)
         {
             System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            if (buf == null)
+                return new List<string>();
+
             return GetHouses(region, district, buf.Item1, buf.Item2, street);
         }
 
@@ -405,6 +411,9 @@ namespace PK.Classes
         public string GetIndex(string region, string district, string townAndSettlement, string street, string house)
         {
             System.Tuple<string, string> buf = SplitTownAndSettlement(townAndSettlement);
+            if (buf == null)
+                return null;
+
             return GetIndex(region, district, buf.Item1, buf.Item2, street, house);
         }
 

@@ -777,7 +777,7 @@ namespace PK.Forms
 
         private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            tbPostcode.Text = e.Result.ToString();
+            tbPostcode.Text = e.Result as string;
             if (tbPostcode.Text == "")
                 tbPostcode.Enabled = true;
             else

@@ -27,11 +27,8 @@ namespace PK.Forms
 
         private void bExport_Click(object sender, EventArgs e)
         {
-            if (!cbCampaignData.Checked && !cbApplications.Checked && !cbOrders.Checked)
-            {
-                MessageBox.Show("Не отмечена информация к выгрузке.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (!CheckCheckBoxes())
                 return;
-            }
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -53,6 +50,33 @@ namespace PK.Forms
             });
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void bSave_Click(object sender, EventArgs e)
+        {
+            if (!CheckCheckBoxes())
+                return;
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                new Classes.FIS_ExportClasses.Root(
+                    new Classes.FIS_ExportClasses.AuthData("XXX", "***"),
+                    Classes.FIS_Packager.MakePackage(_DB_Connection, Classes.Utility.CurrentCampaignID, cbCampaignData.Checked, cbApplications.Checked, cbOrders.Checked)
+                    ).ConvertToXElement().Save(saveFileDialog.FileName);
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private bool CheckCheckBoxes()
+        {
+            if (!cbCampaignData.Checked && !cbApplications.Checked && !cbOrders.Checked)
+            {
+                MessageBox.Show("Не отмечена информация к выгрузке.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
         }
     }
 }

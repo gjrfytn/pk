@@ -36,6 +36,8 @@
             this.cbCampaignData = new System.Windows.Forms.CheckBox();
             this.cbApplications = new System.Windows.Forms.CheckBox();
             this.cbOrders = new System.Windows.Forms.CheckBox();
+            this.bSave = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // cbAddress
@@ -115,11 +117,27 @@
             this.cbOrders.Text = "Приказы";
             this.cbOrders.UseVisualStyleBackColor = true;
             // 
+            // bSave
+            // 
+            this.bSave.Location = new System.Drawing.Point(158, 244);
+            this.bSave.Name = "bSave";
+            this.bSave.Size = new System.Drawing.Size(116, 23);
+            this.bSave.TabIndex = 8;
+            this.bSave.Text = "Выгрузить в файл...";
+            this.bSave.UseVisualStyleBackColor = true;
+            this.bSave.Click += new System.EventHandler(this.bSave_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "xml";
+            this.saveFileDialog.Filter = "XML-файлы|*.xml|Все файлы|*.*";
+            // 
             // FIS_Export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(342, 348);
+            this.Controls.Add(this.bSave);
             this.Controls.Add(this.cbOrders);
             this.Controls.Add(this.cbApplications);
             this.Controls.Add(this.cbCampaignData);
@@ -149,5 +167,7 @@
         private System.Windows.Forms.CheckBox cbCampaignData;
         private System.Windows.Forms.CheckBox cbApplications;
         private System.Windows.Forms.CheckBox cbOrders;
+        private System.Windows.Forms.Button bSave;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
