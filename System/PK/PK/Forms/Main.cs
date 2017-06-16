@@ -272,21 +272,20 @@ namespace PK.Forms
         {
             dgvApplications.Rows.Clear();
             List<object[]> apps = new List<object[]>();
-            DateTime currDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             if (_UserRole == "registrator")
             apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registrator_login", Relation.EQUAL, _UserLogin),
-                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, currDate)
+                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
             else if (_UserRole == "inspector")
                 apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, currDate)
+                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
             else
                 apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
@@ -297,7 +296,6 @@ namespace PK.Forms
             var directions = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
             var profiles = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
 
-            if (apps.Count > 0)
                 foreach (var application in apps)
                 {
                     object[] names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
@@ -328,7 +326,7 @@ namespace PK.Forms
 
                     var appDirections = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, (uint)application[0])
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, application[0])
                     });
                     if (!dgvApplications_Programs.Visible)
                     {
@@ -353,34 +351,34 @@ namespace PK.Forms
                     }
                     var appOrdersData = _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
+                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, application[0])
                     });
                     var appOrders = _DB_Connection.Select(DB_Table.ORDERS, new string[] { "number", "type", "date" }).Join(
                         appOrdersData,
                         orders => orders[0],
                         data => data[0],
-                        (s1, s2) => new Tuple<string, string, DateTime>(s1[0].ToString(), s1[1].ToString(), (DateTime)s1[2])
-                        ).ToArray();
-                    string admNumber = "";
-                    string exNumber = "";
-                    DateTime admData = DateTime.MinValue;
-                    DateTime exData = DateTime.MinValue;
+                        (s1, s2) => new { Number = s1[0].ToString(), Type = s1[1].ToString(), Date = (DateTime)s1[2] }
+                        );
+                    string admNumber = null;
+                    string exNumber = null;
+                    DateTime admDate = DateTime.MinValue;
+                    DateTime exDate = DateTime.MinValue;
                     foreach (var order in appOrders)
-                        if (order.Item2 == "admission" && order.Item3 > admData.Date)
+                        if (order.Type == "admission" && order.Date > admDate.Date)
                         {
-                            admNumber = order.Item1;
-                            admData = order.Item3;
+                            admNumber = order.Number;
+                            admDate = order.Date;
                         }
-                        else if (order.Item2 == "exception" && order.Item3 > exData.Date)
+                        else if (order.Type == "exception" && order.Date > exDate.Date)
                         {
-                            exNumber = order.Item1;
-                            exData = order.Item3;
+                            exNumber = order.Number;
+                            exDate = order.Date;
                         }
 
-                    if (admNumber != "")
-                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_EnrollmentDate.Index].Value = admData.ToShortDateString() + " " + admNumber;
-                    if (exNumber != "")
-                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_DeductionDate.Index].Value = exData.ToShortDateString() + " " + exNumber;
+                    if (admNumber != null)
+                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_EnrollmentDate.Index].Value = admDate.ToShortDateString() + " " + admNumber;
+                    if (exNumber != null)
+                        dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_DeductionDate.Index].Value = exDate.ToShortDateString() + " " + exNumber;
 
                     if ((uint)dgvApplications.Rows[dgvApplications.Rows.Count - 1].Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                         dgvApplications.Rows[dgvApplications.Rows.Count - 1].Selected = true;
