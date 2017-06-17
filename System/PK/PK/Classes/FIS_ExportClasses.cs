@@ -4,21 +4,11 @@ using System.Linq;
 
 namespace PK.Classes
 {
-    namespace FIS_ExportClasses
+    static class FIS_ExportClasses
     {
-        interface IXElemementConvertable
-        {
-            XElement ConvertToXElement();
-        }
-
-        interface IXElemementsConvertable
-        {
-            object[] ConvertToXElements();
-        }
-
         #region Types
 
-        class TUID
+        public class TUID
         {
             public readonly string Value; //200
 
@@ -33,7 +23,7 @@ namespace PK.Classes
             }
         }
 
-        class TEntranceTestSubject : IXElemementsConvertable
+        public class TEntranceTestSubject : IXElemementsConvertable
         {
             public readonly uint? SubjectID = null; //ИД дисциплины (справочник №1)
             public readonly string SubjectName = null; //Наименование дисциплины
@@ -52,13 +42,13 @@ namespace PK.Classes
             {
                 return new object[]
                 {
-                    SubjectID != null ? new XElement("SubjectID", SubjectID.ToString()) : null,
+                    ToElementOrNull("SubjectID", SubjectID),
                     SubjectName != null ? new XElement("SubjectName", SubjectName) : null
                 };
             }
         }
 
-        class TDateTime
+        public class TDateTime
         {
             public readonly string Value;
 
@@ -68,7 +58,7 @@ namespace PK.Classes
             }
         }
 
-        class TOlympicDocument : IXElemementsConvertable
+        public class TOlympicDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -101,22 +91,22 @@ namespace PK.Classes
             {
                 return new object[]
                 {
-                    new XElement("UID", UID.Value) ,
+                    new XElement("UID", UID.Value),
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
                     DocumentSeries !=null? new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
-                    new XElement("DiplomaTypeID", DiplomaTypeID.ToString()),
-                    new XElement("OlympicID", OlympicID.ToString()),
-                    new XElement("ProfileID", ProfileID.ToString()),
-                    new XElement("ClassNumber", ClassNumber.ToString()),
-                    OlympicSubjectID!=null?new XElement("OlympicSubjectID", OlympicSubjectID.ToString()):null,
-                    EgeSubjectID!=null?new XElement("EgeSubjectID", EgeSubjectID.ToString()):null
+                    new XElement("DiplomaTypeID", DiplomaTypeID),
+                    new XElement("OlympicID", OlympicID),
+                    new XElement("ProfileID", ProfileID),
+                    new XElement("ClassNumber", ClassNumber),
+                    ToElementOrNull("OlympicSubjectID", OlympicSubjectID),
+                    ToElementOrNull("EgeSubjectID", EgeSubjectID)
                 };
             }
         }
 
-        class TDate
+        public class TDate
         {
             public readonly string Value;
 
@@ -126,7 +116,7 @@ namespace PK.Classes
             }
         }
 
-        class TDocumentSeries
+        public class TDocumentSeries
         {
             public readonly string Value; //10
 
@@ -136,7 +126,7 @@ namespace PK.Classes
             }
         }
 
-        class TDocumentNumber
+        public class TDocumentNumber
         {
             public readonly string Value; //100
 
@@ -146,7 +136,7 @@ namespace PK.Classes
             }
         }
 
-        class TOlympicTotalDocument : IXElemementsConvertable
+        public class TOlympicTotalDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -177,15 +167,15 @@ namespace PK.Classes
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
-                    new XElement("DiplomaTypeID", DiplomaTypeID.ToString()),
-                    new XElement("ClassNumber", ClassNumber.ToString()),
-                    new XElement("OlympicID", OlympicID.ToString()),
+                    new XElement("DiplomaTypeID", DiplomaTypeID),
+                    new XElement("ClassNumber", ClassNumber),
+                    new XElement("OlympicID", OlympicID),
                     new XElement("Subjects", Subjects.Select(i => i.ConvertToXElement()))
                 };
             }
         }
 
-        class SubjectID : IXElemementConvertable
+        public class SubjectID : IXElemementConvertable
         {
             public readonly uint Value; //ИД дисциплины  (справочник №1)
 
@@ -196,11 +186,11 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("SubjectID", Value.ToString());
+                return new XElement("SubjectID", Value);
             }
         }
 
-        class TUkraineOlympic : IXElemementsConvertable
+        public class TUkraineOlympic : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -233,7 +223,7 @@ namespace PK.Classes
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
-                    new XElement("DiplomaTypeID", DiplomaTypeID.ToString()),
+                    new XElement("DiplomaTypeID", DiplomaTypeID),
                     new XElement("OlympicName", OlympicName),
                     new XElement("OlympicProfile",OlympicProfile),
                     OlympicDate!=null?new XElement("OlympicDate", OlympicDate.Value):null,
@@ -242,7 +232,7 @@ namespace PK.Classes
             }
         }
 
-        class TInternationalOlympic : IXElemementsConvertable
+        public class TInternationalOlympic : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -275,7 +265,7 @@ namespace PK.Classes
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
-                    new XElement("CountryID", CountryID.ToString()),
+                    new XElement("CountryID", CountryID),
                     new XElement("OlympicName", OlympicName),
                     new XElement("OlympicProfile",OlympicProfile),
                     OlympicDate!=null?new XElement("OlympicDate", OlympicDate.Value):null,
@@ -284,7 +274,7 @@ namespace PK.Classes
             }
         }
 
-        class TDisabilityDocument : IXElemementsConvertable
+        public class TDisabilityDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -315,12 +305,12 @@ namespace PK.Classes
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null? new XElement("DocumentOrganization", DocumentOrganization):null,
-                    new XElement("DisabilityTypeID",DisabilityTypeID.ToString())
+                    new XElement("DisabilityTypeID",DisabilityTypeID)
                 };
             }
         }
 
-        class TMedicalDocument : IXElemementsConvertable
+        public class TMedicalDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -350,7 +340,7 @@ namespace PK.Classes
             }
         }
 
-        class TAllowEducationDocument : IXElemementsConvertable
+        public class TAllowEducationDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -380,7 +370,7 @@ namespace PK.Classes
             }
         }
 
-        class TOrphanDocument : IXElemementsConvertable //Плохая спецификация
+        public class TOrphanDocument : IXElemementsConvertable //Плохая спецификация
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -409,7 +399,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("OrphanCategoryID", OrphanCategoryID.ToString()),
+                    new XElement("OrphanCategoryID", OrphanCategoryID),
                     new XElement("DocumentName", DocumentName.Value),
                     DocumentSeries !=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber !=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -419,7 +409,7 @@ namespace PK.Classes
             }
         }
 
-        class TDocumentName
+        public class TDocumentName
         {
             public readonly string Value; //1000
 
@@ -429,7 +419,7 @@ namespace PK.Classes
             }
         }
 
-        class TSportDocument : IXElemementsConvertable
+        public class TSportDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -460,18 +450,18 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("SportCategoryID", SportCategoryID.ToString()),
+                    new XElement("SportCategoryID", SportCategoryID),
                     new XElement("DocumentName", DocumentName),
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
                     new XElement("DocumentDate", DocumentDate.Value),
                     new XElement("DocumentOrganization", DocumentOrganization),
-                    AdditionalInfo!=null?new XElement("AdditionalInfo",AdditionalInfo.ToString()):null
+                    AdditionalInfo!=null?new XElement("AdditionalInfo",AdditionalInfo):null
                 };
             }
         }
 
-        class TCustomDocument : IXElemementsConvertable
+        public class TCustomDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -505,12 +495,12 @@ namespace PK.Classes
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
                     new XElement("DocumentDate", DocumentDate.Value),
                     new XElement("DocumentOrganization", DocumentOrganization),
-                    AdditionalInfo!=null?new XElement("AdditionalInfo",AdditionalInfo.ToString()):null
+                    AdditionalInfo!=null?new XElement("AdditionalInfo",AdditionalInfo):null
                 };
             }
         }
 
-        class TSchoolCertificateDocument : IXElemementsConvertable
+        public class TSchoolCertificateDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -547,15 +537,15 @@ namespace PK.Classes
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null,
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA),
                     Subjects!=null?new XElement("Subjects",Subjects.Select(d => d.ConvertToXElement())):null,
-                    StateServicePreparation !=null?new XElement("StateServicePreparation",GPA.ToString()):null
+                    ToElementOrNull("StateServicePreparation",StateServicePreparation)
                 };
             }
         }
 
-        class THighEduDiplomaDocument : IXElemementsConvertable
+        public class THighEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -597,16 +587,16 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID),
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA)
                 };
             }
         }
 
-        class TPostGraduateDiplomaDocument : IXElemementsConvertable
+        public class TPostGraduateDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -648,16 +638,16 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID),
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA)
                 };
             }
         }
 
-        class TPhDDiplomaDocument : IXElemementsConvertable
+        public class TPhDDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -699,16 +689,16 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID),
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA)
                 };
             }
         }
 
-        class TMiddleEduDiplomaDocument : IXElemementsConvertable
+        public class TMiddleEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -752,17 +742,17 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null,
-                    StateServicePreparation !=null?new XElement("StateServicePreparation",GPA.ToString()):null
+                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID):null,
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID),
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA),
+                    ToElementOrNull("StateServicePreparation",StateServicePreparation)
                 };
             }
         }
 
-        class TBasicDiplomaDocument : IXElemementsConvertable
+        public class TBasicDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -806,17 +796,17 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    ProfessionID!=null?new XElement("ProfessionID",ProfessionID.ToString()):null,
-                    EndYear!=null?new XElement("EndYear",EndYear.ToString()):null,
-                    GPA!=null?new XElement("GPA",GPA.ToString()):null,
-                    StateServicePreparation !=null?new XElement("StateServicePreparation",GPA.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("ProfessionID",ProfessionID),
+                    ToElementOrNull("EndYear",EndYear),
+                    ToElementOrNull("GPA",GPA),
+                    ToElementOrNull("StateServicePreparation",StateServicePreparation)
                 };
             }
         }
 
-        class TIncomplHighEduDiplomaDocument : IXElemementsConvertable
+        public class TIncomplHighEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -854,14 +844,14 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID)
                 };
             }
         }
 
-        class TAcademicDiplomaDocument : IXElemementsConvertable
+        public class TAcademicDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -899,14 +889,14 @@ namespace PK.Classes
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
                     RegistrationNumber!=null?new XElement("RegistrationNumber",RegistrationNumber.Value):null,
-                    QualificationTypeID!=null?new XElement("QualificationTypeID",QualificationTypeID.ToString()):null,
-                    SpecialityID!=null?new XElement("SpecialityID",SpecialityID.ToString()):null,
-                    SpecializationID!=null?new XElement("SpecializationID",SpecializationID.ToString()):null
+                    ToElementOrNull("QualificationTypeID",QualificationTypeID),
+                    ToElementOrNull("SpecialityID",SpecialityID),
+                    ToElementOrNull("SpecializationID",SpecializationID)
                 };
             }
         }
 
-        class TEduCustomDocument : IXElemementsConvertable
+        public class TEduCustomDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -942,7 +932,7 @@ namespace PK.Classes
             }
         }
 
-        class TCompatriotDocument : IXElemementsConvertable
+        public class TCompatriotDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -971,7 +961,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("CompariotCategoryID", CompariotCategoryID.ToString()),
+                    new XElement("CompariotCategoryID", CompariotCategoryID),
                     DocumentName !=null?new XElement("DocumentName", DocumentName.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -981,7 +971,7 @@ namespace PK.Classes
             }
         }
 
-        class TInstitutionDocument : IXElemementsConvertable
+        public class TInstitutionDocument : IXElemementsConvertable
         {
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
@@ -1000,12 +990,12 @@ namespace PK.Classes
                 {
                     new XElement("DocumentNumber", DocumentNumber.Value) ,
                     DocumentDate !=null? new XElement("DocumentDate", DocumentDate.Value):null,
-                    DocumentTypeID !=null?new XElement("DocumentTypeID", DocumentTypeID.ToString()):null
+                    ToElementOrNull("DocumentTypeID", DocumentTypeID)
                 };
             }
         }
 
-        class TVeteranDocument : IXElemementsConvertable
+        public class TVeteranDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -1034,7 +1024,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("VeteranCategoryID", VeteranCategoryID.ToString()),
+                    new XElement("VeteranCategoryID", VeteranCategoryID),
                     DocumentName !=null?new XElement("DocumentName", DocumentName.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -1044,7 +1034,7 @@ namespace PK.Classes
             }
         }
 
-        class TPauperDocument : IXElemementsConvertable
+        public class TPauperDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -1080,7 +1070,7 @@ namespace PK.Classes
             }
         }
 
-        class TParentsLostDocument : IXElemementsConvertable
+        public class TParentsLostDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -1109,7 +1099,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("ParentsLostCategoryID", ParentsLostCategoryID.ToString()),
+                    new XElement("ParentsLostCategoryID", ParentsLostCategoryID),
                     DocumentName !=null?new XElement("DocumentName", DocumentName.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -1119,7 +1109,7 @@ namespace PK.Classes
             }
         }
 
-        class TStateEmployeeDocument : IXElemementsConvertable
+        public class TStateEmployeeDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -1148,7 +1138,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("StateEmployeeCategoryID", StateEmployeeCategoryID.ToString()),
+                    new XElement("StateEmployeeCategoryID", StateEmployeeCategoryID),
                     DocumentName !=null?new XElement("DocumentName", DocumentName.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -1158,7 +1148,7 @@ namespace PK.Classes
             }
         }
 
-        class TRadiationWorkDocument : IXElemementsConvertable
+        public class TRadiationWorkDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -1187,7 +1177,7 @@ namespace PK.Classes
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("RadiationWorkCategoryID", RadiationWorkCategoryID.ToString()),
+                    new XElement("RadiationWorkCategoryID", RadiationWorkCategoryID),
                     DocumentName !=null?new XElement("DocumentName", DocumentName.Value):null,
                     DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     DocumentNumber!=null?new XElement("DocumentNumber", DocumentNumber.Value):null,
@@ -1196,9 +1186,10 @@ namespace PK.Classes
                 };
             }
         }
+
         #endregion
 
-        class Root : IXElemementConvertable
+        public class Root : IXElemementConvertable
         {
             public readonly AuthData AuthData; //Блок авторизации //s
             public readonly PackageData PackageData; //Пакет с импортируемыми данными //s
@@ -1218,7 +1209,7 @@ namespace PK.Classes
             }
         }
 
-        class AuthData : IXElemementConvertable
+        public class AuthData : IXElemementConvertable
         {
             public readonly string Login; //Логин //50
             public readonly string Pass; //Пароль //50
@@ -1236,12 +1227,12 @@ namespace PK.Classes
                 return new XElement("AuthData",
                     new XElement("Login", Login),
                     new XElement("Pass", Pass),
-                    InstitutionID != null ? new XElement("InstitutionID", InstitutionID.ToString()) : null
+                    ToElementOrNull("InstitutionID", InstitutionID)
                     );
             }
         }
 
-        class PackageData : IXElemementConvertable
+        public class PackageData : IXElemementConvertable
         {
             public readonly CampaignInfo CampaignInfo; //Информация о приемных кампаниях
             public readonly AdmissionInfo AdmissionInfo; //Сведения об объеме и структуре приема
@@ -1275,7 +1266,7 @@ namespace PK.Classes
 
         #region Campaigns
 
-        class CampaignInfo : IXElemementConvertable
+        public class CampaignInfo : IXElemementConvertable
         {
             public readonly List<Campaign> Campaigns; //Элементы приемной кампании //s
 
@@ -1292,7 +1283,7 @@ namespace PK.Classes
             }
         }
 
-        class Campaign : IXElemementConvertable
+        public class Campaign : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly string Name; //Название //100
@@ -1320,17 +1311,17 @@ namespace PK.Classes
                 return new XElement("Campaign",
                     new XElement("UID", UID.Value),
                     new XElement("Name", Name),
-                    new XElement("YearStart", YearStart.ToString()),
-                    new XElement("YearEnd", YearEnd.ToString()),
+                    new XElement("YearStart", YearStart),
+                    new XElement("YearEnd", YearEnd),
                     new XElement("EducationForms", EducationForms.Select(i => i.ConvertToXElement())),
-                    new XElement("StatusID", StatusID.ToString()),
+                    new XElement("StatusID", StatusID),
                     new XElement("EducationLevels", EducationLevels.Select(i => i.ConvertToXElement())),
-                    new XElement("CampaignTypeID", CampaignTypeID.ToString())
+                    new XElement("CampaignTypeID", CampaignTypeID)
                     );
             }
         }
 
-        class EducationFormID : IXElemementConvertable
+        public class EducationFormID : IXElemementConvertable
         {
             public readonly uint Value; //ИД формы обучения (справочник №14)
 
@@ -1341,11 +1332,11 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("EducationFormID", Value.ToString());
+                return new XElement("EducationFormID", Value);
             }
         }
 
-        class EducationLevelID : IXElemementConvertable
+        public class EducationLevelID : IXElemementConvertable
         {
             public readonly uint Value; //ИД Уровня образования (справочник №2)
 
@@ -1356,7 +1347,7 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("EducationLevelID", Value.ToString());
+                return new XElement("EducationLevelID", Value);
             }
         }
 
@@ -1364,7 +1355,7 @@ namespace PK.Classes
 
         #region Admission
 
-        class AdmissionInfo : IXElemementConvertable
+        public class AdmissionInfo : IXElemementConvertable
         {
             public readonly List<AVItem> AdmissionVolume; //Объем приема (контрольные цифры)
             public readonly List<DAVItem> DistributedAdmissionVolume; //Объем приема, распределенный по уровню бюджета
@@ -1387,7 +1378,7 @@ namespace PK.Classes
             }
         }
 
-        class AVItem : IXElemementConvertable
+        public class AVItem : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TUID CampaignUID; //Идентификатор приемной кампании (UID) //s
@@ -1431,25 +1422,25 @@ namespace PK.Classes
                 return new XElement("Item",
                     new XElement("UID", UID.Value),
                     new XElement("CampaignUID", CampaignUID.Value),
-                    new XElement("EducationLevelID", EducationLevelID.ToString()),
-                    new XElement("DirectionID", DirectionID.ToString()),
-                    NumberBudgetO != null ? new XElement("NumberBudgetO", NumberBudgetO.ToString()) : null,
-                    NumberBudgetOZ != null ? new XElement("NumberBudgetOZ", NumberBudgetOZ.ToString()) : null,
-                    NumberBudgetZ != null ? new XElement("NumberBudgetZ", NumberBudgetZ.ToString()) : null,
-                    NumberPaidO != null ? new XElement("NumberPaidO", NumberPaidO.ToString()) : null,
-                    NumberPaidOZ != null ? new XElement("NumberPaidOZ", NumberPaidOZ.ToString()) : null,
-                    NumberPaidZ != null ? new XElement("NumberPaidZ", NumberPaidZ.ToString()) : null,
-                    NumberTargetO != null ? new XElement("NumberTargetO", NumberTargetO.ToString()) : null,
-                    NumberTargetOZ != null ? new XElement("NumberTargetOZ", NumberTargetOZ.ToString()) : null,
-                    NumberTargetZ != null ? new XElement("NumberTargetZ", NumberTargetZ.ToString()) : null,
-                    NumberQuotaO != null ? new XElement("NumberQuotaO", NumberQuotaO.ToString()) : null,
-                    NumberQuotaOZ != null ? new XElement("NumberQuotaOZ", NumberQuotaOZ.ToString()) : null,
-                    NumberQuotaZ != null ? new XElement("NumberQuotaZ", NumberQuotaZ.ToString()) : null
+                    new XElement("EducationLevelID", EducationLevelID),
+                    new XElement("DirectionID", DirectionID),
+                    ToElementOrNull("NumberBudgetO", NumberBudgetO),
+                    ToElementOrNull("NumberBudgetOZ", NumberBudgetOZ),
+                    ToElementOrNull("NumberBudgetZ", NumberBudgetZ),
+                    ToElementOrNull("NumberPaidO", NumberPaidO),
+                    ToElementOrNull("NumberPaidOZ", NumberPaidOZ),
+                    ToElementOrNull("NumberPaidZ", NumberPaidZ),
+                    ToElementOrNull("NumberTargetO", NumberTargetO),
+                    ToElementOrNull("NumberTargetOZ", NumberTargetOZ),
+                    ToElementOrNull("NumberTargetZ", NumberTargetZ),
+                    ToElementOrNull("NumberQuotaO", NumberQuotaO),
+                    ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
+                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
                     );
             }
         }
 
-        class DAVItem : IXElemementConvertable
+        public class DAVItem : IXElemementConvertable
         {
             public readonly TUID AdmissionVolumeUID; //Идентификатор объема приема по направлению подготовки //s
             public readonly uint LevelBudget; //ИД уровня бюджета (справочник №35)
@@ -1482,21 +1473,21 @@ namespace PK.Classes
             {
                 return new XElement("Item",
                     new XElement("AdmissionVolumeUID", AdmissionVolumeUID.Value),
-                    new XElement("LevelBudget", LevelBudget.ToString()),
-                    NumberBudgetO != null ? new XElement("NumberBudgetO", NumberBudgetO.ToString()) : null,
-                    NumberBudgetOZ != null ? new XElement("NumberBudgetOZ", NumberBudgetOZ.ToString()) : null,
-                    NumberBudgetZ != null ? new XElement("NumberBudgetZ", NumberBudgetZ.ToString()) : null,
-                    NumberTargetO != null ? new XElement("NumberTargetO", NumberTargetO.ToString()) : null,
-                    NumberTargetOZ != null ? new XElement("NumberTargetOZ", NumberTargetOZ.ToString()) : null,
-                    NumberTargetZ != null ? new XElement("NumberTargetZ", NumberTargetZ.ToString()) : null,
-                    NumberQuotaO != null ? new XElement("NumberQuotaO", NumberQuotaO.ToString()) : null,
-                    NumberQuotaOZ != null ? new XElement("NumberQuotaOZ", NumberQuotaOZ.ToString()) : null,
-                    NumberQuotaZ != null ? new XElement("NumberQuotaZ", NumberQuotaZ.ToString()) : null
+                    new XElement("LevelBudget", LevelBudget),
+                    ToElementOrNull("NumberBudgetO", NumberBudgetO),
+                    ToElementOrNull("NumberBudgetOZ", NumberBudgetOZ),
+                    ToElementOrNull("NumberBudgetZ", NumberBudgetZ),
+                    ToElementOrNull("NumberTargetO", NumberTargetO),
+                    ToElementOrNull("NumberTargetOZ", NumberTargetOZ),
+                    ToElementOrNull("NumberTargetZ", NumberTargetZ),
+                    ToElementOrNull("NumberQuotaO", NumberQuotaO),
+                    ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
+                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
                     );
             }
         }
 
-        class CompetitiveGroup : IXElemementConvertable
+        public class CompetitiveGroup : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TUID CampaignUID; //Идентификатор приемной кампании (UID) //s
@@ -1535,12 +1526,12 @@ namespace PK.Classes
                     new XElement("UID", UID.Value),
                     new XElement("CampaignUID", CampaignUID.Value),
                     new XElement("Name", Name),
-                    new XElement("EducationLevelID", EducationLevelID.ToString()),
-                    new XElement("EducationSourceID", EducationSourceID.ToString()),
-                    new XElement("EducationFormID", EducationFormID.ToString()),
-                    new XElement("DirectionID", DirectionID.ToString()),
+                    new XElement("EducationLevelID", EducationLevelID),
+                    new XElement("EducationSourceID", EducationSourceID),
+                    new XElement("EducationFormID", EducationFormID),
+                    new XElement("DirectionID", DirectionID),
                     EduPrograms != null ? new XElement("EduPrograms", EduPrograms.Select(p => p.ConvertToXElement())) : null,
-                    IsAdditional != null ? new XElement("IsAdditional", IsAdditional.ToString().ToLower()) : null,
+                    ToElementOrNull("IsAdditional", IsAdditional),
                     CompetitiveGroupItem != null ? CompetitiveGroupItem.ConvertToXElement() : null,
                     TargetOrganizations != null ? new XElement("TargetOrganizations", TargetOrganizations.Select(o => o.ConvertToXElement())) : null,
                     CommonBenefit != null ? new XElement("CommonBenefit", CommonBenefit.Select(i => i.ConvertToXElement())) : null,
@@ -1549,7 +1540,7 @@ namespace PK.Classes
             }
         }
 
-        class EduProgram : IXElemementConvertable
+        public class EduProgram : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly string Name; //Наименование ОП //200
@@ -1572,7 +1563,7 @@ namespace PK.Classes
             }
         }
 
-        class CompetitiveGroupItem : IXElemementConvertable
+        public class CompetitiveGroupItem : IXElemementConvertable
         {
             public enum Variants : byte
             {
@@ -1601,12 +1592,12 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("CompetitiveGroupItem",
-                    new XElement(System.Enum.GetName(typeof(Variants), Choice), Number.ToString())
+                    new XElement(System.Enum.GetName(typeof(Variants), Choice), Number)
                     );
             }
         }
 
-        class TargetOrganization : IXElemementConvertable
+        public class TargetOrganization : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly CompetitiveGroupTargetItem CompetitiveGroupTargetItem; //Места для целевого приема //s
@@ -1627,7 +1618,7 @@ namespace PK.Classes
             }
         }
 
-        class CompetitiveGroupTargetItem : IXElemementConvertable
+        public class CompetitiveGroupTargetItem : IXElemementConvertable
         {
             public enum Variants : byte
             {
@@ -1647,12 +1638,12 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("CompetitiveGroupTargetItem",
-                    new XElement(System.Enum.GetName(typeof(Variants), Choice), Number.ToString())
+                    new XElement(System.Enum.GetName(typeof(Variants), Choice), Number)
                     );
             }
         }
 
-        class CommonBenefitItem : IXElemementConvertable
+        public class CommonBenefitItem : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly List<OlympicDiplomTypeID> OlympicDiplomTypes; //Типы дипломов //s
@@ -1688,13 +1679,13 @@ namespace PK.Classes
                 return new XElement("CommonBenefitItem",
                     new XElement("UID", UID.Value),
                     new XElement("OlympicDiplomTypes", OlympicDiplomTypes.Select(t => t.ConvertToXElement())),
-                    new XElement("BenefitKindID", BenefitKindID.ToString()),
-                    new XElement("IsForAllOlympics", IsForAllOlympics.ToString().ToLower()),
-                    IsCreative != null ? new XElement("IsCreative", IsCreative.ToString().ToLower()) : null,
-                    IsAthletic != null ? new XElement("IsAthletic", IsAthletic.ToString().ToLower()) : null,
-                    LevelForAllOlympics != null ? new XElement("LevelForAllOlympics", LevelForAllOlympics.ToString()) : null,
+                    new XElement("BenefitKindID", BenefitKindID),
+                    new XElement("IsForAllOlympics", IsForAllOlympics),
+                    ToElementOrNull("IsCreative", IsCreative),
+                    ToElementOrNull("IsAthletic", IsAthletic),
+                    ToElementOrNull("LevelForAllOlympics", LevelForAllOlympics),
                     ProfileForAllOlympics != null ? new XElement("ProfileForAllOlympics", ProfileForAllOlympics.Select(i => i.ConvertToXElement())) : null,
-                    ClassForAllOlympics != null ? new XElement("ClassForAllOlympics", ClassForAllOlympics.ToString()) : null,
+                    ToElementOrNull("ClassForAllOlympics", ClassForAllOlympics),
                     Olympics != null ? new XElement("Olympics", Olympics.Select(i => i.ConvertToXElement())) : null,
                     OlympicsLevels != null ? new XElement("OlympicsLevels", OlympicsLevels.Select(o => o.ConvertToXElement())) : null,
                     MinEgeMarks != null ? MinEgeMarks.ConvertToXElement() : null
@@ -1702,7 +1693,7 @@ namespace PK.Classes
             }
         }
 
-        class OlympicDiplomTypeID : IXElemementConvertable
+        public class OlympicDiplomTypeID : IXElemementConvertable
         {
             public readonly uint Value; //ИД типа диплома (справочник №18)
 
@@ -1713,11 +1704,11 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("OlympicDiplomTypeID", Value.ToString());
+                return new XElement("OlympicDiplomTypeID", Value);
             }
         }
 
-        class ProfileID : IXElemementConvertable
+        public class ProfileID : IXElemementConvertable
         {
             public readonly uint Value; //ИД профиля олимпиады (справочник №39)
 
@@ -1728,11 +1719,11 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("ProfileID", Value.ToString());
+                return new XElement("ProfileID", Value);
             }
         }
 
-        class OlympicID : IXElemementConvertable
+        public class OlympicID : IXElemementConvertable
         {
             public readonly uint Value; //ИД олимпиады (справочник №19)
 
@@ -1743,11 +1734,11 @@ namespace PK.Classes
 
             public XElement ConvertToXElement()
             {
-                return new XElement("OlympicID", Value.ToString());
+                return new XElement("OlympicID", Value);
             }
         }
 
-        class Olympic : IXElemementConvertable
+        public class Olympic : IXElemementConvertable
         {
             public readonly uint OlympicID; //ИД олимпиады
             public readonly uint? LevelID; //Уровни олимпиады (справочник №3)
@@ -1765,15 +1756,15 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("Olympic",
-                    new XElement("OlympicID", OlympicID.ToString()),
-                    LevelID != null ? new XElement("LevelID", LevelID.ToString()) : null,
+                    new XElement("OlympicID", OlympicID),
+                    ToElementOrNull("LevelID", LevelID),
                     Profiles != null ? new XElement("Profiles", Profiles.Select(p => p.ConvertToXElement())) : null,
-                    new XElement("ClassID", ClassID.ToString())
+                    new XElement("ClassID", ClassID)
                     );
             }
         }
 
-        class MinEgeMarks : IXElemementConvertable
+        public class MinEgeMarks : IXElemementConvertable
         {
             public readonly MinMarks MinMarks; //Минимальная оценка по предмету
 
@@ -1788,7 +1779,7 @@ namespace PK.Classes
             }
         }
 
-        class MinMarks : IXElemementConvertable
+        public class MinMarks : IXElemementConvertable
         {
             public readonly uint SubjectID; //ИД дисциплины (справочник №1)
             public readonly uint MinMark; //Минимальная оценка по предмету
@@ -1802,13 +1793,13 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("MinMarks",
-                    new XElement("SubjectID", SubjectID.ToString()),
-                    new XElement("MinMark", MinMark.ToString())
+                    new XElement("SubjectID", SubjectID),
+                    new XElement("MinMark", MinMark)
                     );
             }
         }
 
-        class EntranceTestItem : IXElemementConvertable
+        public class EntranceTestItem : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly uint EntranceTestTypeID; //Тип вступительного испытания (справочник №11)
@@ -1833,9 +1824,9 @@ namespace PK.Classes
             {
                 return new XElement("EntranceTestItem",
                     new XElement("UID", UID.Value),
-                    new XElement("EntranceTestTypeID", EntranceTestTypeID.ToString()),
-                    MinScore != null ? new XElement("MinScore", MinScore.ToString()) : null,
-                    new XElement("EntranceTestPriority", EntranceTestPriority.ToString()),
+                    new XElement("EntranceTestTypeID", EntranceTestTypeID),
+                    ToElementOrNull("MinScore", MinScore),
+                    new XElement("EntranceTestPriority", EntranceTestPriority),
                     new XElement("EntranceTestSubject", EntranceTestSubject.ConvertToXElements()),
                     EntranceTestBenefits != null ? new XElement("EntranceTestBenefits", EntranceTestBenefits.Select(i => i.ConvertToXElement())) : null,
                     IsForSPOandVO != null ? IsForSPOandVO.ConvertToXElement() : null
@@ -1843,7 +1834,7 @@ namespace PK.Classes
             }
         }
 
-        class IsForSPOandVO : IXElemementConvertable
+        public class IsForSPOandVO : IXElemementConvertable
         {
             public readonly TUID ReplacedEntranceTestItemUID; //UID заменяемого испытания //s
 
@@ -1860,7 +1851,7 @@ namespace PK.Classes
             }
         }
 
-        class EntranceTestBenefitItem : IXElemementConvertable
+        public class EntranceTestBenefitItem : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly List<OlympicDiplomTypeID> OlympicDiplomTypes; //Типы дипломов //s
@@ -1892,12 +1883,12 @@ namespace PK.Classes
                 return new XElement("EntranceTestBenefitItem",
                     new XElement("UID", UID.Value),
                     new XElement("OlympicDiplomTypes", OlympicDiplomTypes.Select(t => t.ConvertToXElement())),
-                    new XElement("BenefitKindID", BenefitKindID.ToString()),
-                    new XElement("IsForAllOlympics", IsForAllOlympics.ToString().ToLower()),
-                    LevelForAllOlympics != null ? new XElement("LevelForAllOlympics", LevelForAllOlympics.ToString()) : null,
+                    new XElement("BenefitKindID", BenefitKindID),
+                    new XElement("IsForAllOlympics", IsForAllOlympics),
+                    ToElementOrNull("LevelForAllOlympics", LevelForAllOlympics),
                     ProfileForAllOlympics != null ? new XElement("ProfileForAllOlympics", ProfileForAllOlympics.Select(i => i.ConvertToXElement())) : null,
-                    ClassForAllOlympics != null ? new XElement("ClassForAllOlympics", ClassForAllOlympics.ToString()) : null,
-                    MinEgeMark != null ? new XElement("MinEgeMark", MinEgeMark.ToString()) : null,
+                    ToElementOrNull("ClassForAllOlympics", ClassForAllOlympics),
+                    ToElementOrNull("MinEgeMark", MinEgeMark),
                     Olympics != null ? new XElement("Olympics", Olympics.Select(i => i.ConvertToXElement())) : null,
                     OlympicsLevels != null ? new XElement("OlympicsLevels", OlympicsLevels.Select(o => o.ConvertToXElement())) : null
                     );
@@ -1906,7 +1897,7 @@ namespace PK.Classes
 
         #endregion
 
-        class InstitutionAchievement : IXElemementConvertable
+        public class InstitutionAchievement : IXElemementConvertable
         {
             public readonly TUID InstitutionAchievementUID; //Идентификатор в ИС ОО //s
             public readonly string Name; //Наименование индивидуального достижения //500
@@ -1928,13 +1919,13 @@ namespace PK.Classes
                 return new XElement("InstitutionAchievement",
                     new XElement("InstitutionAchievementUID", InstitutionAchievementUID.Value),
                     new XElement("Name", Name),
-                    new XElement("IdCategory", IdCategory.ToString()),
-                    new XElement("MaxValue", MaxValue.ToString()),
+                    new XElement("IdCategory", IdCategory),
+                    new XElement("MaxValue", MaxValue),
                     new XElement("CampaignUID", CampaignUID.Value));
             }
         }
 
-        class TargetOrganizationImp : IXElemementConvertable
+        public class TargetOrganizationImp : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly string Name; //Наименование целевой организации //250
@@ -1955,7 +1946,7 @@ namespace PK.Classes
 
         #region Applications
 
-        class Application : IXElemementConvertable
+        public class Application : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly string ApplicationNumber; //Номер заявления ОО //50
@@ -1993,8 +1984,8 @@ namespace PK.Classes
                     new XElement("ApplicationNumber", ApplicationNumber),
                     Entrant.ConvertToXElement(),
                     new XElement("RegistrationDate", RegistrationDate.Value),
-                    new XElement("NeedHostel", NeedHostel.ToString().ToLower()),
-                    new XElement("StatusID", StatusID.ToString()),
+                    new XElement("NeedHostel", NeedHostel),
+                    new XElement("StatusID", StatusID),
                     StatusComment != null ? new XElement("StatusComment", StatusComment) : null,
                     new XElement("FinSourceAndEduForms", FinSourceEduForms.Select(f => f.ConvertToXElement())),
                     ApplicationCommonBenefits != null ? new XElement("ApplicationCommonBenefits", ApplicationCommonBenefits.Select(b => b.ConvertToXElement())) : null,
@@ -2005,7 +1996,7 @@ namespace PK.Classes
             }
         }
 
-        class Entrant : IXElemementConvertable
+        public class Entrant : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly string LastName; //Фамилия //200
@@ -2035,7 +2026,7 @@ namespace PK.Classes
                     new XElement("LastName", LastName),
                     new XElement("FirstName", FirstName),
                     MiddleName != null ? new XElement("MiddleName", MiddleName) : null,
-                    new XElement("GenderID", GenderID.ToString()),
+                    new XElement("GenderID", GenderID),
                     CustomInformation != null ? new XElement("CustomInformation", CustomInformation) : null,
                     EmailOrMailAddress.ConvertToXElement(),
                     IsFromKrym != null ? IsFromKrym.ConvertToXElement() : null
@@ -2043,7 +2034,7 @@ namespace PK.Classes
             }
         }
 
-        class EmailOrMailAddress : IXElemementConvertable
+        public class EmailOrMailAddress : IXElemementConvertable
         {
             public readonly string Email = null; //Электронный адрес //150 //us
             public readonly MailAddress MailAddress = null; //Почтовый адрес
@@ -2067,7 +2058,7 @@ namespace PK.Classes
             }
         }
 
-        class MailAddress : IXElemementConvertable
+        public class MailAddress : IXElemementConvertable
         {
             public readonly uint RegionID; //Регион (справочник № 8)
             public readonly uint TownTypeID; //Тип населенного пункта (справочник № 41)
@@ -2083,14 +2074,14 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("MailAddress",
-                    new XElement("RegionID", RegionID.ToString()),
-                    new XElement("TownTypeID", TownTypeID.ToString()),
+                    new XElement("RegionID", RegionID),
+                    new XElement("TownTypeID", TownTypeID),
                     new XElement("Address", Address)
                     );
             }
         }
 
-        class IsFromKrym : IXElemementConvertable
+        public class IsFromKrym : IXElemementConvertable
         {
             public readonly TUID DocumentUID; //UID подтверждающего документа //s
 
@@ -2105,7 +2096,7 @@ namespace PK.Classes
             }
         }
 
-        class FinSourceEduForm : IXElemementConvertable
+        public class FinSourceEduForm : IXElemementConvertable
         {
             public readonly TUID CompetitiveGroupUID; //UID кокнкурсной группы //s
             public readonly TUID TargetOrganizationUID; //UID организации целевого приема
@@ -2129,12 +2120,12 @@ namespace PK.Classes
                     TargetOrganizationUID != null ? new XElement("TargetOrganizationUID", TargetOrganizationUID.Value) : null,
                     IsAgreedDate != null ? new XElement("IsAgreedDate", IsAgreedDate.Value) : null,
                     IsDisagreedDate != null ? new XElement("IsDisagreedDate", IsDisagreedDate.Value) : null,
-                    IsForSPOandVO != null ? new XElement("IsForSPOandVO", IsForSPOandVO.ToString().ToLower()) : null
+                    ToElementOrNull("IsForSPOandVO", IsForSPOandVO)
                     );
             }
         }
 
-        class ApplicationCommonBenefit : IXElemementConvertable
+        public class ApplicationCommonBenefit : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TUID CompetitiveGroupUID; //UID конкурса для льготы //s
@@ -2156,14 +2147,14 @@ namespace PK.Classes
                 return new XElement("ApplicationCommonBenefit",
                     new XElement("UID", UID.Value),
                     new XElement("CompetitiveGroupUID", CompetitiveGroupUID.Value),
-                    new XElement("DocumentTypeID", DocumentTypeID.ToString()),
+                    new XElement("DocumentTypeID", DocumentTypeID),
                     DocumentReason.ConvertToXElement(),
-                    new XElement("BenefitKindID", BenefitKindID.ToString())
+                    new XElement("BenefitKindID", BenefitKindID)
                     );
             }
         }
 
-        class DocumentReason : IXElemementConvertable
+        public class DocumentReason : IXElemementConvertable
         {
             public readonly TOlympicDocument OlympicDocument = null; //Диплом победителя/призера олимпиады школьников
             public readonly TOlympicTotalDocument OlympicTotalDocument = null; //Диплом победителя/призера всероссийской олимпиады школьников
@@ -2256,7 +2247,7 @@ namespace PK.Classes
             }
         }
 
-        class MedicalDocuments : IXElemementConvertable
+        public class MedicalDocuments : IXElemementConvertable
         {
             public readonly BenefitDocument BenefitDocument; //Основание для льготы //s
             public readonly TAllowEducationDocument AllowEducationDocument; //Заключение об отсутствии противопоказаний для обучения //s
@@ -2276,7 +2267,7 @@ namespace PK.Classes
             }
         }
 
-        class BenefitDocument : IXElemementConvertable
+        public class BenefitDocument : IXElemementConvertable
         {
             public readonly TDisabilityDocument DisabilityDocument = null; //Справка об установлении инвалидности
             public readonly TMedicalDocument MedicalDocument = null; //Заключение психолого-медико-педагогической комиссии
@@ -2300,7 +2291,7 @@ namespace PK.Classes
             }
         }
 
-        class ApplicationDocuments : IXElemementConvertable
+        public class ApplicationDocuments : IXElemementConvertable
         {
             public readonly List<EgeDocument> EgeDocuments; //Свидетельства о результатах ЕГЭ
             public readonly List<GiaDocument> GiaDocuments; //Справки ГИА
@@ -2362,7 +2353,7 @@ namespace PK.Classes
             }
         }
 
-        class EgeDocument : IXElemementConvertable
+        public class EgeDocument : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -2388,13 +2379,13 @@ namespace PK.Classes
                     OriginalReceivedDate != null ? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value) : null,
                     DocumentNumber != null ? new XElement("DocumentNumber", DocumentNumber.Value) : null,
                     DocumentDate != null ? new XElement("DocumentDate", DocumentDate.Value) : null,
-                    new XElement("DocumentYear", DocumentYear.ToString()),
+                    new XElement("DocumentYear", DocumentYear),
                     new XElement("Subjects", Subjects.Select(d => d.ConvertToXElement()))
                     );
             }
         }
 
-        class SubjectData : IXElemementConvertable
+        public class SubjectData : IXElemementConvertable
         {
             public readonly uint SubjectID; //ИД дисциплины (справочник №1)
             public readonly uint Value; //Балл
@@ -2408,13 +2399,13 @@ namespace PK.Classes
             public XElement ConvertToXElement()
             {
                 return new XElement("SubjectData",
-                    new XElement("SubjectID", SubjectID.ToString()),
-                    new XElement("Value", Value.ToString())
+                    new XElement("SubjectID", SubjectID),
+                    new XElement("Value", Value)
                     );
             }
         }
 
-        class GiaDocument : IXElemementConvertable
+        public class GiaDocument : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -2446,7 +2437,7 @@ namespace PK.Classes
             }
         }
 
-        class IdentityDocument : IXElemementConvertable
+        public class IdentityDocument : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -2491,21 +2482,21 @@ namespace PK.Classes
                     LastName != null ? new XElement("LastName", LastName) : null,
                     FirstName != null ? new XElement("FirstName", FirstName) : null,
                     MiddleName != null ? new XElement("MiddleName", MiddleName) : null,
-                    GenderID != null ? new XElement("GenderID", GenderID.ToString()) : null,
+                    ToElementOrNull("GenderID", GenderID),
                     DocumentSeries != null ? new XElement("DocumentSeries", DocumentSeries) : null,
                     new XElement("DocumentNumber", DocumentNumber),
                     SubdivisionCode != null ? new XElement("SubdivisionCode", SubdivisionCode) : null,
                     new XElement("DocumentDate", DocumentDate.Value),
                     DocumentOrganization != null ? new XElement("DocumentOrganization", DocumentOrganization) : null,
-                    new XElement("IdentityDocumentTypeID", IdentityDocumentTypeID.ToString()),
-                    new XElement("NationalityTypeID", NationalityTypeID.ToString()),
+                    new XElement("IdentityDocumentTypeID", IdentityDocumentTypeID),
+                    new XElement("NationalityTypeID", NationalityTypeID),
                     new XElement("BirthDate", BirthDate.Value),
                     BirthPlace != null ? new XElement("BirthPlace", BirthPlace) : null
                     );
             }
         }
 
-        class OtherIdentityDocuments : IXElemementConvertable
+        public class OtherIdentityDocuments : IXElemementConvertable
         {
             public readonly IdentityDocument IdentityDocument; //Документ, удостоверяющий личность //s
 
@@ -2520,7 +2511,7 @@ namespace PK.Classes
             }
         }
 
-        class EduDocument : IXElemementConvertable
+        public class EduDocument : IXElemementConvertable
         {
             public readonly TSchoolCertificateDocument SchoolCertificateDocument = null; //Аттестат о среднем (полном) общем образовании
             public readonly TSchoolCertificateDocument SchoolCertificateBasicDocument = null; //Аттестат об основном общем образовании
@@ -2600,7 +2591,7 @@ namespace PK.Classes
             }
         }
 
-        class MilitaryCardDocument : IXElemementConvertable
+        public class MilitaryCardDocument : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
@@ -2632,7 +2623,7 @@ namespace PK.Classes
             }
         }
 
-        class StudentDocument : IXElemementConvertable
+        public class StudentDocument : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
@@ -2658,7 +2649,7 @@ namespace PK.Classes
             }
         }
 
-        class OrphanDocument : IXElemementConvertable
+        public class OrphanDocument : IXElemementConvertable
         {
             public readonly TOrphanDocument Value; //Документ, подтверждающий сиротство //s
 
@@ -2673,7 +2664,7 @@ namespace PK.Classes
             }
         }
 
-        class VeteranDocument : IXElemementConvertable
+        public class VeteranDocument : IXElemementConvertable
         {
             public readonly TVeteranDocument Value; //Документ, подтверждающий принадлежность к участникам и ветеранам боевых действий //s
 
@@ -2688,7 +2679,7 @@ namespace PK.Classes
             }
         }
 
-        class SportDocument : IXElemementConvertable
+        public class SportDocument : IXElemementConvertable
         {
             public readonly TSportDocument Value; //Диплом победителя/призера в области спорта //s
 
@@ -2703,7 +2694,7 @@ namespace PK.Classes
             }
         }
 
-        class CompatriotDocument : IXElemementConvertable
+        public class CompatriotDocument : IXElemementConvertable
         {
             public readonly TCompatriotDocument Value; //Документ, подтверждающий принадлежность к соотечественникам //s
 
@@ -2718,7 +2709,7 @@ namespace PK.Classes
             }
         }
 
-        class PauperDocument : IXElemementConvertable
+        public class PauperDocument : IXElemementConvertable
         {
             public readonly TPauperDocument Value; //Документ, подтверждающий наличие только одного родителя - инвалида I группы и принадлежность к числу малоимущих семей //s
 
@@ -2733,7 +2724,7 @@ namespace PK.Classes
             }
         }
 
-        class ParentsLostDocument : IXElemementConvertable
+        public class ParentsLostDocument : IXElemementConvertable
         {
             public readonly TParentsLostDocument Value; //Документ, подтверждающий принадлежность родителей и опекунов к погибшим в связи с исполнением служебных обязанностей //s
 
@@ -2748,7 +2739,7 @@ namespace PK.Classes
             }
         }
 
-        class StateEmployeeDocument : IXElemementConvertable
+        public class StateEmployeeDocument : IXElemementConvertable
         {
             public readonly TStateEmployeeDocument Value; //Документ, подтверждающий принадлежность к сотрудникам государственных органов Российской Федерации //s
 
@@ -2763,7 +2754,7 @@ namespace PK.Classes
             }
         }
 
-        class RadiationWorkDocument : IXElemementConvertable
+        public class RadiationWorkDocument : IXElemementConvertable
         {
             public readonly TRadiationWorkDocument Value; //Документ, подтверждающий участие в работах на радиационных объектах или воздействие радиации //s
 
@@ -2778,7 +2769,7 @@ namespace PK.Classes
             }
         }
 
-        class CustomDocument : IXElemementConvertable
+        public class CustomDocument : IXElemementConvertable
         {
             public readonly TCustomDocument Value; //Иной документ //s
 
@@ -2793,7 +2784,7 @@ namespace PK.Classes
             }
         }
 
-        class EntranceTestResult : IXElemementConvertable
+        public class EntranceTestResult : IXElemementConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
             public readonly decimal ResultValue; //Балл
@@ -2822,10 +2813,10 @@ namespace PK.Classes
             {
                 return new XElement("EntranceTestResult",
                     new XElement("UID", UID.Value),
-                    new XElement("ResultValue", ResultValue.ToString()),
-                    new XElement("ResultSourceTypeID", ResultSourceTypeID.ToString()),
+                    new XElement("ResultValue", ResultValue),
+                    new XElement("ResultSourceTypeID", ResultSourceTypeID),
                     new XElement("EntranceTestSubject", EntranceTestSubject.ConvertToXElements()),
-                    new XElement("EntranceTestTypeID", EntranceTestTypeID.ToString()),
+                    new XElement("EntranceTestTypeID", EntranceTestTypeID),
                     new XElement("CompetitiveGroupUID", CompetitiveGroupUID.Value),
                     ResultDocument != null ? ResultDocument.ConvertToXElement() : null,
                     IsDistant != null ? IsDistant.ConvertToXElement() : null,
@@ -2834,7 +2825,7 @@ namespace PK.Classes
             }
         }
 
-        class ResultDocument : IXElemementConvertable
+        public class ResultDocument : IXElemementConvertable
         {
             public readonly TOlympicDocument OlympicDocument = null; //Диплом победителя/призера олимпиады школьников //s
             public readonly TOlympicTotalDocument OlympicTotalDocument = null; //Диплом победителя/призера всероссийской олимпиады школьников //s
@@ -2893,7 +2884,7 @@ namespace PK.Classes
             }
         }
 
-        class IsDistant : IXElemementConvertable
+        public class IsDistant : IXElemementConvertable
         {
             public readonly string DistantPlace; //место сдачи ВИ //200
 
@@ -2910,7 +2901,7 @@ namespace PK.Classes
             }
         }
 
-        class IsDisabled : IXElemementConvertable
+        public class IsDisabled : IXElemementConvertable
         {
             public readonly TUID DisabledDocumentUID; //место сдачи ВИ //s
 
@@ -2927,7 +2918,7 @@ namespace PK.Classes
             }
         }
 
-        class IndividualAchievement : IXElemementConvertable
+        public class IndividualAchievement : IXElemementConvertable
         {
             public readonly TUID IAUID; //Идентификатор индивидуального достижения, учитываемого в заявлении //s
             public readonly TUID InstitutionAchievementUID; //Идентификатор достижения, указанный в приемной кампании //s
@@ -2949,9 +2940,9 @@ namespace PK.Classes
                 return new XElement("IndividualAchievement",
                     new XElement("IAUID", IAUID.Value),
                     new XElement("InstitutionAchievementUID", InstitutionAchievementUID.Value),
-                    IAMark != null ? new XElement("IAMark", IAMark.ToString()) : null,
+                    ToElementOrNull("IAMark", IAMark),
                     new XElement("IADocumentUID", IADocumentUID.Value),
-                    isAdvantageRight_ != null ? new XElement("isAdvantageRight", isAdvantageRight_.ToString()) : null
+                    ToElementOrNull("isAdvantageRight", isAdvantageRight_)
                     );
             }
         }
@@ -2960,7 +2951,7 @@ namespace PK.Classes
 
         #region Orders
 
-        class Orders : IXElemementConvertable
+        public class Orders : IXElemementConvertable
         {
             public readonly List<OrderOfAdmission> OrdersOfAdmission; //Приказы о зачислении
             public readonly List<OrderOfException> OrdersOfException; //Приказы об исключении из приказа о зачислении
@@ -2983,7 +2974,7 @@ namespace PK.Classes
             }
         }
 
-        class OrderOfAdmission : IXElemementConvertable
+        public class OrderOfAdmission : IXElemementConvertable
         {
             public readonly TUID OrderOfAdmissionUID; //Идентификатор в ИС ОО //s
             public readonly TUID CampaignUID; //UID приемной кампании //s
@@ -3019,15 +3010,15 @@ namespace PK.Classes
                     OrderNumber != null ? new XElement("OrderNumber", OrderNumber) : null,
                     OrderDate != null ? new XElement("OrderDate", OrderDate.Value) : null,
                     OrderDatePublished != null ? new XElement("OrderDatePublished", OrderDatePublished.Value) : null,
-                    EducationFormID != null ? new XElement("EducationFormID", EducationFormID.ToString()) : null,
-                    FinanceSourceID != null ? new XElement("FinanceSourceID", FinanceSourceID.ToString()) : null,
-                    EducationLevelID != null ? new XElement("EducationLevelID", EducationLevelID.ToString()) : null,
-                    Stage != null ? new XElement("Stage", Stage.ToString()) : null
+                    ToElementOrNull("EducationFormID", EducationFormID),
+                    ToElementOrNull("FinanceSourceID", FinanceSourceID),
+                    ToElementOrNull("EducationLevelID", EducationLevelID),
+                    ToElementOrNull("Stage", Stage)
                     );
             }
         }
 
-        class OrderOfException : IXElemementConvertable
+        public class OrderOfException : IXElemementConvertable
         {
             public readonly TUID OrderOfExceptionUID; //Идентификатор в ИС ОО //s
             public readonly TUID CampaignUID; //UID приемной кампании //s
@@ -3063,15 +3054,15 @@ namespace PK.Classes
                     OrderNumber != null ? new XElement("OrderNumber", OrderNumber) : null,
                     OrderDate != null ? new XElement("OrderDate", OrderDate.Value) : null,
                     OrderDatePublished != null ? new XElement("OrderDatePublished", OrderDatePublished.Value) : null,
-                    EducationFormID != null ? new XElement("EducationFormID", EducationFormID.ToString()) : null,
-                    FinanceSourceID != null ? new XElement("FinanceSourceID", FinanceSourceID.ToString()) : null,
-                    EducationLevelID != null ? new XElement("EducationLevelID", EducationLevelID.ToString()) : null,
-                    Stage != null ? new XElement("Stage", Stage.ToString()) : null
+                    ToElementOrNull("EducationFormID", EducationFormID),
+                    ToElementOrNull("FinanceSourceID", FinanceSourceID),
+                    ToElementOrNull("EducationLevelID", EducationLevelID),
+                    ToElementOrNull("Stage", Stage)
                     );
             }
         }
 
-        class ApplicationOrd : IXElemementConvertable
+        public class ApplicationOrd : IXElemementConvertable
         {
             public readonly TUID ApplicationUID; //Идентификатор заявления, включаемого в приказ //s
             public readonly TUID OrderUID; //Идентификатор приказа //s
@@ -3097,15 +3088,35 @@ namespace PK.Classes
                 return new XElement("Application",
                     new XElement("ApplicationUID", ApplicationUID.Value),
                     new XElement("OrderUID", OrderUID.Value),
-                    new XElement("OrderTypeID", OrderTypeID.ToString()),
+                    new XElement("OrderTypeID", OrderTypeID),
                     new XElement("CompetitiveGroupUID", CompetitiveGroupUID.Value),
-                    OrderIdLevelBudget != null ? new XElement("OrderIdLevelBudget", OrderIdLevelBudget.ToString()) : null,
-                    BenefitKindID != null ? new XElement("BenefitKindID", BenefitKindID.Value.ToString()) : null,
+                    ToElementOrNull("OrderIdLevelBudget", OrderIdLevelBudget),
+                    ToElementOrNull("BenefitKindID", BenefitKindID),
                     IsDisagreedDate != null ? new XElement("IsDisagreedDate", IsDisagreedDate.Value) : null
                     );
             }
         }
 
         #endregion
+
+        private interface IXElemementConvertable
+        {
+            XElement ConvertToXElement();
+        }
+
+        private interface IXElemementsConvertable
+        {
+            object[] ConvertToXElements();
+        }
+
+        private static XElement ToElementOrNull<T>(string name, T? value) where T : struct
+        {
+            return value.HasValue ? new XElement(name, value.Value) : null;
+        }
+
+        //private static XElement ToElementOrNull<T>(string name, T value) where T : class
+        //{
+        //    return value != null ? new XElement(name, value) : null;
+        //}
     }
 }

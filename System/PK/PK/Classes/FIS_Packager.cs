@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PK.Classes.FIS_ExportClasses;
+using static PK.Classes.FIS_ExportClasses;
 
 namespace PK.Classes
 {
@@ -393,7 +393,7 @@ namespace PK.Classes
                     docs,
                     appl.Comment,
                     benefits,
-                    testsResults,
+                    testsResults.Count != 0 ? testsResults : null,
                     achievements
                     ));
             }
