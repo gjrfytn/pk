@@ -86,14 +86,19 @@ namespace PK.Forms
                                 else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Направление имеет профиль или включено в кампанию. Выполнить удаление направления и связанных профилей?",
                                     "Связь с кампанией"))
                                 {
-                                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
-                                    { { "profiles_direction_faculty", _FacultyShortName }, { "profiles_direction_id", r.Cells[0].Value } });
+                                    using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                    {
+                                        _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                                    { { "profiles_direction_faculty", _FacultyShortName }, { "profiles_direction_id", r.Cells[0].Value } }, transaction);
                                     _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
-                                        { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value }});
+                                        { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value }}, transaction);
                                     _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "direction_faculty", _FacultyShortName },
-                                        { "direction_id", r.Cells[0].Value } });
+                                        { "direction_id", r.Cells[0].Value } }, transaction);
                                     _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object> { { "faculty_short_name", _FacultyShortName },
-                                        { "direction_id", r.Cells[0].Value } });
+                                        { "direction_id", r.Cells[0].Value } }, transaction);
+
+                                        transaction.Commit();
+                                    }
                                 }
                             }
                         }

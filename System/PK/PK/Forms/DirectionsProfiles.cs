@@ -106,15 +106,21 @@ namespace PK.Forms
                             MessageBox.Show("На данный профиль подано заявление. Удаление невозможно.");
                         else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Профиль включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
                         {
-                            _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            {
+                                _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
                             { { "profiles_direction_faculty", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value },
                                 { "profiles_direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value },
-                                { "profiles_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } });
+                                { "profiles_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } }, transaction);
 
                             _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
                                 { { "faculty_short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_FacultyName.Index].Value },
                                 { "direction_id", dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value },
-                                { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } });
+                                { "short_name", dgvDirections.SelectedRows[0].Cells[dgvDirections_ShortName.Index].Value } }, transaction);
+
+                                transaction.Commit();
+                            }
+
                             UpdateTable();
                         }
                     }
