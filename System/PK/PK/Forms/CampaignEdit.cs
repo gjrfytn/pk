@@ -135,11 +135,13 @@ namespace PK.Forms
         {
             bool progressEnabled = true;
 
-            if (_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id" },
-                        new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object> ("name", Relation.EQUAL, tbName.Text)
-                            }).Count != 0)
+            List<object[]> foundCampaign = _DB_Connection.Select(
+                DB_Table.CAMPAIGNS,
+                new string[] { "id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("name", Relation.EQUAL, tbName.Text) }
+                );
+
+            if (foundCampaign.Count != 0 && (_CampaignId.HasValue && _CampaignId.Value != (uint)foundCampaign[0][0] || !_CampaignId.HasValue))
                 MessageBox.Show("Кампания с таким именем уже существует.");
             else
             {
@@ -158,18 +160,28 @@ namespace PK.Forms
                 if (progressEnabled)
                 {
                     if (!cbEduFormO.Checked && !cbEduFormOZ.Checked && !cbEduFormZ.Checked)
-                        MessageBox.Show("Не выбраны формы обучения.");                    
+                        MessageBox.Show("Не выбраны формы обучения.");
                     else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked)
                         MessageBox.Show("Не выбран уровень образования.");
-                    else if (!_CampaignId.HasValue)
+                    else
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                        {
+                            if (!_CampaignId.HasValue)
                             {
-                                SaveCampaign();
+                                SaveCampaign(transaction);
                                 DialogResult = DialogResult.OK;
                             }
-                        else
-                        {
-                            UpdateCampaign();
+                            else
+                                UpdateCampaign(transaction);
+
+                            transaction.Commit();
                         }
+
+                        Cursor.Current = Cursors.Default;
+                    }
                 }
             }            
         }
@@ -430,29 +442,26 @@ namespace PK.Forms
         }
 
 
-        private void SaveCampaign()
+        private void SaveCampaign(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            Cursor.Current = Cursors.WaitCursor;
             _CampaignId = _DB_Connection.Insert(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {
                             { "name", tbName.Text }, { "start_year",  Convert.ToInt32(cbStartYear.SelectedItem)},
                             { "end_year", Convert.ToInt32(cbEndYear.SelectedItem) },
                             { "status_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_STATUS}, { "status_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_STATUS, cbState.SelectedItem.ToString()) },
-                            { "type_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_TYPE}, { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_TYPE, cbType.SelectedItem.ToString()) } });
+                            { "type_dict_id",  (uint)FIS_Dictionary.CAMPAIGN_TYPE}, { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.CAMPAIGN_TYPE, cbType.SelectedItem.ToString()) } }, transaction);
 
-            SaveEduForms();
-            SaveEduLevels();
-            SaveFaculties();
-            SaveDirections();
-            SaveTargetOrganizations();
-            SaveProfiles();            
-            SaveEntranceTests();
-            Cursor.Current = Cursors.Default;
+            SaveEduForms(transaction);
+            SaveEduLevels(transaction);
+            SaveFaculties(transaction);
+            SaveDirections(transaction);
+            SaveTargetOrganizations(transaction);
+            SaveProfiles(transaction);            
+            SaveEntranceTests(transaction);
         }
 
-        private void UpdateCampaign()
+        private void UpdateCampaign(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            Cursor.Current = Cursors.WaitCursor;
             _DB_Connection.Update(DB_Table.CAMPAIGNS, new Dictionary<string, object>
                         {   { "name", tbName.Text }, { "start_year",  int.Parse(cbStartYear.SelectedItem.ToString())},
                             { "end_year", int.Parse(cbEndYear.SelectedItem.ToString()) },
@@ -461,16 +470,15 @@ namespace PK.Forms
                         new Dictionary<string, object>
                         {
                             { "id", _CampaignId}
-                        });
+                        }, transaction);
 
-            UpdateEduForms();
-            UpdateEduLevels();
-            UpdateFaculties();
-            UpdateDirections();
-            UpdateTargetOrganizations();            
-            UpdateProfiles();
-            UpdateEntranceTests();
-            Cursor.Current = Cursors.Default;
+            UpdateEduForms(transaction);
+            UpdateEduLevels(transaction);
+            UpdateFaculties(transaction);
+            UpdateDirections(transaction);
+            UpdateTargetOrganizations(transaction);            
+            UpdateProfiles(transaction);
+            UpdateEntranceTests(transaction);
         }
 
         private void LoadCampaign()
@@ -507,53 +515,53 @@ namespace PK.Forms
         }
 
 
-        private void SaveEduForms()
+        private void SaveEduForms(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (cbEduFormO.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
                         { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма") } });
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очная форма") } }, transaction);
             if (cbEduFormOZ.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
                         { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)") } });
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Очно-заочная (вечерняя)") } }, transaction);
             if (cbEduFormZ.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                     {
                         { "campaigns_id", _CampaignId},
                         { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
-                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма") } });
+                        { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, "Заочная форма") } }, transaction);
         }
 
-        private void SaveEduLevels()
+        private void SaveEduLevels(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (cbEduLevelBacc.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат") } });
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат") } }, transaction);
 
             if (cbEduLevelMag.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура") } });
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура") } }, transaction);
 
             if (cbEduLevelSpec.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет") } });
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет") } }, transaction);
         }
 
-        private void SaveDirections()
+        private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (DataGridViewRow r in dgvDirections.Rows)
                 if (r.Index < dgvDirections.Rows.Count - 1)
@@ -572,21 +580,21 @@ namespace PK.Forms
                         { "places_budget_o", places[0]},
                         { "places_budget_oz", places[1]},
                         { "places_quota_o", places[2]},
-                        { "places_quota_oz", places[3]}});
+                        { "places_quota_oz", places[3]}}, transaction);
                 }
         }
 
-        private void SaveTargetOrganizations()
+        private void SaveTargetOrganizations(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (DataGridViewRow row in dgvTargetOrganizatons.Rows)
                     if (row.Index < dgvTargetOrganizatons.Rows.Count - 1)
                         _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId},
                             { "direction_faculty", row.Cells[dgvTargetOrganizatons_faculty.Index].Value}, { "direction_id", row.Cells[dgvTargetOrganizatons_DirID.Index].Value},
                             { "target_organization_id", row.Cells[dgvTargetOrganizatons_ID.Index].Value},
-                            { "places_o", row.Cells[dgvTargetOrganizatons_OF.Index].Value}, { "places_oz", row.Cells[dgvTargetOrganizatons_OZF.Index].Value } });
+                            { "places_o", row.Cells[dgvTargetOrganizatons_OF.Index].Value}, { "places_oz", row.Cells[dgvTargetOrganizatons_OZF.Index].Value } }, transaction);
         }
 
-        private void SaveProfiles()
+        private void SaveProfiles(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (DataGridViewRow r in dgvPaidPlaces.Rows)
                 if (r.Index < dgvPaidPlaces.Rows.Count - 1)
@@ -599,10 +607,10 @@ namespace PK.Forms
                         { "places_paid_o", r.Cells[dgvPaidPlaces_OFPM.DisplayIndex].Value},
                         { "places_paid_oz", r.Cells[dgvPaidPlaces_OZFPM.Index].Value},
                         { "places_paid_z", r.Cells[dgvPaidPlaces_ZFPM.Index].Value}
-                    });
+                    }, transaction);
         }
 
-        private void SaveFaculties()
+        private void SaveFaculties(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (DataGridViewRow r in dgvFacultities.Rows)
                 if (r.Index < dgvFacultities.Rows.Count - 1)
@@ -611,10 +619,10 @@ namespace PK.Forms
                     { "campaign_id", _CampaignId},
                     { "faculty_short_name", r.Cells[dgvFacultities_ShortFacName.Index].Value.ToString()},
                     { "hostel_places", r.Cells[dgvFacultities_HostelPlaces.Index].Value}
-                });
+                }, transaction);
         }
 
-        private void SaveEntranceTests()
+        private void SaveEntranceTests(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (!cbEduLevelMag.Checked)
                 foreach (DataGridViewRow r in dgvEntranceTests.Rows)
@@ -648,7 +656,7 @@ namespace PK.Forms
                                     { "direction_faculty", v[4]},
                                     { "subject_dict_id", v[2] },
                                     { "subject_id", v[3] }
-                                });
+                                }, transaction);
                                 found = true;
                             }
 
@@ -661,7 +669,7 @@ namespace PK.Forms
                                 { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
                                 { "subject_id", subjectId },
                                 { "priority", i }
-                            });
+                            }, transaction);
                     }
         }
 
@@ -801,7 +809,7 @@ namespace PK.Forms
         }
 
 
-        private void UpdateEduForms()
+        private void UpdateEduForms(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> eduFormsList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
                 { "dictionaries_items_item_id" },
@@ -821,7 +829,7 @@ namespace PK.Forms
                     if (!found)
                         _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                         { { "campaigns_id", _CampaignId}, {"dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM},
-                            { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, chekBox.Text) } });
+                            { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, chekBox.Text) } }, transaction);
                 }
             foreach (object[] eduForm in eduFormsList)
             {
@@ -831,11 +839,11 @@ namespace PK.Forms
                         found = true;
                 if (!found)
                     _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object> { { "campaigns_id", _CampaignId },
-                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM }, { "dictionaries_items_item_id",  (uint)eduForm[0]} });
+                        { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_FORM }, { "dictionaries_items_item_id",  (uint)eduForm[0]} }, transaction);
             }
         }
 
-        private void UpdateEduLevels()
+        private void UpdateEduLevels(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<uint> eduLevelsList = new List<uint>();
 
@@ -863,7 +871,7 @@ namespace PK.Forms
                         found = true;
                 if (!found)
                     _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", v } });
+                    { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", v } }, transaction);
             }
 
             foreach (var v in oldList)
@@ -876,12 +884,12 @@ namespace PK.Forms
                 }
                     if (!found)
                         _DB_Connection.Delete(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
-                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", (uint)v[0] } });
+                        { { "campaigns_id", _CampaignId }, { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL }, { "dictionaries_items_item_id", (uint)v[0] } }, transaction);
                 
             }
         }
 
-        private void UpdateDirections()
+        private void UpdateDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> missingDirections = new List<object[]>();
             List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[]
@@ -921,21 +929,21 @@ namespace PK.Forms
                     new Dictionary<string, object> { { "places_budget_o", int.Parse(newList[index][2]) }, { "places_budget_oz", int.Parse(newList[index][3])},
                         {"places_quota_o", int.Parse(newList[index][4])}, { "places_quota_oz", int.Parse(newList[index][5])} },
                     new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", v[0].ToString() },
-                        { "direction_id", v[1]} });
+                        { "direction_id", v[1]} }, transaction);
                     newList.RemoveAt(index);
                 }
                 else
                     _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", v[0].ToString() },
-                    { "direction_id", (uint)v[1] } });
+                    { "direction_id", (uint)v[1] } }, transaction);
             }
             foreach (var v in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
                 { { "campaign_id", _CampaignId }, { "direction_faculty", v[0] }, { "direction_id", uint.Parse(v[1]) },
                     { "places_budget_o",int.Parse(v[2]) },{ "places_budget_oz", int.Parse(v[3])},
-                    {"places_quota_o", int.Parse(v[4])}, { "places_quota_oz", int.Parse(v[5])}});
+                    {"places_quota_o", int.Parse(v[4])}, { "places_quota_oz", int.Parse(v[5])}}, transaction);
         }
 
-        private void UpdateTargetOrganizations()
+        private void UpdateTargetOrganizations(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_faculty", "direction_id", "target_organization_id",
                 "places_o", "places_oz" }, new List<Tuple<string, Relation, object>>
@@ -971,7 +979,7 @@ namespace PK.Forms
                 {
                     _DB_Connection.Update(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> { { "places_o",  int.Parse(item[3])},
                         { "places_oz", int.Parse(item[4]) } }, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "direction_faculty", oldList[j][0]},
-                            { "direction_id", (uint)oldList[j][1] }, { "target_organization_id", (uint)oldList[j][2] } });
+                            { "direction_id", (uint)oldList[j][1] }, { "target_organization_id", (uint)oldList[j][2] } }, transaction);
                     oldList.RemoveAt(j);
                     newList.Remove(item);
                 }
@@ -981,13 +989,13 @@ namespace PK.Forms
             foreach (string[] record in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
                         { "direction_faculty", record[0]}, { "direction_id", uint.Parse(record[1]) }, { "target_organization_id", uint.Parse(record[2]) },
-                        { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) } });
+                        { "places_o",  uint.Parse(record[3])}, { "places_oz", uint.Parse(record[4]) } }, transaction);
             foreach (object[] record in oldList)
                 _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new Dictionary<string, object> {{ "campaign_id", _CampaignId },
-                        { "direction_faculty", record[0].ToString()}, { "direction_id", (uint)record[1] }, { "target_organization_id", (uint)record[2] }});
+                        { "direction_faculty", record[0].ToString()}, { "direction_id", (uint)record[1] }, { "target_organization_id", (uint)record[2] }}, transaction);
         }
 
-        private void UpdateFaculties()
+        private void UpdateFaculties(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_FACULTIES_DATA, new string[]
            { "faculty_short_name", "hostel_places" }, new List<Tuple<string, Relation, object>>
@@ -1015,18 +1023,18 @@ namespace PK.Forms
                 {
                     _DB_Connection.Update(DB_Table.CAMPAIGNS_FACULTIES_DATA,
                         new Dictionary<string, object> { { "hostel_places", places } },
-                        new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } });
+                        new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } }, transaction);
                     newList.RemoveAt(newList.FindIndex(x => x[0] == v[0].ToString()));
                 }
                 else
-                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } });
+                    _DB_Connection.Delete(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object> { { "campaign_id", _CampaignId }, { "faculty_short_name", v[0].ToString() } }, transaction);
             }
             foreach (var v in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object>
-                { { "faculty_short_name", v[0]}, { "hostel_places", int.Parse(v[1])}, { "campaign_id", _CampaignId} });
+                { { "faculty_short_name", v[0]}, { "hostel_places", int.Parse(v[1])}, { "campaign_id", _CampaignId} }, transaction);
         }
 
-        private void UpdateProfiles()
+        private void UpdateProfiles(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> oldList = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[]
             { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name",
@@ -1060,21 +1068,21 @@ namespace PK.Forms
                     new Dictionary<string, object> { { "places_paid_o", int.Parse(newList[index][3]) }, { "places_paid_oz", int.Parse(newList[index][4])},
                         { "places_paid_z", int.Parse(newList[index][5])}},
                     new Dictionary<string, object> { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0].ToString() },
-                        { "profiles_direction_id", v[1]}, { "profiles_short_name", v[2].ToString()} });
+                        { "profiles_direction_id", v[1]}, { "profiles_short_name", v[2].ToString()} }, transaction);
                     newList.RemoveAt(index);
                 }
                 else
                     _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object> { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0].ToString() },
-                        { "profiles_direction_id", v[1]}, { "profiles_short_name", v[2].ToString()} });
+                        { "profiles_direction_id", v[1]}, { "profiles_short_name", v[2].ToString()} }, transaction);
             }
             foreach (var v in newList)
                 _DB_Connection.Insert(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
                 { { "campaigns_id", _CampaignId }, { "profiles_direction_faculty", v[0] }, { "profiles_direction_id", int.Parse(v[1]) },
                     { "profiles_short_name", v[2]}, { "places_paid_o", int.Parse(v[3]) },{ "places_paid_oz", int.Parse(v[4])},
-                    { "places_paid_z",int.Parse(v[5])}});
+                    { "places_paid_z",int.Parse(v[5])}}, transaction);
         }
 
-        private void UpdateEntranceTests()
+        private void UpdateEntranceTests(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (!cbEduLevelMag.Checked)
             {
@@ -1106,7 +1114,7 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.ENTRANCE_TESTS,
                             new Dictionary<string, object> { { "priority", int.Parse(r[3]) } },
                             new Dictionary<string, object> { { "direction_id", v[0] }, { "subject_dict_id", v[1] },
-                            { "subject_id", v[2]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4] } });
+                            { "subject_id", v[2]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4] } }, transaction);
                             newList.Remove(r);
                             found = true;
                             break;
@@ -1114,13 +1122,13 @@ namespace PK.Forms
                     if (!found)
                         _DB_Connection.Delete(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object> { { "direction_id", (uint)(v[0]) },
                         { "subject_dict_id", (uint)(v[1]) }, { "subject_id", (uint)(v[2]) },
-                    { "priority", v[3]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} });
+                    { "priority", v[3]}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} }, transaction);
                 }
 
                 foreach (var v in newList)
                     _DB_Connection.Insert(DB_Table.ENTRANCE_TESTS, new Dictionary<string, object>
                 { { "direction_id", uint.Parse(v[0]) }, { "subject_dict_id", uint.Parse(v[1]) }, { "subject_id", uint.Parse(v[2]) },
-                    { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} });
+                    { "priority", int.Parse(v[3])}, { "campaign_id", _CampaignId}, { "direction_faculty", v[4]} }, transaction);
             }
         }
     }

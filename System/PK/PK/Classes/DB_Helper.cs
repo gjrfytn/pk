@@ -174,7 +174,7 @@ namespace PK.Classes
             IEnumerable<object[]> newDataList,
             string[] fieldsNames,
             string[] keyFieldsNames,
-            MySql.Data.MySqlClient.MySqlTransaction transaction = null)
+            MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             #region Contracts
             if (oldDataList == null)
@@ -185,6 +185,8 @@ namespace PK.Classes
                 throw new System.ArgumentNullException(nameof(fieldsNames));
             if (keyFieldsNames == null)
                 throw new System.ArgumentNullException(nameof(keyFieldsNames));
+            if (transaction == null)
+                throw new System.ArgumentNullException(nameof(transaction));
             if (fieldsNames.Length == 0)
                 throw new System.ArgumentException("Массив с именами полей должен содержать хотя бы один элемент.", nameof(fieldsNames));
             if (keyFieldsNames.Length == 0)
