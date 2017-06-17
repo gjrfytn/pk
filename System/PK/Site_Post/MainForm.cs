@@ -185,7 +185,8 @@ namespace SitePost
                     if (mark.Value > value)
                     {
                         value = mark.Value;
-                        if (mark.FromExam)
+                        DateTime? date = mark.FromExamDate as DateTime?;
+                        if (date != null)
                             check = 2;
                         else if (mark.Checked)
                             check = 1;
