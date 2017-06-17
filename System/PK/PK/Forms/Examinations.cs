@@ -32,10 +32,9 @@ namespace PK.Forms
             UpdateTable();
         }
 
-        private void dataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count != 0)
-                ToggleButtons();
+            ToggleButtons();
         }
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
@@ -60,14 +59,9 @@ namespace PK.Forms
 
         private void toolStrip_Edit_Click(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count != 0)
-            {
-                ExaminationEdit form = new ExaminationEdit(_DB_Connection, SelectedExamID);
-                form.ShowDialog();
-                UpdateTable();
-            }
-            else
-                MessageBox.Show("Выберите экзамен.");
+            ExaminationEdit form = new ExaminationEdit(_DB_Connection, SelectedExamID);
+            form.ShowDialog();
+            UpdateTable();
         }
 
         private void toolStrip_Delete_Click(object sender, EventArgs e)
@@ -81,12 +75,6 @@ namespace PK.Forms
 
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Выберите экзамен.");
-                return;
-            }
-
             if (ExaminationHasMarks(SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
 
@@ -176,14 +164,9 @@ namespace PK.Forms
 
         private void toolStrip_Marks_Click(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count != 0)
-            {
-                ExaminationMarks form = new ExaminationMarks(_DB_Connection, SelectedExamID);
-                form.ShowDialog();
-                ToggleButtons();
-            }
-            else
-                MessageBox.Show("Выберите экзамен.");
+            ExaminationMarks form = new ExaminationMarks(_DB_Connection, SelectedExamID);
+            form.ShowDialog();
+            ToggleButtons();
         }
 
         private void toolStrip_Print_Click(object sender, EventArgs e)
@@ -214,11 +197,23 @@ namespace PK.Forms
 
         private void ToggleButtons()
         {
-            bool hasMarks = ExaminationHasMarks(SelectedExamID);
-            toolStrip_Edit.Enabled = !hasMarks;
-            toolStrip_Delete.Enabled = !hasMarks;
-            toolStrip_Marks.Enabled = hasMarks;
-            toolStrip_Print.Enabled = hasMarks;
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                toolStrip_Edit.Enabled = false;
+                toolStrip_Delete.Enabled = false;
+                toolStrip_Distribute.Enabled = false;
+                toolStrip_Marks.Enabled = false;
+                toolStrip_Print.Enabled = false;
+            }
+            else
+            {
+                bool hasMarks = ExaminationHasMarks(SelectedExamID);
+                toolStrip_Edit.Enabled = !hasMarks;
+                toolStrip_Delete.Enabled = !hasMarks;
+                toolStrip_Distribute.Enabled = true;
+                toolStrip_Marks.Enabled = hasMarks;
+                toolStrip_Print.Enabled = hasMarks;
+            }
         }
 
         private bool ExaminationHasMarks(uint id)

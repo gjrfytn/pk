@@ -36,6 +36,7 @@
             this.dataGridView_Role = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridView_Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel = new System.Windows.Forms.Panel();
+            this.bDelete = new System.Windows.Forms.Button();
             this.bAdd = new System.Windows.Forms.Button();
             this.cbShowPasswords = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -45,6 +46,7 @@
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeColumns = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -60,16 +62,17 @@
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(672, 388);
+            this.dataGridView.RowHeadersVisible = false;
+            this.dataGridView.Size = new System.Drawing.Size(734, 473);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView_CellValidating);
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
-            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
             // dataGridView_Login
             // 
             this.dataGridView_Login.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_Login.DataPropertyName = "login";
-            this.dataGridView_Login.FillWeight = 65F;
+            this.dataGridView_Login.FillWeight = 50F;
             this.dataGridView_Login.HeaderText = "Логин";
             this.dataGridView_Login.Name = "dataGridView_Login";
             this.dataGridView_Login.ReadOnly = true;
@@ -78,7 +81,7 @@
             // 
             this.dataGridView_Password.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridView_Password.DataPropertyName = "password";
-            this.dataGridView_Password.FillWeight = 75F;
+            this.dataGridView_Password.FillWeight = 40F;
             this.dataGridView_Password.HeaderText = "Пароль";
             this.dataGridView_Password.Name = "dataGridView_Password";
             this.dataGridView_Password.Visible = false;
@@ -92,17 +95,16 @@
             // 
             // dataGridView_Phone
             // 
-            this.dataGridView_Phone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_Phone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridView_Phone.DataPropertyName = "phone_number";
-            this.dataGridView_Phone.FillWeight = 50F;
             this.dataGridView_Phone.HeaderText = "Телефон";
             this.dataGridView_Phone.Name = "dataGridView_Phone";
+            this.dataGridView_Phone.Width = 90;
             // 
             // dataGridView_Role
             // 
-            this.dataGridView_Role.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridView_Role.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridView_Role.DataPropertyName = "role";
-            this.dataGridView_Role.FillWeight = 55F;
             this.dataGridView_Role.HeaderText = "Роль";
             this.dataGridView_Role.Items.AddRange(new object[] {
             "registrator",
@@ -111,6 +113,7 @@
             this.dataGridView_Role.Name = "dataGridView_Role";
             this.dataGridView_Role.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView_Role.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridView_Role.Width = 90;
             // 
             // dataGridView_Comment
             // 
@@ -121,13 +124,24 @@
             // 
             // panel
             // 
+            this.panel.Controls.Add(this.bDelete);
             this.panel.Controls.Add(this.bAdd);
             this.panel.Controls.Add(this.cbShowPasswords);
             this.panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel.Location = new System.Drawing.Point(0, 388);
+            this.panel.Location = new System.Drawing.Point(0, 473);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(672, 48);
+            this.panel.Size = new System.Drawing.Size(734, 38);
             this.panel.TabIndex = 1;
+            // 
+            // bDelete
+            // 
+            this.bDelete.Location = new System.Drawing.Point(93, 6);
+            this.bDelete.Name = "bDelete";
+            this.bDelete.Size = new System.Drawing.Size(75, 23);
+            this.bDelete.TabIndex = 2;
+            this.bDelete.Text = "Удалить";
+            this.bDelete.UseVisualStyleBackColor = true;
+            this.bDelete.Click += new System.EventHandler(this.bDelete_Click);
             // 
             // bAdd
             // 
@@ -137,11 +151,12 @@
             this.bAdd.TabIndex = 1;
             this.bAdd.Text = "Добавить";
             this.bAdd.UseVisualStyleBackColor = true;
+            this.bAdd.Click += new System.EventHandler(this.bAdd_Click);
             // 
             // cbShowPasswords
             // 
             this.cbShowPasswords.AutoSize = true;
-            this.cbShowPasswords.Location = new System.Drawing.Point(535, 10);
+            this.cbShowPasswords.Location = new System.Drawing.Point(597, 10);
             this.cbShowPasswords.Name = "cbShowPasswords";
             this.cbShowPasswords.Size = new System.Drawing.Size(125, 17);
             this.cbShowPasswords.TabIndex = 0;
@@ -153,7 +168,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(672, 436);
+            this.ClientSize = new System.Drawing.Size(734, 511);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -162,6 +177,7 @@
             this.Name = "Users";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Пользователи";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Users_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
@@ -175,6 +191,7 @@
         private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.CheckBox cbShowPasswords;
         private System.Windows.Forms.Button bAdd;
+        private System.Windows.Forms.Button bDelete;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Login;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Password;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Name;

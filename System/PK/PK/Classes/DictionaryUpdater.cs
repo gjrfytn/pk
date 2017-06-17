@@ -152,7 +152,7 @@ namespace PK.Classes
             if (deletedReport != "")
                 deletedReport = "\n\nВнимание: в ФИС отсутствуют направления с ID: " + deletedReport.Remove(deletedReport.Length - 2);
 
-            MessageBox.Show(addedReport + deletedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowUpdateMessage(addedReport + deletedReport);
         }
 
         public void UpdateOlympicsDictionary()
@@ -327,7 +327,7 @@ namespace PK.Classes
             if (deletedReport != "")
                 deletedReport = "\n\nВнимание: в ФИС отсутствуют объекты с ID: " + deletedReport.Remove(deletedReport.Length - 2);
 
-            MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowUpdateMessage(addedReport);
         }
 
         private void UpdateDictionaryItems(FIS_Dictionary dictionary, string dictionaryName, Dictionary<uint, string> fisDictionaryItems)
@@ -368,7 +368,7 @@ namespace PK.Classes
             if (addedCount != 0)
             {
                 addedReport += "\nВсего: " + addedCount;
-                MessageBox.Show(addedReport, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ShowUpdateMessage(addedReport);
             }
 
             if (deletedReport != "")
@@ -376,6 +376,11 @@ namespace PK.Classes
                 deletedReport = "Справочник №" + dictionary + ": в ФИС отсутствуют элементы с ID: " + deletedReport.Remove(deletedReport.Length - 2);
                 MessageBox.Show(deletedReport, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void ShowUpdateMessage(string text)
+        {
+            MessageBox.Show(text, "Справочник обновлён", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

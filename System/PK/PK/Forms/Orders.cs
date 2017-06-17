@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PK.Forms
 {
@@ -66,9 +65,7 @@ namespace PK.Forms
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, SelectedOrderNumber) }
                     )[0][0];
 
-                toolStrip_Delete.Enabled = false;
-                toolStrip_Register.Enabled = false;
-                toolStrip_Print.Enabled = true;
+                ToggleButtons();
             }
         }
 
@@ -92,16 +89,9 @@ namespace PK.Forms
                 e.Cancel = true;
         }
 
-        private void dataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            bool registered = dataGridView[dataGridView_ProtNumber.Index, e.RowIndex].Value != null;
-
-            toolStrip_Edit.Text = registered ? "Просмотреть..." : "Редактировать...";
-            toolStrip_Edit.Image = registered ? Properties.Resources.glass : Properties.Resources.pen;
-
-            toolStrip_Delete.Enabled = !registered;
-            toolStrip_Register.Enabled = !registered;
-
+            ToggleButtons();
         }
 
         private void UpdateTable()
@@ -126,6 +116,29 @@ namespace PK.Forms
                     row[7] is uint ? row[6].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)row[7]).Item1 : null,
                     row[8] is string ? Classes.DB_Queries.GetProfileName(_DB_Connection, row[6].ToString(), (uint)row[7], row[8].ToString()) : null
                     );
+        }
+
+        private void ToggleButtons()
+        {
+            if (dataGridView.SelectedRows.Count == 0)
+            {
+                toolStrip_Edit.Enabled = false;
+                toolStrip_Delete.Enabled = false;
+                toolStrip_Register.Enabled = false;
+                toolStrip_Print.Enabled = false;
+            }
+            else
+            {
+                bool registered = dataGridView.SelectedRows[0].Cells[dataGridView_ProtNumber.Index].Value != null;
+
+                toolStrip_Edit.Text = registered ? "Просмотреть..." : "Редактировать...";
+                toolStrip_Edit.Image = registered ? Properties.Resources.glass : Properties.Resources.pen;
+
+                toolStrip_Edit.Enabled = true;
+                toolStrip_Delete.Enabled = !registered;
+                toolStrip_Register.Enabled = !registered;
+                toolStrip_Print.Enabled = true;
+            }
         }
     }
 }
