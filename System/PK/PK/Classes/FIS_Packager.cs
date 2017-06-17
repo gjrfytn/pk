@@ -243,7 +243,7 @@ namespace PK.Classes
 
             var applicationsBD = connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions" },
+                new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions", "priority_right" },
                 new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID) }
                 ).Join(
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
@@ -258,6 +258,7 @@ namespace PK.Classes
                     Status = _StatusesMap[s1[4].ToString()],
                     Comment = s1[5] as string,
                     SpecialCond = (bool)s1[6],
+                    PriorityRight = s1[7] as bool?,
                     Info = s2[1] as string,
                     Email = s2[2].ToString()
                 });
@@ -274,7 +275,7 @@ namespace PK.Classes
                     k => System.Tuple.Create((uint)k[0], k[1], (uint)k[2]),
                     e => new
                     {
-                        TargetOrg = e[3] as uint?, //TODO Что с целевой орг. делать?
+                        TargetOrg = e[3] as uint?,
                         AgreedDate = e[4] as System.DateTime?,
                         DisagreedDate = e[5] as System.DateTime?
                     },
@@ -294,7 +295,6 @@ namespace PK.Classes
                                 ComposeCompGroupUID(
                                     campaignID,
                                     k.Item1,
-                                    //Utility.DirCodesEduLevels[new DB_Helper(connection).GetDirectionNameAndCode(k.Item1).Item2.Split('.')[1]],
                                     (uint)k.Item2,
                                     k.Item3
                                     ),
@@ -305,30 +305,37 @@ namespace PK.Classes
                         };
                     });
 
-                //Сохранять все документы?
-
-                //Подал на квоту
-                //Просмотреть таблицу льгот
-                //Просмотреть таблицу документов
-
                 List<ApplicationCommonBenefit> benefits = null;
 
-                //if (finSourceEduForms.Any(s => s.EduSource == 20))//TODO
-                //{
-                //    List<object[]> benefits_bd= connection.Select(
-                //           DB_Table.APPLICATION_COMMON_BENEFITS,
-                //           new string[] { "id", "document_type_id", "reason_document_id", "allow_education_document_id", "benefit_kind_id" },
-                //           new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) }
-                //           );
+                //List<object[]> benefitsBD = connection.Select( //TODO
+                //    DB_Table.APPLICATION_COMMON_BENEFITS,
+                //    new string[] { "id", "document_type_id", "reason_document_id", "allow_education_document_id", "benefit_kind_id" },
+                //    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) }
+                //    );
 
-                //    if(benefits_bd.Count!=0)
-                //        foreach (object[] row in benefits_bd)
-                //            benefits.Add(new ApplicationCommonBenefit(
-                //                new TUID(row[0].ToString()),
-                //                new TUID(
+                //if (benefitsBD.Any())
+                //{
+                //    benefits = new List<ApplicationCommonBenefit>(benefitsBD.Count);
+                //    foreach (object[] row in benefitsBD)
+                //        if ((uint)row[4] == 4)
+                //            foreach (var entrance in finSourceEduForms.Where(s => s.EduSource == 20)) //TODO
+                //                benefits.Add(new ApplicationCommonBenefit(
+                //                    new TUID(row[0].ToString()),
+                //                    entrance.FSEF.CompetitiveGroupUID,
+                //                    (uint)row[1],
+                //                    new DocumentReason(row[2]),
+                //                    (uint)row[4]
+                //                    ));
+                //        else
+                //            foreach (var entrance in finSourceEduForms)
+                //                benefits.Add(new ApplicationCommonBenefit(
+                //                    new TUID(row[0].ToString()),
+                //                    entrance.FSEF.CompetitiveGroupUID,
+                //                    (uint)row[1],
+                //                    new DocumentReason(row[2]),
+                //                    (uint)row[4]
                 //                    ));
                 //}
-
 
                 List<IndividualAchievement> achievements = null;
 
@@ -352,8 +359,9 @@ namespace PK.Classes
                             new TUID(ach.ID),
                             new TUID(ach.InstAchID),
                             new TUID(ach.DocID),
-                            instAch[ach.InstAchID]
-                            ));//TODO Преимущественное право?
+                            instAch[ach.InstAchID],
+                            appl.PriorityRight.HasValue ? appl.PriorityRight : null
+                            ));
                 }
 
                 ApplicationDocuments docs = PackApplicationDocuments(connection, appl.ID);
@@ -362,7 +370,8 @@ namespace PK.Classes
                     connection,
                     campaignID,
                     finSourceEduForms.Select(s => System.Tuple.Create(s.DirID, s.FSEF.CompetitiveGroupUID)),
-                    marks.Where(s => s.ApplID == appl.ID)
+                    marks.Where(s => s.ApplID == appl.ID),
+                    null//TODO  new IsDisabled(
                     );
 
                 applications.Add(new Application(
@@ -383,7 +392,7 @@ namespace PK.Classes
                     finSourceEduForms.Select(s => s.FSEF).ToList(),
                     docs,
                     appl.Comment,
-                    benefits,//TODO 
+                    benefits,
                     testsResults,
                     achievements
                     ));
@@ -659,7 +668,7 @@ namespace PK.Classes
             EduDocument eduDoc = null;
             OrphanDocument orphanDoc = null;
             SportDocument sportDoc = null;
-            CustomDocument customDoc = null;
+            List<CustomDocument> customDocs = new List<CustomDocument>();
             foreach (var doc in connection.CallProcedure("get_application_docs", applicationID).Select(
                 s => new
                 {
@@ -771,13 +780,23 @@ namespace PK.Classes
                                 new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
                                 )[0];
 
-                            sportDoc = new SportDocument(new TSportDocument(
-                                new TUID(doc.ID),
-                                123,//TODO (uint)data[1],
-                                data[0].ToString(),
-                                new TDate(doc.Date.Value),
-                                doc.Organization
-                                ));
+                            uint? category = data[1] as uint?; //TODO Записывать изначально как custom
+
+                            if (category.HasValue)
+                                sportDoc = new SportDocument(new TSportDocument(
+                                    new TUID(doc.ID),
+                                    category.Value,
+                                    data[0].ToString(),
+                                    new TDate(doc.Date.Value),
+                                    doc.Organization
+                                    ));
+                            else
+                                customDocs.Add(new CustomDocument(new TCustomDocument(
+                                    new TUID(doc.ID),
+                                    data[0].ToString(),
+                                    new TDate(doc.Date.Value),
+                                    doc.Organization
+                                    )));
                         }
                         break;
                     case "custom":
@@ -788,16 +807,16 @@ namespace PK.Classes
                                 new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
                                 )[0];
 
-                            customDoc = new CustomDocument(new TCustomDocument(
+                            customDocs.Add(new CustomDocument(new TCustomDocument(
                                 new TUID(doc.ID),
                                 data[0].ToString(),
-                                null, //TODO
-                                null, //TODO
+                                new TDate(doc.Date.Value),
+                                doc.Organization,
                                 null,
                                 null,
                                 null,
                                 data[1].ToString()
-                                ));
+                                )));
                         }
                         break;
                 }
@@ -818,7 +837,7 @@ namespace PK.Classes
                 null,
                 null,
                 null,
-                customDoc != null ? new List<CustomDocument> { customDoc } : null
+                customDocs.Count != 0 ? customDocs : null
                 );
         }
 
@@ -826,12 +845,13 @@ namespace PK.Classes
             DB_Connector connection,
             uint campaignID,
             IEnumerable<System.Tuple<uint, TUID>> directionsAndCompGroupsIDs,
-            IEnumerable<DB_Queries.Mark> applMarks)
+            IEnumerable<DB_Queries.Mark> applMarks,
+            IsDisabled specCondDoc)
         {
             List<EntranceTestResult> testsResults = new List<EntranceTestResult>();
             foreach (var entr in directionsAndCompGroupsIDs)
             {
-                IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, campaignID, entr.Item1).Distinct(); //TODO distinct пока не поменяли связть таблицы
+                IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, campaignID, entr.Item1).Distinct(); //TODO distinct пока не поменяли связь таблицы
 
                 foreach (var res in dir_subjects.Join(
                     applMarks,
@@ -842,13 +862,17 @@ namespace PK.Classes
                     testsResults.Add(new EntranceTestResult(
                         new TUID(entr.Item2.Value + res.SubjID.ToString()),
                         res.Value,
-                        (uint)(res.FromExam ? 2 : 1),//TODO
+                        (uint)(res.FromExamDate.HasValue ? 2 : 1),//TODO
                         new TEntranceTestSubject(res.SubjID),
                         1,
                         entr.Item2,
-                        //res.Item5 ? new ResultDocument(new TInstitutionDocument(new TDocumentNumber("1241415"))):null, TODO Для испытаний ОО
-                        null//,
-                            //TODO ? appl.SpecialCond
+                        res.FromExamDate.HasValue ? new ResultDocument(new TInstitutionDocument(
+                            new TDocumentNumber("Экзаменационная ведомость от " + res.FromExamDate.Value.ToShortDateString()),
+                            new TDate(res.FromExamDate.Value),
+                            1
+                            )) : null,
+                        null,
+                        res.FromExamDate.HasValue ? specCondDoc : null
                         ));
             }
 

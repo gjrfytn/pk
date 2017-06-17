@@ -12,15 +12,15 @@ namespace PK.Classes
             public readonly uint SubjID;
             public readonly byte Value;
             public readonly bool Checked;
-            public readonly bool FromExam;
+            public readonly DateTime? FromExamDate;
 
-            public Mark(uint applID, uint subjID, byte value, bool checked_, bool fromExam)
+            public Mark(uint applID, uint subjID, byte value, bool checked_, DateTime? fromExamDate)
             {
                 ApplID = applID;
                 SubjID = subjID;
                 Value = value;
                 Checked = checked_;
-                FromExam = fromExam;
+                FromExamDate = fromExamDate;
             }
         }
 
@@ -63,7 +63,7 @@ namespace PK.Classes
                 connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked"),
                 k1 => k1,
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3], Exam = false }
+                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3], ExamDate = (DateTime?)null }
                 ).Concat(
                 applications.Join(
                 connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
@@ -80,12 +80,12 @@ namespace PK.Classes
                         .Where(s => ((DateTime)s[2]).Year == (uint)campStartEnd[0] || ((DateTime)s[2]).Year == (uint)campStartEnd[1]),
                         k1 => k1[1],
                         k2 => k2[0],
-                        (s1, s2) => new { EntrID = (uint)s1[0], Subj = (uint)s2[1], Mark = (short)s1[2] }
+                        (s1, s2) => new { EntrID = (uint)s1[0], Subj = (uint)s2[1], Mark = (short)s1[2], Date = (DateTime)s2[2] }
                         ),
                     k1 => k1.EntrID,
                     k2 => k2.EntrID,
-                    (s1, s2) => new { s1.ApplID, s2.Subj, Mark = (byte)s2.Mark, Checked = true, Exam = true }
-                    )).Select(s => new Mark(s.ApplID, s.Subj, s.Mark, s.Checked, s.Exam));
+                    (s1, s2) => new { s1.ApplID, s2.Subj, Mark = (byte)s2.Mark, Checked = true, ExamDate = (DateTime?)s2.Date }
+                    )).Select(s => new Mark(s.ApplID, s.Subj, s.Mark, s.Checked, s.ExamDate));
         }
 
         //TODO faculty_short_name и direction_id будут не нужны, если краткое имя профиля уникально.

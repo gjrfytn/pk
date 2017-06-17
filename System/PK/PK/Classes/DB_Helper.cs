@@ -191,8 +191,7 @@ namespace PK.Classes
                 throw new System.ArgumentException("Массив с именами ключевых полей должен содержать хотя бы один элемент.", nameof(keyFieldsNames));
             #endregion
 
-            object nullObj = null;
-            Dictionary<string, object> whereColumns = keyFieldsNames.ToDictionary(k => k, v => nullObj);
+            Dictionary<string, object> whereColumns = keyFieldsNames.ToDictionary(k => k, v => (object)null);
             foreach (object[] oldItem in oldDataList)
             {
                 bool contains = false;
@@ -222,7 +221,7 @@ namespace PK.Classes
                 }
             }
 
-            Dictionary<string, object> columnsValues = fieldsNames.ToDictionary(k => k, v => nullObj);
+            Dictionary<string, object> columnsValues = fieldsNames.ToDictionary(k => k, v => (object)null);
             foreach (object[] newItem in newDataList)
             {
                 for (byte i = 0; i < fieldsNames.Length; ++i)
