@@ -20,7 +20,8 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector(userRole, new Classes.DB_Connector("initial", "1234").Select(
+            _DB_Connection = new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
+                new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
                 DB_Table.ROLES_PASSWORDS,
                 new string[] { "password" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }

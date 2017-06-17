@@ -36,6 +36,12 @@ namespace PK.Classes
         public const string SportDocTypeDeaflympic = "Диплом чемпиона/призера Сурдлимпийских игр";
 
         public const string MedCertificate = "Медицинская справка";
+
+        public const string SubjectMath = "Математика";
+        public const string SubjectRus = "Русский язык";
+        public const string SubjectPhis = "Физика";
+        public const string SubjectObsh = "Обществознание";
+        public const string SubjectForen = "Иностранный язык";
         #endregion
 
         private readonly DB_Connector _DB_Connection;

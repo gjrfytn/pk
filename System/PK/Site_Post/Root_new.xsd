@@ -1,0 +1,78 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="AuthData"/>
+        <xs:element name="PackageData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Abitur" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="Uin"/>
+                    <xs:element type="xs:string" name="Surname"/>
+                    <xs:element type="xs:string" name="Name"/>
+                    <xs:element type="xs:string" name="Name2"/>
+                    <xs:element type="xs:string" name="Password"/>
+                    <xs:element type="xs:byte" name="MathBall"/>
+                    <xs:element type="xs:byte" name="CheckedByFISMath"/>
+                    <xs:element type="xs:byte" name="PhisBall"/>
+                    <xs:element type="xs:byte" name="CheckedByFISPhis"/>
+                    <xs:element type="xs:byte" name="RusBall"/>
+                    <xs:element type="xs:byte" name="CheckedByFISRus"/>
+                    <xs:element type="xs:byte" name="ObshBall"/>
+                    <xs:element type="xs:byte" name="CheckedByFISObsh"/>
+                    <xs:element type="xs:byte" name="ForenBall"/>
+                    <xs:element type="xs:byte" name="CheckedByFISForen"/>
+                    <xs:element type="xs:byte" name="IABall"/>
+                    <xs:element type="xs:byte" name="ODO"/>
+					<xs:element type="xs:byte" name="Olymp"/>
+					<xs:element type="xs:byte" name="Exam"/>
+                    <xs:element type="xs:byte" name="Hostel"/>
+                    <xs:element type="xs:byte" name="PP"/>
+					<xs:element type="xs:byte" name="MCADO"/>
+					<xs:element type="xs:byte" name="Chern"/>
+                    <xs:element name="Documents">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:byte" name="ApplicationOfAdmission"/>
+                          <xs:element type="xs:byte" name="PassportCopy"/>
+                          <xs:element type="xs:byte" name="CertificateDiplomCopy"/>
+                          <xs:element type="xs:byte" name="HRRefCopy"/>
+                          <xs:element type="xs:byte" name="ReferralPK"/>
+                          <xs:element type="xs:byte" name="MedRef"/>
+                          <xs:element type="xs:byte" name="Photo"/>
+                          <xs:element type="xs:byte" name="OrphanDocument"/>
+                          <xs:element type="xs:byte" name="InvalidDocument"/>
+                          <xs:element type="xs:byte" name="PMPDocument"/>
+                          <xs:element type="xs:byte" name="AbsenceOfContraindicationsForTraining"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Applications">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Application" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element type="xs:byte" name="FormOfEducation"/>
+                                <xs:element type="xs:int" name="Direction" minOccurs="0"/>
+                                <xs:element type="xs:string" name="Profile" minOccurs="0"/>
+                                <xs:element type="xs:byte" name="Condition"/>
+                                <xs:element type="xs:byte" name="ApplicationOfConsent"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
