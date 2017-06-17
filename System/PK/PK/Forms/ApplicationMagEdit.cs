@@ -166,16 +166,28 @@ namespace PK.Forms
                     MessageBox.Show("Не выбрано ни одно направление или профиль.");
                 else if (mtbEMail.Text == "")
                     MessageBox.Show("Поле \"Email\" не заполнено");
-                else if (_ApplicationID == null)
-                {
-                    SaveApplication();
-                    btPrint.Enabled = true;
-                    btWithdraw.Enabled = true;
-                }
                 else
                 {
-                    _EditingDateTime = DateTime.Now;
-                    UpdateApplication();
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                    {
+                        if (_ApplicationID == null)
+                        {
+                            SaveApplication(transaction);
+                            btPrint.Enabled = true;
+                            btWithdraw.Enabled = true;
+                        }
+                        else
+                        {
+                            _EditingDateTime = DateTime.Now;
+                            UpdateApplication(transaction);
+                        }
+
+                        transaction.Commit();
+                    }
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
@@ -377,13 +389,26 @@ namespace PK.Forms
         {
             if (Classes.Utility.ShowChoiceMessageWithConfirmation("Забрать документы?", "Забрать документы"))
             {
-                UpdateApplication();
-                _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "status", "withdrawn" } }, new Dictionary<string, object>
-                { { "id", _ApplicationID } });
+                Cursor.Current = Cursors.WaitCursor;
+
+                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                {
+                    UpdateApplication(transaction);
+                    _DB_Connection.Update(
+                        DB_Table.APPLICATIONS,
+                        new Dictionary<string, object> { { "status", "withdrawn" } },
+                        new Dictionary<string, object> { { "id", _ApplicationID } },
+                        transaction
+                        );
+
+                    transaction.Commit();
+                }
 
                 foreach (Control control in Controls)
                     control.Enabled = false;
                 btClose.Enabled = true;
+
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -687,17 +712,15 @@ namespace PK.Forms
             e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
 
-        private void SaveApplication()
+        private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            SaveBasic();
-            SaveDiploma();
+            SaveBasic(transaction);
+            SaveDiploma(transaction);
             if (cbSpecialRights.Checked)
-                SaveQuote();
+                SaveQuote(transaction);
             if (cbMedCertificate.Checked)
-                SaveCertificate();
-            SaveDirections();
-            Cursor.Current = Cursors.Default;
+                SaveCertificate(transaction);
+            SaveDirections(transaction);
         }
 
         private void LoadApplication()
@@ -710,17 +733,15 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void UpdateApplication()
+        private void UpdateApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            UpdateBasic();
-            UpdateDocuments();
-            UpdateDirections();
-            Cursor.Current = Cursors.Default;
+            UpdateBasic(transaction);
+            UpdateDocuments(transaction);
+            UpdateDirections(transaction);
         }
 
 
-        private void SaveBasic()
+        private void SaveBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
             {
@@ -744,7 +765,7 @@ namespace PK.Forms
                 for (int i = 0; i < passwordLength; i++)
                     password += passwordChars[rand.Next(passwordChars.Length)];
                 _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
-                { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } });
+                { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, transaction);
             }
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -752,13 +773,13 @@ namespace PK.Forms
 
             _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "entrant_id", _EntrantID.Value}, { "registration_time", DateTime.Now},
                 { "needs_hostel", cbHostelNeeded.Checked}, { "registrator_login", _RegistratorLogin}, { "campaign_id", _CurrCampainID },                
-                { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked}, { "master_appl", true } });
+                { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked}, { "master_appl", true } }, transaction);
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "identity" },
-                { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} , { "organization", tbIssuedBy.Text} });
+                { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} , { "organization", tbIssuedBy.Text} }, transaction);
 
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID},
-                { "documents_id", idDocUid } });
+                { "documents_id", idDocUid } }, transaction);
 
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
@@ -767,76 +788,76 @@ namespace PK.Forms
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
-                { "reg_town", cbTown.Text}, { "reg_street", cbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} });
+                { "reg_town", cbTown.Text}, { "reg_street", cbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_index", tbPostcode.Text}, { "reg_flat", tbAppartment.Text} }, transaction);
         }
 
-        private void SaveDiploma()
+        private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             int eduDocID = 0;
             eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "high_edu_diploma" }, { "series",  tbEduDocSeries.Text},
-                { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text}, { "date", dtpDiplomaDate.Value }  }));
-            _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "text_data", tbSpecialty.Text } });
-            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } });            
+                { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text}, { "date", dtpDiplomaDate.Value }  }, transaction));
+            _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "text_data", tbSpecialty.Text } }, transaction);
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } }, transaction);            
         }
 
-        private void SaveQuote()
+        private void SaveQuote(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (_QuoteDoc.cause == "Сиротство")
             {
                 uint orphDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "orphan" },
-                    { "date", _QuoteDoc.orphanhoodDocDate} , { "organization", _QuoteDoc.orphanhoodDocOrg} });
+                    { "date", _QuoteDoc.orphanhoodDocDate} , { "organization", _QuoteDoc.orphanhoodDocOrg} }, transaction);
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", orphDocUid},
                         { "name", _QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
-                        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)} });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", orphDocUid } });
+                        { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)} }, transaction);
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", orphDocUid } }, transaction);
                 _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                         { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
                             { "reason_document_id", orphDocUid},{ "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } }, transaction);
             }
             else if (_QuoteDoc.cause == "Медицинские показатели")
             {
                 uint allowEducationDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                    { { "number", _QuoteDoc.conclusionNumber}, { "date", _QuoteDoc.conclusionDate}, { "type", "allow_education"} });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
+                    { { "number", _QuoteDoc.conclusionNumber}, { "date", _QuoteDoc.conclusionDate}, { "type", "allow_education"} }, transaction);
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } }, transaction);
 
                 if (_QuoteDoc.medCause == "Справка об установлении инвалидности")
                 {
                     uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "disability" },
-                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} });
+                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} }, transaction);
                     _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "document_id", medDocUid}, { "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
-                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} });
-                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} }, transaction);
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } }, transaction);
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                         { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")},
                             { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } }, transaction);
                 }
                 else if (_QuoteDoc.medCause == "Заключение психолого-медико-педагогической комиссии")
                 {
                     uint medDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" },
-                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} });
-                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } });
+                        { "series", _QuoteDoc.medDocSerie},  { "number", _QuoteDoc.medDocNumber} }, transaction);
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", medDocUid } }, transaction);
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                         { { "application_id", _ApplicationID}, { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                             { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")},
                             { "reason_document_id", medDocUid},{ "allow_education_document_id", allowEducationDocUid}, { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND},
-                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } });
+                            { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } }, transaction);
                 }
             }
         }
 
-        private void SaveCertificate()
+        private void SaveCertificate(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-                uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" } });
-                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", spravkaID }, { "name", Classes.DB_Helper.MedCertificate } });
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", spravkaID } });
+                uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "medical" } }, transaction);
+                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", spravkaID }, { "name", Classes.DB_Helper.MedCertificate } }, transaction);
+                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", spravkaID } }, transaction);
         }
 
-        private void SaveDirections()
+        private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (TabPage tab in tcPrograms.TabPages)
             {
@@ -851,7 +872,7 @@ namespace PK.Forms
                                     { "faculty_short_name", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((ProgramTuple)cb.SelectedValue).Item4},
                                     { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((ProgramTuple)cb.SelectedValue).Item3},
-                                    { "target_organization_id", _TargetOrganizationID }, { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} });
+                                    { "target_organization_id", _TargetOrganizationID }, { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} }, transaction);
                             }
                     }
                 else
@@ -867,7 +888,7 @@ namespace PK.Forms
                                      { "faculty_short_name",  ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM}, { "edu_form_id", ((ProgramTuple)cb.SelectedValue).Item4},
                                     { "edu_source_dict_id", (uint)FIS_Dictionary.EDU_SOURCE}, { "edu_source_id", ((ProgramTuple)cb.SelectedValue).Item3},
-                                    { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} });
+                                    { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5} }, transaction);
                             }
                     }
                 }
@@ -879,7 +900,7 @@ namespace PK.Forms
                     if (cb != null && cb.SelectedIndex != -1)
                         _DB_Connection.Insert(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
                             { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
-                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } });
+                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } }, transaction);
                 }
         }
 
@@ -1206,10 +1227,10 @@ namespace PK.Forms
         }
 
 
-        private void UpdateBasic()
+        private void UpdateBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) },
-                { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, new Dictionary<string, object> { { "id", _EntrantID } });
+                { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, new Dictionary<string, object> { { "id", _EntrantID } }, transaction);
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -1217,10 +1238,10 @@ namespace PK.Forms
             Random randNumber = new Random();
 
             _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object> { { "needs_hostel", cbHostelNeeded.Checked}, { "edit_time", _EditingDateTime},
-                { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked} }, new Dictionary<string, object> { { "id", _ApplicationID } });
+                { "first_high_edu", firstHightEdu}, { "special_conditions", cbSpecialConditions.Checked} }, new Dictionary<string, object> { { "id", _ApplicationID } }, transaction);
         }
 
-        private void UpdateDocuments()
+        private void UpdateDocuments(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> appDocumentsLinks = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
             {
@@ -1247,7 +1268,7 @@ namespace PK.Forms
                     if (document[1].ToString() == "identity")
                     {
                         _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", tbIDDocSeries.Text}, { "number", tbIDDocNumber.Text}, { "date", dtpIDDocDate.Value} ,
-                            { "organization", tbIssuedBy.Text} }, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                            { "organization", tbIssuedBy.Text} }, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
 
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
@@ -1257,7 +1278,7 @@ namespace PK.Forms
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
                             { "reg_town", cbTown.Text}, { "reg_street", cbStreet.Text}, { "reg_house", cbHouse.Text}, { "reg_flat", tbAppartment.Text}, { "reg_index", tbPostcode.Text} },
-                            new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
                     }
 
                     else if (document[1].ToString() == "high_edu_diploma")
@@ -1265,15 +1286,15 @@ namespace PK.Forms
                         if (document[6] as DateTime? != null)
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", "high_edu_diploma" },
                                 { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text }, { "date", dtpDiplomaDate.Value } },
-                                new Dictionary<string, object> { { "id", (uint)document[0] } });
+                                new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
 
                         else if (document[6] as DateTime? == null)
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", "high_edu_diploma" },
                                 { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text }, { "date", dtpDiplomaDate.Value } },
-                                new Dictionary<string, object> { { "id", (uint)document[0] } });
+                                new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
 
                         _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", tbSpecialty.Text } },
-                            new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
                     }
                     else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
                     {
@@ -1285,89 +1306,89 @@ namespace PK.Forms
                         {
                             certificateFound = true;
                             if (!cbMedCertificate.Checked)
-                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                         }
                         else if ((cbSpecialRights.Checked) && (document[1].ToString() == "orphan") && (_QuoteDoc.cause == "Сиротство"))
                         {
                             qouteFound = true;
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", _QuoteDoc.orphanhoodDocDate }, { "organization", _QuoteDoc.orphanhoodDocOrg } },
-                                    new Dictionary<string, object> { { "id", (uint)document[0] } });
+                                    new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
 
                             _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", _QuoteDoc.orphanhoodDocName}, { "dictionaries_dictionary_id", (uint)FIS_Dictionary.ORPHAN_DOC_TYPE},
-                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                            { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.ORPHAN_DOC_TYPE, _QuoteDoc.orphanhoodDocType)}}, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
 
                             _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                                 { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE, "Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
                                 { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                            new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                            new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } }, transaction);
                         }
                         else if ((cbSpecialRights.Checked) && ((document[1].ToString() == "disability") || (document[1].ToString() == "medical")) && (_QuoteDoc.cause == "Медецинские показатели"))
                         {
                             qouteFound = true;
                             uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", _QuoteDoc.conclusionNumber }, { "date", _QuoteDoc.conclusionDate } },
-                                new Dictionary<string, object> { { "id", allowEducationDocUid } });
+                                new Dictionary<string, object> { { "id", allowEducationDocUid } }, transaction);
 
                             if (document[1].ToString() == "disability")
                             {
                                 _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", _QuoteDoc.medDocSerie }, { "number", _QuoteDoc.medDocNumber } },
-                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
 
                                 _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {{ "dictionaries_dictionary_id",(uint)FIS_Dictionary.DISABILITY_GROUP},
-                                { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DISABILITY_GROUP, _QuoteDoc.disabilityGroup)} }, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
 
                                 _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                                     { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")}, { "allow_education_document_id", allowEducationDocUid},
                                     { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } }, transaction);
                             }
                             else if (document[1].ToString() == "medical")
                             {
                                 qouteFound = true;
                                 _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", _QuoteDoc.medDocSerie }, { "number", _QuoteDoc.medDocNumber } },
-                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } });
+                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
 
                                 _DB_Connection.Update(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                                     { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")}, { "allow_education_document_id", allowEducationDocUid},
                                     { "benefit_kind_dict_id", (uint)FIS_Dictionary.BENEFIT_KIND}, { "benefit_kind_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.BENEFIT_KIND, "По квоте приёма лиц, имеющих особое право") } },
-                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
+                                    new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } }, transaction);
                             }
                         }
                         else if (document[1].ToString() == "orphan")
                         {
-                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                         }
                         else
                         {
                             uint allowEducationDocUid = (uint)(appDocuments.Find(x => x[1].ToString() == "allow_education")[0]);
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "number", _QuoteDoc.conclusionNumber }, { "date", _QuoteDoc.conclusionDate } },
-                                new Dictionary<string, object> { { "id", allowEducationDocUid } });
-                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } });
-                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } });
-                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", allowEducationDocUid } });
-                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                                new Dictionary<string, object> { { "id", allowEducationDocUid } }, transaction);
+                            _DB_Connection.Delete(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object> { { "application_id", _ApplicationID }, { "reason_document_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", allowEducationDocUid } }, transaction);
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", allowEducationDocUid } }, transaction);
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                         }
                     }
                     else if (document[1].ToString() == "photos")
                     {
                         photosFound = true;
                         if (!cbPhotos.Checked)
-                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } });
+                            _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                     }
                 }
             }
             if (cbSpecialRights.Checked && !qouteFound)
             {
-                SaveQuote();
+                SaveQuote(transaction);
             }
             if (cbMedCertificate.Checked && !certificateFound)
             {
-                SaveCertificate();
+                SaveCertificate(transaction);
             }
 
             if (cbPhotos.Checked && !photosFound)
@@ -1375,12 +1396,14 @@ namespace PK.Forms
                     DB_Table._APPLICATIONS_HAS_DOCUMENTS,
                     new Dictionary<string, object>
                     {
-                            { "applications_id", _ApplicationID },
-                            { "documents_id", _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "photos" } })}
-                    });
+                        { "applications_id", _ApplicationID },
+                        { "documents_id", _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "photos" } }, transaction)}
+                    },
+                    transaction
+                    );
         }
 
-        private void UpdateDirections()
+        private void UpdateDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> oldD = new List<object[]>();
             List<object[]> newD = new List<object[]>();
@@ -1422,23 +1445,23 @@ namespace PK.Forms
                 }
             }
             UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, false, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
-                "edu_source_dict_id", "edu_source_id" });
+                "edu_source_dict_id", "edu_source_id" }, transaction);
 
             if (cbAgreed_budget_o.Checked)
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
             else if (cbAgreed_quote_o.Checked)
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
             else if (cbAgreed_target_o.Checked)
                 _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
                     new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
                     { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
-                    { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                    { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
 
             foreach (object[] appEntrance in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "faculty_short_name", "direction_id", "edu_form_id", "edu_source_id", "is_agreed_date", "is_disagreed_date" },
                 new List<Tuple<string, Relation, object>>
@@ -1453,19 +1476,19 @@ namespace PK.Forms
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_budget_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
 
                         else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceQ && !cbAgreed_quote_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_quote_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
 
                         else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceT && !cbAgreed_target_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
                                 new Dictionary<string, object> { { "faculty_short_name", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item2 },
                                 { "direction_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item1 }, { "edu_form_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item4 },
-                                { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } });
+                                { "edu_source_id", ((ProgramTuple)cbProgram_target_o.SelectedValue).Item3 }, { "application_id", _ApplicationID } }, transaction);
                     }
                 }
             List<object[]> examsData = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name", "mark" },
@@ -1491,7 +1514,7 @@ namespace PK.Forms
                         if (!found)
                             _DB_Connection.Insert(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
                             { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 }, { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
-                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } });
+                            { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 } }, transaction);
                     }                        
                 }
             foreach (object[] magExam in examsData)
@@ -1511,7 +1534,7 @@ namespace PK.Forms
                         }
                     if (!found)
                         _DB_Connection.Delete(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object> { { "campaign_id", _CurrCampainID }, { "entrant_id", _EntrantID },
-                            { "faculty", magExam[0].ToString() }, { "direction_id", (uint)magExam[1] }, { "profile_short_name", magExam[2].ToString() } });
+                            { "faculty", magExam[0].ToString() }, { "direction_id", (uint)magExam[1] }, { "profile_short_name", magExam[2].ToString() } }, transaction);
                 }
         }
 
@@ -1629,7 +1652,7 @@ namespace PK.Forms
             }
         }
 
-        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames)
+        private void UpdateData(DB_Table table, List<object[]> oldDataList, List<object[]> newDataList, string[] fieldNames, bool autoGeneratedKey, string[] keyFieldsNames,MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> oldList = oldDataList;
             List<object[]> newList = newDataList;
@@ -1672,7 +1695,7 @@ namespace PK.Forms
                                 keyAndValues.Add(fieldNames[i], newItem[i]);
                             else columnsAndValues.Add(fieldNames[i], newItem[i]);
 
-                        _DB_Connection.Update(table, columnsAndValues, keyAndValues);
+                        _DB_Connection.Update(table, columnsAndValues, keyAndValues, transaction);
                         newList.RemoveAt(index);
                         oldList.Remove(oldList[j]);
                         break;
@@ -1689,7 +1712,7 @@ namespace PK.Forms
                         if (keyFieldsNames.Contains(fieldNames[i]))
                             keyAndValues.Add(fieldNames[i], oldItem[i]);
 
-                    _DB_Connection.Delete(table, keyAndValues);
+                    _DB_Connection.Delete(table, keyAndValues, transaction);
                 }
             else if (newList.Count > 0)
                 foreach (object[] newItem in newList)
@@ -1706,7 +1729,7 @@ namespace PK.Forms
                         for (int i = 0; i < fieldNames.Length; i++)
                             columnsAndValues.Add(fieldNames[i], newItem[i]);
                     }
-                    _DB_Connection.Insert(table, columnsAndValues);
+                    _DB_Connection.Insert(table, columnsAndValues, transaction);
                 }
         }
 
