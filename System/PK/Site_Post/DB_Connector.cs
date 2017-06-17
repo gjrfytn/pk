@@ -10,13 +10,11 @@ namespace PK.Classes
 
         private MySqlConnection _Connection;
 
-        public DB_Connector(string connectionString, string user, string password)
+        public DB_Connector(string user, string password)
         {
             #region Contracts
             if (password == null)
                 throw new System.ArgumentNullException(nameof(password));
-            if (string.IsNullOrWhiteSpace(connectionString))
-                throw new System.ArgumentException("Некорректная строка подключения.", nameof(connectionString));
             if (string.IsNullOrWhiteSpace(user))
                 throw new System.ArgumentException("Некорректное имя пользователя.", nameof(user));
             #endregion
@@ -24,7 +22,7 @@ namespace PK.Classes
             User = user;
             Password = password;
 
-            _Connection = new MySqlConnection(connectionString + " user = " + user + "; password = " + password);
+            _Connection = new MySqlConnection(Properties.Settings.Default.pk_db_CS + " user = " + user + "; password = " + password);
             _Connection.Open();
         }
 
