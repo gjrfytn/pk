@@ -435,6 +435,7 @@ namespace PK.Forms
                         {
                             ChangeAgreedChBs(false);
                             BlockDirChange();
+                            ((CheckBox)sender).Enabled = true;
                             cbAgreed.Enabled = true;
                         }
                         else
@@ -451,12 +452,17 @@ namespace PK.Forms
                 else
                 {
                     int disagreedCount = 0;
-                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                    int agreedCount = 0;
+                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date", "is_agreed_date" }, new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
                             }))
+                    {
                         if ((data[0] as DateTime?) != null)
                             disagreedCount++;
+                        if ((data[1] as DateTime?) != null)
+                            agreedCount++;
+                    }
                     if (disagreedCount >= _AgreedChangeMaxCount)
                     {
                         MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
@@ -465,10 +471,10 @@ namespace PK.Forms
                     }
                     else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
                     {
-                        if (disagreedCount < _AgreedChangeMaxCount - 1)
-                            ChangeAgreedChBs(true);
-                        else
+                        if (agreedCount == _AgreedChangeMaxCount && disagreedCount == _AgreedChangeMaxCount - 1)
                             ((CheckBox)sender).Enabled = false;
+                        else
+                            ChangeAgreedChBs(true);
                         cbAgreed.Checked = false;
                         cbAgreed.Enabled = false;
                     }
@@ -712,6 +718,7 @@ namespace PK.Forms
             e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
 
+
         private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             SaveBasic(transaction);
@@ -797,7 +804,17 @@ namespace PK.Forms
             eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "high_edu_diploma" }, { "series",  tbEduDocSeries.Text},
                 { "number", tbEduDocNumber.Text}, { "organization", tbInstitution.Text}, { "date", dtpDiplomaDate.Value }  }, transaction));
             _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "text_data", tbSpecialty.Text } }, transaction);
-            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } }, transaction);            
+            _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } }, transaction);
+
+            if (cbRedDiploma.Checked)
+            {
+                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID}, { "document_id", eduDocID },
+                    { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MagAchievementRedDiploma)),
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
+                })[0][0]} }, transaction);
+            }
         }
 
         private void SaveQuote(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -1001,6 +1018,16 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
                     })[0][0].ToString();
+
+                    foreach (object[] achievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id" }, new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                    }))
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
+                        })[0][0]) == Classes.DB_Helper.MagAchievementRedDiploma)
+                            cbRedDiploma.Checked = true;
                 }
                 else if (document[1].ToString() == "orphan")
                 {
@@ -1073,39 +1100,20 @@ namespace PK.Forms
 
         private void LoadExamsMarks()
         {
-            //List<object[]> marks = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "faculty", "direction_id", "profile_short_name", "mark", "bonus" },
-            //    new List<Tuple<string, Relation, object>>
-            //    {
-            //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-            //        new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
-            //    });
-            //if (marks.Count > 0)
-            //    foreach (object[] mark in marks)
-            //        foreach (TabPage page in tcPrograms.TabPages)
-            //        {
-            //            uint eduForm = 0;
-            //            uint eduSource = 0;
-            //            if (page.Name.Split('_')[1] == "budget")
-            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB);
-            //            if (page.Name.Split('_')[1] == "paid")
-            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP);
-            //            if (page.Name.Split('_')[1] == "target")
-            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT);
-            //            if (page.Name.Split('_')[1] == "quote")
-            //                eduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ);
-
-            //            if (page.Name.Split('_')[2] == "o")
-            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO);
-            //            if (page.Name.Split('_')[2] == "oz")
-            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ);
-            //            if (page.Name.Split('_')[2] == "z")
-            //                eduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ);
-            //            if (eduForm == (uint))
-            //                foreach (Control c in page.Controls)
-            //                {
-
-            //                }
-            //        }
+            foreach (object[] mark in _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "profile_short_name", "mark", "bonus", "date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
+                }))
+                if (dgvExamsResults.Rows.Count <= 2)
+                {
+                    dgvExamsResults.Rows.Add(mark[0].ToString(), mark[1], mark[2]);
+                    DateTime? date = mark[3] as DateTime?;
+                    if (date != null)
+                        dgvExamsResults.Rows[dgvExamsResults.Rows.Count - 1].Cells[dgvExamsResults_Exam.Index].ToolTipText = ((DateTime)mark[3]).ToShortDateString();
+                }
+            while (dgvExamsResults.Rows.Count < 2)
+                dgvExamsResults.Rows.Add();
         }
 
         private void LoadDirections()
@@ -1295,6 +1303,29 @@ namespace PK.Forms
 
                         _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", tbSpecialty.Text } },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+
+                        bool IAFound = false;
+                        foreach (object[] achievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id", "id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        }))
+                            if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES,
+                                (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
+                        })[0][0]) == Classes.DB_Helper.MagAchievementRedDiploma)
+                            {
+                                IAFound = true;
+                                if (!cbRedDiploma.Checked)
+                                    _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "id", (uint)achievement[1] } }, transaction);                                
+                            }
+                        if (cbRedDiploma.Checked && !IAFound)
+                            _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID}, { "document_id", (uint)document[0] },
+                            { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MagAchievementRedDiploma)),
+                            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
+                        })[0][0]} }, transaction);
                     }
                     else if ((document[1].ToString() == "orphan") || (document[1].ToString() == "disability") || (document[1].ToString() == "medical"))
                     {

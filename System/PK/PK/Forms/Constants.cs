@@ -38,6 +38,7 @@ namespace PK.Forms
             }
 
             _DB_Connection.Update(DB_Table.CONSTANTS, values, where);
+            Close();
         }
 
         private void UpdateTable()

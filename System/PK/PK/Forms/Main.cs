@@ -442,6 +442,9 @@ namespace PK.Forms
         {
             List<string> roles = new List<string>();
             if (_UserRole == "registrator")
+                menuStrip.Enabled = false;
+
+            if (_UserRole == "registrator")
                 roles.Add("registrator");
             else if (_UserRole == "inspector")
                 roles.AddRange(new string[] { "registrator", "inspector" });

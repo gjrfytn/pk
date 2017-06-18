@@ -1112,6 +1112,7 @@
             // cbOlympiad
             // 
             this.cbOlympiad.AutoSize = true;
+            this.cbOlympiad.Enabled = false;
             this.cbOlympiad.Location = new System.Drawing.Point(706, 14);
             this.cbOlympiad.Margin = new System.Windows.Forms.Padding(4);
             this.cbOlympiad.Name = "cbOlympiad";

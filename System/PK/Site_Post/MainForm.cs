@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using PK;
+using System.Net;
 
 namespace SitePost
 {
@@ -12,7 +13,7 @@ namespace SitePost
     {
         private readonly PK.Classes.DB_Connector _DB_Connection;
         private readonly PK.Classes.DB_Helper _DB_Helper;
-        private static readonly string SchemaPath = "Root_new.xsd";
+        private static readonly string SchemaPath = "Root.xsd";
         private static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
 
         private uint _CampaignID;
@@ -32,6 +33,7 @@ namespace SitePost
             cbCampaigns.DataSource = campaigns.ToList();
             cbCampaigns.ValueMember = "Key";
             cbCampaigns.DisplayMember = "Value";
+            cbAdress.SelectedIndex = 0;
             cbUnits.SelectedIndex = 1;
             for (int i = 1; i <= 60; i++)
                 cbInterval.Items.Add(i);
@@ -164,6 +166,23 @@ namespace SitePost
 
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
+
+                byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = bytesData.Length;
+                request.Method = "POST";
+                System.IO.Stream requestStream = request.GetRequestStream();
+                requestStream.Write(bytesData, 0, bytesData.Length);
+                requestStream.Close();
+                HttpWebResponse response;
+                response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    System.IO.Stream responseStream = response.GetResponseStream();
+                    string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
+                    tbResponse.Text = responseStr;
+                }
             }
         }
 
@@ -294,16 +313,19 @@ namespace SitePost
                 if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceB))
                 {
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
+                    appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 1));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceT))
                 {
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
+                    appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 2));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceQ))
                 {
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
+                    appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 3));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceP))

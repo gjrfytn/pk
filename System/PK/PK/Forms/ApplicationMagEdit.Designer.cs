@@ -46,58 +46,41 @@
             this.label29 = new System.Windows.Forms.Label();
             this.tcPrograms = new System.Windows.Forms.TabControl();
             this.tcPrograms_budget_o = new System.Windows.Forms.TabPage();
-            this.tbBonus_budget_o = new System.Windows.Forms.TextBox();
-            this.tbMark_budget_o = new System.Windows.Forms.TextBox();
             this.btRemoveDir_budget_o = new System.Windows.Forms.Button();
-            this.label36 = new System.Windows.Forms.Label();
             this.btAddDir_budget_o = new System.Windows.Forms.Button();
-            this.label32 = new System.Windows.Forms.Label();
             this.cbAgreed_budget_o = new System.Windows.Forms.CheckBox();
             this.cbProgram_budget_o = new System.Windows.Forms.ComboBox();
             this.label27 = new System.Windows.Forms.Label();
             this.tcPrograms_paid_o = new System.Windows.Forms.TabPage();
-            this.tbBonus_paid_o = new System.Windows.Forms.TextBox();
-            this.tbMark_paid_o = new System.Windows.Forms.TextBox();
             this.btRemoveDir_paid_o = new System.Windows.Forms.Button();
-            this.label37 = new System.Windows.Forms.Label();
             this.btAddDir_paid_o = new System.Windows.Forms.Button();
-            this.label38 = new System.Windows.Forms.Label();
             this.cbProgram_paid_o = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
             this.tcPrograms_paid_z = new System.Windows.Forms.TabPage();
-            this.tbBonus_paid_z = new System.Windows.Forms.TextBox();
-            this.tbMark_paid_z = new System.Windows.Forms.TextBox();
             this.btRemoveDir_paid_z = new System.Windows.Forms.Button();
-            this.label39 = new System.Windows.Forms.Label();
             this.btAddDir_paid_z = new System.Windows.Forms.Button();
-            this.label40 = new System.Windows.Forms.Label();
             this.cbProgram_paid_z = new System.Windows.Forms.ComboBox();
             this.label33 = new System.Windows.Forms.Label();
             this.tcPrograms_target_o = new System.Windows.Forms.TabPage();
-            this.tbBonus_target_o = new System.Windows.Forms.TextBox();
-            this.tbMark_target_o = new System.Windows.Forms.TextBox();
             this.btRemoveDir_target_o = new System.Windows.Forms.Button();
-            this.label41 = new System.Windows.Forms.Label();
             this.btAddDir_target_o = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
             this.cbAgreed_target_o = new System.Windows.Forms.CheckBox();
             this.cbProgram_target_o = new System.Windows.Forms.ComboBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tcPrograms_quote_o = new System.Windows.Forms.TabPage();
-            this.tbBonus_quote_o = new System.Windows.Forms.TextBox();
-            this.tbMark_quote_o = new System.Windows.Forms.TextBox();
             this.btRemoveDir_quote_o = new System.Windows.Forms.Button();
-            this.label43 = new System.Windows.Forms.Label();
             this.btAddDir_quote_o = new System.Windows.Forms.Button();
-            this.label44 = new System.Windows.Forms.Label();
             this.cbAgreed_quote_o = new System.Windows.Forms.CheckBox();
             this.cbProgram_quote_o = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.dgvExamsResults = new System.Windows.Forms.DataGridView();
+            this.dgvExamsResults_ProgramName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExamsResults_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExamsResults_IA = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btClose = new System.Windows.Forms.Button();
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
             this.cbAgreed = new System.Windows.Forms.CheckBox();
             this.cbPhotos = new System.Windows.Forms.CheckBox();
@@ -152,6 +135,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btWithdraw = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.gbEduDocument.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
@@ -162,6 +146,7 @@
             this.tcPrograms_target_o.SuspendLayout();
             this.tcPrograms_quote_o.SuspendLayout();
             this.gbApplication.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).BeginInit();
             this.gbWithdrawDocs.SuspendLayout();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -328,7 +313,7 @@
             // gbAttributes
             // 
             this.gbAttributes.Controls.Add(this.cbRedDiploma);
-            this.gbAttributes.Location = new System.Drawing.Point(0, 21);
+            this.gbAttributes.Location = new System.Drawing.Point(0, 30);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Size = new System.Drawing.Size(218, 45);
             this.gbAttributes.TabIndex = 0;
@@ -458,46 +443,26 @@
             this.tcPrograms.Controls.Add(this.tcPrograms_paid_z);
             this.tcPrograms.Controls.Add(this.tcPrograms_target_o);
             this.tcPrograms.Controls.Add(this.tcPrograms_quote_o);
-            this.tcPrograms.Location = new System.Drawing.Point(5, 72);
+            this.tcPrograms.Location = new System.Drawing.Point(7, 92);
             this.tcPrograms.Name = "tcPrograms";
             this.tcPrograms.SelectedIndex = 0;
-            this.tcPrograms.Size = new System.Drawing.Size(1334, 126);
+            this.tcPrograms.Size = new System.Drawing.Size(1334, 106);
             this.tcPrograms.TabIndex = 4;
             // 
             // tcPrograms_budget_o
             // 
-            this.tcPrograms_budget_o.Controls.Add(this.tbBonus_budget_o);
-            this.tcPrograms_budget_o.Controls.Add(this.tbMark_budget_o);
             this.tcPrograms_budget_o.Controls.Add(this.btRemoveDir_budget_o);
-            this.tcPrograms_budget_o.Controls.Add(this.label36);
             this.tcPrograms_budget_o.Controls.Add(this.btAddDir_budget_o);
-            this.tcPrograms_budget_o.Controls.Add(this.label32);
             this.tcPrograms_budget_o.Controls.Add(this.cbAgreed_budget_o);
             this.tcPrograms_budget_o.Controls.Add(this.cbProgram_budget_o);
             this.tcPrograms_budget_o.Controls.Add(this.label27);
             this.tcPrograms_budget_o.Location = new System.Drawing.Point(4, 25);
             this.tcPrograms_budget_o.Name = "tcPrograms_budget_o";
             this.tcPrograms_budget_o.Padding = new System.Windows.Forms.Padding(3);
-            this.tcPrograms_budget_o.Size = new System.Drawing.Size(1326, 97);
+            this.tcPrograms_budget_o.Size = new System.Drawing.Size(1326, 77);
             this.tcPrograms_budget_o.TabIndex = 0;
             this.tcPrograms_budget_o.Text = "Очная бюджетная форма";
             this.tcPrograms_budget_o.UseVisualStyleBackColor = true;
-            // 
-            // tbBonus_budget_o
-            // 
-            this.tbBonus_budget_o.Enabled = false;
-            this.tbBonus_budget_o.Location = new System.Drawing.Point(528, 70);
-            this.tbBonus_budget_o.Name = "tbBonus_budget_o";
-            this.tbBonus_budget_o.Size = new System.Drawing.Size(60, 22);
-            this.tbBonus_budget_o.TabIndex = 2;
-            // 
-            // tbMark_budget_o
-            // 
-            this.tbMark_budget_o.Enabled = false;
-            this.tbMark_budget_o.Location = new System.Drawing.Point(147, 70);
-            this.tbMark_budget_o.Name = "tbMark_budget_o";
-            this.tbMark_budget_o.Size = new System.Drawing.Size(62, 22);
-            this.tbMark_budget_o.TabIndex = 1;
             // 
             // btRemoveDir_budget_o
             // 
@@ -513,15 +478,6 @@
             this.btRemoveDir_budget_o.Visible = false;
             this.btRemoveDir_budget_o.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(263, 73);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(259, 16);
-            this.label36.TabIndex = 9;
-            this.label36.Text = "Балл за индивидуальные достижения:";
-            // 
             // btAddDir_budget_o
             // 
             this.btAddDir_budget_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -533,15 +489,6 @@
             this.btAddDir_budget_o.Text = "+";
             this.btAddDir_budget_o.UseVisualStyleBackColor = true;
             this.btAddDir_budget_o.Click += new System.EventHandler(this.btAddDir_Click);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(19, 73);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(122, 16);
-            this.label32.TabIndex = 8;
-            this.label32.Text = "Балл за экзамен:";
             // 
             // cbAgreed_budget_o
             // 
@@ -577,37 +524,17 @@
             // 
             // tcPrograms_paid_o
             // 
-            this.tcPrograms_paid_o.Controls.Add(this.tbBonus_paid_o);
-            this.tcPrograms_paid_o.Controls.Add(this.tbMark_paid_o);
             this.tcPrograms_paid_o.Controls.Add(this.btRemoveDir_paid_o);
-            this.tcPrograms_paid_o.Controls.Add(this.label37);
             this.tcPrograms_paid_o.Controls.Add(this.btAddDir_paid_o);
-            this.tcPrograms_paid_o.Controls.Add(this.label38);
             this.tcPrograms_paid_o.Controls.Add(this.cbProgram_paid_o);
             this.tcPrograms_paid_o.Controls.Add(this.label28);
             this.tcPrograms_paid_o.Location = new System.Drawing.Point(4, 25);
             this.tcPrograms_paid_o.Name = "tcPrograms_paid_o";
             this.tcPrograms_paid_o.Padding = new System.Windows.Forms.Padding(3);
-            this.tcPrograms_paid_o.Size = new System.Drawing.Size(1326, 97);
+            this.tcPrograms_paid_o.Size = new System.Drawing.Size(1326, 77);
             this.tcPrograms_paid_o.TabIndex = 1;
             this.tcPrograms_paid_o.Text = "Очная платная форма";
             this.tcPrograms_paid_o.UseVisualStyleBackColor = true;
-            // 
-            // tbBonus_paid_o
-            // 
-            this.tbBonus_paid_o.Enabled = false;
-            this.tbBonus_paid_o.Location = new System.Drawing.Point(528, 70);
-            this.tbBonus_paid_o.Name = "tbBonus_paid_o";
-            this.tbBonus_paid_o.Size = new System.Drawing.Size(60, 22);
-            this.tbBonus_paid_o.TabIndex = 11;
-            // 
-            // tbMark_paid_o
-            // 
-            this.tbMark_paid_o.Enabled = false;
-            this.tbMark_paid_o.Location = new System.Drawing.Point(147, 70);
-            this.tbMark_paid_o.Name = "tbMark_paid_o";
-            this.tbMark_paid_o.Size = new System.Drawing.Size(62, 22);
-            this.tbMark_paid_o.TabIndex = 10;
             // 
             // btRemoveDir_paid_o
             // 
@@ -623,15 +550,6 @@
             this.btRemoveDir_paid_o.Visible = false;
             this.btRemoveDir_paid_o.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(263, 73);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(259, 16);
-            this.label37.TabIndex = 15;
-            this.label37.Text = "Балл за индивидуальные достижения:";
-            // 
             // btAddDir_paid_o
             // 
             this.btAddDir_paid_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -643,15 +561,6 @@
             this.btAddDir_paid_o.Text = "+";
             this.btAddDir_paid_o.UseVisualStyleBackColor = true;
             this.btAddDir_paid_o.Click += new System.EventHandler(this.btAddDir_Click);
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(19, 73);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(122, 16);
-            this.label38.TabIndex = 14;
-            this.label38.Text = "Балл за экзамен:";
             // 
             // cbProgram_paid_o
             // 
@@ -675,37 +584,17 @@
             // 
             // tcPrograms_paid_z
             // 
-            this.tcPrograms_paid_z.Controls.Add(this.tbBonus_paid_z);
-            this.tcPrograms_paid_z.Controls.Add(this.tbMark_paid_z);
             this.tcPrograms_paid_z.Controls.Add(this.btRemoveDir_paid_z);
-            this.tcPrograms_paid_z.Controls.Add(this.label39);
             this.tcPrograms_paid_z.Controls.Add(this.btAddDir_paid_z);
-            this.tcPrograms_paid_z.Controls.Add(this.label40);
             this.tcPrograms_paid_z.Controls.Add(this.cbProgram_paid_z);
             this.tcPrograms_paid_z.Controls.Add(this.label33);
             this.tcPrograms_paid_z.Location = new System.Drawing.Point(4, 25);
             this.tcPrograms_paid_z.Name = "tcPrograms_paid_z";
             this.tcPrograms_paid_z.Padding = new System.Windows.Forms.Padding(3);
-            this.tcPrograms_paid_z.Size = new System.Drawing.Size(1326, 97);
+            this.tcPrograms_paid_z.Size = new System.Drawing.Size(1326, 77);
             this.tcPrograms_paid_z.TabIndex = 2;
             this.tcPrograms_paid_z.Text = "Заочная платная форма";
             this.tcPrograms_paid_z.UseVisualStyleBackColor = true;
-            // 
-            // tbBonus_paid_z
-            // 
-            this.tbBonus_paid_z.Enabled = false;
-            this.tbBonus_paid_z.Location = new System.Drawing.Point(528, 70);
-            this.tbBonus_paid_z.Name = "tbBonus_paid_z";
-            this.tbBonus_paid_z.Size = new System.Drawing.Size(60, 22);
-            this.tbBonus_paid_z.TabIndex = 11;
-            // 
-            // tbMark_paid_z
-            // 
-            this.tbMark_paid_z.Enabled = false;
-            this.tbMark_paid_z.Location = new System.Drawing.Point(147, 70);
-            this.tbMark_paid_z.Name = "tbMark_paid_z";
-            this.tbMark_paid_z.Size = new System.Drawing.Size(62, 22);
-            this.tbMark_paid_z.TabIndex = 10;
             // 
             // btRemoveDir_paid_z
             // 
@@ -721,15 +610,6 @@
             this.btRemoveDir_paid_z.Visible = false;
             this.btRemoveDir_paid_z.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(263, 73);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(259, 16);
-            this.label39.TabIndex = 15;
-            this.label39.Text = "Балл за индивидуальные достижения:";
-            // 
             // btAddDir_paid_z
             // 
             this.btAddDir_paid_z.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -741,15 +621,6 @@
             this.btAddDir_paid_z.Text = "+";
             this.btAddDir_paid_z.UseVisualStyleBackColor = true;
             this.btAddDir_paid_z.Click += new System.EventHandler(this.btAddDir_Click);
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(19, 73);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(122, 16);
-            this.label40.TabIndex = 14;
-            this.label40.Text = "Балл за экзамен:";
             // 
             // cbProgram_paid_z
             // 
@@ -773,37 +644,17 @@
             // 
             // tcPrograms_target_o
             // 
-            this.tcPrograms_target_o.Controls.Add(this.tbBonus_target_o);
-            this.tcPrograms_target_o.Controls.Add(this.tbMark_target_o);
             this.tcPrograms_target_o.Controls.Add(this.btRemoveDir_target_o);
-            this.tcPrograms_target_o.Controls.Add(this.label41);
             this.tcPrograms_target_o.Controls.Add(this.btAddDir_target_o);
-            this.tcPrograms_target_o.Controls.Add(this.label42);
             this.tcPrograms_target_o.Controls.Add(this.cbAgreed_target_o);
             this.tcPrograms_target_o.Controls.Add(this.cbProgram_target_o);
             this.tcPrograms_target_o.Controls.Add(this.label34);
             this.tcPrograms_target_o.Location = new System.Drawing.Point(4, 25);
             this.tcPrograms_target_o.Name = "tcPrograms_target_o";
-            this.tcPrograms_target_o.Size = new System.Drawing.Size(1326, 97);
+            this.tcPrograms_target_o.Size = new System.Drawing.Size(1326, 77);
             this.tcPrograms_target_o.TabIndex = 3;
             this.tcPrograms_target_o.Text = "Целевой прием очная форма";
             this.tcPrograms_target_o.UseVisualStyleBackColor = true;
-            // 
-            // tbBonus_target_o
-            // 
-            this.tbBonus_target_o.Enabled = false;
-            this.tbBonus_target_o.Location = new System.Drawing.Point(528, 70);
-            this.tbBonus_target_o.Name = "tbBonus_target_o";
-            this.tbBonus_target_o.Size = new System.Drawing.Size(60, 22);
-            this.tbBonus_target_o.TabIndex = 11;
-            // 
-            // tbMark_target_o
-            // 
-            this.tbMark_target_o.Enabled = false;
-            this.tbMark_target_o.Location = new System.Drawing.Point(147, 70);
-            this.tbMark_target_o.Name = "tbMark_target_o";
-            this.tbMark_target_o.Size = new System.Drawing.Size(62, 22);
-            this.tbMark_target_o.TabIndex = 10;
             // 
             // btRemoveDir_target_o
             // 
@@ -819,15 +670,6 @@
             this.btRemoveDir_target_o.Visible = false;
             this.btRemoveDir_target_o.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(263, 73);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(259, 16);
-            this.label41.TabIndex = 15;
-            this.label41.Text = "Балл за индивидуальные достижения:";
-            // 
             // btAddDir_target_o
             // 
             this.btAddDir_target_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -839,15 +681,6 @@
             this.btAddDir_target_o.Text = "+";
             this.btAddDir_target_o.UseVisualStyleBackColor = true;
             this.btAddDir_target_o.Click += new System.EventHandler(this.btAddDir_Click);
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(19, 73);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(122, 16);
-            this.label42.TabIndex = 14;
-            this.label42.Text = "Балл за экзамен:";
             // 
             // cbAgreed_target_o
             // 
@@ -885,37 +718,17 @@
             // 
             // tcPrograms_quote_o
             // 
-            this.tcPrograms_quote_o.Controls.Add(this.tbBonus_quote_o);
-            this.tcPrograms_quote_o.Controls.Add(this.tbMark_quote_o);
             this.tcPrograms_quote_o.Controls.Add(this.btRemoveDir_quote_o);
-            this.tcPrograms_quote_o.Controls.Add(this.label43);
             this.tcPrograms_quote_o.Controls.Add(this.btAddDir_quote_o);
-            this.tcPrograms_quote_o.Controls.Add(this.label44);
             this.tcPrograms_quote_o.Controls.Add(this.cbAgreed_quote_o);
             this.tcPrograms_quote_o.Controls.Add(this.cbProgram_quote_o);
             this.tcPrograms_quote_o.Controls.Add(this.label35);
             this.tcPrograms_quote_o.Location = new System.Drawing.Point(4, 25);
             this.tcPrograms_quote_o.Name = "tcPrograms_quote_o";
-            this.tcPrograms_quote_o.Size = new System.Drawing.Size(1326, 97);
+            this.tcPrograms_quote_o.Size = new System.Drawing.Size(1326, 77);
             this.tcPrograms_quote_o.TabIndex = 4;
             this.tcPrograms_quote_o.Text = "Особая квота очная форма";
             this.tcPrograms_quote_o.UseVisualStyleBackColor = true;
-            // 
-            // tbBonus_quote_o
-            // 
-            this.tbBonus_quote_o.Enabled = false;
-            this.tbBonus_quote_o.Location = new System.Drawing.Point(528, 70);
-            this.tbBonus_quote_o.Name = "tbBonus_quote_o";
-            this.tbBonus_quote_o.Size = new System.Drawing.Size(60, 22);
-            this.tbBonus_quote_o.TabIndex = 11;
-            // 
-            // tbMark_quote_o
-            // 
-            this.tbMark_quote_o.Enabled = false;
-            this.tbMark_quote_o.Location = new System.Drawing.Point(147, 70);
-            this.tbMark_quote_o.Name = "tbMark_quote_o";
-            this.tbMark_quote_o.Size = new System.Drawing.Size(62, 22);
-            this.tbMark_quote_o.TabIndex = 10;
             // 
             // btRemoveDir_quote_o
             // 
@@ -931,15 +744,6 @@
             this.btRemoveDir_quote_o.Visible = false;
             this.btRemoveDir_quote_o.Click += new System.EventHandler(this.btRemoveDir_Click);
             // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(263, 73);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(259, 16);
-            this.label43.TabIndex = 15;
-            this.label43.Text = "Балл за индивидуальные достижения:";
-            // 
             // btAddDir_quote_o
             // 
             this.btAddDir_quote_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -951,15 +755,6 @@
             this.btAddDir_quote_o.Text = "+";
             this.btAddDir_quote_o.UseVisualStyleBackColor = true;
             this.btAddDir_quote_o.Click += new System.EventHandler(this.btAddDir_Click);
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(19, 73);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(122, 16);
-            this.label44.TabIndex = 14;
-            this.label44.Text = "Балл за экзамен:";
             // 
             // cbAgreed_quote_o
             // 
@@ -998,6 +793,7 @@
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.dgvExamsResults);
             this.gbApplication.Controls.Add(this.gbAttributes);
             this.gbApplication.Controls.Add(this.gbOther);
             this.gbApplication.Controls.Add(this.tcPrograms);
@@ -1010,6 +806,46 @@
             this.gbApplication.TabIndex = 2;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
+            // 
+            // dgvExamsResults
+            // 
+            this.dgvExamsResults.AllowUserToAddRows = false;
+            this.dgvExamsResults.AllowUserToDeleteRows = false;
+            this.dgvExamsResults.AllowUserToResizeRows = false;
+            this.dgvExamsResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvExamsResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvExamsResults_ProgramName,
+            this.dgvExamsResults_Exam,
+            this.dgvExamsResults_IA});
+            this.dgvExamsResults.Location = new System.Drawing.Point(244, 17);
+            this.dgvExamsResults.Name = "dgvExamsResults";
+            this.dgvExamsResults.ReadOnly = true;
+            this.dgvExamsResults.RowHeadersVisible = false;
+            this.dgvExamsResults.Size = new System.Drawing.Size(602, 70);
+            this.dgvExamsResults.TabIndex = 7;
+            // 
+            // dgvExamsResults_ProgramName
+            // 
+            this.dgvExamsResults_ProgramName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvExamsResults_ProgramName.HeaderText = "Маг. прогр.";
+            this.dgvExamsResults_ProgramName.Name = "dgvExamsResults_ProgramName";
+            this.dgvExamsResults_ProgramName.ReadOnly = true;
+            // 
+            // dgvExamsResults_Exam
+            // 
+            this.dgvExamsResults_Exam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvExamsResults_Exam.HeaderText = "Экзамен";
+            this.dgvExamsResults_Exam.Name = "dgvExamsResults_Exam";
+            this.dgvExamsResults_Exam.ReadOnly = true;
+            this.dgvExamsResults_Exam.Width = 91;
+            // 
+            // dgvExamsResults_IA
+            // 
+            this.dgvExamsResults_IA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvExamsResults_IA.HeaderText = "ИД";
+            this.dgvExamsResults_IA.Name = "dgvExamsResults_IA";
+            this.dgvExamsResults_IA.ReadOnly = true;
+            this.dgvExamsResults_IA.Width = 52;
             // 
             // btClose
             // 
@@ -1682,6 +1518,7 @@
             this.tcPrograms_quote_o.PerformLayout();
             this.gbApplication.ResumeLayout(false);
             this.gbApplication.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).EndInit();
             this.gbWithdrawDocs.ResumeLayout(false);
             this.gbWithdrawDocs.PerformLayout();
             this.gbPassport.ResumeLayout(false);
@@ -1740,7 +1577,6 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.ComboBox cbProgram_quote_o;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox cbAgreed_budget_o;
         private System.Windows.Forms.CheckBox cbAgreed_target_o;
         private System.Windows.Forms.CheckBox cbAgreed_quote_o;
@@ -1797,37 +1633,22 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btWithdraw;
         private System.Windows.Forms.Button btFillRand;
-        private System.Windows.Forms.TextBox tbBonus_budget_o;
-        private System.Windows.Forms.TextBox tbMark_budget_o;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Label label32;
         private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
         private System.Windows.Forms.Button btRemoveDir_budget_o;
         private System.Windows.Forms.Button btAddDir_budget_o;
-        private System.Windows.Forms.TextBox tbBonus_paid_o;
-        private System.Windows.Forms.TextBox tbMark_paid_o;
         private System.Windows.Forms.Button btRemoveDir_paid_o;
-        private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Button btAddDir_paid_o;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.TextBox tbBonus_paid_z;
-        private System.Windows.Forms.TextBox tbMark_paid_z;
         private System.Windows.Forms.Button btRemoveDir_paid_z;
-        private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Button btAddDir_paid_z;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.TextBox tbBonus_target_o;
-        private System.Windows.Forms.TextBox tbMark_target_o;
         private System.Windows.Forms.Button btRemoveDir_target_o;
-        private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Button btAddDir_target_o;
-        private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.TextBox tbBonus_quote_o;
-        private System.Windows.Forms.TextBox tbMark_quote_o;
         private System.Windows.Forms.Button btRemoveDir_quote_o;
-        private System.Windows.Forms.Label label43;
         private System.Windows.Forms.Button btAddDir_quote_o;
-        private System.Windows.Forms.Label label44;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.DataGridView dgvExamsResults;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsResults_ProgramName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsResults_Exam;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsResults_IA;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

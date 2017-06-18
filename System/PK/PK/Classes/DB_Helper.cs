@@ -44,6 +44,8 @@ namespace PK.Classes
         public const string SubjectForen = "Иностранный язык";
 
         public const string BenefitOlympic = "Зачисление без вступительных испытаний";
+
+        public const string MagAchievementRedDiploma = "Иное";
         #endregion
 
         private readonly DB_Connector _DB_Connection;

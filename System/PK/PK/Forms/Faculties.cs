@@ -9,6 +9,7 @@ namespace PK.Forms
         private readonly Classes.DB_Connector _DB_Connection;
 
         private bool _Updating;
+        private string name;
 
         public Faculties(Classes.DB_Connector connection)
         {
@@ -53,8 +54,8 @@ namespace PK.Forms
             else if (_Updating)
             {
                 _DB_Connection.Update(DB_Table.FACULTIES,
-                    new Dictionary<string, object> { { "name", tbFacultyName.Text } },
-                    new Dictionary<string, object> { { "short_name", tbFacultyShortName.Text } });
+                    new Dictionary<string, object> { { "name", tbFacultyName.Text }, { "short_name", tbFacultyShortName.Text } },
+                    new Dictionary<string, object> { { "short_name", name } });
                 _Updating = false;
                 ShowHideControls(false);
 
@@ -100,6 +101,7 @@ namespace PK.Forms
                 ShowHideControls(true);
                 tbFacultyName.Text = dgvFaculties.SelectedRows[0].Cells[1].Value.ToString();
                 tbFacultyShortName.Text = dgvFaculties.SelectedRows[0].Cells[0].Value.ToString();
+                name = dgvFaculties.SelectedRows[0].Cells[0].Value.ToString();
                 _Updating = true;
             }
         }

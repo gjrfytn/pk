@@ -152,8 +152,13 @@ namespace PK.Forms
 
         private void dgvDirections_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if ((dgvDirections.CurrentRow.Cells[dgvDirections_Kafedra.Index].Value == null)||(dgvDirections.CurrentRow.Cells[dgvDirections_Kafedra.Index].Value.ToString() == ""))
+            if ((dgvDirections.CurrentRow.Cells[dgvDirections_Kafedra.Index].Value == null) || (dgvDirections.CurrentRow.Cells[dgvDirections_Kafedra.Index].Value.ToString() == ""))
                 _DB_Connection.Update(DB_Table.PROFILES, new Dictionary<string, object> { { "name", dgvDirections.CurrentRow.Cells[dgvDirections_Name.Index].Value.ToString() } },
+                    new Dictionary<string, object> { { "faculty_short_name", dgvDirections.CurrentRow.Cells[dgvDirections_FacultyName.Index].Value.ToString() },
+                        { "direction_id", (uint)dgvDirections.CurrentRow.Cells[dgvDirections_ID.Index].Value }, { "short_name", dgvDirections.CurrentRow.Cells[dgvDirections_ShortName.Index].Value.ToString() } });
+            else
+                _DB_Connection.Update(DB_Table.PROFILES, new Dictionary<string, object> { { "name", dgvDirections.CurrentRow.Cells[dgvDirections_Name.Index].Value.ToString()
+                        + "|" + dgvDirections.CurrentRow.Cells[dgvDirections_Kafedra.Index].Value.ToString() } },
                     new Dictionary<string, object> { { "faculty_short_name", dgvDirections.CurrentRow.Cells[dgvDirections_FacultyName.Index].Value.ToString() },
                         { "direction_id", (uint)dgvDirections.CurrentRow.Cells[dgvDirections_ID.Index].Value }, { "short_name", dgvDirections.CurrentRow.Cells[dgvDirections_ShortName.Index].Value.ToString() } });
         }

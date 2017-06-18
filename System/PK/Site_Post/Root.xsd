@@ -1,0 +1,186 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="AuthData"/>
+        <xs:element name="PackageData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Abitur" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element type="xs:string" name="Uin"/>
+                    <xs:element type="xs:string" name="Surname"/>
+                    <xs:element type="xs:string" name="Name"/>
+                    <xs:element type="xs:string" name="Name2"/>
+                    <xs:element type="xs:string" name="Password"/>
+                    <xs:element name="MathBall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="0"/>
+      						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="CheckedByFISMath">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="PhisBall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="0"/>
+      						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="CheckedByFISPhis">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element  name="RusBall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="0"/>
+      						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="CheckedByFISRus">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="ObshBall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="0"/>
+      						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="CheckedByFISObsh">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="ForenBall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+						<xs:minInclusive value="0"/>
+      						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="CheckedByFISForen">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element name="IABall">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte">
+    						<xs:enumeration value="0"/>
+    						<xs:enumeration value="1"/>
+    						<xs:enumeration value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+                    <xs:element type="xs:boolean" name="ODO"/>
+			<xs:element type="xs:boolean" name="Olymp"/>
+			<xs:element type="xs:boolean" name="Exam"/>
+                    <xs:element type="xs:boolean" name="Hostel"/>
+                    <xs:element type="xs:boolean" name="PP"/>
+			<xs:element type="xs:boolean" name="MCADO"/>
+			<xs:element type="xs:boolean" name="Chern"/>
+                    <xs:element name="Documents">
+                      <xs:complexType>
+				<xs:all>
+                          <xs:element type="xs:boolean" name="ApplicationOfAdmission"/>
+                          <xs:element type="xs:boolean" name="PassportCopy"/>
+                          <xs:element type="xs:boolean" name="CertificateDiplomCopy"/>
+                          <xs:element type="xs:boolean" name="HRRefCopy"/>
+                          <xs:element type="xs:boolean" name="ReferralPK"/>
+                          <xs:element type="xs:boolean" name="MedRef"/>
+                          <xs:element type="xs:boolean" name="Photo"/>
+                          <xs:element type="xs:boolean" name="OrphanDocument"/>
+                          <xs:element type="xs:boolean" name="InvalidDocument"/>
+                          <xs:element type="xs:boolean" name="PMPDocument"/>
+                          <xs:element type="xs:boolean" name="AbsenceOfContraindicationsForTraining"/>
+				</xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Applications" maxOccurs="1" minOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Application" maxOccurs="unbounded" minOccurs="1">
+                            <xs:complexType>
+				     <xs:all>	
+                                <xs:element name="FormOfEducation">
+						<xs:simpleType>
+							<xs:restriction base="xs:byte">
+    								<xs:enumeration value="1"/>
+    								<xs:enumeration value="2"/>
+    								<xs:enumeration value="3"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+                                <xs:element type="xs:int" name="Direction" />
+                                <xs:element type="xs:string" name="Profile" />
+                                <xs:element name="Condition">
+						<xs:simpleType>
+							<xs:restriction base="xs:byte">
+    								<xs:enumeration value="1"/>
+    								<xs:enumeration value="2"/>
+    								<xs:enumeration value="3"/>
+    								<xs:enumeration value="4"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+                                <xs:element name="ApplicationOfConsent">
+						<xs:simpleType>
+							<xs:restriction base="xs:byte">
+    								<xs:enumeration value="0"/>
+    								<xs:enumeration value="1"/>
+    								<xs:enumeration value="2"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				     </xs:all>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

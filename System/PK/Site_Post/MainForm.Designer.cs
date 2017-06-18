@@ -38,21 +38,22 @@
             this.btStart = new System.Windows.Forms.Button();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.cbUnits = new System.Windows.Forms.ComboBox();
+            this.tbResponse = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // cbCampaigns
             // 
             this.cbCampaigns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCampaigns.FormattingEnabled = true;
-            this.cbCampaigns.Location = new System.Drawing.Point(47, 58);
+            this.cbCampaigns.Location = new System.Drawing.Point(142, 21);
             this.cbCampaigns.Name = "cbCampaigns";
-            this.cbCampaigns.Size = new System.Drawing.Size(231, 21);
+            this.cbCampaigns.Size = new System.Drawing.Size(122, 21);
             this.cbCampaigns.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(111, 32);
+            this.label1.Location = new System.Drawing.Point(12, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 13);
             this.label1.TabIndex = 2;
@@ -61,7 +62,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(125, 103);
+            this.label2.Location = new System.Drawing.Point(279, 24);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 3;
@@ -71,15 +72,17 @@
             // 
             this.cbAdress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAdress.FormattingEnabled = true;
-            this.cbAdress.Location = new System.Drawing.Point(12, 130);
+            this.cbAdress.Items.AddRange(new object[] {
+            "http://sociomadi.ru/pk/getXMLdata.php"});
+            this.cbAdress.Location = new System.Drawing.Point(376, 21);
             this.cbAdress.Name = "cbAdress";
-            this.cbAdress.Size = new System.Drawing.Size(300, 21);
+            this.cbAdress.Size = new System.Drawing.Size(231, 21);
             this.cbAdress.TabIndex = 4;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 184);
+            this.label3.Location = new System.Drawing.Point(13, 60);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(141, 13);
             this.label3.TabIndex = 5;
@@ -89,14 +92,14 @@
             // 
             this.cbInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbInterval.FormattingEnabled = true;
-            this.cbInterval.Location = new System.Drawing.Point(166, 181);
+            this.cbInterval.Location = new System.Drawing.Point(157, 57);
             this.cbInterval.Name = "cbInterval";
-            this.cbInterval.Size = new System.Drawing.Size(69, 21);
+            this.cbInterval.Size = new System.Drawing.Size(55, 21);
             this.cbInterval.TabIndex = 6;
             // 
             // btStart
             // 
-            this.btStart.Location = new System.Drawing.Point(128, 228);
+            this.btStart.Location = new System.Drawing.Point(271, 231);
             this.btStart.Name = "btStart";
             this.btStart.Size = new System.Drawing.Size(75, 23);
             this.btStart.TabIndex = 7;
@@ -117,16 +120,26 @@
             "ч",
             "мин.",
             "сек."});
-            this.cbUnits.Location = new System.Drawing.Point(250, 181);
+            this.cbUnits.Location = new System.Drawing.Point(218, 57);
             this.cbUnits.Name = "cbUnits";
-            this.cbUnits.Size = new System.Drawing.Size(62, 21);
+            this.cbUnits.Size = new System.Drawing.Size(46, 21);
             this.cbUnits.TabIndex = 8;
+            // 
+            // tbResponse
+            // 
+            this.tbResponse.Location = new System.Drawing.Point(15, 95);
+            this.tbResponse.Multiline = true;
+            this.tbResponse.Name = "tbResponse";
+            this.tbResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbResponse.Size = new System.Drawing.Size(592, 125);
+            this.tbResponse.TabIndex = 9;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(324, 269);
+            this.ClientSize = new System.Drawing.Size(619, 266);
+            this.Controls.Add(this.tbResponse);
             this.Controls.Add(this.cbUnits);
             this.Controls.Add(this.btStart);
             this.Controls.Add(this.cbInterval);
@@ -152,6 +165,7 @@
         private System.Windows.Forms.Button btStart;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ComboBox cbUnits;
+        private System.Windows.Forms.TextBox tbResponse;
     }
 }
 

@@ -427,27 +427,60 @@ namespace PK.Forms
                             dateOk = false;
                         if (dateOk)
                         {
-                            Cursor.Current = Cursors.WaitCursor;
-
-                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            bool passportOK = true;
+                            List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                             {
-                                if (_ApplicationID == null)
+                                new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
+                                new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
+                                new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
+                            });
+                            if (passportFound.Count > 0)
+                            {
+                                List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
                                 {
-                                    SaveApplication(transaction);
-                                    btPrint.Enabled = true;
-                                    btWithdraw.Enabled = true;
-                                    ChangeAgreedChBs(true);
-                                }
-                                else
+                                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
                                 {
-                                    _EditingDateTime = DateTime.Now;
-                                    UpdateApplication(transaction);
-                                }
-
-                                transaction.Commit();
+                                    new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
+                                });
+                                foreach (object[] app in oldApplications)
+                                    if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
+                                    {
+                                        passportOK = false;
+                                        if (app[0].ToString() != "withdrawn")
+                                        {
+                                            MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                            break;
+                                        }
+                                        else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                            passportOK = true;
+                                    }
                             }
+                            if (passportOK && cbGraduationYear.SelectedItem.ToString() == "2014" && rbCertificate.Checked && !(tbEduDocNumber.Text == "" || tbEduDocSeries.Text.Length == 14))
+                                MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
+                            else if (passportOK)
+                            {
+                                Cursor.Current = Cursors.WaitCursor;
 
-                            Cursor.Current = Cursors.Default;
+                                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                {
+                                    if (_ApplicationID == null)
+                                    {
+                                        SaveApplication(transaction);
+                                        btPrint.Enabled = true;
+                                        btWithdraw.Enabled = true;
+                                        ChangeAgreedChBs(true);
+                                    }
+                                    else
+                                    {
+                                        _EditingDateTime = DateTime.Now;
+                                        UpdateApplication(transaction);
+                                    }
+
+                                    transaction.Commit();
+                                }
+
+                                Cursor.Current = Cursors.Default;
+                            }
                         }
                     }
                 }
@@ -525,6 +558,18 @@ namespace PK.Forms
                 cbCertificateHRD.Enabled = true;
                 cbEduDoc.Enabled = false;
                 cbEduDoc.Checked = false;
+            }
+            if (cbOriginal.Checked && _ApplicationID != null)
+            {
+                int agreedCount = 0;
+                foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_agreed_date" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
+                        }))
+                    if ((data[0] as DateTime?) != null)
+                        agreedCount++;
+                if (agreedCount <= 2)
+                    ChangeAgreedChBs(true);
             }
         }
 
@@ -845,20 +890,11 @@ namespace PK.Forms
                         }
                         else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
                         {
-                            //UpdateDirections();
-                            //foreach (Control control in ((CheckBox)sender).Parent.Controls)
-                            //{
-                            //    ComboBox comboBox = control as ComboBox;
-                            //    if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
-                            //        _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_agreed_date", DateTime.Now } },
-                            //            new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
-                            //            { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
-                            //            { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 }, { "application_id", _ApplicationID } });
-                            //}
                             ChangeAgreedChBs(false);
                             BlockDirChange();
+                            ((CheckBox)sender).Enabled = true;
                             cbOriginal.Enabled = false;
-                            cbAgreed.Enabled = true;
+                            cbAgreed.Enabled = true;                            
                         }
                         else
                         {
@@ -874,12 +910,17 @@ namespace PK.Forms
                 else
                 {
                     int disagreedCount = 0;
-                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date" }, new List<Tuple<string, Relation, object>>
+                    int agreedCount = 0;
+                    foreach (object[] data in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "is_disagreed_date", "is_agreed_date" }, new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("application_id", Relation.EQUAL,_ApplicationID)
                             }))
+                    {
                         if ((data[0] as DateTime?) != null)
                             disagreedCount++;
+                        if ((data[1] as DateTime?) != null)
+                            agreedCount++;
+                    }
                     if (disagreedCount >= _AgreedChangeMaxCount)
                     {
                         MessageBox.Show("Нельзя изменить согласие на зачисление больше " + _AgreedChangeMaxCount + " раз.");
@@ -888,19 +929,10 @@ namespace PK.Forms
                     }
                     else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
                     {
-                        //foreach (Control control in ((CheckBox)sender).Parent.Controls)
-                        //{
-                        //    ComboBox comboBox = control as ComboBox;
-                        //    if (comboBox != null && comboBox.Name == "cbDirection" + ((CheckBox)sender).Name.Substring(8) && ((ComboBox)comboBox).SelectedIndex != -1)
-                        //        _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object> { { "is_disagreed_date", DateTime.Now } },
-                        //            new Dictionary<string, object> { { "faculty_short_name", ((DirTuple)comboBox.SelectedValue).Item2 },
-                        //            { "direction_id", ((DirTuple)comboBox.SelectedValue).Item1 }, { "edu_form_id", ((DirTuple)comboBox.SelectedValue).Item5 },
-                        //            { "edu_source_id", ((DirTuple)comboBox.SelectedValue).Item4 }, { "application_id", _ApplicationID } });
-                        //}
-                        if (disagreedCount < _AgreedChangeMaxCount - 1)
-                            ChangeAgreedChBs(true);
+                        if (agreedCount == _AgreedChangeMaxCount && disagreedCount == _AgreedChangeMaxCount - 1)
+                            ((CheckBox)sender).Enabled = false;                            
                         else
-                            ((CheckBox)sender).Enabled = false;
+                            ChangeAgreedChBs(true);
                         cbAgreed.Checked = false;
                         cbAgreed.Enabled = false;
                         cbOriginal.Enabled = true;
@@ -995,6 +1027,11 @@ namespace PK.Forms
                     dgv.CurrentCell.Style.BackColor = System.Drawing.Color.LightPink;
                 else
                     dgv.CurrentCell.Style.BackColor = System.Drawing.Color.White;
+
+                cbOlympiad.Enabled = false;
+                foreach (DataGridViewRow row in dgvExams.Rows)
+                    if ((byte)row.Cells[dgvExams_EGE.Index].Value >= 75)
+                        cbOlympiad.Enabled = true;
             }
         }
 
@@ -1163,6 +1200,7 @@ namespace PK.Forms
         {
             e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
+        
 
         private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
@@ -1344,16 +1382,22 @@ namespace PK.Forms
 
         private void SaveSport(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            uint sportDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                { { "type", "sport" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName } }, transaction);            
-            if (SportDoc.diplomaType != Classes.DB_Helper.SportAchievementGTO || SportDoc.diplomaType != Classes.DB_Helper.SportAchievementEuropeChampionship
-                || SportDoc.diplomaType != Classes.DB_Helper.SportAchievementWorldChampionship)
+            uint sportDocID;
+            if (SportDoc.diplomaType != Classes.DB_Helper.SportAchievementGTO && SportDoc.diplomaType != Classes.DB_Helper.SportAchievementEuropeChampionship
+                && SportDoc.diplomaType != Classes.DB_Helper.SportAchievementWorldChampionship)
+            {
+                sportDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                { { "type", "sport" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName } }, transaction);
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", sportDocID},
                 { "name", SportDoc.docName}, { "dictionaries_dictionary_id", FIS_Dictionary.SPORT_DIPLOMA_TYPE },
                 { "dictionaries_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SPORT_DIPLOMA_TYPE, SportDoc.diplomaType) } }, transaction);
+            }
             else
-                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", sportDocID}, { "name", SportDoc.docName} }, transaction);
-
+            {
+                sportDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                { { "type", "custom" }, { "date", SportDoc.docDate}, { "organization", SportDoc.orgName } }, transaction);
+                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", sportDocID }, { "name", SportDoc.docName } }, transaction);                
+            }
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", sportDocID } }, transaction);
 
             uint achevmentCategoryId = 0;
@@ -1944,12 +1988,36 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     }))
-                        if (documentData[0].ToString() == Classes.DB_Helper.MADIOlympDocName)
+                        if (documentData[0].ToString()!= null && documentData[0].ToString() == Classes.DB_Helper.MADIOlympDocName)
                         {
                             MADIOlympDoc.olympName = documentData[1].ToString();
                             MADIOlympDoc.olympDate = (DateTime)document[4];
                             MADIOlympDoc.olypmOrg = document[5].ToString();
                             cbMADIOlympiad.Checked = true;
+                        }
+                    else
+                        {
+                            SportDoc.docDate = (DateTime)document[4];
+                            SportDoc.docName = documentData[0].ToString();
+                            SportDoc.orgName = document[5].ToString();
+                            cbSport.Checked = true;
+                    
+                            foreach(object[] achievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
+                                }))
+                            {
+                                string achievementName = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" },
+                                    new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
+                                })[0][0]);
+
+                                if (achievementName == Classes.DB_Helper.SportAchievementGTO || achievementName == Classes.DB_Helper.SportAchievementWorldChampionship
+                                    || achievementName == Classes.DB_Helper.SportAchievementEuropeChampionship)
+                                    SportDoc.diplomaType = achievementName;
+                            }
                         }
                 }
             }
@@ -2360,7 +2428,6 @@ namespace PK.Forms
                     {
                         if (cbSport.Checked)
                         {
-                            sportFound = true;
                             uint achevmentCategoryIdNew = 0;
                             switch (SportDoc.diplomaType)
                             {
@@ -2401,6 +2468,7 @@ namespace PK.Forms
 
                             if (achevmentCategoryIdNew == achevmentCategoryIdOld)
                             {
+                                sportFound = true;
                                 _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", SportDoc.docDate }, { "organization", SportDoc.orgName } },
                                     new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                                 _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", SportDoc.docName } },
@@ -2409,17 +2477,18 @@ namespace PK.Forms
                             else
                             {
                                 _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID } }, transaction);
-                                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID},
-                                    { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
-                                    new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryIdNew)
-                            })[0][0]}, { "document_id", (uint)document[0]} }, transaction);
-                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", SportDoc.docDate }, { "organization", SportDoc.orgName } },
-                                    new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
-                                _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", SportDoc.docName } },
-                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                                _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                            //    _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "application_id", _ApplicationID},
+                            //        { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                            //        new List<Tuple<string, Relation, object>>
+                            //{
+                            //    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                            //    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, achevmentCategoryIdNew)
+                            //})[0][0]}, { "document_id", (uint)document[0]} }, transaction);
+                            //    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", SportDoc.docDate }, { "organization", SportDoc.orgName } },
+                            //        new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                            //    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", SportDoc.docName } },
+                            //        new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
                             }
                         }
                         else
@@ -2509,38 +2578,50 @@ namespace PK.Forms
                     }
                     else if (document[1].ToString() == "custom")
                     {
-                        if (cbMADIOlympiad.Checked)
-                        {
-                            foreach (object[] documentData in _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "text_data" },
+                        List<object[]> otherData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "text_data" },
                                 new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                            }))
-                                if (documentData[0].ToString() == Classes.DB_Helper.MADIOlympDocName)
+                            });
+                        if (otherData.Count > 0 && otherData[0][1].ToString() == Classes.DB_Helper.MADIOlympDocName)
+                            if (cbMADIOlympiad.Checked)
+                            {
+                                _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", MADIOlympDoc.olympName } },
+                                    new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", MADIOlympDoc.olympDate }, { "organization", MADIOlympDoc.olypmOrg } },
+                                    new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                                MADIOlympFound = true;
+                            }
+                            else
+                            {
+                                List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                                    new List<Tuple<string, Relation, object>>
                                 {
-                                    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "text_data", MADIOlympDoc.olympName } },
-                                        new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
-                                    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", MADIOlympDoc.olympDate }, { "organization", MADIOlympDoc.olypmOrg } },
-                                        new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
-                                    MADIOlympFound = true;
-                                }
+                                    new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
+                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.OlympAchievementName))
+                                });
+
+                                uint achievementId = 0;
+                                if (achievments.Count != 0)
+                                    achievementId = (uint)(achievments[0][0]);
+
+                                _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "documents_id", (uint)document[0] } }, transaction);
+                                _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                                _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "institution_achievement_id", achievementId } }, transaction);
+                                _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                            }
+                        else if (cbSport.Checked && (SportDoc.diplomaType == Classes.DB_Helper.SportAchievementGTO || SportDoc.diplomaType == Classes.DB_Helper.SportAchievementWorldChampionship
+                                || SportDoc.diplomaType == Classes.DB_Helper.SportAchievementEuropeChampionship))
+                        {
+                            _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "name", MADIOlympDoc.olympName } },
+                                new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "date", MADIOlympDoc.olympDate }, { "organization", MADIOlympDoc.olypmOrg } },
+                                new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                            sportFound = true;
                         }
                         else
                         {
-                            List<object[]> achievments = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
-                                new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object> ("category_dict_id", Relation.EQUAL, (uint)FIS_Dictionary.IND_ACH_CATEGORIES),
-                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.OlympAchievementName))
-                            });
-
-                            uint achievementId = 0;
-                            if (achievments.Count != 0)
-                                achievementId = (uint)(achievments[0][0]);
-
-                            _DB_Connection.Delete(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "documents_id", (uint)document[0] } }, transaction);
-                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
-                            _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "institution_achievement_id", achievementId } }, transaction);
+                            _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object> { { "document_id", (uint)document[0] } },transaction);
                             _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                         }
                     }
@@ -3000,17 +3081,17 @@ namespace PK.Forms
 
         private void BlockDirChange()
         {
-            //foreach (TabPage page in tcDirections.TabPages)
-            //    if (page.Name.Split('_')[1] != "paid")
-            //        foreach (Control control in page.Controls)
-            //        {
-            //            ComboBox cb = control as ComboBox;
-            //            if (cb != null)
-            //                cb.Enabled = false;
-            //            Button bt = control as Button;
-            //            if (bt != null)
-            //                bt.Enabled = false;
-            //        }
+            foreach (TabPage page in tcDirections.TabPages)
+                if (page.Name.Split('_')[1] != "paid")
+                    foreach (Control control in page.Controls)
+                    {
+                        ComboBox cb = control as ComboBox;
+                        if (cb != null)
+                            cb.Enabled = false;
+                        Button bt = control as Button;
+                        if (bt != null)
+                            bt.Enabled = false;
+                    }
         }
     }
 }
