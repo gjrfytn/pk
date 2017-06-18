@@ -299,7 +299,23 @@ namespace PK.Classes
 
                 if (master)
                 {
-                    byte redDiplomaMark = 0; //TODO
+                    byte redDiplomaMark = (byte)connection.Select(
+                        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                        new string[] { "institution_achievement_id" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                        ).Join(
+                        connection.Select(
+                            DB_Table.INSTITUTION_ACHIEVEMENTS,
+                            new string[] { "id", "value" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
+                            }),
+                        k1 => k1[0],
+                        k2 => k2[0],
+                        (s1, s2) => (ushort)s2[1]
+                        ).SingleOrDefault();
 
                     if (percRecordBack)
                     {
@@ -993,11 +1009,11 @@ namespace PK.Classes
                 {
                     if (order.Master)
                     {
-                        List<Tuple<string, ushort>> result=new List<Tuple<string, ushort>>();
+                        List<Tuple<string, ushort>> result = new List<Tuple<string, ushort>>();
 
                         foreach (var appl in applications)
                         {
-                            var orders=  connection.Select(
+                            var orders = connection.Select(
                                 DB_Table.ORDERS_HAS_APPLICATIONS,
                                 new string[] { "orders_number" },
                                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl.ApplID) }
@@ -1014,13 +1030,13 @@ namespace PK.Classes
                                     }),
                                 k1 => k1[0],
                                 k2 => k2[0],
-                                (s1, s2) => new {Type= s2[1].ToString(),Date= (DateTime)s2[2],Direction= (uint)s2[3],Profile=s2[4].ToString() }
+                                (s1, s2) => new { Type = s2[1].ToString(), Date = (DateTime)s2[2], Direction = (uint)s2[3], Profile = s2[4].ToString() }
                                 ).GroupBy(
-                                k=>Tuple.Create(k.Direction,k.Profile),
-                                (k,g)=>new
+                                k => Tuple.Create(k.Direction, k.Profile),
+                                (k, g) => new
                                 {
-                                    
-                                }                                );
+
+                                });
                         }
 
                         table = result;
@@ -1047,12 +1063,33 @@ namespace PK.Classes
                                 new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
                             }).Select(s => new { EntrID = (uint)s[0], Exam = (short)s[1], Bonus = (ushort)s[2] });
 
-                        table = applications.Join(
+                        var redDiplomaID_Bonus = connection.Select(
+                            DB_Table.INSTITUTION_ACHIEVEMENTS,
+                            new string[] { "id", "value" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
+                            }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
+
+                        var redDimplomaAppls = applications.Join(
+                            connection.Select(
+                                DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                                new string[] { "application_id", },
+                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, redDiplomaID_Bonus.ID) }),
+                            k1 => k1.ApplID,
+                            k2 => k2[0],
+                            (s1, s2) => new { s1.ApplID }
+                            );
+
+                        table = applications.Select(
+                            s => new { s.EntrID, s.Name, RedDiplomaBonus = redDimplomaAppls.Any(a => a.ApplID == s.ApplID) ? redDiplomaID_Bonus.Bonus : 0 }
+                            ).Join(
                             marks,
                             k1 => k1.EntrID,
                             k2 => k2.EntrID,
-                            (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus))
-                            ); //TODO диплом с отличием
+                            (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus + s1.RedDiplomaBonus))
+                            );
                     }
                     else
                     {

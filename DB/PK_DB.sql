@@ -202,8 +202,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`directions` (
   CONSTRAINT `directions_has_faculties`
     FOREIGN KEY (`faculty_short_name`)
     REFERENCES `pk_db`.`faculties` (`short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `directions_has_dictionary_10_items`
     FOREIGN KEY (`direction_id`)
     REFERENCES `pk_db`.`dictionary_10_items` (`id`)
@@ -220,14 +220,14 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`profiles` (
   `faculty_short_name` VARCHAR(5) NOT NULL COMMENT 'Факультет.',
   `direction_id` INT UNSIGNED NOT NULL COMMENT 'Направление.',
   `short_name` VARCHAR(5) NOT NULL COMMENT 'Краткое название профиля.',
-  `name` VARCHAR(150) NOT NULL COMMENT 'Название профиля.',
+  `name` VARCHAR(300) NOT NULL COMMENT 'Название профиля.',
   PRIMARY KEY (`faculty_short_name`, `direction_id`, `short_name`),
   INDEX `has_idx` (`faculty_short_name` ASC, `direction_id` ASC),
   CONSTRAINT `profiles_has`
     FOREIGN KEY (`faculty_short_name` , `direction_id`)
     REFERENCES `pk_db`.`directions` (`faculty_short_name` , `direction_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Профили обучения по направлениям.';
 
@@ -245,8 +245,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`campaigns_faculties_data` (
   CONSTRAINT `fk_faculties_has_campaigns_faculties1`
     FOREIGN KEY (`faculty_short_name`)
     REFERENCES `pk_db`.`faculties` (`short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_faculties_has_campaigns_campaigns1`
     FOREIGN KEY (`campaign_id`)
     REFERENCES `pk_db`.`campaigns` (`id`)
@@ -273,8 +273,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`campaigns_directions_data` (
   CONSTRAINT `campaigns_directions_data_has_fac_dir`
     FOREIGN KEY (`direction_id` , `direction_faculty`)
     REFERENCES `pk_db`.`directions` (`direction_id` , `faculty_short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `campaigns_directions_data_has_camp_fac_d`
     FOREIGN KEY (`campaign_id` , `direction_faculty`)
     REFERENCES `pk_db`.`campaigns_faculties_data` (`campaign_id` , `faculty_short_name`)
@@ -301,8 +301,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`campaigns_profiles_data` (
   CONSTRAINT `campaigns_profiles_data_has_profiles`
     FOREIGN KEY (`profiles_direction_faculty` , `profiles_direction_id` , `profiles_short_name`)
     REFERENCES `pk_db`.`profiles` (`faculty_short_name` , `direction_id` , `short_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `campaigns_profiles_data_has_camp_dir_d`
     FOREIGN KEY (`campaigns_id` , `profiles_direction_faculty` , `profiles_direction_id`)
     REFERENCES `pk_db`.`campaigns_directions_data` (`campaign_id` , `direction_faculty` , `direction_id`)
@@ -950,8 +950,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`campaigns_directions_target_organizations_da
   CONSTRAINT `fk_campaigns_directions_data_has_target_organizations_target_1`
     FOREIGN KEY (`target_organization_id`)
     REFERENCES `pk_db`.`target_organizations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'Данные направления кампании по целевым организациям.';
 

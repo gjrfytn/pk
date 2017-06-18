@@ -42,6 +42,28 @@ namespace PK.Classes
             }
         }
 
+        public class Document
+        {
+            public readonly uint ID;
+            public readonly string Type;
+            public readonly string Series;
+            public readonly string Number;
+            public readonly DateTime? Date;
+            public readonly string Organization;
+            public readonly DateTime? OrigDate;
+
+            public Document(uint id, string type, string series, string number, DateTime? date, string organization, DateTime? origDate)
+            {
+                ID = id;
+                Type = type;
+                Series = series;
+                Number = number;
+                Date = date;
+                Organization = organization;
+                OrigDate = origDate;
+            }
+        }
+
         public static IEnumerable<Mark> GetMarks(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
         {
             #region Contracts
@@ -163,6 +185,19 @@ namespace PK.Classes
                     new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
                     new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,direction)
                 }).Select(s => (uint)s[0]);
+        }
+
+        public static IEnumerable<Document> GetApplicationDocuments(DB_Connector connection, uint applicationID)
+        {
+            return connection.CallProcedure("get_application_docs", applicationID).Select(s => new Document(
+                (uint)s[0],
+                s[1].ToString(),
+                s[2] as string,
+                s[3] as string,
+                s[4] as DateTime?,
+                s[5] as string,
+                s[6] as DateTime?
+                ));
         }
     }
 }

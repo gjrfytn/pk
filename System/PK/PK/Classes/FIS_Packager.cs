@@ -307,35 +307,176 @@ namespace PK.Classes
 
                 List<ApplicationCommonBenefit> benefits = null;
 
-                //List<object[]> benefitsBD = connection.Select( //TODO
-                //    DB_Table.APPLICATION_COMMON_BENEFITS,
-                //    new string[] { "id", "document_type_id", "reason_document_id", "allow_education_document_id", "benefit_kind_id" },
-                //    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) }
-                //    );
+                List<object[]> benefitsBD = connection.Select(
+                    DB_Table.APPLICATION_COMMON_BENEFITS,
+                    new string[] { "id", "document_type_id", "reason_document_id", "allow_education_document_id", "benefit_kind_id" },
+                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) }
+                    );
 
-                //if (benefitsBD.Any())
-                //{
-                //    benefits = new List<ApplicationCommonBenefit>(benefitsBD.Count);
-                //    foreach (object[] row in benefitsBD)
-                //        if ((uint)row[4] == 4)
-                //            foreach (var entrance in finSourceEduForms.Where(s => s.EduSource == 20)) //TODO
-                //                benefits.Add(new ApplicationCommonBenefit(
-                //                    new TUID(row[0].ToString()),
-                //                    entrance.FSEF.CompetitiveGroupUID,
-                //                    (uint)row[1],
-                //                    new DocumentReason(row[2]),
-                //                    (uint)row[4]
-                //                    ));
-                //        else
-                //            foreach (var entrance in finSourceEduForms)
-                //                benefits.Add(new ApplicationCommonBenefit(
-                //                    new TUID(row[0].ToString()),
-                //                    entrance.FSEF.CompetitiveGroupUID,
-                //                    (uint)row[1],
-                //                    new DocumentReason(row[2]),
-                //                    (uint)row[4]
-                //                    ));
-                //}
+                IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
+
+                if (benefitsBD.Any())
+                {
+                    benefits = new List<ApplicationCommonBenefit>(benefitsBD.Count);
+                    foreach (object[] row in benefitsBD)
+                    {
+                        DocumentReason reasonDoc = null;
+                        DB_Queries.Document doc = docs.Single(s => s.ID == (uint)row[2]);
+                        object[] data;
+                        DB_Queries.Document allowDoc;
+
+                        switch ((uint)row[1])//TODO
+                        {
+                            case 9:
+                                data = connection.Select(
+                                    DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "diploma_type_id", "olympic_id", "profile_id", "class_number", "olympic_subject_id" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+
+                                reasonDoc = new DocumentReason(new TOlympicDocument(
+                                    new TUID(doc.ID),
+                                    (uint)data[0],
+                                    (uint)data[1],
+                                    (uint)data[2],
+                                    (uint)data[3],
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                                    doc.Number != null ? new TDocumentNumber(doc.Number) : null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
+                                    data[4] as uint?
+                                    ));
+                                break;
+                            case 10:
+                                data = connection.Select(
+                                    DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "diploma_type_id", "class_number", "olympic_id" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+
+                                reasonDoc = new DocumentReason(new TOlympicTotalDocument(
+                                    new TUID(doc.ID),
+                                    new TDocumentNumber(doc.Number),
+                                    (uint)data[0],
+                                    (uint)data[1],
+                                    (uint)data[2],
+                                    new List<SubjectID> { null },//TODO
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Series != null ? new TDocumentSeries(doc.Series) : null
+                                    ));
+                                break;
+                            case 11:
+                                data = connection.Select(
+                                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "dictionaries_item_id" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+                                allowDoc = docs.Single(s => s.ID == (uint)row[3]);
+
+                                reasonDoc = new DocumentReason(new MedicalDocuments(
+                                    new BenefitDocument(new TDisabilityDocument(
+                                        new TUID(doc.ID),
+                                        new TDocumentSeries(doc.Series),
+                                        new TDocumentNumber(doc.Number),
+                                        (uint)data[0],
+                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                        doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
+                                        doc.Organization
+                                        )),
+                                    new TAllowEducationDocument(
+                                        new TUID(allowDoc.ID),
+                                        new TDocumentNumber(doc.Number),
+                                        new TDate(doc.Date.Value),
+                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                        doc.Organization
+                                    )));
+                                break;
+                            case 12:
+                                allowDoc = docs.Single(s => s.ID == (uint)row[3]);
+
+                                reasonDoc = new DocumentReason(new MedicalDocuments(
+                                    new BenefitDocument(new TMedicalDocument(
+                                        new TUID(doc.ID),
+                                        new TDocumentNumber(doc.Number),
+                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                        doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
+                                        doc.Organization
+                                        )),
+                                    new TAllowEducationDocument(
+                                        new TUID(allowDoc.ID),
+                                        new TDocumentNumber(doc.Number),
+                                        new TDate(doc.Date.Value),
+                                        doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                        doc.Organization
+                                        )));
+                                break;
+                            case 27:
+                                data = connection.Select(
+                                    DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "diploma_type_id", "olympic_name", "profile_id" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+
+                                reasonDoc = new DocumentReason(new TUkraineOlympic(
+                                    new TUID(doc.ID),
+                                    new TDocumentNumber(doc.Number),
+                                    (uint)data[0],
+                                    data[1].ToString(),
+                                    new DB_Helper(connection).GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)data[2]),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null
+                                    ));
+                                break;
+                            case 28:
+                                data = connection.Select(
+                                    DB_Table.OLYMPIC_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "country_id", "olympic_name", "profile_id" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+
+                                reasonDoc = new DocumentReason(new TInternationalOlympic(
+                                    new TUID(doc.ID),
+                                    new TDocumentNumber(doc.Number),
+                                    (uint)data[0],
+                                    data[1].ToString(),
+                                    new DB_Helper(connection).GetDictionaryItemName(FIS_Dictionary.OLYMPICS_PROFILES, (uint)data[2]),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null
+                                    ));
+                                break;
+                            case 30:
+                                data = connection.Select(
+                                    DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                    new string[] { "dictionaries_item_id", "name" },
+                                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                    )[0];
+
+                                reasonDoc = new DocumentReason(new TOrphanDocument(
+                                    new TUID(doc.ID),
+                                    (uint)data[0],
+                                    new TDocumentName(data[1].ToString()),
+                                    new TDate(doc.Date.Value),
+                                    doc.Organization,
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                                    doc.Number != null ? new TDocumentNumber(doc.Number) : null
+                                    ));
+                                break;
+                        }
+
+                        if ((uint)row[4] == 4)
+                            foreach (var entrance in (uint)row[4] == 4 ? finSourceEduForms.Where(s => s.EduSource == 20) : finSourceEduForms) //TODO
+                                benefits.Add(new ApplicationCommonBenefit(
+                                    new TUID(row[0].ToString()),
+                                    entrance.FSEF.CompetitiveGroupUID,
+                                    (uint)row[1],
+                                    reasonDoc,
+                                    (uint)row[4]
+                                    ));
+                    }
+                }
 
                 List<IndividualAchievement> achievements = null;
 
@@ -364,14 +505,13 @@ namespace PK.Classes
                             ));
                 }
 
-                ApplicationDocuments docs = PackApplicationDocuments(connection, appl.ID);
+                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs);
 
                 List<EntranceTestResult> testsResults = PackApplicationTestResults(
                     connection,
                     campaignID,
                     finSourceEduForms.Select(s => System.Tuple.Create(s.DirID, s.FSEF.CompetitiveGroupUID)),
-                    marks.Where(s => s.ApplID == appl.ID),
-                    null//TODO  new IsDisabled(
+                    marks.Where(s => s.ApplID == appl.ID)
                     );
 
                 applications.Add(new Application(
@@ -379,18 +519,18 @@ namespace PK.Classes
                     appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
-                        docs.IdentityDocument.LastName,
-                        docs.IdentityDocument.FirstName,
-                        docs.IdentityDocument.GenderID.Value,
+                        packedDocs.IdentityDocument.LastName,
+                        packedDocs.IdentityDocument.FirstName,
+                        packedDocs.IdentityDocument.GenderID.Value,
                         new EmailOrMailAddress(appl.Email.ToString()),
-                        docs.IdentityDocument.MiddleName,
+                        packedDocs.IdentityDocument.MiddleName,
                         appl.Info
                         ),
                     new TDateTime(appl.RegTime),
                     appl.Hostel,
                     appl.Status,
                     finSourceEduForms.Select(s => s.FSEF).ToList(),
-                    docs,
+                    packedDocs,
                     appl.Comment,
                     benefits,
                     testsResults.Count != 0 ? testsResults : null,
@@ -662,24 +802,14 @@ namespace PK.Classes
             }
         }
 
-        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, uint applicationID)
+        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs)
         {
             IdentityDocument identDoc = null;
             EduDocument eduDoc = null;
             OrphanDocument orphanDoc = null;
             SportDocument sportDoc = null;
             List<CustomDocument> customDocs = new List<CustomDocument>();
-            foreach (var doc in connection.CallProcedure("get_application_docs", applicationID).Select(
-                s => new
-                {
-                    ID = (uint)s[0],
-                    Type = s[1].ToString(),
-                    Series = s[2].ToString(),
-                    Number = s[3].ToString(),
-                    Date = s[4] as System.DateTime?,
-                    Organization = s[5].ToString(),
-                    OrigDate = s[6] as System.DateTime?
-                }))
+            foreach (var doc in docs)
                 switch (doc.Type)
                 {
                     case "identity":
@@ -845,8 +975,7 @@ namespace PK.Classes
             DB_Connector connection,
             uint campaignID,
             IEnumerable<System.Tuple<uint, TUID>> directionsAndCompGroupsIDs,
-            IEnumerable<DB_Queries.Mark> applMarks,
-            IsDisabled specCondDoc)
+            IEnumerable<DB_Queries.Mark> applMarks)
         {
             List<EntranceTestResult> testsResults = new List<EntranceTestResult>();
             foreach (var entr in directionsAndCompGroupsIDs)
@@ -870,9 +999,7 @@ namespace PK.Classes
                             new TDocumentNumber("Экзаменационная ведомость от " + res.FromExamDate.Value.ToShortDateString()),
                             new TDate(res.FromExamDate.Value),
                             1
-                            )) : null,
-                        null,
-                        res.FromExamDate.HasValue ? specCondDoc : null
+                            )) : null
                         ));
             }
 
