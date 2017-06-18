@@ -190,16 +190,7 @@ namespace PK.Classes
                 foreach (Stream stream in entrances)
                     inventoryTableParams[0].Add(new string[] { _Streams[Tuple.Create(stream.EduForm, stream.EduSource)].Item1 + " форма обучения" });
 
-                var docs = connection.CallProcedure("get_application_docs", applID).Select(
-                    s => new
-                    {
-                        ID = (uint)s[0],
-                        Type = s[1].ToString(),
-                        Series = s[2] as string,
-                        Number = s[3] as string,
-                        Date = s[4] as DateTime?,
-                        OrigDate = s[6] as DateTime?
-                    });
+                IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, applID);
 
                 inventoryTableParams[1].Add(new string[] { "Заявление на поступление" });
                 if (entrances.Any(s => s.Directions.Any(e => e.AgreedDate != null && e.DisagreedDate == null)))
