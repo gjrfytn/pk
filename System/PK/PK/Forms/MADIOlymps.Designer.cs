@@ -31,6 +31,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tbOlympName = new System.Windows.Forms.TextBox();
             this.btSave = new System.Windows.Forms.Button();
+            this.tbOrganization = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // label1
@@ -51,7 +55,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(209, 82);
+            this.btSave.Location = new System.Drawing.Point(209, 154);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 2;
@@ -59,11 +63,48 @@
             this.btSave.UseVisualStyleBackColor = true;
             this.btSave.Click += new System.EventHandler(this.btSave_Click);
             // 
+            // tbOrganization
+            // 
+            this.tbOrganization.Location = new System.Drawing.Point(12, 107);
+            this.tbOrganization.Name = "tbOrganization";
+            this.tbOrganization.Size = new System.Drawing.Size(316, 20);
+            this.tbOrganization.TabIndex = 3;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(123, 86);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(77, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Организация:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(375, 86);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(99, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Дата проведения:";
+            // 
+            // dtpDate
+            // 
+            this.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDate.Location = new System.Drawing.Point(366, 107);
+            this.dtpDate.Name = "dtpDate";
+            this.dtpDate.Size = new System.Drawing.Size(119, 20);
+            this.dtpDate.TabIndex = 6;
+            // 
             // MADIOlymps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 117);
+            this.ClientSize = new System.Drawing.Size(497, 189);
+            this.Controls.Add(this.dtpDate);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.tbOrganization);
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.tbOlympName);
             this.Controls.Add(this.label1);
@@ -84,5 +125,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbOlympName;
         private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.TextBox tbOrganization;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DateTimePicker dtpDate;
     }
 }

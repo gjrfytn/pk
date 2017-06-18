@@ -42,6 +42,8 @@ namespace PK.Classes
         public const string SubjectPhis = "Физика";
         public const string SubjectObsh = "Обществознание";
         public const string SubjectForen = "Иностранный язык";
+
+        public const string BenefitOlympic = "Зачисление без вступительных испытаний";
         #endregion
 
         private readonly DB_Connector _DB_Connection;
