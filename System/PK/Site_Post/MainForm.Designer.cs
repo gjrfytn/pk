@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.cbCampaigns = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,6 +40,7 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.cbUnits = new System.Windows.Forms.ComboBox();
             this.tbResponse = new System.Windows.Forms.TextBox();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // cbCampaigns
@@ -134,6 +136,12 @@
             this.tbResponse.Size = new System.Drawing.Size(592, 125);
             this.tbResponse.TabIndex = 9;
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Отправка данных на сайт ПК МАДИ";
+            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,8 +156,13 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbCampaigns);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Отправка данных на сайт ПК МАДИ";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -166,6 +179,7 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ComboBox cbUnits;
         private System.Windows.Forms.TextBox tbResponse;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

@@ -132,6 +132,10 @@ namespace PK.Forms
             cbRegion.Items.AddRange(_KLADR.GetRegions().ToArray());
             dtpDateOfBirth.MaxDate = DateTime.Now;
             dtpIDDocDate.MaxDate = DateTime.Now;
+            tbMobilePhone.Text = tbMobilePhone.Tag.ToString();
+            tbMobilePhone.ForeColor = System.Drawing.Color.Gray;
+            tbHomePhone.Text = tbHomePhone.Tag.ToString();
+            tbHomePhone.ForeColor = System.Drawing.Color.Gray;
 
             for (int i = DateTime.Now.Year; i >= 1950; i--)
                 cbGraduationYear.Items.Add(i);
@@ -383,8 +387,11 @@ namespace PK.Forms
             if (tbLastName.Text == "" || tbFirstName.Text == "" || tbIDDocSeries.Text == "" || tbIDDocNumber.Text == ""
                 || tbPlaceOfBirth.Text == "" || cbRegion.Text == "" || tbPostcode.Text == "")
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
-            else if ((rbDiploma.Checked || rbCertificate.Checked || rbSpravka.Checked) && (tbEduDocSeries.Text == "" || tbEduDocNumber.Text == ""))
+            else if ((rbDiploma.Checked || rbCertificate.Checked || rbSpravka.Checked)
+                && (rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014 && tbEduDocNumber.Text == "" || tbEduDocSeries.Text == ""))
                 MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
+            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (tbEduDocNumber.Text != "" || tbEduDocSeries.Text.Length != 14))
+                MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
             else
             {
                 bool found = false;
@@ -456,9 +463,7 @@ namespace PK.Forms
                                             passportOK = true;
                                     }
                             }
-                            if (passportOK && cbGraduationYear.SelectedItem.ToString() == "2014" && rbCertificate.Checked && !(tbEduDocNumber.Text == "" || tbEduDocSeries.Text.Length == 14))
-                                MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
-                            else if (passportOK)
+                            if (passportOK)
                             {
                                 Cursor.Current = Cursors.WaitCursor;
 
@@ -1081,8 +1086,8 @@ namespace PK.Forms
             tbInstitutionNumber.Text = "";
             tbPostcode.Text = "";
             mtbEMail.Text = "";
-            mtbHomePhone.Text = "";
-            mtbMobilePhone.Text = "";
+            tbMobilePhone.Text = "";
+            tbHomePhone.Text = "";
 
             Random rand = new Random();
             int stringLength = 10;
@@ -1125,12 +1130,12 @@ namespace PK.Forms
             if (rand.Next(2) > 0)
                 for (int i = 0; i < 10; i++)
                     phone += digits[rand.Next(digits.Length)];
-            mtbHomePhone.Text = phone;
+            tbMobilePhone.Text = phone;
             phone = "";
             if (rand.Next(2) > 0)
                 for (int i = 0; i < 10; i++)
                     phone += digits[rand.Next(digits.Length)];
-            mtbMobilePhone.Text = phone;
+            tbHomePhone.Text = phone;
 
             cbSex.SelectedIndex = rand.Next(cbSex.Items.Count);
             cbRegion.SelectedIndex = rand.Next(cbRegion.Items.Count);
@@ -1211,7 +1216,31 @@ namespace PK.Forms
         {
             e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
-        
+
+        private void tbPhone_Enter(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).ForeColor == System.Drawing.Color.Gray)
+            {
+                (sender as TextBox).Text = "";
+                (sender as TextBox).ForeColor = System.Drawing.Color.Black;
+            }
+        }
+
+        private void tbPhone_Leave(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).Text == "")
+            {
+                (sender as TextBox).Text = (sender as TextBox).Tag.ToString();
+                (sender as TextBox).ForeColor = System.Drawing.Color.Gray;
+            }
+        }
+
+        private void tbPhone_TextChanged(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).Text != (sender as TextBox).Tag.ToString())
+                (sender as TextBox).ForeColor = System.Drawing.Color.Black;
+        }
+
 
         private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
@@ -1272,7 +1301,7 @@ namespace PK.Forms
                 for (int i = 0; i < passwordLength; i++)
                     password +=  passwordChars[rand.Next(passwordChars.Length)];
                 _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
-                    { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } },transaction);
+                    { "home_phone", tbHomePhone.Text }, { "mobile_phone", tbMobilePhone.Text } },transaction);
             }
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -1672,8 +1701,8 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
                 })[0];
             mtbEMail.Text = entrant[0].ToString();
-            mtbHomePhone.Text = entrant[1].ToString();
-            mtbMobilePhone.Text = entrant[2].ToString();
+            tbMobilePhone.Text = entrant[1].ToString();
+            tbHomePhone.Text = entrant[2].ToString();
 
             if (_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
             {
@@ -1999,7 +2028,7 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     }))
-                        if (documentData[0].ToString()!= null && documentData[0].ToString() == Classes.DB_Helper.MADIOlympDocName)
+                        if (documentData[0] != null && documentData[0].ToString() == Classes.DB_Helper.MADIOlympDocName)
                         {
                             MADIOlympDoc.olympName = documentData[1].ToString();
                             MADIOlympDoc.olympDate = (DateTime)document[4];
@@ -2309,8 +2338,8 @@ namespace PK.Forms
 
         private void UpdateBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) },
-                { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, new Dictionary<string, object> { { "id", _EntrantID } }, transaction);
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", tbHomePhone.Text },
+                { "mobile_phone", tbMobilePhone.Text } }, new Dictionary<string, object> { { "id", _EntrantID } }, transaction);
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -2386,6 +2415,10 @@ namespace PK.Forms
                             new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
                         else if ((document[6] as DateTime?) == null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "original_recieved_date", DateTime.Now }, { "type", eduDocType },
+                                { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
+                            new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
+                        else
+                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", eduDocType },
                                 { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}},
                             new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
 
