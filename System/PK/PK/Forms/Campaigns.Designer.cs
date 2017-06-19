@@ -60,6 +60,7 @@
             this.dgvCampaigns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCampaigns.Size = new System.Drawing.Size(715, 361);
             this.dgvCampaigns.TabIndex = 0;
+            this.dgvCampaigns.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCampaigns_CellDoubleClick);
             // 
             // dgvCampaigns_ID
             // 

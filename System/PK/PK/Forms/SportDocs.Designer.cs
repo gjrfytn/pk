@@ -77,6 +77,7 @@
             // 
             // cbDocType
             // 
+            this.cbDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDocType.FormattingEnabled = true;
             this.cbDocType.Location = new System.Drawing.Point(24, 49);
             this.cbDocType.Name = "cbDocType";
@@ -86,6 +87,7 @@
             // tbDocName
             // 
             this.tbDocName.Location = new System.Drawing.Point(24, 111);
+            this.tbDocName.MaxLength = 1000;
             this.tbDocName.Name = "tbDocName";
             this.tbDocName.Size = new System.Drawing.Size(409, 20);
             this.tbDocName.TabIndex = 5;
@@ -101,6 +103,7 @@
             // tbOrgName
             // 
             this.tbOrgName.Location = new System.Drawing.Point(24, 212);
+            this.tbOrgName.MaxLength = 500;
             this.tbOrgName.Name = "tbOrgName";
             this.tbOrgName.Size = new System.Drawing.Size(409, 20);
             this.tbOrgName.TabIndex = 7;

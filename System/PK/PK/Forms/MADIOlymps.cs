@@ -20,9 +20,16 @@ namespace PK.Forms
 
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+
+            foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("year", Relation.GREATER_EQUAL, DateTime.Now.Year -1)
+            }))
+                cbOlympName.Items.Add(olymp[0].ToString());
+
             if (olympData.olympName != null && olympData.olympName != "")
             {
-                tbOlympName.Text = olympData.olympName;
+                cbOlympName.Text = olympData.olympName;
                 OlympName = olympData.olympName;
                 tbOrganization.Text = olympData.olypmOrg;
                 OlympOrg = olympData.olypmOrg;
@@ -33,11 +40,11 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if (tbOlympName.Text == "" || tbOrganization.Text == "")
+            if (cbOlympName.Text == "" || tbOrganization.Text == "")
                 MessageBox.Show("Все поля должны быть заполнены");
             else
             {
-                OlympName = tbOlympName.Text;
+                OlympName = cbOlympName.Text;
                 OlympOrg = tbOrganization.Text;
                 OlympDate = dtpDate.Value;
                 DialogResult = DialogResult.OK;

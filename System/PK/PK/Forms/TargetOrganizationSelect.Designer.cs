@@ -56,6 +56,7 @@
             // tbSearchString
             // 
             this.tbSearchString.Location = new System.Drawing.Point(28, 35);
+            this.tbSearchString.MaxLength = 250;
             this.tbSearchString.Name = "tbSearchString";
             this.tbSearchString.Size = new System.Drawing.Size(330, 20);
             this.tbSearchString.TabIndex = 2;

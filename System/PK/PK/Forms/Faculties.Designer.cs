@@ -88,6 +88,7 @@
             // 
             this.tbFacultyShortName.Enabled = false;
             this.tbFacultyShortName.Location = new System.Drawing.Point(446, 348);
+            this.tbFacultyShortName.MaxLength = 5;
             this.tbFacultyShortName.Name = "tbFacultyShortName";
             this.tbFacultyShortName.Size = new System.Drawing.Size(47, 20);
             this.tbFacultyShortName.TabIndex = 2;
@@ -96,6 +97,7 @@
             // 
             this.tbFacultyName.Enabled = false;
             this.tbFacultyName.Location = new System.Drawing.Point(79, 348);
+            this.tbFacultyName.MaxLength = 75;
             this.tbFacultyName.Name = "tbFacultyName";
             this.tbFacultyName.Size = new System.Drawing.Size(248, 20);
             this.tbFacultyName.TabIndex = 3;

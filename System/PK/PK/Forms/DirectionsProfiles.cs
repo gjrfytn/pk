@@ -135,6 +135,7 @@ namespace PK.Forms
                 FillDirCombobox("03");
                 tbKafedra.Enabled = false;
                 label5.Enabled = false;
+                tbName.MaxLength = 300;
             }                
             else if (rbMag.Checked)
             {
@@ -147,6 +148,7 @@ namespace PK.Forms
                 FillDirCombobox("05");
                 tbKafedra.Enabled = false;
                 label5.Enabled = false;
+                tbName.MaxLength = 300;
             } 
         }
 

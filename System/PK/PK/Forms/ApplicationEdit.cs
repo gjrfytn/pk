@@ -81,6 +81,7 @@ namespace PK.Forms
         private bool _HouseNeedsReload;
 
         private const int _AgreedChangeMaxCount = 2;
+        private const int _SelectedDirsMaxCount = 5;
 
         public ApplicationEdit(Classes.DB_Connector connection,uint campaignID, string registratorsLogin, uint? applicationId)
         {
@@ -1164,12 +1165,22 @@ namespace PK.Forms
         private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
         {
             cbMedCertificate.Enabled = false;
+            int selectedDirsCount = 0;
             foreach (TabPage page in tcDirections.TabPages)
                 foreach (Control control in page.Controls)
                 {
-                    ComboBox combo = control as ComboBox;
-                    if (combo != null && combo.SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)combo.SelectedValue).Item1).Item2))
-                        cbMedCertificate.Enabled = true;
+                    ComboBox combo = control as ComboBox;                    
+                    if (combo != null && combo.SelectedIndex != -1)
+                    {
+                        selectedDirsCount++;
+                        if (!_Loading && selectedDirsCount > _SelectedDirsMaxCount)
+                        {
+                            ((ComboBox)sender).SelectedIndex = -1;
+                            MessageBox.Show("Нельзя выбрать более " + _SelectedDirsMaxCount + " направлений/профилей.");
+                        }
+                        else if (_DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)combo.SelectedValue).Item1).Item2))
+                            cbMedCertificate.Enabled = true;
+                    }
                 }
             if (!cbMedCertificate.Enabled && !_Loading)
                 cbMedCertificate.Checked = false;

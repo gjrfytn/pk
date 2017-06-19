@@ -166,12 +166,14 @@
             // 
             this.tbAchievementName.Enabled = false;
             this.tbAchievementName.Location = new System.Drawing.Point(399, 498);
+            this.tbAchievementName.MaxLength = 500;
             this.tbAchievementName.Name = "tbAchievementName";
             this.tbAchievementName.Size = new System.Drawing.Size(299, 20);
             this.tbAchievementName.TabIndex = 8;
             // 
             // cbAchievementType
             // 
+            this.cbAchievementType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAchievementType.Enabled = false;
             this.cbAchievementType.FormattingEnabled = true;
             this.cbAchievementType.Location = new System.Drawing.Point(15, 498);
@@ -183,6 +185,7 @@
             // 
             this.tbMaxValue.Enabled = false;
             this.tbMaxValue.Location = new System.Drawing.Point(741, 498);
+            this.tbMaxValue.MaxLength = 5;
             this.tbMaxValue.Name = "tbMaxValue";
             this.tbMaxValue.Size = new System.Drawing.Size(88, 20);
             this.tbMaxValue.TabIndex = 10;

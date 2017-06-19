@@ -20,6 +20,45 @@ namespace PK.Forms
             UpdateTableAndCombobox();
         }
 
+        private void btCreatePriemComp_Click(object sender, EventArgs e)
+        {
+            CampaignEdit form = new CampaignEdit(_DB_Connection,null);
+            form.ShowDialog();
+            UpdateTableAndCombobox();
+        }
+
+        private void btUpdate_Click(object sender, EventArgs e)
+        {
+            if (dgvCampaigns.SelectedRows.Count == 0)
+                MessageBox.Show("Выберите кампанию в списке.");
+            else
+            {
+                CampaignEdit form = new CampaignEdit(_DB_Connection,(uint)dgvCampaigns.SelectedRows[0].Cells[0].Value);
+                form.ShowDialog();
+                UpdateTableAndCombobox();
+            }
+        }
+
+        private void cbCurrentCampaign_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != Classes.Utility.CurrentCampaignID)
+            {
+                Properties.Settings.Default.CampaignID = (uint)cbCurrentCampaign.SelectedValue;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void dgvCampaigns_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvCampaigns.SelectedRows.Count > 0)
+            {
+                CampaignEdit form = new CampaignEdit(_DB_Connection, (uint)dgvCampaigns.SelectedRows[0].Cells[0].Value);
+                form.ShowDialog();
+                UpdateTableAndCombobox();
+            }
+        }
+
+
         private void UpdateTableAndCombobox()
         {
             dgvCampaigns.Rows.Clear();
@@ -56,34 +95,6 @@ namespace PK.Forms
                 cbCurrentCampaign.SelectedValue = Classes.Utility.CurrentCampaignID;
             else
                 cbCurrentCampaign.SelectedIndex = -1;
-        }
-
-        private void btCreatePriemComp_Click(object sender, EventArgs e)
-        {
-            CampaignEdit form = new CampaignEdit(_DB_Connection,null);
-            form.ShowDialog();
-            UpdateTableAndCombobox();
-        }
-
-        private void btUpdate_Click(object sender, EventArgs e)
-        {
-            if (dgvCampaigns.SelectedRows.Count == 0)
-                MessageBox.Show("Выберите кампанию в списке.");
-            else
-            {
-                CampaignEdit form = new CampaignEdit(_DB_Connection,(uint)dgvCampaigns.SelectedRows[0].Cells[0].Value);
-                form.ShowDialog();
-                UpdateTableAndCombobox();
-            }
-        }
-
-        private void cbCurrentCampaign_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != Classes.Utility.CurrentCampaignID)
-            {
-                Properties.Settings.Default.CampaignID = (uint)cbCurrentCampaign.SelectedValue;
-                Properties.Settings.Default.Save();
-            }
         }
     }
 }

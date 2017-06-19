@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.tbOlympName = new System.Windows.Forms.TextBox();
             this.btSave = new System.Windows.Forms.Button();
             this.tbOrganization = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dtpDate = new System.Windows.Forms.DateTimePicker();
+            this.cbOlympName = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -45,13 +45,6 @@
             this.label1.Size = new System.Drawing.Size(213, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Название олимпиады или конференции:";
-            // 
-            // tbOlympName
-            // 
-            this.tbOlympName.Location = new System.Drawing.Point(12, 49);
-            this.tbOlympName.Name = "tbOlympName";
-            this.tbOlympName.Size = new System.Drawing.Size(473, 20);
-            this.tbOlympName.TabIndex = 1;
             // 
             // btSave
             // 
@@ -66,6 +59,7 @@
             // tbOrganization
             // 
             this.tbOrganization.Location = new System.Drawing.Point(12, 107);
+            this.tbOrganization.MaxLength = 500;
             this.tbOrganization.Name = "tbOrganization";
             this.tbOrganization.Size = new System.Drawing.Size(316, 20);
             this.tbOrganization.TabIndex = 3;
@@ -96,6 +90,14 @@
             this.dtpDate.Size = new System.Drawing.Size(119, 20);
             this.dtpDate.TabIndex = 6;
             // 
+            // cbOlympName
+            // 
+            this.cbOlympName.FormattingEnabled = true;
+            this.cbOlympName.Location = new System.Drawing.Point(12, 48);
+            this.cbOlympName.Name = "cbOlympName";
+            this.cbOlympName.Size = new System.Drawing.Size(472, 21);
+            this.cbOlympName.TabIndex = 7;
+            // 
             // MADIOlymps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -106,8 +108,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbOrganization);
             this.Controls.Add(this.btSave);
-            this.Controls.Add(this.tbOlympName);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbOlympName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
@@ -123,11 +125,11 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbOlympName;
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.TextBox tbOrganization;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker dtpDate;
+        private System.Windows.Forms.ComboBox cbOlympName;
     }
 }

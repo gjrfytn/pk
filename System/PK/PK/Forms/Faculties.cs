@@ -123,9 +123,47 @@ namespace PK.Forms
                 MessageBox.Show("Выберите факультет");
             else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранный факультет?", "Удаление факультета"))
             {
-                _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object> { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value },
+                try
+                {
+                    _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object> { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value },
                     { "name", dgvFaculties.SelectedRows[0].Cells[1].Value} });
-                UpdateTable();
+                    UpdateTable();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    if (ex.Number == 1217 || ex.Number == 1451)
+                    {
+                        List<object[]> appEntrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "application_id" }, new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, dgvFaculties.SelectedRows[0].Cells[0].Value)
+                        });
+                        if (appEntrances.Count > 0)
+                            MessageBox.Show("На данный факультет подано заявление. Удаление невозможно.");
+                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Факультет включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
+                        {
+                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            {
+                                _DB_Connection.Delete(DB_Table.CAMPAIGNS_PROFILES_DATA, new Dictionary<string, object>
+                                { { "profiles_direction_faculty", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+                                _DB_Connection.Delete(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
+                                { { "direction_faculty", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+                                _DB_Connection.Delete(DB_Table.CAMPAIGNS_FACULTIES_DATA, new Dictionary<string, object>
+                                { { "faculty_short_name", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+
+                                _DB_Connection.Delete(DB_Table.PROFILES, new Dictionary<string, object>
+                                { { "faculty_short_name", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+                                _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object>
+                                { { "faculty_short_name", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+                                _DB_Connection.Delete(DB_Table.FACULTIES, new Dictionary<string, object>
+                                { { "short_name", dgvFaculties.SelectedRows[0].Cells[0].Value } }, transaction);
+
+                                transaction.Commit();
+                            }
+
+                            UpdateTable();
+                        }
+                    }
+                }
             }
         }
     }

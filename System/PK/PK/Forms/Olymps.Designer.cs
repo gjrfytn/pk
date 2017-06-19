@@ -51,6 +51,7 @@
             // 
             // cbOlympType
             // 
+            this.cbOlympType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOlympType.FormattingEnabled = true;
             this.cbOlympType.Items.AddRange(new object[] {
             "Диплом победителя/призера олимпиады школьников",
@@ -161,6 +162,7 @@
             // 
             // cbDiplomaType
             // 
+            this.cbDiplomaType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDiplomaType.Enabled = false;
             this.cbDiplomaType.FormattingEnabled = true;
             this.cbDiplomaType.Location = new System.Drawing.Point(326, 119);
@@ -170,6 +172,7 @@
             // 
             // cbOlympProfile
             // 
+            this.cbOlympProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOlympProfile.FormattingEnabled = true;
             this.cbOlympProfile.Location = new System.Drawing.Point(151, 191);
             this.cbOlympProfile.Name = "cbOlympProfile";
@@ -178,6 +181,7 @@
             // 
             // cbClass
             // 
+            this.cbClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbClass.Enabled = false;
             this.cbClass.FormattingEnabled = true;
             this.cbClass.Items.AddRange(new object[] {
@@ -193,6 +197,7 @@
             // 
             // cbDiscipline
             // 
+            this.cbDiscipline.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDiscipline.Enabled = false;
             this.cbDiscipline.FormattingEnabled = true;
             this.cbDiscipline.Location = new System.Drawing.Point(274, 226);
@@ -202,6 +207,7 @@
             // 
             // cbCountry
             // 
+            this.cbCountry.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCountry.Enabled = false;
             this.cbCountry.FormattingEnabled = true;
             this.cbCountry.Location = new System.Drawing.Point(80, 261);

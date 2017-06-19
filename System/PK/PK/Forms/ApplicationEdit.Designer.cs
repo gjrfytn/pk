@@ -413,6 +413,7 @@
             // 
             this.tbAppartment.Location = new System.Drawing.Point(1127, 20);
             this.tbAppartment.Margin = new System.Windows.Forms.Padding(4);
+            this.tbAppartment.MaxLength = 6;
             this.tbAppartment.Name = "tbAppartment";
             this.tbAppartment.Size = new System.Drawing.Size(36, 22);
             this.tbAppartment.TabIndex = 5;
@@ -482,6 +483,7 @@
             // 
             this.tbPlaceOfBirth.Location = new System.Drawing.Point(736, 109);
             this.tbPlaceOfBirth.Margin = new System.Windows.Forms.Padding(4);
+            this.tbPlaceOfBirth.MaxLength = 250;
             this.tbPlaceOfBirth.Name = "tbPlaceOfBirth";
             this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 22);
             this.tbPlaceOfBirth.TabIndex = 11;
@@ -562,6 +564,7 @@
             // 
             this.tbIssuedBy.Location = new System.Drawing.Point(208, 52);
             this.tbIssuedBy.Margin = new System.Windows.Forms.Padding(4);
+            this.tbIssuedBy.MaxLength = 500;
             this.tbIssuedBy.Name = "tbIssuedBy";
             this.tbIssuedBy.Size = new System.Drawing.Size(445, 22);
             this.tbIssuedBy.TabIndex = 3;
@@ -607,7 +610,7 @@
             // 
             // tbIDDocSeries
             // 
-            this.tbIDDocSeries.Location = new System.Drawing.Point(985, 20);
+            this.tbIDDocSeries.Location = new System.Drawing.Point(981, 17);
             this.tbIDDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbIDDocSeries.MaxLength = 20;
             this.tbIDDocSeries.Name = "tbIDDocSeries";
@@ -651,6 +654,7 @@
             // 
             this.tbMiddleName.Location = new System.Drawing.Point(1016, 81);
             this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4);
+            this.tbMiddleName.MaxLength = 250;
             this.tbMiddleName.Name = "tbMiddleName";
             this.tbMiddleName.Size = new System.Drawing.Size(310, 22);
             this.tbMiddleName.TabIndex = 8;
@@ -670,6 +674,7 @@
             // 
             this.tbLastName.Location = new System.Drawing.Point(202, 81);
             this.tbLastName.Margin = new System.Windows.Forms.Padding(4);
+            this.tbLastName.MaxLength = 250;
             this.tbLastName.Name = "tbLastName";
             this.tbLastName.Size = new System.Drawing.Size(308, 22);
             this.tbLastName.TabIndex = 6;
@@ -689,6 +694,7 @@
             // 
             this.tbFirstName.Location = new System.Drawing.Point(599, 81);
             this.tbFirstName.Margin = new System.Windows.Forms.Padding(4);
+            this.tbFirstName.MaxLength = 250;
             this.tbFirstName.Name = "tbFirstName";
             this.tbFirstName.Size = new System.Drawing.Size(310, 22);
             this.tbFirstName.TabIndex = 7;
@@ -766,6 +772,7 @@
             // 
             this.tbInstitutionLocation.Location = new System.Drawing.Point(936, 17);
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
+            this.tbInstitutionLocation.MaxLength = 242;
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
             this.tbInstitutionLocation.Size = new System.Drawing.Size(193, 22);
             this.tbInstitutionLocation.TabIndex = 3;
@@ -804,6 +811,7 @@
             // 
             this.tbInstitutionNumber.Location = new System.Drawing.Point(1049, 48);
             this.tbInstitutionNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.tbInstitutionNumber.MaxLength = 242;
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
             this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
             this.tbInstitutionNumber.TabIndex = 6;
@@ -867,6 +875,7 @@
             // 
             this.tbEduDocNumber.Location = new System.Drawing.Point(546, 17);
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.tbEduDocNumber.MaxLength = 100;
             this.tbEduDocNumber.Name = "tbEduDocNumber";
             this.tbEduDocNumber.Size = new System.Drawing.Size(119, 22);
             this.tbEduDocNumber.TabIndex = 2;
@@ -885,6 +894,7 @@
             // 
             this.tbEduDocSeries.Location = new System.Drawing.Point(413, 17);
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
+            this.tbEduDocSeries.MaxLength = 20;
             this.tbEduDocSeries.Name = "tbEduDocSeries";
             this.tbEduDocSeries.Size = new System.Drawing.Size(56, 22);
             this.tbEduDocSeries.TabIndex = 1;
@@ -2213,6 +2223,7 @@
             // 
             this.tbExamsDocNumber.Location = new System.Drawing.Point(280, 51);
             this.tbExamsDocNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.tbExamsDocNumber.MaxLength = 100;
             this.tbExamsDocNumber.Name = "tbExamsDocNumber";
             this.tbExamsDocNumber.Size = new System.Drawing.Size(165, 22);
             this.tbExamsDocNumber.TabIndex = 3;
@@ -2221,6 +2232,7 @@
             // 
             this.tbExamsDocSeries.Location = new System.Drawing.Point(89, 51);
             this.tbExamsDocSeries.Margin = new System.Windows.Forms.Padding(4);
+            this.tbExamsDocSeries.MaxLength = 20;
             this.tbExamsDocSeries.Name = "tbExamsDocSeries";
             this.tbExamsDocSeries.Size = new System.Drawing.Size(113, 22);
             this.tbExamsDocSeries.TabIndex = 2;

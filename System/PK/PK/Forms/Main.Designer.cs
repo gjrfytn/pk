@@ -15,12 +15,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripMain_CreateApplication = new System.Windows.Forms.ToolStripButton();
             this.toolStrip_Label1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip_CurrCampaign = new System.Windows.Forms.ToolStripLabel();
-            this.toolStrip_Label2 = new System.Windows.Forms.ToolStripLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,17 +46,6 @@
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvApplications = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbLastName = new System.Windows.Forms.TextBox();
-            this.tbFirstName = new System.Windows.Forms.TextBox();
-            this.tbMiddleName = new System.Windows.Forms.TextBox();
-            this.dtpRegDate = new System.Windows.Forms.DateTimePicker();
-            this.tbRegNumber = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cbDateSearch = new System.Windows.Forms.CheckBox();
-            this.rbNew = new System.Windows.Forms.RadioButton();
-            this.rbWithdraw = new System.Windows.Forms.RadioButton();
-            this.rbAdm = new System.Windows.Forms.RadioButton();
             this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,6 +60,20 @@
             this.dgvApplications_EnrollmentDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_RegistratorLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbLastName = new System.Windows.Forms.TextBox();
+            this.tbFirstName = new System.Windows.Forms.TextBox();
+            this.tbMiddleName = new System.Windows.Forms.TextBox();
+            this.dtpRegDate = new System.Windows.Forms.DateTimePicker();
+            this.tbRegNumber = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbDateSearch = new System.Windows.Forms.CheckBox();
+            this.rbNew = new System.Windows.Forms.RadioButton();
+            this.rbWithdraw = new System.Windows.Forms.RadioButton();
+            this.rbAdm = new System.Windows.Forms.RadioButton();
+            this.lFilter = new System.Windows.Forms.Label();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -81,11 +84,11 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMain_CreateApplication,
             this.toolStrip_Label1,
-            this.toolStrip_CurrCampaign,
-            this.toolStrip_Label2});
+            this.toolStrip_CurrCampaign});
             this.toolStrip.Location = new System.Drawing.Point(0, 25);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip.Size = new System.Drawing.Size(1512, 25);
             this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
@@ -111,12 +114,6 @@
             this.toolStrip_CurrCampaign.Name = "toolStrip_CurrCampaign";
             this.toolStrip_CurrCampaign.Size = new System.Drawing.Size(153, 22);
             this.toolStrip_CurrCampaign.Text = "Выберите кампанию...";
-            // 
-            // toolStrip_Label2
-            // 
-            this.toolStrip_Label2.Name = "toolStrip_Label2";
-            this.toolStrip_Label2.Size = new System.Drawing.Size(51, 22);
-            this.toolStrip_Label2.Text = "Фильтр:";
             // 
             // menuStrip
             // 
@@ -365,150 +362,6 @@
             this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 55);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 20);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Поиск:";
-            // 
-            // tbLastName
-            // 
-            this.tbLastName.ForeColor = System.Drawing.Color.Gray;
-            this.tbLastName.Location = new System.Drawing.Point(186, 52);
-            this.tbLastName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tbLastName.Name = "tbLastName";
-            this.tbLastName.Size = new System.Drawing.Size(155, 26);
-            this.tbLastName.TabIndex = 7;
-            this.tbLastName.Tag = "Фамилия";
-            this.tbLastName.Text = "Фамилия";
-            this.tbLastName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
-            this.tbLastName.Enter += new System.EventHandler(this.tbField_Enter);
-            this.tbLastName.Leave += new System.EventHandler(this.tbField_Leave);
-            // 
-            // tbFirstName
-            // 
-            this.tbFirstName.ForeColor = System.Drawing.Color.Gray;
-            this.tbFirstName.Location = new System.Drawing.Point(349, 52);
-            this.tbFirstName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tbFirstName.Name = "tbFirstName";
-            this.tbFirstName.Size = new System.Drawing.Size(155, 26);
-            this.tbFirstName.TabIndex = 8;
-            this.tbFirstName.Tag = "Имя";
-            this.tbFirstName.Text = "Имя";
-            this.tbFirstName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
-            this.tbFirstName.Enter += new System.EventHandler(this.tbField_Enter);
-            this.tbFirstName.Leave += new System.EventHandler(this.tbField_Leave);
-            // 
-            // tbMiddleName
-            // 
-            this.tbMiddleName.ForeColor = System.Drawing.Color.Gray;
-            this.tbMiddleName.Location = new System.Drawing.Point(512, 52);
-            this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tbMiddleName.Name = "tbMiddleName";
-            this.tbMiddleName.Size = new System.Drawing.Size(155, 26);
-            this.tbMiddleName.TabIndex = 9;
-            this.tbMiddleName.Tag = "Отчество";
-            this.tbMiddleName.Text = "Отчество";
-            this.tbMiddleName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
-            this.tbMiddleName.Enter += new System.EventHandler(this.tbField_Enter);
-            this.tbMiddleName.Leave += new System.EventHandler(this.tbField_Leave);
-            // 
-            // dtpRegDate
-            // 
-            this.dtpRegDate.Enabled = false;
-            this.dtpRegDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpRegDate.Location = new System.Drawing.Point(855, 52);
-            this.dtpRegDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.dtpRegDate.Name = "dtpRegDate";
-            this.dtpRegDate.Size = new System.Drawing.Size(118, 26);
-            this.dtpRegDate.TabIndex = 10;
-            this.dtpRegDate.ValueChanged += new System.EventHandler(this.tbField_TextChanged);
-            // 
-            // tbRegNumber
-            // 
-            this.tbRegNumber.ForeColor = System.Drawing.Color.Gray;
-            this.tbRegNumber.Location = new System.Drawing.Point(71, 52);
-            this.tbRegNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tbRegNumber.Name = "tbRegNumber";
-            this.tbRegNumber.Size = new System.Drawing.Size(107, 26);
-            this.tbRegNumber.TabIndex = 11;
-            this.tbRegNumber.Tag = "№ заявления";
-            this.tbRegNumber.Text = "№ заявления";
-            this.tbRegNumber.TextChanged += new System.EventHandler(this.tbField_TextChanged);
-            this.tbRegNumber.Enter += new System.EventHandler(this.tbField_Enter);
-            this.tbRegNumber.Leave += new System.EventHandler(this.tbField_Leave);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Gray;
-            this.label2.Location = new System.Drawing.Point(695, 55);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(152, 20);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Дата регистрации:";
-            // 
-            // cbDateSearch
-            // 
-            this.cbDateSearch.AutoSize = true;
-            this.cbDateSearch.Location = new System.Drawing.Point(677, 58);
-            this.cbDateSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cbDateSearch.Name = "cbDateSearch";
-            this.cbDateSearch.Size = new System.Drawing.Size(15, 14);
-            this.cbDateSearch.TabIndex = 13;
-            this.cbDateSearch.UseVisualStyleBackColor = true;
-            this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
-            // 
-            // rbNew
-            // 
-            this.rbNew.AutoSize = true;
-            this.rbNew.BackColor = System.Drawing.Color.Transparent;
-            this.rbNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.rbNew.Location = new System.Drawing.Point(489, 26);
-            this.rbNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.rbNew.Name = "rbNew";
-            this.rbNew.Size = new System.Drawing.Size(69, 20);
-            this.rbNew.TabIndex = 14;
-            this.rbNew.TabStop = true;
-            this.rbNew.Text = "Новые";
-            this.rbNew.UseVisualStyleBackColor = false;
-            this.rbNew.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
-            // 
-            // rbWithdraw
-            // 
-            this.rbWithdraw.AutoSize = true;
-            this.rbWithdraw.BackColor = System.Drawing.Color.Transparent;
-            this.rbWithdraw.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.rbWithdraw.Location = new System.Drawing.Point(558, 26);
-            this.rbWithdraw.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.rbWithdraw.Name = "rbWithdraw";
-            this.rbWithdraw.Size = new System.Drawing.Size(175, 20);
-            this.rbWithdraw.TabIndex = 15;
-            this.rbWithdraw.TabStop = true;
-            this.rbWithdraw.Text = "Забравшие документы";
-            this.rbWithdraw.UseVisualStyleBackColor = false;
-            this.rbWithdraw.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
-            // 
-            // rbAdm
-            // 
-            this.rbAdm.AutoSize = true;
-            this.rbAdm.BackColor = System.Drawing.Color.Transparent;
-            this.rbAdm.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.rbAdm.Location = new System.Drawing.Point(732, 26);
-            this.rbAdm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.rbAdm.Name = "rbAdm";
-            this.rbAdm.Size = new System.Drawing.Size(115, 20);
-            this.rbAdm.TabIndex = 16;
-            this.rbAdm.TabStop = true;
-            this.rbAdm.Text = "Зачисленные";
-            this.rbAdm.UseVisualStyleBackColor = false;
-            this.rbAdm.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
-            // 
             // dgvApplications_ID
             // 
             this.dgvApplications_ID.HeaderText = "УИН";
@@ -615,12 +468,181 @@
             this.dgvApplications_Status.Name = "dgvApplications_Status";
             this.dgvApplications_Status.ReadOnly = true;
             this.dgvApplications_Status.Width = 87;
-            //
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 55);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 20);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Поиск:";
+            // 
+            // tbLastName
+            // 
+            this.tbLastName.ForeColor = System.Drawing.Color.Gray;
+            this.tbLastName.Location = new System.Drawing.Point(186, 52);
+            this.tbLastName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbLastName.MaxLength = 250;
+            this.tbLastName.Name = "tbLastName";
+            this.tbLastName.Size = new System.Drawing.Size(155, 26);
+            this.tbLastName.TabIndex = 7;
+            this.tbLastName.Tag = "Фамилия";
+            this.tbLastName.Text = "Фамилия";
+            this.tbLastName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
+            this.tbLastName.Enter += new System.EventHandler(this.tbField_Enter);
+            this.tbLastName.Leave += new System.EventHandler(this.tbField_Leave);
+            // 
+            // tbFirstName
+            // 
+            this.tbFirstName.ForeColor = System.Drawing.Color.Gray;
+            this.tbFirstName.Location = new System.Drawing.Point(349, 52);
+            this.tbFirstName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbFirstName.MaxLength = 250;
+            this.tbFirstName.Name = "tbFirstName";
+            this.tbFirstName.Size = new System.Drawing.Size(155, 26);
+            this.tbFirstName.TabIndex = 8;
+            this.tbFirstName.Tag = "Имя";
+            this.tbFirstName.Text = "Имя";
+            this.tbFirstName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
+            this.tbFirstName.Enter += new System.EventHandler(this.tbField_Enter);
+            this.tbFirstName.Leave += new System.EventHandler(this.tbField_Leave);
+            // 
+            // tbMiddleName
+            // 
+            this.tbMiddleName.ForeColor = System.Drawing.Color.Gray;
+            this.tbMiddleName.Location = new System.Drawing.Point(512, 52);
+            this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbMiddleName.MaxLength = 250;
+            this.tbMiddleName.Name = "tbMiddleName";
+            this.tbMiddleName.Size = new System.Drawing.Size(155, 26);
+            this.tbMiddleName.TabIndex = 9;
+            this.tbMiddleName.Tag = "Отчество";
+            this.tbMiddleName.Text = "Отчество";
+            this.tbMiddleName.TextChanged += new System.EventHandler(this.tbField_TextChanged);
+            this.tbMiddleName.Enter += new System.EventHandler(this.tbField_Enter);
+            this.tbMiddleName.Leave += new System.EventHandler(this.tbField_Leave);
+            // 
+            // dtpRegDate
+            // 
+            this.dtpRegDate.Enabled = false;
+            this.dtpRegDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpRegDate.Location = new System.Drawing.Point(855, 52);
+            this.dtpRegDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dtpRegDate.Name = "dtpRegDate";
+            this.dtpRegDate.Size = new System.Drawing.Size(118, 26);
+            this.dtpRegDate.TabIndex = 10;
+            this.dtpRegDate.ValueChanged += new System.EventHandler(this.tbField_TextChanged);
+            // 
+            // tbRegNumber
+            // 
+            this.tbRegNumber.ForeColor = System.Drawing.Color.Gray;
+            this.tbRegNumber.Location = new System.Drawing.Point(71, 52);
+            this.tbRegNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tbRegNumber.MaxLength = 11;
+            this.tbRegNumber.Name = "tbRegNumber";
+            this.tbRegNumber.Size = new System.Drawing.Size(107, 26);
+            this.tbRegNumber.TabIndex = 11;
+            this.tbRegNumber.Tag = "№ заявления";
+            this.tbRegNumber.Text = "№ заявления";
+            this.tbRegNumber.TextChanged += new System.EventHandler(this.tbField_TextChanged);
+            this.tbRegNumber.Enter += new System.EventHandler(this.tbField_Enter);
+            this.tbRegNumber.Leave += new System.EventHandler(this.tbField_Leave);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Gray;
+            this.label2.Location = new System.Drawing.Point(695, 55);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(152, 20);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Дата регистрации:";
+            // 
+            // cbDateSearch
+            // 
+            this.cbDateSearch.AutoSize = true;
+            this.cbDateSearch.Location = new System.Drawing.Point(677, 58);
+            this.cbDateSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.cbDateSearch.Name = "cbDateSearch";
+            this.cbDateSearch.Size = new System.Drawing.Size(15, 14);
+            this.cbDateSearch.TabIndex = 13;
+            this.cbDateSearch.UseVisualStyleBackColor = true;
+            this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
+            // 
+            // rbNew
+            // 
+            this.rbNew.AutoSize = true;
+            this.rbNew.BackColor = System.Drawing.Color.Transparent;
+            this.rbNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbNew.Location = new System.Drawing.Point(612, 26);
+            this.rbNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbNew.Name = "rbNew";
+            this.rbNew.Size = new System.Drawing.Size(69, 20);
+            this.rbNew.TabIndex = 14;
+            this.rbNew.TabStop = true;
+            this.rbNew.Text = "Новые";
+            this.rbNew.UseVisualStyleBackColor = false;
+            this.rbNew.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
+            // 
+            // rbWithdraw
+            // 
+            this.rbWithdraw.AutoSize = true;
+            this.rbWithdraw.BackColor = System.Drawing.Color.Transparent;
+            this.rbWithdraw.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbWithdraw.Location = new System.Drawing.Point(681, 26);
+            this.rbWithdraw.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbWithdraw.Name = "rbWithdraw";
+            this.rbWithdraw.Size = new System.Drawing.Size(175, 20);
+            this.rbWithdraw.TabIndex = 15;
+            this.rbWithdraw.TabStop = true;
+            this.rbWithdraw.Text = "Забравшие документы";
+            this.rbWithdraw.UseVisualStyleBackColor = false;
+            this.rbWithdraw.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
+            // 
+            // rbAdm
+            // 
+            this.rbAdm.AutoSize = true;
+            this.rbAdm.BackColor = System.Drawing.Color.Transparent;
+            this.rbAdm.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rbAdm.Location = new System.Drawing.Point(855, 26);
+            this.rbAdm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rbAdm.Name = "rbAdm";
+            this.rbAdm.Size = new System.Drawing.Size(115, 20);
+            this.rbAdm.TabIndex = 16;
+            this.rbAdm.TabStop = true;
+            this.rbAdm.Text = "Зачисленные";
+            this.rbAdm.UseVisualStyleBackColor = false;
+            this.rbAdm.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
+            // 
+            // lFilter
+            // 
+            this.lFilter.AutoSize = true;
+            this.lFilter.BackColor = System.Drawing.Color.Transparent;
+            this.lFilter.Location = new System.Drawing.Point(538, 26);
+            this.lFilter.Name = "lFilter";
+            this.lFilter.Size = new System.Drawing.Size(74, 20);
+            this.lFilter.TabIndex = 17;
+            this.lFilter.Text = "Фильтр:";
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // timer
+            // 
+            this.timer.Interval = 10000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1512, 709);
+            this.Controls.Add(this.lFilter);
             this.Controls.Add(this.rbAdm);
             this.Controls.Add(this.rbWithdraw);
             this.Controls.Add(this.rbNew);
@@ -636,9 +658,9 @@
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = global::PK.Properties.Resources.logo;
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "Main";
             this.Text = "ИС «ПК МАДИ»";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -708,7 +730,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
         private System.Windows.Forms.ToolStripLabel toolStrip_Label1;
         private System.Windows.Forms.ToolStripLabel toolStrip_CurrCampaign;
-        private System.Windows.Forms.ToolStripLabel toolStrip_Label2;
+        private System.Windows.Forms.Label lFilter;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

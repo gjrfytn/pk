@@ -280,6 +280,7 @@
             // 
             // cbFaculties
             // 
+            this.cbFaculties.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFaculties.Enabled = false;
             this.cbFaculties.FormattingEnabled = true;
             this.cbFaculties.Location = new System.Drawing.Point(922, 386);
@@ -330,6 +331,7 @@
             // 
             this.tbKafedra.Enabled = false;
             this.tbKafedra.Location = new System.Drawing.Point(235, 425);
+            this.tbKafedra.MaxLength = 149;
             this.tbKafedra.Name = "tbKafedra";
             this.tbKafedra.Size = new System.Drawing.Size(100, 20);
             this.tbKafedra.TabIndex = 15;

@@ -69,6 +69,7 @@
             // 
             // cbCause
             // 
+            this.cbCause.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCause.FormattingEnabled = true;
             this.cbCause.Items.AddRange(new object[] {
             "Сиротство",
@@ -99,6 +100,7 @@
             // tbOrphanhoodDocOrg
             // 
             this.tbOrphanhoodDocOrg.Location = new System.Drawing.Point(18, 198);
+            this.tbOrphanhoodDocOrg.MaxLength = 500;
             this.tbOrphanhoodDocOrg.Name = "tbOrphanhoodDocOrg";
             this.tbOrphanhoodDocOrg.Size = new System.Drawing.Size(347, 20);
             this.tbOrphanhoodDocOrg.TabIndex = 7;
@@ -106,6 +108,7 @@
             // tbOrphanhoodDocName
             // 
             this.tbOrphanhoodDocName.Location = new System.Drawing.Point(18, 104);
+            this.tbOrphanhoodDocName.MaxLength = 1000;
             this.tbOrphanhoodDocName.Name = "tbOrphanhoodDocName";
             this.tbOrphanhoodDocName.Size = new System.Drawing.Size(347, 20);
             this.tbOrphanhoodDocName.TabIndex = 6;
@@ -120,6 +123,7 @@
             // 
             // cbOrphanhoodDocType
             // 
+            this.cbOrphanhoodDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbOrphanhoodDocType.FormattingEnabled = true;
             this.cbOrphanhoodDocType.Location = new System.Drawing.Point(15, 42);
             this.cbOrphanhoodDocType.Name = "cbOrphanhoodDocType";
@@ -194,6 +198,7 @@
             // 
             // cbDisabilityGroup
             // 
+            this.cbDisabilityGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDisabilityGroup.Enabled = false;
             this.cbDisabilityGroup.FormattingEnabled = true;
             this.cbDisabilityGroup.Location = new System.Drawing.Point(140, 131);
@@ -204,6 +209,7 @@
             // tbConclusionNumber
             // 
             this.tbConclusionNumber.Location = new System.Drawing.Point(129, 204);
+            this.tbConclusionNumber.MaxLength = 100;
             this.tbConclusionNumber.Name = "tbConclusionNumber";
             this.tbConclusionNumber.Size = new System.Drawing.Size(100, 20);
             this.tbConclusionNumber.TabIndex = 10;
@@ -211,6 +217,7 @@
             // tbMedDocNumber
             // 
             this.tbMedDocNumber.Location = new System.Drawing.Point(123, 100);
+            this.tbMedDocNumber.MaxLength = 100;
             this.tbMedDocNumber.Name = "tbMedDocNumber";
             this.tbMedDocNumber.Size = new System.Drawing.Size(100, 20);
             this.tbMedDocNumber.TabIndex = 9;
@@ -219,6 +226,7 @@
             // 
             this.tbMedDocSeries.Enabled = false;
             this.tbMedDocSeries.Location = new System.Drawing.Point(119, 63);
+            this.tbMedDocSeries.MaxLength = 20;
             this.tbMedDocSeries.Name = "tbMedDocSeries";
             this.tbMedDocSeries.Size = new System.Drawing.Size(100, 20);
             this.tbMedDocSeries.TabIndex = 8;
@@ -281,6 +289,7 @@
             // 
             // cbMedCause
             // 
+            this.cbMedCause.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMedCause.FormattingEnabled = true;
             this.cbMedCause.Items.AddRange(new object[] {
             "Справка об установлении инвалидности",
@@ -319,8 +328,8 @@
             this.Controls.Add(this.btSave);
             this.Controls.Add(this.cbCause);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.pOrphanhood);
             this.Controls.Add(this.pMed);
+            this.Controls.Add(this.pOrphanhood);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = global::PK.Properties.Resources.logo;
             this.MaximizeBox = false;
