@@ -17,6 +17,13 @@ namespace PK
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
+
             Forms.Authorization form = new Forms.Authorization();
             if (form.ShowDialog() == DialogResult.OK)
                 Application.Run(new Forms.Main(form.UsersRole, form.UsersLogin));
