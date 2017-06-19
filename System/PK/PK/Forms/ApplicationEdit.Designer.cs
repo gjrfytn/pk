@@ -189,12 +189,12 @@
             this.cbSport = new System.Windows.Forms.CheckBox();
             this.cbMADIOlympiad = new System.Windows.Forms.CheckBox();
             this.mtbEMail = new System.Windows.Forms.MaskedTextBox();
-            this.mtbHomePhone = new System.Windows.Forms.MaskedTextBox();
-            this.mtbMobilePhone = new System.Windows.Forms.MaskedTextBox();
             this.label31 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
+            this.tbMobilePhone = new System.Windows.Forms.TextBox();
+            this.tbHomePhone = new System.Windows.Forms.TextBox();
             this.btClose = new System.Windows.Forms.Button();
             this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
             this.cbAgreed = new System.Windows.Forms.CheckBox();
@@ -770,11 +770,11 @@
             // 
             // tbInstitutionLocation
             // 
-            this.tbInstitutionLocation.Location = new System.Drawing.Point(936, 17);
+            this.tbInstitutionLocation.Location = new System.Drawing.Point(946, 17);
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionLocation.MaxLength = 242;
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
-            this.tbInstitutionLocation.Size = new System.Drawing.Size(193, 22);
+            this.tbInstitutionLocation.Size = new System.Drawing.Size(183, 22);
             this.tbInstitutionLocation.TabIndex = 3;
             // 
             // cbGraduationYear
@@ -790,7 +790,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(694, 19);
+            this.label27.Location = new System.Drawing.Point(704, 19);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(234, 16);
@@ -873,17 +873,17 @@
             // 
             // tbEduDocNumber
             // 
-            this.tbEduDocNumber.Location = new System.Drawing.Point(546, 17);
+            this.tbEduDocNumber.Location = new System.Drawing.Point(595, 16);
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.MaxLength = 100;
             this.tbEduDocNumber.Name = "tbEduDocNumber";
-            this.tbEduDocNumber.Size = new System.Drawing.Size(119, 22);
+            this.tbEduDocNumber.Size = new System.Drawing.Size(92, 22);
             this.tbEduDocNumber.TabIndex = 2;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(493, 21);
+            this.label23.Location = new System.Drawing.Point(542, 20);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(54, 16);
@@ -896,7 +896,7 @@
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.MaxLength = 20;
             this.tbEduDocSeries.Name = "tbEduDocSeries";
-            this.tbEduDocSeries.Size = new System.Drawing.Size(56, 22);
+            this.tbEduDocSeries.Size = new System.Drawing.Size(118, 22);
             this.tbEduDocSeries.TabIndex = 1;
             // 
             // label22
@@ -2293,12 +2293,12 @@
             // 
             this.gbOther.Controls.Add(this.gbIndividualAchievements);
             this.gbOther.Controls.Add(this.mtbEMail);
-            this.gbOther.Controls.Add(this.mtbHomePhone);
-            this.gbOther.Controls.Add(this.mtbMobilePhone);
             this.gbOther.Controls.Add(this.label31);
             this.gbOther.Controls.Add(this.label30);
             this.gbOther.Controls.Add(this.label29);
             this.gbOther.Controls.Add(this.cbSpecialConditions);
+            this.gbOther.Controls.Add(this.tbMobilePhone);
+            this.gbOther.Controls.Add(this.tbHomePhone);
             this.gbOther.Location = new System.Drawing.Point(3, 264);
             this.gbOther.Margin = new System.Windows.Forms.Padding(4);
             this.gbOther.Name = "gbOther";
@@ -2362,26 +2362,6 @@
             this.mtbEMail.Size = new System.Drawing.Size(191, 22);
             this.mtbEMail.TabIndex = 4;
             // 
-            // mtbHomePhone
-            // 
-            this.mtbHomePhone.Location = new System.Drawing.Point(648, 63);
-            this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
-            this.mtbHomePhone.Mask = "(999)999-99-99";
-            this.mtbHomePhone.Name = "mtbHomePhone";
-            this.mtbHomePhone.Size = new System.Drawing.Size(183, 22);
-            this.mtbHomePhone.TabIndex = 3;
-            this.mtbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
-            // 
-            // mtbMobilePhone
-            // 
-            this.mtbMobilePhone.Location = new System.Drawing.Point(195, 63);
-            this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
-            this.mtbMobilePhone.Mask = "(999)999-99-99";
-            this.mtbMobilePhone.Name = "mtbMobilePhone";
-            this.mtbMobilePhone.Size = new System.Drawing.Size(184, 22);
-            this.mtbMobilePhone.TabIndex = 2;
-            this.mtbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
-            // 
             // label31
             // 
             this.label31.AutoSize = true;
@@ -2422,6 +2402,30 @@
             this.cbSpecialConditions.TabIndex = 1;
             this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
             this.cbSpecialConditions.UseVisualStyleBackColor = true;
+            // 
+            // tbMobilePhone
+            // 
+            this.tbMobilePhone.Location = new System.Drawing.Point(195, 64);
+            this.tbMobilePhone.MaxLength = 20;
+            this.tbMobilePhone.Name = "tbMobilePhone";
+            this.tbMobilePhone.Size = new System.Drawing.Size(184, 22);
+            this.tbMobilePhone.TabIndex = 9;
+            this.tbMobilePhone.Tag = "(495)123-4567";
+            this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
+            this.tbMobilePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbMobilePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
+            // 
+            // tbHomePhone
+            // 
+            this.tbHomePhone.Location = new System.Drawing.Point(648, 64);
+            this.tbHomePhone.MaxLength = 20;
+            this.tbHomePhone.Name = "tbHomePhone";
+            this.tbHomePhone.Size = new System.Drawing.Size(182, 22);
+            this.tbHomePhone.TabIndex = 27;
+            this.tbHomePhone.Tag = "(495)123-4567";
+            this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
+            this.tbHomePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbHomePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
             // 
             // btClose
             // 
@@ -2748,8 +2752,6 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.CheckBox cbPassportMatch;
         private System.Windows.Forms.MaskedTextBox mtbEMail;
-        private System.Windows.Forms.MaskedTextBox mtbHomePhone;
-        private System.Windows.Forms.MaskedTextBox mtbMobilePhone;
         private System.Windows.Forms.Button btRemoveDir21;
         private System.Windows.Forms.Button btAddDir2;
         private System.Windows.Forms.ComboBox cbDirection21;
@@ -2832,5 +2834,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
         private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.TextBox tbMobilePhone;
+        private System.Windows.Forms.TextBox tbHomePhone;
     }
 }

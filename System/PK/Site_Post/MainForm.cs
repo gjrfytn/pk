@@ -43,7 +43,6 @@ namespace SitePost
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            MessageBox.Show("Таймер сработал. Частота : " + timer.Interval + " мс");
             PostApplications();
             timer.Start();
         }
@@ -82,6 +81,25 @@ namespace SitePost
                     PostApplications();
                     timer.Start();
                 }
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                ShowInTaskbar = false;
+                notifyIcon.Visible = true;
+            }
+        }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+                ShowInTaskbar = true;
+                notifyIcon.Visible = false;
+            }
         }
 
 
@@ -162,8 +180,6 @@ namespace SitePost
 
                     PackageData.Root.Element("PackageData").Add(abitur);
                 }
-                //PackageData.Save("doc.xml");
-
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
 
@@ -348,6 +364,6 @@ namespace SitePost
                 appls.Add(appl);
             }
             return appls;
-        }        
+        }
     }
 }

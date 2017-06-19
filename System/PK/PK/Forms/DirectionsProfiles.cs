@@ -142,6 +142,7 @@ namespace PK.Forms
                 FillDirCombobox("04");
                 tbKafedra.Enabled = true;
                 label5.Enabled = true;
+                tbName.MaxLength = 150;
             }                
             else if (rbSpec.Checked)
             {
