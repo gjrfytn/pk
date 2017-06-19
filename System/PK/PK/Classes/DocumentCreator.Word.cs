@@ -115,15 +115,25 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
 
                 if (properties.Element("A5") != null)
                 {
-                    doc.PageWidth = 419.5f;
-                    doc.PageHeight = 595.2f;
+                    if (doc.PageLayout.Orientation == Orientation.Portrait)
+                    {
+                        doc.PageWidth = 419.5f;
+                        doc.PageHeight = 595.2f;
+                    }
+                    else
+                    {
+                        doc.PageHeight = 419.5f;
+                        doc.PageWidth = 595.2f;
+                    }
                 }
 
                 if (properties.Element("Album") != null)
                 {
-                    float buf = doc.PageWidth;
-                    doc.PageWidth = doc.PageHeight;
-                    doc.PageHeight = buf;
+                    float width = doc.PageWidth;
+                    float height = doc.PageHeight;
+                    doc.PageLayout.Orientation = Orientation.Landscape;
+                    doc.PageWidth = height;
+                    doc.PageHeight = width;
                 }
 
                 if (properties.Element("Margins") != null)

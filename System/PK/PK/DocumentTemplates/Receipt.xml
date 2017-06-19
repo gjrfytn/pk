@@ -5,43 +5,46 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>9</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>9</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="UsualUnderline">
       <Name>Arial</Name>
-      <Size>12</Size>
+      <Size>9</Size>
       <Style>Underline</Style>
     </Font>
     <Font ID="18">
       <Name>Arial</Name>
-      <Size>14</Size>
+      <Size>11</Size>
     </Font>
     <Font ID="20Bold">
       <Name>Arial</Name>
-      <Size>18</Size>
+      <Size>16</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="LargeBold">
       <Name>Arial</Name>
-      <Size>20</Size>
+      <Size>18</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="LargeItalic">
       <Name>Arial</Name>
-      <Size>20</Size>
+      <Size>18</Size>
       <Style>Italic</Style>
     </Font>
   </Fonts>
   <Document>
     <Word>
       <Properties>
+        <A5/>
         <Margins>
-          <Top>40</Top>
+          <Left>30</Left>
+          <Top>30</Top>
+          <Right>30</Right>
         </Margins>
       </Properties>
       <Structure>

@@ -5,25 +5,33 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>14</Size>
+      <Size>10</Size>
     </Font>
     <Font ID="Large">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>12</Size>
     </Font>
     <Font ID="LargeBold">
       <Name>Arial</Name>
-      <Size>16</Size>
+      <Size>12</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="Header">
       <Name>Arial</Name>
-      <Size>18</Size>
+      <Size>14</Size>
       <Style>Bold</Style>
     </Font>
   </Fonts>
   <Document>
     <Word>
+      <Properties>
+        <A5/>
+        <Margins>
+          <Left>30</Left>
+          <Top>30</Top>
+          <Right>30</Right>
+        </Margins>
+      </Properties>
       <Structure>
         <Element>
           <Paragraph>

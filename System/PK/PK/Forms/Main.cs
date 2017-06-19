@@ -47,17 +47,21 @@ namespace PK.Forms
         {
             if (!IsDisposed)
             {
-                    if (disposing)
-                    {
-                        _DB_Connection.Dispose();
+                if (disposing)
+                {
+                    _DB_Connection.Dispose();
 
-                        if (components != null)
-                            components.Dispose();
-                    }
+                    if (components != null)
+                        components.Dispose();
+                }
 
-                    System.IO.Directory.Delete(Classes.Utility.TempPath, true); //TODO Исключение?
+                try
+                {
+                    System.IO.Directory.Delete(Classes.Utility.TempPath, true);
+                }
+                catch (System.IO.IOException) { }
 
-                    base.Dispose(disposing);
+                base.Dispose(disposing);
             }
         }
 

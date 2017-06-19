@@ -453,7 +453,7 @@ namespace PK.Classes
                         System.Windows.Forms.SystemInformation.ComputerName,
                         applData.RegistrationTime.ToString(),
                         applData.EditTime.HasValue?applData.EditTime.ToString():"нет",
-                        master ?"":"Проверить всю информацию можно в личном кабинете абитуриента по адресу: www.priem-madi.ru/тут_что-то_будет",
+                        master ?"":"Проверить всю информацию можно в личном кабинете абитуриента по адресу: www.priem-madi.ru",
                         master ?"":"Логин: "+ applData.EntrantID.ToString(),
                         master ?"":"Пароль: "+ applData.Password
                     },

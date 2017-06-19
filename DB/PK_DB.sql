@@ -366,8 +366,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`entrants` (
   `email` VARCHAR(150) NOT NULL COMMENT 'Электронный адрес.',
   `personal_password` VARCHAR(12) NOT NULL COMMENT 'Пароль к личному кабинету.',
   `custom_information` VARCHAR(4000) NULL COMMENT 'Дополнительные сведения, предоставленные абитуриентом.',
-  `home_phone` VARCHAR(15) NULL COMMENT 'Домашний телефон.',
-  `mobile_phone` VARCHAR(15) NULL COMMENT 'Мобильный телефон.',
+  `home_phone` VARCHAR(20) NULL COMMENT 'Домашний телефон.',
+  `mobile_phone` VARCHAR(20) NULL COMMENT 'Мобильный телефон.',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 COMMENT = 'Абитуриенты.';
