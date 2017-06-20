@@ -152,6 +152,9 @@ namespace PK.Forms
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
             else if (tbInstitution.Text == "")
                 MessageBox.Show("Обязательные поля в разделе \"Документ об образовании\" не заполнены.");
+            else if (!cbAppAdmission.Checked || (cbSpecialRights.Checked || cbTarget.Checked) && !cbDirectionDoc.Checked
+                    || !cbEduDoc.Checked)
+                MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
             else
             {
                 bool found = false;
@@ -231,6 +234,7 @@ namespace PK.Forms
                 cbProgram_quote_o.SelectedIndex = -1;
             cbProgram_quote_o.Enabled = cbSpecialRights.Checked;
             label35.Enabled = cbSpecialRights.Checked;
+            DirectionDocEnableDisable();
         }
 
         private void btGetIndex_Click(object sender, EventArgs e)
@@ -283,6 +287,7 @@ namespace PK.Forms
                 cbProgram_target_o.SelectedIndex = -1;
             cbProgram_target_o.Enabled = cbTarget.Checked;
             label34.Enabled = cbTarget.Checked;
+            DirectionDocEnableDisable();
         }
 
         private void cbDistrict_Enter(object sender, EventArgs e)
@@ -1788,6 +1793,22 @@ namespace PK.Forms
             //            if (bt != null)
             //                bt.Enabled = false;
             //        }
+        }
+
+        private void DirectionDocEnableDisable()
+        {
+            if ((cbSpecialRights.Checked || cbTarget.Checked) && !_Loading)
+                cbDirectionDoc.Enabled = true;
+            else if ((cbSpecialRights.Checked || cbTarget.Checked) && _Loading)
+            {
+                cbDirectionDoc.Enabled = true;
+                cbDirectionDoc.Checked = true;
+            }
+            else
+            {
+                cbDirectionDoc.Enabled = false;
+                cbDirectionDoc.Checked = false;
+            }
         }
     }
 }

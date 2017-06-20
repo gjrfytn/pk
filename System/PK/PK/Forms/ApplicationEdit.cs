@@ -409,7 +409,7 @@ namespace PK.Forms
                 else if (mtbEMail.Text == "")
                     MessageBox.Show("Поле \"Email\" не заполнено");
                 else if (!cbAppAdmission.Checked
-                    || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked) && !cbDirectionDoc.Checked
+                    || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked) && !cbDirectionDoc.Checked
                     || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
                     || rbSpravka.Checked && !cbCertificateHRD.Checked)
                     MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
@@ -523,9 +523,9 @@ namespace PK.Forms
 
         private void DirectionDocEnableDisable()
         {
-            if (((cbChernobyl.Checked) || (cbQuote.Checked) || (cbOlympiad.Checked) || (cbPriority.Checked))&&(!_Loading))
+            if (((cbChernobyl.Checked) || (cbQuote.Checked) || (cbOlympiad.Checked) || (cbPriority.Checked) || (cbTarget.Checked))&&(!_Loading))
                 cbDirectionDoc.Enabled = true;
-            else if (((cbChernobyl.Checked) || (cbQuote.Checked) || (cbOlympiad.Checked) || (cbPriority.Checked)) && (_Loading))
+            else if (((cbChernobyl.Checked) || (cbQuote.Checked) || (cbOlympiad.Checked) || (cbPriority.Checked) || (cbTarget.Checked)) && (_Loading))
             {
                 cbDirectionDoc.Enabled = true;
                 cbDirectionDoc.Checked = true;
@@ -710,7 +710,6 @@ namespace PK.Forms
                             lb.Enabled = true;
                     }
                 }
-                
             }
             else if (!cbTarget.Checked && !_Loading)
             {
@@ -766,6 +765,7 @@ namespace PK.Forms
                         lb.Enabled = true;
                 }
             }
+            DirectionDocEnableDisable();
         }
 
         private void btAddDir_Click(object sender, EventArgs e)
