@@ -201,6 +201,11 @@ namespace PK.Forms
             form.ShowDialog();
             Classes.Utility.Print(Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value));
         }
+        
+        private void menuStrip_DirsPlaces_Click(object sender, EventArgs e)
+        {
+            Classes.Utility.Print(Classes.OutDocuments.DirectionsPlaces(_DB_Connection));
+        }
 
         private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)
         {

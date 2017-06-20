@@ -51,10 +51,11 @@ namespace PK.Classes
 
                 AddCoreProperties(doc);
 
-                if (wordTemplateElement.Element("Properties") != null)
-                    ApplyProperties(doc, wordTemplateElement.Element("Properties"));
-
                 string placeholderGroup = null;
+
+                if (wordTemplateElement.Element("Properties") != null)
+                    ApplyProperties(doc, wordTemplateElement.Element("Properties"), fonts, connection, id, ref placeholderGroup, singleParams);
+
                 foreach (XElement element in wordTemplateElement.Element("Structure").Elements())
                 {
                     if (element.Element("Paragraph") != null)
@@ -108,7 +109,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     );
             }
 
-            private static void ApplyProperties(DocX doc, XElement properties)
+            private static void ApplyProperties(DocX doc, XElement properties, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (properties.Element("Borders") != null)
                     AddBorders(doc);
@@ -148,6 +149,28 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                         doc.MarginRight = float.Parse(margins.Element("Right").Value);
                     if (margins.Element("Bottom") != null)
                         doc.MarginBottom = float.Parse(margins.Element("Bottom").Value);
+                }
+
+                if (properties.Element("Headers") != null)
+                {
+                    doc.AddHeaders();
+                    doc.Headers.first.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.first.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    doc.Headers.odd.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.odd.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    doc.Headers.even.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.even.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                }
+
+                if (properties.Element("PageNumeration") != null)
+                {
+                    doc.AddFooters();
+                    doc.Footers.first.PageNumbers = true;
+                    doc.Footers.odd.PageNumbers = true;
+                    doc.Footers.even.PageNumbers = true;
+                    doc.Footers.first.Paragraphs[0].Alignment = Alignment.right;
+                    doc.Footers.odd.Paragraphs[0].Alignment = Alignment.right;
+                    doc.Footers.even.Paragraphs[0].Alignment = Alignment.right;
                 }
             }
 

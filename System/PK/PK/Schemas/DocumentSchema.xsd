@@ -365,6 +365,17 @@
                               </xs:all>
                             </xs:complexType>
                           </xs:element>
+                          <xs:element name="Headers" minOccurs="0" type="TParagraph">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Верхний колонтитул.</xs:documentation>
+                            </xs:annotation>
+                          </xs:element>
+                          <xs:element name="PageNumeration" minOccurs="0">
+                            <xs:annotation>
+                              <xs:documentation xml:lang="ru">Нумерация страниц.</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType/>
+                          </xs:element>
                         </xs:all>
                       </xs:complexType>
                     </xs:element>

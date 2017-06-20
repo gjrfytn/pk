@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Template
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="..\Schemas\DocumentSchema.xsd">
+  <Fonts>
+    <Font ID="Usual">
+      <Name>Arial</Name>
+      <Size>14</Size>
+    </Font>
+    <Font ID="UsualBold">
+      <Name>Arial</Name>
+      <Size>14</Size>
+      <Style>Bold</Style>
+    </Font>
+  </Fonts>
+  <Document>
+    <Word>
+      <Structure>
+        <Element>
+          <Table>
+            <Placeholder>0</Placeholder>
+            <Structure>
+              <Column>
+                <Caption>Направление</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Заявления</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+            </Structure>
+          </Table>
+        </Element>
+      </Structure>
+    </Word>
+  </Document>
+</Template>

@@ -74,6 +74,7 @@
             this.lFilter = new System.Windows.Forms.Label();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.menuStrip_DirsPlaces = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -245,7 +246,8 @@
             // menuStrip_OutDocuments
             // 
             this.menuStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuStrip_RegJournal});
+            this.menuStrip_RegJournal,
+            this.menuStrip_DirsPlaces});
             this.menuStrip_OutDocuments.Name = "menuStrip_OutDocuments";
             this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 19);
             this.menuStrip_OutDocuments.Text = "Печатные формы";
@@ -253,7 +255,7 @@
             // menuStrip_RegJournal
             // 
             this.menuStrip_RegJournal.Name = "menuStrip_RegJournal";
-            this.menuStrip_RegJournal.Size = new System.Drawing.Size(191, 22);
+            this.menuStrip_RegJournal.Size = new System.Drawing.Size(233, 22);
             this.menuStrip_RegJournal.Tag = "inspector";
             this.menuStrip_RegJournal.Text = "Журнал регистрации";
             this.menuStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
@@ -637,6 +639,13 @@
             this.timer.Interval = 10000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // menuStrip_DirsPlaces
+            // 
+            this.menuStrip_DirsPlaces.Name = "menuStrip_DirsPlaces";
+            this.menuStrip_DirsPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_DirsPlaces.Text = "Заявления по направлениям";
+            this.menuStrip_DirsPlaces.Click += new System.EventHandler(this.menuStrip_DirsPlaces_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -733,6 +742,7 @@
         private System.Windows.Forms.Label lFilter;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_DirsPlaces;
     }
 }
 

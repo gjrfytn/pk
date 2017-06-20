@@ -222,13 +222,13 @@ namespace PK.Classes
                 if ((applData.Chernobyl ?? false) || (applData.Priority ?? false) || docs.Any(s =>
                     s.Type == "orphan" ||
                     s.Type == "disability" ||
-                    s.Type == "medical" ||
+                    //s.Type == "medical" ||
                     s.Type == "olympic" ||
                     s.Type == "olympic_total" ||
                     s.Type == "ukraine_olympic" ||
                     s.Type == "international_olympic"
                 ))
-                    inventoryTableParams[1].Add(new string[] { "Направление ПК" }); //TODO
+                    inventoryTableParams[1].Add(new string[] { "Направление ПК" });
 
                 foreach (var medDoc in docs.Where(s => s.Type == "medical"))
                 {
@@ -453,7 +453,7 @@ namespace PK.Classes
                         System.Windows.Forms.SystemInformation.ComputerName,
                         applData.RegistrationTime.ToString(),
                         applData.EditTime.HasValue?applData.EditTime.ToString():"нет",
-                        master ?"":"Проверить всю информацию можно в личном кабинете абитуриента по адресу: www.priem-madi.ru",
+                        master ?"":"Проверить всю информацию можно в личном кабинете абитуриента по адресу: http://www.madi.ru/abit/list.php",
                         master ?"":"Логин: "+ applData.EntrantID.ToString(),
                         master ?"":"Пароль: "+ applData.Password
                     },
@@ -888,6 +888,44 @@ namespace PK.Classes
             string doc = Utility.TempPath + "registrationJournal" + new Random().Next();
             DocumentCreator.Create(
                 Utility.DocumentsTemplatesPath + "RegistrationJournal.xml",
+                doc,
+                new string[] { date.ToShortDateString() },
+                new List<string[]>[] { data }
+                );
+
+            return doc + ".docx";
+        }
+
+        public static string DirectionsPlaces(DB_Connector connection)
+        {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            #endregion
+
+            List<string[]> data = connection.Select(
+                DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
+                new string[] { "direction_faculty", "direction_id" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID) }
+                ).GroupJoin(
+                connection.Select(DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id"),
+                k1 => Tuple.Create(k1[0], k1[1]),
+                k2 => Tuple.Create(k2[0], k2[1]),
+                (e, g) => new
+                {
+                    Faculty = e[0].ToString(),
+                    Direction = (uint)e[1],
+                    ApplCount = g.Count()
+                }).Join(
+                connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id", "short_name"),
+                k1 => Tuple.Create(k1.Faculty, k1.Direction),
+                k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
+                (s1, s2) => new string[] { s2[2].ToString(), s1.ApplCount.ToString() }
+                ).ToList();
+
+            string doc = Utility.TempPath + "directionsPlaces" + new Random().Next();
+            DocumentCreator.Create(
+                Utility.DocumentsTemplatesPath + "DirectionsPlaces.xml",
                 doc,
                 null,
                 new List<string[]>[] { data }

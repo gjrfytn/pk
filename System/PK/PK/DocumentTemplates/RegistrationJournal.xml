@@ -16,12 +16,25 @@
   <Document>
     <Word>
       <Properties>
+        <Album/>
         <Margins>
           <Left>20</Left>
           <Top>10</Top>
           <Right>20</Right>
           <Bottom>10</Bottom>
         </Margins>
+        <Headers>
+          <Alighment>Right</Alighment>
+          <FontID>Usual</FontID>
+          <Parts>
+            <Part>
+              <Text>
+                <Placeholder>0</Placeholder>
+              </Text>
+            </Part>
+          </Parts>
+        </Headers>
+        <PageNumeration/>
       </Properties>
       <Structure>
         <Element>
