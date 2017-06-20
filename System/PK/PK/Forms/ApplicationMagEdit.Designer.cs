@@ -40,10 +40,10 @@
             this.gbOther = new System.Windows.Forms.GroupBox();
             this.mtbEMail = new System.Windows.Forms.MaskedTextBox();
             this.label31 = new System.Windows.Forms.Label();
-            this.mtbHomePhone = new System.Windows.Forms.MaskedTextBox();
-            this.mtbMobilePhone = new System.Windows.Forms.MaskedTextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
+            this.tbMobilePhone = new System.Windows.Forms.TextBox();
+            this.tbHomePhone = new System.Windows.Forms.TextBox();
             this.tcPrograms = new System.Windows.Forms.TabControl();
             this.tcPrograms_budget_o = new System.Windows.Forms.TabPage();
             this.btRemoveDir_budget_o = new System.Windows.Forms.Button();
@@ -136,6 +136,9 @@
             this.btWithdraw = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.gbEduDocument.SuspendLayout();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
@@ -151,11 +154,14 @@
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAddress.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // gbEduDocument
             // 
             this.gbEduDocument.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.gbEduDocument.Controls.Add(this.pictureBox2);
             this.gbEduDocument.Controls.Add(this.cbTarget);
             this.gbEduDocument.Controls.Add(this.btFillRand);
             this.gbEduDocument.Controls.Add(this.cbSpecialRights);
@@ -180,7 +186,7 @@
             // cbTarget
             // 
             this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(995, 58);
+            this.cbTarget.Location = new System.Drawing.Point(1064, 58);
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
             this.cbTarget.Size = new System.Drawing.Size(128, 20);
@@ -192,7 +198,7 @@
             // btFillRand
             // 
             this.btFillRand.BackColor = System.Drawing.Color.LightBlue;
-            this.btFillRand.Location = new System.Drawing.Point(1187, 24);
+            this.btFillRand.Location = new System.Drawing.Point(1223, 24);
             this.btFillRand.Name = "btFillRand";
             this.btFillRand.Size = new System.Drawing.Size(93, 44);
             this.btFillRand.TabIndex = 7;
@@ -203,7 +209,7 @@
             // cbSpecialRights
             // 
             this.cbSpecialRights.AutoSize = true;
-            this.cbSpecialRights.Location = new System.Drawing.Point(845, 58);
+            this.cbSpecialRights.Location = new System.Drawing.Point(914, 58);
             this.cbSpecialRights.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialRights.Name = "cbSpecialRights";
             this.cbSpecialRights.Size = new System.Drawing.Size(120, 20);
@@ -215,7 +221,7 @@
             // cbHostelNeeded
             // 
             this.cbHostelNeeded.AutoSize = true;
-            this.cbHostelNeeded.Location = new System.Drawing.Point(596, 58);
+            this.cbHostelNeeded.Location = new System.Drawing.Point(665, 58);
             this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
             this.cbHostelNeeded.Name = "cbHostelNeeded";
             this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
@@ -225,7 +231,7 @@
             // 
             // tbSpecialty
             // 
-            this.tbSpecialty.Location = new System.Drawing.Point(196, 53);
+            this.tbSpecialty.Location = new System.Drawing.Point(265, 53);
             this.tbSpecialty.MaxLength = 4000;
             this.tbSpecialty.Name = "tbSpecialty";
             this.tbSpecialty.Size = new System.Drawing.Size(329, 22);
@@ -234,7 +240,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(10, 56);
+            this.label25.Location = new System.Drawing.Point(79, 56);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(180, 16);
             this.label25.TabIndex = 14;
@@ -243,7 +249,7 @@
             // dtpDiplomaDate
             // 
             this.dtpDiplomaDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDiplomaDate.Location = new System.Drawing.Point(1014, 21);
+            this.dtpDiplomaDate.Location = new System.Drawing.Point(1083, 21);
             this.dtpDiplomaDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpDiplomaDate.Name = "dtpDiplomaDate";
             this.dtpDiplomaDate.Size = new System.Drawing.Size(109, 22);
@@ -252,7 +258,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(842, 24);
+            this.label24.Location = new System.Drawing.Point(911, 24);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(155, 16);
             this.label24.TabIndex = 12;
@@ -260,7 +266,7 @@
             // 
             // tbInstitution
             // 
-            this.tbInstitution.Location = new System.Drawing.Point(102, 21);
+            this.tbInstitution.Location = new System.Drawing.Point(171, 21);
             this.tbInstitution.MaxLength = 500;
             this.tbInstitution.Name = "tbInstitution";
             this.tbInstitution.Size = new System.Drawing.Size(234, 22);
@@ -270,7 +276,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(11, 26);
+            this.label21.Location = new System.Drawing.Point(80, 26);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(84, 16);
             this.label21.TabIndex = 10;
@@ -278,7 +284,7 @@
             // 
             // tbEduDocNumber
             // 
-            this.tbEduDocNumber.Location = new System.Drawing.Point(655, 21);
+            this.tbEduDocNumber.Location = new System.Drawing.Point(724, 21);
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.MaxLength = 100;
             this.tbEduDocNumber.Name = "tbEduDocNumber";
@@ -288,7 +294,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(593, 24);
+            this.label23.Location = new System.Drawing.Point(662, 24);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(54, 16);
@@ -298,7 +304,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(385, 24);
+            this.label22.Location = new System.Drawing.Point(454, 24);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(51, 16);
@@ -307,7 +313,7 @@
             // 
             // tbEduDocSeries
             // 
-            this.tbEduDocSeries.Location = new System.Drawing.Point(444, 21);
+            this.tbEduDocSeries.Location = new System.Drawing.Point(513, 21);
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.MaxLength = 20;
             this.tbEduDocSeries.Name = "tbEduDocSeries";
@@ -317,9 +323,9 @@
             // gbAttributes
             // 
             this.gbAttributes.Controls.Add(this.cbRedDiploma);
-            this.gbAttributes.Location = new System.Drawing.Point(0, 30);
+            this.gbAttributes.Location = new System.Drawing.Point(111, 17);
             this.gbAttributes.Name = "gbAttributes";
-            this.gbAttributes.Size = new System.Drawing.Size(218, 45);
+            this.gbAttributes.Size = new System.Drawing.Size(228, 45);
             this.gbAttributes.TabIndex = 0;
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Индивидуальные достижения";
@@ -337,7 +343,7 @@
             // cbSpecialConditions
             // 
             this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(871, 39);
+            this.cbSpecialConditions.Location = new System.Drawing.Point(122, 67);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
@@ -372,10 +378,10 @@
             // 
             this.gbOther.Controls.Add(this.mtbEMail);
             this.gbOther.Controls.Add(this.label31);
-            this.gbOther.Controls.Add(this.mtbHomePhone);
-            this.gbOther.Controls.Add(this.mtbMobilePhone);
             this.gbOther.Controls.Add(this.label30);
             this.gbOther.Controls.Add(this.label29);
+            this.gbOther.Controls.Add(this.tbMobilePhone);
+            this.gbOther.Controls.Add(this.tbHomePhone);
             this.gbOther.Location = new System.Drawing.Point(472, 204);
             this.gbOther.Name = "gbOther";
             this.gbOther.Size = new System.Drawing.Size(868, 41);
@@ -400,26 +406,6 @@
             this.label31.TabIndex = 30;
             this.label31.Text = "E-mail:";
             // 
-            // mtbHomePhone
-            // 
-            this.mtbHomePhone.Location = new System.Drawing.Point(477, 13);
-            this.mtbHomePhone.Margin = new System.Windows.Forms.Padding(4);
-            this.mtbHomePhone.Mask = "(999) 999-99-99";
-            this.mtbHomePhone.Name = "mtbHomePhone";
-            this.mtbHomePhone.Size = new System.Drawing.Size(116, 22);
-            this.mtbHomePhone.TabIndex = 1;
-            this.mtbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
-            // 
-            // mtbMobilePhone
-            // 
-            this.mtbMobilePhone.Location = new System.Drawing.Point(168, 13);
-            this.mtbMobilePhone.Margin = new System.Windows.Forms.Padding(4);
-            this.mtbMobilePhone.Mask = "(999) 999-99-99";
-            this.mtbMobilePhone.Name = "mtbMobilePhone";
-            this.mtbMobilePhone.Size = new System.Drawing.Size(118, 22);
-            this.mtbMobilePhone.TabIndex = 0;
-            this.mtbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
-            // 
             // label30
             // 
             this.label30.AutoSize = true;
@@ -439,6 +425,32 @@
             this.label29.Size = new System.Drawing.Size(147, 16);
             this.label29.TabIndex = 27;
             this.label29.Text = "Мобильный телефон:";
+            // 
+            // tbMobilePhone
+            // 
+            this.tbMobilePhone.Location = new System.Drawing.Point(167, 13);
+            this.tbMobilePhone.MaxLength = 20;
+            this.tbMobilePhone.Name = "tbMobilePhone";
+            this.tbMobilePhone.Size = new System.Drawing.Size(118, 22);
+            this.tbMobilePhone.TabIndex = 5;
+            this.tbMobilePhone.Tag = "(495)123-4567";
+            this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
+            this.tbMobilePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
+            this.tbMobilePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
+            // 
+            // tbHomePhone
+            // 
+            this.tbHomePhone.Location = new System.Drawing.Point(477, 12);
+            this.tbHomePhone.MaxLength = 20;
+            this.tbHomePhone.Name = "tbHomePhone";
+            this.tbHomePhone.Size = new System.Drawing.Size(116, 22);
+            this.tbHomePhone.TabIndex = 8;
+            this.tbHomePhone.Tag = "(495)123-4567";
+            this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
+            this.tbHomePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
+            this.tbHomePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
             // 
             // tcPrograms
             // 
@@ -797,6 +809,8 @@
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.label32);
+            this.gbApplication.Controls.Add(this.pictureBox3);
             this.gbApplication.Controls.Add(this.dgvExamsResults);
             this.gbApplication.Controls.Add(this.gbAttributes);
             this.gbApplication.Controls.Add(this.gbOther);
@@ -821,7 +835,7 @@
             this.dgvExamsResults_ProgramName,
             this.dgvExamsResults_Exam,
             this.dgvExamsResults_IA});
-            this.dgvExamsResults.Location = new System.Drawing.Point(244, 17);
+            this.dgvExamsResults.Location = new System.Drawing.Point(681, 16);
             this.dgvExamsResults.Name = "dgvExamsResults";
             this.dgvExamsResults.ReadOnly = true;
             this.dgvExamsResults.RowHeadersVisible = false;
@@ -1400,6 +1414,7 @@
             this.tbMiddleName.Name = "tbMiddleName";
             this.tbMiddleName.Size = new System.Drawing.Size(310, 22);
             this.tbMiddleName.TabIndex = 8;
+            this.tbMiddleName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
             // label4
             // 
@@ -1419,6 +1434,7 @@
             this.tbLastName.Name = "tbLastName";
             this.tbLastName.Size = new System.Drawing.Size(308, 22);
             this.tbLastName.TabIndex = 6;
+            this.tbLastName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
             // label3
             // 
@@ -1438,6 +1454,7 @@
             this.tbFirstName.Name = "tbFirstName";
             this.tbFirstName.Size = new System.Drawing.Size(310, 22);
             this.tbFirstName.TabIndex = 7;
+            this.tbFirstName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
             // label2
             // 
@@ -1485,6 +1502,35 @@
             // 
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(11, 18);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(44, 61);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 15;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(11, 17);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(52, 70);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 30;
+            this.pictureBox3.TabStop = false;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(586, 18);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(78, 16);
+            this.label32.TabIndex = 31;
+            this.label32.Text = "Экзамены:";
             // 
             // ApplicationMagEdit
             // 
@@ -1535,6 +1581,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.gbAddress.ResumeLayout(false);
             this.gbAddress.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1559,8 +1607,6 @@
         private System.Windows.Forms.ComboBox cbFirstTime;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.GroupBox gbOther;
-        private System.Windows.Forms.MaskedTextBox mtbHomePhone;
-        private System.Windows.Forms.MaskedTextBox mtbMobilePhone;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.MaskedTextBox mtbEMail;
@@ -1659,5 +1705,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsResults_Exam;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExamsResults_IA;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.TextBox tbMobilePhone;
+        private System.Windows.Forms.TextBox tbHomePhone;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }

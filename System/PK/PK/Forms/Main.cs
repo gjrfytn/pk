@@ -31,6 +31,7 @@ namespace PK.Forms
             _UserRole = userRole;
             SetUserRole();
 
+            dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
             System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);            
             dtpRegDate.Value = dtpRegDate.MinDate;
             SetCurrentCampaign();
@@ -428,12 +429,14 @@ namespace PK.Forms
 
         private void CompleteUpdateAppsTable(List<DataGridViewRow> rows)
         {
+            DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
             dgvApplications.Rows.Clear();
             dgvApplications.Rows.AddRange(rows.ToArray());
-            dgvApplications.Sort(dgvApplications_ID, System.ComponentModel.ListSortDirection.Ascending);
             foreach (DataGridViewRow row in dgvApplications.Rows)
                 if ((uint)row.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                     row.Selected = true;
+            if (sortColumn != null)
+                dgvApplications.Sort(sortColumn, System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void FilterAppsTable()

@@ -387,10 +387,12 @@ namespace PK.Forms
             if (tbLastName.Text == "" || tbFirstName.Text == "" || tbIDDocSeries.Text == "" || tbIDDocNumber.Text == ""
                 || tbPlaceOfBirth.Text == "" || cbRegion.Text == "" || tbPostcode.Text == "")
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
-            else if ((rbDiploma.Checked || rbCertificate.Checked || rbSpravka.Checked)
-                && (rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014 && tbEduDocNumber.Text == "" || tbEduDocSeries.Text == ""))
+            else if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
+                MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
+            else if ((rbDiploma.Checked || rbSpravka.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
+                && ( tbEduDocSeries.Text == "" || tbEduDocNumber.Text == "" ))
                 MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
-            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (tbEduDocNumber.Text != "" || tbEduDocSeries.Text.Length != 14))
+            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (tbEduDocSeries.Text != "" || tbEduDocNumber.Text.Length != 14))
                 MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
             else
             {
@@ -954,7 +956,7 @@ namespace PK.Forms
 
         private void tbNumber_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsNumber(e.KeyChar) || (e.KeyChar == '\b'))
+            if (char.IsNumber(e.KeyChar) || e.KeyChar == '\b' || e.KeyChar == '-' || e.KeyChar == '(' || e.KeyChar == ')')
                 return;
             else
                 e.Handled = true;
@@ -962,7 +964,7 @@ namespace PK.Forms
 
         private void tbCyrillic_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == '-') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
+            if (e.KeyChar >= 'А' && e.KeyChar <= 'я' || e.KeyChar == '\b' || e.KeyChar == '.' || e.KeyChar == '-' || e.KeyChar == 'ё' || e.KeyChar == 'Ё' || e.KeyChar == ' ')
                 return;
             else
                 e.Handled = true;
