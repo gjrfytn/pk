@@ -953,7 +953,6 @@
             // cbEduDoc
             // 
             this.cbEduDoc.AutoSize = true;
-            this.cbEduDoc.Enabled = false;
             this.cbEduDoc.Location = new System.Drawing.Point(375, 23);
             this.cbEduDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbEduDoc.Name = "cbEduDoc";
