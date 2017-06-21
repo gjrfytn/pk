@@ -34,6 +34,7 @@ namespace SitePost
             cbCampaigns.ValueMember = "Key";
             cbCampaigns.DisplayMember = "Value";
             cbAdress.SelectedIndex = 0;
+            cbAdress.Enabled = cbPost.Checked;
             cbUnits.SelectedIndex = 1;
             for (int i = 1; i <= 60; i++)
                 cbInterval.Items.Add(i);
@@ -102,6 +103,11 @@ namespace SitePost
             }
         }
 
+        private void cbPost_CheckedChanged(object sender, EventArgs e)
+        {
+            cbAdress.Enabled = ((CheckBox)sender).Checked;
+        }
+
 
         private void PostApplications()
         {
@@ -158,7 +164,7 @@ namespace SitePost
                             new XElement("Photo", 0),
                             new XElement("OrphanDocument", 0),
                             new XElement("InvalidDocument", 0),
-                            new XElement("PMPDocument", 0),
+                            //new XElement("PMPDocument", 0),
                             new XElement("AbsenceOfContraindicationsForTraining", 0)),
                         new XElement("Applications"));
 
@@ -183,23 +189,27 @@ namespace SitePost
                 }
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
-                PackageData.Save("doc.xml");
+                if (cbSave.Checked)
+                    PackageData.Save("doc.xml");
 
-                byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = bytesData.Length;
-                request.Method = "POST";
-                System.IO.Stream requestStream = request.GetRequestStream();
-                requestStream.Write(bytesData, 0, bytesData.Length);
-                requestStream.Close();
-                HttpWebResponse response;
-                response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (cbPost.Checked)
                 {
-                    System.IO.Stream responseStream = response.GetResponseStream();
-                    string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
-                    tbResponse.Text = responseStr;
+                    byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.ContentLength = bytesData.Length;
+                    request.Method = "POST";
+                    System.IO.Stream requestStream = request.GetRequestStream();
+                    requestStream.Write(bytesData, 0, bytesData.Length);
+                    requestStream.Close();
+                    HttpWebResponse response;
+                    response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        System.IO.Stream responseStream = response.GetResponseStream();
+                        string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
+                        tbResponse.Text = responseStr;
+                    }
                 }
             }
         }
