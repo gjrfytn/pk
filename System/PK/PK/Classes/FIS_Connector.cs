@@ -18,19 +18,8 @@ namespace PK.Classes
             CheckLoginAndPassword(login, password);
             #endregion
 
-            //
-            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-            //        @"<Root>
-            //            <AuthData>
-            //                <Login>" + login + @"</Login>
-            //                <Pass>" + password + @"</Pass>
-            //            </AuthData>
-            //        </Root>"
-            //);
-            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionary", byteArray);
-            //
-
-            XDocument doc = XDocument.Load("tempDictList.xml");
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, null).ToString());
+            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionary", byteArray);
 
             return doc.Root.Elements().ToDictionary(k => uint.Parse(k.Element("Code").Value), v => v.Element("Name").Value);
         }
@@ -43,22 +32,12 @@ namespace PK.Classes
 
             if (dictionaryID == 10 || dictionaryID == 19)
                 throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", nameof(dictionaryID));
-            //
-            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-            //        @"<Root>
-            //        <GetDictionaryContent>
-            //            <DictionaryCode>" + dictionaryID + @"</DictionaryCode>
-            //        </GetDictionaryContent>
-            //        <AuthData>
-            //            <Login>" + login + @"</Login>
-            //            <Pass>" + password + @"</Pass>
-            //        </AuthData>
-            //    </Root>"
-            //);
-            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
-            //
 
-            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + dictionaryID + ".xml");
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
+                new XElement("DictionaryCode", dictionaryID)
+                )).ToString());
+
+            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
 
             if (doc.Root.Element("DictionaryItems") != null)//TODO Из-за 24 справочника, в котором вопреки спецификации вообще нету элементов. Возможно из-за тестового клиента.
                 return doc.Root.Element("DictionaryItems").Elements()
@@ -73,22 +52,11 @@ namespace PK.Classes
             CheckLoginAndPassword(login, password);
             #endregion
 
-            //
-            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-            //        @"<Root>
-            //         <GetDictionaryContent>
-            //             <DictionaryCode>" + 10 + @"</DictionaryCode>
-            //         </GetDictionaryContent>
-            //         <AuthData>
-            //             <Login>" + login + @"</Login>
-            //             <Pass>" + password + @"</Pass>
-            //         </AuthData>
-            //     </Root>"
-            //);
-            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
-            //
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
+                new XElement("DictionaryCode", 10)
+                )).ToString());
 
-            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 10 + ".xml");
+            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
 
             return doc.Root.Element("DictionaryItems").Elements().ToDictionary(
                 k => uint.Parse(k.Element("ID").Value),
@@ -114,24 +82,13 @@ namespace PK.Classes
                 throw new System.ArgumentException("Массив с профилями должен содержать хотя бы один элемент.", nameof(profiles));
             #endregion
 
-            //
-            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(
-            //        @"<Root>
-            //         <GetDictionaryContent>
-            //             <DictionaryCode>" + 19 + @"</DictionaryCode>
-            //         </GetDictionaryContent>
-            //         <AuthData>
-            //             <Login>" + login + @"</Login>
-            //             <Pass>" + password + @"</Pass>
-            //         </AuthData>
-            //     </Root>"
-            //);
-            //XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
-            //
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
+                new XElement("DictionaryCode", 19)
+                )).ToString());
+
+            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
 
             string[] strProfiles = System.Array.ConvertAll(profiles, s => s.ToString());
-
-            XDocument doc = XDocument.Load(".\\tempDictionaries\\dicn" + 19 + ".xml");
 
             return doc.Root.Element("DictionaryItems").Elements()
                 .Where(
@@ -158,18 +115,17 @@ namespace PK.Classes
                 });
         }
 
-        public static string Export(string address, string login, string password, FIS_ExportClasses.PackageData data)
+        public static string Export(string address, string login, string password, XElement packageData)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
-            if (data == null)
-                throw new System.ArgumentNullException(nameof(data));
+            if (packageData == null)
+                throw new System.ArgumentNullException(nameof(packageData));
             if (string.IsNullOrWhiteSpace(address))
                 throw new System.ArgumentException("Некорректный адрес.", nameof(address));
             #endregion
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(new FIS_ExportClasses.Root(
-                new FIS_ExportClasses.AuthData(login, password), data).ConvertToXElement().ToString());
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, packageData).ToString());
 
             XDocument doc = GetResponse(address + "/import/importservice.svc/import", byteArray);
 
@@ -213,6 +169,17 @@ namespace PK.Classes
                 throw new System.ArgumentException("Некорректный логин.", nameof(login));
             if (string.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Некорректный пароль.", nameof(password));
+        }
+
+        private static XDocument MakeRoot(string login, string password, XElement data)
+        {
+            return new XDocument(new XElement("Root",
+                new XElement("AuthData",
+                new XElement("Login", login),
+                new XElement("Pass", password)
+                ),
+                data
+                ));
         }
     }
 }

@@ -323,11 +323,11 @@ namespace PK.Classes
                     marks.Where(s => s.ApplID == appl.ID)
                     );
 
-                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight);
+                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs);
 
                 applications.Add(new Application(
-                    new TUID(appl.ID),
-                    appl.ID.ToString(),
+                    new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
+                    campaignID.ToString() + "_" + appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
                         packedDocs.IdentityDocument.LastName,
@@ -653,6 +653,7 @@ namespace PK.Classes
                     case "school_certificate":
                     case "high_edu_diploma":
                     case "academic_diploma":
+                    case "middle_edu_diploma":
                         {
                             uint year = (uint)connection.Select(
                            DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
@@ -667,7 +668,7 @@ namespace PK.Classes
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     null,
-                                    null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization
                                     ));
                             else if (doc.Type == "school_certificate")
@@ -676,8 +677,22 @@ namespace PK.Classes
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     new TDocumentSeries(doc.Series),
-                                    null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
+                                    year
+                                    ));
+                            else if (doc.Type == "middle_edu_diploma")
+                                eduDoc = new EduDocument(new TMiddleEduDiplomaDocument(
+                                    new TUID(doc.ID),
+                                    new TDocumentSeries(doc.Series),
+                                    new TDocumentNumber(doc.Number),
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
+                                    doc.Organization,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
                                     year
                                     ));
                             else
@@ -686,7 +701,7 @@ namespace PK.Classes
                                     new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    null,
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     null,
                                     null,
@@ -993,7 +1008,7 @@ namespace PK.Classes
             return testsResults;
         }
 
-        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight)
+        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight, IEnumerable<DB_Queries.Document> docs)
         {
             List<IndividualAchievement> achievements = new List<IndividualAchievement>();
 
@@ -1012,13 +1027,14 @@ namespace PK.Classes
                     ).ToDictionary(k => (uint)k[0], e => (ushort)e[1]);
 
                 foreach (var ach in achievementsBD)
-                    achievements.Add(new IndividualAchievement(
-                        new TUID(ach.ID),
-                        new TUID(ach.InstAchID),
-                        new TUID(ach.DocID),
-                        instAch[ach.InstAchID],
-                        priorityRight.HasValue ? priorityRight : null
-                        ));
+                    if (docs.Single(s => s.ID == ach.DocID).Type != "high_edu_diploma")
+                        achievements.Add(new IndividualAchievement(
+                            new TUID(ach.ID),
+                            new TUID(ach.InstAchID),
+                            new TUID(ach.DocID),
+                            instAch[ach.InstAchID],
+                            priorityRight.HasValue ? priorityRight : null
+                            ));
             }
 
             return achievements;

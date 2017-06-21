@@ -787,7 +787,8 @@ namespace PK.Classes
 
             var applications = connection.Select(
                 DB_Table.APPLICATIONS,
-                "id", "entrant_id", "registration_time"
+                new string[] { "id", "entrant_id", "registration_time" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID) }
                 ).Where(a => ((DateTime)a[2]).Date == date).Join(
                 connection.Select(
                 DB_Table.ENTRANTS,
@@ -854,14 +855,14 @@ namespace PK.Classes
                 switch (eduDoc.DocType)
                 {
                     case "academic_diploma":
-                        eduDocName = "справки";
+                        eduDocName = eduDoc.Original.HasValue ? "Справка" : "Копия справки";
                         break;
                     case "school_certificate":
-                        eduDocName = "аттестата";
+                        eduDocName = eduDoc.Original.HasValue ? "Аттестат" : "Копия аттестата";
                         break;
                     case "middle_edu_diploma":
                     case "high_edu_diploma":
-                        eduDocName = "диплома";
+                        eduDocName = eduDoc.Original.HasValue ? "Диплом" : "Копия диплома";
                         break;
                     default:
                         throw new Exception("Unreacheble reached.");
@@ -880,7 +881,7 @@ namespace PK.Classes
                     appl.ApplID.ToString(),
                     appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
                     string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
-                    (eduDoc.Original!=null?"Оригинал ":"Копия ")+eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
+                    eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
                     string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct())
                 });
             }
@@ -903,12 +904,20 @@ namespace PK.Classes
                 throw new ArgumentNullException(nameof(connection));
             #endregion
 
+            DB_Helper dbHelper = new DB_Helper(connection);
+
             List<string[]> data = connection.Select(
                 DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
                 new string[] { "direction_faculty", "direction_id" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID) }
                 ).GroupJoin(
-                connection.Select(DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id"),
+                connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES,
+                    new string[] { "faculty_short_name", "direction_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("edu_source_id",Relation.NOT_EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP))
+                    }),
                 k1 => Tuple.Create(k1[0], k1[1]),
                 k2 => Tuple.Create(k2[0], k2[1]),
                 (e, g) => new
@@ -916,7 +925,7 @@ namespace PK.Classes
                     Faculty = e[0].ToString(),
                     Direction = (uint)e[1],
                     ApplCount = g.Count()
-                }).Join(
+                }).Where(s => s.ApplCount != 0).Join(
                 connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id", "short_name"),
                 k1 => Tuple.Create(k1.Faculty, k1.Direction),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
@@ -926,6 +935,37 @@ namespace PK.Classes
             string doc = Utility.TempPath + "directionsPlaces" + new Random().Next();
             DocumentCreator.Create(
                 Utility.DocumentsTemplatesPath + "DirectionsPlaces.xml",
+                doc,
+                null,
+                new List<string[]>[] { data }
+                );
+
+            return doc + ".docx";
+        }
+
+        public static string ProfilesPlaces(DB_Connector connection)
+        {
+            #region Contracts
+            if (connection == null)
+                throw new ArgumentNullException(nameof(connection));
+            #endregion
+
+            DB_Helper dbHelper = new DB_Helper(connection);
+
+            List<string[]> data = connection.Select(
+                DB_Table.CAMPAIGNS_PROFILES_DATA,
+                new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Utility.CurrentCampaignID) }
+                ).GroupJoin(
+                connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id", "profile_short_name"),
+                k1 => Tuple.Create(k1[0], k1[1], k1[2]),
+                k2 => Tuple.Create(k2[0], k2[1], k2[2]),
+                (e, g) => new string[] { e[2].ToString(), g.Count().ToString() }).ToList();
+
+            string doc = Utility.TempPath + "profilesPlaces" + new Random().Next();
+            DocumentCreator.Create(
+                Utility.DocumentsTemplatesPath + "ProfilesPlaces.xml",
                 doc,
                 null,
                 new List<string[]>[] { data }
