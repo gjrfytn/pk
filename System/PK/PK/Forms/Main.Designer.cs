@@ -75,6 +75,7 @@
             this.lFilter = new System.Windows.Forms.Label();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.menuStrip_ProfilesPlaces = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -247,7 +248,8 @@
             // 
             this.menuStrip_OutDocuments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_RegJournal,
-            this.menuStrip_DirsPlaces});
+            this.menuStrip_DirsPlaces,
+            this.menuStrip_ProfilesPlaces});
             this.menuStrip_OutDocuments.Name = "menuStrip_OutDocuments";
             this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 19);
             this.menuStrip_OutDocuments.Text = "Печатные формы";
@@ -646,6 +648,13 @@
             this.timer.Interval = 30000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // menuStrip_ProfilesPlaces
+            // 
+            this.menuStrip_ProfilesPlaces.Name = "menuStrip_ProfilesPlaces";
+            this.menuStrip_ProfilesPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_ProfilesPlaces.Text = "Заявления по профилям";
+            this.menuStrip_ProfilesPlaces.Click += new System.EventHandler(this.menuStrip_ProfilesPlaces_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -743,6 +752,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_DirsPlaces;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_ProfilesPlaces;
     }
 }
 

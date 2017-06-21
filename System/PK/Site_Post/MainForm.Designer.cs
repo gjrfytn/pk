@@ -75,6 +75,7 @@
             this.cbAdress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAdress.FormattingEnabled = true;
             this.cbAdress.Items.AddRange(new object[] {
+            "http://madi.ru/abit/getXMLdata.php",
             "http://sociomadi.ru/pk/getXMLdata.php"});
             this.cbAdress.Location = new System.Drawing.Point(376, 21);
             this.cbAdress.Name = "cbAdress";

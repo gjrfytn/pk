@@ -208,6 +208,11 @@ namespace PK.Forms
             Classes.Utility.Print(Classes.OutDocuments.DirectionsPlaces(_DB_Connection));
         }
 
+        private void menuStrip_ProfilesPlaces_Click(object sender, EventArgs e)
+        {
+            Classes.Utility.Print(Classes.OutDocuments.ProfilesPlaces(_DB_Connection));
+        }
+
         private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)
         {
             EGE_Check form = new EGE_Check(_DB_Connection);

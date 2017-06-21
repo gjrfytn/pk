@@ -22,9 +22,9 @@ namespace SitePost
         public MainForm()
         {
             InitializeComponent();
-            _DB_Connection = new PK.Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "administrator", "adm1234");
+
+            _DB_Connection = new PK.Classes.DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
             _DB_Helper = new PK.Classes.DB_Helper(_DB_Connection);
-            
             Dictionary<uint, string> campaigns = new Dictionary<uint, string>();
             foreach (object[] campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "name" }))
                 if (!_DB_Helper.IsMasterCampaign((uint)campaign[0]))
@@ -175,6 +175,7 @@ namespace SitePost
 
                     SetMarks((uint)application[0], abitur);
                     SetDocuments((uint)application[0], abitur);
+                    SetIA((uint)application[0], abitur);
                     foreach (XElement appl in GetEntrances((uint)application[0]))
                         abitur.Element("Applications").Add(appl);
 
@@ -182,6 +183,7 @@ namespace SitePost
                 }
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
+                PackageData.Save("doc.xml");
 
                 byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
@@ -293,7 +295,7 @@ namespace SitePost
         private List<XElement> GetEntrances(uint appID)
         {
             List<object[]> entrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "edu_form_id", "direction_id", "profile_short_name",
-                        "is_agreed_date", "edu_source_id" }, new List<Tuple<string, Relation, object>>
+                        "is_agreed_date", "edu_source_id", "faculty_short_name" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("application_id", Relation.EQUAL, appID)
                         });
@@ -328,24 +330,28 @@ namespace SitePost
 
                 if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceB))
                 {
+                    appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 1));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceT))
                 {
+                    appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 2));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceQ))
                 {
+                    appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 3));
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceP))
                 {
+                    appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", 0));
                     appl.Add(new XElement("Profile", entrance[2].ToString()));
                     appl.Add(new XElement("Condition", 4));
@@ -364,6 +370,26 @@ namespace SitePost
                 appls.Add(appl);
             }
             return appls;
+        }
+
+        private void SetIA(uint appID, XElement abitur)
+        {
+            IEnumerable<ushort> IABalls = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                    _DB_Connection.Select(
+                        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                        new string[] { "institution_achievement_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL, appID)
+                        }),
+                    k1 => k1[0],
+                    k2 => k2[0],
+                    (s1, s2) => (ushort)s1[1]);
+
+            if (IABalls.Any())
+            {
+                abitur.SetElementValue("IABall", IABalls.Max());
+            }            
         }
     }
 }

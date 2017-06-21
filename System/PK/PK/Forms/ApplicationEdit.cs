@@ -55,7 +55,7 @@ namespace PK.Forms
             public DateTime olympDate;
         }
 
-        
+
         public ODoc OlympicDoc;
         public SDoc SportDoc;
         public MODoc MADIOlympDoc;
@@ -74,6 +74,21 @@ namespace PK.Forms
         private bool _Agreed;
         private QDoc _QuoteDoc;
         private string[] _DirsMed = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
+        private List<string[]> _InstitutionTypes = new List<string[]>()
+        {
+            new string[] {"Средняя школа", "school_certificate"},
+            new string[] { "Лицей", "school_certificate"},
+            new string[] { "Гимназия", "school_certificate"},
+            new string[] { "УВК", "school_certificate"},
+            new string[] { "ПТУ", "middle_edu_diploma"},
+            new string[] { "СПТУ", "middle_edu_diploma"},
+            new string[] { "ПУ", "middle_edu_diploma"},
+            new string[] { "Техникум", "middle_edu_diploma"},
+            new string[] { "Колледж", "middle_edu_diploma"},
+            new string[] {"Университет", "high_edu_diploma"},
+            new string[] { "Академия", "high_edu_diploma"},
+            new string[] { "Институт", "high_edu_diploma"}
+        };
 
         private bool _DistrictNeedsReload;
         private bool _TownNeedsReload;
@@ -209,7 +224,6 @@ namespace PK.Forms
                             FillDirectionsProfilesCombobox(cb, false, eduFormName, Classes.DB_Helper.EduSourceQ);
                     }
             }
-            cbInstitutionType.SelectedIndex = 0;
             if (_ApplicationID != null)
             {
                 _Loading = true;
@@ -550,6 +564,10 @@ namespace PK.Forms
                 cbEduDoc.Enabled = true;
                 cbCertificateHRD.Enabled = false;
                 cbCertificateHRD.Checked = false;
+                cbInstitutionType.Items.Clear();
+                foreach (string[] type in _InstitutionTypes.Where(s => s[1] == "school_certificate"))
+                    cbInstitutionType.Items.Add(type[0]);
+                cbInstitutionType.SelectedIndex = 0;
             }
             else if (rbDiploma.Checked)
             {
@@ -560,12 +578,20 @@ namespace PK.Forms
                 cbEduDoc.Enabled = true;
                 cbCertificateHRD.Enabled = false;
                 cbCertificateHRD.Checked = false;
+                cbInstitutionType.Items.Clear();
+                foreach (string[] type in _InstitutionTypes.Where(s => s[1] == "middle_edu_diploma" || s[1] == "high_edu_diploma"))
+                    cbInstitutionType.Items.Add(type[0]);
+                cbInstitutionType.SelectedIndex = 0;
             }
             else if (rbSpravka.Checked)
             {
                 cbCertificateHRD.Enabled = true;
                 cbEduDoc.Enabled = false;
                 cbEduDoc.Checked = false;
+                cbInstitutionType.Items.Clear();
+                foreach (string[] type in _InstitutionTypes)
+                    cbInstitutionType.Items.Add(type[0]);
+                cbInstitutionType.SelectedIndex = 0;
             }
             if (cbOriginal.Checked && _ApplicationID != null)
             {
@@ -1297,7 +1323,7 @@ namespace PK.Forms
             else
             {
                 char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-                int passwordLength = 12;
+                int passwordLength = 6;
                 string password = "";
                 Random rand = new Random();
                 for (int i = 0; i < passwordLength; i++)
@@ -1339,18 +1365,18 @@ namespace PK.Forms
 
         private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            string eduDocType = "";
-            int eduDocID = 0;
-            if (rbSpravka.Checked)
-                eduDocType = "academic_diploma";
-            else if (rbCertificate.Checked)
-                eduDocType = "school_certificate";
-            else if (rbDiploma.Checked)
-                eduDocType = "high_edu_diploma";
+            string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
+            uint eduDocID = 0;
+            //if (rbSpravka.Checked)
+            //    eduDocType = "academic_diploma";
+            //else if (rbCertificate.Checked)
+            //    eduDocType = "school_certificate";
+            //else if (rbDiploma.Checked)
+            //    eduDocType = "high_edu_diploma";
 
             if (cbOriginal.Checked)
             {
-                eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
+                eduDocID = (uint)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text},
                     { "original_recieved_date", DateTime.Now}}, transaction));
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "year", cbGraduationYear.SelectedItem } }, transaction);
@@ -1358,7 +1384,7 @@ namespace PK.Forms
             }
             else
             {
-                eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
+                eduDocID = (uint)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", eduDocType }, { "series",  tbEduDocSeries.Text},
                     { "number", tbEduDocNumber.Text}, { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text + "|" + tbInstitutionLocation.Text}  }, transaction));
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", eduDocID }, { "year", cbGraduationYear.SelectedItem } }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", eduDocID } }, transaction);
@@ -1782,14 +1808,14 @@ namespace PK.Forms
                     tbAppartment.Text = passport[11].ToString();
                     cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.GENDER, (uint)passport[12]);
                 }
-                else if ((document[1].ToString() == "school_certificate") || (document[1].ToString() == "high_edu_diploma") || (document[1].ToString() == "academic_diploma"))
+                else if (document[1].ToString() == "school_certificate" || document[1].ToString() == "middle_edu_diploma" || document[1].ToString() == "high_edu_diploma" || document[1].ToString() == "academic_diploma")
                 {
                     if (document[1].ToString() == "school_certificate")
                     {
                         rbCertificate.Checked = true;
                         cbEduDoc.Checked = true;
                     }
-                    else if (document[1].ToString() == "high_edu_diploma")
+                    else if (document[1].ToString() == "middle_edu_diploma" || document[1].ToString() == "high_edu_diploma")
                     {
                         rbDiploma.Checked = true;
                         cbEduDoc.Checked = true;
@@ -2094,7 +2120,7 @@ namespace PK.Forms
                 }).Select(s => new
                 {
                     Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                    Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
+                    Display = s.ProfileShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
                 }).ToList();
 
             var dirsRecords = appEntrances.Join(
@@ -2109,10 +2135,11 @@ namespace PK.Forms
                     Name = s2[1].ToString(),
                     EduSource = (uint)s1[5],
                     EduForm = (uint)s1[4],
+                    DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
                 }).Select(s => new
                 {
                     Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
-                    Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
+                    Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
                 }).ToList();
 
             var records = dirsRecords.Concat(profsRecords);
@@ -2398,15 +2425,16 @@ namespace PK.Forms
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
                     }
 
-                    else if ((document[1].ToString() == "school_certificate") || (document[1].ToString() == "high_edu_diploma") || (document[1].ToString() == "academic_diploma"))
+                    else if (document[1].ToString() == "school_certificate" || document[1].ToString() == "middle_edu_diploma"
+                        || document[1].ToString() == "high_edu_diploma" || document[1].ToString() == "academic_diploma")
                     {
-                        string eduDocType = "";
-                        if (rbSpravka.Checked)
-                            eduDocType = "academic_diploma";
-                        if (rbCertificate.Checked)
-                            eduDocType = "school_certificate";
-                        if (rbDiploma.Checked)
-                            eduDocType = "high_edu_diploma";
+                        string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
+                        //if (rbSpravka.Checked)
+                        //    eduDocType = "academic_diploma";
+                        //if (rbCertificate.Checked)
+                        //    eduDocType = "school_certificate";
+                        //if (rbDiploma.Checked)
+                        //    eduDocType = "high_edu_diploma";
 
                         if ((document[6] as DateTime?) != null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series",  tbEduDocSeries.Text}, { "type", eduDocType },
@@ -2975,7 +3003,7 @@ namespace PK.Forms
                     }).Select(s => new
                     {
                         Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = "(" + s.Faculty + ", " + s.Level + ") " + s.ProfileName
+                        Display = s.ProfileShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.ProfileName
                     }).ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
@@ -3010,11 +3038,12 @@ namespace PK.Forms
                         Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
                         Name = s2[1].ToString(),
                         EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm)
+                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                        DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0]) 
                     }).Select(s => new
                     {
                         Value = new DirTuple(s.Id, s.Faculty,s.Name, s.EduSource, s.EduForm, "", ""),
-                        Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
+                        Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
                     }).ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
@@ -3045,11 +3074,12 @@ namespace PK.Forms
                         Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
                         Name = s2[1].ToString(),
                         EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm)
+                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                        DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
                     }).Select(s => new
                     {
                         Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
-                        Display = "(" + s.Faculty + ", " + s.Level + ") " + s.Name
+                        Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
                     }).Distinct().ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
@@ -3164,6 +3194,19 @@ namespace PK.Forms
                         if (bt != null)
                             bt.Enabled = false;
                     }
+        }
+
+        private string GetDirectionShortName(string facultyShortName, uint directionID)
+        {
+            List<object[]> result = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "short_name" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, facultyShortName),
+                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, directionID)
+                });
+            if (!result.Any())
+                throw new System.ArgumentException("На данном факультете отсутствует данное направление.");
+            else
+                return result[0][0].ToString();
         }
     }
 }

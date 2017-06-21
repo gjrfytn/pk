@@ -3,12 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-using EGE_Result = System.Tuple<uint, string, string, string, string, string, System.Collections.Generic.IEnumerable<uint>>;
-
 namespace PK.Forms
 {
     partial class EGE_Check : Form
     {
+        class EGE_Result
+        {
+            public readonly uint DocID;
+            public readonly string Series;
+            public readonly string Number;
+            public readonly string LastName;
+            public readonly string FirstName;
+            public readonly string MiddleName;
+            public readonly IEnumerable<uint> Subjects;
+
+            public EGE_Result(uint docID, string series, string number, string lastName, string firstName, string middleName, IEnumerable<uint> subjects)
+            {
+                DocID = docID;
+                Series = series;
+                Number = number;
+                LastName = lastName;
+                FirstName = firstName;
+                MiddleName = middleName;
+                Subjects = subjects;
+            }
+        }
+
         private readonly Classes.DB_Connector _DB_Connection;
         private readonly IEnumerable<EGE_Result> _ApplsEgeResults;
 
@@ -73,10 +93,10 @@ namespace PK.Forms
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName))
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName, false, System.Text.Encoding.GetEncoding(1251)))
                 {
                     foreach (EGE_Result appl in _ApplsEgeResults)
-                        writer.WriteLine(appl.Item4 + "%" + appl.Item5 + "%" + appl.Item6 + "%" + appl.Item2 + "%" + appl.Item3);
+                        writer.WriteLine(appl.LastName + "%" + appl.FirstName + "%" + appl.MiddleName + "%" + appl.Series + "%" + appl.Number);
                 }
 
                 Cursor.Current = Cursors.Default;
@@ -90,7 +110,7 @@ namespace PK.Forms
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<string[]> lines = new List<string[]>();
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName, System.Text.Encoding.GetEncoding(1251)))
                 {
                     while (!reader.EndOfStream)
                         lines.Add(reader.ReadLine().Split('%'));
@@ -98,13 +118,26 @@ namespace PK.Forms
 
                 foreach (EGE_Result appl in _ApplsEgeResults)
                 {
+                    Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+
                     var applResults = lines.Where(
-                        s => s[0] == appl.Item4 && s[1] == appl.Item5 && s[2] == appl.Item6 && s[3] == appl.Item2 && s[4] == appl.Item3
-                        );
+                        s => s[0] == appl.LastName && s[1] == appl.FirstName && s[2] == appl.MiddleName && s[3] == appl.Series && s[4] == appl.Number
+                        ).Where(s => s[5] != "" && s[5] != "Сочинение").Select(s =>
+                        {
+                            if (s[5] != "Русский язык" && s[5].Contains(" язык"))
+                                s[5] = "Иностранный язык";
+
+                            return new
+                            {
+                                Subject = dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, s[5]),
+                                Value = s[6],
+                                Year = s[7]
+                            };
+                        });
 
                     var subjects = applResults.GroupBy(
-                        k => new Classes.DB_Helper(_DB_Connection).GetDictionaryItemID(FIS_Dictionary.SUBJECTS, k[5]),
-                        el => new { Value = el[6], Year = el[7] },
+                        k => k.Subject,
+                        el => new { el.Value, el.Year },
                         (k, g) => new { Subject = k, Results = g.OrderBy(s => s.Value) }
                         );
 
@@ -114,7 +147,7 @@ namespace PK.Forms
                             DB_Table.DOCUMENTS_SUBJECTS_DATA,
                             new Dictionary<string, object>
                             {
-                                { "document_id", appl.Item1 },
+                                { "document_id", appl.DocID },
                                 { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
                                 { "subject_id", subj.Subject },
                                 { "value", subj.Results.Last().Value},

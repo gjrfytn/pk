@@ -1189,49 +1189,6 @@ namespace PK.Classes
 
         #endregion
 
-        public class Root : IXElemementConvertable
-        {
-            public readonly AuthData AuthData; //Блок авторизации //s
-            public readonly PackageData PackageData; //Пакет с импортируемыми данными //s
-
-            public Root(AuthData authData, PackageData packageData)
-            {
-                AuthData = authData;
-                PackageData = packageData;
-            }
-
-            public XElement ConvertToXElement()
-            {
-                return new XElement("Root",
-                    AuthData.ConvertToXElement(),
-                    PackageData.ConvertToXElement()
-                    );
-            }
-        }
-
-        public class AuthData : IXElemementConvertable
-        {
-            public readonly string Login; //Логин //50
-            public readonly string Pass; //Пароль //50
-            public readonly int? InstitutionID; //Идентификатор ВУЗа
-
-            public AuthData(string login, string pass, int? institutionID = null)
-            {
-                Login = login;
-                Pass = pass;
-                InstitutionID = institutionID;
-            }
-
-            public XElement ConvertToXElement()
-            {
-                return new XElement("AuthData",
-                    new XElement("Login", Login),
-                    new XElement("Pass", Pass),
-                    ToElementOrNull("InstitutionID", InstitutionID)
-                    );
-            }
-        }
-
         public class PackageData : IXElemementConvertable
         {
             public readonly CampaignInfo CampaignInfo; //Информация о приемных кампаниях

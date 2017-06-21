@@ -800,7 +800,7 @@ namespace PK.Forms
                 })[0][0])})[0][0];
             {
                 char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-                int passwordLength = 12;
+                int passwordLength = 6;
                 string password = "";
                 Random rand = new Random();
                 for (int i = 0; i < passwordLength; i++)

@@ -1,174 +1,291 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:simpleType name="EGE_Mark">
+    <xs:restriction base="xs:unsignedByte">
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FIS_Status">
+    <xs:restriction base="xs:byte">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="Root">
     <xs:complexType>
       <xs:sequence>
-        <xs:element type="xs:string" name="AuthData"/>
+        <xs:element type="xs:string" name="AuthData">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Данные аутентификации.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="PackageData">
+          <xs:annotation>
+            <xs:documentation xml:lang="ru">Пакет с данными.</xs:documentation>
+          </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Abitur" maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="Abitur" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:all>
-                    <xs:element type="xs:string" name="Uin"/>
-                    <xs:element type="xs:string" name="Surname"/>
-                    <xs:element type="xs:string" name="Name"/>
-                    <xs:element type="xs:string" name="Name2"/>
-                    <xs:element type="xs:string" name="Password"/>
+                    <xs:element type="xs:string" name="Uin">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">УИН заявления.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element type="xs:string" name="Surname">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Фамилия.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                    <xs:element type="xs:string" name="Name">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Имя.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element type="xs:string" name="Name2">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Отчество.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                    <xs:element type="xs:string" name="Password">
+                    <xs:annotation>
+                      <xs:documentation xml:lang="ru">Пароль.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
                     <xs:element name="MathBall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-						<xs:minInclusive value="0"/>
-      						<xs:maxInclusive value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="CheckedByFISMath">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="PhisBall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-						<xs:minInclusive value="0"/>
-      						<xs:maxInclusive value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="CheckedByFISPhis">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element  name="RusBall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-						<xs:minInclusive value="0"/>
-      						<xs:maxInclusive value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="CheckedByFISRus">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="ObshBall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-						<xs:minInclusive value="0"/>
-      						<xs:maxInclusive value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="CheckedByFISObsh">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="ForenBall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-						<xs:minInclusive value="0"/>
-      						<xs:maxInclusive value="100"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element name="CheckedByFISForen">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="2"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл по математике.</xs:documentation>
+                      </xs:annotation>
+                      <xs:simpleType>
+                        <xs:restriction base="xs:byte">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="100"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="CheckedByFISMath" type="FIS_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус проверки математики в ФИС.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="PhisBall" type="EGE_Mark">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл по физике.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="CheckedByFISPhis" type="FIS_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус проверки физики в ФИС.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element  name="RusBall" type="EGE_Mark">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл по русскому языку.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="CheckedByFISRus" type="FIS_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус проверки русского языка в ФИС.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ObshBall" type="EGE_Mark">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл по обществознанию.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="CheckedByFISObsh" type="FIS_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус проверки обществознания в ФИС.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ForenBall" type="EGE_Mark">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл по иностранному языку.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="CheckedByFISForen" type="FIS_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус проверки иностранного языка в ФИС.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
                     <xs:element name="IABall">
-				<xs:simpleType>
-					<xs:restriction base="xs:byte">
-    						<xs:enumeration value="0"/>
-    						<xs:enumeration value="1"/>
-    						<xs:enumeration value="10"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-                    <xs:element type="xs:boolean" name="ODO"/>
-			<xs:element type="xs:boolean" name="Olymp"/>
-			<xs:element type="xs:boolean" name="Exam"/>
-                    <xs:element type="xs:boolean" name="Hostel"/>
-                    <xs:element type="xs:boolean" name="PP"/>
-			<xs:element type="xs:boolean" name="MCADO"/>
-			<xs:element type="xs:boolean" name="Chern"/>
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Балл проверки русского языка в ФИС.</xs:documentation>
+                      </xs:annotation>
+                      <xs:simpleType>
+                        <xs:restriction base="xs:byte">
+                          <xs:enumeration value="0"/>
+                          <xs:enumeration value="1"/>
+                          <xs:enumeration value="10"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element type="xs:boolean" name="ODO">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Оригинал документа об образовании.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="Olymp">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Участвовал в олимпиаде.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="Exam">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Сдаёт экзамены.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="Hostel">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Нуждается в общежитии.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="PP">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Преимущественное право.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="MCADO">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">МЦАДО.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                    <xs:element type="xs:boolean" name="Chern">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Чернобыль.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
                     <xs:element name="Documents">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Документы.</xs:documentation>
+                      </xs:annotation>
                       <xs:complexType>
-				<xs:all>
-                          <xs:element type="xs:boolean" name="ApplicationOfAdmission"/>
-                          <xs:element type="xs:boolean" name="PassportCopy"/>
-                          <xs:element type="xs:boolean" name="CertificateDiplomCopy"/>
-                          <xs:element type="xs:boolean" name="HRRefCopy"/>
-                          <xs:element type="xs:boolean" name="ReferralPK"/>
-                          <xs:element type="xs:boolean" name="MedRef"/>
-                          <xs:element type="xs:boolean" name="Photo"/>
-                          <xs:element type="xs:boolean" name="OrphanDocument"/>
-                          <xs:element type="xs:boolean" name="InvalidDocument"/>
-                          <xs:element type="xs:boolean" name="PMPDocument"/>
-                          <xs:element type="xs:boolean" name="AbsenceOfContraindicationsForTraining"/>
-				</xs:all>
+                        <xs:all>
+                          <xs:element type="xs:boolean" name="ApplicationOfAdmission">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Заявление о поступлении.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="PassportCopy">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Копия паспорта.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="CertificateDiplomCopy">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Копия документа об образовании.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="HRRefCopy">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Справка отдела кадров.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="ReferralPK">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Направление ПК.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="MedRef">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Медицинская справка.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="Photo">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">4 фотографии 3x4.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="OrphanDocument">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Документ о сиротстве.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="InvalidDocument">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Документ об инвалидности.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="PMPDocument">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">TODO.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                          <xs:element type="xs:boolean" name="AbsenceOfContraindicationsForTraining">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Документ об отсутствии противопоказаний к обучению.</xs:documentation>
+                      </xs:annotation>
+					</xs:element>
+                        </xs:all>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="Applications" maxOccurs="1" minOccurs="1">
+                    <xs:element name="Applications">
+					<xs:annotation>
+                        <xs:documentation xml:lang="ru">Направления заявления.</xs:documentation>
+                      </xs:annotation>
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="Application" maxOccurs="unbounded" minOccurs="1">
+                          <xs:element name="Application" maxOccurs="unbounded">
+						  <xs:annotation>
+                        <xs:documentation xml:lang="ru">Направление заявления.</xs:documentation>
+                      </xs:annotation>
                             <xs:complexType>
-				     <xs:all>	
+                              <xs:all>
                                 <xs:element name="FormOfEducation">
-						<xs:simpleType>
-							<xs:restriction base="xs:byte">
-    								<xs:enumeration value="1"/>
-    								<xs:enumeration value="2"/>
-    								<xs:enumeration value="3"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-                                <xs:element type="xs:int" name="Direction" />
-                                <xs:element type="xs:string" name="Profile" />
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">Форма обучения.</xs:documentation>
+                      </xs:annotation>
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:byte">
+                                      <xs:enumeration value="1"/>
+                                      <xs:enumeration value="2"/>
+                                      <xs:enumeration value="3"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                                <xs:element type="xs:string" name="Faculty" >
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">Сокращение факультета.</xs:documentation>
+                      </xs:annotation>
+								</xs:element>
+                                <xs:element type="xs:int" name="Direction" >
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">ID направления.</xs:documentation>
+                      </xs:annotation>
+								</xs:element>
+                                <xs:element type="xs:string" name="Profile" >
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">Сокращение профиля.</xs:documentation>
+                      </xs:annotation>
+								</xs:element>
                                 <xs:element name="Condition">
-						<xs:simpleType>
-							<xs:restriction base="xs:byte">
-    								<xs:enumeration value="1"/>
-    								<xs:enumeration value="2"/>
-    								<xs:enumeration value="3"/>
-    								<xs:enumeration value="4"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">Основание.</xs:documentation>
+                      </xs:annotation>
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:byte">
+                                      <xs:enumeration value="1"/>
+                                      <xs:enumeration value="2"/>
+                                      <xs:enumeration value="3"/>
+                                      <xs:enumeration value="4"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
                                 <xs:element name="ApplicationOfConsent">
-						<xs:simpleType>
-							<xs:restriction base="xs:byte">
-    								<xs:enumeration value="0"/>
-    								<xs:enumeration value="1"/>
-    								<xs:enumeration value="2"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-				     </xs:all>
+								<xs:annotation>
+                        <xs:documentation xml:lang="ru">Заявление о согласии.</xs:documentation>
+                      </xs:annotation>
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:byte">
+                                      <xs:enumeration value="0"/>
+                                      <xs:enumeration value="1"/>
+                                      <xs:enumeration value="2"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                              </xs:all>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>

@@ -830,19 +830,6 @@
             // 
             this.cbInstitutionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbInstitutionType.FormattingEnabled = true;
-            this.cbInstitutionType.Items.AddRange(new object[] {
-            "Средняя школа",
-            "Лицей",
-            "Гимназия",
-            "УВК",
-            "ПТУ",
-            "СПТУ",
-            "ПУ",
-            "Техникум",
-            "Колледж",
-            "Университет",
-            "Академия",
-            "Институт"});
             this.cbInstitutionType.Location = new System.Drawing.Point(633, 46);
             this.cbInstitutionType.Margin = new System.Windows.Forms.Padding(4);
             this.cbInstitutionType.Name = "cbInstitutionType";
