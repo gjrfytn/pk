@@ -36,6 +36,7 @@ namespace PK.Classes
         public const string SportDocTypeDeaflympic = "Диплом чемпиона/призера Сурдлимпийских игр";
 
         public const string MedCertificate = "Медицинская справка";
+        public const string PassportName = "Паспорт гражданина РФ";
 
         public const string SubjectMath = "Математика";
         public const string SubjectRus = "Русский язык";

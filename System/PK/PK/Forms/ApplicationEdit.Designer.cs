@@ -873,17 +873,17 @@
             // 
             // tbEduDocNumber
             // 
-            this.tbEduDocNumber.Location = new System.Drawing.Point(595, 16);
+            this.tbEduDocNumber.Location = new System.Drawing.Point(568, 16);
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.MaxLength = 100;
             this.tbEduDocNumber.Name = "tbEduDocNumber";
-            this.tbEduDocNumber.Size = new System.Drawing.Size(92, 22);
+            this.tbEduDocNumber.Size = new System.Drawing.Size(118, 22);
             this.tbEduDocNumber.TabIndex = 2;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(542, 20);
+            this.label23.Location = new System.Drawing.Point(515, 20);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(54, 16);
@@ -896,7 +896,7 @@
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.MaxLength = 20;
             this.tbEduDocSeries.Name = "tbEduDocSeries";
-            this.tbEduDocSeries.Size = new System.Drawing.Size(118, 22);
+            this.tbEduDocSeries.Size = new System.Drawing.Size(80, 22);
             this.tbEduDocSeries.TabIndex = 1;
             // 
             // label22
@@ -2413,6 +2413,7 @@
             this.tbMobilePhone.Tag = "(495)123-4567";
             this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbMobilePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbMobilePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             this.tbMobilePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
             // 
             // tbHomePhone
@@ -2425,6 +2426,7 @@
             this.tbHomePhone.Tag = "(495)123-4567";
             this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbHomePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
+            this.tbHomePhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbNumber_KeyPress);
             this.tbHomePhone.Leave += new System.EventHandler(this.tbPhone_Leave);
             // 
             // btClose

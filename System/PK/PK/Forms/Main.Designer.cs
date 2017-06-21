@@ -645,7 +645,7 @@
             // 
             // timer
             // 
-            this.timer.Interval = 10000;
+            this.timer.Interval = 30000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // menuStrip_ProfilesPlaces

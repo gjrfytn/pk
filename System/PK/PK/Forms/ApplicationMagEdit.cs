@@ -78,6 +78,10 @@ namespace PK.Forms
             dtpDateOfBirth.MaxDate = DateTime.Now;
             dtpIDDocDate.MaxDate = DateTime.Now;
             dtpDiplomaDate.MaxDate = DateTime.Now;
+            tbMobilePhone.Text = tbMobilePhone.Tag.ToString();
+            tbMobilePhone.ForeColor = System.Drawing.Color.Gray;
+            tbHomePhone.Text = tbHomePhone.Tag.ToString();
+            tbHomePhone.ForeColor = System.Drawing.Color.Gray;
 
             foreach (TabPage tab in tcPrograms.Controls)
             {
@@ -180,6 +184,7 @@ namespace PK.Forms
                             SaveApplication(transaction);
                             btPrint.Enabled = true;
                             btWithdraw.Enabled = true;
+                            ChangeAgreedChBs(true);
                         }
                         else
                         {
@@ -352,7 +357,7 @@ namespace PK.Forms
 
         private void tbNumber_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsNumber(e.KeyChar) || (e.KeyChar == '\b'))
+            if (char.IsNumber(e.KeyChar) || e.KeyChar == '\b' || e.KeyChar == '-' || e.KeyChar == '(' || e.KeyChar == ')')
                 return;
             else
                 e.Handled = true;
@@ -360,7 +365,7 @@ namespace PK.Forms
 
         private void tbCyrillic_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((e.KeyChar >= 'А' && e.KeyChar <= 'я') || (e.KeyChar == '\b') || (e.KeyChar == '.') || (e.KeyChar == '-') || (e.KeyChar == 'ё') || (e.KeyChar == 'Ё'))
+            if (e.KeyChar >= 'А' && e.KeyChar <= 'я' || e.KeyChar == '\b' || e.KeyChar == '.' || e.KeyChar == '-' || e.KeyChar == 'ё' || e.KeyChar == 'Ё' || e.KeyChar == ' ')
                 return;
             else
                 e.Handled = true;
@@ -508,8 +513,8 @@ namespace PK.Forms
             tbSpecialty.Text = "";
             tbPostcode.Text = "";
             mtbEMail.Text = "";
-            mtbHomePhone.Text = "";
-            mtbMobilePhone.Text = "";
+            tbHomePhone.Text = "";
+            tbMobilePhone.Text = "";
 
             Random rand = new Random();
             int stringLength = 10;
@@ -551,12 +556,12 @@ namespace PK.Forms
             if (rand.Next(2) > 0)
                 for (int i = 0; i < 10; i++)
                     phone += digits[rand.Next(digits.Length)];
-            mtbHomePhone.Text = phone;
+            tbHomePhone.Text = phone;
             phone = "";
             if (rand.Next(2) > 0)
                 for (int i = 0; i < 10; i++)
                     phone += digits[rand.Next(digits.Length)];
-            mtbMobilePhone.Text = phone;
+            tbMobilePhone.Text = phone;
 
             cbSex.SelectedIndex = rand.Next(cbSex.Items.Count);
             cbRegion.SelectedIndex = rand.Next(cbRegion.Items.Count);
@@ -723,6 +728,30 @@ namespace PK.Forms
             e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
         }
 
+        private void tbPhone_Enter(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).ForeColor == System.Drawing.Color.Gray)
+            {
+                (sender as TextBox).Text = "";
+                (sender as TextBox).ForeColor = System.Drawing.Color.Black;
+            }
+        }
+
+        private void tbPhone_Leave(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).Text == "")
+            {
+                (sender as TextBox).Text = (sender as TextBox).Tag.ToString();
+                (sender as TextBox).ForeColor = System.Drawing.Color.Gray;
+            }
+        }
+
+        private void tbPhone_TextChanged(object sender, EventArgs e)
+        {
+            if ((sender as TextBox).Text != (sender as TextBox).Tag.ToString())
+                (sender as TextBox).ForeColor = System.Drawing.Color.Black;
+        }
+
 
         private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
@@ -777,7 +806,7 @@ namespace PK.Forms
                 for (int i = 0; i < passwordLength; i++)
                     password += passwordChars[rand.Next(passwordChars.Length)];
                 _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "personal_password", password },
-                { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) }, { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, transaction);
+                { "home_phone", tbHomePhone.Text }, { "mobile_phone", tbMobilePhone.Text } }, transaction);
             }
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
@@ -960,8 +989,8 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, application[4])
                 })[0];
             mtbEMail.Text = entrant[0].ToString();
-            mtbHomePhone.Text = entrant[1].ToString();
-            mtbMobilePhone.Text = entrant[2].ToString();
+            tbHomePhone.Text = entrant[1].ToString();
+            tbMobilePhone.Text = entrant[2].ToString();
         }
 
         private void LoadDocuments()
@@ -1242,8 +1271,8 @@ namespace PK.Forms
 
         private void UpdateBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", string.Concat(mtbHomePhone.Text.Where(s => char.IsNumber(s))) },
-                { "mobile_phone", string.Concat(mtbMobilePhone.Text.Where(s => char.IsNumber(s))) } }, new Dictionary<string, object> { { "id", _EntrantID } }, transaction);
+            _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object> { { "email", mtbEMail.Text }, { "home_phone", tbHomePhone.Text },
+                { "mobile_phone", tbMobilePhone.Text } }, new Dictionary<string, object> { { "id", _EntrantID } }, transaction);
 
             bool firstHightEdu = true;
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
