@@ -21,7 +21,7 @@ namespace PK.Forms
 
             dataGridView_Capacity.ValueType = typeof(ushort);
 
-            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Utility.CurrentCampaignID);
+            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Settings.CurrentCampaignID);
 
             dtpDate.MinDate = new DateTime((int)curCampStartEnd.Item1, 1, 1);
             dtpDate.MaxDate = new DateTime((int)curCampStartEnd.Item2, 12, 31);

@@ -90,15 +90,15 @@ namespace PK.Forms
 
         private void CreateApplication_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.CurrentCampaignID == 0)
+            if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
                 Form form;
-                if (_DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID))
-                    form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
+                if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                    form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
                 else
-                    form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, null);
+                    form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
 
                 form.ShowDialog();
                 UpdateApplicationsTable();
@@ -144,7 +144,7 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Exams_Click(object sender, EventArgs e)
         {
-            if (_DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID))
+            if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
             {
                 MasterExaminations form = new MasterExaminations(_DB_Connection);
                 form.ShowDialog();
@@ -158,7 +158,7 @@ namespace PK.Forms
 
         private void menuStrip_InstitutionAchievements_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.CurrentCampaignID == 0)
+            if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
@@ -177,11 +177,11 @@ namespace PK.Forms
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.CurrentCampaignID == 0)
+            if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                Constants form = new Constants(_DB_Connection, Classes.Utility.CurrentCampaignID);
+                Constants form = new Constants(_DB_Connection, Classes.Settings.CurrentCampaignID);
                 form.ShowDialog();
             }
         }
@@ -209,17 +209,17 @@ namespace PK.Forms
         {
             DateChoice form = new DateChoice();
             form.ShowDialog();
-            Classes.Utility.Print(Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value));
+            System.Diagnostics.Process.Start(Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value));
         }
         
         private void menuStrip_DirsPlaces_Click(object sender, EventArgs e)
         {
-            Classes.Utility.Print(Classes.OutDocuments.DirectionsPlaces(_DB_Connection));
+            System.Diagnostics.Process.Start(Classes.OutDocuments.DirectionsPlaces(_DB_Connection));
         }
 
         private void menuStrip_ProfilesPlaces_Click(object sender, EventArgs e)
         {
-            Classes.Utility.Print(Classes.OutDocuments.ProfilesPlaces(_DB_Connection));
+            System.Diagnostics.Process.Start(Classes.OutDocuments.ProfilesPlaces(_DB_Connection));
         }
 
         private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)
@@ -232,7 +232,7 @@ namespace PK.Forms
         {
             _SelectedAppID = (uint)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
 
-            if (Classes.Utility.CurrentCampaignID == 0)
+            if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
@@ -241,12 +241,12 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.CurrentRow.Cells[0].Value)
                 })[0][0])
                 {
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 else
                 {
-                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Utility.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
@@ -323,7 +323,7 @@ namespace PK.Forms
             apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registrator_login", Relation.EQUAL, _UserLogin),
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
@@ -331,14 +331,14 @@ namespace PK.Forms
                 apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
             else
                 apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
                 });
             var directions = _DB_UpdateConnection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
             var profiles = _DB_UpdateConnection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
@@ -487,14 +487,14 @@ namespace PK.Forms
 
         private void SetCurrentCampaign()
         {
-            if (Classes.Utility.CurrentCampaignID != 0)
+            if (Classes.Settings.CurrentCampaignID != 0)
             {
                 toolStrip_CurrCampaign.Text = _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "name" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
                 })[0][0].ToString();
 
-                bool master = _DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID);
+                bool master = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
                 dgvApplications_Original.Visible = !master;
                 dgvApplications_Entrances.Visible = !master;
                 dgvApplications_Programs.Visible = master;

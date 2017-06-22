@@ -120,7 +120,7 @@ namespace PK.Forms
                 new string[] { "direction_faculty", "direction_id" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                     new Tuple<string, Relation, object>("subject_id",Relation.EQUAL,subjectID)
                 });
 
@@ -185,7 +185,7 @@ namespace PK.Forms
             dataGridView.Rows.Clear();
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Utility.CurrentCampaignID))
+            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
                 dataGridView.Rows.Add(
                     exam.ID,
                     subjects[exam.SubjID],

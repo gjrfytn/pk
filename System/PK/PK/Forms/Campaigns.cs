@@ -41,7 +41,7 @@ namespace PK.Forms
 
         private void cbCurrentCampaign_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != Classes.Utility.CurrentCampaignID)
+            if (cbCurrentCampaign.SelectedIndex != -1 && (uint)cbCurrentCampaign.SelectedValue != Classes.Settings.CurrentCampaignID)
             {
                 Properties.Settings.Default.CampaignID = (uint)cbCurrentCampaign.SelectedValue;
                 Properties.Settings.Default.Save();
@@ -91,8 +91,8 @@ namespace PK.Forms
                 Display = s[1].ToString()
             }).ToArray();
 
-            if (Classes.Utility.CurrentCampaignID != 0)
-                cbCurrentCampaign.SelectedValue = Classes.Utility.CurrentCampaignID;
+            if (Classes.Settings.CurrentCampaignID != 0)
+                cbCurrentCampaign.SelectedValue = Classes.Settings.CurrentCampaignID;
             else
                 cbCurrentCampaign.SelectedIndex = -1;
         }

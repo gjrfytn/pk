@@ -60,7 +60,7 @@ namespace PK.Forms
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information
                             );
-                });
+                }, new Classes.LoginSetting());
             }
 
             Cursor.Current = Cursors.Default;
@@ -99,7 +99,7 @@ namespace PK.Forms
         {
             return Classes.FIS_Packager.MakePackage(
                 _DB_Connection,
-                Classes.Utility.CurrentCampaignID,
+                Classes.Settings.CurrentCampaignID,
                 cbCampaignData.Checked,
                 cbApplications.Checked,
                 cbOrders.Checked

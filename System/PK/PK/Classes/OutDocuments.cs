@@ -152,7 +152,7 @@ namespace PK.Classes
                 if (moveJournal)
                 {
                     documents.Add(new DocumentCreator.DocumentParameters(
-                        Utility.DocumentsTemplatesPath + "MoveJournal.xml",
+                        Settings.DocumentsTemplatesPath + "MoveJournal.xml",
                         null,
                         null,
                         new string[]
@@ -199,7 +199,7 @@ namespace PK.Classes
                 if (docs.Any(s => s.Type == "identity"))
                     inventoryTableParams[1].Add(new string[] { "Копия паспорта" });
 
-                var eduDoc = docs.Single(s => s.Type == "school_certificate" || s.Type == "high_edu_diploma" || s.Type == "academic_diploma");
+                var eduDoc = docs.Single(s => s.Type == "school_certificate" || s.Type == "high_edu_diploma" || s.Type == "middle_edu_diploma" || s.Type == "academic_diploma");
                 if (eduDoc.Type == "academic_diploma")
                     inventoryTableParams[1].Add(new string[] { "Справка отдела кадров" });
                 else
@@ -252,7 +252,7 @@ namespace PK.Classes
 
                 if (inventory)
                     documents.Add(new DocumentCreator.DocumentParameters(
-                        Utility.DocumentsTemplatesPath + "Inventory.xml",
+                        Settings.DocumentsTemplatesPath + "Inventory.xml",
                         null,
                         null,
                         new string[]
@@ -300,7 +300,7 @@ namespace PK.Classes
                             new string[] { "id", "value" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
                             }),
                         k1 => k1[0],
@@ -325,7 +325,7 @@ namespace PK.Classes
                 }
                 else
                 {
-                    var marks = DB_Queries.GetMarks(connection, new uint[] { applID }, Utility.CurrentCampaignID).GroupBy(
+                    var marks = DB_Queries.GetMarks(connection, new uint[] { applID }, Settings.CurrentCampaignID).GroupBy(
                     k => k.SubjID,
                     (k, g) => Tuple.Create(k, g.Any(s => s.Checked) ? g.Where(s => s.Checked).Max(s => s.Value) : g.Max(s => s.Value))
                     );
@@ -364,7 +364,7 @@ namespace PK.Classes
 
 
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "PercRecordFace.xml",
+                    Settings.DocumentsTemplatesPath + "PercRecordFace.xml",
                     null,
                     null,
                     parameters.ToArray(),
@@ -396,7 +396,7 @@ namespace PK.Classes
                         };
 
                         documents.Add(new DocumentCreator.DocumentParameters(
-                            Utility.DocumentsTemplatesPath + "PercRecordFaceM.xml",
+                            Settings.DocumentsTemplatesPath + "PercRecordFaceM.xml",
                             null,
                             null,
                             parameters,
@@ -441,7 +441,7 @@ namespace PK.Classes
                 }
 
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "Receipt.xml",
+                    Settings.DocumentsTemplatesPath + "Receipt.xml",
                     null,
                     null,
                     new string[]
@@ -552,7 +552,7 @@ namespace PK.Classes
                     parameters.Add("");
 
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "PercRecordBack.xml",
+                    Settings.DocumentsTemplatesPath + "PercRecordBack.xml",
                     null,
                     null,
                     parameters.ToArray(),
@@ -581,7 +581,7 @@ namespace PK.Classes
                             new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("entrant_id",Relation.EQUAL,applData.EntrantID),
-                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("faculty",Relation.EQUAL,entrance.Faculty),
                                 new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,entrance.DirectionID),
                                 new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,entrance.Profile)
@@ -610,7 +610,7 @@ namespace PK.Classes
                         };
 
                         documents.Add(new DocumentCreator.DocumentParameters(
-                            Utility.DocumentsTemplatesPath + "PercRecordBackM.xml",
+                            Settings.DocumentsTemplatesPath + "PercRecordBackM.xml",
                             null,
                             null,
                             parameters,
@@ -631,7 +631,7 @@ namespace PK.Classes
                 GetAgreedDirData(connection, applID, out agreedDir, out dirShortName);
 
                 ushort sum = 0;
-                foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
+                foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
                 {
                     var mark = marks.SingleOrDefault(s => s.Item1 == subj);
                     if (mark != null)
@@ -640,7 +640,7 @@ namespace PK.Classes
 
                 DB_Helper dbHelper = new DB_Helper(connection);
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "AdmAgreement.xml",
+                    Settings.DocumentsTemplatesPath + "AdmAgreement.xml",
                     null,
                     null,
                     new string[]
@@ -674,7 +674,7 @@ namespace PK.Classes
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("entrant_id",Relation.EQUAL,applData.EntrantID),
-                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
                         new Tuple<string, Relation, object>("faculty",Relation.EQUAL,agreedDir.Item1),
                         new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir.Item2),
                         new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,agreedDir.Item3)
@@ -682,7 +682,7 @@ namespace PK.Classes
 
                 DB_Helper dbHelper = new DB_Helper(connection);
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "AdmAgreement.xml",
+                    Settings.DocumentsTemplatesPath + "AdmAgreement.xml",
                     null,
                     null,
                     new string[]
@@ -716,9 +716,9 @@ namespace PK.Classes
                 List<uint> subjects = new List<uint>();
 
                 foreach (var entrance in entrances)
-                    subjects.AddRange(DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, entrance.Faculty, entrance.Direction));
+                    subjects.AddRange(DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, entrance.Faculty, entrance.Direction));
 
-                IEnumerable<DB_Queries.Exam> exams = DB_Queries.GetCampaignExams(connection, Utility.CurrentCampaignID).Where(s =>
+                IEnumerable<DB_Queries.Exam> exams = DB_Queries.GetCampaignExams(connection, Settings.CurrentCampaignID).Where(s =>
                 registrationTime >= s.RegStartDate && registrationTime < s.RegEndDate + new TimeSpan(1, 0, 0, 0)
                 );
 
@@ -731,7 +731,7 @@ namespace PK.Classes
                     ).OrderBy(s => s.Date).Select(s => new string[] { dbHelper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, s.Subj), s.Date.ToShortDateString() });
 
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Utility.DocumentsTemplatesPath + "ExamShedule.xml",
+                    Settings.DocumentsTemplatesPath + "ExamShedule.xml",
                     null,
                     null,
                     null,
@@ -788,7 +788,7 @@ namespace PK.Classes
             var applications = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
                 ).Where(a => ((DateTime)a[2]).Date == date).Join(
                 connection.Select(
                 DB_Table.ENTRANTS,
@@ -888,7 +888,7 @@ namespace PK.Classes
 
             string doc = Utility.TempPath + "registrationJournal" + new Random().Next();
             DocumentCreator.Create(
-                Utility.DocumentsTemplatesPath + "RegistrationJournal.xml",
+                Settings.DocumentsTemplatesPath + "RegistrationJournal.xml",
                 doc,
                 new string[] { date.ToShortDateString() },
                 new List<string[]>[] { data }
@@ -909,7 +909,7 @@ namespace PK.Classes
             List<string[]> data = connection.Select(
                 DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
                 new string[] { "direction_faculty", "direction_id" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
                 ).GroupJoin(
                 connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
@@ -926,15 +926,20 @@ namespace PK.Classes
                     Direction = (uint)e[1],
                     ApplCount = g.Count()
                 }).Where(s => s.ApplCount != 0).Join(
+                connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name"),
+                k1=>k1.Direction,
+                k2=>k2[0],
+                (s1,s2)=>new { s1.Faculty,s1.Direction,Name=s2[1].ToString(),s1.ApplCount }
+                ).Join(
                 connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id", "short_name"),
                 k1 => Tuple.Create(k1.Faculty, k1.Direction),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
-                (s1, s2) => new string[] { s2[2].ToString(), s1.ApplCount.ToString() }
+                (s1, s2) => new string[] { s2[2].ToString(),s1.Name, s1.ApplCount.ToString() }
                 ).ToList();
 
             string doc = Utility.TempPath + "directionsPlaces" + new Random().Next();
             DocumentCreator.Create(
-                Utility.DocumentsTemplatesPath + "DirectionsPlaces.xml",
+                Settings.DocumentsTemplatesPath + "DirectionsPlaces.xml",
                 doc,
                 null,
                 new List<string[]>[] { data }
@@ -955,17 +960,22 @@ namespace PK.Classes
             List<string[]> data = connection.Select(
                 DB_Table.CAMPAIGNS_PROFILES_DATA,
                 new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Utility.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Settings.CurrentCampaignID) }
                 ).GroupJoin(
                 connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id", "profile_short_name"),
                 k1 => Tuple.Create(k1[0], k1[1], k1[2]),
                 k2 => Tuple.Create(k2[0], k2[1], k2[2]),
-                (e, g) => new string[] { e[2].ToString(), g.Count().ToString() }).ToList();
+                (e, g) => new {ShortName= e[2].ToString(),ApplCount= g.Count() }).Join(
+                connection.Select(DB_Table.PROFILES,"short_name","name"),
+                k1=>k1.ShortName,
+                k2=>k2[0],
+                (s1,s2)=> new string[] { s1.ShortName,s2[1].ToString() ,s1.ApplCount.ToString() }
+                ).ToList();
 
             string doc = Utility.TempPath + "profilesPlaces" + new Random().Next();
             DocumentCreator.Create(
-                Utility.DocumentsTemplatesPath + "ProfilesPlaces.xml",
+                Settings.DocumentsTemplatesPath + "DirectionsPlaces.xml",
                 doc,
                 null,
                 new List<string[]>[] { data }
@@ -1065,7 +1075,7 @@ namespace PK.Classes
             {
                 doc = Utility.TempPath + "ExcOrder" + new Random().Next();
                 DocumentCreator.Create(
-                    Utility.DocumentsTemplatesPath + "ExcOrder.xml",
+                    Settings.DocumentsTemplatesPath + "ExcOrder.xml",
                     doc,
                     paramaters.ToArray(),
                     new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
@@ -1126,7 +1136,7 @@ namespace PK.Classes
                             new string[] { "entrant_id", "mark", "bonus" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("faculty",Relation.EQUAL,order.Faculty),
                                 new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction.Value),
                                 new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
@@ -1137,7 +1147,7 @@ namespace PK.Classes
                             new string[] { "id", "value" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
                             }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
 
@@ -1162,9 +1172,9 @@ namespace PK.Classes
                     }
                     else
                     {
-                        IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, Utility.CurrentCampaignID, order.Faculty, order.Direction.Value);
+                        IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, order.Faculty, order.Direction.Value);
 
-                        IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Utility.CurrentCampaignID);
+                        IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Settings.CurrentCampaignID);
 
                         table = applications.Join(
                             marks.Join(
@@ -1188,7 +1198,7 @@ namespace PK.Classes
                 string filename = order.Type == "admission" ? "AdmOrder" : "HostelOrder";
                 doc = Utility.TempPath + filename + new Random().Next();
                 DocumentCreator.Create(
-                    Utility.DocumentsTemplatesPath + filename + ".xml",
+                    Settings.DocumentsTemplatesPath + filename + ".xml",
                     doc,
                     paramaters.ToArray(),
                     new IEnumerable<string[]>[] { table.OrderByDescending(s => s.Item2).Select(s => new string[] { s.Item1, s.Item2.ToString() }) }

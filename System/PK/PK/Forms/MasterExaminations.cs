@@ -24,12 +24,12 @@ namespace PK.Forms
             var marks = _DB_Connection.Select(
                 DB_Table.MASTERS_EXAMS_MARKS,
                 new string[] { "entrant_id", "faculty", "direction_id", "profile_short_name", "date", "mark", "bonus" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
                 ).GroupJoin(
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
                     ),
                 k1 => k1[0],
                 k2 => k2[1],
@@ -102,7 +102,7 @@ namespace PK.Forms
                     },
                     new Dictionary<string, object>
                     {
-                        {"campaign_id" ,Classes.Utility.CurrentCampaignID},
+                        {"campaign_id" ,Classes.Settings.CurrentCampaignID},
                         { "entrant_id" ,row.Cells[dataGridView_ID.Index].Value},
                         {"faculty" ,row.Cells[dataGridView_Faculty.Index].Value},
                         {"direction_id" ,row.Cells[dataGridView_Direction.Index].Value},

@@ -70,7 +70,7 @@ namespace PK.Forms
 
             cbFDP.ValueMember = "Value";
 
-            _IsMaster = _DB_Helper.IsMasterCampaign(Classes.Utility.CurrentCampaignID);
+            _IsMaster = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
 
             if (_IsMaster)
             {
@@ -206,7 +206,7 @@ namespace PK.Forms
                 cbFDP.DataSource = _DB_Connection.Select(
                     DB_Table.CAMPAIGNS_FACULTIES_DATA,
                     new string[] { "faculty_short_name" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
                     ).Join(
                     _DB_Connection.Select(DB_Table.FACULTIES, "short_name", "name"),
                     k1 => k1[0],
@@ -222,7 +222,7 @@ namespace PK.Forms
                         new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
                         }).Select(
                         s => new
@@ -237,7 +237,7 @@ namespace PK.Forms
                         new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID)
                         }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0).Join(
                         _DB_Connection.Select(
@@ -245,7 +245,7 @@ namespace PK.Forms
                             new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             }),
                         k1 => Tuple.Create(k1.Faculty, k1.DirID),
                         k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
@@ -261,7 +261,7 @@ namespace PK.Forms
                         new string[] { "direction_faculty", "direction_id" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
                             "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
                         }).Join(
@@ -270,7 +270,7 @@ namespace PK.Forms
                             new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             }),
                         k1 => Tuple.Create(k1[0].ToString(), (uint)k1[1]),
                         k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
@@ -288,7 +288,7 @@ namespace PK.Forms
                         new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaigns_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("places_paid_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
                         }).Select(
                         s => new
@@ -302,7 +302,7 @@ namespace PK.Forms
                         new string[] { "direction_faculty", "direction_id", "places_" + ((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c => ((RadioButton)c).Checked).Tag).Item1 },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID)
                         }).GroupBy(k => Tuple.Create(k[0], k[1]), (k, g) => new { Faculty = k.Item1.ToString(), DirID = (uint)k.Item2, Places = g.Sum(s => (ushort)s[2]) })
                         .Where(s => s.Places > 0)
                        .Select(s => new { Value = new CB_Value(s.Faculty, s.DirID, null), Display = s.Faculty + " " + _DB_Helper.GetDirectionNameAndCode(s.DirID).Item1 }).ToList();
@@ -312,7 +312,7 @@ namespace PK.Forms
                             new string[] { "direction_faculty", "direction_id" },
                             new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                                 new Tuple<string, Relation, object>("places_" +((RB_Tag)gbEduSource.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1+
                                 "_"+((RB_Tag)gbEduForm.Controls.Cast<Control>().Single(c=>((RadioButton)c).Checked).Tag).Item1, Relation.GREATER,0 )
                             }).Select(s => new { Value = new CB_Value(s[0].ToString(), (uint)s[1], null), Display = s[0].ToString() + " " + _DB_Helper.GetDirectionNameAndCode((uint)s[1]).Item1 }).ToList();
@@ -396,7 +396,7 @@ namespace PK.Forms
                 { "edu_form_id",CheckedEduForm },
                 { "edu_source_dict_id",(uint)FIS_Dictionary.EDU_SOURCE },
                 { "edu_source_id", CheckedEduSource},
-                { "campaign_id",Classes.Utility.CurrentCampaignID },
+                { "campaign_id",Classes.Settings.CurrentCampaignID },
                 { "faculty_short_name",faculty },
                 { "direction_id", direction},
                 { "profile_short_name",profile }
@@ -558,7 +558,7 @@ namespace PK.Forms
             return _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "status" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
                 ).Where(s => statuses.Contains(s[1].ToString())).Select(s => (uint)s[0]);
         }
 
@@ -644,7 +644,7 @@ namespace PK.Forms
                         new string[] { "entrant_id", "mark", "bonus" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL, Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL, Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("faculty",Relation.EQUAL,buf.Item1),
                             new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,buf.Item2),
                             new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,buf.Item3),
@@ -674,7 +674,7 @@ namespace PK.Forms
             }
             else
             {
-                IEnumerable<Classes.DB_Queries.Mark> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Utility.CurrentCampaignID);
+                IEnumerable<Classes.DB_Queries.Mark> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
 
                 var table = candidates.Join(
                     marks,
@@ -707,7 +707,7 @@ namespace PK.Forms
                 {
                     IEnumerable<uint> dir_subjects = Classes.DB_Queries.GetDirectionEntranceTests(
                         _DB_Connection,
-                        Classes.Utility.CurrentCampaignID,
+                        Classes.Settings.CurrentCampaignID,
                         ((CB_Value)cbFDP.SelectedValue).Item1,
                         ((CB_Value)cbFDP.SelectedValue).Item2
                         );

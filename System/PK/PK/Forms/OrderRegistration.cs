@@ -103,7 +103,7 @@ namespace PK.Forms
                         new string[] { "hostel_places" },
                         new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,faculty)
                         })[0][0];
 

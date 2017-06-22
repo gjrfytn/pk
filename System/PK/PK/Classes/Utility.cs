@@ -6,10 +6,7 @@ namespace PK.Classes
 {
     static class Utility
     {
-
         public const string TempPath = ".\\temp\\";
-
-        public static readonly string DocumentsTemplatesPath = Properties.Settings.Default.DocumentsTemplatesPath;
 
         public static readonly Dictionary<string, uint> DirCodesEduLevels = new Dictionary<string, uint>
         {
@@ -17,11 +14,6 @@ namespace PK.Classes
             {"05", 5}, //Специалитет
             {"04", 4}  //TODO Магистратура?
         };
-
-        public static uint CurrentCampaignID
-        {
-            get { return Properties.Settings.Default.CampaignID; }
-        }
 
         /// <summary>
         /// Отображает диалоговое окно с кнопками "Да" и "Нет".
@@ -188,11 +180,11 @@ namespace PK.Classes
             //p.Dispose();?
         }
 
-        public static bool TryAccessFIS_Function(System.Action<string, string> func)
+        public static bool TryAccessFIS_Function(System.Action<string, string> func, Forms.FIS_Authorization.ILoginSetting setting)
         {
             try
             {
-                Forms.FIS_Authorization form = new Forms.FIS_Authorization();
+                Forms.FIS_Authorization form = new Forms.FIS_Authorization(setting);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     func(form.tbLogin.Text, form.tbPassword.Text);

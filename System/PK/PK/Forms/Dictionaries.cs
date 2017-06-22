@@ -36,7 +36,7 @@ namespace PK.Forms
                     _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
 
                 _Updater.UpdateDictionaries();
-            }))
+            }, new Classes.LoginSetting()))
                 UpdateDictionariesTable();
 
             Cursor.Current = Cursors.Default;

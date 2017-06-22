@@ -41,7 +41,7 @@ namespace PK.Forms
             var applications = connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id,entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID) }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
                     ).Join(
                     connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
                     k1 => k1[1],

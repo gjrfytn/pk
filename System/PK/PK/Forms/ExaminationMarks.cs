@@ -43,7 +43,7 @@ namespace PK.Forms
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
                     ),
                 k1 => k1[0],
                 k2 => k2[1],
@@ -110,7 +110,7 @@ namespace PK.Forms
                 });
 
             string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
-            Classes.DocumentCreator.Create(Classes.Utility.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
+            Classes.DocumentCreator.Create(Classes.Settings.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;

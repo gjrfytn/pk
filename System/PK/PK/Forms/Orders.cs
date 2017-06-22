@@ -104,7 +104,7 @@ namespace PK.Forms
                 new string[] { "number", "type", "date", "protocol_number", "edu_source_id", "edu_form_id", "faculty_short_name", "direction_id", "profile_short_name" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Utility.CurrentCampaignID)
+                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID)
                 }))
                 dataGridView.Rows.Add(
                     row[0],

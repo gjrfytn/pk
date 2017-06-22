@@ -71,7 +71,7 @@ namespace PK.Forms
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID), }
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
                     ),
                 k1 => k1.ID,
                 k2 => k2[1],
@@ -136,7 +136,7 @@ namespace PK.Forms
 
             string doc = Classes.Utility.TempPath + "AlphaCodes" + new Random().Next();
             Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "AlphaCodes.xml",
+                Classes.Settings.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Code }).OrderBy(s => s[1]) }
@@ -152,7 +152,7 @@ namespace PK.Forms
 
             string doc = Classes.Utility.TempPath + "AlphaAuditories" + new Random().Next();
             Classes.DocumentCreator.Create(
-                Classes.Utility.DocumentsTemplatesPath + "AlphaAuditories.xml",
+                Classes.Settings.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
                 new string[] { _ExamName, _ExamDate },
                 new IEnumerable<string[]>[] { _EntrantsTable.Select(s => new string[] { s.ApplIDs, s.Name, s.Auditory }).OrderBy(s => s[1]) }
@@ -181,7 +181,7 @@ namespace PK.Forms
 
             string doc = Classes.Utility.TempPath + "AbitAudDistrib" + new Random().Next();
             Classes.DocumentCreator.Create(
-               Classes.Utility.DocumentsTemplatesPath + "AbitAudDistrib.xml",
+               Classes.Settings.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                doc,
                new string[]
                {
@@ -205,7 +205,7 @@ namespace PK.Forms
             {
                 string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
                 Classes.DocumentCreator.Create(
-                    Classes.Utility.DocumentsTemplatesPath + "ExamCardsSheet.xml",
+                    Classes.Settings.DocumentsTemplatesPath + "ExamCardsSheet.xml",
                     doc,
                     new string[] { group.Item2, group.Item1.ToString(), _ExamName, _ExamDate },
                     new IEnumerable<string[]>[]

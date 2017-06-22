@@ -81,7 +81,7 @@ namespace PK.Forms
                     _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
 
                 _Updater.UpdateOlympicsDictionary();
-            }))
+            }, new Classes.LoginSetting()))
                 UpdateOlympicsTable();
 
             Cursor.Current = Cursors.Default;
