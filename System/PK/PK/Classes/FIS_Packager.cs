@@ -644,7 +644,7 @@ namespace PK.Classes
                                 idDoc[2].ToString(),
                                 (uint)idDoc[3],
                                 doc.Series,
-                                idDoc[4].ToString(),
+                                idDoc[4] as string,
                                 doc.Organization,
                                 idDoc[8].ToString()
                                 );

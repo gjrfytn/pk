@@ -41,6 +41,8 @@
             this.cbUnits = new System.Windows.Forms.ComboBox();
             this.tbResponse = new System.Windows.Forms.TextBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cbPost = new System.Windows.Forms.CheckBox();
+            this.cbSave = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cbCampaigns
@@ -64,7 +66,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(279, 24);
+            this.label2.Location = new System.Drawing.Point(279, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 3;
@@ -77,7 +79,7 @@
             this.cbAdress.Items.AddRange(new object[] {
             "http://madi.ru/abit/getXMLdata.php",
             "http://sociomadi.ru/pk/getXMLdata.php"});
-            this.cbAdress.Location = new System.Drawing.Point(376, 21);
+            this.cbAdress.Location = new System.Drawing.Point(376, 57);
             this.cbAdress.Name = "cbAdress";
             this.cbAdress.Size = new System.Drawing.Size(231, 21);
             this.cbAdress.TabIndex = 4;
@@ -143,11 +145,36 @@
             this.notifyIcon.Text = "Отправка данных на сайт ПК МАДИ";
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
             // 
+            // cbPost
+            // 
+            this.cbPost.AutoSize = true;
+            this.cbPost.Location = new System.Drawing.Point(476, 23);
+            this.cbPost.Name = "cbPost";
+            this.cbPost.Size = new System.Drawing.Size(131, 17);
+            this.cbPost.TabIndex = 10;
+            this.cbPost.Text = "Выполнять отправку";
+            this.cbPost.UseVisualStyleBackColor = true;
+            this.cbPost.CheckedChanged += new System.EventHandler(this.cbPost_CheckedChanged);
+            // 
+            // cbSave
+            // 
+            this.cbSave.AutoSize = true;
+            this.cbSave.Checked = true;
+            this.cbSave.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSave.Location = new System.Drawing.Point(282, 23);
+            this.cbSave.Name = "cbSave";
+            this.cbSave.Size = new System.Drawing.Size(166, 17);
+            this.cbSave.TabIndex = 11;
+            this.cbSave.Text = "Сохранить в файл \"doc.xml\"";
+            this.cbSave.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(619, 266);
+            this.Controls.Add(this.cbSave);
+            this.Controls.Add(this.cbPost);
             this.Controls.Add(this.tbResponse);
             this.Controls.Add(this.cbUnits);
             this.Controls.Add(this.btStart);
@@ -181,6 +208,8 @@
         private System.Windows.Forms.ComboBox cbUnits;
         private System.Windows.Forms.TextBox tbResponse;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.CheckBox cbPost;
+        private System.Windows.Forms.CheckBox cbSave;
     }
 }
 

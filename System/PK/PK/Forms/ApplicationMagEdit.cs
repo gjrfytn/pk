@@ -151,10 +151,11 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if ((tbLastName.Text == "") || (tbFirstName.Text == "") || (tbMiddleName.Text == "") || (tbIDDocSeries.Text == "") || (tbIDDocNumber.Text == "")
-                || (tbPlaceOfBirth.Text == "") || (cbRegion.Text == "") || (tbPostcode.Text == ""))
+            if (string.IsNullOrWhiteSpace(tbLastName.Text) || string.IsNullOrWhiteSpace(tbFirstName.Text) || string.IsNullOrWhiteSpace(tbIDDocSeries.Text)
+                || string.IsNullOrWhiteSpace(tbIDDocNumber.Text) || string.IsNullOrWhiteSpace(tbPlaceOfBirth.Text)
+                || string.IsNullOrWhiteSpace(cbRegion.Text) || string.IsNullOrWhiteSpace(tbPostcode.Text))
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
-            else if (tbInstitution.Text == "")
+            else if (string.IsNullOrWhiteSpace(tbInstitution.Text))
                 MessageBox.Show("Обязательные поля в разделе \"Документ об образовании\" не заполнены.");
             else if (!cbAppAdmission.Checked || (cbSpecialRights.Checked || cbTarget.Checked) && !cbDirectionDoc.Checked
                     || !cbEduDoc.Checked)

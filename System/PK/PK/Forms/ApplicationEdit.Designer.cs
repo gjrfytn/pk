@@ -169,6 +169,7 @@
             this.cbDirection91 = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.gbExamsDoc = new System.Windows.Forms.GroupBox();
+            this.cbNoEGE = new System.Windows.Forms.CheckBox();
             this.dgvExams = new System.Windows.Forms.DataGridView();
             this.dgvExams_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Year = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -2122,6 +2123,7 @@
             // 
             // gbExamsDoc
             // 
+            this.gbExamsDoc.Controls.Add(this.cbNoEGE);
             this.gbExamsDoc.Controls.Add(this.dgvExams);
             this.gbExamsDoc.Controls.Add(this.tbExamsDocNumber);
             this.gbExamsDoc.Controls.Add(this.tbExamsDocSeries);
@@ -2138,6 +2140,17 @@
             this.gbExamsDoc.TabIndex = 2;
             this.gbExamsDoc.TabStop = false;
             this.gbExamsDoc.Text = "Сведения о документе регистрации на ЕГЭ";
+            // 
+            // cbNoEGE
+            // 
+            this.cbNoEGE.AutoSize = true;
+            this.cbNoEGE.Location = new System.Drawing.Point(14, 51);
+            this.cbNoEGE.Name = "cbNoEGE";
+            this.cbNoEGE.Size = new System.Drawing.Size(126, 20);
+            this.cbNoEGE.TabIndex = 5;
+            this.cbNoEGE.Text = "Не сдавал ЕГЭ";
+            this.cbNoEGE.UseVisualStyleBackColor = true;
+            this.cbNoEGE.CheckedChanged += new System.EventHandler(this.cbPassportMatch_CheckedChanged);
             // 
             // dgvExams
             // 
@@ -2208,26 +2221,26 @@
             // 
             // tbExamsDocNumber
             // 
-            this.tbExamsDocNumber.Location = new System.Drawing.Point(280, 51);
+            this.tbExamsDocNumber.Location = new System.Drawing.Point(513, 54);
             this.tbExamsDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbExamsDocNumber.MaxLength = 100;
             this.tbExamsDocNumber.Name = "tbExamsDocNumber";
-            this.tbExamsDocNumber.Size = new System.Drawing.Size(165, 22);
+            this.tbExamsDocNumber.Size = new System.Drawing.Size(98, 22);
             this.tbExamsDocNumber.TabIndex = 3;
             // 
             // tbExamsDocSeries
             // 
-            this.tbExamsDocSeries.Location = new System.Drawing.Point(89, 51);
+            this.tbExamsDocSeries.Location = new System.Drawing.Point(333, 54);
             this.tbExamsDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbExamsDocSeries.MaxLength = 20;
             this.tbExamsDocSeries.Name = "tbExamsDocSeries";
-            this.tbExamsDocSeries.Size = new System.Drawing.Size(113, 22);
+            this.tbExamsDocSeries.Size = new System.Drawing.Size(87, 22);
             this.tbExamsDocSeries.TabIndex = 2;
             // 
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(218, 54);
+            this.label35.Location = new System.Drawing.Point(451, 57);
             this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(54, 16);
@@ -2237,7 +2250,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(18, 54);
+            this.label34.Location = new System.Drawing.Point(262, 57);
             this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(51, 16);
@@ -2737,8 +2750,6 @@
         private System.Windows.Forms.TextBox tbExamsDocSeries;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.ComboBox cbExamsDocType;
-        private System.Windows.Forms.Label label33;
         private System.Windows.Forms.CheckBox cbPassportMatch;
         private System.Windows.Forms.MaskedTextBox mtbEMail;
         private System.Windows.Forms.Button btRemoveDir21;
@@ -2825,5 +2836,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.TextBox tbMobilePhone;
         private System.Windows.Forms.TextBox tbHomePhone;
+        private System.Windows.Forms.CheckBox cbNoEGE;
+        private System.Windows.Forms.ComboBox cbExamsDocType;
+        private System.Windows.Forms.Label label33;
     }
 }

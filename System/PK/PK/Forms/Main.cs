@@ -8,6 +8,7 @@ namespace PK.Forms
     public partial class Main : Form
     {
         private readonly Classes.DB_Connector _DB_Connection;
+        private readonly Classes.DB_Connector _DB_UpdateConnection;
         private readonly Classes.DB_Helper _DB_Helper;
         private readonly string _UserLogin;
         private readonly string _UserRole;
@@ -26,6 +27,14 @@ namespace PK.Forms
                 new string[] { "password" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }
                 )[0][0].ToString());
+
+            _DB_UpdateConnection = new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
+                new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
+                DB_Table.ROLES_PASSWORDS,
+                new string[] { "password" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }
+                )[0][0].ToString());
+
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
             _UserRole = userRole;
@@ -311,7 +320,7 @@ namespace PK.Forms
             List<DataGridViewRow> appRows = new List<DataGridViewRow>();
             List<object[]> apps = new List<object[]>();
             if (_UserRole == "registrator")
-            apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
+            apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
@@ -319,31 +328,31 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
             else if (_UserRole == "inspector")
-                apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
+                apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID),
                     new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
                 });
             else
-                apps = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
+                apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Utility.CurrentCampaignID)
                 });
-            var directions = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
-            var profiles = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
+            var directions = _DB_UpdateConnection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
+            var profiles = _DB_UpdateConnection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
 
                 foreach (var application in apps)
                 {
                 DataGridViewRow row = new DataGridViewRow();
                 row.CreateCells(dgvApplications);
-                object[] names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
+                object[] names = _DB_UpdateConnection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
                         })[0];
-                    var appDocuments = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+                    var appDocuments = _DB_UpdateConnection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
@@ -352,7 +361,7 @@ namespace PK.Forms
                                 application[3], _Statuses[application[5].ToString()]);
                 }
 
-                    foreach (var document in _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
+                    foreach (var document in _DB_UpdateConnection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
                         appDocuments,
                         docs => docs[0],
                         appdocs => appdocs[0],
@@ -366,7 +375,7 @@ namespace PK.Forms
                             row.Cells[dgvApplications_Original.Index].Value = true;
 
 
-                    var appDirections = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
+                    var appDirections = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("application_id", Relation.EQUAL, application[0])
                     });
@@ -391,11 +400,11 @@ namespace PK.Forms
                             else
                             row.Cells[dgvApplications_Programs.Index].Value = row.Cells[dgvApplications_Programs.Index].Value + ", " + appDir[2].ToString();
                     }
-                    var appOrdersData = _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
+                    var appOrdersData = _DB_UpdateConnection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, application[0])
                     });
-                    var appOrders = _DB_Connection.Select(DB_Table.ORDERS, new string[] { "number", "type", "date" }).Join(
+                    var appOrders = _DB_UpdateConnection.Select(DB_Table.ORDERS, new string[] { "number", "type", "date" }).Join(
                         appOrdersData,
                         orders => orders[0],
                         data => data[0],

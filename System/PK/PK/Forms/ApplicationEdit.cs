@@ -398,15 +398,16 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if (tbLastName.Text == "" || tbFirstName.Text == "" || tbIDDocSeries.Text == "" || tbIDDocNumber.Text == ""
-                || tbPlaceOfBirth.Text == "" || cbRegion.Text == "" || tbPostcode.Text == "")
+            if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && (string.IsNullOrWhiteSpace(tbLastName.Text)
+                || string.IsNullOrWhiteSpace(tbFirstName.Text) || string.IsNullOrWhiteSpace(tbIDDocSeries.Text) || string.IsNullOrWhiteSpace(tbIDDocNumber.Text)
+                || string.IsNullOrWhiteSpace(tbPlaceOfBirth.Text) || string.IsNullOrWhiteSpace(cbRegion.Text) || string.IsNullOrWhiteSpace(tbPostcode.Text)))
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
             else if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
                 MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
             else if ((rbDiploma.Checked || rbSpravka.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
-                && ( tbEduDocSeries.Text == "" || tbEduDocNumber.Text == "" ))
+                && (string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || string.IsNullOrWhiteSpace(tbEduDocNumber.Text)))
                 MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
-            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (tbEduDocSeries.Text != "" || tbEduDocNumber.Text.Length != 14))
+            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (!string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || tbEduDocNumber.Text.Length != 14))
                 MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
             else
             {
@@ -420,9 +421,9 @@ namespace PK.Forms
                     }
                 if (!found)
                     MessageBox.Show("Не выбрано ни одно направление или профиль.");
-                else if (!cbPassportMatch.Checked && (tbExamsDocSeries.Text == "") && (tbExamsDocNumber.Text == ""))
+                else if (!cbPassportMatch.Checked && !cbNoEGE .Checked && (string.IsNullOrWhiteSpace(tbExamsDocSeries.Text) || string.IsNullOrWhiteSpace(tbExamsDocNumber.Text)))
                     MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
-                else if (mtbEMail.Text == "")
+                else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
                     MessageBox.Show("Поле \"Email\" не заполнено");
                 else if (!cbAppAdmission.Checked
                     || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked) && !cbDirectionDoc.Checked
@@ -497,7 +498,6 @@ namespace PK.Forms
                                         _EditingDateTime = DateTime.Now;
                                         UpdateApplication(transaction);
                                     }
-
                                     transaction.Commit();
                                 }
 
@@ -511,17 +511,26 @@ namespace PK.Forms
 
         private void cbPassportMatch_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbPassportMatch.Checked)
+            if (cbPassportMatch.Checked || cbNoEGE.Checked)
             {
                 tbExamsDocSeries.Enabled = false;
-                tbExamsDocSeries.Text = tbIDDocSeries.Text;
                 tbExamsDocNumber.Enabled = false;
-                tbExamsDocNumber.Text = tbIDDocNumber.Text;
                 cbExamsDocType.Enabled = false;
-                cbExamsDocType.SelectedItem = cbIDDocType.SelectedItem.ToString();
                 label33.Enabled = false;
                 label34.Enabled = false;
                 label35.Enabled = false;
+                if (cbPassportMatch.Checked)
+                {
+                    tbExamsDocSeries.Text = tbIDDocSeries.Text;                
+                    tbExamsDocNumber.Text = tbIDDocNumber.Text;                
+                    cbExamsDocType.SelectedItem = cbIDDocType.SelectedItem.ToString(); 
+                }
+               else
+                {
+                    tbExamsDocSeries.Clear();
+                    tbExamsDocNumber.Clear();
+                    cbIDDocType.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -1350,7 +1359,7 @@ namespace PK.Forms
             _DB_Connection.Insert(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "document_id", idDocUid},
                 { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                 { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER, cbSex.SelectedItem.ToString())},
-                { "subdivision_code", mtbSubdivisionCode.Text },{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                { "subdivision_code", mtbSubdivisionCode.MaskFull? mtbSubdivisionCode.Text: null }, { "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                 { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                 { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                 { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
@@ -1599,7 +1608,7 @@ namespace PK.Forms
         private void SaveExams(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             uint examsDocId = 0;
-            if (cbPassportMatch.Checked)
+            if (cbPassportMatch.Checked || cbNoEGE.Checked)
             {
                 examsDocId = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "type", "ege" }, { "series", tbIDDocSeries.Text }, { "number", tbIDDocNumber.Text } }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object> { { "applications_id", _ApplicationID }, { "documents_id", examsDocId } }, transaction);
@@ -2417,7 +2426,7 @@ namespace PK.Forms
                         _DB_Connection.Update(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> {
                             { "last_name", tbLastName.Text}, { "first_name", tbFirstName.Text}, { "middle_name", tbMiddleName.Text},
                             { "gender_dict_id", (uint)FIS_Dictionary.GENDER},{ "gender_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.GENDER,cbSex.SelectedItem.ToString())},
-                            { "subdivision_code", mtbSubdivisionCode.Text },{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
+                            { "subdivision_code", mtbSubdivisionCode.MaskFull? mtbSubdivisionCode.Text: null },{ "type_dict_id", (uint)FIS_Dictionary.IDENTITY_DOC_TYPE},
                             { "type_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,cbIDDocType.SelectedItem.ToString())},
                             { "nationality_dict_id", (uint)FIS_Dictionary.COUNTRY}, { "nationality_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.COUNTRY,cbNationality.SelectedItem.ToString())},
                             { "birth_date", dtpDateOfBirth.Value},{ "birth_place", tbPlaceOfBirth.Text}, { "reg_region", cbRegion.Text}, { "reg_district", cbDistrict.Text},
@@ -2480,7 +2489,7 @@ namespace PK.Forms
                     }
                     else if (document[1].ToString() == "ege")
                     {
-                        if (cbPassportMatch.Checked)
+                        if (cbPassportMatch.Checked || cbNoEGE.Checked)
                         {
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "series", tbIDDocSeries.Text }, { "number", tbIDDocNumber.Text } },
                                 new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
