@@ -395,6 +395,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `special_conditions` TINYINT(1) NOT NULL COMMENT 'ВИ с созданием специальных условий.',
   `master_appl` TINYINT(1) NOT NULL COMMENT 'Заявление на уровень магистра.',
   `withdraw_date` DATE NULL COMMENT 'Дата отзыва документов.',
+  `compatriot` TINYINT(1) NULL COMMENT 'Принадлежность к соотечественникам.',
+  `courses` TINYINT(1) NULL COMMENT 'Курсы.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`entrant_id` ASC),
   INDEX `applications_registrered_idx` (`registrator_login` ASC),

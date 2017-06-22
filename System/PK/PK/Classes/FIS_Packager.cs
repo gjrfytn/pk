@@ -323,7 +323,7 @@ namespace PK.Classes
                     marks.Where(s => s.ApplID == appl.ID)
                     );
 
-                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs);
+                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs, packedDocs.CustomDocuments);
 
                 applications.Add(new Application(
                     new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
@@ -1008,7 +1008,7 @@ namespace PK.Classes
             return testsResults;
         }
 
-        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight, IEnumerable<DB_Queries.Document> docs)
+        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight, IEnumerable<DB_Queries.Document> docs, ICollection<CustomDocument> customDocs)
         {
             List<IndividualAchievement> achievements = new List<IndividualAchievement>();
 
@@ -1027,14 +1027,29 @@ namespace PK.Classes
                     ).ToDictionary(k => (uint)k[0], e => (ushort)e[1]);
 
                 foreach (var ach in achievementsBD)
-                    if (docs.Single(s => s.ID == ach.DocID).Type != "high_edu_diploma")
+                {
+                    DB_Queries.Document doc = docs.Single(s => s.ID == ach.DocID);
+                    if (doc.Type != "high_edu_diploma")
+                    {
+                        TUID docUID = new TUID(doc.ID.ToString() + "C");
+                        customDocs.Add(new CustomDocument(new TCustomDocument(
+                            docUID,
+                            doc.Type,
+                            new TDate(doc.Date.Value),
+                            doc.Organization,
+                            doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                            doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                            doc.Number != null ? new TDocumentNumber(doc.Number) : null
+                            )));
                         achievements.Add(new IndividualAchievement(
                             new TUID(ach.ID),
                             new TUID(ach.InstAchID),
-                            new TUID(ach.DocID),
+                            docUID,
                             instAch[ach.InstAchID],
                             priorityRight.HasValue ? priorityRight : null
                             ));
+                    }
+                }
             }
 
             return achievements;
