@@ -43,6 +43,7 @@
             this.cbEduFormZ = new System.Windows.Forms.CheckBox();
             this.cbEduFormOZ = new System.Windows.Forms.CheckBox();
             this.gbEduLevel = new System.Windows.Forms.GroupBox();
+            this.cbEduLevelSPO = new System.Windows.Forms.CheckBox();
             this.cbEduLevelSpec = new System.Windows.Forms.CheckBox();
             this.cbEduLevelMag = new System.Windows.Forms.CheckBox();
             this.cbEduLevelBacc = new System.Windows.Forms.CheckBox();
@@ -179,7 +180,8 @@
             this.cbType.FormattingEnabled = true;
             this.cbType.Items.AddRange(new object[] {
             "Прием на обучение на бакалавриат/специалитет",
-            "Прием на обучение в магистратуру"});
+            "Прием на обучение в магистратуру",
+            "Прием на обучение на СПО"});
             this.cbType.Location = new System.Drawing.Point(788, 22);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(280, 21);
@@ -191,7 +193,7 @@
             this.gbEduForms.Controls.Add(this.cbEduFormO);
             this.gbEduForms.Controls.Add(this.cbEduFormZ);
             this.gbEduForms.Controls.Add(this.cbEduFormOZ);
-            this.gbEduForms.Location = new System.Drawing.Point(244, 49);
+            this.gbEduForms.Location = new System.Drawing.Point(226, 49);
             this.gbEduForms.Name = "gbEduForms";
             this.gbEduForms.Size = new System.Drawing.Size(373, 45);
             this.gbEduForms.TabIndex = 10;
@@ -233,15 +235,27 @@
             // 
             // gbEduLevel
             // 
+            this.gbEduLevel.Controls.Add(this.cbEduLevelSPO);
             this.gbEduLevel.Controls.Add(this.cbEduLevelSpec);
             this.gbEduLevel.Controls.Add(this.cbEduLevelMag);
             this.gbEduLevel.Controls.Add(this.cbEduLevelBacc);
-            this.gbEduLevel.Location = new System.Drawing.Point(640, 49);
+            this.gbEduLevel.Location = new System.Drawing.Point(605, 49);
             this.gbEduLevel.Name = "gbEduLevel";
-            this.gbEduLevel.Size = new System.Drawing.Size(304, 45);
+            this.gbEduLevel.Size = new System.Drawing.Size(362, 45);
             this.gbEduLevel.TabIndex = 11;
             this.gbEduLevel.TabStop = false;
             this.gbEduLevel.Text = "Уровень образования";
+            // 
+            // cbEduLevelSPO
+            // 
+            this.cbEduLevelSPO.AutoSize = true;
+            this.cbEduLevelSPO.Enabled = false;
+            this.cbEduLevelSPO.Location = new System.Drawing.Point(306, 19);
+            this.cbEduLevelSPO.Name = "cbEduLevelSPO";
+            this.cbEduLevelSPO.Size = new System.Drawing.Size(49, 17);
+            this.cbEduLevelSPO.TabIndex = 3;
+            this.cbEduLevelSPO.Text = "СПО";
+            this.cbEduLevelSPO.UseVisualStyleBackColor = true;
             // 
             // cbEduLevelSpec
             // 
@@ -812,7 +826,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(973, 62);
+            this.btSave.Location = new System.Drawing.Point(983, 62);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(75, 23);
             this.btSave.TabIndex = 16;
@@ -937,5 +951,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_OZF;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTargetOrganizatons_Sum;
+        private System.Windows.Forms.CheckBox cbEduLevelSPO;
     }
 }

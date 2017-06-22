@@ -63,23 +63,24 @@ namespace PK.Forms
             foreach (CheckBox v in gbEduLevel.Controls)
                 v.Checked = false;
 
-            if (cbType.SelectedItem.ToString() == "Прием иностранце по направлениям Минобрнауки")
-                foreach (CheckBox v in gbEduLevel.Controls)
-                    v.Enabled = true;
-            else
+            //if (cbType.SelectedItem.ToString() == "Прием иностранце по направлениям Минобрнауки")
+            //    foreach (CheckBox v in gbEduLevel.Controls)
+            //        v.Enabled = true;
+            //else
                 foreach (CheckBox v in gbEduLevel.Controls)
                     v.Enabled = false;
 
             switch (cbType.SelectedItem.ToString())
             {
                 case "Прием на обучение на бакалавриат/специалитет":
-                    cbEduLevelBacc.Visible = true;
                     cbEduLevelBacc.Enabled = true;
-                    cbEduLevelSpec.Visible = true;
                     cbEduLevelSpec.Enabled = true;
                     break;
                 case "Прием на обучение в магистратуру":
                     cbEduLevelMag.Checked = true;
+                    break;
+                case "Прием на обучение на СПО":
+                    cbEduLevelSPO.Checked = true;
                     break;
             }
         }
