@@ -90,6 +90,8 @@
             this.btFillRand = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
+            this.cbCompatriot = new System.Windows.Forms.CheckBox();
+            this.label44 = new System.Windows.Forms.Label();
             this.cbPriority = new System.Windows.Forms.CheckBox();
             this.cbTarget = new System.Windows.Forms.CheckBox();
             this.cbOlympiad = new System.Windows.Forms.CheckBox();
@@ -185,6 +187,7 @@
             this.label33 = new System.Windows.Forms.Label();
             this.cbPassportMatch = new System.Windows.Forms.CheckBox();
             this.gbOther = new System.Windows.Forms.GroupBox();
+            this.cbCourses = new System.Windows.Forms.CheckBox();
             this.gbIndividualAchievements = new System.Windows.Forms.GroupBox();
             this.cbMedal = new System.Windows.Forms.CheckBox();
             this.cbSport = new System.Windows.Forms.CheckBox();
@@ -1066,6 +1069,9 @@
             // 
             // gbAttributes
             // 
+            this.gbAttributes.BackColor = System.Drawing.Color.Transparent;
+            this.gbAttributes.Controls.Add(this.cbCompatriot);
+            this.gbAttributes.Controls.Add(this.label44);
             this.gbAttributes.Controls.Add(this.cbPriority);
             this.gbAttributes.Controls.Add(this.cbTarget);
             this.gbAttributes.Controls.Add(this.cbOlympiad);
@@ -1074,31 +1080,51 @@
             this.gbAttributes.Controls.Add(this.cbChernobyl);
             this.gbAttributes.Controls.Add(this.cbMCADO);
             this.gbAttributes.Controls.Add(this.cbHostelNeeded);
-            this.gbAttributes.Location = new System.Drawing.Point(130, 9);
+            this.gbAttributes.Location = new System.Drawing.Point(12, 9);
             this.gbAttributes.Margin = new System.Windows.Forms.Padding(4);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Padding = new System.Windows.Forms.Padding(4);
-            this.gbAttributes.Size = new System.Drawing.Size(1199, 36);
+            this.gbAttributes.Size = new System.Drawing.Size(1328, 36);
             this.gbAttributes.TabIndex = 0;
             this.gbAttributes.TabStop = false;
-            this.gbAttributes.Text = "Признаки";
+            // 
+            // cbCompatriot
+            // 
+            this.cbCompatriot.AutoSize = true;
+            this.cbCompatriot.Location = new System.Drawing.Point(1171, 14);
+            this.cbCompatriot.Name = "cbCompatriot";
+            this.cbCompatriot.Size = new System.Drawing.Size(144, 20);
+            this.cbCompatriot.TabIndex = 9;
+            this.cbCompatriot.Text = "Соотечественник";
+            this.cbCompatriot.UseVisualStyleBackColor = true;
+            this.cbCompatriot.CheckedChanged += new System.EventHandler(this.cbAttribute_CheckedChanged);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.BackColor = System.Drawing.Color.Ivory;
+            this.label44.Location = new System.Drawing.Point(545, -2);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(73, 16);
+            this.label44.TabIndex = 8;
+            this.label44.Text = "Признаки";
             // 
             // cbPriority
             // 
             this.cbPriority.AutoSize = true;
-            this.cbPriority.Location = new System.Drawing.Point(943, 14);
+            this.cbPriority.Location = new System.Drawing.Point(960, 14);
             this.cbPriority.Margin = new System.Windows.Forms.Padding(4);
             this.cbPriority.Name = "cbPriority";
             this.cbPriority.Size = new System.Drawing.Size(200, 20);
             this.cbPriority.TabIndex = 7;
             this.cbPriority.Text = "Преимущественное право";
             this.cbPriority.UseVisualStyleBackColor = true;
-            this.cbPriority.CheckedChanged += new System.EventHandler(this.cbPrerogative_CheckedChanged);
+            this.cbPriority.CheckedChanged += new System.EventHandler(this.cbAttribute_CheckedChanged);
             // 
             // cbTarget
             // 
             this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(816, 14);
+            this.cbTarget.Location = new System.Drawing.Point(824, 14);
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
             this.cbTarget.Size = new System.Drawing.Size(128, 20);
@@ -1111,7 +1137,7 @@
             // 
             this.cbOlympiad.AutoSize = true;
             this.cbOlympiad.Enabled = false;
-            this.cbOlympiad.Location = new System.Drawing.Point(706, 14);
+            this.cbOlympiad.Location = new System.Drawing.Point(708, 13);
             this.cbOlympiad.Margin = new System.Windows.Forms.Padding(4);
             this.cbOlympiad.Name = "cbOlympiad";
             this.cbOlympiad.Size = new System.Drawing.Size(102, 20);
@@ -1123,7 +1149,7 @@
             // cbExams
             // 
             this.cbExams.AutoSize = true;
-            this.cbExams.Location = new System.Drawing.Point(568, 14);
+            this.cbExams.Location = new System.Drawing.Point(565, 14);
             this.cbExams.Margin = new System.Windows.Forms.Padding(4);
             this.cbExams.Name = "cbExams";
             this.cbExams.Size = new System.Drawing.Size(135, 20);
@@ -1134,7 +1160,7 @@
             // cbQuote
             // 
             this.cbQuote.AutoSize = true;
-            this.cbQuote.Location = new System.Drawing.Point(444, 14);
+            this.cbQuote.Location = new System.Drawing.Point(441, 14);
             this.cbQuote.Margin = new System.Windows.Forms.Padding(4);
             this.cbQuote.Name = "cbQuote";
             this.cbQuote.Size = new System.Drawing.Size(116, 20);
@@ -1153,7 +1179,7 @@
             this.cbChernobyl.TabIndex = 2;
             this.cbChernobyl.Text = "Чернобыльская зона";
             this.cbChernobyl.UseVisualStyleBackColor = true;
-            this.cbChernobyl.CheckedChanged += new System.EventHandler(this.cbChernobyl_CheckedChanged);
+            this.cbChernobyl.CheckedChanged += new System.EventHandler(this.cbAttribute_CheckedChanged);
             // 
             // cbMCADO
             // 
@@ -1169,7 +1195,7 @@
             // cbHostelNeeded
             // 
             this.cbHostelNeeded.AutoSize = true;
-            this.cbHostelNeeded.Location = new System.Drawing.Point(5, 14);
+            this.cbHostelNeeded.Location = new System.Drawing.Point(5, 13);
             this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
             this.cbHostelNeeded.Name = "cbHostelNeeded";
             this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
@@ -2291,6 +2317,7 @@
             // 
             // gbOther
             // 
+            this.gbOther.Controls.Add(this.cbCourses);
             this.gbOther.Controls.Add(this.gbIndividualAchievements);
             this.gbOther.Controls.Add(this.mtbEMail);
             this.gbOther.Controls.Add(this.label31);
@@ -2306,6 +2333,16 @@
             this.gbOther.Size = new System.Drawing.Size(1340, 90);
             this.gbOther.TabIndex = 5;
             this.gbOther.TabStop = false;
+            // 
+            // cbCourses
+            // 
+            this.cbCourses.AutoSize = true;
+            this.cbCourses.Location = new System.Drawing.Point(852, 14);
+            this.cbCourses.Name = "cbCourses";
+            this.cbCourses.Size = new System.Drawing.Size(296, 20);
+            this.cbCourses.TabIndex = 28;
+            this.cbCourses.Text = "Посещал подготовительные курсы МАДИ";
+            this.cbCourses.UseVisualStyleBackColor = true;
             // 
             // gbIndividualAchievements
             // 
@@ -2395,7 +2432,7 @@
             // cbSpecialConditions
             // 
             this.cbSpecialConditions.AutoSize = true;
-            this.cbSpecialConditions.Location = new System.Drawing.Point(852, 30);
+            this.cbSpecialConditions.Location = new System.Drawing.Point(852, 38);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
@@ -2839,5 +2876,8 @@
         private System.Windows.Forms.CheckBox cbNoEGE;
         private System.Windows.Forms.ComboBox cbExamsDocType;
         private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.CheckBox cbCourses;
+        private System.Windows.Forms.CheckBox cbCompatriot;
+        private System.Windows.Forms.Label label44;
     }
 }

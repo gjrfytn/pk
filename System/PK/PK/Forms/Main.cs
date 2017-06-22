@@ -260,6 +260,7 @@ namespace PK.Forms
                 _SelectedAppID = (uint)dgvApplications.SelectedRows[0].Cells[dgvApplications_ID.Index].Value;
         }
 
+
         private void tbField_Leave(object sender, EventArgs e)
         {
             if ((sender as TextBox).Text == "")
@@ -385,7 +386,7 @@ namespace PK.Forms
                             directions,
                             entrances => new Tuple<uint, string>((uint)entrances[0], entrances[1].ToString()),
                             dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
-                            (s1, s2) => s2[2].ToString()).ToArray();
+                            (s1, s2) => (s1[2]!=null && s1[2].ToString() != "")? s1[2].ToString(): s2[2].ToString()).ToArray();
                         foreach (object shortName in entrance)
                             if (row.Cells[dgvApplications_Entrances.Index].Value == null)
                             row.Cells[dgvApplications_Entrances.Index].Value = shortName;

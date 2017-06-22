@@ -47,6 +47,8 @@ namespace PK.Classes
         public const string BenefitOlympic = "Зачисление без вступительных испытаний";
 
         public const string MagAchievementRedDiploma = "Иное";
+
+        public const string NoEGE = "Не сдавал ЕГЭ";
         #endregion
 
         private readonly DB_Connector _DB_Connection;
