@@ -262,17 +262,33 @@ namespace PK.Forms
 
         private void cbEduLevel_CheckedChanged(object sender, EventArgs e)
         {
-            FillDirectionsTable();
-            FillFacultiesTable();
-            FillProfiliesTable();
-            FillDistTable();
-            if (_CampaignId != null)
+            if (!cbEduLevelSPO.Checked)
             {
-                LoadTables();
+                FillDirectionsTable();
+                FillFacultiesTable();
+                FillProfiliesTable();
+                FillDistTable();
+                if (_CampaignId != null)
+                {
+                    LoadTables();
+                }
+                dgvEntranceTests.Visible = !cbEduLevelMag.Checked;
+                dgvEntranceTests.Enabled = !cbEduLevelMag.Checked;
+                label10.Visible = !cbEduLevelMag.Checked;
             }
-            dgvEntranceTests.Visible = !cbEduLevelMag.Checked;
-            dgvEntranceTests.Enabled = !cbEduLevelMag.Checked;
-            label10.Visible = !cbEduLevelMag.Checked;
+            else
+            {
+                FillDirectionsTable();
+                FillFacultiesTable();
+                dgvFacultities.Enabled = false;
+                dgvFacultities.Visible = false;
+                dgvTargetOrganizatons.Enabled = false;
+                dgvTargetOrganizatons.Visible = false;
+                dgvPaidPlaces.Enabled = false;
+                dgvPaidPlaces.Visible = false;
+                dgvEntranceTests.Enabled = false;
+                dgvEntranceTests.Visible = false;
+            }
         }
 
 
@@ -289,19 +305,25 @@ namespace PK.Forms
 
         private void FillDirectionsTable()
         {
-            dgvDirections.Rows.Clear();
-            foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name", "code", "id" ))
-                foreach (var r in _DB_Connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id"))
+            if (!cbEduLevelSPO.Checked)
+            {
+                dgvDirections.Rows.Clear();
+                foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name", "code", "id"))
+                    foreach (var r in _DB_Connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id"))
 
-                if ((cbEduLevelBacc.Checked)&&(v[1].ToString().Substring(3, 2) == "03")&&(r[1].ToString()==v[2].ToString()))
-                            dgvDirections.Rows.Add(v[2].ToString(),true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-                else if ((cbEduLevelSpec.Checked)&&(v[1].ToString().Substring(3, 2) == "05")&&(r[1].ToString() == v[2].ToString()))
-                        dgvDirections.Rows.Add(v[2].ToString(), true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-                else if ((cbEduLevelMag.Checked)&&(v[1].ToString().Substring(3, 2) == "04")&&(r[1].ToString() == v[2].ToString()))
+                        if ((cbEduLevelBacc.Checked) && (v[1].ToString().Substring(3, 2) == "03") && (r[1].ToString() == v[2].ToString()))
                             dgvDirections.Rows.Add(v[2].ToString(), true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+                        else if ((cbEduLevelSpec.Checked) && (v[1].ToString().Substring(3, 2) == "05") && (r[1].ToString() == v[2].ToString()))
+                            dgvDirections.Rows.Add(v[2].ToString(), true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+                        else if ((cbEduLevelMag.Checked) && (v[1].ToString().Substring(3, 2) == "04") && (r[1].ToString() == v[2].ToString()))
+                            dgvDirections.Rows.Add(v[2].ToString(), true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+            else
+            {
+                //TODO
+            }
             dgvDirections.Sort(dgvDirections.Columns[1], ListSortDirection.Ascending);
             dgvDirections.Rows.Add("", false, "ИТОГО", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
             dgvDirections.Rows[dgvDirections.Rows.Count - 1].ReadOnly = true;
@@ -328,17 +350,24 @@ namespace PK.Forms
         private void FillFacultiesTable ()
         {
             dgvFacultities.Rows.Clear();
-            foreach (var v in _DB_Connection.Select(DB_Table.FACULTIES, "short_name", "name"))
+            if (!cbEduLevelSPO.Checked)
             {
-                bool found = false;
-                foreach (DataGridViewRow r in dgvDirections.Rows)
-                    if ((v[0].ToString() == r.Cells[4].Value.ToString())&&((bool)(r.Cells[1].Value)))
-                    {
-                        found = true;
-                    }
-                if (found)
-                dgvFacultities.Rows.Add(v[0].ToString(), v[1].ToString(), 0);
-            }                
+                foreach (var v in _DB_Connection.Select(DB_Table.FACULTIES, "short_name", "name"))
+                {
+                    bool found = false;
+                    foreach (DataGridViewRow r in dgvDirections.Rows)
+                        if ((v[0].ToString() == r.Cells[4].Value.ToString()) && ((bool)(r.Cells[1].Value)))
+                        {
+                            found = true;
+                        }
+                    if (found)
+                        dgvFacultities.Rows.Add(v[0].ToString(), v[1].ToString(), 0);
+                }
+            }
+            else
+            {
+                //TODO
+            }
             dgvFacultities.Sort(dgvFacultities.Columns[1], ListSortDirection.Ascending);
             dgvFacultities.Rows.Add("", "ИТОГО", 0);
             dgvFacultities.Rows[dgvFacultities.Rows.Count - 1].ReadOnly = true;
@@ -456,9 +485,12 @@ namespace PK.Forms
             SaveEduLevels(transaction);
             SaveFaculties(transaction);
             SaveDirections(transaction);
-            SaveTargetOrganizations(transaction);
-            SaveProfiles(transaction);            
-            SaveEntranceTests(transaction);
+            if (!cbEduLevelSPO.Checked)
+            {
+                SaveTargetOrganizations(transaction);
+                SaveProfiles(transaction);
+                SaveEntranceTests(transaction);
+            }
         }
 
         private void UpdateCampaign(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -564,16 +596,18 @@ namespace PK.Forms
 
         private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            foreach (DataGridViewRow r in dgvDirections.Rows)
-                if (r.Index < dgvDirections.Rows.Count - 1)
-                {
-                
-                    int[] places = new int[5];
-                    for (int i = 5; i <= 8; i++)
-                        if (dgvDirections.Columns[i].Visible == true)
-                            places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
+            if (!cbEduLevelSPO.Checked)
+            {
+                foreach (DataGridViewRow r in dgvDirections.Rows)
+                    if (r.Index < dgvDirections.Rows.Count - 1)
+                    {
 
-                    _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
+                        int[] places = new int[5];
+                        for (int i = 5; i <= 8; i++)
+                            if (dgvDirections.Columns[i].Visible == true)
+                                places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
+
+                        _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
                     {
                         { "campaign_id", _CampaignId},
                         { "direction_faculty", r.Cells[dgvDirections_Fac.Index].Value.ToString()},
@@ -582,7 +616,12 @@ namespace PK.Forms
                         { "places_budget_oz", places[1]},
                         { "places_quota_o", places[2]},
                         { "places_quota_oz", places[3]}}, transaction);
-                }
+                    }
+            }
+            else
+            {
+                //TODO
+            }
         }
 
         private void SaveTargetOrganizations(MySql.Data.MySqlClient.MySqlTransaction transaction)

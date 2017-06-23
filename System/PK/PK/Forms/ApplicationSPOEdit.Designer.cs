@@ -96,13 +96,14 @@
             this.label28 = new System.Windows.Forms.Label();
             this.cbForeignLanguage = new System.Windows.Forms.ComboBox();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.dgvDirection = new System.Windows.Forms.DataGridView();
             this.dgvDirection_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirection_Faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirection_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirection_EduLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirection_EduForm = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label29 = new System.Windows.Forms.Label();
             this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
             this.cbPhotos = new System.Windows.Forms.CheckBox();
             this.cbMedCertificate = new System.Windows.Forms.CheckBox();
@@ -113,7 +114,6 @@
             this.btClose = new System.Windows.Forms.Button();
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAddress.SuspendLayout();
@@ -121,9 +121,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.gbEduDocument.SuspendLayout();
             this.gbApplication.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirection)).BeginInit();
             this.gbWithdrawDocs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // gbPassport
@@ -268,6 +268,7 @@
             this.btGetIndex.TabIndex = 6;
             this.btGetIndex.Text = ">";
             this.btGetIndex.UseVisualStyleBackColor = true;
+            this.btGetIndex.Click += new System.EventHandler(this.btGetIndex_Click);
             // 
             // tbPostcode
             // 
@@ -862,6 +863,25 @@
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(12, 21);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(60, 78);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 30;
+            this.pictureBox3.TabStop = false;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(351, 20);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(154, 16);
+            this.label29.TabIndex = 1;
+            this.label29.Text = "Условия поступления:";
+            // 
             // dgvDirection
             // 
             this.dgvDirection.AllowUserToAddRows = false;
@@ -919,15 +939,6 @@
             this.dgvDirection_EduForm.Name = "dgvDirection_EduForm";
             this.dgvDirection_EduForm.ReadOnly = true;
             this.dgvDirection_EduForm.Width = 143;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(351, 20);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(154, 16);
-            this.label29.TabIndex = 1;
-            this.label29.Text = "Условия поступления:";
             // 
             // gbWithdrawDocs
             // 
@@ -1047,16 +1058,6 @@
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(12, 21);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(60, 78);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 30;
-            this.pictureBox3.TabStop = false;
-            // 
             // ApplicationSPOEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1072,7 +1073,7 @@
             this.Controls.Add(this.gbPassport);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ApplicationSPOEdit";
             this.Text = "Заявление на поступление";
             this.gbPassport.ResumeLayout(false);
@@ -1087,10 +1088,10 @@
             this.gbEduDocument.PerformLayout();
             this.gbApplication.ResumeLayout(false);
             this.gbApplication.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirection)).EndInit();
             this.gbWithdrawDocs.ResumeLayout(false);
             this.gbWithdrawDocs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
