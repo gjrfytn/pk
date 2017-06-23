@@ -23,7 +23,9 @@ namespace SitePost
         {
             InitializeComponent();
 
+            //_DB_Connection = new PK.Classes.DB_Connector("server = localhost; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
             _DB_Connection = new PK.Classes.DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
+
             _DB_Helper = new PK.Classes.DB_Helper(_DB_Connection);
             Dictionary<uint, string> campaigns = new Dictionary<uint, string>();
             foreach (object[] campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "name" }))
@@ -105,6 +107,7 @@ namespace SitePost
 
         private void cbPost_CheckedChanged(object sender, EventArgs e)
         {
+            methodGroupBox.Enabled = ((CheckBox)sender).Checked;
             cbAdress.Enabled = ((CheckBox)sender).Checked;
         }
 
@@ -192,11 +195,13 @@ namespace SitePost
                 if (cbSave.Checked)
                     PackageData.Save("doc.xml");
 
-                if (cbPost.Checked)
+                if ((cbPost.Checked) && (rbPostMethod.Checked))
                 {
                     byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
                     request.ContentType = "application/x-www-form-urlencoded";
+                    request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                    request.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
                     request.ContentLength = bytesData.Length;
                     request.Method = "POST";
                     System.IO.Stream requestStream = request.GetRequestStream();
@@ -211,6 +216,45 @@ namespace SitePost
                         tbResponse.Text = responseStr;
                     }
                 }
+                if ((cbPost.Checked) && (rbFTPMethod.Checked))
+                {
+                    // Get the object used to communicate with the server.
+                    FtpWebRequest FtpRequest = (FtpWebRequest)WebRequest.Create(tbServer.Text+ "/doc.xml");
+                    FtpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+
+                    // This example assumes the FTP site uses anonymous logon.
+                    FtpRequest.Credentials = new NetworkCredential(tbUser.Text, tbPassword.Text);
+
+                    // Copy the contents of the file to the request stream.
+                    System.IO.StreamReader sourceStream = new System.IO.StreamReader("doc.xml");
+                    byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
+                    sourceStream.Close();
+                    FtpRequest.ContentLength = fileContents.Length;
+
+                    System.IO.Stream requestStream = FtpRequest.GetRequestStream();
+                    requestStream.Write(fileContents, 0, fileContents.Length);
+                    requestStream.Close();
+                                        
+                    FtpWebResponse FtpResponse = (FtpWebResponse)FtpRequest.GetResponse();
+                    tbResponse.Text = tbResponse.Text + DateTime.Now.ToString() + ": " + FtpResponse.StatusDescription + "\n";
+                    FtpResponse.Close();
+                    //FtpResponse.StatusCode=FtpStatusCode.ClosingData
+                    if (FtpResponse.StatusCode == FtpStatusCode.ClosingData)
+                    {
+                        HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbAdress.Text);
+                        HttpWebResponse HttpResponse;
+                        HttpResponse = (HttpWebResponse)HttpRequest.GetResponse();
+                        if (HttpResponse.StatusCode == HttpStatusCode.OK)
+                        {
+                            System.IO.Stream responseStream = HttpResponse.GetResponseStream();
+                            string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
+                            tbResponse.Text = tbResponse.Text + responseStr + "\r\n";
+                            HttpResponse.Close();
+                        }
+                    }
+
+                }
+
             }
         }
 
@@ -278,13 +322,13 @@ namespace SitePost
                 }
                 else if (doc.Item2 == "olympic" || doc.Item2 == "olympic_total" || doc.Item2 == "ukraine_olympic" || doc.Item2 == "international_olympic")
                     abitur.SetElementValue("Olymp", 1);
-                else if (doc.Item2 == "photo")
+                else if (doc.Item2 == "photos")
                     abitur.Element("Documents").SetElementValue("Photo", 1);
                 else if (doc.Item2 == "orphan")
                     abitur.Element("Documents").SetElementValue("OrphanDocument", 1);
                 else if (doc.Item2 == "disability")
                     abitur.Element("Documents").SetElementValue("InvalidDocument", 1);
-                else if (doc.Item2 == "high_edu_diploma" || doc.Item2 == "school_certificate")
+                else if (doc.Item2 == "high_edu_diploma" || doc.Item2 == "school_certificate" || doc.Item2 == "middle_edu_diploma")
                 {
                     abitur.Element("Documents").SetElementValue("CertificateDiplomCopy", 1);
                     object origDate = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "original_recieved_date" }, new List<Tuple<string, Relation, object>>
@@ -400,6 +444,28 @@ namespace SitePost
             {
                 abitur.SetElementValue("IABall", IABalls.Max());
             }            
+        }
+
+        private void rbFTPMethod_Click(object sender, EventArgs e)
+        {
+            cbSave.Checked = true;
+            cbSave.Enabled = !((RadioButton)sender).Checked;
+        }
+
+        private void rbPostMethod_CheckedChanged(object sender, EventArgs e)
+        {
+            cbSave.Enabled = ((RadioButton)sender).Checked;
+            lAdress.Enabled = ((RadioButton)sender).Checked;
+            cbAdress.Enabled = ((RadioButton)sender).Checked;
+
+            lServer.Enabled = !((RadioButton)sender).Checked;
+            tbServer.Enabled = !((RadioButton)sender).Checked;
+            lUser.Enabled = !((RadioButton)sender).Checked;
+            tbUser.Enabled = !((RadioButton)sender).Checked;
+            lPassword.Enabled = !((RadioButton)sender).Checked;
+            tbPassword.Enabled = !((RadioButton)sender).Checked;
+            tbAdress.Enabled = !((RadioButton)sender).Checked;
+            lAdressForScript.Enabled = !((RadioButton)sender).Checked;
         }
     }
 }
