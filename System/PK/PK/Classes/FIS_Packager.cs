@@ -323,7 +323,31 @@ namespace PK.Classes
                     marks.Where(s => s.ApplID == appl.ID)
                     );
 
-                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs, packedDocs.CustomDocuments);
+                List<CustomDocument> customDocs = packedDocs.CustomDocuments == null ? customDocs = new List<CustomDocument>() : customDocs = new List<CustomDocument>(packedDocs.CustomDocuments);
+
+                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs, customDocs);
+
+                if (customDocs.Count == 0)
+                    customDocs = null;
+
+                packedDocs = new ApplicationDocuments(
+                    packedDocs.IdentityDocument,
+                    packedDocs.EgeDocuments,
+                    packedDocs.GiaDocuments,
+                    packedDocs.OtherIdentityDocuments,
+                    packedDocs.EduDocuments,
+                    packedDocs.MilitaryCardDocument,
+                    packedDocs.StudentDocument,
+                    packedDocs.OrphanDocuments,
+                    packedDocs.VeteranDocuments,
+                    packedDocs.SportDocuments,
+                    packedDocs.CompatriotDocuments,
+                    packedDocs.PauperDocuments,
+                    packedDocs.ParentsLostDocuments,
+                    packedDocs.StateEmployeeDocuments,
+                    packedDocs.RadiationWorkDocuments,
+                    customDocs
+                    );
 
                 applications.Add(new Application(
                     new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
@@ -1035,7 +1059,7 @@ namespace PK.Classes
                         customDocs.Add(new CustomDocument(new TCustomDocument(
                             docUID,
                             doc.Type,
-                            new TDate(doc.Date.Value),
+                            new TDate(System.DateTime.Now),//TODO Год выдачи
                             doc.Organization,
                             doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                             doc.Series != null ? new TDocumentSeries(doc.Series) : null,

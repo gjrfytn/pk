@@ -761,7 +761,7 @@ namespace PK.Classes
             }
         }
 
-        public static string RegistrationJournal(DB_Connector connection, DateTime date)
+        public static string RegistrationJournal(DB_Connector connection)
         {
             #region Contracts
             if (connection == null)
@@ -780,16 +780,12 @@ namespace PK.Classes
                 {new Tuple<uint,uint>(12,20),"ОЗКВ" },
                 {new Tuple<uint,uint>(12,16),"ОЗЦП" }
             };
-
-            List<string[]> data = new List<string[]>();
-
-            date = date.Date;
-
-            var applications = connection.Select(
+            
+            var dateGroups = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
-                ).Where(a => ((DateTime)a[2]).Date == date).Join(
+                ).Join(
                 connection.Select(
                 DB_Table.ENTRANTS,
                 "id", "home_phone", "mobile_phone"
@@ -801,7 +797,8 @@ namespace PK.Classes
                     ApplID = (uint)s1[0],
                     EntrID = (uint)s1[1],
                     HomePhone = s2[1].ToString(),
-                    MobilePhone = s2[2].ToString()
+                    MobilePhone = s2[2].ToString(),
+                    RegTime=(DateTime)s1[2]
                 }).Join(
                 connection.Select(
                 DB_Table.ENTRANTS_VIEW,
@@ -816,8 +813,15 @@ namespace PK.Classes
                     FirstName = s2[2].ToString(),
                     MiddleName = s2[3].ToString(),
                     s1.HomePhone,
-                    s1.MobilePhone
-                });
+                    s1.MobilePhone,
+                    s1.RegTime
+                }).GroupBy(
+                k=>k.RegTime.Date,
+                (k,g)=>new
+                {
+                    Date=k,
+                    Applications=g
+                }                );
 
             var applDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
                     connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date"),
@@ -833,67 +837,78 @@ namespace PK.Classes
                     Original = s2[4] as DateTime?
                 });
 
-            foreach (var appl in applications)
+            List<DocumentCreator.DocumentParameters> documents = new List<DocumentCreator.DocumentParameters>();
+            uint count = 1;
+            foreach (var dateGroup in dateGroups)
             {
-                object[] idDoc = connection.Select(
-                    DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
-                    new string[] { "reg_index", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_flat" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("document_id",Relation.EQUAL,applDocs.Single(d=>d.ApplID==appl.ApplID&&d.DocType=="identity").DocID)
-                    })[0];
-
-                var eduDoc = applDocs.Single(d =>
-                d.ApplID == appl.ApplID &&
-                (d.DocType == "academic_diploma" ||
-                d.DocType == "school_certificate" ||
-                d.DocType == "middle_edu_diploma" ||
-                d.DocType == "high_edu_diploma")
-                );
-
-                string eduDocName;
-                switch (eduDoc.DocType)
+                List<string[]> data = new List<string[]>();
+                foreach (var appl in dateGroup.Applications)
                 {
-                    case "academic_diploma":
-                        eduDocName = eduDoc.Original.HasValue ? "Справка" : "Копия справки";
-                        break;
-                    case "school_certificate":
-                        eduDocName = eduDoc.Original.HasValue ? "Аттестат" : "Копия аттестата";
-                        break;
-                    case "middle_edu_diploma":
-                    case "high_edu_diploma":
-                        eduDocName = eduDoc.Original.HasValue ? "Диплом" : "Копия диплома";
-                        break;
-                    default:
-                        throw new Exception("Unreacheble reached.");
-                }
+                    object[] idDoc = connection.Select(
+                        DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                        new string[] { "reg_index", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_flat" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                        new Tuple<string, Relation, object>("document_id",Relation.EQUAL,applDocs.Single(d=>d.ApplID==appl.ApplID&&d.DocType=="identity").DocID)
+                        })[0];
 
-                List<object[]> applEntr = connection.Select(
-                    DB_Table.APPLICATIONS_ENTRANCES,
-                    new string[] { "edu_form_id", "edu_source_id" },
-                    new List<Tuple<string, Relation, object>>
+                    var eduDoc = applDocs.Single(d =>
+                    d.ApplID == appl.ApplID &&
+                    (d.DocType == "academic_diploma" ||
+                    d.DocType == "school_certificate" ||
+                    d.DocType == "middle_edu_diploma" ||
+                    d.DocType == "high_edu_diploma")
+                    );
+
+                    string eduDocName;
+                    switch (eduDoc.DocType)
                     {
-                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL,appl.ApplID)
+                        case "academic_diploma":
+                            eduDocName = eduDoc.Original.HasValue ? "Справка" : "Копия справки";
+                            break;
+                        case "school_certificate":
+                            eduDocName = eduDoc.Original.HasValue ? "Аттестат" : "Копия аттестата";
+                            break;
+                        case "middle_edu_diploma":
+                        case "high_edu_diploma":
+                            eduDocName = eduDoc.Original.HasValue ? "Диплом" : "Копия диплома";
+                            break;
+                        default:
+                            throw new Exception("Unreacheble reached.");
+                    }
+
+                    List<object[]> applEntr = connection.Select(
+                        DB_Table.APPLICATIONS_ENTRANCES,
+                        new string[] { "edu_form_id", "edu_source_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL,appl.ApplID)
+                        });
+
+                    data.Add(new string[]
+                    {
+                        count.ToString(),
+                        appl.ApplID.ToString(),
+                        appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
+                        string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
+                        eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
+                        string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct())
                     });
 
-                data.Add(new string[]
-                {
-                    appl.ApplID.ToString(),
-                    appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
-                    string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
-                    eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
-                    string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct())
-                });
+                    count++;
+                }
+
+                documents.Add(new DocumentCreator.DocumentParameters(
+                    Settings.DocumentsTemplatesPath + "RegistrationJournal.xml",
+                    null,
+                    null,
+                    new string[] { dateGroup.Date.ToShortDateString() },
+                    new List<string[]>[] { data }
+                    ));
             }
 
             string doc = Utility.TempPath + "registrationJournal" + new Random().Next();
-            DocumentCreator.Create(
-                Settings.DocumentsTemplatesPath + "RegistrationJournal.xml",
-                doc,
-                new string[] { date.ToShortDateString() },
-                new List<string[]>[] { data }
-                );
-
+            DocumentCreator.Create(doc, documents, false);
             return doc + ".docx";
         }
 

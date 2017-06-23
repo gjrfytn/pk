@@ -35,8 +35,8 @@ namespace PK
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             MessageBox.Show("Приложение продолжит работу. Сообщите администратору о возникновении ошибки.", "Непредвиденная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter("log.txt", true))
-                writer.Write("\n\n" + DateTime.Now.ToString() + "\n" + e.Exception.ToString());
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter("log.log", true))
+                writer.Write("\r\n\r\n" + DateTime.Now.ToString() + "\r\n" + e.Exception.ToString());
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -47,8 +47,8 @@ namespace PK
             }
             finally
             {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter("log.txt", true))
-                    writer.Write("\n\n" + DateTime.Now.ToString() + " CRITICAL ERROR \n" + e.ExceptionObject.ToString());
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter("log.log", true))
+                    writer.Write("\r\n\r\n" + DateTime.Now.ToString() + " CRITICAL ERROR \r\n" + e.ExceptionObject.ToString());
             }
         }
     }

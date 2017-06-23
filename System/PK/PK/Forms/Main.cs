@@ -207,9 +207,7 @@ namespace PK.Forms
 
         private void toolStrip_RegJournal_Click(object sender, EventArgs e)
         {
-            DateChoice form = new DateChoice();
-            form.ShowDialog();
-            System.Diagnostics.Process.Start(Classes.OutDocuments.RegistrationJournal(_DB_Connection, form.dateTimePicker.Value));
+            System.Diagnostics.Process.Start(Classes.OutDocuments.RegistrationJournal(_DB_Connection));
         }
         
         private void menuStrip_DirsPlaces_Click(object sender, EventArgs e)

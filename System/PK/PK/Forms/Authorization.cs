@@ -102,7 +102,10 @@ namespace PK.Forms
                 DialogResult = DialogResult.OK;
             }
             else
+            {
                 MessageBox.Show("Неверный пароль.", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tbPassword.Clear();
+            }
         }
 
         private void AssureConstants()
