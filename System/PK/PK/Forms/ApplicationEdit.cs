@@ -1115,6 +1115,30 @@ namespace PK.Forms
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             char[] latinLetters = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
             string[] emailEndings = { "gmail.com", "yandex.ru", "rambler.ru", "list.ru", "mail.ru" };
+            
+            int year = rand.Next(1990, DateTime.Now.Year - 16);
+            int month = rand.Next(1, 12);
+            int day = rand.Next(1, DateTime.DaysInMonth(year, month));
+            DateTime randDate = new DateTime(year, month, day);
+            dtpDateOfBirth.Value = randDate;
+
+            if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 14 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 20)
+                year = dtpDateOfBirth.Value.Year + 14;
+            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 20 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 45)
+                if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 20 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
+                    year = dtpDateOfBirth.Value.Year + 14;
+                else year = dtpDateOfBirth.Value.Year + 20;
+            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 45 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
+                year = dtpDateOfBirth.Value.Year + 20;
+            else year = dtpDateOfBirth.Value.Year + 45;
+            if (year == DateTime.Now.Year)
+                month = rand.Next(dtpDateOfBirth.Value.Month, DateTime.Now.Month);
+            else month = rand.Next(1, 12);
+            day = rand.Next(1, DateTime.DaysInMonth(year, month));
+            dtpIDDocDate.Value = new DateTime(year, month, day);
+
+            cbGraduationYear.SelectedItem = rand.Next(dtpDateOfBirth.Value.Year + 16, DateTime.Now.Year);
+
             for (int i = 0; i < stringLength; i++)
             {
                 tbLastName.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
@@ -1128,11 +1152,20 @@ namespace PK.Forms
             {
                 tbIDDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbIDDocNumber.Text += digits[rand.Next(digits.Length)];
-                tbEduDocSeries.Text += digits[rand.Next(digits.Length)];
-                tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
                 tbExamsDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbExamsDocNumber.Text += digits[rand.Next(digits.Length)];
                 tbInstitutionNumber.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
+                if ((int)cbGraduationYear.SelectedItem < 2014)
+                {
+                    tbEduDocSeries.Text += digits[rand.Next(digits.Length)];
+                    tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
+                }
+            }
+            if ((int)cbGraduationYear.SelectedItem >= 2014)
+            {
+                for (int i = 0; i < 14; i++)
+                    tbEduDocNumber.Text += digits[rand.Next(digits.Length)];
+                tbEduDocSeries.Text = "";
             }
             string subCode = "";
             for (int i = 0; i < 6; i++)
@@ -1160,29 +1193,6 @@ namespace PK.Forms
             cbInstitutionType.SelectedIndex = rand.Next(cbInstitutionType.Items.Count);
             cbFirstTime.SelectedIndex = rand.Next(cbFirstTime.Items.Count);
             cbForeignLanguage.SelectedIndex = rand.Next(cbForeignLanguage.Items.Count);
-
-            int year = rand.Next(1990, DateTime.Now.Year - 16);
-            int month = rand.Next(1, 12);
-            int day = rand.Next(1, DateTime.DaysInMonth(year, month));
-            DateTime randDate = new DateTime(year, month, day);
-            dtpDateOfBirth.Value = randDate;
-
-            if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 14 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 20)
-                year = dtpDateOfBirth.Value.Year + 14;
-            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year >= 20 && DateTime.Now.Year - dtpDateOfBirth.Value.Year < 45)
-                if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 20 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
-                    year = dtpDateOfBirth.Value.Year + 14;
-                else year = dtpDateOfBirth.Value.Year + 20;
-            else if (DateTime.Now.Year - dtpDateOfBirth.Value.Year == 45 && DateTime.Now.Month < dtpDateOfBirth.Value.Month)
-                year = dtpDateOfBirth.Value.Year + 20;
-            else year = dtpDateOfBirth.Value.Year + 45;
-            if (year == DateTime.Now.Year)
-                month = rand.Next(dtpDateOfBirth.Value.Month, DateTime.Now.Month);
-            else month = rand.Next(1, 12);
-            day = rand.Next(1, DateTime.DaysInMonth(year, month));
-            dtpIDDocDate.Value = new DateTime(year, month, day);
-
-            cbGraduationYear.SelectedItem = rand.Next(dtpDateOfBirth.Value.Year + 16, DateTime.Now.Year);
         }
 
         private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
@@ -1409,25 +1419,23 @@ namespace PK.Forms
 
         private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
-            uint eduDocID = 0;
-            //if (rbSpravka.Checked)
-            //    eduDocType = "academic_diploma";
-            //else if (rbCertificate.Checked)
-            //    eduDocType = "school_certificate";
-            //else if (rbDiploma.Checked)
-            //    eduDocType = "high_edu_diploma";
+            string eduDocType = "";
+            if (!rbCertificate.Checked)
+                eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
+            else
+                eduDocType = "academic_diploma";
 
+            uint eduDocID = 0;
             if (cbOriginal.Checked)
             {
-                eduDocID = (uint)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                eduDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
                 {
                     { "type", eduDocType },
                     { "series",  tbEduDocSeries.Text.Trim()},
                     { "number", tbEduDocNumber.Text.Trim()},
                     { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text.Trim() + "|" + tbInstitutionLocation.Text.Trim()},
                     { "original_recieved_date", DateTime.Now}
-                }, transaction));
+                }, transaction);
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                 {
                     { "document_id", eduDocID },
@@ -1441,13 +1449,13 @@ namespace PK.Forms
             }
             else
             {
-                eduDocID = (uint)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                eduDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
                 {
                     { "type", eduDocType },
                     { "series",  tbEduDocSeries.Text.Trim()},
                     { "number", tbEduDocNumber.Text.Trim()},
                     { "organization", cbInstitutionType.SelectedItem.ToString() + "|" + tbInstitutionNumber.Text.Trim() + "|" + tbInstitutionLocation.Text.Trim()}
-                }, transaction));
+                }, transaction);
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                 {
                     { "document_id", eduDocID },
@@ -1460,17 +1468,33 @@ namespace PK.Forms
                 }, transaction);
             }
             if (cbMedal.Checked)
+            {
+                uint insAchievementCategory = 0;
+                switch (eduDocType)
+                {
+                    case "school_certificate":
+                        insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement);
+                        break;
+                    case "middle_edu_diploma":
+                        insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedMiddleDiploma);
+                        break;
+                    case "high_edu_diploma":
+                    case "academic_diploma":
+                        insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement);
+                        break;
+                }
                 _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
                 {
                     { "application_id", _ApplicationID },
-                    { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
-                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                    })[0][0] },
+                    { "institution_achievement_id", _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, insAchievementCategory)
+                            })},
                     { "document_id", eduDocID }
                 }, transaction);
+            }
         }
 
         private void SaveQuote(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -2022,17 +2046,6 @@ namespace PK.Forms
             mtbEMail.Text = entrant[0].ToString();
             tbMobilePhone.Text = entrant[1].ToString();
             tbHomePhone.Text = entrant[2].ToString();
-
-            if (_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
-            {
-                new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                })[0][0])
-            }).Count > 0)
-                cbMedal.Checked = true;
         }
 
         private void LoadExaminationsMarks()
@@ -2047,7 +2060,7 @@ namespace PK.Forms
                 ex => ex[0],
                 exM => exM[0],
                 (s1, s2) => new Tuple<uint, int, DateTime>((uint)s1[1], int.Parse(s2[1].ToString()), (DateTime)s1[2])
-                ).ToArray();
+                );
             foreach (var examData in examinations)
                 foreach (DataGridViewRow row in dgvExams.Rows)
                     if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, examData.Item1))
@@ -2132,6 +2145,23 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
                     })[0][0].ToString());
+
+                    uint insAchievementCategory = 0;
+                    switch (document[1].ToString())
+                    {
+                        case "school_certificate":
+                            insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement);
+                            break;
+                        case "middle_edu_diploma":
+                            insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedMiddleDiploma);
+                            break;
+                        case "high_edu_diploma":
+                        case "academic_diploma":
+                            insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement);
+                            break;
+                    }                    
+                    if (GetAppAchievementsByCategory(insAchievementCategory).Count > 0)
+                        cbMedal.Checked = true;
                 }
                 else if (document[1].ToString() == "ege")
                 {
@@ -2783,12 +2813,6 @@ namespace PK.Forms
                         || document[1].ToString() == "high_edu_diploma" || document[1].ToString() == "academic_diploma")
                     {
                         string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
-                        //if (rbSpravka.Checked)
-                        //    eduDocType = "academic_diploma";
-                        //if (rbCertificate.Checked)
-                        //    eduDocType = "school_certificate";
-                        //if (rbDiploma.Checked)
-                        //    eduDocType = "high_edu_diploma";
 
                         if ((document[6] as DateTime?) != null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
@@ -2845,37 +2869,68 @@ namespace PK.Forms
                             { "document_id", (uint)document[0] }
                         }, transaction);
 
-                        List<object[]> appMedalAch = _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" },
-                            new List<Tuple<string, Relation, object>>
+                        uint newAchievementCategory = 0;
+                        switch (eduDocType)
+                        {
+                            case "school_certificate":
+                                newAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement);
+                                break;
+                            case "middle_edu_diploma":
+                                newAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedMiddleDiploma);
+                                break;
+                            case "high_edu_diploma":
+                            case "academic_diploma":
+                                newAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement);
+                                break;
+                        }
+
+                        List<object[]> appCurrAchievements = new List<object[]>();
+                        appCurrAchievements.AddRange(GetAppAchievementsByCategory(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)));
+                        appCurrAchievements.AddRange(GetAppAchievementsByCategory(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedMiddleDiploma)));
+                        appCurrAchievements.AddRange(GetAppAchievementsByCategory(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement)));
+
+                        if (cbMedal.Checked)
+                        {
+                            bool achFound = false;
+                            foreach (object[] oldAchievement in appCurrAchievements)
                             {
-                                new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                                new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                                uint oldAchievementCategory = (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
-                                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                                })[0][0])
-                            });
+                                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)oldAchievement[0])
+                                    })[0][0])
+                                })[0][0];
 
-                        if ((cbMedal.Checked) && (appMedalAch.Count == 0))
-                            _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
+                                if (oldAchievementCategory == newAchievementCategory)
+                                    achFound = true;
+                                else
+                                    _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
+                                    {
+                                        { "id", (uint)oldAchievement[0] }
+                                    }, transaction);
+                            }
+                            if (!achFound)
+                                _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
                             {
                                 { "application_id", _ApplicationID },
                                 { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
-                                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                                })[0][0] },
+                                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, newAchievementCategory)
+                                })[0][0]},
                                 { "document_id", (uint)document[0] }
                             }, transaction);
-                        else if (!cbMedal.Checked && appMedalAch.Count > 0)
-                        {
-                            _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
-                            {
-                                { "id", (uint)appMedalAch[0][0] }
-                            }, transaction);
                         }
+                        else
+                            foreach(object[] oldAchievement in appCurrAchievements)
+                                _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
+                                    {
+                                        { "id", (uint)oldAchievement[0] }
+                                    }, transaction);
                     }
                     else if (document[1].ToString() == "ege")
                     {
@@ -3890,6 +3945,25 @@ namespace PK.Forms
                 cbDirectionDoc.Enabled = false;
                 cbDirectionDoc.Checked = false;
             }
+        }
+
+        private List<object[]> GetAppAchievementsByCategory(uint categoryID)
+        {
+            List<object[]> institutionAchievements = _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, categoryID)
+                            });
+            if (institutionAchievements.Count == 0)
+                throw new System.ArgumentException("В данной кампании не существует достижение данной категории.");
+            else
+                return _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                            new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)institutionAchievements[0][0])
+                        });
         }
     }
 }

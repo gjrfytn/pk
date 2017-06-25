@@ -903,7 +903,7 @@ namespace PK.Forms
                     { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                     new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MagAchievementRedDiploma)),
+                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement)),
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                 })[0][0]}
                 }, transaction);
@@ -1205,7 +1205,7 @@ namespace PK.Forms
                         if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
-                        })[0][0]) == Classes.DB_Helper.MagAchievementRedDiploma)
+                        })[0][0]) == Classes.DB_Helper.RedDiplomaAchievement)
                             cbRedDiploma.Checked = true;
                 }
                 else if (document[1].ToString() == "orphan")
@@ -1565,7 +1565,7 @@ namespace PK.Forms
                                 new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
-                        })[0][0]) == Classes.DB_Helper.MagAchievementRedDiploma)
+                        })[0][0]) == Classes.DB_Helper.RedDiplomaAchievement)
                             {
                                 IAFound = true;
                                 if (!cbRedDiploma.Checked)
@@ -1582,7 +1582,7 @@ namespace PK.Forms
                                 { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                                 new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MagAchievementRedDiploma)),
+                            new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement)),
                             new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                         })[0][0]} }, transaction);
                     }

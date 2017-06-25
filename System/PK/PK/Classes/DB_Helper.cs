@@ -17,7 +17,6 @@ namespace PK.Classes
         public const string EduSourceQ = "Квота приема лиц, имеющих особое право";
         public const string EduSourceT = "Целевой прием";
 
-        public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
         public const string MADIOlympDocName = "Диплом участника олимпиад";
         public const string OlympAchievementName = "Участие в олимпиадах и иных конкурсах";
         public const string SportAchievementOlympic = "Статус чемпиона и призера Олимпийских игр";
@@ -46,7 +45,9 @@ namespace PK.Classes
 
         public const string BenefitOlympic = "Зачисление без вступительных испытаний";
 
-        public const string MagAchievementRedDiploma = "Иное";
+        public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
+        public const string RedMiddleDiploma = "Диплом о среднем профессиональном образовании с отличием";
+        public const string RedDiplomaAchievement = "Иное";
 
         public const string NoEGE = "Не сдавал ЕГЭ";
         #endregion

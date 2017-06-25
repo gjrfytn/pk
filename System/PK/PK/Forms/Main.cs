@@ -370,7 +370,8 @@ namespace PK.Forms
                             OriginalRecievedDate = s1[2] as DateTime?
                         }
                         ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
-                        if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma") && (document.Value.Item2 != null))
+                        if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma"
+                        || document.Value.Item1 == "middle_edu_diploma") && (document.Value.Item2 != null))
                             row.Cells[dgvApplications_Original.Index].Value = true;
 
 
@@ -384,7 +385,7 @@ namespace PK.Forms
                             directions,
                             entrances => new Tuple<uint, string>((uint)entrances[0], entrances[1].ToString()),
                             dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
-                            (s1, s2) => (s1[2]!=null && s1[2].ToString() != "")? s1[2].ToString(): s2[2].ToString()).ToArray();
+                            (s1, s2) => (s1[2]!=null && s1[2].ToString() != "")? s1[2].ToString() + "*": s2[2].ToString()).ToArray();
                         foreach (object shortName in entrance)
                             if (row.Cells[dgvApplications_Entrances.Index].Value == null)
                             row.Cells[dgvApplications_Entrances.Index].Value = shortName;
@@ -443,6 +444,7 @@ namespace PK.Forms
         private void CompleteUpdateAppsTable(List<DataGridViewRow> rows)
         {
             DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
+            int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
             dgvApplications.Rows.Clear();
             dgvApplications.Rows.AddRange(rows.ToArray());
             foreach (DataGridViewRow row in dgvApplications.Rows)
@@ -450,11 +452,14 @@ namespace PK.Forms
                     row.Selected = true;
             if (sortColumn != null)
                 dgvApplications.Sort(sortColumn, System.ComponentModel.ListSortDirection.Ascending);
+            if (displayedRow >= 0 && dgvApplications.Rows.Count >= displayedRow)
+                dgvApplications.FirstDisplayedScrollingRowIndex = displayedRow;
         }
 
         private void FilterAppsTable()
         {
             ChangeColumnsVisible();
+            int visibleCount = 0;
             foreach (DataGridViewRow row in dgvApplications.Rows)
             {
                 if (rbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["new"]))
@@ -480,8 +485,11 @@ namespace PK.Forms
                     else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
                         matches = false;
                     row.Visible = matches;
+                    if (matches)
+                        visibleCount++;
                 }
             }
+            lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + visibleCount;
         }
 
         private void SetCurrentCampaign()
