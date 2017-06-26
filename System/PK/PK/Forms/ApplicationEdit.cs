@@ -1337,8 +1337,8 @@ namespace PK.Forms
                 {
                     { "email", mtbEMail.Text.Trim() },
                     { "personal_password", password },
-                    { "home_phone", tbHomePhone.Text.Trim() },
-                    { "mobile_phone", tbMobilePhone.Text.Trim() }
+                    { "home_phone", tbHomePhone.Text!=tbHomePhone.Tag.ToString()? tbHomePhone.Text.Trim() : null},
+                    { "mobile_phone", tbMobilePhone.Text!=tbMobilePhone.Tag.ToString()? tbMobilePhone.Text.Trim() : null}
                 }, transaction);
             }
             bool firstHightEdu = true;
@@ -1420,7 +1420,7 @@ namespace PK.Forms
         private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             string eduDocType = "";
-            if (!rbCertificate.Checked)
+            if (!rbSpravka.Checked)
                 eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
             else
                 eduDocType = "academic_diploma";
@@ -2044,8 +2044,8 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
                 })[0];
             mtbEMail.Text = entrant[0].ToString();
-            tbMobilePhone.Text = entrant[1].ToString();
-            tbHomePhone.Text = entrant[2].ToString();
+            tbMobilePhone.Text = entrant[2].ToString();
+            tbHomePhone.Text = entrant[1].ToString();
         }
 
         private void LoadExaminationsMarks()
@@ -2711,8 +2711,8 @@ namespace PK.Forms
             _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object>
             {
                 { "email", mtbEMail.Text.Trim() },
-                { "home_phone", tbHomePhone.Text.Trim() },
-                { "mobile_phone", tbMobilePhone.Text.Trim() }
+                { "home_phone", tbHomePhone.Text!=tbHomePhone.Tag.ToString()? tbHomePhone.Text.Trim() : null },
+                { "mobile_phone", tbMobilePhone.Text!=tbMobilePhone.Tag.ToString()? tbMobilePhone.Text.Trim() : null }
             }, new Dictionary<string, object>
             {
                 { "id", _EntrantID }
@@ -2812,7 +2812,11 @@ namespace PK.Forms
                     else if (document[1].ToString() == "school_certificate" || document[1].ToString() == "middle_edu_diploma"
                         || document[1].ToString() == "high_edu_diploma" || document[1].ToString() == "academic_diploma")
                     {
-                        string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
+                        string eduDocType = "";
+                        if (!rbSpravka.Checked)
+                            eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
+                        else
+                            eduDocType = "academic_diploma";
 
                         if ((document[6] as DateTime?) != null && (cbOriginal.Checked))
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>

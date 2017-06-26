@@ -199,5 +199,23 @@ namespace PK.Classes
                 s[6] as DateTime?
                 ));
         }
+
+        public static ushort GetApplicationIndAchMaxValue(DB_Connector connection, uint applicationID)
+        {
+            IEnumerable<ushort> list = connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                connection.Select(
+                    DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                    new string[] { "institution_achievement_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL, applicationID)
+                    }),
+                k1 => k1[0],
+                k2 => k2[0],
+                (s1, s2) => (ushort)s1[1]
+                );
+
+            return list.Count() != 0 ? list.Max() : (ushort)0;
+        }
     }
 }

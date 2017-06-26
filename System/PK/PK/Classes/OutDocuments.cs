@@ -143,8 +143,8 @@ namespace PK.Classes
                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData.EntrantID) }
                    )[0];
 
-                applData.HomePhone = entrantData[0].ToString();
-                applData.MobilePhone = entrantData[1].ToString();
+                applData.HomePhone = entrantData[0] as string;
+                applData.MobilePhone = entrantData[1] as string;
                 applData.Password = entrantData[2].ToString();
 
                 List<DocumentCreator.DocumentParameters> documents = new List<DocumentCreator.DocumentParameters>();
@@ -469,18 +469,7 @@ namespace PK.Classes
                 IEnumerable<Stream> entrances,
                 IEnumerable<Tuple<uint, byte>> marks)
             {
-                string indAchValue = connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
-                    connection.Select(
-                        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
-                        new string[] { "institution_achievement_id" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("application_id",Relation.EQUAL, applID)
-                        }),
-                    k1 => k1[0],
-                    k2 => k2[0],
-                    (s1, s2) => s1[1]
-                    ).Max()?.ToString();
+                ushort indAchValue = DB_Queries.GetApplicationIndAchMaxValue(connection, applID);
 
                 bool target = connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
@@ -499,8 +488,8 @@ namespace PK.Classes
                     applData.LastName,
                     applData.FirstName,
                     applData.MiddleName,
-                    applData.HomePhone,
-                    applData.MobilePhone,
+                    !string.IsNullOrEmpty(applData.HomePhone)?applData.HomePhone:"-",
+                    !string.IsNullOrEmpty(applData.MobilePhone)?applData.MobilePhone:"-",
                     applData.Quota?"XXX":"",
                     applData.Priority.Value?"XXX":"",
                     math.ToString(),
@@ -514,7 +503,7 @@ namespace PK.Classes
                     applData.Original?"XXX":"",
                     soc.ToString(),
                     foreign.ToString(),
-                    indAchValue,
+                    indAchValue!=0?indAchValue.ToString():"",
                     (math+rus+phys).ToString(),
                     (math+rus+soc).ToString(),
                     (rus+soc+foreign).ToString()
@@ -631,6 +620,9 @@ namespace PK.Classes
                 GetAgreedDirData(connection, applID, out agreedDir, out dirShortName);
 
                 ushort sum = 0;
+
+                sum += DB_Queries.GetApplicationIndAchMaxValue(connection, applID);
+
                 foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
                 {
                     var mark = marks.SingleOrDefault(s => s.Item1 == subj);
@@ -756,6 +748,7 @@ namespace PK.Classes
                     new string[] { "short_name" },
                     new List<Tuple<string, Relation, object>>
                     {
+                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL,agreedDir.Item1),
                         new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir.Item2)
                     })[0][0].ToString();
             }
