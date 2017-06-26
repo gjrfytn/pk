@@ -428,14 +428,9 @@ namespace PK.Classes
                             receiptTableParams[0].Add(new string[] { "     - " + entrance.Profile + " (" + entrance.Faculty + ") " +
                             DB_Queries.GetProfileName(connection,entrance.Faculty,entrance.DirectionID,entrance.Profile)});
                         else
-                            receiptTableParams[0].Add(new string[] { "     - " + connection.Select(
-                                DB_Table.DIRECTIONS,
-                                new string[] { "short_name" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
-                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.DirectionID)
-                                })[0][0].ToString()+ " (" + entrance.Faculty + ") " + dbHelper.GetDirectionNameAndCode(entrance.DirectionID).Item1});
+                            receiptTableParams[0].Add(new string[] { "     - " +
+                                dbHelper.GetDirectionShortName( entrance.Faculty, entrance.DirectionID)+
+                                " (" + entrance.Faculty + ") " + dbHelper.GetDirectionNameAndCode(entrance.DirectionID).Item1});
                     }
                     receiptTableParams[0].Add(new string[] { "" });
                 }
@@ -483,6 +478,11 @@ namespace PK.Classes
                 byte? phys = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика")).Select(s => s.Item2));
                 byte? soc = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание")).Select(s => s.Item2));
                 byte? foreign = MaxOrNull(marks.Where(s => s.Item1 == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык")).Select(s => s.Item2));
+
+                IEnumerable<string> agreements = entrances.SelectMany(s1 =>
+                s1.Directions.Where(s2 => s2.AgreedDate.HasValue).OrderBy(s => s.AgreedDate.Value).Select(s2 => dbHelper.GetDirectionShortName(s2.Faculty, s2.DirectionID))
+                );
+
                 List<string> parameters = new List<string>
                 {
                     applData.LastName,
@@ -506,7 +506,9 @@ namespace PK.Classes
                     indAchValue!=0?indAchValue.ToString():"",
                     (math+rus+phys).ToString(),
                     (math+rus+soc).ToString(),
-                    (rus+soc+foreign).ToString()
+                    (rus+soc+foreign).ToString(),
+                    agreements.ElementAtOrDefault(0),
+                    agreements.ElementAtOrDefault(1)
                 };
 
                 foreach (Stream stream in entrances)
@@ -518,14 +520,7 @@ namespace PK.Classes
                         if (stream.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
                             parameters.Add(entrance.Profile);
                         else
-                            parameters.Add(connection.Select(
-                                DB_Table.DIRECTIONS,
-                                new string[] { "short_name" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL, entrance.Faculty),
-                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL, entrance.DirectionID)
-                                })[0][0].ToString());
+                            parameters.Add(dbHelper.GetDirectionShortName(entrance.Faculty, entrance.DirectionID));
 
                         count++;
                     }
@@ -537,7 +532,7 @@ namespace PK.Classes
                     }
                 }
 
-                while (parameters.Count != 42)
+                while (parameters.Count != 44)
                     parameters.Add("");
 
                 documents.Add(new DocumentCreator.DocumentParameters(
@@ -743,14 +738,7 @@ namespace PK.Classes
                         new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
                     }).Select(s => Tuple.Create(s[0].ToString(), (uint)s[1], s[2] as string, (uint)s[3], (DateTime)s[4])).Single();
 
-                dirShortName = connection.Select(
-                    DB_Table.DIRECTIONS,
-                    new string[] { "short_name" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL,agreedDir.Item1),
-                        new Tuple<string, Relation, object>("direction_id", Relation.EQUAL,agreedDir.Item2)
-                    })[0][0].ToString();
+                dirShortName = new DB_Helper(connection).GetDirectionShortName(agreedDir.Item1, agreedDir.Item2);
             }
         }
 

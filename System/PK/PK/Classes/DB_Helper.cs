@@ -182,6 +182,23 @@ namespace PK.Classes
             return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
         }
 
+        public string GetDirectionShortName(string facultyShortName, uint directionID)
+        {
+            List<object[]> result = _DB_Connection.Select(
+                DB_Table.DIRECTIONS,
+                new string[] { "short_name" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, facultyShortName),
+                    new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, directionID)
+                });
+
+            if (!result.Any())
+                throw new System.ArgumentException("Направление не найдено.");
+
+            return result[0][0].ToString();
+        }
+
         public void UpdateData(
             DB_Table table,
             IEnumerable<object[]> oldDataList,

@@ -2473,7 +2473,7 @@ namespace PK.Forms
                     Name = s2[1].ToString(),
                     EduSource = (uint)s1[5],
                     EduForm = (uint)s1[4],
-                    DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
+                    DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
                 }).Select(s => new
                 {
                     Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
@@ -3764,7 +3764,7 @@ namespace PK.Forms
                         Name = s2[1].ToString(),
                         EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
                         EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
+                        DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
                     }).Select(s => new
                     {
                         Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
@@ -3800,7 +3800,7 @@ namespace PK.Forms
                         Name = s2[1].ToString(),
                         EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
                         EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        DirShortName = GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
+                        DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
                     }).Select(s => new
                     {
                         Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
@@ -3919,20 +3919,6 @@ namespace PK.Forms
                         if (bt != null)
                             bt.Enabled = false;
                     }
-        }
-
-        private string GetDirectionShortName(string facultyShortName, uint directionID)
-        {
-            List<object[]> result = _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "short_name" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, facultyShortName),
-                    new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, directionID)
-                });
-            if (!result.Any())
-                throw new System.ArgumentException("На данном факультете отсутствует данное направление.");
-            else
-                return result[0][0].ToString();
         }
 
         private void DirectionDocEnableDisable()
