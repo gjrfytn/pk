@@ -780,7 +780,7 @@ namespace PK.Classes
                 {new Tuple<uint,uint>(12,20),"ОЗКВ" },
                 {new Tuple<uint,uint>(12,16),"ОЗЦП" }
             };
-            
+
             var dateGroups = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time" },
@@ -798,7 +798,7 @@ namespace PK.Classes
                     EntrID = (uint)s1[1],
                     HomePhone = s2[1].ToString(),
                     MobilePhone = s2[2].ToString(),
-                    RegTime=(DateTime)s1[2]
+                    RegTime = (DateTime)s1[2]
                 }).Join(
                 connection.Select(
                 DB_Table.ENTRANTS_VIEW,
@@ -816,12 +816,12 @@ namespace PK.Classes
                     s1.MobilePhone,
                     s1.RegTime
                 }).GroupBy(
-                k=>k.RegTime.Date,
-                (k,g)=>new
+                k => k.RegTime.Date,
+                (k, g) => new
                 {
-                    Date=k,
-                    Applications=g
-                }                );
+                    Date = k,
+                    Applications = g
+                });
 
             var applDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
                     connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date"),
@@ -892,7 +892,8 @@ namespace PK.Classes
                         appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
                         string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
                         eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
-                        string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct())
+                        string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct()),
+                        dateGroup.Date.ToShortDateString()
                     });
 
                     count++;
@@ -902,7 +903,7 @@ namespace PK.Classes
                     Settings.DocumentsTemplatesPath + "RegistrationJournal.xml",
                     null,
                     null,
-                    new string[] { dateGroup.Date.ToShortDateString() },
+                    null,
                     new List<string[]>[] { data }
                     ));
             }
@@ -942,14 +943,14 @@ namespace PK.Classes
                     ApplCount = g.Count()
                 }).Where(s => s.ApplCount != 0).Join(
                 connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name"),
-                k1=>k1.Direction,
-                k2=>k2[0],
-                (s1,s2)=>new { s1.Faculty,s1.Direction,Name=s2[1].ToString(),s1.ApplCount }
+                k1 => k1.Direction,
+                k2 => k2[0],
+                (s1, s2) => new { s1.Faculty, s1.Direction, Name = s2[1].ToString(), s1.ApplCount }
                 ).Join(
                 connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id", "short_name"),
                 k1 => Tuple.Create(k1.Faculty, k1.Direction),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
-                (s1, s2) => new string[] { s2[2].ToString(),s1.Name, s1.ApplCount.ToString() }
+                (s1, s2) => new string[] { s2[2].ToString(), s1.Name, s1.ApplCount.ToString() }
                 ).ToList();
 
             string doc = Utility.TempPath + "directionsPlaces" + new Random().Next();
@@ -981,11 +982,11 @@ namespace PK.Classes
                     DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id", "profile_short_name"),
                 k1 => Tuple.Create(k1[0], k1[1], k1[2]),
                 k2 => Tuple.Create(k2[0], k2[1], k2[2]),
-                (e, g) => new {ShortName= e[2].ToString(),ApplCount= g.Count() }).Join(
-                connection.Select(DB_Table.PROFILES,"short_name","name"),
-                k1=>k1.ShortName,
-                k2=>k2[0],
-                (s1,s2)=> new string[] { s1.ShortName,s2[1].ToString() ,s1.ApplCount.ToString() }
+                (e, g) => new { ShortName = e[2].ToString(), ApplCount = g.Count() }).Join(
+                connection.Select(DB_Table.PROFILES, "short_name", "name"),
+                k1 => k1.ShortName,
+                k2 => k2[0],
+                (s1, s2) => new string[] { s1.ShortName, s2[1].ToString(), s1.ApplCount.ToString() }
                 ).ToList();
 
             string doc = Utility.TempPath + "profilesPlaces" + new Random().Next();

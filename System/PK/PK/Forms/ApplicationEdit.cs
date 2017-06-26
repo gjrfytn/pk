@@ -1491,7 +1491,7 @@ namespace PK.Forms
                             {
                                 new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
                                 new Tuple<string, Relation, object>("category_id", Relation.EQUAL, insAchievementCategory)
-                            })},
+                            })[0][0]},
                     { "document_id", eduDocID }
                 }, transaction);
             }
