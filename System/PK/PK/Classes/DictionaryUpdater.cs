@@ -17,7 +17,7 @@ namespace PK.Classes
             if (dbConnection == null)
                 throw new System.ArgumentNullException(nameof(dbConnection));
             if (string.IsNullOrWhiteSpace(fisLogin))
-                throw new System.ArgumentException("Некорректный логин.",nameof(fisLogin));
+                throw new System.ArgumentException("Некорректный логин.", nameof(fisLogin));
             if (string.IsNullOrWhiteSpace(fisPassword))
                 throw new System.ArgumentException("Некорректный пароль.", nameof(fisPassword));
             #endregion
@@ -240,30 +240,7 @@ namespace PK.Classes
                                 }
                         }
                         else
-                        {
-                            _DB_Connection.Insert(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
-                        new Dictionary<string, object>
-                        {
-                            { "olympic_id",olymp.Key },
-                            { "profile_dict_id", prof.Key.Item1 },
-                            { "profile_id", prof.Key.Item2 },
-                            { "level_dict_id", prof.Value.LevelDictID },
-                            { "level_id", prof.Value.LevelID }
-                        }
-                        );
-
-                            foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
-                                _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
-                            new Dictionary<string, object>
-                            {
-                                { "dictionary_olympic_profiles_olympic_id",olymp.Key },
-                                { "dictionary_olympic_profiles_profile_dict_id", prof.Key.Item1 },
-                                { "dictionary_olympic_profiles_profile_id", prof.Key.Item2 },
-                                { "dictionaries_items_dictionary_id", subj.Item1 },
-                                { "dictionaries_items_item_id",subj.Item2 }
-                            }
-                            );
-                        }
+                            InsertProfileWithSubjects(olymp, prof);
                 }
                 else
                 {
@@ -278,30 +255,7 @@ namespace PK.Classes
                         );
 
                     foreach (var prof in olymp.Value.Profiles)
-                    {
-                        _DB_Connection.Insert(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
-                        new Dictionary<string, object>
-                        {
-                            { "olympic_id",olymp.Key },
-                            { "profile_dict_id", prof.Key.Item1 },
-                            { "profile_id", prof.Key.Item2 },
-                            { "level_dict_id", prof.Value.LevelDictID },
-                            { "level_id", prof.Value.LevelID }
-                        }
-                        );
-
-                        foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
-                            _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
-                        new Dictionary<string, object>
-                        {
-                            { "dictionary_olympic_profiles_olympic_id",olymp.Key },
-                            { "dictionary_olympic_profiles_profile_dict_id", prof.Key.Item1 },
-                            { "dictionary_olympic_profiles_profile_id", prof.Key.Item2 },
-                            { "dictionaries_items_dictionary_id", subj.Item1 },
-                            { "dictionaries_items_item_id",subj.Item2 }
-                        }
-                        );
-                    }
+                        InsertProfileWithSubjects(olymp, prof);
 
                     addedReport += "\n" + olymp.Key;
                     addedCount++;
@@ -376,6 +330,30 @@ namespace PK.Classes
                 deletedReport = "Справочник №" + dictionary + ": в ФИС отсутствуют элементы с ID: " + deletedReport.Remove(deletedReport.Length - 2);
                 MessageBox.Show(deletedReport, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void InsertProfileWithSubjects(KeyValuePair<uint, FIS_Olympic_TEMP> olymp, KeyValuePair<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile> prof)
+        {
+            _DB_Connection.Insert(DB_Table.DICTIONARY_OLYMPIC_PROFILES,
+                new Dictionary<string, object>
+                {
+                    { "olympic_id",olymp.Key },
+                    { "profile_dict_id", prof.Key.Item1 },
+                    { "profile_id", prof.Key.Item2 },
+                    { "level_dict_id", prof.Value.LevelDictID },
+                    { "level_id", prof.Value.LevelID }
+                });
+
+            foreach (System.Tuple<uint, uint> subj in prof.Value.Subjects)
+                _DB_Connection.Insert(DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
+                    new Dictionary<string, object>
+                    {
+                        { "dictionary_olympic_profiles_olympic_id",olymp.Key },
+                        { "dictionary_olympic_profiles_profile_dict_id", prof.Key.Item1 },
+                        { "dictionary_olympic_profiles_profile_id", prof.Key.Item2 },
+                        { "dictionaries_items_dictionary_id", subj.Item1 },
+                        { "dictionaries_items_item_id",subj.Item2 }
+                    });
         }
 
         private void ShowUpdateMessage(string text)
