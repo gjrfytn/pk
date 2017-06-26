@@ -444,6 +444,13 @@ namespace PK.Forms
         private void CompleteUpdateAppsTable(List<DataGridViewRow> rows)
         {
             DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
+
+            System.ComponentModel.ListSortDirection sortMethod = System.ComponentModel.ListSortDirection.Ascending;
+            if (dgvApplications.SortOrder == SortOrder.Ascending)
+                sortMethod = System.ComponentModel.ListSortDirection.Ascending;
+            else if (dgvApplications.SortOrder == SortOrder.Descending)
+                sortMethod = System.ComponentModel.ListSortDirection.Descending;
+
             int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
             dgvApplications.Rows.Clear();
             dgvApplications.Rows.AddRange(rows.ToArray());
@@ -451,7 +458,7 @@ namespace PK.Forms
                 if ((uint)row.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                     row.Selected = true;
             if (sortColumn != null)
-                dgvApplications.Sort(sortColumn, System.ComponentModel.ListSortDirection.Ascending);
+                dgvApplications.Sort(sortColumn, sortMethod);
             if (displayedRow >= 0 && dgvApplications.Rows.Count >= displayedRow)
                 dgvApplications.FirstDisplayedScrollingRowIndex = displayedRow;
         }
@@ -471,7 +478,8 @@ namespace PK.Forms
                         && row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_both"]))
                         row.Visible = false;
                     else row.Visible = true;
-                if (row.Visible)
+                if (row.Visible && (tbRegNumber.Text != tbRegNumber.Tag.ToString() || tbLastName.Text != tbLastName.Tag.ToString()
+                    || tbFirstName.Text != tbFirstName.Tag.ToString() || tbMiddleName.Text != tbMiddleName.Tag.ToString() || dtpRegDate.Value != dtpRegDate.MinDate))
                 {
                     bool matches = true;
                     if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
@@ -485,9 +493,9 @@ namespace PK.Forms
                     else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
                         matches = false;
                     row.Visible = matches;
-                    if (matches)
-                        visibleCount++;
                 }
+                if (row.Visible)
+                    visibleCount++;
             }
             lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + visibleCount;
         }
