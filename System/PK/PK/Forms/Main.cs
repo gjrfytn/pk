@@ -83,6 +83,7 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Campaigns_Click(object sender, EventArgs e)
         {
+            StopTableAutoUpdating();
             Campaigns form = new Campaigns(_DB_Connection);
             form.ShowDialog();
             SetCurrentCampaign();
@@ -94,6 +95,7 @@ namespace PK.Forms
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
+                StopTableAutoUpdating();
                 Form form;
                 if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
                     form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
@@ -103,6 +105,7 @@ namespace PK.Forms
                 form.ShowDialog();
                 UpdateApplicationsTable();
                 FilterAppsTable();
+                timer.Start();
             }
         }
 
@@ -169,10 +172,12 @@ namespace PK.Forms
 
         private void menuStrip_Orders_Click(object sender, EventArgs e)
         {
+            StopTableAutoUpdating();
             Orders form = new Orders(_DB_Connection);
             form.ShowDialog();
             UpdateApplicationsTable();
             FilterAppsTable();
+            timer.Start();
         }
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
@@ -239,16 +244,19 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.CurrentRow.Cells[0].Value)
                 })[0][0])
                 {
+                    StopTableAutoUpdating();
                     ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 else
                 {
+                    StopTableAutoUpdating();
                     ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
                 FilterAppsTable();
+                timer.Start();
             }
         }
 
@@ -278,8 +286,10 @@ namespace PK.Forms
         }
 
         private void tbField_TextChanged(object sender, EventArgs e)
-        {            
-                FilterAppsTable();
+        {
+            StopTableAutoUpdating();
+            FilterAppsTable();
+            timer.Start();
         }
 
         private void cbDateSearch_CheckedChanged(object sender, EventArgs e)
@@ -293,7 +303,9 @@ namespace PK.Forms
 
         private void rbFilter_CheckedChanged(object sender, EventArgs e)
         {
+            StopTableAutoUpdating();
             FilterAppsTable();
+            timer.Start();
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -309,14 +321,14 @@ namespace PK.Forms
 
         private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            CompleteUpdateAppsTable(e.Result as List<DataGridViewRow>);
+            CompleteUpdateAppsTable(e.Result as List<object[]>);
             FilterAppsTable();
         }
 
 
-        private List<DataGridViewRow> GetAppsTableRows()
+        private List<object[]> GetAppsTableRows()
         {
-            List<DataGridViewRow> appRows = new List<DataGridViewRow>();
+            List<object[]> appRows = new List<object[]>();
             List<object[]> apps = new List<object[]>();
             if (_UserRole == "registrator")
             apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
@@ -344,8 +356,8 @@ namespace PK.Forms
 
                 foreach (var application in apps)
                 {
-                DataGridViewRow row = new DataGridViewRow();
-                row.CreateCells(dgvApplications);
+                object[] row = new object[dgvApplications.Columns.Count];
+                //row.CreateCells(dgvApplications);
                 object[] names = _DB_UpdateConnection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
                         new List<Tuple<string, Relation, object>>
                         {
@@ -356,8 +368,8 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
                     });
                 {
-                    row.SetValues(application[0], names[0], names[1], names[2], null, null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
-                                application[3], _Statuses[application[5].ToString()]);
+                    row = new object[] { application[0], names[0], names[1], names[2], null, null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
+                                application[3], _Statuses[application[5].ToString()] };
                 }
 
                     foreach (var document in _DB_UpdateConnection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
@@ -372,7 +384,7 @@ namespace PK.Forms
                         ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
                         if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma"
                         || document.Value.Item1 == "middle_edu_diploma") && (document.Value.Item2 != null))
-                            row.Cells[dgvApplications_Original.Index].Value = true;
+                            row[dgvApplications_Original.Index] = true;
 
 
                     var appDirections = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
@@ -387,18 +399,18 @@ namespace PK.Forms
                             dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
                             (s1, s2) => (s1[2]!=null && s1[2].ToString() != "")? s1[2].ToString() + "*": s2[2].ToString()).ToArray();
                         foreach (object shortName in entrance)
-                            if (row.Cells[dgvApplications_Entrances.Index].Value == null)
-                            row.Cells[dgvApplications_Entrances.Index].Value = shortName;
+                            if (row[dgvApplications_Entrances.Index] == null)
+                            row[dgvApplications_Entrances.Index] = shortName;
                             else
-                            row.Cells[dgvApplications_Entrances.Index].Value = row.Cells[dgvApplications_Entrances.Index].Value.ToString() + ", " + shortName;
+                            row[dgvApplications_Entrances.Index] = row[dgvApplications_Entrances.Index].ToString() + ", " + shortName;
                     }
                     else
                     {
                         foreach (object[] appDir in appDirections)
-                            if (row.Cells[dgvApplications_Programs.Index].Value == null)
-                            row.Cells[dgvApplications_Programs.Index].Value = appDir[2];
+                            if (row[dgvApplications_Programs.Index] == null)
+                            row[dgvApplications_Programs.Index] = appDir[2];
                             else
-                            row.Cells[dgvApplications_Programs.Index].Value = row.Cells[dgvApplications_Programs.Index].Value + ", " + appDir[2].ToString();
+                            row[dgvApplications_Programs.Index] = row[dgvApplications_Programs.Index] + ", " + appDir[2].ToString();
                     }
                     var appOrdersData = _DB_UpdateConnection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
                     {
@@ -427,9 +439,9 @@ namespace PK.Forms
                         }
 
                     if (admNumber != null)
-                    row.Cells[dgvApplications_EnrollmentDate.Index].Value = admDate.ToShortDateString() + " " + admNumber;
+                    row[dgvApplications_EnrollmentDate.Index] = admDate.ToShortDateString() + " " + admNumber;
                     if (exNumber != null)
-                    row.Cells[dgvApplications_DeductionDate.Index].Value = exDate.ToShortDateString() + " " + exNumber;
+                    row[dgvApplications_DeductionDate.Index] = exDate.ToShortDateString() + " " + exNumber;
 
                 appRows.Add(row);
                 }
@@ -441,7 +453,7 @@ namespace PK.Forms
             CompleteUpdateAppsTable(GetAppsTableRows());
         }
 
-        private void CompleteUpdateAppsTable(List<DataGridViewRow> rows)
+        private void CompleteUpdateAppsTable(List<object[]> rows)
         {
             DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
 
@@ -452,11 +464,27 @@ namespace PK.Forms
                 sortMethod = System.ComponentModel.ListSortDirection.Descending;
 
             int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
-            dgvApplications.Rows.Clear();
-            dgvApplications.Rows.AddRange(rows.ToArray());
-            foreach (DataGridViewRow row in dgvApplications.Rows)
-                if ((uint)row.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
-                    row.Selected = true;
+            if (dgvApplications.Rows.Count == 0)
+                foreach (object[] row in rows)
+                    dgvApplications.Rows.Add(row);
+            else
+                foreach (object[] newRow in rows)
+                    foreach (DataGridViewRow oldRow in dgvApplications.Rows)
+                        if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == (uint)newRow[dgvApplications_ID.Index])
+                        {
+                            bool match = true;
+                            foreach (DataGridViewCell oldCell in oldRow.Cells)
+                                if (oldCell.Value!=null && newRow[oldCell.ColumnIndex]!= null && oldCell.Value.ToString() != newRow[oldCell.ColumnIndex].ToString())
+                                {
+                                    match = false;
+                                    break;
+                                }
+                            if (!match)
+                                oldRow.SetValues(newRow);
+                            if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
+                                oldRow.Selected = true;
+                        }
+
             if (sortColumn != null)
                 dgvApplications.Sort(sortColumn, sortMethod);
             if (displayedRow >= 0 && dgvApplications.Rows.Count >= displayedRow)
@@ -556,6 +584,12 @@ namespace PK.Forms
             dgvApplications_EnrollmentDate.Visible = rbNew.Checked || rbAdm.Checked;
             dgvApplications_DeductionDate.Visible = rbNew.Checked;
             dgvApplications_Status.Visible = rbAdm.Checked;
+        }
+
+        private void StopTableAutoUpdating()
+        {
+            backgroundWorker.CancelAsync();
+            timer.Stop();
         }
     }
 }
