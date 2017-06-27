@@ -167,12 +167,18 @@ namespace PK.Forms
             }
         }
 
-        private void menuStrip_Orders_Click(object sender, EventArgs e)
+        private void menuStrip_Campaign_Orders_Click(object sender, EventArgs e)
         {
             Orders form = new Orders(_DB_Connection);
             form.ShowDialog();
             UpdateApplicationsTable();
             FilterAppsTable();
+        }
+
+        private void menuStrip_Campaign_Statistics_Click(object sender, EventArgs e)
+        {
+            Statistics form = new Statistics(_DB_Connection);
+            form.Show();
         }
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)
