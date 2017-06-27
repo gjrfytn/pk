@@ -468,13 +468,17 @@ namespace PK.Forms
                 foreach (object[] row in rows)
                     dgvApplications.Rows.Add(row);
             else
+            {
                 foreach (object[] newRow in rows)
+                {
+                    bool found = false;
                     foreach (DataGridViewRow oldRow in dgvApplications.Rows)
                         if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == (uint)newRow[dgvApplications_ID.Index])
                         {
+                            found = true;
                             bool match = true;
                             foreach (DataGridViewCell oldCell in oldRow.Cells)
-                                if (oldCell.Value!=null && newRow[oldCell.ColumnIndex]!= null && oldCell.Value.ToString() != newRow[oldCell.ColumnIndex].ToString())
+                                if (oldCell.Value != null && newRow[oldCell.ColumnIndex] != null && oldCell.Value.ToString() != newRow[oldCell.ColumnIndex].ToString())
                                 {
                                     match = false;
                                     break;
@@ -484,6 +488,22 @@ namespace PK.Forms
                             if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
                                 oldRow.Selected = true;
                         }
+                    if (!found)
+                        dgvApplications.Rows.Add(newRow);
+                }
+                int i = 0;
+                while(i < dgvApplications.Rows.Count)
+                {
+                    bool found = false;
+                    foreach (object[] newRow in rows)
+                        if ((uint)dgvApplications.Rows[i].Cells[dgvApplications_ID.Index].Value == (uint)newRow[dgvApplications_ID.Index])
+                            found = true;
+                    if (!found)
+                        dgvApplications.Rows.RemoveAt(i);
+                    else
+                        i++;
+                }
+            }
 
             if (sortColumn != null)
                 dgvApplications.Sort(sortColumn, sortMethod);
