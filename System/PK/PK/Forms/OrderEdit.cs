@@ -27,7 +27,7 @@ namespace PK.Forms
         private readonly string _EditNumber;
         private readonly bool _IsMaster;
 
-        public OrderEdit(Classes.DB_Connector connection, string number, bool readOnly)
+        public OrderEdit(Classes.DB_Connector connection, string number)
         {
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
@@ -57,15 +57,6 @@ namespace PK.Forms
                 dtpDate.Tag = true;
             else
                 dtpDate.Tag = false;
-
-            if (readOnly)
-            {
-                foreach (Control c in Controls)
-                    c.Enabled = false;
-
-                dataGridView.Enabled = true;
-                dataGridView.ReadOnly = true;
-            }
             #endregion
 
             cbFDP.ValueMember = "Value";
@@ -96,7 +87,7 @@ namespace PK.Forms
             {
                 object[] order = _DB_Connection.Select(
                     DB_Table.ORDERS,
-                    new string[] { "type", "date", "edu_form_id", "edu_source_id", "faculty_short_name",/**/ "direction_id"/**/, "profile_short_name" },
+                    new string[] { "type", "date", "edu_form_id", "edu_source_id", "faculty_short_name",/**/ "direction_id"/**/, "profile_short_name", "protocol_number" },
                     new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("number",Relation.EQUAL,_EditNumber)
@@ -118,16 +109,34 @@ namespace PK.Forms
                 else
                     cbFDP.SelectedValue = new CB_Value(order[4].ToString(), (uint)order[5], order[6] as string);
 
-                cbFDP_SelectionChangeCommitted(null, null);
-
-                foreach (uint applID in _DB_Connection.Select(
+                IEnumerable<uint> applications = _DB_Connection.Select(
                     DB_Table.ORDERS_HAS_APPLICATIONS,
                     new string[] { "applications_id" },
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("orders_number", Relation.EQUAL, _EditNumber) }
-                    ).Select(s => (uint)s[0]))
+                    ).Select(s => (uint)s[0]);
+
+                if ((order[7] as ushort?).HasValue)
+                {
+                    FillTable(applications);
+
                     foreach (DataGridViewRow row in dataGridView.Rows)
-                        if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
-                            row.Cells[dataGridView_Added.Index].Value = true;
+                        row.Cells[dataGridView_Added.Index].Value = true;
+
+                    foreach (Control c in Controls)
+                        c.Enabled = false;
+
+                    dataGridView.Enabled = true;
+                    dataGridView.ReadOnly = true;
+                }
+                else
+                {
+                    cbFDP_SelectionChangeCommitted(null, null);
+
+                    foreach (uint applID in applications)
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                            if ((uint)row.Cells[dataGridView_ID.Index].Value == applID)
+                                row.Cells[dataGridView_Added.Index].Value = true;
+                }
 
                 cbType.Enabled = false;
                 gbEduSource.Enabled = false;

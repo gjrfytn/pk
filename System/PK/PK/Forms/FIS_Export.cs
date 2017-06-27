@@ -84,6 +84,18 @@ namespace PK.Forms
             Cursor.Current = Cursors.Default;
         }
 
+        private void cb_CheckedChanged(object sender, EventArgs e)
+        {
+            bSave.Enabled = cbCampaignData.Checked || cbApplications.Checked || cbOrders.Checked;
+            bExport.Enabled = bSave.Enabled;
+
+            if (sender == cbApplications)
+            {
+                dtpAppStartDate.Enabled = cbApplications.Checked;
+                dtpAppEndDate.Enabled = cbApplications.Checked;
+            }
+        }
+
         private bool CheckCheckBoxes()
         {
             if (!cbCampaignData.Checked && !cbApplications.Checked && !cbOrders.Checked)
@@ -101,7 +113,7 @@ namespace PK.Forms
                 _DB_Connection,
                 Classes.Settings.CurrentCampaignID,
                 cbCampaignData.Checked,
-                cbApplications.Checked,
+                cbApplications.Checked ? Tuple.Create(dtpAppStartDate.Value, dtpAppEndDate.Value) : null,
                 cbOrders.Checked
                 ).ConvertToXElement();
         }
