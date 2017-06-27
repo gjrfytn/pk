@@ -321,131 +321,37 @@ namespace PK.Forms
 
         private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            CompleteUpdateAppsTable(e.Result as List<object[]>);
+            CompleteUpdateAppsTable((IEnumerable<object[]>)e.Result);
             FilterAppsTable();
         }
 
 
-        private List<object[]> GetAppsTableRows()
+        private IEnumerable<object[]> GetAppsTableRows()
         {
-            List<object[]> appRows = new List<object[]>();
-            List<object[]> apps = new List<object[]>();
+            IEnumerable<object[]> rows = _DB_UpdateConnection.CallProcedure("get_main_form_table", Classes.Settings.CurrentCampaignID).Select(s => new object[]
+            {
+                s[0], //0 УИД
+                s[1], //1 Фамилия
+                s[2], //2 Имя
+                s[3], //3 Отчество
+                s[4], //4 Направления
+                s[4].ToString().Replace("*",""), //5 Маг. программы
+                s[5], //6 ОДО
+                s[6], //7 Дата подачи
+                s[7], //8 Дата изменения
+                s[8], //9 Забрал документы
+                (s[9] as DateTime?)?.ToShortDateString(), //10 Приказ об отчислении
+                (s[10] as DateTime?)?.ToShortDateString(), //11 Приказ о зачислении
+                s[11], //12 Регистратор
+                _Statuses[s[12].ToString()] //13 Статус
+            });
+
             if (_UserRole == "registrator")
-            apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("registrator_login", Relation.EQUAL, _UserLogin),
-                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
-                });
+                return rows.Where(s => s[12].ToString() == _UserLogin && ((DateTime)s[7]).Date == DateTime.Now.Date);
             else if (_UserRole == "inspector")
-                apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("registration_time", Relation.GREATER_EQUAL, DateTime.Now.Date)
-                });
+                return rows.Where(s => ((DateTime)s[7]).Date == DateTime.Now.Date);
             else
-                apps = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS, new string[] { "id", "entrant_id", "registration_time", "registrator_login", "edit_time", "status", "withdraw_date" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
-                });
-            var directions = _DB_UpdateConnection.Select(DB_Table.DIRECTIONS, new string[] { "direction_id", "faculty_short_name", "short_name" });
-            var profiles = _DB_UpdateConnection.Select(DB_Table.PROFILES, new string[] { "direction_id", "faculty_short_name", "short_name" });
-
-                foreach (var application in apps)
-                {
-                object[] row = new object[dgvApplications.Columns.Count];
-                //row.CreateCells(dgvApplications);
-                object[] names = _DB_UpdateConnection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[1])
-                        })[0];
-                    var appDocuments = _DB_UpdateConnection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, (uint)application[0])
-                    });
-                {
-                    row = new object[] { application[0], names[0], names[1], names[2], null, null, null, application[2] as DateTime?, application[4] as DateTime?, application[6], null, null,
-                                application[3], _Statuses[application[5].ToString()] };
-                }
-
-                    foreach (var document in _DB_UpdateConnection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "original_recieved_date" }).Join(
-                        appDocuments,
-                        docs => docs[0],
-                        appdocs => appdocs[0],
-                        (s1, s2) => new
-                        {
-                            Type = s1[1].ToString(),
-                            OriginalRecievedDate = s1[2] as DateTime?
-                        }
-                        ).Select(s => new { Value = new Tuple<string, DateTime?>(s.Type, s.OriginalRecievedDate) }).ToList())
-                        if ((document.Value.Item1 == "school_certificate" || document.Value.Item1 == "high_edu_diploma" || document.Value.Item1 == "academic_diploma"
-                        || document.Value.Item1 == "middle_edu_diploma") && (document.Value.Item2 != null))
-                            row[dgvApplications_Original.Index] = true;
-
-
-                    var appDirections = _DB_UpdateConnection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "profile_short_name" }, new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, application[0])
-                    });
-                    if (!dgvApplications_Programs.Visible)
-                    {
-                        string[] entrance = appDirections.Join(
-                            directions,
-                            entrances => new Tuple<uint, string>((uint)entrances[0], entrances[1].ToString()),
-                            dirs => new Tuple<uint, string>((uint)dirs[0], dirs[1].ToString()),
-                            (s1, s2) => (s1[2]!=null && s1[2].ToString() != "")? s1[2].ToString() + "*": s2[2].ToString()).ToArray();
-                        foreach (object shortName in entrance)
-                            if (row[dgvApplications_Entrances.Index] == null)
-                            row[dgvApplications_Entrances.Index] = shortName;
-                            else
-                            row[dgvApplications_Entrances.Index] = row[dgvApplications_Entrances.Index].ToString() + ", " + shortName;
-                    }
-                    else
-                    {
-                        foreach (object[] appDir in appDirections)
-                            if (row[dgvApplications_Programs.Index] == null)
-                            row[dgvApplications_Programs.Index] = appDir[2];
-                            else
-                            row[dgvApplications_Programs.Index] = row[dgvApplications_Programs.Index] + ", " + appDir[2].ToString();
-                    }
-                    var appOrdersData = _DB_UpdateConnection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, new string[] { "orders_number" }, new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, application[0])
-                    });
-                    var appOrders = _DB_UpdateConnection.Select(DB_Table.ORDERS, new string[] { "number", "type", "date" }).Join(
-                        appOrdersData,
-                        orders => orders[0],
-                        data => data[0],
-                        (s1, s2) => new { Number = s1[0].ToString(), Type = s1[1].ToString(), Date = (DateTime)s1[2] }
-                        );
-                    string admNumber = null;
-                    string exNumber = null;
-                    DateTime admDate = DateTime.MinValue;
-                    DateTime exDate = DateTime.MinValue;
-                    foreach (var order in appOrders)
-                        if (order.Type == "admission" && order.Date > admDate.Date)
-                        {
-                            admNumber = order.Number;
-                            admDate = order.Date;
-                        }
-                        else if (order.Type == "exception" && order.Date > exDate.Date)
-                        {
-                            exNumber = order.Number;
-                            exDate = order.Date;
-                        }
-
-                    if (admNumber != null)
-                    row[dgvApplications_EnrollmentDate.Index] = admDate.ToShortDateString() + " " + admNumber;
-                    if (exNumber != null)
-                    row[dgvApplications_DeductionDate.Index] = exDate.ToShortDateString() + " " + exNumber;
-
-                appRows.Add(row);
-                }
-            return appRows;
+                return rows;
         }
 
         private void UpdateApplicationsTable()
@@ -453,7 +359,7 @@ namespace PK.Forms
             CompleteUpdateAppsTable(GetAppsTableRows());
         }
 
-        private void CompleteUpdateAppsTable(List<object[]> rows)
+        private void CompleteUpdateAppsTable(IEnumerable<object[]> rows)
         {
             DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
 
