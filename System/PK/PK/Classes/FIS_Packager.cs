@@ -902,7 +902,7 @@ namespace PK.Classes
                                 new TAllowEducationDocument(
                                     new TUID(allowDoc.ID),
                                     new TDocumentNumber(doc.Number),
-                                    new TDate(doc.Date.Value),
+                                    doc.Date.HasValue? new TDate(doc.Date.Value): new TDate(System.DateTime.Now), //TODO Now
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Organization
                                 )));
@@ -1062,7 +1062,7 @@ namespace PK.Classes
                             new TDate(System.DateTime.Now),//TODO Год выдачи
                             doc.Organization,
                             doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                            doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                            !string.IsNullOrEmpty(doc.Series) ? new TDocumentSeries(doc.Series) : null, //TODO
                             doc.Number != null ? new TDocumentNumber(doc.Number) : null
                             )));
                         achievements.Add(new IndividualAchievement(

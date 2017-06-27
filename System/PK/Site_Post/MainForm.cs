@@ -46,8 +46,10 @@ namespace SitePost
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             PostApplications();
             timer.Start();
+            Cursor.Current = Cursors.Default;
         }
 
         private void btStart_Click(object sender, EventArgs e)

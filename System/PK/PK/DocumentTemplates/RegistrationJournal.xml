@@ -19,7 +19,7 @@
         <Album/>
         <Margins>
           <Left>20</Left>
-          <Top>10</Top>
+          <Top>15</Top>
           <Right>20</Right>
           <Bottom>10</Bottom>
         </Margins>

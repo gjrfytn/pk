@@ -315,7 +315,7 @@ namespace PK.Classes
                         string eduDocSeries = highEduDoc.Series;
                         string eduDocNumber = highEduDoc.Number;
                         ushort eduDocYear = (ushort)highEduDoc.Date.Value.Year;
-                        string eduDocLevel = "TODO";
+                        string eduDocLevel = ""; //TODO
 
                         AddMastPercRecordBack(documents, connection, applData, entrances, eduDocSeries, eduDocNumber, eduDocYear, eduDocLevel, redDiplomaMark);
                     }
@@ -508,7 +508,7 @@ namespace PK.Classes
                     (math+rus+soc).ToString(),
                     (rus+soc+foreign).ToString(),
                     agreements.ElementAtOrDefault(0),
-                    agreements.ElementAtOrDefault(1)
+                    agreements.ElementAtOrDefault(1) //23
                 };
 
                 foreach (Stream stream in entrances)
@@ -589,8 +589,8 @@ namespace PK.Classes
                             redDiplomaMark.ToString(),
                             applData.Hostel?"Да":"Нет",
                             mark.Bonus.ToString(),
-                            mark.Exam!=-1?mark.Exam.ToString():"нет",
-                            (redDiplomaMark +mark.Bonus+(mark.Exam!=-1?mark.Exam:0)).ToString()
+                            mark.Exam!=-1?mark.Exam.ToString():"",
+                            mark.Exam!=-1?(redDiplomaMark +mark.Bonus+(mark.Exam!=-1?mark.Exam:0)).ToString():""
                         };
 
                         documents.Add(new DocumentCreator.DocumentParameters(
@@ -765,8 +765,11 @@ namespace PK.Classes
             var dateGroups = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
-                ).Join(
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
+                    new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
+                }).Join(
                 connection.Select(
                 DB_Table.ENTRANTS,
                 "id", "home_phone", "mobile_phone"
