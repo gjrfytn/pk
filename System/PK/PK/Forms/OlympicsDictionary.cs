@@ -2,19 +2,23 @@
 
 namespace PK.Forms
 {
-    partial class OlympicsDictionary : Form
+    partial class OlympicsDictionary : DictionaryBase
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-
-        private Classes.DictionaryUpdater _Updater;
-
-        public OlympicsDictionary(Classes.DB_Connector dbConnection)
+        public OlympicsDictionary(Classes.DB_Connector connection) : base(connection)
         {
             InitializeComponent();
+        }
 
-            _DB_Connection = dbConnection;
+        protected override void UpdateMainTable()
+        {
+            dgvOlympics.Rows.Clear();
+            foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
+                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2] as uint?, olymp[3]);
+        }
 
-            UpdateOlympicsTable();
+        protected override void UpdateDictionary(Classes.DictionaryUpdater updater)
+        {
+            updater.UpdateOlympicsDictionary();
         }
 
         private void dgvOlympics_SelectionChanged(object sender, System.EventArgs e)
@@ -69,29 +73,6 @@ namespace PK.Forms
                             new System.Tuple<string, Relation, object>("dictionary_id",Relation.EQUAL,subj[0]),
                             new System.Tuple<string, Relation, object>("item_id",Relation.EQUAL,subj[1])
                         })[0][0]);
-        }
-
-        private void toolStrip_Update_Click(object sender, System.EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-            if (Classes.Utility.TryAccessFIS_Function((login, password) =>
-            {
-                if (_Updater == null)
-                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
-
-                _Updater.UpdateOlympicsDictionary();
-            }, new Classes.LoginSetting()))
-                UpdateOlympicsTable();
-
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void UpdateOlympicsTable()
-        {
-            dgvOlympics.Rows.Clear();
-            foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
-                dgvOlympics.Rows.Add(olymp[0], olymp[1], olymp[2] as uint?, olymp[3]);
         }
     }
 }

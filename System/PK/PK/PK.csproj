@@ -122,6 +122,12 @@
     <Compile Include="Forms\DateChoice.Designer.cs">
       <DependentUpon>DateChoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DictionaryBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DictionaryBase.Designer.cs">
+      <DependentUpon>DictionaryBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EGE_Check.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -343,6 +349,9 @@
     <EmbeddedResource Include="Forms\DateChoice.resx">
       <DependentUpon>DateChoice.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DictionaryBase.resx">
+      <DependentUpon>DictionaryBase.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dictionaries.resx">
       <DependentUpon>Dictionaries.cs</DependentUpon>
     </EmbeddedResource>
@@ -465,10 +474,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Schemas\DocumentSchema.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Schemas\ForSite.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

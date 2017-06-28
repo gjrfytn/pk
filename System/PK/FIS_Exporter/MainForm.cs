@@ -86,5 +86,32 @@ namespace FIS_Exporter
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName))
                     textBox.Text = reader.ReadToEnd();
         }
+        
+        private void bLoadDictionary_Click(object sender, EventArgs e)
+        {
+            //if(saveFileDialog.ShowDialog()==DialogResult.OK)
+            //{
+            //    Cursor.Current = Cursors.WaitCursor;
+
+            //    PK.Classes.Utility.TryAccessFIS_Function((login, password) =>
+            //    {
+            //        if (PK.Classes.Utility.ShowUnrevertableActionMessageBox())
+            //            MessageBox.Show(
+            //                "Идентификатор пакета: " +
+            //                PK.Classes.FIS_Connector.load(
+            //                    cbAddress.Text,
+            //                    login,
+            //                    password,
+            //                    package
+            //                    ),
+            //                "Пакет отправлен",
+            //                MessageBoxButtons.OK,
+            //                MessageBoxIcon.Information
+            //                );
+            //    }, new LoginSetting());
+
+            //    Cursor.Current = Cursors.Default;
+            //}
+        }
     }
 }

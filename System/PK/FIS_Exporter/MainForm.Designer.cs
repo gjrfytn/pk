@@ -35,6 +35,10 @@
             this.bOpen = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.textBox = new System.Windows.Forms.TextBox();
+            this.nudDictionaryNumber = new System.Windows.Forms.NumericUpDown();
+            this.bLoadDictionary = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDictionaryNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // bOpenAddressPage
@@ -99,11 +103,50 @@
             this.textBox.Size = new System.Drawing.Size(375, 169);
             this.textBox.TabIndex = 7;
             // 
+            // nudDictionaryNumber
+            // 
+            this.nudDictionaryNumber.Location = new System.Drawing.Point(205, 230);
+            this.nudDictionaryNumber.Maximum = new decimal(new int[] {
+            48,
+            0,
+            0,
+            0});
+            this.nudDictionaryNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudDictionaryNumber.Name = "nudDictionaryNumber";
+            this.nudDictionaryNumber.Size = new System.Drawing.Size(40, 20);
+            this.nudDictionaryNumber.TabIndex = 10;
+            this.nudDictionaryNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // bLoadDictionary
+            // 
+            this.bLoadDictionary.Location = new System.Drawing.Point(251, 227);
+            this.bLoadDictionary.Name = "bLoadDictionary";
+            this.bLoadDictionary.Size = new System.Drawing.Size(138, 23);
+            this.bLoadDictionary.TabIndex = 11;
+            this.bLoadDictionary.Text = "Загрузить справочник...";
+            this.bLoadDictionary.UseVisualStyleBackColor = true;
+            this.bLoadDictionary.Click += new System.EventHandler(this.bLoadDictionary_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "xml";
+            this.saveFileDialog.Filter = "XML-файлы|*.xml|Все файлы|*.*";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(399, 256);
+            this.Controls.Add(this.bLoadDictionary);
+            this.Controls.Add(this.nudDictionaryNumber);
             this.Controls.Add(this.bOpen);
             this.Controls.Add(this.bExport);
             this.Controls.Add(this.textBox);
@@ -115,6 +158,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FIS Exporter";
+            ((System.ComponentModel.ISupportInitialize)(this.nudDictionaryNumber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,6 +173,9 @@
         private System.Windows.Forms.Button bOpen;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.TextBox textBox;
+        private System.Windows.Forms.NumericUpDown nudDictionaryNumber;
+        private System.Windows.Forms.Button bLoadDictionary;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

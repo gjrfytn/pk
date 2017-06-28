@@ -343,7 +343,7 @@ namespace PK.Forms
 
         private IEnumerable<object[]> GetAppsTableRows()
         {
-            bool isMaster = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
+            bool isMaster = new Classes.DB_Helper(_DB_UpdateConnection).IsMasterCampaign(Classes.Settings.CurrentCampaignID);
             IEnumerable<object[]> rows = _DB_UpdateConnection.CallProcedure("get_main_form_table", Classes.Settings.CurrentCampaignID).Select(s => new object[]
             {
                 s[0], // УИД
