@@ -170,7 +170,7 @@ namespace PK.Forms
             }
         }
 
-        private void menuStrip_Orders_Click(object sender, EventArgs e)
+        private void menuStrip_Campaign_Orders_Click(object sender, EventArgs e)
         {
             StopTableAutoUpdating();
             Orders form = new Orders(_DB_Connection);
@@ -178,6 +178,12 @@ namespace PK.Forms
             UpdateApplicationsTable();
             FilterAppsTable();
             timer.Start();
+        }
+
+        private void menuStrip_Campaign_Statistics_Click(object sender, EventArgs e)
+        {
+            Statistics form = new Statistics(_DB_Connection);
+            form.Show();
         }
 
         private void menuStrip_Constants_Click(object sender, EventArgs e)

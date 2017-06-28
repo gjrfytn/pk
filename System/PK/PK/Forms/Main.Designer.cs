@@ -25,7 +25,8 @@
             this.menuStrip_Campaign = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Campaigns = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Campaign_Exams = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip_Orders = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Campaign_Orders = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_Campaign_Statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Entrants = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CreateApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_CheckEgeMarks = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,7 +139,8 @@
             this.menuStrip_Campaign.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Campaign_Campaigns,
             this.menuStrip_Campaign_Exams,
-            this.menuStrip_Orders});
+            this.menuStrip_Campaign_Orders,
+            this.menuStrip_Campaign_Statistics});
             this.menuStrip_Campaign.Name = "menuStrip_Campaign";
             this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 19);
             this.menuStrip_Campaign.Text = "Приемная кампания";
@@ -159,13 +161,21 @@
             this.menuStrip_Campaign_Exams.Text = "Экзамены";
             this.menuStrip_Campaign_Exams.Click += new System.EventHandler(this.menuStrip_Campaign_Exams_Click);
             // 
-            // menuStrip_Orders
+            // menuStrip_Campaign_Orders
             // 
-            this.menuStrip_Orders.Name = "menuStrip_Orders";
-            this.menuStrip_Orders.Size = new System.Drawing.Size(192, 22);
-            this.menuStrip_Orders.Tag = "inspector";
-            this.menuStrip_Orders.Text = "Приказы";
-            this.menuStrip_Orders.Click += new System.EventHandler(this.menuStrip_Orders_Click);
+            this.menuStrip_Campaign_Orders.Name = "menuStrip_Campaign_Orders";
+            this.menuStrip_Campaign_Orders.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Orders.Tag = "inspector";
+            this.menuStrip_Campaign_Orders.Text = "Приказы";
+            this.menuStrip_Campaign_Orders.Click += new System.EventHandler(this.menuStrip_Campaign_Orders_Click);
+            // 
+            // menuStrip_Campaign_Statistics
+            // 
+            this.menuStrip_Campaign_Statistics.Name = "menuStrip_Campaign_Statistics";
+            this.menuStrip_Campaign_Statistics.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Statistics.Tag = "inspector";
+            this.menuStrip_Campaign_Statistics.Text = "Статистика";
+            this.menuStrip_Campaign_Statistics.Click += new System.EventHandler(this.menuStrip_Campaign_Statistics_Click);
             // 
             // menuStrip_Entrants
             // 
@@ -266,6 +276,7 @@
             // 
             this.menuStrip_DirsPlaces.Name = "menuStrip_DirsPlaces";
             this.menuStrip_DirsPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_DirsPlaces.Tag = "inspector";
             this.menuStrip_DirsPlaces.Text = "Заявления по направлениям";
             this.menuStrip_DirsPlaces.Click += new System.EventHandler(this.menuStrip_DirsPlaces_Click);
             // 
@@ -273,6 +284,7 @@
             // 
             this.menuStrip_ProfilesPlaces.Name = "menuStrip_ProfilesPlaces";
             this.menuStrip_ProfilesPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_ProfilesPlaces.Tag = "inspector";
             this.menuStrip_ProfilesPlaces.Text = "Заявления по профилям";
             this.menuStrip_ProfilesPlaces.Click += new System.EventHandler(this.menuStrip_ProfilesPlaces_Click);
             // 
@@ -723,7 +735,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Users;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_FIS_Export;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_InstitutionAchievements;
-        private System.Windows.Forms.ToolStripMenuItem menuStrip_Orders;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Orders;
         private System.Windows.Forms.DataGridView dgvApplications;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Constants;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_OutDocuments;
@@ -762,6 +774,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EnrollmentDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Statistics;
     }
 }
 
