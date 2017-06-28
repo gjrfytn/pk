@@ -59,13 +59,86 @@ namespace PK.Forms
             for (int i = DateTime.Now.Year; i >= 1950; i--)
                 cbGraduationYear.Items.Add(i);
             cbGraduationYear.SelectedIndex = 0;
-
-            //TODO Заполнение таблицы
+            LoadSPOProgram();
         }
 
         private void btSave_Click(object sender, EventArgs e)
         {
+            if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && (string.IsNullOrWhiteSpace(tbLastName.Text)
+                || string.IsNullOrWhiteSpace(tbFirstName.Text) || string.IsNullOrWhiteSpace(tbIDDocSeries.Text) || string.IsNullOrWhiteSpace(tbIDDocNumber.Text)
+                || string.IsNullOrWhiteSpace(tbPlaceOfBirth.Text) || string.IsNullOrWhiteSpace(cbRegion.Text) || string.IsNullOrWhiteSpace(tbPostcode.Text)))
+                MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
+            else if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
+                MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
+            else if ((rbDiploma.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
+                && (string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || string.IsNullOrWhiteSpace(tbEduDocNumber.Text)))
+                MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
+            else if ((int)cbGraduationYear.SelectedItem >= 2014 && rbCertificate.Checked && (!string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || tbEduDocNumber.Text.Length != 14))
+                MessageBox.Show("Неправильный формат серии и номера аттестата для этого года окончания.");
+            else if (!cbAppAdmission.Checked || !cbEduDoc.Checked || !cbPassportCopy.Checked)
+                MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
+            else
+            {
+                    bool dateOk = true;
+                    if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
+                        && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                        dateOk = false;
+                    if (dateOk)
+                    {
+                        bool passportOK = true;
+                        List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" },
+                            new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
+                                new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
+                                new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
+                            });
+                        if (passportFound.Count > 0)
+                        {
+                            List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" },
+                                    new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
+                                });
+                            foreach (object[] app in oldApplications)
+                                if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
+                                {
+                                    passportOK = false;
+                                    if (app[0].ToString() != "withdrawn")
+                                    {
+                                        MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                        break;
+                                    }
+                                    else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                        passportOK = true;
+                                }
+                        }
+                        if (passportOK)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
 
+                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            {
+                                if (_ApplicationID == null)
+                                {
+                                    SaveApplication(transaction);
+                                    btPrint.Enabled = true;
+                                    btWithdraw.Enabled = true;
+                                }
+                                else
+                                {
+                                    _EditingDateTime = DateTime.Now;
+                                    UpdateApplication(transaction);
+                                }
+                                transaction.Commit();
+                            }
+                            Cursor.Current = Cursors.Default;
+                        }
+                    }
+            }
         }
 
         private void btPrint_Click(object sender, EventArgs e)
@@ -75,7 +148,7 @@ namespace PK.Forms
 
         private void btClose_Click(object sender, EventArgs e)
         {
-
+            DialogResult = DialogResult.OK;
         }
 
         private void btWithdraw_Click(object sender, EventArgs e)
@@ -132,7 +205,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])
                 })[0][0])})[0][0];
             else
-            {                
+            {
                 _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object>
                 {
                     //{ "email", mtbEMail.Text },               //TODO добавить поля на форму
@@ -320,8 +393,8 @@ namespace PK.Forms
                 })[0];
             //TODO
             //mtbEMail.Text = entrant[0].ToString();
-            //tbMobilePhone.Text = entrant[1].ToString();
-            //tbHomePhone.Text = entrant[2].ToString();
+            //tbMobilePhone.Text = entrant[2].ToString();
+            //tbHomePhone.Text = entrant[1].ToString();
         }
 
         private void LoadDocuments()
@@ -367,7 +440,7 @@ namespace PK.Forms
                     tbAppartment.Text = passport[11].ToString();
                     cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.GENDER, (uint)passport[12]);
                 }
-                else if (document[1].ToString() == "school_certificate" || document[1].ToString() == "middle_edu_diploma"|| document[1].ToString() == "high_edu_diploma")
+                else if (document[1].ToString() == "school_certificate" || document[1].ToString() == "middle_edu_diploma" || document[1].ToString() == "high_edu_diploma")
                 {
                     if (document[1].ToString() == "school_certificate")
                     {
@@ -395,10 +468,10 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
                     })[0][0].ToString());
-                }                
+                }
                 else if (document[1].ToString() == "photos")
                     cbPhotos.Checked = true;
-                
+
                 else if (document[1].ToString() == "medical")
                 {
                     List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" },
@@ -446,7 +519,7 @@ namespace PK.Forms
             {
                 new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID)
             });
-            
+
             bool certificateFound = false;
             bool photosFound = false;
 
@@ -532,7 +605,7 @@ namespace PK.Forms
                         photosFound = true;
                         if (!cbPhotos.Checked)
                             _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object> { { "id", (uint)document[0] } }, transaction);
-                    }                    
+                    }
                 }
                 if (cbMedCertificate.Checked && !certificateFound)
                 {
@@ -553,7 +626,7 @@ namespace PK.Forms
 
         private void UpdateDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            
+
         }
 
 
@@ -562,6 +635,18 @@ namespace PK.Forms
             cb.Items.AddRange(_DB_Helper.GetDictionaryItems(dictionary).Values.ToArray());
             if (cb.Items.Count > 0)
                 cb.SelectedIndex = 0;
+        }
+
+        private void LoadSPOProgram()
+        {
+            List<object[]> spoDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty", "direction_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                    new Tuple<string, Relation, object>("places_budget_o", Relation.GREATER_EQUAL, 0)
+                });
+            foreach (object[] dir in spoDirs)
+                dgvDirection.Rows.Add((uint)dir[1], dir[0].ToString(), _DB_Helper.GetDirectionNameAndCode((uint)dir[1]).Item1, "Специалист", "Очная платная");//TODO Проверить
         }
     }
 }
