@@ -213,20 +213,24 @@ namespace PK.Forms
 
                         using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
                         {
-                            if (_ApplicationID == null)
-                            {
-                                SaveApplication(transaction);
-                                btPrint.Enabled = true;
-                                btWithdraw.Enabled = true;
-                                ChangeAgreedChBs(true);
-                            }
+                            uint applID;
+                            if (!_ApplicationID.HasValue)
+                                applID = SaveApplication(transaction);
                             else
                             {
+                                applID = _ApplicationID.Value;
                                 _EditingDateTime = DateTime.Now;
                                 UpdateApplication(transaction);
                             }
 
                             transaction.Commit();
+
+                            if (!_ApplicationID.HasValue)
+                                ChangeAgreedChBs(true);
+
+                            _ApplicationID = applID;
+                            btPrint.Enabled = true;
+                            btWithdraw.Enabled = true;
                         }
 
                         Cursor.Current = Cursors.Default;
@@ -237,6 +241,17 @@ namespace PK.Forms
 
         private void btPrint_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
+            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+            {
+                _EditingDateTime = DateTime.Now;
+                UpdateApplication(transaction);
+                transaction.Commit();
+            }
+
+            Cursor.Current = Cursors.Default;
+            
             ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
             form.ShowDialog();
         }
@@ -287,6 +302,9 @@ namespace PK.Forms
             cbStreet.Enabled = false;
             cbHouse.Enabled = false;
             tbAppartment.Enabled = false;
+
+            btSave.Enabled = false;
+
             backgroundWorker.RunWorkerAsync(Tuple.Create(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text, cbHouse.Text));
         }
 
@@ -311,6 +329,8 @@ namespace PK.Forms
             cbStreet.Enabled = true;
             cbHouse.Enabled = true;
             tbAppartment.Enabled = true;
+
+            btSave.Enabled = true;
         }
 
         private void cbTarget_CheckedChanged(object sender, EventArgs e)
@@ -788,15 +808,17 @@ namespace PK.Forms
         }
 
 
-        private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private uint SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            SaveBasic(transaction);
-            SaveDiploma(transaction);
+            uint applID=  SaveBasic(transaction);
+            SaveDiploma(applID, transaction);
             if (cbSpecialRights.Checked)
-                SaveQuote(transaction);
+                SaveQuote(applID, transaction);
             if (cbMedCertificate.Checked)
-                SaveCertificate(transaction);
-            SaveDirections(transaction);
+                SaveCertificate(applID, transaction);
+            SaveDirections(applID, transaction);
+
+            return applID;
         }
 
         private void LoadApplication()
@@ -817,7 +839,7 @@ namespace PK.Forms
         }
 
 
-        private void SaveBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private uint SaveBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" },
                 new List<Tuple<string, Relation, object>>
@@ -854,7 +876,7 @@ namespace PK.Forms
             if (cbFirstTime.SelectedItem.ToString() == "Повторно")
                 firstHightEdu = false;
 
-            _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object>
+            uint applID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object>
             {
                 { "entrant_id", _EntrantID.Value},
                 { "registration_time", DateTime.Now},
@@ -877,7 +899,7 @@ namespace PK.Forms
 
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
             {
-                { "applications_id", _ApplicationID},
+                { "applications_id", applID},
                 { "documents_id", idDocUid }
             }, transaction);
 
@@ -904,9 +926,11 @@ namespace PK.Forms
                 { "reg_index", tbPostcode.Text},
                 { "reg_flat", tbAppartment.Text}
             }, transaction);
+
+            return applID;
         }
 
-        private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveDiploma(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             int eduDocID = 0;
             eduDocID = (int)(_DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
@@ -924,7 +948,7 @@ namespace PK.Forms
             }, transaction);
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
             {
-                { "applications_id", _ApplicationID },
+                { "applications_id", applID },
                 { "documents_id", eduDocID }
             }, transaction);
 
@@ -932,7 +956,7 @@ namespace PK.Forms
             {
                 _DB_Connection.Insert(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
                 {
-                    { "application_id", _ApplicationID},
+                    { "application_id", applID},
                     { "document_id", eduDocID },
                     { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                     new List<Tuple<string, Relation, object>>
@@ -944,7 +968,7 @@ namespace PK.Forms
             }
         }
 
-        private void SaveQuote(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveQuote(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             if (_QuoteDoc.cause == "Сиротство")
             {
@@ -963,12 +987,12 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", orphDocUid }
                 }, transaction);
                 _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                 {
-                    { "application_id", _ApplicationID},
+                    { "application_id", applID},
                     { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                     { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Документ, подтверждающий принадлежность к детям-сиротам и детям, оставшимся без попечения родителей")},
                     { "reason_document_id", orphDocUid},
@@ -986,7 +1010,7 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", allowEducationDocUid }
                 }, transaction);
 
@@ -1006,12 +1030,12 @@ namespace PK.Forms
                     }, transaction);
                     _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                     {
-                        { "applications_id", _ApplicationID },
+                        { "applications_id", applID },
                         { "documents_id", medDocUid }
                     }, transaction);
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                     {
-                        { "application_id", _ApplicationID},
+                        { "application_id", applID },
                         { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                         { "document_type_id",  _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности")},
                         { "reason_document_id", medDocUid},
@@ -1030,12 +1054,12 @@ namespace PK.Forms
                     }, transaction);
                     _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                     {
-                        { "applications_id", _ApplicationID },
+                        { "applications_id", applID },
                         { "documents_id", medDocUid }
                     }, transaction);
                     _DB_Connection.Insert(DB_Table.APPLICATION_COMMON_BENEFITS, new Dictionary<string, object>
                     {
-                        { "application_id", _ApplicationID},
+                        { "application_id", applID },
                         { "document_type_dict_id", (uint)FIS_Dictionary.DOCUMENT_TYPE},
                         { "document_type_id",  _DB_Helper.GetDictionaryItemID( FIS_Dictionary.DOCUMENT_TYPE, "Заключение психолого-медико-педагогической комиссии")},
                         { "reason_document_id", medDocUid},
@@ -1047,7 +1071,7 @@ namespace PK.Forms
             }
         }
 
-        private void SaveCertificate(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveCertificate(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
                 uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
                 {
@@ -1060,12 +1084,12 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", spravkaID }
                 }, transaction);
         }
 
-        private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveDirections(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             foreach (TabPage tab in tcPrograms.TabPages)
             {
@@ -1078,7 +1102,7 @@ namespace PK.Forms
                             {
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object>
                                 {
-                                    { "application_id", _ApplicationID },
+                                    { "application_id", applID },
                                     { "faculty_short_name", ((ProgramTuple)cb.SelectedValue).Item2 },
                                     { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
@@ -1101,7 +1125,7 @@ namespace PK.Forms
                                 Control sdf = cb.Parent;
                                 _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object>
                                 {
-                                    { "application_id", _ApplicationID },
+                                    { "application_id", applID },
                                      { "faculty_short_name",  ((ProgramTuple)cb.SelectedValue).Item2 },
                                     { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1},                                    
                                     { "edu_form_dict_id", (uint)FIS_Dictionary.EDU_FORM},
@@ -1815,13 +1839,14 @@ namespace PK.Forms
                     }
                 }
             }
+
             if (cbSpecialRights.Checked && !qouteFound)
             {
-                SaveQuote(transaction);
+                SaveQuote(_ApplicationID.Value, transaction);
             }
             if (cbMedCertificate.Checked && !certificateFound)
             {
-                SaveCertificate(transaction);
+                SaveCertificate(_ApplicationID.Value, transaction);
             }
 
             if (cbPhotos.Checked && !photosFound)
@@ -1829,7 +1854,7 @@ namespace PK.Forms
                     DB_Table._APPLICATIONS_HAS_DOCUMENTS,
                     new Dictionary<string, object>
                     {
-                        { "applications_id", _ApplicationID },
+                        { "applications_id", _ApplicationID.Value },
                         { "documents_id", _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
                         {
                             { "type", "photos" }

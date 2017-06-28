@@ -2608,7 +2608,7 @@
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(189, 28);
             this.btPrint.TabIndex = 5;
-            this.btPrint.Text = "Распечатать документы";
+            this.btPrint.Text = "Сохранить и распечатать";
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 

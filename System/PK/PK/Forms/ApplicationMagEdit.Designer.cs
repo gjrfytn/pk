@@ -18,6 +18,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationMagEdit));
             this.gbEduDocument = new System.Windows.Forms.GroupBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.cbTarget = new System.Windows.Forms.CheckBox();
             this.btFillRand = new System.Windows.Forms.Button();
             this.cbSpecialRights = new System.Windows.Forms.CheckBox();
@@ -74,6 +75,8 @@
             this.cbProgram_quote_o = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.dgvExamsResults = new System.Windows.Forms.DataGridView();
             this.dgvExamsResults_ProgramName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExamsResults_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -136,10 +139,8 @@
             this.btWithdraw = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.label32 = new System.Windows.Forms.Label();
             this.gbEduDocument.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.tcPrograms.SuspendLayout();
@@ -149,13 +150,12 @@
             this.tcPrograms_target_o.SuspendLayout();
             this.tcPrograms_quote_o.SuspendLayout();
             this.gbApplication.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).BeginInit();
             this.gbWithdrawDocs.SuspendLayout();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAddress.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // gbEduDocument
@@ -182,6 +182,16 @@
             this.gbEduDocument.TabIndex = 1;
             this.gbEduDocument.TabStop = false;
             this.gbEduDocument.Text = "Документ об образовании";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(11, 18);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(44, 61);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 15;
+            this.pictureBox2.TabStop = false;
             // 
             // cbTarget
             // 
@@ -825,6 +835,25 @@
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(586, 18);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(78, 16);
+            this.label32.TabIndex = 31;
+            this.label32.Text = "Экзамены:";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(11, 17);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(52, 70);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 30;
+            this.pictureBox3.TabStop = false;
+            // 
             // dgvExamsResults
             // 
             this.dgvExamsResults.AllowUserToAddRows = false;
@@ -895,7 +924,7 @@
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(197, 28);
             this.btPrint.TabIndex = 4;
-            this.btPrint.Text = "Распечатать документы";
+            this.btPrint.Text = "Сохранить и распечатать";
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
@@ -1503,35 +1532,6 @@
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(11, 18);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(44, 61);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 15;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(11, 17);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(52, 70);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 30;
-            this.pictureBox3.TabStop = false;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(586, 18);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(78, 16);
-            this.label32.TabIndex = 31;
-            this.label32.Text = "Экзамены:";
-            // 
             // ApplicationMagEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1556,6 +1556,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplicationMagEdit_FormClosing);
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.gbAttributes.ResumeLayout(false);
             this.gbAttributes.PerformLayout();
             this.gbOther.ResumeLayout(false);
@@ -1573,6 +1574,7 @@
             this.tcPrograms_quote_o.PerformLayout();
             this.gbApplication.ResumeLayout(false);
             this.gbApplication.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).EndInit();
             this.gbWithdrawDocs.ResumeLayout(false);
             this.gbWithdrawDocs.PerformLayout();
@@ -1581,8 +1583,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.gbAddress.ResumeLayout(false);
             this.gbAddress.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
