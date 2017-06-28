@@ -325,25 +325,34 @@ namespace PK.Forms
             FilterAppsTable();
         }
 
+        private void dgvApplications_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == dgvApplications_Status.Index)
+            {
+                e.Value = _Statuses[e.Value.ToString()];
+                e.FormattingApplied = true;
+            }
+        }
+
 
         private IEnumerable<object[]> GetAppsTableRows()
         {
+            bool isMaster = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
             IEnumerable<object[]> rows = _DB_UpdateConnection.CallProcedure("get_main_form_table", Classes.Settings.CurrentCampaignID).Select(s => new object[]
             {
-                s[0], //0 УИД
-                s[1], //1 Фамилия
-                s[2], //2 Имя
-                s[3], //3 Отчество
-                s[4], //4 Направления
-                s[4].ToString().Replace("*",""), //5 Маг. программы
-                s[5], //6 ОДО
-                s[6], //7 Дата подачи
-                s[7], //8 Дата изменения
-                s[8], //9 Забрал документы
-                (s[9] as DateTime?)?.ToShortDateString(), //10 Приказ об отчислении
-                (s[10] as DateTime?)?.ToShortDateString(), //11 Приказ о зачислении
-                s[11], //12 Регистратор
-                _Statuses[s[12].ToString()] //13 Статус
+                s[0], // УИД
+                s[1], // Фамилия
+                s[2], // Имя
+                s[3], // Отчество
+                isMaster?s[4].ToString().Replace("*", ""):s[4].ToString(), // Направления
+                s[5], // ОДО
+                s[6], // Дата подачи
+                s[7], // Дата изменения
+                s[8], // Забрал документы
+                (s[9] as DateTime?)?.ToShortDateString(), // Приказ об отчислении
+                (s[10] as DateTime?)?.ToShortDateString(), // Приказ о зачислении
+                s[11], // Регистратор
+                s[12].ToString() // Статус
             });
 
             if (_UserRole == "registrator")
@@ -371,8 +380,12 @@ namespace PK.Forms
 
             int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
             if (dgvApplications.Rows.Count == 0)
-                foreach (object[] row in rows)
-                    dgvApplications.Rows.Add(row);
+                dgvApplications.Rows.AddRange(rows.Select(s =>
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dgvApplications, s);
+                    return row;
+                }).ToArray());
             else
             {
                 foreach (object[] newRow in rows)
@@ -423,15 +436,12 @@ namespace PK.Forms
             int visibleCount = 0;
             foreach (DataGridViewRow row in dgvApplications.Rows)
             {
-                if (rbNew.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["new"]))
-                        row.Visible = false;
-                    else if (rbWithdraw.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["withdrawn"]))
-                        row.Visible = false;
-                    else if (rbAdm.Checked && (row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_budget"]
-                        && row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_paid"]
-                        && row.Cells[dgvApplications_Status.Index].Value.ToString() != _Statuses["adm_both"]))
-                        row.Visible = false;
-                    else row.Visible = true;
+                string status = row.Cells[dgvApplications_Status.Index].Value.ToString();
+
+                row.Visible = !(rbNew.Checked && status != "new" ||
+                    rbWithdraw.Checked && status != "withdrawn" ||
+                    rbAdm.Checked && status != "adm_budget" && status != "adm_paid" && status != "adm_both");
+
                 if (row.Visible && (tbRegNumber.Text != tbRegNumber.Tag.ToString() || tbLastName.Text != tbLastName.Tag.ToString()
                     || tbFirstName.Text != tbFirstName.Tag.ToString() || tbMiddleName.Text != tbMiddleName.Tag.ToString() || dtpRegDate.Value != dtpRegDate.MinDate))
                 {
@@ -448,9 +458,11 @@ namespace PK.Forms
                         matches = false;
                     row.Visible = matches;
                 }
+
                 if (row.Visible)
                     visibleCount++;
             }
+
             lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + visibleCount;
         }
 
@@ -465,8 +477,7 @@ namespace PK.Forms
 
                 bool master = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
                 dgvApplications_Original.Visible = !master;
-                dgvApplications_Entrances.Visible = !master;
-                dgvApplications_Programs.Visible = master;
+                dgvApplications_Entrances.HeaderText = master?"Маг. программы":"Направления";
 
                 UpdateApplicationsTable();
                 FilterAppsTable();
@@ -478,29 +489,30 @@ namespace PK.Forms
         private void SetUserRole()
         {
             List<string> roles = new List<string>();
+
             if (_UserRole == "registrator")
                 menuStrip.Enabled = false;
-
-            if (_UserRole == "registrator")
-                roles.Add("registrator");
-            else if (_UserRole == "inspector")
-                roles.AddRange(new string[] { "registrator", "inspector" });
-            else if (_UserRole == "administrator")
-                roles.AddRange(new string[] { "registrator", "inspector", "administrator" });
-
-            foreach (ToolStripMenuItem menuStrip in MainMenuStrip.Items)
+            else
             {
-                foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
-                    if (submenuItem.Tag != null && !roles.Contains(submenuItem.Tag.ToString()))
-                        submenuItem.Enabled = false;
+                if (_UserRole == "inspector")
+                    roles.AddRange(new string[] { "registrator", "inspector" });
+                else if (_UserRole == "administrator")
+                    roles.AddRange(new string[] { "registrator", "inspector", "administrator" });
 
-                bool enabled = false;
-                foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
-                    if (submenuItem.Enabled)
+                foreach (ToolStripMenuItem menuStrip in MainMenuStrip.Items)
+                {
+                    foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
+                        if (submenuItem.Tag != null && !roles.Contains(submenuItem.Tag.ToString()))
+                            submenuItem.Enabled = false;
+
+                    bool enabled = false;
+                    foreach (ToolStripItem submenuItem in menuStrip.DropDownItems)
+                        if (submenuItem.Enabled)
                             enabled = true;
 
-                if (!enabled)
-                    menuStrip.Enabled = false;
+                    if (!enabled)
+                        menuStrip.Enabled = false;
+                }
             }
         }
 

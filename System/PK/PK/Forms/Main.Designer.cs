@@ -68,7 +68,6 @@
             this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_Entrances = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Programs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_Original = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dgvApplications_RegDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvApplications_EditDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -360,7 +359,6 @@
             this.dgvApplications_FirstName,
             this.dgvApplications_MiddleName,
             this.dgvApplications_Entrances,
-            this.dgvApplications_Programs,
             this.dgvApplications_Original,
             this.dgvApplications_RegDate,
             this.dgvApplications_EditDate,
@@ -380,6 +378,7 @@
             this.dgvApplications.TabIndex = 2;
             this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
+            this.dgvApplications.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvApplications_CellFormatting);
             // 
             // label1
             // 
@@ -604,13 +603,6 @@
             this.dgvApplications_Entrances.Name = "dgvApplications_Entrances";
             this.dgvApplications_Entrances.ReadOnly = true;
             // 
-            // dgvApplications_Programs
-            // 
-            this.dgvApplications_Programs.HeaderText = "Маг. программы";
-            this.dgvApplications_Programs.Name = "dgvApplications_Programs";
-            this.dgvApplications_Programs.ReadOnly = true;
-            this.dgvApplications_Programs.Visible = false;
-            // 
             // dgvApplications_Original
             // 
             this.dgvApplications_Original.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -762,7 +754,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Entrances;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Programs;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvApplications_Original;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EditDate;
