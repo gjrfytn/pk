@@ -39,7 +39,7 @@ namespace PK.Classes
             { "withdrawn", 6 },
         };
 
-        public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, bool applications, bool orders)
+        public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, System.Tuple<System.DateTime, System.DateTime> applicationsRange, bool orders)
         {
             #region Contracts
             if (connection == null)
@@ -51,7 +51,7 @@ namespace PK.Classes
                 campaignData ? PackAdmissionInfo(connection, campaignID) : null,
                 campaignData ? PackInstitutionAchievements(connection, campaignID) : null,
                 campaignData ? PackTargetOrganizations(connection) : null,
-                applications ? PackApplications(connection, campaignID) : null,
+                applicationsRange != null ? PackApplications(connection, campaignID, applicationsRange) : null,
                 orders ? PackOrders(connection, campaignID) : null
                 );
         }
@@ -237,15 +237,19 @@ namespace PK.Classes
             return null;
         }
 
-        private static List<Application> PackApplications(DB_Connector connection, uint campaignID)
+        private static List<Application> PackApplications(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> applicationsRange)
         {
             List<Application> applications = new List<Application>();
 
             var applicationsBD = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions", "priority_right" },
-                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID) }
-                ).Join(
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID),
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.GREATER_EQUAL,applicationsRange.Item1.Date),
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,applicationsRange.Item2.Date)
+                }).Join(
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
                 k1 => k1[1],
                 k2 => k2[0],
@@ -263,7 +267,10 @@ namespace PK.Classes
                     Email = s2[2].ToString()
                 });
 
-            IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
+            if (applicationsBD.Count() == 0)
+                return null;
+
+                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
             foreach (var appl in applicationsBD)
             {
@@ -373,10 +380,7 @@ namespace PK.Classes
                     ));
             }
 
-            if (applications.Count != 0)
                 return applications;
-
-            return null;
         }
 
         private static Orders PackOrders(DB_Connector connection, uint campaignID)
@@ -902,7 +906,7 @@ namespace PK.Classes
                                 new TAllowEducationDocument(
                                     new TUID(allowDoc.ID),
                                     new TDocumentNumber(doc.Number),
-                                    new TDate(doc.Date.Value),
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : new TDate(System.DateTime.Now), //TODO Now
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Organization
                                 )));
@@ -1062,7 +1066,7 @@ namespace PK.Classes
                             new TDate(System.DateTime.Now),//TODO Год выдачи
                             doc.Organization,
                             doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                            doc.Series != null ? new TDocumentSeries(doc.Series) : null,
+                            !string.IsNullOrEmpty(doc.Series) ? new TDocumentSeries(doc.Series) : null, //TODO
                             doc.Number != null ? new TDocumentNumber(doc.Number) : null
                             )));
                         achievements.Add(new IndividualAchievement(

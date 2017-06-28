@@ -176,27 +176,61 @@ namespace PK.Forms
                     MessageBox.Show("Поле \"Email\" не заполнено");
                 else
                 {
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                    bool passportOK = true;
+                    List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                            {
+                                new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
+                                new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
+                                new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
+                            });
+                    if (passportFound.Count > 0)
                     {
-                        if (_ApplicationID == null)
-                        {
-                            SaveApplication(transaction);
-                            btPrint.Enabled = true;
-                            btWithdraw.Enabled = true;
-                            ChangeAgreedChBs(true);
-                        }
-                        else
-                        {
-                            _EditingDateTime = DateTime.Now;
-                            UpdateApplication(transaction);
-                        }
-
-                        transaction.Commit();
+                        List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" },
+                            new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                                    new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})
+                                        [0][0])
+                                });
+                        foreach (object[] app in oldApplications)
+                            if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
+                            {
+                                passportOK = false;
+                                if (app[0].ToString() != "withdrawn")
+                                {
+                                    MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                    break;
+                                }
+                                else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                    passportOK = true;
+                            }
                     }
+                    if (passportOK)
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
 
-                    Cursor.Current = Cursors.Default;
+                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                        {
+                            if (_ApplicationID == null)
+                            {
+                                SaveApplication(transaction);
+                                btPrint.Enabled = true;
+                                btWithdraw.Enabled = true;
+                                ChangeAgreedChBs(true);
+                            }
+                            else
+                            {
+                                _EditingDateTime = DateTime.Now;
+                                UpdateApplication(transaction);
+                            }
+
+                            transaction.Commit();
+                        }
+
+                        Cursor.Current = Cursors.Default;
+                    }
                 }
             }
         }
@@ -1162,7 +1196,7 @@ namespace PK.Forms
 
                     object[] passport = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id",
                         "nationality_id", "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house",
-                        "reg_index", "reg_flat", "last_name", "first_name", "middle_name"},
+                        "reg_index", "reg_flat", "last_name", "first_name", "middle_name", "gender_id"},
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
@@ -1182,6 +1216,7 @@ namespace PK.Forms
                     tbLastName.Text = passport[12].ToString();
                     tbFirstName.Text = passport[13].ToString();
                     tbMiddleName.Text = passport[14].ToString();
+                    cbSex.SelectedItem = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.GENDER, (uint)passport[15]);
                 }
                 else if (document[1].ToString() == "high_edu_diploma")
                 {

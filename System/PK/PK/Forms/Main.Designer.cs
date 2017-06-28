@@ -49,20 +49,6 @@
             this.menuStrip_DirDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_OlympDictionary = new System.Windows.Forms.ToolStripMenuItem();
             this.dgvApplications = new System.Windows.Forms.DataGridView();
-            this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Entrances = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Programs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Original = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dgvApplications_RegDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_EditDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_PickUpDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_DeductionDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_EnrollmentDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_RegistratorLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvApplications_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.tbLastName = new System.Windows.Forms.TextBox();
             this.tbFirstName = new System.Windows.Forms.TextBox();
@@ -78,6 +64,19 @@
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.lbDispalyedCount = new System.Windows.Forms.Label();
+            this.dgvApplications_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_FirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_MiddleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Entrances = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Original = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dgvApplications_RegDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_EditDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_PickUpDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_DeductionDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_EnrollmentDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_RegistratorLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvApplications_Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -372,7 +371,6 @@
             this.dgvApplications_FirstName,
             this.dgvApplications_MiddleName,
             this.dgvApplications_Entrances,
-            this.dgvApplications_Programs,
             this.dgvApplications_Original,
             this.dgvApplications_RegDate,
             this.dgvApplications_EditDate,
@@ -392,113 +390,7 @@
             this.dgvApplications.TabIndex = 2;
             this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
-            // 
-            // dgvApplications_ID
-            // 
-            this.dgvApplications_ID.HeaderText = "УИН";
-            this.dgvApplications_ID.Name = "dgvApplications_ID";
-            this.dgvApplications_ID.ReadOnly = true;
-            this.dgvApplications_ID.Width = 50;
-            // 
-            // dgvApplications_LastName
-            // 
-            this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_LastName.HeaderText = "Фамилия";
-            this.dgvApplications_LastName.MinimumWidth = 100;
-            this.dgvApplications_LastName.Name = "dgvApplications_LastName";
-            this.dgvApplications_LastName.ReadOnly = true;
-            // 
-            // dgvApplications_FirstName
-            // 
-            this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_FirstName.FillWeight = 50F;
-            this.dgvApplications_FirstName.HeaderText = "Имя";
-            this.dgvApplications_FirstName.MinimumWidth = 100;
-            this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
-            this.dgvApplications_FirstName.ReadOnly = true;
-            // 
-            // dgvApplications_MiddleName
-            // 
-            this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_MiddleName.FillWeight = 50F;
-            this.dgvApplications_MiddleName.HeaderText = "Отчество";
-            this.dgvApplications_MiddleName.MinimumWidth = 100;
-            this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
-            this.dgvApplications_MiddleName.ReadOnly = true;
-            // 
-            // dgvApplications_Entrances
-            // 
-            this.dgvApplications_Entrances.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvApplications_Entrances.FillWeight = 50F;
-            this.dgvApplications_Entrances.HeaderText = "Направления";
-            this.dgvApplications_Entrances.MinimumWidth = 50;
-            this.dgvApplications_Entrances.Name = "dgvApplications_Entrances";
-            this.dgvApplications_Entrances.ReadOnly = true;
-            // 
-            // dgvApplications_Programs
-            // 
-            this.dgvApplications_Programs.HeaderText = "Маг. программы";
-            this.dgvApplications_Programs.Name = "dgvApplications_Programs";
-            this.dgvApplications_Programs.ReadOnly = true;
-            this.dgvApplications_Programs.Visible = false;
-            // 
-            // dgvApplications_Original
-            // 
-            this.dgvApplications_Original.HeaderText = "ОДО";
-            this.dgvApplications_Original.Name = "dgvApplications_Original";
-            this.dgvApplications_Original.ReadOnly = true;
-            this.dgvApplications_Original.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.dgvApplications_Original.Width = 50;
-            // 
-            // dgvApplications_RegDate
-            // 
-            this.dgvApplications_RegDate.HeaderText = "Дата подачи";
-            this.dgvApplications_RegDate.Name = "dgvApplications_RegDate";
-            this.dgvApplications_RegDate.ReadOnly = true;
-            this.dgvApplications_RegDate.Width = 120;
-            // 
-            // dgvApplications_EditDate
-            // 
-            this.dgvApplications_EditDate.HeaderText = "Дата изменения";
-            this.dgvApplications_EditDate.Name = "dgvApplications_EditDate";
-            this.dgvApplications_EditDate.ReadOnly = true;
-            this.dgvApplications_EditDate.Width = 120;
-            // 
-            // dgvApplications_PickUpDate
-            // 
-            this.dgvApplications_PickUpDate.HeaderText = "Забрал документы";
-            this.dgvApplications_PickUpDate.Name = "dgvApplications_PickUpDate";
-            this.dgvApplications_PickUpDate.ReadOnly = true;
-            // 
-            // dgvApplications_DeductionDate
-            // 
-            this.dgvApplications_DeductionDate.HeaderText = "Приказ об отчислении";
-            this.dgvApplications_DeductionDate.Name = "dgvApplications_DeductionDate";
-            this.dgvApplications_DeductionDate.ReadOnly = true;
-            this.dgvApplications_DeductionDate.Width = 120;
-            // 
-            // dgvApplications_EnrollmentDate
-            // 
-            this.dgvApplications_EnrollmentDate.HeaderText = "Приказ о зачислении";
-            this.dgvApplications_EnrollmentDate.Name = "dgvApplications_EnrollmentDate";
-            this.dgvApplications_EnrollmentDate.ReadOnly = true;
-            this.dgvApplications_EnrollmentDate.Width = 120;
-            // 
-            // dgvApplications_RegistratorLogin
-            // 
-            this.dgvApplications_RegistratorLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvApplications_RegistratorLogin.HeaderText = "Регистратор";
-            this.dgvApplications_RegistratorLogin.Name = "dgvApplications_RegistratorLogin";
-            this.dgvApplications_RegistratorLogin.ReadOnly = true;
-            this.dgvApplications_RegistratorLogin.Width = 131;
-            // 
-            // dgvApplications_Status
-            // 
-            this.dgvApplications_Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvApplications_Status.HeaderText = "Статус";
-            this.dgvApplications_Status.Name = "dgvApplications_Status";
-            this.dgvApplications_Status.ReadOnly = true;
-            this.dgvApplications_Status.Width = 87;
+            this.dgvApplications.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvApplications_CellFormatting);
             // 
             // label1
             // 
@@ -660,6 +552,7 @@
             // 
             // backgroundWorker
             // 
+            this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
@@ -673,12 +566,114 @@
             this.lbDispalyedCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbDispalyedCount.AutoSize = true;
             this.lbDispalyedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lbDispalyedCount.Location = new System.Drawing.Point(1292, 54);
+            this.lbDispalyedCount.Location = new System.Drawing.Point(1279, 54);
             this.lbDispalyedCount.Name = "lbDispalyedCount";
             this.lbDispalyedCount.Size = new System.Drawing.Size(197, 20);
             this.lbDispalyedCount.TabIndex = 18;
             this.lbDispalyedCount.Tag = "Отображено заявлений: ";
             this.lbDispalyedCount.Text = "Отображено заявлений: ";
+            // 
+            // dgvApplications_ID
+            // 
+            this.dgvApplications_ID.HeaderText = "УИН";
+            this.dgvApplications_ID.Name = "dgvApplications_ID";
+            this.dgvApplications_ID.ReadOnly = true;
+            this.dgvApplications_ID.Width = 50;
+            // 
+            // dgvApplications_LastName
+            // 
+            this.dgvApplications_LastName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_LastName.HeaderText = "Фамилия";
+            this.dgvApplications_LastName.MinimumWidth = 100;
+            this.dgvApplications_LastName.Name = "dgvApplications_LastName";
+            this.dgvApplications_LastName.ReadOnly = true;
+            // 
+            // dgvApplications_FirstName
+            // 
+            this.dgvApplications_FirstName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_FirstName.FillWeight = 50F;
+            this.dgvApplications_FirstName.HeaderText = "Имя";
+            this.dgvApplications_FirstName.MinimumWidth = 100;
+            this.dgvApplications_FirstName.Name = "dgvApplications_FirstName";
+            this.dgvApplications_FirstName.ReadOnly = true;
+            // 
+            // dgvApplications_MiddleName
+            // 
+            this.dgvApplications_MiddleName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_MiddleName.FillWeight = 50F;
+            this.dgvApplications_MiddleName.HeaderText = "Отчество";
+            this.dgvApplications_MiddleName.MinimumWidth = 100;
+            this.dgvApplications_MiddleName.Name = "dgvApplications_MiddleName";
+            this.dgvApplications_MiddleName.ReadOnly = true;
+            // 
+            // dgvApplications_Entrances
+            // 
+            this.dgvApplications_Entrances.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_Entrances.FillWeight = 50F;
+            this.dgvApplications_Entrances.HeaderText = "Направления";
+            this.dgvApplications_Entrances.MinimumWidth = 50;
+            this.dgvApplications_Entrances.Name = "dgvApplications_Entrances";
+            this.dgvApplications_Entrances.ReadOnly = true;
+            // 
+            // dgvApplications_Original
+            // 
+            this.dgvApplications_Original.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvApplications_Original.FillWeight = 20F;
+            this.dgvApplications_Original.HeaderText = "ОДО";
+            this.dgvApplications_Original.MinimumWidth = 20;
+            this.dgvApplications_Original.Name = "dgvApplications_Original";
+            this.dgvApplications_Original.ReadOnly = true;
+            this.dgvApplications_Original.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // dgvApplications_RegDate
+            // 
+            this.dgvApplications_RegDate.HeaderText = "Дата подачи";
+            this.dgvApplications_RegDate.Name = "dgvApplications_RegDate";
+            this.dgvApplications_RegDate.ReadOnly = true;
+            this.dgvApplications_RegDate.Width = 120;
+            // 
+            // dgvApplications_EditDate
+            // 
+            this.dgvApplications_EditDate.HeaderText = "Дата изменения";
+            this.dgvApplications_EditDate.Name = "dgvApplications_EditDate";
+            this.dgvApplications_EditDate.ReadOnly = true;
+            this.dgvApplications_EditDate.Width = 120;
+            // 
+            // dgvApplications_PickUpDate
+            // 
+            this.dgvApplications_PickUpDate.HeaderText = "Забрал документы";
+            this.dgvApplications_PickUpDate.Name = "dgvApplications_PickUpDate";
+            this.dgvApplications_PickUpDate.ReadOnly = true;
+            // 
+            // dgvApplications_DeductionDate
+            // 
+            this.dgvApplications_DeductionDate.HeaderText = "Приказ об отчислении";
+            this.dgvApplications_DeductionDate.Name = "dgvApplications_DeductionDate";
+            this.dgvApplications_DeductionDate.ReadOnly = true;
+            this.dgvApplications_DeductionDate.Width = 120;
+            // 
+            // dgvApplications_EnrollmentDate
+            // 
+            this.dgvApplications_EnrollmentDate.HeaderText = "Приказ о зачислении";
+            this.dgvApplications_EnrollmentDate.Name = "dgvApplications_EnrollmentDate";
+            this.dgvApplications_EnrollmentDate.ReadOnly = true;
+            this.dgvApplications_EnrollmentDate.Width = 120;
+            // 
+            // dgvApplications_RegistratorLogin
+            // 
+            this.dgvApplications_RegistratorLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvApplications_RegistratorLogin.HeaderText = "Регистратор";
+            this.dgvApplications_RegistratorLogin.Name = "dgvApplications_RegistratorLogin";
+            this.dgvApplications_RegistratorLogin.ReadOnly = true;
+            this.dgvApplications_RegistratorLogin.Width = 131;
+            // 
+            // dgvApplications_Status
+            // 
+            this.dgvApplications_Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvApplications_Status.HeaderText = "Статус";
+            this.dgvApplications_Status.Name = "dgvApplications_Status";
+            this.dgvApplications_Status.ReadOnly = true;
+            this.dgvApplications_Status.Width = 87;
             // 
             // Main
             // 
@@ -765,12 +760,12 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_DirsPlaces;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_ProfilesPlaces;
+        private System.Windows.Forms.Label lbDispalyedCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_LastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_FirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_MiddleName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Entrances;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Programs;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvApplications_Original;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EditDate;
@@ -779,7 +774,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_EnrollmentDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
-        private System.Windows.Forms.Label lbDispalyedCount;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_Campaign_Statistics;
     }
 }

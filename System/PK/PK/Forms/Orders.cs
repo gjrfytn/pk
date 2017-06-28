@@ -31,7 +31,7 @@ namespace PK.Forms
 
         private void toolStrip_New_Click(object sender, EventArgs e)
         {
-            OrderEdit form = new OrderEdit(_DB_Connection, null, false);
+            OrderEdit form = new OrderEdit(_DB_Connection, null);
             form.ShowDialog();
 
             UpdateTable();
@@ -39,7 +39,7 @@ namespace PK.Forms
 
         private void toolStrip_Edit_Click(object sender, EventArgs e)
         {
-            OrderEdit form = new OrderEdit(_DB_Connection, SelectedOrderNumber, dataGridView[dataGridView_ProtNumber.Index, dataGridView.SelectedRows[0].Index].Value != null);
+            OrderEdit form = new OrderEdit(_DB_Connection, SelectedOrderNumber);
             form.ShowDialog();
 
             UpdateTable();

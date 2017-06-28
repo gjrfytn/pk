@@ -314,11 +314,7 @@ namespace PK.Forms
                     if (row.Index < dgvDirections.Rows.Count-1 && uint.Parse(row.Cells[dgvDirections_DirID.Index].Value.ToString()) == (uint)v[1]
                         && row.Cells[dgvDirections_Fac.Index].Value.ToString() == v[2].ToString())
                         dgvPaidPlaces.Rows.Add(v[1], v[0], _DB_Helper.GetDirectionNameAndCode((uint)v[1]).Item2, 
-                            _DB_Connection.Select(DB_Table.DIRECTIONS, new string[] { "short_name" }, new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, v[2].ToString()),
-                                new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, (uint)v[1])
-                            })[0][0],                            
+                            _DB_Helper.GetDirectionShortName(v[2].ToString(), (uint)v[1]),                            
                             v[2], 0, 0, 0, v[3], 0);
             dgvPaidPlaces.Rows.Add("", "ИТОГО", "", "", "", 0, 0, 0, "", 0);
             dgvPaidPlaces.Rows[dgvPaidPlaces.Rows.Count - 1].ReadOnly = true;

@@ -116,6 +116,8 @@ namespace PK.Forms
                         lines.Add(reader.ReadLine().Split('%'));
                 }
 
+                uint count = 0;
+
                 foreach (EGE_Result appl in _ApplsEgeResults)
                 {
                     Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
@@ -134,6 +136,7 @@ namespace PK.Forms
                                 Year = s[7]
                             };
                         });
+
 
                     var subjects = applResults.GroupBy(
                         k => k.Subject,
@@ -155,9 +158,13 @@ namespace PK.Forms
                                 { "checked",true }
                             });
                     }
+
+                    count = (uint)subjects.Count();
                 }
 
                 Cursor.Current = Cursors.Default;
+
+                MessageBox.Show("Всего результатов: " + count, "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
