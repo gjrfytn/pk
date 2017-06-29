@@ -256,6 +256,7 @@
             this.cbEduLevelSPO.TabIndex = 3;
             this.cbEduLevelSPO.Text = "СПО";
             this.cbEduLevelSPO.UseVisualStyleBackColor = true;
+            this.cbEduLevelSPO.CheckedChanged += new System.EventHandler(this.cbEduLevel_CheckedChanged);
             // 
             // cbEduLevelSpec
             // 

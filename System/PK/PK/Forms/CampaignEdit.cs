@@ -81,6 +81,7 @@ namespace PK.Forms
                     break;
                 case "Прием на обучение на СПО":
                     cbEduLevelSPO.Checked = true;
+                    cbEduFormO.Checked = true;
                     cbEduFormOZ.Checked = false;
                     cbEduFormOZ.Enabled = false;
                     cbEduFormZ.Checked = false;
@@ -166,7 +167,7 @@ namespace PK.Forms
                 {
                     if (!cbEduFormO.Checked && !cbEduFormOZ.Checked && !cbEduFormZ.Checked)
                         MessageBox.Show("Не выбраны формы обучения.");
-                    else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked)
+                    else if (!cbEduLevelBacc.Checked && !cbEduLevelMag.Checked && !cbEduLevelSpec.Checked && !cbEduLevelSPO.Checked)
                         MessageBox.Show("Не выбран уровень образования.");
                     else
                     {
@@ -284,14 +285,13 @@ namespace PK.Forms
             {
                 FillDirectionsTable();
                 FillFacultiesTable();
-                dgvFacultities.Enabled = false;
+                FillProfiliesTable();
                 dgvFacultities.Visible = false;
-                dgvTargetOrganizatons.Enabled = false;
                 dgvTargetOrganizatons.Visible = false;
-                dgvPaidPlaces.Enabled = false;
-                dgvPaidPlaces.Visible = false;
-                dgvEntranceTests.Enabled = false;
                 dgvEntranceTests.Visible = false;
+                label7.Visible = false;
+                label8.Visible = false;
+                label10.Visible = false;
             }
         }
 
@@ -312,7 +312,6 @@ namespace PK.Forms
             dgvDirections.Rows.Clear();
             foreach (var v in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS, "name", "code", "id"))
                 foreach (var r in _DB_Connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id"))
-
                     if ((cbEduLevelBacc.Checked) && (v[1].ToString().Substring(3, 2) == "03") && (r[1].ToString() == v[2].ToString()))
                         dgvDirections.Rows.Add(v[2].ToString(), true, v[0].ToString(), v[1].ToString(), r[0].ToString(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -485,6 +484,10 @@ namespace PK.Forms
                 SaveProfiles(transaction);
                 SaveEntranceTests(transaction);
             }
+            else
+            {
+                SaveProfiles(transaction);
+            }
         }
 
         private void UpdateCampaign(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -503,9 +506,16 @@ namespace PK.Forms
             UpdateEduLevels(transaction);
             UpdateFaculties(transaction);
             UpdateDirections(transaction);
-            UpdateTargetOrganizations(transaction);            
-            UpdateProfiles(transaction);
-            UpdateEntranceTests(transaction);
+            if (!cbEduLevelSPO.Checked)
+            {
+                UpdateTargetOrganizations(transaction);
+                UpdateProfiles(transaction);
+                UpdateEntranceTests(transaction);
+            }
+            else
+            {
+                UpdateProfiles(transaction);
+            }
         }
 
         private void LoadCampaign()
@@ -535,10 +545,18 @@ namespace PK.Forms
         private void LoadTables()
         {
             LoadDirections();
-            LoadTargetOrganizations();
-            LoadFaculties();
-            LoadProfiles();
-            LoadEntranceTests();
+            if (!cbEduLevelSPO.Checked)
+            {
+                LoadTargetOrganizations();
+                LoadFaculties();
+                LoadProfiles();
+                LoadEntranceTests();
+            }
+            else
+            {
+                LoadFaculties();
+                LoadProfiles();
+            }
         }
 
 
@@ -596,7 +614,7 @@ namespace PK.Forms
 
                     int[] places = new int[5];
                     for (int i = 5; i <= 8; i++)
-                        if (dgvDirections.Columns[i].Visible == true)
+                        if (dgvDirections.Columns[i].Visible)
                             places[i - 5] = int.Parse(r.Cells[i].Value.ToString());
 
                     _DB_Connection.Insert(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new Dictionary<string, object>
@@ -818,8 +836,9 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dgvPaidPlaces.Rows)
                 if (row.Index < dgvPaidPlaces.Rows.Count)
                     SumCells(row.Cells[dgvPaidPlaces_OFPM.Index]);
-            for (int i = dgvPaidPlaces_OFPM.Index; i <= dgvPaidPlaces_ZFPM.Index; i++)
-                SumCells(dgvPaidPlaces.Rows[0].Cells[i]);
+            if (dgvPaidPlaces.Rows.Count > 0)
+                for (int i = dgvPaidPlaces_OFPM.Index; i <= dgvPaidPlaces_ZFPM.Index; i++)
+                    SumCells(dgvPaidPlaces.Rows[0].Cells[i]);
         }
 
         private void LoadEntranceTests()
