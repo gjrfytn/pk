@@ -21,11 +21,14 @@ namespace PK.Forms
             _DB_Connection = connection;
             _DB_Helper = new Classes.DB_Helper(_DB_Connection);
 
+            List<string> olympsNames = new List<string>();
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("year", Relation.GREATER_EQUAL, DateTime.Now.Year -1)
             }))
-                cbOlympName.Items.Add(olymp[0].ToString());
+                olympsNames.Add(olymp[0].ToString());
+            foreach(string name in olympsNames.Distinct())
+                cbOlympName.Items.Add(name);
 
             if (olympData.olympName != null && olympData.olympName != "")
             {
