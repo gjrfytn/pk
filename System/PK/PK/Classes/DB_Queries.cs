@@ -82,7 +82,7 @@ namespace PK.Classes
                 )[0];
 
             return applications.Join(
-                connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked"),
+                connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "id", "subject_id", "value", "checked"),
                 k1 => k1,
                 k2 => k2[0],
                 (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3], ExamDate = (DateTime?)null }

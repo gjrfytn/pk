@@ -79,6 +79,8 @@ namespace PK.Forms
 
                 if (ValidateXML(package))
                     package.Save(saveFileDialog.FileName);
+
+                MessageBox.Show("Выгрузка завершена.", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             Cursor.Current = Cursors.Default;

@@ -1069,7 +1069,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`entrants_view` (`id` INT, `last_name` INT, `
 -- -----------------------------------------------------
 -- Placeholder table for view `pk_db`.`applications_ege_marks_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pk_db`.`applications_ege_marks_view` (`applications_id` INT, `subject_id` INT, `value` INT, `checked` INT);
+CREATE TABLE IF NOT EXISTS `pk_db`.`applications_ege_marks_view` (`id` INT, `document_id` INT, `series` INT, `number` INT, `subject_id` INT, `value` INT, `checked` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `pk_db`.`applications_short_entrances_view`
@@ -1271,7 +1271,7 @@ DELIMITER ;
 DROP TABLE IF EXISTS `pk_db`.`entrants_view`;
 USE `pk_db`;
 CREATE  OR REPLACE VIEW `entrants_view` AS
-    SELECT 
+    SELECT DISTINCT
         entrants.id,
         appls_idents.last_name,
         appls_idents.first_name,
@@ -1317,11 +1317,21 @@ DROP TABLE IF EXISTS `pk_db`.`applications_ege_marks_view`;
 USE `pk_db`;
 CREATE  OR REPLACE VIEW `applications_ege_marks_view` AS
     SELECT 
-        applications_id, subject_id, value, checked
+        _applications_has_documents.applications_id AS id,
+        docs_marks.*
     FROM
         _applications_has_documents
             JOIN
-        documents_subjects_data ON _applications_has_documents.documents_id = documents_subjects_data.document_id;
+        (SELECT 
+            documents.id AS document_id,
+                documents.series,
+                documents.number,
+                documents_subjects_data.subject_id,
+                documents_subjects_data.value,
+                documents_subjects_data.checked
+        FROM
+            documents
+        JOIN documents_subjects_data ON documents.id = documents_subjects_data.document_id) AS docs_marks ON _applications_has_documents.documents_id = docs_marks.document_id;
 
 -- -----------------------------------------------------
 -- View `pk_db`.`applications_short_entrances_view`
