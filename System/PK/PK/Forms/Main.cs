@@ -362,9 +362,9 @@ namespace PK.Forms
             });
 
             if (_UserRole == "registrator")
-                return rows.Where(s => s[12].ToString() == _UserLogin && ((DateTime)s[7]).Date == DateTime.Now.Date);
+                return rows.Where(s => s[11].ToString() == _UserLogin && ((DateTime)s[6]).Date == DateTime.Now.Date);
             else if (_UserRole == "inspector")
-                return rows.Where(s => ((DateTime)s[7]).Date == DateTime.Now.Date);
+                return rows.Where(s => ((DateTime)s[6]).Date == DateTime.Now.Date);
             else
                 return rows;
         }
@@ -385,50 +385,14 @@ namespace PK.Forms
                 sortMethod = System.ComponentModel.ListSortDirection.Descending;
 
             int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
-            if (dgvApplications.Rows.Count == 0)
-                dgvApplications.Rows.AddRange(rows.Select(s =>
+
+            dgvApplications.Rows.Clear();
+            dgvApplications.Rows.AddRange(rows.Select(s =>
                 {
                     DataGridViewRow row = new DataGridViewRow();
                     row.CreateCells(dgvApplications, s);
                     return row;
                 }).ToArray());
-            else
-            {
-                foreach (object[] newRow in rows)
-                {
-                    bool found = false;
-                    foreach (DataGridViewRow oldRow in dgvApplications.Rows)
-                        if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == (uint)newRow[dgvApplications_ID.Index])
-                        {
-                            found = true;
-                            bool match = true;
-                            foreach (DataGridViewCell oldCell in oldRow.Cells)
-                                if (oldCell.Value != null && newRow[oldCell.ColumnIndex] != null && oldCell.Value.ToString() != newRow[oldCell.ColumnIndex].ToString())
-                                {
-                                    match = false;
-                                    break;
-                                }
-                            if (!match)
-                                oldRow.SetValues(newRow);
-                            if ((uint)oldRow.Cells[dgvApplications_ID.Index].Value == _SelectedAppID)
-                                oldRow.Selected = true;
-                        }
-                    if (!found)
-                        dgvApplications.Rows.Add(newRow);
-                }
-                int i = 0;
-                while(i < dgvApplications.Rows.Count)
-                {
-                    bool found = false;
-                    foreach (object[] newRow in rows)
-                        if ((uint)dgvApplications.Rows[i].Cells[dgvApplications_ID.Index].Value == (uint)newRow[dgvApplications_ID.Index])
-                            found = true;
-                    if (!found)
-                        dgvApplications.Rows.RemoveAt(i);
-                    else
-                        i++;
-                }
-            }
 
             if (sortColumn != null)
                 dgvApplications.Sort(sortColumn, sortMethod);
@@ -438,6 +402,9 @@ namespace PK.Forms
 
         private void FilterAppsTable()
         {
+            //using (System.IO.StreamWriter writer = new System.IO.StreamWriter("lol.log", true))
+            //    writer.Write("\r\nfiltered");
+
             ChangeColumnsVisible();
             int visibleCount = 0;
             foreach (DataGridViewRow row in dgvApplications.Rows)

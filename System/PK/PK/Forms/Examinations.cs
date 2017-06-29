@@ -85,10 +85,10 @@ namespace PK.Forms
                 new string[] { "id", "registration_time" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true)
-                }
-                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
-               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
+                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true),
+                    new Tuple<string, Relation, object>("status",Relation.EQUAL,"new")
+                }).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
+                (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
                 ).Select(s => (uint)s[0]);
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());

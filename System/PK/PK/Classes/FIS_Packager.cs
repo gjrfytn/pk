@@ -270,7 +270,7 @@ namespace PK.Classes
             if (applicationsBD.Count() == 0)
                 return null;
 
-                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
+            IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
             foreach (var appl in applicationsBD)
             {
@@ -380,7 +380,7 @@ namespace PK.Classes
                     ));
             }
 
-                return applications;
+            return applications;
         }
 
         private static Orders PackOrders(DB_Connector connection, uint campaignID)
@@ -671,7 +671,7 @@ namespace PK.Classes
                                 doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                 idDoc[2].ToString(),
                                 (uint)idDoc[3],
-                                doc.Series,
+                                !string.IsNullOrWhiteSpace(doc.Series) ? doc.Series : null,
                                 idDoc[4] as string,
                                 doc.Organization,
                                 idDoc[8].ToString()
@@ -704,7 +704,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    new TDocumentSeries(doc.Series),
+                                    !string.IsNullOrWhiteSpace(doc.Series)? new TDocumentSeries(doc.Series):null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     year

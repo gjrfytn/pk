@@ -50,6 +50,7 @@ namespace PK.Classes
         public const string RedDiplomaAchievement = "Иное";
 
         public const string NoEGE = "Не сдавал ЕГЭ";
+        public const string EGEAdditionalDoc = "Дополнительный документ ЕГЭ";
         #endregion
 
         private readonly DB_Connector _DB_Connection;
