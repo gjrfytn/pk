@@ -337,11 +337,35 @@ namespace PK.Classes
                 if (customDocs.Count == 0)
                     customDocs = null;
 
+                List<IdentityDocument> otherIdentityDocs = connection.Select(
+                    DB_Table.APPLICATION_EGE_RESULTS,
+                    new string[] { "series", "number" },
+                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) })
+                    .GroupBy(
+                    k => System.Tuple.Create(k[0] as string, k[1] as string),
+                    (k, g) => new IdentityDocument(
+                        new TUID(appl.ID.ToString() + "_" + k.Item1 + k.Item2),
+                        packedDocs.IdentityDocument.LastName,
+                        packedDocs.IdentityDocument.FirstName,
+                        k.Item2,
+                        packedDocs.IdentityDocument.DocumentDate,
+                        9, //TODO
+                        packedDocs.IdentityDocument.NationalityTypeID,
+                        packedDocs.IdentityDocument.BirthDate,
+                        null,
+                        packedDocs.IdentityDocument.MiddleName,
+                        packedDocs.IdentityDocument.GenderID,
+                        k.Item1
+                        )).ToList();
+
+                if (otherIdentityDocs.Count == 0)
+                    otherIdentityDocs = null;
+
                 packedDocs = new ApplicationDocuments(
                     packedDocs.IdentityDocument,
                     packedDocs.EgeDocuments,
                     packedDocs.GiaDocuments,
-                    packedDocs.OtherIdentityDocuments,
+                    otherIdentityDocs,
                     packedDocs.EduDocuments,
                     packedDocs.MilitaryCardDocument,
                     packedDocs.StudentDocument,
@@ -704,7 +728,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    !string.IsNullOrWhiteSpace(doc.Series)? new TDocumentSeries(doc.Series):null,
+                                    !string.IsNullOrWhiteSpace(doc.Series) ? new TDocumentSeries(doc.Series) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     year

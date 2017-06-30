@@ -106,7 +106,7 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
-            dgvExams_EGE.ValueType = typeof(byte);
+            dgvExams_EGE.ValueType = typeof(ushort);
 
             if (_DB_Connection.Select(
                 DB_Table.USERS,
@@ -139,7 +139,6 @@ namespace PK.Forms
             FillComboBox(cbIDDocType, FIS_Dictionary.IDENTITY_DOC_TYPE);
             FillComboBox(cbSex, FIS_Dictionary.GENDER);
             FillComboBox(cbNationality, FIS_Dictionary.COUNTRY);
-            FillComboBox(cbExamsDocType, FIS_Dictionary.IDENTITY_DOC_TYPE);
             cbFirstTime.SelectedIndex = 0;
             cbForeignLanguage.SelectedIndex = 0;
             rbCertificate.Checked = false;
@@ -168,11 +167,11 @@ namespace PK.Forms
             };
 
             object[] minMarks = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" })[0];
-            dgvExams.Rows.Add("Математика", null, null, (byte)0, minMarks[0], false);
-            dgvExams.Rows.Add("Русский язык", null, null, (byte)0, minMarks[1], false);
-            dgvExams.Rows.Add("Физика", null, null, (byte)0, minMarks[2], false);
-            dgvExams.Rows.Add("Обществознание", null, null, (byte)0, minMarks[3], false);
-            dgvExams.Rows.Add("Иностранный язык", null, null, (byte)0, minMarks[4], false);
+            dgvExams.Rows.Add("Математика", null, null, (ushort)0, minMarks[0], false);
+            dgvExams.Rows.Add("Русский язык", null, null, (ushort)0, minMarks[1], false);
+            dgvExams.Rows.Add("Физика", null, null, (ushort)0, minMarks[2], false);
+            dgvExams.Rows.Add("Обществознание", null, null, (ushort)0, minMarks[3], false);
+            dgvExams.Rows.Add("Иностранный язык", null, null, (ushort)0, minMarks[4], false);
 
             for (int j = 0; j < dgvExams.Rows.Count; j++)
             {
@@ -442,7 +441,7 @@ namespace PK.Forms
                         }
                         if (cbQuote.Checked && !quoteOK)
                             MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
-                        else if (!cbPassportMatch.Checked && !cbNoEGE.Checked && (string.IsNullOrWhiteSpace(tbExamsDocSeries.Text) || string.IsNullOrWhiteSpace(tbExamsDocNumber.Text)))
+                        else if (false)//TODO
                             MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
                         else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
                             MessageBox.Show("Поле \"Email\" не заполнено");
@@ -539,46 +538,14 @@ namespace PK.Forms
 
         private void cbPassportMatch_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbPassportMatch.Checked || cbNoEGE.Checked)
+            if (cbPassportMatch.Checked)
             {
-                tbExamsDocSeries.Enabled = false;
-                tbExamsDocNumber.Enabled = false;
-                cbExamsDocType.Enabled = false;
-                label33.Enabled = false;
-                label34.Enabled = false;
-                label35.Enabled = false;
-                if (cbPassportMatch.Checked)
-                {
-                    tbExamsDocSeries.Text = tbIDDocSeries.Text;
-                    tbExamsDocNumber.Text = tbIDDocNumber.Text;
-                    cbExamsDocType.SelectedItem = cbIDDocType.SelectedItem.ToString();
-                    dgvExams.Enabled = true;
-                }
-                else
-                {
-                    tbExamsDocSeries.Clear();
-                    tbExamsDocNumber.Clear();
-                    cbIDDocType.SelectedIndex = 0;
-                    dgvExams.Enabled = false;
-                }
+                //TODO
             }
             else
             {
-                tbExamsDocSeries.Enabled = true;
-                tbExamsDocSeries.Clear();
-                tbExamsDocNumber.Enabled = true;
-                tbExamsDocNumber.Clear();
-                cbExamsDocType.Enabled = true;
-                cbIDDocType.SelectedIndex = 0;
-                label33.Enabled = true;
-                label34.Enabled = true;
-                label35.Enabled = true;
-                dgvExams.Enabled = true;
+
             }
-            if (sender == cbPassportMatch && cbPassportMatch.Checked)
-                cbNoEGE.Checked = false;
-            else if (sender == cbNoEGE && cbNoEGE.Checked)
-                cbPassportMatch.Checked = false;
         }
 
         private void rb_CheckedChanged(object sender, EventArgs e)
@@ -1074,7 +1041,7 @@ namespace PK.Forms
             {
                 try
                 {
-                    if (byte.Parse(e.FormattedValue.ToString()) > 100)
+                    if (ushort.Parse(e.FormattedValue.ToString()) > 100)
                     {
                         MessageBox.Show("Значение не должно превышать 100.");
                         e.Cancel = true;
@@ -1090,18 +1057,20 @@ namespace PK.Forms
             if (dgv.CurrentCell != null && dgv.CurrentCell.ColumnIndex == dgvExams_EGE.Index)
             {
                 if (dgv.CurrentCell.Value.ToString() == "")
-                    dgv.CurrentCell.Value = (byte)0;
+                    dgv.CurrentCell.Value = (ushort)0;
 
-                if ((byte)dgv.CurrentCell.Value != 0 && (byte)dgv.CurrentCell.Value < (ushort)dgv[dgvExams_Min.Index, dgv.CurrentCell.RowIndex].Value)
+                if ((ushort)dgv.CurrentCell.Value != 0 && (ushort)dgv.CurrentCell.Value < (ushort)dgv[dgvExams_Min.Index, dgv.CurrentCell.RowIndex].Value)
                     dgv.CurrentCell.Style.BackColor = System.Drawing.Color.LightPink;
                 else
                     dgv.CurrentCell.Style.BackColor = System.Drawing.Color.White;
 
                 cbOlympiad.Enabled = false;
                 foreach (DataGridViewRow row in dgvExams.Rows)
-                    if ((byte)row.Cells[dgvExams_EGE.Index].Value >= 75)
+                    if ((ushort)row.Cells[dgvExams_EGE.Index].Value >= 75)
                         cbOlympiad.Enabled = true;
             }
+            if (dgv.CurrentRow != null && !_Loading && _ApplicationID.HasValue)
+                dgv.CurrentRow.Cells[dgvExams_Checked.Index].Value = false;
         }
 
         private void cbAddress_TextChanged(object sender, EventArgs e)
@@ -1197,8 +1166,6 @@ namespace PK.Forms
             {
                 tbIDDocSeries.Text += digits[rand.Next(digits.Length)];
                 tbIDDocNumber.Text += digits[rand.Next(digits.Length)];
-                tbExamsDocSeries.Text += digits[rand.Next(digits.Length)];
-                tbExamsDocNumber.Text += digits[rand.Next(digits.Length)];
                 tbInstitutionNumber.Text += cyrillicLetters[rand.Next(cyrillicLetters.Length)];
                 if ((int)cbGraduationYear.SelectedItem < 2014)
                 {
@@ -1348,7 +1315,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
-            //LoadExaminationsMarks();
+            LoadMarks();
             LoadDocuments();
             LoadDirections();
             Cursor.Current = Cursors.Default;
@@ -1357,6 +1324,7 @@ namespace PK.Forms
         private void UpdateApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             UpdateBasic(transaction);
+            UpdateEGEMarks(transaction);
             UpdateDocuments(transaction);
             UpdateDirections(transaction);
         }
@@ -1910,74 +1878,19 @@ namespace PK.Forms
 
         private void SaveExams(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            uint[] examsDocIds = new uint[2];
-            if (cbPassportMatch.Checked || cbNoEGE.Checked)
-            {
-                examsDocIds[0] = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "type", "ege" },
-                    { "series", tbIDDocSeries.Text.Trim() },
-                    { "number", tbIDDocNumber.Text.Trim() }
-                }, transaction);
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "applications_id", applID },
-                    { "documents_id", examsDocIds[0] }
-                }, transaction);
-                if (cbNoEGE.Checked)
-                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                    {
-                        { "document_id", examsDocIds[0] },
-                        { "text_data", Classes.DB_Helper.NoEGE }
-                    }, transaction);
-            }
-            else
-            {
-                examsDocIds[0] = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "type", "ege" },
-                    { "series", tbExamsDocSeries.Text.Trim() },
-                    { "number", tbExamsDocNumber.Text.Trim() }
-                }, transaction);
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "applications_id", applID },
-                    { "documents_id", examsDocIds[0] }
-                }, transaction);
-
-
-                examsDocIds[1] = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "type", "ege" },
-                    { "series", tbIDDocSeries.Text.Trim() },
-                    { "number", tbIDDocNumber.Text.Trim() }
-                }, transaction);
-                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
-                {
-                    { "applications_id", applID },
-                    { "documents_id", examsDocIds[1] }
-                }, transaction);
-                _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                    {
-                        { "document_id", examsDocIds[0] },
-                        { "text_data", Classes.DB_Helper.EGEAdditionalDoc }
-                    }, transaction);
-            }
-
             foreach (DataGridViewRow row in dgvExams.Rows)
-                foreach (uint egeDocID in examsDocIds)
+                if ((ushort)row.Cells[dgvExams_EGE.Index].Value > 0)
+                    _DB_Connection.Insert(DB_Table.APPLICATION_EGE_RESULTS, new Dictionary<string, object>
                 {
-                    if ((byte)row.Cells[3].Value != 0)
-                        _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
-                    {
-                        { "document_id", egeDocID},
-                        { "year", row.Cells[dgvExams_Year.Index].Value },
-                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS},
-                        { "subject_id", _DB_Helper.GetDictionaryItemID( FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString())} ,
-                        { "value", row.Cells[3].Value},
-                        { "checked", false }
-                    }, transaction);
-                }
+                    { "application_id", applID },
+                    { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                    { "subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[dgvExams_Subject.Index].Value.ToString()) },
+                    { "series", row.Cells[dgvExams_Series.Index].Value },
+                    { "number", row.Cells[dgvExams_Number.Index].Value },
+                    { "year", ushort.Parse(row.Cells[dgvExams_Year.Index].Value.ToString()) },
+                    { "value", row.Cells[dgvExams_EGE.Index].Value },
+                    { "checked", false },
+                }, transaction);
         }
 
         private void SaveCertificate(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -2122,8 +2035,24 @@ namespace PK.Forms
             tbHomePhone.Text = entrant[1].ToString();
         }
 
-        private void LoadExaminationsMarks()
+        private void LoadMarks()
         {
+            foreach (object[] mark in _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, new string[] { "subject_id", "series", "number", "year", "value", "checked" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
+                }))
+                foreach (DataGridViewRow row in dgvExams.Rows)
+                    if (_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[dgvExams_Subject.Index].Value.ToString()) == (uint)mark[0])
+                    {
+                        row.Cells[dgvExams_Year.Index].Value = mark[3].ToString();
+                        row.Cells[dgvExams_EGE.Index].Value = (ushort)mark[4];
+                        row.Cells[dgvExams_Series.Index].Value = mark[1];
+                        row.Cells[dgvExams_Number.Index].Value = mark[2];
+                        row.Cells[dgvExams_Checked.Index].Value = (bool)mark[5];
+                        if ((bool)row.Cells[dgvExams_Checked.Index].Value) ;
+                    }
+
             var exMarks = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new string[] { "examination_id", "mark" }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
@@ -2146,7 +2075,6 @@ namespace PK.Forms
 
         private void LoadDocuments()
         {
-            bool egeLoaded = false;
             List<object[]> appDocuments = new List<object[]>();
             foreach (var documentID in _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
             {
@@ -2237,81 +2165,6 @@ namespace PK.Forms
                     }
                     if (GetAppAchievementsByCategory(insAchievementCategory).Count > 0)
                         cbMedal.Checked = true;
-                }
-                else if (document[1].ToString() == "ege" && !egeLoaded)
-                {
-                    if (document[2].ToString() == tbIDDocSeries.Text && document[3].ToString() == tbIDDocNumber.Text && tbExamsDocSeries.Text == "")
-                    {
-                        List<object[]> egeAdditionalData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                            });
-                        if (egeAdditionalData.Any() && egeAdditionalData[0][0].ToString() == Classes.DB_Helper.NoEGE)
-                            cbNoEGE.Checked = true;
-                        else
-                        {
-                            cbPassportMatch.Checked = true;
-                            tbExamsDocSeries.Text = document[2].ToString();
-                            tbExamsDocNumber.Text = document[3].ToString();
-                        }
-                    }
-                    else
-                    {
-                        cbPassportMatch.Checked = false;
-                        cbNoEGE.Checked = false;
-                        tbExamsDocSeries.Text = document[2].ToString();
-                        tbExamsDocNumber.Text = document[3].ToString();
-                    }
-                    //List<object[]> subjects = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "subject_id", "value", "checked", "year" }, new List<Tuple<string, Relation, object>>
-                    //{
-                    //    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                    //});
-                    //foreach (var subject in subjects)
-                    //    foreach (DataGridViewRow row in dgvExams.Rows)
-                    //        if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)subject[0]))
-                    //        {
-                    //            row.Cells[dgvExams_EGE.Index].Value = (byte)(uint)subject[1];
-                    //            row.Cells[dgvExams_Checked.Index].Value = (bool)subject[2];
-                    //            row.Cells[dgvExams_Year.Index].Value = subject[3].ToString();
-                    //            if ((bool)subject[2])
-                    //                row.ReadOnly = true;
-                    //        }
-
-                    foreach (var mark in Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ApplicationID.Value }, _CurrCampainID).Join(
-                        _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "year", "subject_id" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                        }),
-                        k1 => k1.SubjID,
-                        k2 => k2[1],
-                        (s1, s2) => new
-                        {
-                            Mark = s1,
-                            Year = s2[0].ToString()
-                        }
-                        ))
-                        foreach (DataGridViewRow row in dgvExams.Rows)
-                            if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, mark.Mark.SubjID))
-                            {
-                                if (!mark.Mark.FromExamDate.HasValue)
-                                {
-                                    if ((byte)row.Cells[dgvExams_EGE.Index].Value <= mark.Mark.Value && mark.Mark.Checked || (byte)row.Cells[dgvExams_EGE.Index].Value == 0)
-                                    {
-                                        row.Cells[dgvExams_EGE.Index].Value = mark.Mark.Value;
-                                        row.Cells[dgvExams_Checked.Index].Value = mark.Mark.Checked;
-                                        row.Cells[dgvExams_Year.Index].Value = mark.Year;
-                                        if (mark.Mark.Checked)
-                                            row.ReadOnly = true;
-                                    }
-                                }
-                                else if ((byte)row.Cells[dgvExams_Exam.Index].Value <= mark.Mark.Value)
-                                {
-                                    row.Cells[dgvExams_Exam.Index].Value = mark.Mark.Value;
-                                    row.Cells[dgvExams_Exam.Index].ToolTipText = mark.Mark.FromExamDate.Value.ToShortDateString();
-                                }
-                            }
                 }
                 else if (document[1].ToString() == "photos")
                     cbPhotos.Checked = true;
@@ -2854,6 +2707,27 @@ namespace PK.Forms
             }, transaction);
         }
 
+        private void UpdateEGEMarks(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        {
+            string[] fieldNames = new string[] { "application_id", "subject_dict_id", "subject_id", "value", "year", "checked", "series", "number" };
+            string[] keysNames = new string[] { "application_id", "subject_dict_id", "subject_id" };
+            List<object[]> oldData = _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, fieldNames,
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID )
+                });
+            List<object[]> newData = new List<object[]>();
+            foreach (DataGridViewRow row in dgvExams.Rows)
+                if ((ushort)row.Cells[dgvExams_EGE.Index].Value > 0)
+                {
+                        newData.Add(new object[] { _ApplicationID, (uint)FIS_Dictionary.SUBJECTS,
+                        _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[dgvExams_Subject.Index].Value.ToString()),
+                        row.Cells[dgvExams_EGE.Index].Value, row.Cells[dgvExams_Year.Index].Value, (bool)row.Cells[dgvExams_Checked.Index].Value,
+                    row.Cells[dgvExams_Series.Index].Value, row.Cells[dgvExams_Number.Index].Value });
+                }
+            _DB_Helper.UpdateData(DB_Table.APPLICATION_EGE_RESULTS, oldData, newData, fieldNames, keysNames, transaction);
+        }
+
         private void UpdateDocuments(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> appDocumentsLinks = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
@@ -2867,7 +2741,6 @@ namespace PK.Forms
             bool olympFound = false;
             bool certificateFound = false;
             bool photosFound = false;
-            bool egeUdated = false;
 
             if (appDocumentsLinks.Count > 0)
             {
@@ -3048,209 +2921,6 @@ namespace PK.Forms
                                     {
                                         { "id", (uint)oldAchievement[0] }
                                     }, transaction);
-                    }
-                    else if (document[1].ToString() == "ege" && !egeUdated)
-                    {
-                        //if (cbPassportMatch.Checked || cbNoEGE.Checked)
-                        //{
-                        //    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                        //    {
-                        //        { "series", tbIDDocSeries.Text.Trim() },
-                        //        { "number", tbIDDocNumber.Text.Trim() }
-                        //    }, new Dictionary<string, object>
-                        //    {
-                        //        { "id", (uint)document[0] }
-                        //    }, transaction);
-                        //}
-                        //else
-                        //{
-                        //    List<object[]> egeDocs = appDocuments.FindAll(s => s[1].ToString() == "ege");
-                        //    foreach (object[] egeDoc in egeDocs)
-                        //    {
-                        //        List<object[]> egeAddData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "tex_data" },
-                        //            new List<Tuple<string, Relation, object>>
-                        //            {
-                        //                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)egeDoc[0])
-                        //            });
-                        //        if (!egeAddData.Any())
-                        //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                        //            {
-                        //                { "series", tbExamsDocSeries.Text.Trim() },
-                        //                { "number", tbExamsDocNumber.Text.Trim() }
-                        //            }, new Dictionary<string, object>
-                        //            {
-                        //                { "document_id", (uint)egeDoc[0] }
-                        //            }, transaction);
-                        //        else
-                        //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                        //            {
-                        //                { "series", tbIDDocSeries.Text.Trim() },
-                        //                { "number", tbIDDocNumber.Text.Trim() }
-                        //            }, new Dictionary<string, object>
-                        //            {
-                        //                { "document_id", (uint)egeDoc[0] }
-                        //            }, transaction);
-                        //    }
-                        //    egeUdated = true;
-                        //}
-
-                        //List<object[]> egeAdditionalData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
-                        //        new List<Tuple<string, Relation, object>>
-                        //        {
-                        //            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                        //        });
-                        //if (egeAdditionalData.Any() && egeAdditionalData[0][0].ToString() == Classes.DB_Helper.NoEGE && !cbNoEGE.Checked)
-                        //    _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                        //        {
-                        //            { "document_id", (uint)document[0] }
-                        //        }, transaction);
-                        //else if (!egeAdditionalData.Any() && cbNoEGE.Checked)
-                        //    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                        //        {
-                        //            { "document_id", (uint)document[0] },
-                        //            { "text_data", Classes.DB_Helper.NoEGE }
-                        //        }, transaction);
-
-                        List<Tuple<uint, string, string, bool>> egeFullInfo = new List<Tuple<uint, string, string, bool>>();
-                        foreach (object[] egeDoc in appDocuments.FindAll(s => s[1].ToString() == "ege"))
-                        {
-                            List<object[]> egeAddData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)egeDoc[0])
-                                });
-                            if (egeAddData.Any())
-                                egeFullInfo.Add(new Tuple<uint, string, string, bool>((uint)egeDoc[0], egeDoc[2].ToString(), egeDoc[3].ToString(), true));
-                            else
-                                egeFullInfo.Add(new Tuple<uint, string, string, bool>((uint)egeDoc[0], egeDoc[2].ToString(), egeDoc[3].ToString(), false));
-                        }
-                        if (cbPassportMatch.Checked || cbNoEGE.Checked)
-                        {
-                            if (egeFullInfo.Count > 1)
-                            {
-                                _DB_Connection.Delete(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
-                                {
-                                    { "document_id", egeFullInfo.Find(s => !s.Item4).Item1 }
-                                }, transaction);
-                                _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "id", egeFullInfo.Find(s => !s.Item4).Item1 }
-                                }, transaction);
-
-                                egeFullInfo.Remove(egeFullInfo.Find(s => !s.Item4));
-                            }
-
-                            if (egeFullInfo.First().Item4 && !cbNoEGE.Checked)
-                                _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                    {
-                                        { "document_id", egeFullInfo.First().Item1 }
-                                    }, transaction);
-                            else if (cbNoEGE.Checked)
-                                if (egeFullInfo.First().Item4)
-                                    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                    {
-                                        { "text_data", Classes.DB_Helper.NoEGE }
-                                    }, new Dictionary<string, object>
-                                    {
-                                        { "document_id", egeFullInfo.First().Item1 }
-                                    }, transaction);
-                                else
-                                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                    {
-                                        { "document_id", egeFullInfo.First().Item1 },
-                                        { "text_data", Classes.DB_Helper.NoEGE }
-                                    }, transaction);
-
-                            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "series", tbIDDocSeries.Text.Trim() },
-                                    { "number", tbIDDocNumber.Text.Trim() }
-                                }, new Dictionary<string, object>
-                                {
-                                    { "id", egeFullInfo.First().Item1 }
-                                }, transaction);
-                        }
-                        else
-                        {
-                            if (egeFullInfo.Count == 1)
-                            {
-                                if (egeFullInfo.First().Item4)
-                                    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                    {
-                                        { "text_data", Classes.DB_Helper.EGEAdditionalDoc }
-                                    }, new Dictionary<string, object>
-                                    {
-                                        { "document_id", egeFullInfo.First().Item1 }
-                                    }, transaction);
-                                else
-                                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                    {
-                                        { "document_id", egeFullInfo.First().Item1 },
-                                        { "text_data", Classes.DB_Helper.EGEAdditionalDoc }
-                                    }, transaction);
-                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "series", tbIDDocSeries.Text.Trim() },
-                                    { "number", tbIDDocNumber.Text.Trim() }
-                                }, new Dictionary<string, object>
-                                {
-                                    { "id", egeFullInfo.First().Item1 }
-                                }, transaction);
-
-                                uint newEgeDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "type", "ege" },
-                                    { "series", tbExamsDocSeries.Text.Trim() },
-                                    { "number", tbExamsDocNumber.Text.Trim() }
-                                }, transaction);
-                                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "applications_id", _ApplicationID },
-                                    { "documents_id", newEgeDocID }
-                                }, transaction);
-
-                                egeFullInfo.Add(new Tuple<uint, string, string, bool>(newEgeDocID, tbEduDocSeries.Text.Trim(), tbExamsDocNumber.Text.Trim(), false));
-                            }
-                            else
-                            {
-                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "series", tbIDDocSeries.Text },
-                                    { "number", tbIDDocNumber.Text }
-                                }, new Dictionary<string, object>
-                                {
-                                    { "id", egeFullInfo.Find(s => s.Item4).Item1 }
-                                }, transaction);
-                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                {
-                                    { "series", tbExamsDocSeries.Text },
-                                    { "number", tbExamsDocNumber.Text }
-                                }, new Dictionary<string, object>
-                                {
-                                    { "id", egeFullInfo.Find(s => !s.Item4).Item1 }
-                                }, transaction);
-                            }
-                        }
-
-                        foreach (Tuple<uint, string, string, bool> egeDoc in egeFullInfo)
-                        {
-                            string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value", "year", "checked" };
-                            string[] keysNames = new string[] { "document_id", "subject_dict_id", "subject_id" };
-                            List<object[]> oldData = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, fieldNames,
-                                new List<Tuple<string, Relation, object>>
-                                {
-                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, egeDoc.Item1)
-                                });
-                            List<object[]> newData = new List<object[]>();
-                            foreach (DataGridViewRow row in dgvExams.Rows)
-                            {
-                                if (int.Parse(row.Cells[3].Value.ToString()) != 0)
-                                    newData.Add(new object[] { egeDoc.Item1, 1, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString()),
-                                    row.Cells[3].Value, row.Cells[dgvExams_Year.Index].Value, (bool)row.Cells[dgvExams_Checked.Index].Value });
-                            }
-                            _DB_Helper.UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, keysNames, transaction);
-                        }
-                        egeUdated = true;
                     }
                     else if (document[1].ToString() == "sport")
                     {
