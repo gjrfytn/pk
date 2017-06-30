@@ -219,7 +219,10 @@ namespace PK.Classes
                         inventoryTableParams[1].Add(new string[] { "Копия" + buf });
                 }
 
-                if ((applData.Chernobyl ?? false) || (applData.Priority ?? false) || docs.Any(s =>
+                if ((applData.Chernobyl ?? false) ||
+                    (applData.Priority ?? false) ||
+                    entrances.Any(s => s.EduSource == new DB_Helper(connection).GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT)) ||
+                    docs.Any(s =>
                     s.Type == "orphan" ||
                     s.Type == "disability" ||
                     //s.Type == "medical" ||
