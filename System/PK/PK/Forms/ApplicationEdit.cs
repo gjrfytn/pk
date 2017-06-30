@@ -1924,7 +1924,7 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", examsDocId }
                 }, transaction);
                 if (cbNoEGE.Checked)
@@ -1944,7 +1944,7 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", examsDocId }
                 }, transaction);
             }
