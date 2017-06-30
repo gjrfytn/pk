@@ -414,126 +414,126 @@ namespace PK.Forms
                     if (!Classes.Utility.ShowChoiceMessageBox("Серия и номер не соответствуют российскому аттестату 2014 года и новее. Выполнить сохранение?", "Нестандартные данные аттестата"))
                         certificateOK = false;
 
-                    if(certificateOK)
-                    {
-                        bool found = false;
-                        foreach (TabPage tab in tcDirections.TabPages)
-                            foreach (Control control in tab.Controls)
-                            {
-                                ComboBox cb = control as ComboBox;
-                                if ((cb != null) && (cb.SelectedIndex != -1))
-                                    found = true;
-                            }
-                        if (!found)
-                            MessageBox.Show("Не выбрано ни одно направление или профиль.");
-                        else
+                if (certificateOK)
+                {
+                    bool found = false;
+                    foreach (TabPage tab in tcDirections.TabPages)
+                        foreach (Control control in tab.Controls)
                         {
-                            bool quoteOK = false;
-                            if (cbQuote.Checked)
-                            {
-                                foreach (TabPage page in tcDirections.TabPages)
-                                    if (page.Name.Split('_')[1] == "quote")
-                                        foreach (Control control in page.Controls)
-                                        {
-                                            ComboBox combo = control as ComboBox;
-                                            if (combo != null && combo.SelectedIndex != -1)
-                                                quoteOK = true;
-                                        }
-                            }
-                            if (cbQuote.Checked && !quoteOK)
-                                MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
-                            else if (!cbPassportMatch.Checked && !cbNoEGE.Checked && (string.IsNullOrWhiteSpace(tbExamsDocSeries.Text) || string.IsNullOrWhiteSpace(tbExamsDocNumber.Text)))
-                                MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
-                            else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
-                                MessageBox.Show("Поле \"Email\" не заполнено");
-                            else if (!cbAppAdmission.Checked
-                                || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
-                                || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
-                                || rbSpravka.Checked && !cbCertificateHRD.Checked)
-                                MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
-                            else
-                            {
-                                bool applicationMissed = false;
-                                foreach (TabPage page in tcDirections.TabPages)
+                            ComboBox cb = control as ComboBox;
+                            if ((cb != null) && (cb.SelectedIndex != -1))
+                                found = true;
+                        }
+                    if (!found)
+                        MessageBox.Show("Не выбрано ни одно направление или профиль.");
+                    else
+                    {
+                        bool quoteOK = false;
+                        if (cbQuote.Checked)
+                        {
+                            foreach (TabPage page in tcDirections.TabPages)
+                                if (page.Name.Split('_')[1] == "quote")
                                     foreach (Control control in page.Controls)
                                     {
-                                        CheckBox checkBox = control as CheckBox;
-                                        if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
-                                        {
-                                            MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
-                                            applicationMissed = true;
-                                            break;
-                                        }
+                                        ComboBox combo = control as ComboBox;
+                                        if (combo != null && combo.SelectedIndex != -1)
+                                            quoteOK = true;
                                     }
-                                if (!applicationMissed)
+                        }
+                        if (cbQuote.Checked && !quoteOK)
+                            MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
+                        else if (!cbPassportMatch.Checked && !cbNoEGE.Checked && (string.IsNullOrWhiteSpace(tbExamsDocSeries.Text) || string.IsNullOrWhiteSpace(tbExamsDocNumber.Text)))
+                            MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
+                        else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
+                            MessageBox.Show("Поле \"Email\" не заполнено");
+                        else if (!cbAppAdmission.Checked
+                            || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
+                            || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
+                            || rbSpravka.Checked && !cbCertificateHRD.Checked)
+                            MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
+                        else
+                        {
+                            bool applicationMissed = false;
+                            foreach (TabPage page in tcDirections.TabPages)
+                                foreach (Control control in page.Controls)
                                 {
-                                    bool dateOk = true;
-                                    if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
-                                        && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
-                                        dateOk = false;
-                                    if (dateOk)
+                                    CheckBox checkBox = control as CheckBox;
+                                    if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
                                     {
-                                        bool passportOK = true;
-                                        List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                                        MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
+                                        applicationMissed = true;
+                                        break;
+                                    }
+                                }
+                            if (!applicationMissed)
+                            {
+                                bool dateOk = true;
+                                if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
+                                    && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                                    dateOk = false;
+                                if (dateOk)
+                                {
+                                    bool passportOK = true;
+                                    List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
                                 new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
                                 new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
                             });
-                                        if (passportFound.Count > 0)
-                                        {
-                                            List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
+                                    if (passportFound.Count > 0)
+                                    {
+                                        List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
                                 });
-                                            foreach (object[] app in oldApplications)
-                                                if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
-                                                {
-                                                    passportOK = false;
-                                                    if (app[0].ToString() != "withdrawn")
-                                                    {
-                                                        MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
-                                                        break;
-                                                    }
-                                                    else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
-                                                        passportOK = true;
-                                                }
-                                        }
-                                        if (passportOK)
-                                        {
-                                            Cursor.Current = Cursors.WaitCursor;
-
-                                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                        foreach (object[] app in oldApplications)
+                                            if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
                                             {
-                                                uint applID;
-                                                if (!_ApplicationID.HasValue)
-                                                    applID = SaveApplication(transaction);
-                                                else
+                                                passportOK = false;
+                                                if (app[0].ToString() != "withdrawn")
                                                 {
-                                                    applID = _ApplicationID.Value;
-                                                    _EditingDateTime = DateTime.Now;
-                                                    UpdateApplication(transaction);
+                                                    MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                                    break;
                                                 }
+                                                else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                                    passportOK = true;
+                                            }
+                                    }
+                                    if (passportOK)
+                                    {
+                                        Cursor.Current = Cursors.WaitCursor;
 
-                                                transaction.Commit();
-
-                                                if (!_ApplicationID.HasValue)
-                                                    ChangeAgreedChBs(true);
-
-                                                _ApplicationID = applID;
-                                                btPrint.Enabled = true;
-                                                btWithdraw.Enabled = true;
+                                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                        {
+                                            uint applID;
+                                            if (!_ApplicationID.HasValue)
+                                                applID = SaveApplication(transaction);
+                                            else
+                                            {
+                                                applID = _ApplicationID.Value;
+                                                _EditingDateTime = DateTime.Now;
+                                                UpdateApplication(transaction);
                                             }
 
-                                            Cursor.Current = Cursors.Default;
+                                            transaction.Commit();
+
+                                            if (!_ApplicationID.HasValue)
+                                                ChangeAgreedChBs(true);
+
+                                            _ApplicationID = applID;
+                                            btPrint.Enabled = true;
+                                            btWithdraw.Enabled = true;
                                         }
+
+                                        Cursor.Current = Cursors.Default;
                                     }
                                 }
                             }
                         }
                     }
+                }
             }
         } //Сохранение!!!
 
@@ -716,19 +716,16 @@ namespace PK.Forms
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Выполнить сохранение?", "Сохранение", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            Cursor.Current = Cursors.WaitCursor;
+
+            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
             {
-                Cursor.Current = Cursors.WaitCursor;
-
-                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-                {
-                    _EditingDateTime = DateTime.Now;
-                    UpdateApplication(transaction);
-                    transaction.Commit();
-                }
-
-                Cursor.Current = Cursors.Default;
+                _EditingDateTime = DateTime.Now;
+                UpdateApplication(transaction);
+                transaction.Commit();
             }
+
+            Cursor.Current = Cursors.Default;
 
             ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
             form.ShowDialog();
@@ -1163,7 +1160,7 @@ namespace PK.Forms
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             char[] latinLetters = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
             string[] emailEndings = { "gmail.com", "yandex.ru", "rambler.ru", "list.ru", "mail.ru" };
-            
+
             int year = rand.Next(1990, DateTime.Now.Year - 16);
             int month = rand.Next(1, 12);
             int day = rand.Next(1, DateTime.DaysInMonth(year, month));
@@ -1256,12 +1253,12 @@ namespace PK.Forms
                     if (combo != null && combo.SelectedIndex != -1)
                     {
                         pageFilled = true;
-                        
+
                     }
                 }
                 if (pageFilled)
                     selectedDirsCount++;
-            }            
+            }
             if (!_Loading && selectedDirsCount > _SelectedDirsMaxCount)
             {
                 ((ComboBox)sender).SelectedIndex = -1;
@@ -1331,7 +1328,7 @@ namespace PK.Forms
 
         private uint SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-           uint applID= SaveBasic(transaction);
+            uint applID = SaveBasic(transaction);
             SaveDiploma(applID, transaction);
             SaveExams(applID, transaction);
             if (cbQuote.Checked)
@@ -1968,10 +1965,10 @@ namespace PK.Forms
             }
 
             foreach (DataGridViewRow row in dgvExams.Rows)
-                foreach(uint egeDocID in examsDocIds)
-            {
-                if ((byte)row.Cells[3].Value != 0)
-                    _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
+                foreach (uint egeDocID in examsDocIds)
+                {
+                    if ((byte)row.Cells[3].Value != 0)
+                        _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
                     {
                         { "document_id", egeDocID},
                         { "year", row.Cells[dgvExams_Year.Index].Value },
@@ -1980,7 +1977,7 @@ namespace PK.Forms
                         { "value", row.Cells[3].Value},
                         { "checked", false }
                     }, transaction);
-            }
+                }
         }
 
         private void SaveCertificate(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -2149,6 +2146,7 @@ namespace PK.Forms
 
         private void LoadDocuments()
         {
+            bool egeLoaded = false;
             List<object[]> appDocuments = new List<object[]>();
             foreach (var documentID in _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
             {
@@ -2236,13 +2234,13 @@ namespace PK.Forms
                         case "academic_diploma":
                             insAchievementCategory = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement);
                             break;
-                    }                    
+                    }
                     if (GetAppAchievementsByCategory(insAchievementCategory).Count > 0)
                         cbMedal.Checked = true;
                 }
-                else if (document[1].ToString() == "ege")
+                else if (document[1].ToString() == "ege" && !egeLoaded)
                 {
-                    if (document[2].ToString() == tbIDDocSeries.Text && document[3].ToString() == tbIDDocNumber.Text)
+                    if (document[2].ToString() == tbIDDocSeries.Text && document[3].ToString() == tbIDDocNumber.Text && tbExamsDocSeries.Text == "")
                     {
                         List<object[]> egeAdditionalData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
                             new List<Tuple<string, Relation, object>>
@@ -2260,6 +2258,8 @@ namespace PK.Forms
                     }
                     else
                     {
+                        cbPassportMatch.Checked = false;
+                        cbNoEGE.Checked = false;
                         tbExamsDocSeries.Text = document[2].ToString();
                         tbExamsDocNumber.Text = document[3].ToString();
                     }
@@ -2277,21 +2277,21 @@ namespace PK.Forms
                     //            if ((bool)subject[2])
                     //                row.ReadOnly = true;
                     //        }
-                    
-                foreach(var mark in Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ApplicationID.Value }, _CurrCampainID).Join(
-                    _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "year", "subject_id" },
-                    new List<Tuple<string, Relation, object>>
-                    {
+
+                    foreach (var mark in Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { _ApplicationID.Value }, _CurrCampainID).Join(
+                        _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, new string[] { "year", "subject_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                    }),
-                    k1 => k1.SubjID,
-                    k2 => k2[1],
-                    (s1,s2) => new
-                    {
-                        Mark = s1,
-                        Year = s2[0].ToString()
-                    }
-                    ))
+                        }),
+                        k1 => k1.SubjID,
+                        k2 => k2[1],
+                        (s1, s2) => new
+                        {
+                            Mark = s1,
+                            Year = s2[0].ToString()
+                        }
+                        ))
                         foreach (DataGridViewRow row in dgvExams.Rows)
                             if (row.Cells[dgvExams_Subject.Index].Value.ToString() == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.SUBJECTS, mark.Mark.SubjID))
                             {
@@ -2310,7 +2310,7 @@ namespace PK.Forms
                                 {
                                     row.Cells[dgvExams_Exam.Index].Value = mark.Mark.Value;
                                     row.Cells[dgvExams_Exam.Index].ToolTipText = mark.Mark.FromExamDate.Value.ToShortDateString();
-                                }                           
+                                }
                             }
                 }
                 else if (document[1].ToString() == "photos")
@@ -3043,7 +3043,7 @@ namespace PK.Forms
                             }, transaction);
                         }
                         else
-                            foreach(object[] oldAchievement in appCurrAchievements)
+                            foreach (object[] oldAchievement in appCurrAchievements)
                                 _DB_Connection.Delete(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new Dictionary<string, object>
                                     {
                                         { "id", (uint)oldAchievement[0] }
@@ -3051,90 +3051,206 @@ namespace PK.Forms
                     }
                     else if (document[1].ToString() == "ege" && !egeUdated)
                     {
+                        //if (cbPassportMatch.Checked || cbNoEGE.Checked)
+                        //{
+                        //    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                        //    {
+                        //        { "series", tbIDDocSeries.Text.Trim() },
+                        //        { "number", tbIDDocNumber.Text.Trim() }
+                        //    }, new Dictionary<string, object>
+                        //    {
+                        //        { "id", (uint)document[0] }
+                        //    }, transaction);
+                        //}
+                        //else
+                        //{
+                        //    List<object[]> egeDocs = appDocuments.FindAll(s => s[1].ToString() == "ege");
+                        //    foreach (object[] egeDoc in egeDocs)
+                        //    {
+                        //        List<object[]> egeAddData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "tex_data" },
+                        //            new List<Tuple<string, Relation, object>>
+                        //            {
+                        //                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)egeDoc[0])
+                        //            });
+                        //        if (!egeAddData.Any())
+                        //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                        //            {
+                        //                { "series", tbExamsDocSeries.Text.Trim() },
+                        //                { "number", tbExamsDocNumber.Text.Trim() }
+                        //            }, new Dictionary<string, object>
+                        //            {
+                        //                { "document_id", (uint)egeDoc[0] }
+                        //            }, transaction);
+                        //        else
+                        //            _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                        //            {
+                        //                { "series", tbIDDocSeries.Text.Trim() },
+                        //                { "number", tbIDDocNumber.Text.Trim() }
+                        //            }, new Dictionary<string, object>
+                        //            {
+                        //                { "document_id", (uint)egeDoc[0] }
+                        //            }, transaction);
+                        //    }
+                        //    egeUdated = true;
+                        //}
+
+                        //List<object[]> egeAdditionalData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
+                        //        new List<Tuple<string, Relation, object>>
+                        //        {
+                        //            new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                        //        });
+                        //if (egeAdditionalData.Any() && egeAdditionalData[0][0].ToString() == Classes.DB_Helper.NoEGE && !cbNoEGE.Checked)
+                        //    _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                        //        {
+                        //            { "document_id", (uint)document[0] }
+                        //        }, transaction);
+                        //else if (!egeAdditionalData.Any() && cbNoEGE.Checked)
+                        //    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                        //        {
+                        //            { "document_id", (uint)document[0] },
+                        //            { "text_data", Classes.DB_Helper.NoEGE }
+                        //        }, transaction);
+
+                        List<Tuple<uint, string, string, bool>> egeFullInfo = new List<Tuple<uint, string, string, bool>>();
+                        foreach (object[] egeDoc in appDocuments.FindAll(s => s[1].ToString() == "ege"))
+                        {
+                            List<object[]> egeAddData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)egeDoc[0])
+                                });
+                            if (egeAddData.Any())
+                                egeFullInfo.Add(new Tuple<uint, string, string, bool>((uint)egeDoc[0], egeDoc[2].ToString(), egeDoc[3].ToString(), true));
+                            else
+                                egeFullInfo.Add(new Tuple<uint, string, string, bool>((uint)egeDoc[0], egeDoc[2].ToString(), egeDoc[3].ToString(), false));
+                        }
                         if (cbPassportMatch.Checked || cbNoEGE.Checked)
                         {
+                            if (egeFullInfo.Count > 1)
+                            {
+                                _DB_Connection.Delete(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
+                                {
+                                    { "document_id", egeFullInfo.Find(s => !s.Item4).Item1 }
+                                }, transaction);
+                                _DB_Connection.Delete(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "id", egeFullInfo.Find(s => !s.Item4).Item1 }
+                                }, transaction);
+
+                                egeFullInfo.Remove(egeFullInfo.Find(s => !s.Item4));
+                            }
+
+                            if (egeFullInfo.First().Item4 && !cbNoEGE.Checked)
+                                _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                                    {
+                                        { "document_id", egeFullInfo.First().Item1 }
+                                    }, transaction);
+                            else if (cbNoEGE.Checked)
+                                if (egeFullInfo.First().Item4)
+                                    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                                    {
+                                        { "text_data", Classes.DB_Helper.NoEGE }
+                                    }, new Dictionary<string, object>
+                                    {
+                                        { "document_id", egeFullInfo.First().Item1 }
+                                    }, transaction);
+                                else
+                                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
+                                    {
+                                        { "document_id", egeFullInfo.First().Item1 },
+                                        { "text_data", Classes.DB_Helper.NoEGE }
+                                    }, transaction);
+
                             _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                            {
-                                { "series", tbIDDocSeries.Text.Trim() },
-                                { "number", tbIDDocNumber.Text.Trim() }
-                            }, new Dictionary<string, object>
-                            {
-                                { "id", (uint)document[0] }
-                            }, transaction);
+                                {
+                                    { "series", tbIDDocSeries.Text.Trim() },
+                                    { "number", tbIDDocNumber.Text.Trim() }
+                                }, new Dictionary<string, object>
+                                {
+                                    { "id", egeFullInfo.First().Item1 }
+                                }, transaction);
                         }
                         else
                         {
-                            //_DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                            //{
-                            //    { "series", tbExamsDocSeries.Text.Trim() },
-                            //    { "number", tbExamsDocNumber.Text.Trim() }
-                            //}, new Dictionary<string, object>
-                            //{
-                            //    { "id", (uint)document[0] }
-                            //}, transaction);
-
-                            List<object[]> egeDocs = appDocuments.FindAll(s => s[1].ToString() == "ege");
-                            foreach (object[] egeDoc in egeDocs)
+                            if (egeFullInfo.Count == 1)
                             {
-                                List<object[]> egeAddData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
-                                    new List<Tuple<string, Relation, object>>
+                                if (egeFullInfo.First().Item4)
+                                    _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                                     {
-                                        new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)egeDoc[0])
-                                    });
-                                if (!egeAddData.Any())
-                                    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
-                                    {
-                                        { "series", tbExamsDocSeries.Text.Trim() },
-                                        { "number", tbExamsDocNumber.Text.Trim() }
+                                        { "text_data", Classes.DB_Helper.EGEAdditionalDoc }
                                     }, new Dictionary<string, object>
                                     {
-                                        { "id", (uint)egeDoc[0] }
+                                        { "document_id", egeFullInfo.First().Item1 }
                                     }, transaction);
                                 else
-                                    _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                    _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                                     {
-                                        { "series", tbIDDocSeries.Text.Trim() },
-                                        { "number", tbIDDocNumber.Text.Trim() }
-                                    }, new Dictionary<string, object>
-                                    {
-                                        { "id", (uint)egeDoc[0] }
+                                        { "document_id", egeFullInfo.First().Item1 },
+                                        { "text_data", Classes.DB_Helper.EGEAdditionalDoc }
                                     }, transaction);
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "series", tbIDDocSeries.Text.Trim() },
+                                    { "number", tbIDDocNumber.Text.Trim() }
+                                }, new Dictionary<string, object>
+                                {
+                                    { "id", egeFullInfo.First().Item1 }
+                                }, transaction);
+
+                                uint newEgeDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "type", "ege" },
+                                    { "series", tbExamsDocSeries.Text.Trim() },
+                                    { "number", tbExamsDocNumber.Text.Trim() }
+                                }, transaction);
+                                _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "applications_id", _ApplicationID },
+                                    { "documents_id", newEgeDocID }
+                                }, transaction);
+
+                                egeFullInfo.Add(new Tuple<uint, string, string, bool>(newEgeDocID, tbEduDocSeries.Text.Trim(), tbExamsDocNumber.Text.Trim(), false));
                             }
-                            egeUdated = true;
+                            else
+                            {
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "series", tbIDDocSeries.Text },
+                                    { "number", tbIDDocNumber.Text }
+                                }, new Dictionary<string, object>
+                                {
+                                    { "id", egeFullInfo.Find(s => s.Item4).Item1 }
+                                }, transaction);
+                                _DB_Connection.Update(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                                {
+                                    { "series", tbExamsDocSeries.Text },
+                                    { "number", tbExamsDocNumber.Text }
+                                }, new Dictionary<string, object>
+                                {
+                                    { "id", egeFullInfo.Find(s => !s.Item4).Item1 }
+                                }, transaction);
+                            }
                         }
 
-                        List<object[]> egeAdditionalData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
+                        foreach (Tuple<uint, string, string, bool> egeDoc in egeFullInfo)
+                        {
+                            string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value", "year", "checked" };
+                            string[] keysNames = new string[] { "document_id", "subject_dict_id", "subject_id" };
+                            List<object[]> oldData = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, fieldNames,
                                 new List<Tuple<string, Relation, object>>
                                 {
-                                    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
+                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, egeDoc.Item1)
                                 });
-                        if (egeAdditionalData.Any() && egeAdditionalData[0][0].ToString() == Classes.DB_Helper.NoEGE && !cbNoEGE.Checked)
-                            _DB_Connection.Delete(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                {
-                                    { "document_id", (uint)document[0] }
-                                }, transaction);
-                        else if (!egeAdditionalData.Any() && cbNoEGE.Checked)
-                            _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
-                                {
-                                    { "document_id", (uint)document[0] },
-                                    { "text_data", Classes.DB_Helper.NoEGE }
-                                }, transaction);
-
-                        string[] fieldNames = new string[] { "document_id", "subject_dict_id", "subject_id", "value", "year", "checked" };
-                        string[] keysNames = new string[] { "document_id", "subject_dict_id", "subject_id" };
-                        List<object[]> oldData = _DB_Connection.Select(DB_Table.DOCUMENTS_SUBJECTS_DATA, fieldNames,
-                            new List<Tuple<string, Relation, object>>
+                            List<object[]> newData = new List<object[]>();
+                            foreach (DataGridViewRow row in dgvExams.Rows)
                             {
-                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
-                            });
-                        List<object[]> newData = new List<object[]>();
-                        foreach (DataGridViewRow row in dgvExams.Rows)
-                        {
-                            if (int.Parse(row.Cells[3].Value.ToString()) != 0)
-                                newData.Add(new object[] { (uint)document[0], 1, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString()),
+                                if (int.Parse(row.Cells[3].Value.ToString()) != 0)
+                                    newData.Add(new object[] { egeDoc.Item1, 1, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[0].Value.ToString()),
                                     row.Cells[3].Value, row.Cells[dgvExams_Year.Index].Value, (bool)row.Cells[dgvExams_Checked.Index].Value });
+                            }
+                            _DB_Helper.UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, keysNames, transaction);
                         }
-                        _DB_Helper.UpdateData(DB_Table.DOCUMENTS_SUBJECTS_DATA, oldData, newData, fieldNames, keysNames, transaction);
+                        egeUdated = true;
                     }
                     else if (document[1].ToString() == "sport")
                     {
