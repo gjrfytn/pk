@@ -120,7 +120,8 @@ namespace SitePost
                 "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
-                new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false)
+                new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false),
+                new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
             });
 
             string connectionStr = "server=" + tbDirectToDBServer.Text + ";port=3306;database=" + tbDirectToDBBaseName.Text + ";user=" + tbDirectToDBUser.Text + ";password=" + tbDirectToDBPassword.Text + ";";
