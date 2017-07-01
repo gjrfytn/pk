@@ -441,92 +441,106 @@ namespace PK.Forms
                         }
                         if (cbQuote.Checked && !quoteOK)
                             MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
-                        else if (false)//TODO
-                            MessageBox.Show("Не заполнены обязательные поля в разделе \"Сведения о документе регистрации на ЕГЭ\".");
-                        else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
-                            MessageBox.Show("Поле \"Email\" не заполнено");
-                        else if (!cbAppAdmission.Checked
-                            || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
-                            || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
-                            || rbSpravka.Checked && !cbCertificateHRD.Checked)
-                            MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
                         else
                         {
-                            bool applicationMissed = false;
-                            foreach (TabPage page in tcDirections.TabPages)
-                                foreach (Control control in page.Controls)
+                            bool egeFound = true;
+                            bool egePassportDataOK = true; ;
+                            foreach(DataGridViewRow row in dgvExams.Rows)
+                                if ((ushort)row.Cells[dgvExams_EGE.Index].Value > 0)
                                 {
-                                    CheckBox checkBox = control as CheckBox;
-                                    if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
-                                    {
-                                        MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
-                                        applicationMissed = true;
-                                        break;
-                                    }
+                                    egeFound = true;
+                                    if (row.Cells[dgvExams_Number.Index].Value.ToString() == "")
+                                        egePassportDataOK = false;
                                 }
-                            if (!applicationMissed)
+
+                            if (!egeFound && Classes.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ. Выполнить сохранение?","Отсутствует ЕГЭ"))
+                                if (!egePassportDataOK)
+                                MessageBox.Show("Для результата ЕГЭ не указаны паспортные данные.");
+                            else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
+                                MessageBox.Show("Поле \"Email\" не заполнено");
+                            else if (!cbAppAdmission.Checked
+                                || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
+                                || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
+                                || rbSpravka.Checked && !cbCertificateHRD.Checked)
+                                MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
+                            else
                             {
-                                bool dateOk = true;
-                                if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
-                                    && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
-                                    dateOk = false;
-                                if (dateOk)
+                                bool applicationMissed = false;
+                                foreach (TabPage page in tcDirections.TabPages)
+                                    foreach (Control control in page.Controls)
+                                    {
+                                        CheckBox checkBox = control as CheckBox;
+                                        if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
+                                        {
+                                            MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
+                                            applicationMissed = true;
+                                            break;
+                                        }
+                                    }
+                                if (!applicationMissed)
                                 {
-                                    bool passportOK = true;
-                                    List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                                    bool dateOk = true;
+                                    if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
+                                        && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                                        dateOk = false;
+                                    if (dateOk)
+                                    {
+                                        bool passportOK = true;
+                                        List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
                                 new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
                                 new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
                             });
-                                    if (passportFound.Count > 0)
-                                    {
-                                        List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
+                                        if (passportFound.Count > 0)
+                                        {
+                                            List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
                                 });
-                                        foreach (object[] app in oldApplications)
-                                            if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
-                                            {
-                                                passportOK = false;
-                                                if (app[0].ToString() != "withdrawn")
+                                            foreach (object[] app in oldApplications)
+                                                if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
                                                 {
-                                                    MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
-                                                    break;
+                                                    passportOK = false;
+                                                    if (app[0].ToString() != "withdrawn")
+                                                    {
+                                                        MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                                        break;
+                                                    }
+                                                    else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                                        passportOK = true;
                                                 }
-                                                else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
-                                                    passportOK = true;
-                                            }
-                                    }
-                                    if (passportOK)
-                                    {
-                                        Cursor.Current = Cursors.WaitCursor;
-
-                                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-                                        {
-                                            uint applID;
-                                            if (!_ApplicationID.HasValue)
-                                                applID = SaveApplication(transaction);
-                                            else
-                                            {
-                                                applID = _ApplicationID.Value;
-                                                _EditingDateTime = DateTime.Now;
-                                                UpdateApplication(transaction);
-                                            }
-
-                                            transaction.Commit();
-
-                                            if (!_ApplicationID.HasValue)
-                                                ChangeAgreedChBs(true);
-
-                                            _ApplicationID = applID;
-                                            btPrint.Enabled = true;
-                                            btWithdraw.Enabled = true;
                                         }
+                                        if (passportOK)
+                                        {
+                                            Cursor.Current = Cursors.WaitCursor;
 
-                                        Cursor.Current = Cursors.Default;
+                                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                            {
+                                                uint applID;
+                                                if (!_ApplicationID.HasValue)
+                                                    applID = SaveApplication(transaction);
+                                                else
+                                                {
+                                                    applID = _ApplicationID.Value;
+                                                    _EditingDateTime = DateTime.Now;
+                                                    UpdateApplication(transaction);
+                                                }
+
+                                                transaction.Commit();
+
+                                                if (!_ApplicationID.HasValue)
+                                                    ChangeAgreedChBs(true);
+
+                                                _ApplicationID = applID;
+                                                btPrint.Enabled = true;
+                                                btWithdraw.Enabled = true;
+                                            }
+
+                                            Cursor.Current = Cursors.Default;
+                                        }
                                     }
                                 }
                             }
