@@ -277,9 +277,27 @@ namespace PK.Forms
                 {
                     LoadTables();
                 }
-                dgvEntranceTests.Visible = !cbEduLevelMag.Checked;
-                dgvEntranceTests.Enabled = !cbEduLevelMag.Checked;
-                label10.Visible = !cbEduLevelMag.Checked;
+                if (cbEduLevelMag.Checked)
+                {
+                    dgvEntranceTests.Visible = false;
+                    label10.Visible = false;
+                }
+                else
+                {
+                    dgvEntranceTests.Visible = true;
+                    label10.Visible = true;
+                }
+
+                dgvFacultities.Visible = true;
+                dgvFacultities.Parent = panel1;
+                dgvTargetOrganizatons.Visible = true;
+                dgvTargetOrganizatons.Parent = panel1;
+                dgvEntranceTests.Parent = panel1;
+                label7.Visible = true;
+                label7.Parent = panel1;
+                label8.Visible = true;
+                label8.Parent = panel1;
+                label10.Parent = panel1;
             }
             else
             {
@@ -287,11 +305,17 @@ namespace PK.Forms
                 FillFacultiesTable();
                 FillProfiliesTable();
                 dgvFacultities.Visible = false;
+                dgvFacultities.Parent = this;
                 dgvTargetOrganizatons.Visible = false;
+                dgvTargetOrganizatons.Parent = this;
                 dgvEntranceTests.Visible = false;
+                dgvEntranceTests.Parent = this;
                 label7.Visible = false;
+                label7.Parent = this;
                 label8.Visible = false;
+                label8.Parent = this;
                 label10.Visible = false;
+                label10.Parent = this;
             }
         }
 
