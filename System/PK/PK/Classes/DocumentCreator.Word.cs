@@ -35,7 +35,7 @@ namespace PK.Classes
                 { "Window",AutoFit.Window}
             };
 
-            public static DocX CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
+            public static DocX CreateFromTemplate(SharedClasses.DB.DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
                 return Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
             }
@@ -45,7 +45,7 @@ namespace PK.Classes
                 return Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
             }
 
-            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
+            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, SharedClasses.DB.DB_Connector connection, uint? id, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -109,7 +109,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     );
             }
 
-            private static void ApplyProperties(DocX doc, XElement properties, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void ApplyProperties(DocX doc, XElement properties, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (properties.Element("Borders") != null)
                     AddBorders(doc);
@@ -174,7 +174,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
-            private static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (parElem.Element("Alighment") != null)
                     paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
@@ -366,7 +366,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 return table;
             }
 
-            private static void MakeFixedTable(Table table, XElement tableEl, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void MakeFixedTable(Table table, XElement tableEl, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 MakeBorders(table, tableEl.Element("Borders"));
 

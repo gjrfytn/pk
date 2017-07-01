@@ -7,7 +7,7 @@ namespace FIS_Exporter
 {
     public partial class MainForm : Form
     {
-        private class LoginSetting : PK.Forms.FIS_Authorization.ILoginSetting
+        private class LoginSetting : SharedClasses.FIS.FIS_Authorization.ILoginSetting
         {
             public string Value
             {
@@ -60,12 +60,12 @@ namespace FIS_Exporter
 
             Cursor.Current = Cursors.WaitCursor;
 
-            PK.Classes.Utility.TryAccessFIS_Function((login, password) =>
+            SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
             {
-                if (PK.Classes.Utility.ShowUnrevertableActionMessageBox())
+                if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                     MessageBox.Show(
                         "Идентификатор пакета: " +
-                        PK.Classes.FIS_Connector.Export(
+                        SharedClasses.FIS.FIS_Connector.Export(
                             cbAddress.Text,
                             login,
                             password,

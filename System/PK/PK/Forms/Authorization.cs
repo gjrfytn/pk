@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -9,7 +10,7 @@ namespace PK.Forms
         public string UsersRole { get; private set; }
         public string UsersLogin { get; private set; }
 
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
         public Authorization()
         {
@@ -26,11 +27,11 @@ namespace PK.Forms
             {
                 try
                 {
-                    _DB_Connection = new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234");
+                    _DB_Connection = new DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234");
                 }
                 catch (MySql.Data.MySqlClient.MySqlException ex)
                 {
-                    if (ex.Number == 1042 && !Classes.Utility.ShowChoiceMessageBox("Подключён ли кабель локальной сети к компьютеру?", "Ошибка подключения"))
+                    if (ex.Number == 1042 && !SharedClasses.Utility.ShowChoiceMessageBox("Подключён ли кабель локальной сети к компьютеру?", "Ошибка подключения"))
                     {
                         MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         continue; //TODO
@@ -39,7 +40,7 @@ namespace PK.Forms
                     MessageBox.Show("Обратитесь к администратору. Не закрывайте это сообщение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     MessageBox.Show("Информация об ошибке:\n" + ex.Message, "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    if (Classes.Utility.ShowChoiceMessageBox("Закрыть приложение?", "Действие"))
+                    if (SharedClasses.Utility.ShowChoiceMessageBox("Закрыть приложение?", "Действие"))
                     {
                         Load += (s, e) => DialogResult = DialogResult.Abort;
                         break;

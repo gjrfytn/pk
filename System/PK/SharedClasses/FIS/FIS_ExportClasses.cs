@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.FIS
 {
-    static class FIS_ExportClasses
+    public static class FIS_ExportClasses
     {
         #region Types
 

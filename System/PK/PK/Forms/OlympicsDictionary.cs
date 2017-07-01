@@ -1,10 +1,11 @@
 ﻿using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class OlympicsDictionary : DictionaryBase
     {
-        public OlympicsDictionary(Classes.DB_Connector connection) : base(connection)
+        public OlympicsDictionary(DB_Connector connection) : base(connection)
         {
             InitializeComponent();
         }

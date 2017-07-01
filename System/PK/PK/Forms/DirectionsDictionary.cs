@@ -1,9 +1,10 @@
-﻿
+﻿using SharedClasses.DB;
+
 namespace PK.Forms
 {
     partial class DirectionsDictionary : DictionaryBase
     {
-        public DirectionsDictionary(Classes.DB_Connector connection) : base(connection)
+        public DirectionsDictionary(DB_Connector connection) : base(connection)
         {
             InitializeComponent();
         }

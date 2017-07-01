@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class SportDocs : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly ApplicationEdit _Parent;
 
-        public SportDocs(Classes.DB_Connector connection, ApplicationEdit parent)
+        public SportDocs(DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
             _Parent = parent;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
-            cbDocType.Items.Add(Classes.DB_Helper.SportAchievementGTO);
-            cbDocType.Items.Add(Classes.DB_Helper.SportAchievementWorldChampionship);
-            cbDocType.Items.Add(Classes.DB_Helper.SportAchievementEuropeChampionship);
+            cbDocType.Items.Add(DB_Helper.SportAchievementGTO);
+            cbDocType.Items.Add(DB_Helper.SportAchievementWorldChampionship);
+            cbDocType.Items.Add(DB_Helper.SportAchievementEuropeChampionship);
             foreach (string itemName in _DB_Helper.GetDictionaryItems(FIS_Dictionary.SPORT_DIPLOMA_TYPE).Values)
                 cbDocType.Items.Add(itemName);
             cbDocType.SelectedIndex = 0;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 using RB_Tag = System.Tuple<string, uint>;
 using CB_Value = System.Tuple<string, uint, string>;
@@ -22,15 +23,15 @@ namespace PK.Forms
             set { gbEduForm.Controls.Cast<RadioButton>().Single(rb => ((RB_Tag)rb.Tag).Item2 == value).Checked = true; }
         }
 
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly string _EditNumber;
         private readonly bool _IsMaster;
 
-        public OrderEdit(Classes.DB_Connector connection, string number)
+        public OrderEdit(DB_Connector connection, string number)
         {
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _EditNumber = number;
 
             #region Components
@@ -45,13 +46,13 @@ namespace PK.Forms
                 Tuple.Create("hostel" ,"Выделение мест в общежитии" )
             };
 
-            rbBudget.Tag = new RB_Tag("budget", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB));
-            rbPaid.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP));
-            rbTarget.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT));
-            rbQuota.Tag = new RB_Tag("quota", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ));
-            rbO.Tag = new RB_Tag("o", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO));
-            rbOZ.Tag = new RB_Tag("oz", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormOZ));
-            rbZ.Tag = new RB_Tag("z", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ));
+            rbBudget.Tag = new RB_Tag("budget", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB));
+            rbPaid.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP));
+            rbTarget.Tag = new RB_Tag(null, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT));
+            rbQuota.Tag = new RB_Tag("quota", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ));
+            rbO.Tag = new RB_Tag("o", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO));
+            rbOZ.Tag = new RB_Tag("oz", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ));
+            rbZ.Tag = new RB_Tag("z", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormZ));
 
             if (_EditNumber != null)
                 dtpDate.Tag = true;
@@ -400,7 +401,7 @@ namespace PK.Forms
 
             Cursor.Current = Cursors.Default;
 
-            Classes.Utility.ShowChangesSavedMessage();
+            SharedClasses.Utility.ShowChangesSavedMessage();
             DialogResult = DialogResult.OK;
         }
 
@@ -532,7 +533,7 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
                         new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM,Classes.DB_Helper.EduFormO)),
+                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM,DB_Helper.EduFormO)),
                         new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,CheckedEduSource),
                         new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, faculty)
                     }),
@@ -603,7 +604,7 @@ namespace PK.Forms
             }
             else
             {
-                IEnumerable<Classes.DB_Queries.Mark> marks = Classes.DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
+                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
 
                 var table = candidates.Join(
                     marks,
@@ -634,7 +635,7 @@ namespace PK.Forms
                         AddBachelorRow(appl.ApplID, appl.Name, null, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
                 else
                 {
-                    IEnumerable<uint> dir_subjects = Classes.DB_Queries.GetDirectionEntranceTests(
+                    IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(
                         _DB_Connection,
                         Classes.Settings.CurrentCampaignID,
                         ((CB_Value)cbFDP.SelectedValue).Item1,
@@ -700,7 +701,7 @@ namespace PK.Forms
                 return false;
             }
 
-            if (!(bool)dtpDate.Tag && !Classes.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
+            if (!(bool)dtpDate.Tag && !SharedClasses.Utility.ShowChoiceMessageBox("Поле даты не менялось. Продолжить сохранение?", "Предупреждение"))
                 return false;
 
             return true;
@@ -758,7 +759,7 @@ namespace PK.Forms
                 s => new
                 {
                     Value = new CB_Value(s[0].ToString(), (uint)s[1], s[2].ToString()),
-                    Display = s[0].ToString() + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
+                    Display = s[0].ToString() + " " + DB_Queries.GetProfileName(_DB_Connection, s[0].ToString(), (uint)s[1], s[2].ToString())
                 }).ToList();
         }
 
@@ -771,7 +772,7 @@ namespace PK.Forms
                 (s1, s2) => new
                 {
                     Value = s2,
-                    Display = s2.Item1 + " " + Classes.DB_Queries.GetProfileName(_DB_Connection, s2.Item1, s2.Item2, s2.Item3)
+                    Display = s2.Item1 + " " + DB_Queries.GetProfileName(_DB_Connection, s2.Item1, s2.Item2, s2.Item3)
                 }).ToList();
         }
 

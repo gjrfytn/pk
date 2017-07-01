@@ -1,7 +1,7 @@
 ﻿
-namespace PK
+namespace SharedClasses.DB
 {
-    enum DB_Table : byte
+    public enum DB_Table : byte
     {
         DICTIONARIES,
         DICTIONARIES_ITEMS,

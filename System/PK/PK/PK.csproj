@@ -77,13 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\DBF_Reader.cs" />
-    <Compile Include="Classes\DB_Queries.cs" />
-    <Compile Include="Classes\FIS_ExportClasses.cs" />
     <Compile Include="Classes\LoginSetting.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="Classes\Settings.cs" />
-    <Compile Include="FIS_DictionaryEnum.cs" />
-    <Compile Include="FIS_Olympic_TEMP.cs" />
     <Compile Include="Forms\ApplicationDocsPrint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,9 +98,6 @@
     <Compile Include="Forms\Authorization.Designer.cs">
       <DependentUpon>Authorization.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\DB_Connector.cs" />
-    <Compile Include="Classes\DB_Helper.cs" />
-    <Compile Include="DB_TableEnum.cs" />
     <Compile Include="Classes\DictionaryUpdater.cs" />
     <Compile Include="Classes\DocumentCreator.cs" />
     <Compile Include="Classes\DocumentCreator.Excel.cs" />
@@ -194,13 +187,6 @@
     </Compile>
     <Compile Include="Forms\Faculties.Designer.cs">
       <DependentUpon>Faculties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Classes\FIS_Connector.cs" />
-    <Compile Include="Forms\FIS_Authorization.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FIS_Authorization.Designer.cs">
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FIS_Export.cs">
       <SubType>Form</SubType>
@@ -313,7 +299,6 @@
     <Compile Include="Forms\QuotDocs.Designer.cs">
       <DependentUpon>QuotDocs.cs</DependentUpon>
     </Compile>
-    <Compile Include="RelationEnum.cs" />
     <Compile Include="Forms\SportDocs.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -332,7 +317,6 @@
     <Compile Include="Forms\Users.Designer.cs">
       <DependentUpon>Users.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Utility.cs" />
     <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
       <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
@@ -384,9 +368,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Faculties.resx">
       <DependentUpon>Faculties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FIS_Authorization.resx">
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FIS_Export.resx">
       <DependentUpon>FIS_Export.cs</DependentUpon>
@@ -712,7 +693,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharedClasses\SharedClasses.csproj">
+      <Project>{1700dad0-594e-4512-87ce-0d6f149e6eef}</Project>
+      <Name>SharedClasses</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

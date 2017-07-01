@@ -1,7 +1,7 @@
 ﻿
-namespace PK
+namespace SharedClasses.DB
 {
-    enum Relation
+    public enum Relation
     {
         EQUAL,
         NOT_EQUAL,

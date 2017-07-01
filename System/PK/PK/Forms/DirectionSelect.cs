@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -11,15 +12,15 @@ namespace PK.Forms
         public string DirectionName;
         public string DirectionFaculty;
 
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
-        public DirectionSelect(Classes.DB_Connector connection, List<string> filters)
+        public DirectionSelect(DB_Connector connection, List<string> filters)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             foreach (object[] item in _DB_Connection.Select(DB_Table.DIRECTIONS, "direction_id", "faculty_short_name"))
             {

@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -25,7 +26,7 @@ namespace PK.Forms
             }
         }
 
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly uint _ExaminationID;
         private readonly string _ExamName;
         private readonly string _ExamDate;
@@ -33,7 +34,7 @@ namespace PK.Forms
         private readonly Dictionary<string, ushort> _Audiences;
         private readonly List<Tuple<char, string>> _Distribution;
 
-        public ExaminationDocsPrint(Classes.DB_Connector connection, uint examinationID)
+        public ExaminationDocsPrint(DB_Connector connection, uint examinationID)
         {
             InitializeComponent();
 
@@ -48,7 +49,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id",Relation.EQUAL,_ExaminationID)
                 })[0];
 
-            _ExamName = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)buf[0]);
+            _ExamName = new DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS, (uint)buf[0]);
             _ExamDate = ((DateTime)buf[1]).ToShortDateString();
 
             var entrantsIDs = _DB_Connection.Select(
@@ -91,7 +92,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("examination_id",Relation.EQUAL,_ExaminationID)
                 }).OrderBy(s => s[2]).ToDictionary(k => k[0].ToString(), v => (ushort)v[1]);
 
-            _Distribution = Classes.Utility.DistributeAbiturients(
+            _Distribution = SharedClasses.Utility.DistributeAbiturients(
                  _Audiences,
                  entrants.Select(en => char.ToUpper(en.LastName[0])).GroupBy(en => en).ToDictionary(k => k.Key, v => (ushort)v.Count())
                  );
@@ -134,7 +135,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string doc = Classes.Utility.TempPath + "AlphaCodes" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "AlphaCodes" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Settings.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
@@ -150,7 +151,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string doc = Classes.Utility.TempPath + "AlphaAuditories" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "AlphaAuditories" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Settings.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
@@ -179,7 +180,7 @@ namespace PK.Forms
                 });
             }
 
-            string doc = Classes.Utility.TempPath + "AbitAudDistrib" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "AbitAudDistrib" + new Random().Next();
             Classes.DocumentCreator.Create(
                Classes.Settings.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                doc,
@@ -203,7 +204,7 @@ namespace PK.Forms
 
             foreach (Tuple<char, string> group in _Distribution)
             {
-                string doc = Classes.Utility.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
+                string doc = Classes.Settings.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
                 Classes.DocumentCreator.Create(
                     Classes.Settings.DocumentsTemplatesPath + "ExamCardsSheet.xml",
                     doc,

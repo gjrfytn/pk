@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using SharedClasses.DB;
 
 namespace PK.Classes
 {
@@ -337,7 +338,7 @@ namespace PK.Classes
                         AddBachAdmAgreement(documents, connection, applID, applData, marks);
                 }
 
-                string doc = Utility.TempPath + "abitDocs" + new Random().Next();
+                string doc = Settings.TempPath + "abitDocs" + new Random().Next();
                 DocumentCreator.Create(doc, documents, true);
                 return doc + ".docx";
             }
@@ -892,7 +893,7 @@ namespace PK.Classes
                     ));
             }
 
-            string doc = Utility.TempPath + "registrationJournal" + new Random().Next();
+            string doc = Settings.TempPath + "registrationJournal" + new Random().Next();
             DocumentCreator.Create(doc, documents, false);
             return doc + ".docx";
         }
@@ -937,7 +938,7 @@ namespace PK.Classes
                 (s1, s2) => new string[] { s2[2].ToString(), s1.Name, s1.ApplCount.ToString() }
                 ).ToList();
 
-            string doc = Utility.TempPath + "directionsPlaces" + new Random().Next();
+            string doc = Settings.TempPath + "directionsPlaces" + new Random().Next();
             DocumentCreator.Create(
                 Settings.DocumentsTemplatesPath + "DirectionsPlaces.xml",
                 doc,
@@ -973,7 +974,7 @@ namespace PK.Classes
                 (s1, s2) => new string[] { s1.ShortName, s2[1].ToString(), s1.ApplCount.ToString() }
                 ).ToList();
 
-            string doc = Utility.TempPath + "profilesPlaces" + new Random().Next();
+            string doc = Settings.TempPath + "profilesPlaces" + new Random().Next();
             DocumentCreator.Create(
                 Settings.DocumentsTemplatesPath + "DirectionsPlaces.xml",
                 doc,
@@ -1073,7 +1074,7 @@ namespace PK.Classes
 
             if (order.Type == "exception")
             {
-                doc = Utility.TempPath + "ExcOrder" + new Random().Next();
+                doc = Settings.TempPath + "ExcOrder" + new Random().Next();
                 DocumentCreator.Create(
                     Settings.DocumentsTemplatesPath + "ExcOrder.xml",
                     doc,
@@ -1196,7 +1197,7 @@ namespace PK.Classes
                     }
                 }
                 string filename = order.Type == "admission" ? "AdmOrder" : "HostelOrder";
-                doc = Utility.TempPath + filename + new Random().Next();
+                doc = Settings.TempPath + filename + new Random().Next();
                 DocumentCreator.Create(
                     Settings.DocumentsTemplatesPath + filename + ".xml",
                     doc,

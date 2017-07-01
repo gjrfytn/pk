@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 using ProgramTuple = System.Tuple<uint, string, uint, uint, string, string>; //Id, Faculty, EduSource, EduForm, ProfileShortName, ProfileName
 
@@ -9,8 +10,8 @@ namespace PK.Forms
 {
     partial class ApplicationMagEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly Classes.KLADR _KLADR;
 
         private uint? _ApplicationID;
@@ -31,7 +32,7 @@ namespace PK.Forms
 
         private const int _AgreedChangeMaxCount = 2;
 
-        public ApplicationMagEdit(Classes.DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
+        public ApplicationMagEdit(DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
         {
             _DB_Connection = connection;
             _RegistratorLogin = registratorsLogin;
@@ -62,7 +63,7 @@ namespace PK.Forms
                 DialogResult = DialogResult.Abort;
             }
 
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _KLADR = new Classes.KLADR(connection.User, connection.Password);
             _CurrCampainID = campaignID;
             _ApplicationID = applicationId;
@@ -90,29 +91,29 @@ namespace PK.Forms
                 switch (tab.Name.Split('_')[2])
                 {
                     case "o":
-                        eduFormName = Classes.DB_Helper.EduFormO;
+                        eduFormName = DB_Helper.EduFormO;
                         break;
                     case "oz":
-                        eduFormName = Classes.DB_Helper.EduFormOZ;
+                        eduFormName = DB_Helper.EduFormOZ;
                         break;
                     case "z":
-                        eduFormName = Classes.DB_Helper.EduFormZ;
+                        eduFormName = DB_Helper.EduFormZ;
                         break;
                 }
 
                 switch (tab.Name.Split('_')[1])
                 {
                     case "budget":
-                        eduSourceName = Classes.DB_Helper.EduSourceB;
+                        eduSourceName = DB_Helper.EduSourceB;
                         break;
                     case "paid":
-                        eduSourceName = Classes.DB_Helper.EduSourceP;
+                        eduSourceName = DB_Helper.EduSourceP;
                         break;
                     case "target":
-                        eduSourceName = Classes.DB_Helper.EduSourceT;
+                        eduSourceName = DB_Helper.EduSourceT;
                         break;
                     case "quote":
-                        eduSourceName = Classes.DB_Helper.EduSourceQ;
+                        eduSourceName = DB_Helper.EduSourceQ;
                         break;
                 }
                 foreach (Control c in tab.Controls)
@@ -218,7 +219,7 @@ namespace PK.Forms
                                         MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
                                         break;
                                     }
-                                    else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                    else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
                                         passportOK = true;
                                 }
                         }
@@ -468,7 +469,7 @@ namespace PK.Forms
 
         private void btWithdraw_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowChoiceMessageWithConfirmation("Забрать документы?", "Забрать документы"))
+            if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Забрать документы?", "Забрать документы"))
             {
                 Cursor.Current = Cursors.WaitCursor;
 
@@ -513,7 +514,7 @@ namespace PK.Forms
                             _Agreed = true;
                             ((CheckBox)sender).Checked = false;
                         }
-                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                        else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Дать согласие на зачисление на данную специальность?", "Согласие на зачисление"))
                         {
                             ChangeAgreedChBs(false);
                             BlockDirChange();
@@ -551,7 +552,7 @@ namespace PK.Forms
                         _Agreed = true;
                         ((CheckBox)sender).Checked = true;
                     }
-                    else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
+                    else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Отменить согласие на зачисление на данную специальность?", "Согласие на зачисление"))
                     {
                         if (agreedCount == _AgreedChangeMaxCount && disagreedCount == _AgreedChangeMaxCount - 1)
                             ((CheckBox)sender).Enabled = false;
@@ -797,7 +798,7 @@ namespace PK.Forms
 
         private void ApplicationMagEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
+            e.Cancel = !SharedClasses.Utility.ShowFormCloseMessageBox();
         }
 
         private void tbPhone_Enter(object sender, EventArgs e)
@@ -978,7 +979,7 @@ namespace PK.Forms
                     { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                     new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement)),
+                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, DB_Helper.RedDiplomaAchievement)),
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                 })[0][0]}
                 }, transaction);
@@ -1097,7 +1098,7 @@ namespace PK.Forms
                 _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
                 {
                     { "document_id", spravkaID },
-                    { "name", Classes.DB_Helper.MedCertificate }
+                    { "name", DB_Helper.MedCertificate }
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
@@ -1293,7 +1294,7 @@ namespace PK.Forms
                         if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
-                        })[0][0]) == Classes.DB_Helper.RedDiplomaAchievement)
+                        })[0][0]) == DB_Helper.RedDiplomaAchievement)
                             cbRedDiploma.Checked = true;
                 }
                 else if (document[1].ToString() == "orphan")
@@ -1346,7 +1347,7 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     });
-                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == DB_Helper.MedCertificate)
                         cbMedCertificate.Checked = true;
                     else
                     {
@@ -1422,8 +1423,8 @@ namespace PK.Forms
             
             foreach (var entrancesData in records)
             {
-                if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceB))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO)))
+                if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB))
+                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
                     cbProgram_budget_o.SelectedValue = entrancesData.Value;
                     cbProgram_budget_o.Visible = true;
@@ -1433,8 +1434,8 @@ namespace PK.Forms
                     btRemoveDir_budget_o.Enabled = true;
                 }
 
-                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO)))
+                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
                     cbProgram_paid_o.SelectedValue = entrancesData.Value;
                     cbProgram_paid_o.Visible = true;
@@ -1443,8 +1444,8 @@ namespace PK.Forms
                     btRemoveDir_paid_o.Enabled = true;
                 }
 
-                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceP))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormZ)))
+                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormZ)))
                 {
                     cbProgram_paid_z.SelectedValue = entrancesData.Value;
                     cbProgram_paid_z.Visible = true;
@@ -1453,8 +1454,8 @@ namespace PK.Forms
                     btRemoveDir_paid_z.Enabled = true;
                 }
 
-                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceQ))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO)))
+                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ))
+                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
                     cbSpecialRights.Checked = true;
                     cbProgram_quote_o.SelectedValue = entrancesData.Value;
@@ -1465,8 +1466,8 @@ namespace PK.Forms
                     btRemoveDir_quote_o.Enabled = true;
                 }
 
-                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, Classes.DB_Helper.EduSourceT))
-                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, Classes.DB_Helper.EduFormO)))
+                else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
+                    && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
                     cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
@@ -1491,13 +1492,13 @@ namespace PK.Forms
             foreach (object[] appEntrData in appEntrances)
                 if (appEntrData[2] as DateTime? != null && appEntrData[7] as DateTime? == null)
                 {
-                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrData[4]) == Classes.DB_Helper.EduFormO)
+                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrData[4]) == DB_Helper.EduFormO)
                     {
-                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceB)
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == DB_Helper.EduSourceB)
                             cbAgreed_budget_o.Checked = true;
-                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceQ)
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == DB_Helper.EduSourceQ)
                             cbAgreed_quote_o.Checked = true;
-                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == Classes.DB_Helper.EduSourceT)
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrData[5]) == DB_Helper.EduSourceT)
                             cbAgreed_target_o.Checked = true;
                     }
                     cbAgreed.Checked = true;
@@ -1655,7 +1656,7 @@ namespace PK.Forms
                                 new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
-                        })[0][0]) == Classes.DB_Helper.RedDiplomaAchievement)
+                        })[0][0]) == DB_Helper.RedDiplomaAchievement)
                             {
                                 IAFound = true;
                                 if (!cbRedDiploma.Checked)
@@ -1672,7 +1673,7 @@ namespace PK.Forms
                                 { "institution_achievement_id", (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" },
                                 new List<Tuple<string, Relation, object>>
                         {
-                            new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.RedDiplomaAchievement)),
+                            new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, DB_Helper.RedDiplomaAchievement)),
                             new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
                         })[0][0]} }, transaction);
                     }
@@ -1683,7 +1684,7 @@ namespace PK.Forms
                             {
                                 new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                             });
-                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == DB_Helper.MedCertificate)
                         {
                             certificateFound = true;
                             if (!cbMedCertificate.Checked)
@@ -1984,9 +1985,9 @@ namespace PK.Forms
                 }))
                 if (appEntrance[4] as DateTime? != null && appEntrance[5] as DateTime? == null)
                 {
-                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrance[2]) == Classes.DB_Helper.EduFormO)
+                    if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)appEntrance[2]) == DB_Helper.EduFormO)
                     {
-                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceB && !cbAgreed_budget_o.Checked)
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == DB_Helper.EduSourceB && !cbAgreed_budget_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object>
                             {
                                { "is_disagreed_date", DateTime.Now }
@@ -1999,7 +2000,7 @@ namespace PK.Forms
                                 { "application_id", _ApplicationID }
                             }, transaction);
 
-                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceQ && !cbAgreed_quote_o.Checked)
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == DB_Helper.EduSourceQ && !cbAgreed_quote_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object>
                             {
                                 { "is_disagreed_date", DateTime.Now }
@@ -2012,7 +2013,7 @@ namespace PK.Forms
                                 { "application_id", _ApplicationID }
                             }, transaction);
 
-                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == Classes.DB_Helper.EduSourceT && !cbAgreed_target_o.Checked)
+                        else if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)appEntrance[3]) == DB_Helper.EduSourceT && !cbAgreed_target_o.Checked)
                             _DB_Connection.Update(DB_Table.APPLICATIONS_ENTRANCES, new Dictionary<string, object>
                                 {
                                 { "is_disagreed_date", DateTime.Now }
@@ -2092,12 +2093,12 @@ namespace PK.Forms
         {
             var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
 
-            if (eduSource == Classes.DB_Helper.EduSourceB || eduSource == Classes.DB_Helper.EduSourceQ)
+            if (eduSource == DB_Helper.EduSourceB || eduSource == DB_Helper.EduSourceQ)
             {
                 string placesCountColumnName = "";
-                if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceB))
+                if ((eduForm == DB_Helper.EduFormO) && (eduSource == DB_Helper.EduSourceB))
                     placesCountColumnName = "places_budget_o";
-                else if ((eduForm == Classes.DB_Helper.EduFormO) && (eduSource == Classes.DB_Helper.EduSourceQ))
+                else if ((eduForm == DB_Helper.EduFormO) && (eduSource == DB_Helper.EduSourceQ))
                     placesCountColumnName = "places_quota_o";
 
                 var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
@@ -2128,7 +2129,7 @@ namespace PK.Forms
                 combobox.DataSource = selectedDirs;
                 combobox.SelectedIndex = -1;
             }
-            else if (eduSource == Classes.DB_Helper.EduSourceT)
+            else if (eduSource == DB_Helper.EduSourceT)
             {
                 string placesCountColumnName = "places_o";
 
@@ -2164,11 +2165,11 @@ namespace PK.Forms
             {
                 string placesCountColumnName = "";
 
-                if (eduForm == Classes.DB_Helper.EduFormO)
+                if (eduForm == DB_Helper.EduFormO)
                     placesCountColumnName = "places_paid_o";
-                else if (eduForm == Classes.DB_Helper.EduFormOZ)
+                else if (eduForm == DB_Helper.EduFormOZ)
                     placesCountColumnName = "places_paid_oz";
-                else if (eduForm == Classes.DB_Helper.EduFormZ)
+                else if (eduForm == DB_Helper.EduFormZ)
                     placesCountColumnName = "places_paid_z";
 
                 var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_id", "profiles_direction_faculty", "profiles_short_name", placesCountColumnName },

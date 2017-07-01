@@ -1,4 +1,4 @@
-﻿namespace PK.Forms
+﻿namespace SharedClasses.FIS
 {
     partial class FIS_Authorization
     {

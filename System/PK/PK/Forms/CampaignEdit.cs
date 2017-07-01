@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class CampaignEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly  Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly  DB_Helper _DB_Helper;
 
         private uint? _CampaignId;
 
-        public CampaignEdit(Classes.DB_Connector connection,uint? campUid)
+        public CampaignEdit(DB_Connector connection,uint? campUid)
         {
             #region Components
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace PK.Forms
             #endregion
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _CampaignId = campUid;
 
             cbState.SelectedIndex = 0;

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static PK.Classes.FIS_ExportClasses;
+using SharedClasses.DB;
+
+using static SharedClasses.FIS.FIS_ExportClasses;
 
 namespace PK.Classes
 {
@@ -118,7 +120,7 @@ namespace PK.Classes
                 EduSourcePlaces targetPlaces = GetTargetPlaces(connection, admData.CampID, admData.DirID);
 
                 DB_Helper dbHelper = new DB_Helper(connection);
-                uint levelID = Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
+                uint levelID = SharedClasses.Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
 
                 admissionVolumes.Add(new AVItem(
                     new TUID(admData.CampID.ToString() + admData.DirID.ToString()),

@@ -2,20 +2,21 @@
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Examinations : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         private uint SelectedExamID
         {
             get { return (uint)dataGridView.SelectedRows[0].Cells[dataGridView_ID.Index].Value; }
         }
 
-        public Examinations(Classes.DB_Connector connection)
+        public Examinations(DB_Connector connection)
         {
             #region Components
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace PK.Forms
             #endregion
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             UpdateTable();
         }
@@ -44,7 +45,7 @@ namespace PK.Forms
                 MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
-            else if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            else if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[dataGridView_ID.Index].Value } });
             else
                 e.Cancel = true;
@@ -66,7 +67,7 @@ namespace PK.Forms
 
         private void toolStrip_Delete_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", SelectedExamID } });
                 UpdateTable();
@@ -185,7 +186,7 @@ namespace PK.Forms
             dataGridView.Rows.Clear();
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
+            foreach (DB_Queries.Exam exam in DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
                 dataGridView.Rows.Add(
                     exam.ID,
                     subjects[exam.SubjID],

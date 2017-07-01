@@ -3,9 +3,9 @@ using System.Net;
 using System.Xml.Linq;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.FIS
 {
-    static class FIS_Connector
+    public static class FIS_Connector
     {
         public class FIS_Exception : System.Exception
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -18,9 +19,9 @@ namespace PK.Forms
             { "hostel" ,"Выделение мест в общежитии" }
         };
 
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public Orders(Classes.DB_Connector connection)
+        public Orders(DB_Connector connection)
         {
             InitializeComponent();
 
@@ -47,7 +48,7 @@ namespace PK.Forms
 
         private void toolStrip_Delete_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.ORDERS, new Dictionary<string, object> { { "number", SelectedOrderNumber } });
                 UpdateTable();
@@ -83,7 +84,7 @@ namespace PK.Forms
                 MessageBox.Show("Невозможно удалить зарегестрированный приказ.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
-            else if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            else if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                 _DB_Connection.Delete(DB_Table.ORDERS, new Dictionary<string, object> { { "number", e.Row.Cells[dataGridView_Number.Index].Value } });
             else
                 e.Cancel = true;
@@ -98,7 +99,7 @@ namespace PK.Forms
         {
             dataGridView.Rows.Clear();
 
-            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
             foreach (object[] row in _DB_Connection.Select(
                 DB_Table.ORDERS,
                 new string[] { "number", "type", "date", "protocol_number", "edu_source_id", "edu_form_id", "faculty_short_name", "direction_id", "profile_short_name" },
@@ -114,7 +115,7 @@ namespace PK.Forms
                     dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)row[4]),
                     dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)row[5]),
                     row[7] is uint ? row[6].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)row[7]).Item1 : null,
-                    row[8] is string ? Classes.DB_Queries.GetProfileName(_DB_Connection, row[6].ToString(), (uint)row[7], row[8].ToString()) : null
+                    row[8] is string ? DB_Queries.GetProfileName(_DB_Connection, row[6].ToString(), (uint)row[7], row[8].ToString()) : null
                     );
         }
 
