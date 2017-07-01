@@ -443,17 +443,17 @@ namespace PK.Forms
                             MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
                         else
                         {
-                            bool egeFound = true;
-                            bool egePassportDataOK = true; ;
+                            bool egeFound = false;
+                            bool egePassportDataOK = true;
                             foreach(DataGridViewRow row in dgvExams.Rows)
                                 if ((ushort)row.Cells[dgvExams_EGE.Index].Value > 0)
                                 {
                                     egeFound = true;
-                                    if (row.Cells[dgvExams_Number.Index].Value.ToString() == "")
+                                    if (row.Cells[dgvExams_Number.Index].Value == null || string.IsNullOrWhiteSpace(row.Cells[dgvExams_Number.Index].Value.ToString()))
                                         egePassportDataOK = false;
                                 }
 
-                            if (!egeFound && Classes.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ. Выполнить сохранение?","Отсутствует ЕГЭ"))
+                            if (egeFound || !egeFound && Classes.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ. Выполнить сохранение?","Отсутствует ЕГЭ"))
                                 if (!egePassportDataOK)
                                 MessageBox.Show("Для результата ЕГЭ не указаны паспортные данные.");
                             else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
