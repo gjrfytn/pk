@@ -20,6 +20,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FIS_Exporter", "FIS_Exporte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedClasses", "SharedClasses\SharedClasses.csproj", "{1700DAD0-594E-4512-87CE-0D6F149E6EEF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{38017AE8-12D4-42F0-A14E-BF8F4B64BBAA}"
+	ProjectSection(SolutionItems) = preProject
+		SharedResources\logo.ico = SharedResources\logo.ico
+		SharedResources\logo_export.ico = SharedResources\logo_export.ico
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -154,6 +154,7 @@
             this.Controls.Add(this.lAddress);
             this.Controls.Add(this.cbAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::FIS_Exporter.Properties.Resources.logo_export;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
