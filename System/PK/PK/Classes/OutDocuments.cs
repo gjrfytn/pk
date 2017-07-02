@@ -33,11 +33,6 @@ namespace PK.Classes
                 public readonly uint EduSource;
                 public readonly System.Collections.ObjectModel.ReadOnlyCollection<Entrance> Directions;
 
-                //public readonly IEnumerable<Direction> Directions
-                //{
-                //    get { return _Directions.AsReadOnly(); }
-                //}
-
                 public Stream(uint eduForm, uint eduSource, System.Collections.ObjectModel.ReadOnlyCollection<Entrance> directions)
                 {
                     EduForm = eduForm;
@@ -765,12 +760,9 @@ namespace PK.Classes
 
             var dateGroups = connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "entrant_id", "registration_time" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
-                    new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
-                }).Join(
+                new string[] { "id", "entrant_id", "registration_time", "status" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
+                ).Join(
                 connection.Select(
                 DB_Table.ENTRANTS,
                 "id", "home_phone", "mobile_phone"
@@ -783,7 +775,8 @@ namespace PK.Classes
                     EntrID = (uint)s1[1],
                     HomePhone = s2[1].ToString(),
                     MobilePhone = s2[2].ToString(),
-                    RegTime = (DateTime)s1[2]
+                    RegTime = (DateTime)s1[2],
+                    Status = s1[3].ToString()
                 }).Join(
                 connection.Select(
                 DB_Table.ENTRANTS_VIEW,
@@ -799,14 +792,9 @@ namespace PK.Classes
                     MiddleName = s2[3].ToString(),
                     s1.HomePhone,
                     s1.MobilePhone,
-                    s1.RegTime
-                }).GroupBy(
-                k => k.RegTime.Date,
-                (k, g) => new
-                {
-                    Date = k,
-                    Applications = g
-                });
+                    s1.RegTime,
+                    s1.Status
+                }).GroupBy(k => k.RegTime.Date);
 
             var applDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
                     connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date"),
@@ -827,7 +815,7 @@ namespace PK.Classes
             foreach (var dateGroup in dateGroups)
             {
                 List<string[]> data = new List<string[]>();
-                foreach (var appl in dateGroup.Applications)
+                foreach (var appl in dateGroup)
                 {
                     object[] idDoc = connection.Select(
                         DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
@@ -870,16 +858,19 @@ namespace PK.Classes
                             new Tuple<string, Relation, object>("application_id",Relation.EQUAL,appl.ApplID)
                         });
 
-                    data.Add(new string[]
-                    {
-                        count.ToString(),
-                        appl.ApplID.ToString(),
-                        appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
-                        string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
-                        eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
-                        string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct()),
-                        dateGroup.Date.ToShortDateString()
-                    });
+                    if (appl.Status != "withdrawn")
+                        data.Add(new string[]
+                        {
+                            count.ToString(),
+                            appl.ApplID.ToString(),
+                            appl.LastName+" "+ appl.FirstName +" "+appl.MiddleName,
+                            string.Join(", ",idDoc.Where(o=>o.ToString()!=""))   + "\n\n"+appl.HomePhone+", "+appl.MobilePhone,
+                            eduDocName+" "+eduDoc.DocSeries+eduDoc.DocNumber,
+                            string.Join(", ",applEntr.Select(en=>streams[Tuple.Create((uint)en[0],(uint)en[1])]).Distinct()),
+                            dateGroup.Key.ToShortDateString()
+                        });
+                    else
+                        data.Add(new string[] { count.ToString(), appl.ApplID.ToString(), "ЗАБРАЛ ДОКУМЕНТЫ", "", "", "", "" });
 
                     count++;
                 }

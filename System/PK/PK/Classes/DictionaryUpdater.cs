@@ -9,11 +9,12 @@ namespace PK.Classes
     class DictionaryUpdater
     {
         private readonly DB_Connector _DB_Connection;
+        private readonly string _FIS_Address;
         private readonly string _FIS_Login;
         private readonly string _FIS_Password;
         private readonly DB_Helper _DB_Helper;
 
-        public DictionaryUpdater(DB_Connector dbConnection, string fisLogin, string fisPassword)
+        public DictionaryUpdater(DB_Connector dbConnection, string address, string fisLogin, string fisPassword)
         {
             #region Contracts
             if (dbConnection == null)
@@ -25,6 +26,7 @@ namespace PK.Classes
             #endregion
 
             _DB_Connection = dbConnection;
+            _FIS_Address = address;
             _FIS_Login = fisLogin;
             _FIS_Password = fisPassword;
             _DB_Helper = new DB_Helper(_DB_Connection);
@@ -32,7 +34,7 @@ namespace PK.Classes
 
         public void UpdateDictionaries()
         {
-            Dictionary<uint, string> fisDictionaries = FIS_Connector.GetDictionaries(_FIS_Login, _FIS_Password);
+            Dictionary<uint, string> fisDictionaries = FIS_Connector.GetDictionaries(_FIS_Address,_FIS_Login, _FIS_Password);
             Dictionary<uint, string> dbDictionaries = _DB_Connection.Select(DB_Table.DICTIONARIES).ToDictionary(d1 => (uint)d1[0], d2 => d2[1].ToString());
 
             string addedReport = "Добавлены справочники:";
@@ -42,7 +44,7 @@ namespace PK.Classes
             foreach (var d in fisDictionaries)
                 if (d.Key != 10 && d.Key != 19)
                 {
-                    var fisDictionaryItems = FIS_Connector.GetDictionaryItems(_FIS_Login, _FIS_Password, d.Key);
+                    var fisDictionaryItems = FIS_Connector.GetDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password, d.Key);
 
                     if (dbDictionaries.ContainsKey(d.Key))
                     {
@@ -94,7 +96,7 @@ namespace PK.Classes
 
         public void UpdateDirectionsDictionary()
         {
-            Dictionary<uint, string[]> fisDictionaryItems = FIS_Connector.GetDirectionsDictionaryItems(_FIS_Login, _FIS_Password);
+            Dictionary<uint, string[]> fisDictionaryItems = FIS_Connector.GetDirectionsDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password);
             Dictionary<uint, string[]> dbDictionaryItems = _DB_Helper.GetDirectionsDictionaryItems();
 
             string addedReport = "В справочник №" + 10 + " \"" + "Направления подготовки" + "\" добавлены элементы:";
@@ -160,6 +162,7 @@ namespace PK.Classes
         public void UpdateOlympicsDictionary()
         {
             Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = FIS_Connector.GetOlympicsDictionaryItems(
+                _FIS_Address,
                 _FIS_Login,
                 _FIS_Password,
                 _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "физика"),

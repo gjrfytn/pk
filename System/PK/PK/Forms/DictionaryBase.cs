@@ -37,7 +37,7 @@ namespace PK.Forms
             if (SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
             {
                 if (_Updater == null)
-                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, "http://10.0.3.1:8080", login, password); //TODO address
 
                 UpdateDictionary(_Updater);
             }, new Classes.LoginSetting()))

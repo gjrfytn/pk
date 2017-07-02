@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.FIS;
 
 namespace FIS_Exporter
 {
@@ -65,7 +66,7 @@ namespace FIS_Exporter
                 if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                     MessageBox.Show(
                         "Идентификатор пакета: " +
-                        SharedClasses.FIS.FIS_Connector.Export(
+                        FIS_Connector.Export(
                             cbAddress.Text,
                             login,
                             password,
@@ -86,32 +87,44 @@ namespace FIS_Exporter
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName))
                     textBox.Text = reader.ReadToEnd();
         }
-        
+
+        private void bDictionaryList_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
+                {
+                    FIS_Connector.GetDictionariesXML(
+                        cbAddress.Text,
+                        login,
+                        password
+                        ).Save(saveFileDialog.FileName);
+                }, new LoginSetting());
+
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
         private void bLoadDictionary_Click(object sender, EventArgs e)
         {
-            //if(saveFileDialog.ShowDialog()==DialogResult.OK)
-            //{
-            //    Cursor.Current = Cursors.WaitCursor;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Cursor.Current = Cursors.WaitCursor;
 
-            //    PK.Classes.Utility.TryAccessFIS_Function((login, password) =>
-            //    {
-            //        if (PK.Classes.Utility.ShowUnrevertableActionMessageBox())
-            //            MessageBox.Show(
-            //                "Идентификатор пакета: " +
-            //                PK.Classes.FIS_Connector.load(
-            //                    cbAddress.Text,
-            //                    login,
-            //                    password,
-            //                    package
-            //                    ),
-            //                "Пакет отправлен",
-            //                MessageBoxButtons.OK,
-            //                MessageBoxIcon.Information
-            //                );
-            //    }, new LoginSetting());
+                SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
+                {
+                    FIS_Connector.GetDictionaryXML(
+                        cbAddress.Text,
+                        login,
+                        password,
+                        (uint)nudDictionaryNumber.Value
+                        ).Save(saveFileDialog.FileName);
+                }, new LoginSetting());
 
-            //    Cursor.Current = Cursors.Default;
-            //}
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }
