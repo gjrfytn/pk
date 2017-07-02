@@ -503,7 +503,7 @@ namespace SharedClasses.FIS
         public class TSchoolCertificateDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
             public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
@@ -548,8 +548,8 @@ namespace SharedClasses.FIS
         public class THighEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -560,7 +560,7 @@ namespace SharedClasses.FIS
             public readonly uint? EndYear; //Год окончания
             public readonly float? GPA; //Средний балл
 
-            public THighEduDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
+            public THighEduDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -599,8 +599,8 @@ namespace SharedClasses.FIS
         public class TPostGraduateDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -611,7 +611,7 @@ namespace SharedClasses.FIS
             public readonly uint? EndYear; //Год окончания
             public readonly float? GPA; //Средний балл
 
-            public TPostGraduateDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
+            public TPostGraduateDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -633,7 +633,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -650,8 +650,8 @@ namespace SharedClasses.FIS
         public class TPhDDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -662,7 +662,7 @@ namespace SharedClasses.FIS
             public readonly uint? EndYear; //Год окончания
             public readonly float? GPA; //Средний балл
 
-            public TPhDDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
+            public TPhDDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -684,7 +684,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -701,8 +701,8 @@ namespace SharedClasses.FIS
         public class TMiddleEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -714,7 +714,7 @@ namespace SharedClasses.FIS
             public readonly float? GPA; //Средний балл
             public readonly bool? StateServicePreparation; //Осуществляет подготовку к военной или иной государственной службе (преимущественное право)
 
-            public TMiddleEduDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null, bool? stateServicePreparation = null)
+            public TMiddleEduDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null, uint? endYear = null, float? gpa = null, bool? stateServicePreparation = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -737,7 +737,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -755,8 +755,8 @@ namespace SharedClasses.FIS
         public class TBasicDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -768,7 +768,7 @@ namespace SharedClasses.FIS
             public readonly float? GPA; //Средний балл
             public readonly bool? StateServicePreparation; //Осуществляет подготовку к военной или иной государственной службе (преимущественное право)
 
-            public TBasicDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? professionID = null, uint? endYear = null, float? gpa = null, bool? stateServicePreparation = null)
+            public TBasicDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? professionID = null, uint? endYear = null, float? gpa = null, bool? stateServicePreparation = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -791,7 +791,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null? new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -809,8 +809,8 @@ namespace SharedClasses.FIS
         public class TIncomplHighEduDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -819,7 +819,7 @@ namespace SharedClasses.FIS
             public readonly uint? SpecialityID; //Код направления подготовки (справочник № 10)
             public readonly ushort? SpecializationID; //Поле зарезервировано (значение не обрабатывается)
 
-            public TIncomplHighEduDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null)
+            public TIncomplHighEduDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDate documentDate = null, string documentOrganization = null, TDocumentNumber registrationNumber = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -839,7 +839,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -854,9 +854,9 @@ namespace SharedClasses.FIS
         public class TAcademicDiplomaDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
             public readonly TDocumentNumber RegistrationNumber; //регистрационный номер
-            public readonly TDocumentSeries DocumentSeries; //Серия документа //s
+            public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа //s
             public readonly TDate DocumentDate; //Дата выдачи документа
             public readonly string DocumentOrganization; //Организация, выдавшая документ //500 //us
@@ -864,7 +864,7 @@ namespace SharedClasses.FIS
             public readonly uint? SpecialityID; //Код направления подготовки (справочник № 10)
             public readonly ushort? SpecializationID; //Поле зарезервировано (значение не обрабатывается)
 
-            public TAcademicDiplomaDocument(TUID uid, TDocumentSeries documentSeries, TDocumentNumber documentNumber, TDate originalReceivedDate = null, TDocumentNumber registrationNumber = null, TDate documentDate = null, string documentOrganization = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null)
+            public TAcademicDiplomaDocument(TUID uid, TDocumentNumber documentNumber, TDocumentSeries documentSeries = null, TDate originalReceivedDate = null, TDocumentNumber registrationNumber = null, TDate documentDate = null, string documentOrganization = null, uint? qualificationTypeID = null, uint? specialityID = null, ushort? specializationID = null)
             {
                 UID = uid;
                 OriginalReceivedDate = originalReceivedDate;
@@ -884,7 +884,7 @@ namespace SharedClasses.FIS
                 {
                     new XElement("UID", UID.Value) ,
                     OriginalReceivedDate !=null? new XElement("OriginalReceivedDate", OriginalReceivedDate.Value):null,
-                    new XElement("DocumentSeries", DocumentSeries.Value),
+                    DocumentSeries!=null?new XElement("DocumentSeries", DocumentSeries.Value):null,
                     new XElement("DocumentNumber", DocumentNumber.Value),
                     DocumentDate!=null?new XElement("DocumentDate", DocumentDate.Value):null,
                     DocumentOrganization!=null?new XElement("DocumentOrganization", DocumentOrganization):null,
@@ -899,7 +899,7 @@ namespace SharedClasses.FIS
         public class TEduCustomDocument : IXElemementsConvertable
         {
             public readonly TUID UID; //Идентификатор в ИС ОО //s
-            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов
+            public readonly TDate OriginalReceivedDate; //Дата предоставления оригиналов документов/заверенных копий
             public readonly TDocumentSeries DocumentSeries; //Серия документа
             public readonly TDocumentNumber DocumentNumber; //Номер документа
             public readonly TDate DocumentDate; //Дата выдачи документа //s
@@ -2207,9 +2207,9 @@ namespace SharedClasses.FIS
         public class MedicalDocuments : IXElemementConvertable
         {
             public readonly BenefitDocument BenefitDocument; //Основание для льготы //s
-            public readonly TAllowEducationDocument AllowEducationDocument; //Заключение об отсутствии противопоказаний для обучения //s
+            public readonly TAllowEducationDocument AllowEducationDocument; //Заключение об отсутствии противопоказаний для обучения
 
-            public MedicalDocuments(BenefitDocument benefitDocument, TAllowEducationDocument allowEducationDocument)
+            public MedicalDocuments(BenefitDocument benefitDocument, TAllowEducationDocument allowEducationDocument = null)
             {
                 BenefitDocument = benefitDocument;
                 AllowEducationDocument = allowEducationDocument;
@@ -2219,7 +2219,7 @@ namespace SharedClasses.FIS
             {
                 return new XElement("MedicalDocuments",
                     BenefitDocument.ConvertToXElement(),
-                    new XElement("AllowEducationDocument", AllowEducationDocument.ConvertToXElements())
+                    AllowEducationDocument != null ? new XElement("AllowEducationDocument", AllowEducationDocument.ConvertToXElements()) : null
                     );
             }
         }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="TError">
 		<xs:all>
@@ -865,7 +865,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeriesEmpty" minOccurs="0">
@@ -953,10 +953,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1028,10 +1028,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1103,10 +1103,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1178,10 +1178,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1258,10 +1258,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1338,10 +1338,10 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1397,7 +1397,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="RegistrationNumber" type="TDocumentNumber" minOccurs="0">
@@ -1405,7 +1405,7 @@
 					<xs:documentation>регистрационный номер</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentSeries" type="TDocumentSeries">
+			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Серия документа</xs:documentation>
 				</xs:annotation>
@@ -1456,7 +1456,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" minOccurs="0">
@@ -2990,7 +2990,7 @@
 																										</xs:annotation>
 																										<xs:complexType>
 																											<xs:choice>
-																												<xs:element name="DisabilityDocument" type="TDisabilityDocument">
+																												<xs:element name="DisabilityDocument" type="TDisabilityDocument" minOccurs="0">
 																													<xs:annotation>
 																														<xs:documentation>Справка об установлении инвалидности</xs:documentation>
 																													</xs:annotation>

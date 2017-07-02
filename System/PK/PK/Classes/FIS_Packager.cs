@@ -694,8 +694,8 @@ namespace PK.Classes
                             if (doc.Type == "academic_diploma")
                                 eduDoc = new EduDocument(new TAcademicDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
+                                    new TDocumentSeries(doc.Series),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
@@ -706,7 +706,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    !string.IsNullOrWhiteSpace(doc.Series)? new TDocumentSeries(doc.Series):null,
+                                    !string.IsNullOrWhiteSpace(doc.Series) ? new TDocumentSeries(doc.Series) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     year
@@ -714,8 +714,8 @@ namespace PK.Classes
                             else if (doc.Type == "middle_edu_diploma")
                                 eduDoc = new EduDocument(new TMiddleEduDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
+                                    new TDocumentSeries(doc.Series),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
@@ -728,8 +728,8 @@ namespace PK.Classes
                             else
                                 eduDoc = new EduDocument(new THighEduDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
+                                    new TDocumentSeries(doc.Series),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
