@@ -63,12 +63,8 @@ namespace PK.Forms
             foreach (CheckBox v in gbEduLevel.Controls)
                 v.Checked = false;
 
-            //if (cbType.SelectedItem.ToString() == "Прием иностранце по направлениям Минобрнауки")
-            //    foreach (CheckBox v in gbEduLevel.Controls)
-            //        v.Enabled = true;
-            //else
-                foreach (CheckBox v in gbEduLevel.Controls)
-                    v.Enabled = false;
+            foreach (CheckBox v in gbEduLevel.Controls)
+                v.Enabled = false;
 
             switch (cbType.SelectedItem.ToString())
             {
@@ -82,6 +78,7 @@ namespace PK.Forms
                 case "Прием на обучение на СПО":
                     cbEduLevelSPO.Checked = true;
                     cbEduFormO.Checked = true;
+                    cbEduFormO.Enabled = false;
                     cbEduFormOZ.Checked = false;
                     cbEduFormOZ.Enabled = false;
                     cbEduFormZ.Checked = false;
@@ -277,45 +274,33 @@ namespace PK.Forms
                 {
                     LoadTables();
                 }
-                if (cbEduLevelMag.Checked)
-                {
-                    dgvEntranceTests.Visible = false;
-                    label10.Visible = false;
-                }
-                else
-                {
-                    dgvEntranceTests.Visible = true;
-                    label10.Visible = true;
-                }
+
+                dgvEntranceTests.Visible = !cbEduLevelMag.Checked;
+                label10.Visible = !cbEduLevelMag.Checked;
 
                 dgvFacultities.Visible = true;
-                dgvFacultities.Parent = panel1;
                 dgvTargetOrganizatons.Visible = true;
-                dgvTargetOrganizatons.Parent = panel1;
-                dgvEntranceTests.Parent = panel1;
                 label7.Visible = true;
-                label7.Parent = panel1;
                 label8.Visible = true;
-                label8.Parent = panel1;
-                label10.Parent = panel1;
+
+                dgvPaidPlaces.Location = new Point(0, 860);
+                label9.Location = new Point(405, 844);
             }
             else
             {
                 FillDirectionsTable();
                 FillFacultiesTable();
                 FillProfiliesTable();
+
                 dgvFacultities.Visible = false;
-                dgvFacultities.Parent = this;
                 dgvTargetOrganizatons.Visible = false;
-                dgvTargetOrganizatons.Parent = this;
                 dgvEntranceTests.Visible = false;
-                dgvEntranceTests.Parent = this;
                 label7.Visible = false;
-                label7.Parent = this;
                 label8.Visible = false;
-                label8.Parent = this;
                 label10.Visible = false;
-                label10.Parent = this;
+
+                dgvPaidPlaces.Location = new Point(0, 342);
+                label9.Location = new Point(466, 326);
             }
         }
 
@@ -613,21 +598,27 @@ namespace PK.Forms
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат") } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelB) } }, transaction);
 
             if (cbEduLevelMag.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура") } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM) } }, transaction);
 
             if (cbEduLevelSpec.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет") } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelS) } }, transaction);
+            if (cbEduLevelSPO.Checked)
+                _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
+                {
+                    { "campaigns_id", _CampaignId},
+                    { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelSPO) } }, transaction);
         }
 
         private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -771,14 +762,17 @@ namespace PK.Forms
 
                 switch (itemName)
                 {
-                    case "Бакалавриат":
+                    case Classes.DB_Helper.EduLevelB:
                         cbEduLevelBacc.Checked = true;
                         break;
-                    case "Магистратура":
+                    case Classes.DB_Helper.EduLevelM:
                         cbEduLevelMag.Checked = true;
                         break;
-                    case "Специалитет":
+                    case Classes.DB_Helper.EduLevelS:
                         cbEduLevelSpec.Checked = true;
+                        break;
+                    case Classes.DB_Helper.EduLevelSPO:
+                        cbEduLevelSPO.Checked = true;
                         break;
                 }
             }
@@ -918,13 +912,16 @@ namespace PK.Forms
             List<uint> eduLevelsList = new List<uint>();
 
             if (cbEduLevelBacc.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Бакалавриат"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelB));
 
             if (cbEduLevelMag.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Магистратура"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM));
 
             if (cbEduLevelSpec.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, "Специалитет"));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelS));
+
+            if (cbEduLevelSPO.Checked)
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelSPO));
 
             List<object[]> oldList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
             { "dictionaries_items_item_id", }, new List<Tuple<string, Relation, object>>
