@@ -13,8 +13,14 @@ namespace PK.Forms
         private readonly string _UserLogin;
         private readonly string _UserRole;
 
-        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюджет" }, { "adm_paid", "Зачислен на платное" },
-            { "adm_both", "Зачислен на бюджет и платное" }, { "withdrawn", "Забрал документы" } };
+        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string>
+        {
+            { "new", "Новое" },
+            { "adm_budget", "Зачислен на бюджет" },
+            { "adm_paid", "Зачислен на платное" },
+            { "adm_both", "Зачислен на бюджет и платное" },
+            { "withdrawn", "Забрал документы" }
+        };
         private uint _SelectedAppID;
 
         public Main(string userRole, string usersLogin)
@@ -98,7 +104,22 @@ namespace PK.Forms
                 if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
                     form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
                 else
-                    form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                {
+                    List<object[]> campaidnEduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
+                        });
+                    bool spo = false;
+                    foreach (object[] eduLevel in campaidnEduLevels)
+                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                            spo = true;
+                    if(spo)
+                        form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                    else
+                        form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                }
 
                 form.ShowDialog();
                 UpdateApplicationsTable();
@@ -232,26 +253,29 @@ namespace PK.Forms
         {
             _SelectedAppID = (uint)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
 
-            if (Classes.Settings.CurrentCampaignID == 0)
-                MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
-            else
-            {
-                if (!(bool)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "master_appl" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.CurrentRow.Cells[0].Value)
-                })[0][0])
-                {
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
-                    form.ShowDialog();
-                }
+            Form form;
+                if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                    form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                 else
                 {
-                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
-                    form.ShowDialog();
+                    List<object[]> campaidnEduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
+                        });
+                    bool spo = false;
+                    foreach (object[] eduLevel in campaidnEduLevels)
+                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                            spo = true;
+                    if(spo)
+                        form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
+                    else
+                        form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                 }
+                form.ShowDialog();
                 UpdateApplicationsTable();
                 FilterAppsTable();
-            }
         }
 
         private void dgvApplications_CellClick(object sender, DataGridViewCellEventArgs e)

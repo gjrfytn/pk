@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationSPOEdit));
             this.gbPassport = new System.Windows.Forms.GroupBox();
             this.mtbSubdivisionCode = new System.Windows.Forms.MaskedTextBox();
@@ -96,14 +97,15 @@
             this.label28 = new System.Windows.Forms.Label();
             this.cbForeignLanguage = new System.Windows.Forms.ComboBox();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.mtbEMail = new System.Windows.Forms.MaskedTextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.tbMobilePhone = new System.Windows.Forms.TextBox();
+            this.tbHomePhone = new System.Windows.Forms.TextBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label29 = new System.Windows.Forms.Label();
             this.dgvDirection = new System.Windows.Forms.DataGridView();
-            this.dgvDirection_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirection_Faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirection_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirection_EduLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvDirection_EduForm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbWithdrawDocs = new System.Windows.Forms.GroupBox();
             this.cbPhotos = new System.Windows.Forms.CheckBox();
             this.cbMedCertificate = new System.Windows.Forms.CheckBox();
@@ -114,6 +116,13 @@
             this.btClose = new System.Windows.Forms.Button();
             this.btSave = new System.Windows.Forms.Button();
             this.btPrint = new System.Windows.Forms.Button();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.dgvDirection_DirID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirection_Faculty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirection_DirName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirection_EduLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDirection_EduForm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAddress.SuspendLayout();
@@ -219,6 +228,8 @@
             this.cbStreet.Name = "cbStreet";
             this.cbStreet.Size = new System.Drawing.Size(165, 24);
             this.cbStreet.TabIndex = 3;
+            this.cbStreet.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
+            this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
             // 
             // cbTown
             // 
@@ -229,6 +240,8 @@
             this.cbTown.Name = "cbTown";
             this.cbTown.Size = new System.Drawing.Size(163, 24);
             this.cbTown.TabIndex = 2;
+            this.cbTown.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
+            this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
             // 
             // cbDistrict
             // 
@@ -239,6 +252,8 @@
             this.cbDistrict.Name = "cbDistrict";
             this.cbDistrict.Size = new System.Drawing.Size(154, 24);
             this.cbDistrict.TabIndex = 1;
+            this.cbDistrict.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
+            this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
             // 
             // cbRegion
             // 
@@ -249,6 +264,7 @@
             this.cbRegion.Name = "cbRegion";
             this.cbRegion.Size = new System.Drawing.Size(150, 24);
             this.cbRegion.TabIndex = 0;
+            this.cbRegion.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             // 
             // cbHouse
             // 
@@ -259,6 +275,8 @@
             this.cbHouse.Name = "cbHouse";
             this.cbHouse.Size = new System.Drawing.Size(108, 24);
             this.cbHouse.TabIndex = 4;
+            this.cbHouse.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
+            this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
             // 
             // btGetIndex
             // 
@@ -408,6 +426,7 @@
             this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 22);
             this.dtpDateOfBirth.TabIndex = 10;
             this.dtpDateOfBirth.Tag = "false";
+            this.dtpDateOfBirth.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // label11
             // 
@@ -527,6 +546,7 @@
             this.dtpIDDocDate.TabIndex = 4;
             this.dtpIDDocDate.Tag = "false";
             this.dtpIDDocDate.Value = new System.DateTime(2017, 2, 28, 11, 49, 40, 0);
+            this.dtpIDDocDate.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
             // 
             // tbMiddleName
             // 
@@ -747,6 +767,7 @@
             this.cbOriginal.TabIndex = 7;
             this.cbOriginal.Text = "Оригинал";
             this.cbOriginal.UseVisualStyleBackColor = true;
+            this.cbOriginal.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // tbEduDocNumber
             // 
@@ -809,6 +830,7 @@
             this.rbDiploma.TabIndex = 1;
             this.rbDiploma.Text = "Диплом";
             this.rbDiploma.UseVisualStyleBackColor = true;
+            this.rbDiploma.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // rbCertificate
             // 
@@ -822,6 +844,7 @@
             this.rbCertificate.TabStop = true;
             this.rbCertificate.Text = "Аттестат";
             this.rbCertificate.UseVisualStyleBackColor = true;
+            this.rbCertificate.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
             // 
             // label28
             // 
@@ -849,6 +872,12 @@
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.mtbEMail);
+            this.gbApplication.Controls.Add(this.label31);
+            this.gbApplication.Controls.Add(this.label30);
+            this.gbApplication.Controls.Add(this.label32);
+            this.gbApplication.Controls.Add(this.tbMobilePhone);
+            this.gbApplication.Controls.Add(this.tbHomePhone);
             this.gbApplication.Controls.Add(this.pictureBox3);
             this.gbApplication.Controls.Add(this.label29);
             this.gbApplication.Controls.Add(this.label28);
@@ -858,10 +887,66 @@
             this.gbApplication.Controls.Add(this.cbForeignLanguage);
             this.gbApplication.Location = new System.Drawing.Point(0, 262);
             this.gbApplication.Name = "gbApplication";
-            this.gbApplication.Size = new System.Drawing.Size(1351, 104);
+            this.gbApplication.Size = new System.Drawing.Size(1351, 135);
             this.gbApplication.TabIndex = 19;
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
+            // 
+            // mtbEMail
+            // 
+            this.mtbEMail.Location = new System.Drawing.Point(1087, 101);
+            this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
+            this.mtbEMail.Name = "mtbEMail";
+            this.mtbEMail.Size = new System.Drawing.Size(191, 22);
+            this.mtbEMail.TabIndex = 31;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(1026, 101);
+            this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(49, 16);
+            this.label31.TabIndex = 35;
+            this.label31.Text = "E-mail:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(560, 106);
+            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(139, 16);
+            this.label30.TabIndex = 34;
+            this.label30.Text = "Домашний телефон:";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(103, 106);
+            this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(147, 16);
+            this.label32.TabIndex = 33;
+            this.label32.Text = "Мобильный телефон:";
+            // 
+            // tbMobilePhone
+            // 
+            this.tbMobilePhone.Location = new System.Drawing.Point(264, 103);
+            this.tbMobilePhone.MaxLength = 20;
+            this.tbMobilePhone.Name = "tbMobilePhone";
+            this.tbMobilePhone.Size = new System.Drawing.Size(184, 22);
+            this.tbMobilePhone.TabIndex = 32;
+            this.tbMobilePhone.Tag = "(495)123-4567";
+            // 
+            // tbHomePhone
+            // 
+            this.tbHomePhone.Location = new System.Drawing.Point(717, 103);
+            this.tbHomePhone.MaxLength = 20;
+            this.tbHomePhone.Name = "tbHomePhone";
+            this.tbHomePhone.Size = new System.Drawing.Size(182, 22);
+            this.tbHomePhone.TabIndex = 36;
+            this.tbHomePhone.Tag = "(495)123-4567";
             // 
             // pictureBox3
             // 
@@ -901,45 +986,6 @@
             this.dgvDirection.Size = new System.Drawing.Size(824, 46);
             this.dgvDirection.TabIndex = 0;
             // 
-            // dgvDirection_DirID
-            // 
-            this.dgvDirection_DirID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dgvDirection_DirID.HeaderText = "ID";
-            this.dgvDirection_DirID.Name = "dgvDirection_DirID";
-            this.dgvDirection_DirID.ReadOnly = true;
-            this.dgvDirection_DirID.Width = 46;
-            // 
-            // dgvDirection_Faculty
-            // 
-            this.dgvDirection_Faculty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirection_Faculty.HeaderText = "Факультет";
-            this.dgvDirection_Faculty.Name = "dgvDirection_Faculty";
-            this.dgvDirection_Faculty.ReadOnly = true;
-            this.dgvDirection_Faculty.Width = 104;
-            // 
-            // dgvDirection_DirName
-            // 
-            this.dgvDirection_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dgvDirection_DirName.HeaderText = "Направление подготовки";
-            this.dgvDirection_DirName.Name = "dgvDirection_DirName";
-            this.dgvDirection_DirName.ReadOnly = true;
-            // 
-            // dgvDirection_EduLevel
-            // 
-            this.dgvDirection_EduLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirection_EduLevel.HeaderText = "Уровень подготовки";
-            this.dgvDirection_EduLevel.Name = "dgvDirection_EduLevel";
-            this.dgvDirection_EduLevel.ReadOnly = true;
-            this.dgvDirection_EduLevel.Width = 168;
-            // 
-            // dgvDirection_EduForm
-            // 
-            this.dgvDirection_EduForm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvDirection_EduForm.HeaderText = "Форма обучения";
-            this.dgvDirection_EduForm.Name = "dgvDirection_EduForm";
-            this.dgvDirection_EduForm.ReadOnly = true;
-            this.dgvDirection_EduForm.Width = 143;
-            // 
             // gbWithdrawDocs
             // 
             this.gbWithdrawDocs.Controls.Add(this.cbPhotos);
@@ -947,7 +993,7 @@
             this.gbWithdrawDocs.Controls.Add(this.cbEduDoc);
             this.gbWithdrawDocs.Controls.Add(this.cbPassportCopy);
             this.gbWithdrawDocs.Controls.Add(this.cbAppAdmission);
-            this.gbWithdrawDocs.Location = new System.Drawing.Point(0, 378);
+            this.gbWithdrawDocs.Location = new System.Drawing.Point(1, 410);
             this.gbWithdrawDocs.Margin = new System.Windows.Forms.Padding(4);
             this.gbWithdrawDocs.Name = "gbWithdrawDocs";
             this.gbWithdrawDocs.Padding = new System.Windows.Forms.Padding(4);
@@ -970,7 +1016,6 @@
             // cbMedCertificate
             // 
             this.cbMedCertificate.AutoSize = true;
-            this.cbMedCertificate.Enabled = false;
             this.cbMedCertificate.Location = new System.Drawing.Point(552, 23);
             this.cbMedCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.cbMedCertificate.Name = "cbMedCertificate";
@@ -982,7 +1027,6 @@
             // cbEduDoc
             // 
             this.cbEduDoc.AutoSize = true;
-            this.cbEduDoc.Enabled = false;
             this.cbEduDoc.Location = new System.Drawing.Point(389, 23);
             this.cbEduDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbEduDoc.Name = "cbEduDoc";
@@ -1016,7 +1060,7 @@
             // btWithdraw
             // 
             this.btWithdraw.Enabled = false;
-            this.btWithdraw.Location = new System.Drawing.Point(1154, 372);
+            this.btWithdraw.Location = new System.Drawing.Point(1155, 404);
             this.btWithdraw.Name = "btWithdraw";
             this.btWithdraw.Size = new System.Drawing.Size(160, 28);
             this.btWithdraw.TabIndex = 24;
@@ -1026,7 +1070,7 @@
             // 
             // btClose
             // 
-            this.btClose.Location = new System.Drawing.Point(1186, 407);
+            this.btClose.Location = new System.Drawing.Point(1187, 439);
             this.btClose.Margin = new System.Windows.Forms.Padding(4);
             this.btClose.Name = "btClose";
             this.btClose.Size = new System.Drawing.Size(100, 28);
@@ -1037,7 +1081,7 @@
             // 
             // btSave
             // 
-            this.btSave.Location = new System.Drawing.Point(940, 407);
+            this.btSave.Location = new System.Drawing.Point(941, 439);
             this.btSave.Margin = new System.Windows.Forms.Padding(4);
             this.btSave.Name = "btSave";
             this.btSave.Size = new System.Drawing.Size(168, 28);
@@ -1049,7 +1093,7 @@
             // btPrint
             // 
             this.btPrint.Enabled = false;
-            this.btPrint.Location = new System.Drawing.Point(928, 372);
+            this.btPrint.Location = new System.Drawing.Point(929, 404);
             this.btPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(189, 28);
@@ -1058,11 +1102,56 @@
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // dgvDirection_DirID
+            // 
+            this.dgvDirection_DirID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dgvDirection_DirID.HeaderText = "ID";
+            this.dgvDirection_DirID.Name = "dgvDirection_DirID";
+            this.dgvDirection_DirID.ReadOnly = true;
+            this.dgvDirection_DirID.Visible = false;
+            this.dgvDirection_DirID.Width = 46;
+            // 
+            // dgvDirection_Faculty
+            // 
+            this.dgvDirection_Faculty.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirection_Faculty.HeaderText = "Факультет";
+            this.dgvDirection_Faculty.Name = "dgvDirection_Faculty";
+            this.dgvDirection_Faculty.ReadOnly = true;
+            this.dgvDirection_Faculty.Width = 104;
+            // 
+            // dgvDirection_DirName
+            // 
+            this.dgvDirection_DirName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dgvDirection_DirName.HeaderText = "Направление подготовки";
+            this.dgvDirection_DirName.Name = "dgvDirection_DirName";
+            this.dgvDirection_DirName.ReadOnly = true;
+            // 
+            // dgvDirection_EduLevel
+            // 
+            this.dgvDirection_EduLevel.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirection_EduLevel.HeaderText = "Уровень подготовки";
+            this.dgvDirection_EduLevel.Name = "dgvDirection_EduLevel";
+            this.dgvDirection_EduLevel.ReadOnly = true;
+            this.dgvDirection_EduLevel.Width = 168;
+            // 
+            // dgvDirection_EduForm
+            // 
+            this.dgvDirection_EduForm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dgvDirection_EduForm.HeaderText = "Форма обучения";
+            this.dgvDirection_EduForm.Name = "dgvDirection_EduForm";
+            this.dgvDirection_EduForm.ReadOnly = true;
+            this.dgvDirection_EduForm.Width = 143;
+            // 
             // ApplicationSPOEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1350, 442);
+            this.ClientSize = new System.Drawing.Size(1350, 476);
             this.Controls.Add(this.btWithdraw);
             this.Controls.Add(this.btClose);
             this.Controls.Add(this.btSave);
@@ -1167,11 +1256,6 @@
         private System.Windows.Forms.GroupBox gbApplication;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.DataGridView dgvDirection;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_DirID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_Faculty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_DirName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_EduLevel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_EduForm;
         private System.Windows.Forms.GroupBox gbWithdrawDocs;
         private System.Windows.Forms.CheckBox cbPhotos;
         private System.Windows.Forms.CheckBox cbMedCertificate;
@@ -1183,5 +1267,18 @@
         private System.Windows.Forms.Button btSave;
         private System.Windows.Forms.Button btPrint;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.MaskedTextBox mtbEMail;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox tbMobilePhone;
+        private System.Windows.Forms.TextBox tbHomePhone;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_DirID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_Faculty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_DirName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_EduLevel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirection_EduForm;
     }
 }

@@ -35,7 +35,12 @@ namespace PK.Forms
             new string[] { "Институт", "high_edu_diploma"}
         };
 
-        public ApplicationSPOEdit(Classes.DB_Connector connection, string registratorsLogin, uint? applicationId)
+        private bool _DistrictNeedsReload;
+        private bool _TownNeedsReload;
+        private bool _StreetNeedsReload;
+        private bool _HouseNeedsReload;
+
+        public ApplicationSPOEdit(Classes.DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
         {
             _DB_Connection = connection;
             _RegistratorLogin = registratorsLogin;
@@ -60,6 +65,13 @@ namespace PK.Forms
                 cbGraduationYear.Items.Add(i);
             cbGraduationYear.SelectedIndex = 0;
             LoadSPOProgram();
+
+            if (_ApplicationID != null)
+            {
+                _Loading = true;
+                LoadApplication();
+                _Loading = false;
+            }
         }
 
         private void btSave_Click(object sender, EventArgs e)
@@ -158,7 +170,153 @@ namespace PK.Forms
 
         private void btGetIndex_Click(object sender, EventArgs e)
         {
+            tbPostcode.Text = "Поиск...";
+            btGetIndex.Enabled = false;
+            cbRegion.Enabled = false;
+            cbDistrict.Enabled = false;
+            cbTown.Enabled = false;
+            cbStreet.Enabled = false;
+            cbHouse.Enabled = false;
+            tbAppartment.Enabled = false;
+            backgroundWorker.RunWorkerAsync(Tuple.Create(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text, cbHouse.Text));
+        }
 
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            var address = (Tuple<string, string, string, string, string>)e.Argument;
+            e.Result = _KLADR.GetIndex(address.Item1, address.Item2, address.Item3, address.Item4, address.Item5);
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            tbPostcode.Text = e.Result as string;
+            if (tbPostcode.Text == "")
+                tbPostcode.Enabled = true;
+            else
+                tbPostcode.Enabled = false;
+
+            btGetIndex.Enabled = true;
+            cbRegion.Enabled = true;
+            cbDistrict.Enabled = true;
+            cbTown.Enabled = true;
+            cbStreet.Enabled = true;
+            cbHouse.Enabled = true;
+            tbAppartment.Enabled = true;
+        }
+
+        private void cbDistrict_Enter(object sender, EventArgs e)
+        {
+            if (_DistrictNeedsReload)
+            {
+                _DistrictNeedsReload = false;
+                cbDistrict.Items.Clear();
+                cbDistrict.Items.AddRange(_KLADR.GetDistricts(cbRegion.Text).ToArray());
+
+                if (cbDistrict.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbDistrict, 3000);
+                }
+            }
+        }
+
+        private void cbTown_Enter(object sender, EventArgs e)
+        {
+            if (_TownNeedsReload)
+            {
+                _TownNeedsReload = false;
+                cbTown.Items.Clear();
+                cbTown.Items.AddRange(_KLADR.GetTownsAndSettlements(cbRegion.Text, cbDistrict.Text).ToArray());
+
+                if (cbTown.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbTown, 3000);
+                }
+            }
+        }
+
+        private void cbStreet_Enter(object sender, EventArgs e)
+        {
+            if (_StreetNeedsReload)
+            {
+                _StreetNeedsReload = false;
+                cbStreet.Items.Clear();
+                cbStreet.Items.AddRange(_KLADR.GetStreets(cbRegion.Text, cbDistrict.Text, cbTown.Text).ToArray());
+
+                if (cbStreet.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbStreet, 3000);
+                }
+            }
+        }
+
+        private void cbHouse_Enter(object sender, EventArgs e)
+        {
+            if (_HouseNeedsReload)
+            {
+                _HouseNeedsReload = false;
+                cbHouse.Items.Clear();
+                cbHouse.Items.AddRange(_KLADR.GetHouses(cbRegion.Text, cbDistrict.Text, cbTown.Text, cbStreet.Text).ToArray());
+
+                if (cbHouse.Items.Count == 0)
+                {
+                    toolTip.Show("Не найдено адресов.", cbHouse, 3000);
+                }
+            }
+        }
+
+        private void cbAddress_TextChanged(object sender, EventArgs e)
+        {
+            if (((ComboBox)sender).Name != "cbHouse")
+            {
+                _HouseNeedsReload = true;
+                cbHouse.Text = "";
+                if (((ComboBox)sender).Name != "cbStreet")
+                {
+                    _StreetNeedsReload = true;
+                    cbStreet.Text = "";
+                    if (((ComboBox)sender).Name != "cbTown")
+                    {
+                        _TownNeedsReload = true;
+                        cbTown.Text = "";
+                        if (((ComboBox)sender).Name != "cbDistrict")
+                        {
+                            _DistrictNeedsReload = true;
+                            cbDistrict.Text = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void rb_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbCertificate.Checked)
+            {
+                if (cbOriginal.Checked)
+                    cbEduDoc.Text = "Оригинал аттестата";
+                else
+                    cbEduDoc.Text = "Копия аттестата";
+                cbInstitutionType.Items.Clear();
+                foreach (string[] type in _InstitutionTypes.Where(s => s[1] == "school_certificate"))
+                    cbInstitutionType.Items.Add(type[0]);
+                cbInstitutionType.SelectedIndex = 0;
+            }
+            else if (rbDiploma.Checked)
+            {
+                if (cbOriginal.Checked)
+                    cbEduDoc.Text = "Оригинал диплома";
+                else
+                    cbEduDoc.Text = "Копия диплома";
+                cbInstitutionType.Items.Clear();
+                foreach (string[] type in _InstitutionTypes.Where(s => s[1] == "middle_edu_diploma" || s[1] == "high_edu_diploma"))
+                    cbInstitutionType.Items.Add(type[0]);
+                cbInstitutionType.SelectedIndex = 0;
+            }
+        }
+
+        private void dtp_ValueChanged(object sender, EventArgs e)
+        {
+            ((DateTimePicker)sender).Tag = true;
         }
 
 
@@ -206,11 +364,18 @@ namespace PK.Forms
                 })[0][0])})[0][0];
             else
             {
+                char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                int passwordLength = 6;
+                string password = "";
+                Random rand = new Random();
+                for (int i = 0; i < passwordLength; i++)
+                    password += passwordChars[rand.Next(passwordChars.Length)];
                 _EntrantID = _DB_Connection.Insert(DB_Table.ENTRANTS, new Dictionary<string, object>
                 {
-                    //{ "email", mtbEMail.Text },               //TODO добавить поля на форму
-                    //{ "home_phone", tbHomePhone.Text },
-                    //{ "mobile_phone", tbMobilePhone.Text }
+                    { "email", mtbEMail.Text },
+                    { "home_phone", tbHomePhone.Text },
+                    { "mobile_phone", tbMobilePhone.Text },
+                    { "personal_password", password }
                 }, transaction);
             }
 
@@ -224,7 +389,9 @@ namespace PK.Forms
                 { "language", cbForeignLanguage.SelectedItem.ToString()},
                 { "priority_right", false},
                 { "special_conditions", false},
-                { "master_appl", false}
+                { "master_appl", false},
+                { "first_high_edu", true },
+                { "comment", tbReturnAdress.Text.Trim()}
             }, transaction);
 
             uint idDocUid = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
@@ -356,7 +523,7 @@ namespace PK.Forms
         {
             Text += " № " + _ApplicationID;
             object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[]{ "needs_hostel", "language", "first_high_edu",
-                "mcado", "chernobyl", "passing_examinations", "priority_right", "special_conditions", "entrant_id", "status" },
+                "mcado", "chernobyl", "passing_examinations", "priority_right", "special_conditions", "entrant_id", "status", "comment" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, _ApplicationID)
@@ -376,6 +543,7 @@ namespace PK.Forms
             cbForeignLanguage.SelectedItem = application[1];
             cbPassportCopy.Checked = true;
             cbAppAdmission.Checked = true;
+            tbReturnAdress.Text = application[10].ToString();
 
             object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, new string[] { "last_name", "first_name", "middle_name" },
                 new List<Tuple<string, Relation, object>>
@@ -391,10 +559,9 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, application[8])
                 })[0];
-            //TODO
-            //mtbEMail.Text = entrant[0].ToString();
-            //tbMobilePhone.Text = entrant[2].ToString();
-            //tbHomePhone.Text = entrant[1].ToString();
+            mtbEMail.Text = entrant[0].ToString();
+            tbMobilePhone.Text = entrant[2].ToString();
+            tbHomePhone.Text = entrant[1].ToString();
         }
 
         private void LoadDocuments()
@@ -495,9 +662,9 @@ namespace PK.Forms
         {
             _DB_Connection.Update(DB_Table.ENTRANTS, new Dictionary<string, object>
             {
-                //{ "email", mtbEMail.Text },
-                //{ "home_phone", tbHomePhone.Text },
-                //{ "mobile_phone", tbMobilePhone.Text }
+                { "email", mtbEMail.Text },
+                { "home_phone", tbHomePhone.Text },
+                { "mobile_phone", tbMobilePhone.Text }
             }, new Dictionary<string, object>
             {
                 { "id", _EntrantID }
@@ -506,7 +673,8 @@ namespace PK.Forms
             _DB_Connection.Update(DB_Table.APPLICATIONS, new Dictionary<string, object>
             {
                 { "edit_time", _EditingDateTime},
-                { "language", cbForeignLanguage.SelectedItem.ToString()}
+                { "language", cbForeignLanguage.SelectedItem.ToString()},
+                { "comment", tbReturnAdress.Text.Trim()}
             }, new Dictionary<string, object>
             {
                 { "id", _ApplicationID }
@@ -576,16 +744,6 @@ namespace PK.Forms
 
                         _DB_Connection.Update(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object> { { "year", cbGraduationYear.SelectedItem } },
                             new Dictionary<string, object> { { "document_id", (uint)document[0] } }, transaction);
-
-                        List<object[]> appMedalAch = _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
-                                new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
-                                {
-                                    new Tuple<string, Relation, object>("category_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IND_ACH_CATEGORIES, Classes.DB_Helper.MedalAchievement)),
-                                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID)
-                                })[0][0])
-                            });
                     }
                     else if (document[1].ToString() == "medical")
                     {
