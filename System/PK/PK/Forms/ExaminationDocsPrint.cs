@@ -68,12 +68,15 @@ namespace PK.Forms
                 en => en[0],
                 i => i[0],
                 (s1, s2) => new { ID = (uint)s1[0], LastName = s1[1].ToString(), FirstName = s1[2].ToString(), MiddleName = s1[3].ToString() }
-                ).GroupJoin(
+                ).Join(
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
-                    ),
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("status",Relation.NOT_EQUAL,"withdrawn")
+                    }),
                 k1 => k1.ID,
                 k2 => k2[1],
                 (s1, s2) => new
@@ -82,7 +85,16 @@ namespace PK.Forms
                     s1.LastName,
                     s1.FirstName,
                     s1.MiddleName,
-                    ApplIDs = string.Join(", ", s2.Select(s => s[0].ToString()))
+                    ApplID = (uint)s2[0]
+                }).GroupBy(
+                k => k.ID,
+                (k, g) => new
+                {
+                    ID = k,
+                    g.First().LastName,
+                    g.First().FirstName,
+                    g.First().MiddleName,
+                    ApplIDs = string.Join(", ", g.Select(s => s.ApplID.ToString()))
                 });
 
             _Audiences = _DB_Connection.Select(DB_Table.EXAMINATIONS_AUDIENCES,

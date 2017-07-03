@@ -416,21 +416,18 @@ namespace PK.Forms
                     rbWithdraw.Checked && status != "withdrawn" ||
                     rbAdm.Checked && status != "adm_budget" && status != "adm_paid" && status != "adm_both");
 
-                if (row.Visible && (tbRegNumber.Text != tbRegNumber.Tag.ToString() || tbLastName.Text != tbLastName.Tag.ToString()
-                    || tbFirstName.Text != tbFirstName.Tag.ToString() || tbMiddleName.Text != tbMiddleName.Tag.ToString() || dtpRegDate.Value != dtpRegDate.MinDate))
+                if (row.Visible)
                 {
-                    bool matches = true;
                     if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
-                        matches = false;
-                    row.Visible = matches;
+                        row.Visible = false;
                 }
 
                 if (row.Visible)

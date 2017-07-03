@@ -44,6 +44,7 @@ namespace SharedClasses.DB
         ORDERS,
         ORDERS_HAS_APPLICATIONS,
         APPLICATIONS_EGE_MARKS_VIEW,
-        MASTERS_EXAMS_MARKS
+        MASTERS_EXAMS_MARKS,
+        APPLICATIONS_DOCUMENTS_VIEW
     }
 }

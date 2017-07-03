@@ -870,7 +870,7 @@ namespace PK.Classes
                             dateGroup.Key.ToShortDateString()
                         });
                     else
-                        data.Add(new string[] { count.ToString(), appl.ApplID.ToString(), "ЗАБРАЛ ДОКУМЕНТЫ", "", "", "", "" });
+                        data.Add(new string[] { count.ToString(), appl.ApplID.ToString(), "ЗАБРАЛ ДОКУМЕНТЫ\n\n", "", "", "", "" });
 
                     count++;
                 }
