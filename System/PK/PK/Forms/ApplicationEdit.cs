@@ -1246,7 +1246,6 @@ namespace PK.Forms
 
         private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cbMedCertificate.Enabled = false;
             int selectedDirsCount = 0;
             foreach (TabPage page in tcDirections.TabPages)
             {
@@ -1256,8 +1255,7 @@ namespace PK.Forms
                     ComboBox combo = control as ComboBox;
                     if (combo != null && combo.SelectedIndex != -1)
                     {
-                        pageFilled = true;
-                        
+                        pageFilled = true;                        
                     }
                 }
                 if (pageFilled)
@@ -1268,10 +1266,24 @@ namespace PK.Forms
                 ((ComboBox)sender).SelectedIndex = -1;
                 MessageBox.Show("Нельзя выбрать более " + _SelectedDirsMaxCount + " потоков.");
             }
-            else if (((ComboBox)sender).SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)((ComboBox)sender).SelectedValue).Item1).Item2))
+
+            bool medCertificateNeeded = false;
+            foreach (TabPage page in tcDirections.TabPages)
+                foreach (Control control in page.Controls)
+                {
+                    ComboBox combo = control as ComboBox;
+                    if (combo != null && combo.SelectedIndex != -1 && _DirsMed.Contains(_DB_Helper.GetDirectionNameAndCode(((DirTuple)combo.SelectedValue).Item1).Item2))
+                    {
+                        medCertificateNeeded = true;
+                    }
+                }
+            if (medCertificateNeeded)
                 cbMedCertificate.Enabled = true;
-            if (!cbMedCertificate.Enabled && !_Loading)
+            else if (!_Loading)
+            {
+                cbMedCertificate.Enabled = false;
                 cbMedCertificate.Checked = false;
+            }
         }
 
         private void cbIDDocType_SelectedIndexChanged(object sender, EventArgs e)//TODO
