@@ -1,10 +1,11 @@
 ﻿using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Dictionaries : DictionaryBase
     {
-        public Dictionaries(Classes.DB_Connector connection) : base(connection)
+        public Dictionaries(DB_Connector connection) : base(connection)
         {
             InitializeComponent();
         }

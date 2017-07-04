@@ -29,9 +29,14 @@
               <xs:element name="Abitur" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:all>
-                    <xs:element type="xs:string" name="Uin">
+                    <xs:element type="xs:unsignedInt" name="Uin">
                       <xs:annotation>
                         <xs:documentation xml:lang="ru">УИН заявления.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element type="xs:unsignedInt" name="EntrantUin">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">УИН абитуриента.</xs:documentation>
                       </xs:annotation>
                     </xs:element>
                     <xs:element type="xs:string" name="Surname">
@@ -239,7 +244,7 @@
                                     <xs:documentation xml:lang="ru">Сокращение факультета.</xs:documentation>
                                   </xs:annotation>
                                 </xs:element>
-                                <xs:element type="xs:int" name="Direction" >
+                                <xs:element type="xs:unsignedInt" name="Direction" >
                                   <xs:annotation>
                                     <xs:documentation xml:lang="ru">ID направления.</xs:documentation>
                                   </xs:annotation>

@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class InstitutionAchievementsEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         private uint _LoadedCampaign;
 
-        public InstitutionAchievementsEdit(Classes.DB_Connector connection)
+        public InstitutionAchievementsEdit(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             foreach (var campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, "name"))
             {
@@ -228,7 +229,7 @@ namespace PK.Forms
         private void dgvAchievements_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
-                if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранное достижение?", "Удаление достижения"))
+                if (SharedClasses.Utility.ShowChoiceMessageBox("Удалить выбранное достижение?", "Удаление достижения"))
                     return;
                 else e.Handled = true;
         }

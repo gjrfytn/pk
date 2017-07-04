@@ -2,20 +2,21 @@
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Examinations : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         private uint SelectedExamID
         {
             get { return (uint)dataGridView.SelectedRows[0].Cells[dataGridView_ID.Index].Value; }
         }
 
-        public Examinations(Classes.DB_Connector connection)
+        public Examinations(DB_Connector connection)
         {
             #region Components
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace PK.Forms
             #endregion
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             UpdateTable();
         }
@@ -44,7 +45,7 @@ namespace PK.Forms
                 MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
-            else if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            else if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[dataGridView_ID.Index].Value } });
             else
                 e.Cancel = true;
@@ -66,7 +67,7 @@ namespace PK.Forms
 
         private void toolStrip_Delete_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", SelectedExamID } });
                 UpdateTable();
@@ -82,14 +83,14 @@ namespace PK.Forms
 
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "registration_time" },
+                new string[] { "id", "registration_time","entrant_id" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true),
                     new Tuple<string, Relation, object>("status",Relation.EQUAL,"new")
                 }).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
                 (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
-                ).Select(s => (uint)s[0]);
+                ).Select(s =>new { ApplID = (uint)s[0], EntrID = (uint)s[2] });
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());
 
@@ -108,7 +109,7 @@ namespace PK.Forms
                 (s1, s2) => (uint)s1[0]
                 );
 
-            applications = applications.Except(alreadyPassedAppls);
+            applications = applications.Where(s=>!alreadyPassedAppls.Contains(s.EntrID));
 
             var applsDirections = _DB_Connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
@@ -133,7 +134,7 @@ namespace PK.Forms
 
             applications = applications.Join(
                  applsSubjects,
-                 k1 => k1,
+                 k1 => k1.ApplID,
                  k2 => k2,
                  (s1, s2) => s1
                  );
@@ -147,8 +148,8 @@ namespace PK.Forms
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
                 applications,
                 en => en[0],
-                a => a,
-                (s1, s2) => s1[0]
+                a => a.EntrID,
+                (s1, s2) => s2.EntrID
               ).Distinct();//TODO Нужно?
 
             foreach (object entrID in entrantsIDs)
@@ -185,7 +186,7 @@ namespace PK.Forms
             dataGridView.Rows.Clear();
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
+            foreach (DB_Queries.Exam exam in DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
                 dataGridView.Rows.Add(
                     exam.ID,
                     subjects[exam.SubjID],

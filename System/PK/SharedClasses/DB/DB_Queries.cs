@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.DB
 {
-    static class DB_Queries
+    public static class DB_Queries
     {
         public class Mark
         {
@@ -44,6 +44,7 @@ namespace PK.Classes
 
         public class Document
         {
+            public readonly uint ApplID;
             public readonly uint ID;
             public readonly string Type;
             public readonly string Series;
@@ -52,8 +53,9 @@ namespace PK.Classes
             public readonly string Organization;
             public readonly DateTime? OrigDate;
 
-            public Document(uint id, string type, string series, string number, DateTime? date, string organization, DateTime? origDate)
+            public Document(uint applID, uint id, string type, string series, string number, DateTime? date, string organization, DateTime? origDate)
             {
+                ApplID = applID;
                 ID = id;
                 Type = type;
                 Series = series;
@@ -187,9 +189,29 @@ namespace PK.Classes
                 }).Select(s => (uint)s[0]);
         }
 
+        public static IEnumerable<Document> GetDocuments(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
+        {
+            return applications.Join(
+                connection.Select(DB_Table.APPLICATIONS_DOCUMENTS_VIEW),
+                k1 => k1,
+                k2 => k2[0],
+                (s1, s2) => new Document(
+                    s1,
+                    (uint)s2[1],
+                    s2[2].ToString(),
+                    s2[3] as string,
+                    s2[4] as string,
+                    s2[5] as DateTime?,
+                    s2[6] as string,
+                    s2[7] as DateTime?
+                    ));
+
+        }
+
         public static IEnumerable<Document> GetApplicationDocuments(DB_Connector connection, uint applicationID)
         {
             return connection.CallProcedure("get_application_docs", applicationID).Select(s => new Document(
+                applicationID,
                 (uint)s[0],
                 s[1].ToString(),
                 s[2] as string,

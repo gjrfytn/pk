@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 using OlympTuple = System.Tuple<uint, string>;
 
@@ -8,16 +9,16 @@ namespace PK.Forms
 {
     partial class Olymps : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly ApplicationEdit _Parent;
 
-        public Olymps(Classes.DB_Connector connection, ApplicationEdit parent)
+        public Olymps(DB_Connector connection, ApplicationEdit parent)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _Parent = parent;
             
             cbDiplomaType.Items.AddRange(_DB_Helper.GetDictionaryItems(FIS_Dictionary.DIPLOMA_TYPE).Values.ToArray());

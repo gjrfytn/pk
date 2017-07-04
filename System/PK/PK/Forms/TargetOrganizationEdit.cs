@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class TargetOrganizationEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly uint? _UpdatingCode;
 
-        public TargetOrganizationEdit(Classes.DB_Connector connection)
+        public TargetOrganizationEdit(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
         }
 
-        public TargetOrganizationEdit(Classes.DB_Connector connection, uint organizationCode)
+        public TargetOrganizationEdit(DB_Connector connection, uint organizationCode)
         {
             InitializeComponent();
 

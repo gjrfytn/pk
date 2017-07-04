@@ -1,7 +1,7 @@
 ﻿
-namespace PK
+namespace SharedClasses.DB
 {
-    enum DB_Table : byte
+    public enum DB_Table : byte
     {
         DICTIONARIES,
         DICTIONARIES_ITEMS,
@@ -44,6 +44,7 @@ namespace PK
         ORDERS,
         ORDERS_HAS_APPLICATIONS,
         APPLICATION_EGE_RESULTS,
-        MASTERS_EXAMS_MARKS
+        MASTERS_EXAMS_MARKS,
+        APPLICATIONS_DOCUMENTS_VIEW
     }
 }

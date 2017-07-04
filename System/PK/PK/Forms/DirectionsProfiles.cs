@@ -4,20 +4,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class DirectionsProfiles : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
-        public DirectionsProfiles(Classes.DB_Connector connection)
+        public DirectionsProfiles(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             UpdateTable();
             cbDirections.ValueMember = "Value";
         }
@@ -67,11 +68,11 @@ namespace PK.Forms
             EnableDisableControls(true);
             if (dgvDirections.SelectedRows.Count != 0)
             {
-                if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelB)
+                if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == DB_Helper.EduLevelB)
                     rbBacc.Checked = true;
-                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelS)
+                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == DB_Helper.EduLevelS)
                     rbSpec.Checked = true;
-                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == Classes.DB_Helper.EduLevelM)
+                else if (dgvDirections.SelectedRows[0].Cells[dgvDirections_EduLevel.Index].Value.ToString() == DB_Helper.EduLevelM)
                     rbMag.Checked = true;
                 cbDirections.SelectedIndex = cbDirections.FindString(_DB_Helper.GetDirectionNameAndCode((uint)dgvDirections.SelectedRows[0].Cells[dgvDirections_ID.Index].Value).Item2);
                 btAddProfile.Enabled = false;
@@ -82,7 +83,7 @@ namespace PK.Forms
         {
             if ((dgvDirections.SelectedRows.Count == 0) || (dgvDirections.SelectedRows[0].Cells[dgvDirections_Type.Index].Value.ToString() == "Н"))
                 MessageBox.Show("Выберите профиль");
-            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранный профиль?", "Удаление профиля"))
+            else if (SharedClasses.Utility.ShowChoiceMessageBox("Удалить выбранный профиль?", "Удаление профиля"))
             {
                 try
                 {
@@ -104,7 +105,7 @@ namespace PK.Forms
                         });
                         if (appEntrances.Count > 0)
                             MessageBox.Show("На данный профиль подано заявление. Удаление невозможно.");
-                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Профиль включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
+                        else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Профиль включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
                         {
                             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
                             {
@@ -218,7 +219,7 @@ namespace PK.Forms
                 {
                     if ((dgvDirections.Rows[i].Cells[dgvDirections_Type.Index].Value.ToString() == "Н")
                         && (dgvDirections.Rows[i].Cells[dgvDirections_ID.Index].Value.ToString() == v[1].ToString()))
-                        if (dgvDirections.Rows[i].Cells[dgvDirections_EduLevel.Index].Value.ToString() != Classes.DB_Helper.EduLevelM)
+                        if (dgvDirections.Rows[i].Cells[dgvDirections_EduLevel.Index].Value.ToString() != DB_Helper.EduLevelM)
                             dgvDirections.Rows.Insert(i + 1, v[1], "П", v[0], v[3].ToString(),
                             dgvDirections.Rows[i].Cells[4].Value, dgvDirections.Rows[i].Cells[5].Value, v[2]);                    
                         else

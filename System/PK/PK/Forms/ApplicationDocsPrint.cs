@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class ApplicationDocsPrint : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly uint _ID;
 
-        public ApplicationDocsPrint(Classes.DB_Connector connection, uint id)
+        public ApplicationDocsPrint(DB_Connector connection, uint id)
         {
             InitializeComponent();
 
@@ -28,7 +29,7 @@ namespace PK.Forms
         private void bPrint_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            Classes.Utility.Print(Classes.OutDocuments.Entrant.Documents(
+            SharedClasses.Utility.Print(Classes.OutDocuments.Entrant.Documents(
                 _DB_Connection,
                 _ID,
                 cbMoveJournal.Checked,

@@ -1,7 +1,7 @@
 ﻿
 namespace PK.Classes
 {
-    class LoginSetting : Forms.FIS_Authorization.ILoginSetting
+    class LoginSetting : SharedClasses.FIS.FIS_Authorization.ILoginSetting
     {
         public string Value
         {

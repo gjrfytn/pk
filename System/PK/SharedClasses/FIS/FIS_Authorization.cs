@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace PK.Forms
+namespace SharedClasses.FIS
 {
     public partial class FIS_Authorization : Form
     {

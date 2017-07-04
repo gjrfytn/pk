@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Classes
 {

@@ -46,7 +46,7 @@ namespace PK.Forms
                 return;
             }
 
-            if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
+            if (!SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
                 return;
 
             foreach (Button b in System.Linq.Enumerable.OfType<Button>(Controls))
