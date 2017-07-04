@@ -83,14 +83,14 @@ namespace PK.Forms
 
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "registration_time" },
+                new string[] { "id", "registration_time","entrant_id" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true),
                     new Tuple<string, Relation, object>("status",Relation.EQUAL,"new")
                 }).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
                 (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
-                ).Select(s => (uint)s[0]);
+                ).Select(s =>new { ApplID = (uint)s[0], EntrID = (uint)s[2] });
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());
 
@@ -109,7 +109,7 @@ namespace PK.Forms
                 (s1, s2) => (uint)s1[0]
                 );
 
-            applications = applications.Except(alreadyPassedAppls);
+            applications = applications.Where(s=>!alreadyPassedAppls.Contains(s.EntrID));
 
             var applsDirections = _DB_Connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
@@ -134,7 +134,7 @@ namespace PK.Forms
 
             applications = applications.Join(
                  applsSubjects,
-                 k1 => k1,
+                 k1 => k1.ApplID,
                  k2 => k2,
                  (s1, s2) => s1
                  );
@@ -148,8 +148,8 @@ namespace PK.Forms
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
                 applications,
                 en => en[0],
-                a => a,
-                (s1, s2) => s1[0]
+                a => a.EntrID,
+                (s1, s2) => s2.EntrID
               ).Distinct();//TODO Нужно?
 
             foreach (object entrID in entrantsIDs)

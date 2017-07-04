@@ -222,14 +222,14 @@ namespace SitePost
 
                     if ((cbPost.Checked) && (rbDirectToDB.Checked))
                     {
-                        string Query = "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` " + 
-                        "(`abitur_id`, `uin`, `surname`, `_name`, `name2`, " + 
+                        string Query = "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` " +
+                        "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, " + 
                         "`math_ball`, `checked_by_FIS_math`, `phis_ball`, `checked_by_FIS_phis`, `rus_ball`, `checked_by_FIS_rus`, " +
                         "`obsh_ball`, `checked_by_FIS_obsh`, `foren_ball`, `checked_by_FIS_foren`, `IA_ball`, " + 
                         "`ODO`, `Olymp`, `Exam`, `hostel`, `PP`, `MCADO`, `Chern`, `appl_of_admission`, " + 
                         "`passport_copy`, `a_d_copy`, `hr_ref_copy`, `referral_pk`, `med_ref`, `photo`, `password`, " +
                         "`orphan_document`, `invalid_document`, `pmp_document`, `absence_of_contraindications`) VALUES " +
-                        "(0, " + abitur.Element("Uin").Value.ToString() + ", '" + abitur.Element("Surname").Value.ToString() + "', '" + 
+                        "(0, " + abitur.Element("Uin").Value.ToString() + ", " + abitur.Element("EntrantUin").Value.ToString() + ", '" + abitur.Element("Surname").Value.ToString() + "', '" + 
                         abitur.Element("Name").Value.ToString() + "' ,'" + abitur.Element("Name2").Value.ToString() + "' ," + 
                         abitur.Element("MathBall").Value.ToString() + " ," + abitur.Element("CheckedByFISMath").Value.ToString() + " ," +
                         abitur.Element("PhisBall").Value.ToString() + " ," + abitur.Element("CheckedByFISPhis").Value.ToString() + " ," +
