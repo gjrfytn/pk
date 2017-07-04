@@ -171,7 +171,6 @@
             this.cbDirection91 = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
             this.gbExamsDoc = new System.Windows.Forms.GroupBox();
-            this.cbNoEGE = new System.Windows.Forms.CheckBox();
             this.dgvExams = new System.Windows.Forms.DataGridView();
             this.dgvExams_Subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Year = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -179,12 +178,8 @@
             this.dgvExams_EGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Min = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExams_Checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.tbExamsDocNumber = new System.Windows.Forms.TextBox();
-            this.tbExamsDocSeries = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.cbExamsDocType = new System.Windows.Forms.ComboBox();
-            this.label33 = new System.Windows.Forms.Label();
+            this.dgvExams_Series = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvExams_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbPassportMatch = new System.Windows.Forms.CheckBox();
             this.gbOther = new System.Windows.Forms.GroupBox();
             this.cbCourses = new System.Windows.Forms.CheckBox();
@@ -2149,14 +2144,7 @@
             // 
             // gbExamsDoc
             // 
-            this.gbExamsDoc.Controls.Add(this.cbNoEGE);
             this.gbExamsDoc.Controls.Add(this.dgvExams);
-            this.gbExamsDoc.Controls.Add(this.tbExamsDocNumber);
-            this.gbExamsDoc.Controls.Add(this.tbExamsDocSeries);
-            this.gbExamsDoc.Controls.Add(this.label35);
-            this.gbExamsDoc.Controls.Add(this.label34);
-            this.gbExamsDoc.Controls.Add(this.cbExamsDocType);
-            this.gbExamsDoc.Controls.Add(this.label33);
             this.gbExamsDoc.Controls.Add(this.cbPassportMatch);
             this.gbExamsDoc.Location = new System.Drawing.Point(718, 50);
             this.gbExamsDoc.Margin = new System.Windows.Forms.Padding(4);
@@ -2166,17 +2154,6 @@
             this.gbExamsDoc.TabIndex = 2;
             this.gbExamsDoc.TabStop = false;
             this.gbExamsDoc.Text = "Сведения о документе регистрации на ЕГЭ";
-            // 
-            // cbNoEGE
-            // 
-            this.cbNoEGE.AutoSize = true;
-            this.cbNoEGE.Location = new System.Drawing.Point(14, 51);
-            this.cbNoEGE.Name = "cbNoEGE";
-            this.cbNoEGE.Size = new System.Drawing.Size(126, 20);
-            this.cbNoEGE.TabIndex = 5;
-            this.cbNoEGE.Text = "Не сдавал ЕГЭ";
-            this.cbNoEGE.UseVisualStyleBackColor = true;
-            this.cbNoEGE.CheckedChanged += new System.EventHandler(this.cbPassportMatch_CheckedChanged);
             // 
             // dgvExams
             // 
@@ -2190,12 +2167,14 @@
             this.dgvExams_Exam,
             this.dgvExams_EGE,
             this.dgvExams_Min,
-            this.dgvExams_Checked});
-            this.dgvExams.Location = new System.Drawing.Point(37, 81);
+            this.dgvExams_Checked,
+            this.dgvExams_Series,
+            this.dgvExams_Number});
+            this.dgvExams.Location = new System.Drawing.Point(5, 64);
             this.dgvExams.Margin = new System.Windows.Forms.Padding(4);
             this.dgvExams.Name = "dgvExams";
             this.dgvExams.RowHeadersVisible = false;
-            this.dgvExams.Size = new System.Drawing.Size(549, 136);
+            this.dgvExams.Size = new System.Drawing.Size(606, 136);
             this.dgvExams.TabIndex = 4;
             this.dgvExams.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvExams_CellValidating);
             this.dgvExams.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvExams_CellValueChanged);
@@ -2218,11 +2197,10 @@
             // 
             // dgvExams_Exam
             // 
-            this.dgvExams_Exam.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.dgvExams_Exam.HeaderText = "Экзамен";
             this.dgvExams_Exam.Name = "dgvExams_Exam";
             this.dgvExams_Exam.ReadOnly = true;
-            this.dgvExams_Exam.Width = 91;
+            this.dgvExams_Exam.Width = 80;
             // 
             // dgvExams_EGE
             // 
@@ -2234,79 +2212,34 @@
             // dgvExams_Min
             // 
             this.dgvExams_Min.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dgvExams_Min.HeaderText = "Минимум";
+            this.dgvExams_Min.HeaderText = "Мин.";
             this.dgvExams_Min.Name = "dgvExams_Min";
             this.dgvExams_Min.ReadOnly = true;
-            this.dgvExams_Min.Width = 94;
+            this.dgvExams_Min.Width = 63;
             // 
             // dgvExams_Checked
             // 
-            this.dgvExams_Checked.HeaderText = "Проверено";
+            this.dgvExams_Checked.HeaderText = "Пров.";
             this.dgvExams_Checked.Name = "dgvExams_Checked";
             this.dgvExams_Checked.ReadOnly = true;
+            this.dgvExams_Checked.Width = 50;
             // 
-            // tbExamsDocNumber
+            // dgvExams_Series
             // 
-            this.tbExamsDocNumber.Location = new System.Drawing.Point(513, 54);
-            this.tbExamsDocNumber.Margin = new System.Windows.Forms.Padding(4);
-            this.tbExamsDocNumber.MaxLength = 100;
-            this.tbExamsDocNumber.Name = "tbExamsDocNumber";
-            this.tbExamsDocNumber.Size = new System.Drawing.Size(98, 22);
-            this.tbExamsDocNumber.TabIndex = 3;
+            this.dgvExams_Series.HeaderText = "Серия";
+            this.dgvExams_Series.Name = "dgvExams_Series";
+            this.dgvExams_Series.Width = 60;
             // 
-            // tbExamsDocSeries
+            // dgvExams_Number
             // 
-            this.tbExamsDocSeries.Location = new System.Drawing.Point(333, 54);
-            this.tbExamsDocSeries.Margin = new System.Windows.Forms.Padding(4);
-            this.tbExamsDocSeries.MaxLength = 20;
-            this.tbExamsDocSeries.Name = "tbExamsDocSeries";
-            this.tbExamsDocSeries.Size = new System.Drawing.Size(87, 22);
-            this.tbExamsDocSeries.TabIndex = 2;
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(451, 57);
-            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(54, 16);
-            this.label35.TabIndex = 4;
-            this.label35.Text = "Номер:";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(262, 57);
-            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(51, 16);
-            this.label34.TabIndex = 3;
-            this.label34.Text = "Серия:";
-            // 
-            // cbExamsDocType
-            // 
-            this.cbExamsDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbExamsDocType.FormattingEnabled = true;
-            this.cbExamsDocType.Location = new System.Drawing.Point(376, 22);
-            this.cbExamsDocType.Margin = new System.Windows.Forms.Padding(4);
-            this.cbExamsDocType.Name = "cbExamsDocType";
-            this.cbExamsDocType.Size = new System.Drawing.Size(238, 24);
-            this.cbExamsDocType.TabIndex = 1;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(258, 25);
-            this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(110, 16);
-            this.label33.TabIndex = 1;
-            this.label33.Text = "Тип документа:";
+            this.dgvExams_Number.HeaderText = "Номер";
+            this.dgvExams_Number.Name = "dgvExams_Number";
+            this.dgvExams_Number.Width = 80;
             // 
             // cbPassportMatch
             // 
             this.cbPassportMatch.AutoSize = true;
-            this.cbPassportMatch.Location = new System.Drawing.Point(14, 23);
+            this.cbPassportMatch.Location = new System.Drawing.Point(16, 31);
             this.cbPassportMatch.Margin = new System.Windows.Forms.Padding(4);
             this.cbPassportMatch.Name = "cbPassportMatch";
             this.cbPassportMatch.Size = new System.Drawing.Size(242, 20);
@@ -2783,10 +2716,6 @@
         private System.Windows.Forms.CheckBox cbAppAdmission;
         private System.Windows.Forms.GroupBox gbExamsDoc;
         private System.Windows.Forms.DataGridView dgvExams;
-        private System.Windows.Forms.TextBox tbExamsDocNumber;
-        private System.Windows.Forms.TextBox tbExamsDocSeries;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.Label label34;
         private System.Windows.Forms.CheckBox cbPassportMatch;
         private System.Windows.Forms.MaskedTextBox mtbEMail;
         private System.Windows.Forms.Button btRemoveDir21;
@@ -2863,21 +2792,20 @@
         private System.Windows.Forms.ComboBox cbTown;
         private System.Windows.Forms.Button btWithdraw;
         private System.Windows.Forms.Button btFillRand;
+        private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.TextBox tbMobilePhone;
+        private System.Windows.Forms.TextBox tbHomePhone;
+        private System.Windows.Forms.CheckBox cbCourses;
+        private System.Windows.Forms.CheckBox cbCompatriot;
+        private System.Windows.Forms.Label label44;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Subject;
         private System.Windows.Forms.DataGridViewComboBoxColumn dgvExams_Year;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Exam;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_EGE;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Min;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
-        private System.Windows.Forms.MaskedTextBox mtbSubdivisionCode;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.TextBox tbMobilePhone;
-        private System.Windows.Forms.TextBox tbHomePhone;
-        private System.Windows.Forms.CheckBox cbNoEGE;
-        private System.Windows.Forms.ComboBox cbExamsDocType;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.CheckBox cbCourses;
-        private System.Windows.Forms.CheckBox cbCompatriot;
-        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Series;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Number;
     }
 }

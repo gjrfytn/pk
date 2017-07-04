@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SharedClasses.DB
+namespace PK.Classes
 {
-    public class DB_Helper
+    class DB_Helper
     {
         #region DictItemsNames
         public const string EduFormO = "Очная форма";
@@ -85,14 +85,14 @@ namespace SharedClasses.DB
                 );
         }
 
-        public Dictionary<uint, FIS.FIS_Olympic_TEMP> GetOlympicsDictionaryItems()
+        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems()
         {
-            Dictionary<uint, FIS.FIS_Olympic_TEMP> dictionaryItems = new Dictionary<uint, FIS.FIS_Olympic_TEMP>();
+            Dictionary<uint, FIS_Olympic_TEMP> dictionaryItems = new Dictionary<uint, FIS_Olympic_TEMP>();
 
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
             {
-                Dictionary<System.Tuple<uint, uint>, FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile> profiles =
-                    new Dictionary<System.Tuple<uint, uint>, FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile>();
+                Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile> profiles =
+                    new Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile>();
                 foreach (object[] prof in _DB_Connection.Select(
                     DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                     new string[] { "*" },
@@ -100,7 +100,7 @@ namespace SharedClasses.DB
                 {
                     profiles.Add(
                        new System.Tuple<uint, uint>((uint)prof[1], (uint)prof[2]),
-                        new FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile
+                        new FIS_Olympic_TEMP.FIS_Olympic_Profile
                         {
                             Subjects = _DB_Connection.Select(
                                 DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
@@ -116,7 +116,7 @@ namespace SharedClasses.DB
                 }
                 dictionaryItems.Add(
                     (uint)olymp[0],
-                    new FIS.FIS_Olympic_TEMP
+                    new FIS_Olympic_TEMP
                     {
                         Year = (ushort)olymp[1],
                         Number = olymp[2] as uint?,

@@ -11,7 +11,6 @@ namespace PK.Forms
         class EGE_Result
         {
             public readonly uint ApplID;
-            public readonly uint DocID;
             public readonly string Series;
             public readonly string Number;
             public readonly string LastName;
@@ -21,10 +20,9 @@ namespace PK.Forms
             public readonly ushort Value;
             public readonly bool Checked;
 
-            public EGE_Result(uint applID, uint docID, string series, string number, string lastName, string firstName, string middleName, uint subjectID, ushort value, bool checked_)
+            public EGE_Result(uint applID, string series, string number, string lastName, string firstName, string middleName, uint subjectID, ushort value, bool checked_)
             {
                 ApplID = applID;
-                DocID = docID;
                 Series = series;
                 Number = number;
                 LastName = lastName;
@@ -70,7 +68,7 @@ namespace PK.Forms
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<string[]> lines = new List<string[]>();
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName/*, System.Text.Encoding.GetEncoding(1251)*/))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(openFileDialog.FileName, System.Text.Encoding.GetEncoding(1251)))
                 {
                     while (!reader.EndOfStream)
                         lines.Add(reader.ReadLine().Split('%'));
@@ -111,18 +109,18 @@ namespace PK.Forms
                         if (!foundResult.Checked || foundResult.Value < res.Value)
                         {
                             _DB_Connection.Update(
-                                DB_Table.DOCUMENTS_SUBJECTS_DATA,
+                                DB_Table.APPLICATION_EGE_RESULTS,
                                 new Dictionary<string, object>
                                 {
-                                    { "value", res.Value },
                                     { "year", res.Year },
+                                    { "value", res.Value },
                                     { "checked", true }
                                 },
                                 new Dictionary<string, object>
                                 {
-                                    { "document_id", foundResult.DocID},
+                                    { "application_id", foundResults.First().ApplID},
                                     { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
-                                    { "subject_id", res.Subject },
+                                    { "subject_id", res.Subject }
                                 });
 
                             count++;
@@ -131,14 +129,16 @@ namespace PK.Forms
                     else
                     {
                         _DB_Connection.Insert(
-                            DB_Table.DOCUMENTS_SUBJECTS_DATA,
+                            DB_Table.APPLICATION_EGE_RESULTS,
                             new Dictionary<string, object>
                             {
-                                    { "document_id", foundResults.First().DocID},
+                                    { "application_id", foundResults.First().ApplID},
                                     { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
                                     { "subject_id", res.Subject },
-                                    { "value", res.Value },
+                                    { "series", res.Series },
+                                    { "number", res.Number },
                                     { "year", res.Year },
+                                    { "value", res.Value },
                                     { "checked", true }
                             });
 
@@ -166,21 +166,20 @@ namespace PK.Forms
                     );
 
             return applications.Join(
-                _DB_Connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "id", "document_id", "series", "number", "subject_id", "value", "checked"),
+                _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, "application_id", "series", "number", "subject_id", "value", "checked"),
                 k1 => k1.ApplID,
                 k2 => k2[0],
                 (s1, s2) => new EGE_Result
                 (
                     s1.ApplID,
-                    (uint)s2[1],
+                    s2[1].ToString(),
                     s2[2].ToString(),
-                    s2[3].ToString(),
                     s1.LastN,
                     s1.FirstN,
                     s1.MiddleN,
-                    (uint)s2[4],
-                    (ushort)(uint)s2[5],
-                    (bool)s2[6]
+                    (uint)s2[3],
+                    (ushort)s2[4],
+                    (bool)s2[5]
                 ));
         }
     }

@@ -2253,7 +2253,7 @@ namespace SharedClasses.FIS
             public readonly List<EgeDocument> EgeDocuments; //Свидетельства о результатах ЕГЭ
             public readonly List<GiaDocument> GiaDocuments; //Справки ГИА
             public readonly IdentityDocument IdentityDocument; //Документ, удостоверяющий личность //s
-            public readonly OtherIdentityDocuments OtherIdentityDocuments; //дополнительный перечень документов, удостоверяющих личность
+            public readonly List<IdentityDocument> OtherIdentityDocuments; //дополнительный перечень документов, удостоверяющих личность
             public readonly List<EduDocument> EduDocuments; //Документы об образовании
             public readonly MilitaryCardDocument MilitaryCardDocument; //Военный билет
             public readonly StudentDocument StudentDocument; //Справка об обучении в другом ВУЗе
@@ -2267,7 +2267,7 @@ namespace SharedClasses.FIS
             public readonly List<RadiationWorkDocument> RadiationWorkDocuments; //Документы, подтверждающие участие в работах на радиационных объектах или воздействие радиации
             public readonly List<CustomDocument> CustomDocuments; //Иные документы
 
-            public ApplicationDocuments(IdentityDocument identityDocument, List<EgeDocument> egeDocuments = null, List<GiaDocument> giaDocuments = null, OtherIdentityDocuments otherIdentityDocuments = null, List<EduDocument> eduDocuments = null, MilitaryCardDocument militaryCardDocument = null, StudentDocument studentDocument = null, List<OrphanDocument> orphanDocuments = null, List<VeteranDocument> veteranDocuments = null, List<SportDocument> sportDocuments = null, List<CompatriotDocument> compatriotDocuments = null, List<PauperDocument> pauperDocuments = null, List<ParentsLostDocument> parentsLostDocuments = null, List<StateEmployeeDocument> stateEmployeeDocuments = null, List<RadiationWorkDocument> radiationWorkDocuments = null, List<CustomDocument> customDocuments = null)
+            public ApplicationDocuments(IdentityDocument identityDocument, List<EgeDocument> egeDocuments = null, List<GiaDocument> giaDocuments = null, List<IdentityDocument> otherIdentityDocuments = null, List<EduDocument> eduDocuments = null, MilitaryCardDocument militaryCardDocument = null, StudentDocument studentDocument = null, List<OrphanDocument> orphanDocuments = null, List<VeteranDocument> veteranDocuments = null, List<SportDocument> sportDocuments = null, List<CompatriotDocument> compatriotDocuments = null, List<PauperDocument> pauperDocuments = null, List<ParentsLostDocument> parentsLostDocuments = null, List<StateEmployeeDocument> stateEmployeeDocuments = null, List<RadiationWorkDocument> radiationWorkDocuments = null, List<CustomDocument> customDocuments = null)
             {
                 EgeDocuments = egeDocuments;
                 GiaDocuments = giaDocuments;
@@ -2293,7 +2293,7 @@ namespace SharedClasses.FIS
                     EgeDocuments != null ? new XElement("EgeDocuments", EgeDocuments.Select(d => d.ConvertToXElement())) : null,
                     GiaDocuments != null ? new XElement("GiaDocuments", GiaDocuments.Select(d => d.ConvertToXElement())) : null,
                     IdentityDocument.ConvertToXElement(),
-                    OtherIdentityDocuments != null ? OtherIdentityDocuments.ConvertToXElement() : null,
+                    OtherIdentityDocuments != null ? new XElement("OtherIdentityDocuments", OtherIdentityDocuments.Select(d => d.ConvertToXElement())) : null,
                     EduDocuments != null ? new XElement("EduDocuments", EduDocuments.Select(d => d.ConvertToXElement())) : null,
                     MilitaryCardDocument != null ? MilitaryCardDocument.ConvertToXElement() : null,
                     StudentDocument != null ? StudentDocument.ConvertToXElement() : null,
@@ -2450,21 +2450,6 @@ namespace SharedClasses.FIS
                     new XElement("BirthDate", BirthDate.Value),
                     BirthPlace != null ? new XElement("BirthPlace", BirthPlace) : null
                     );
-            }
-        }
-
-        public class OtherIdentityDocuments : IXElemementConvertable
-        {
-            public readonly IdentityDocument IdentityDocument; //Документ, удостоверяющий личность //s
-
-            public OtherIdentityDocuments(IdentityDocument identityDocument)
-            {
-                IdentityDocument = identityDocument;
-            }
-
-            public XElement ConvertToXElement()
-            {
-                return new XElement("OtherIdentityDocuments", IdentityDocument.ConvertToXElement());
             }
         }
 
