@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class FaculityDirectionsSelect : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly string _FacultyShortName;
 
-        public FaculityDirectionsSelect(Classes.DB_Connector connection, string shortName)
+        public FaculityDirectionsSelect(DB_Connector connection, string shortName)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace PK.Forms
                             _DB_Connection.Delete(DB_Table.DIRECTIONS, new Dictionary<string, object>
                             { { "faculty_short_name", _FacultyShortName }, { "direction_id", r.Cells[0].Value } });
                         }
-                        catch (MySqlException ex)
+                        catch (MySql.Data.MySqlClient.MySqlException ex)
                         {
                             if (ex.Number == 1217 || ex.Number == 1451)
                             {
@@ -83,7 +83,7 @@ namespace PK.Forms
                                     MessageBox.Show("На направление \"" + r.Cells[dgvDirections_Name.Index].Value + "\" подано заявление. Удаление невозможно.");
                                     stop = true;
                                 }
-                                else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Направление имеет профиль или включено в кампанию. Выполнить удаление направления и связанных профилей?",
+                                else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Направление имеет профиль или включено в кампанию. Выполнить удаление направления и связанных профилей?",
                                     "Связь с кампанией"))
                                 {
                                     using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())

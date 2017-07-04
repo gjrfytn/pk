@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class ExaminationMarks : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly uint _ExaminationID;
         private readonly uint _SubjectID;
         private readonly DateTime _Date;
 
-        public ExaminationMarks(Classes.DB_Connector connection, uint examinationID)
+        public ExaminationMarks(DB_Connector connection, uint examinationID)
         {
             #region Components
             InitializeComponent();
@@ -33,7 +34,7 @@ namespace PK.Forms
 
             _SubjectID = (uint)exam[1];
             _Date = (DateTime)exam[2];
-            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
+            Text = new DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
 
             var marks = _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
@@ -93,10 +94,10 @@ namespace PK.Forms
 
             string[] singleParams = new string[]
             {
-                new Classes.DB_Helper(_DB_Connection).GetMinMark(_SubjectID).ToString(),
+                new DB_Helper(_DB_Connection).GetMinMark(_SubjectID).ToString(),
                 _Date.Year.ToString(),
                 _Date.ToShortDateString(),
-                new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
+                new DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
                 subjConsts[_SubjectID]
             };
 
@@ -109,7 +110,7 @@ namespace PK.Forms
                     ((short)row.Cells[dataGridView_Mark.Index].Value==-1)?"неявка": row.Cells[dataGridView_Mark.Index].Value.ToString(),
                 });
 
-            string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "AlphaMarks" + new Random().Next();
             Classes.DocumentCreator.Create(Classes.Settings.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             System.Diagnostics.Process.Start(doc + ".docx");
 
@@ -121,7 +122,7 @@ namespace PK.Forms
             if (!TryApplyCellChanges())
                 return;
 
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new Dictionary<string, object> { { "examination_id", _ExaminationID } });
                 dataGridView.Rows.Clear();

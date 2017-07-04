@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     public partial class Main : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Connector _DB_UpdateConnection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_UpdateConnection;
+        private readonly DB_Helper _DB_Helper;
         private readonly string _UserLogin;
         private readonly string _UserRole;
 
@@ -21,27 +22,27 @@ namespace PK.Forms
         {
             InitializeComponent();
 
-            _DB_Connection = new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
-                new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
+            _DB_Connection = new DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
+                new DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
                 DB_Table.ROLES_PASSWORDS,
                 new string[] { "password" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }
                 )[0][0].ToString());
 
-            _DB_UpdateConnection = new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
-                new Classes.DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
+            _DB_UpdateConnection = new DB_Connector(Properties.Settings.Default.pk_db_CS, userRole,
+                new DB_Connector(Properties.Settings.Default.pk_db_CS, "initial", "1234").Select(
                 DB_Table.ROLES_PASSWORDS,
                 new string[] { "password" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, userRole) }
                 )[0][0].ToString());
 
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _UserLogin = usersLogin;
             _UserRole = userRole;
             SetUserRole();
 
             dgvApplications.Sort(dgvApplications_LastName, System.ComponentModel.ListSortDirection.Ascending);
-            System.IO.Directory.CreateDirectory(Classes.Utility.TempPath);            
+            System.IO.Directory.CreateDirectory(Classes.Settings.TempPath);            
             dtpRegDate.Value = dtpRegDate.MinDate;
             SetCurrentCampaign();
             rbNew.Checked = true;
@@ -67,7 +68,7 @@ namespace PK.Forms
 
                 try
                 {
-                    System.IO.Directory.Delete(Classes.Utility.TempPath, true);
+                    System.IO.Directory.Delete(Classes.Settings.TempPath, true);
                 }
                 catch (System.IO.IOException) { }
 
@@ -343,7 +344,7 @@ namespace PK.Forms
 
         private IEnumerable<object[]> GetAppsTableRows()
         {
-            bool isMaster = new Classes.DB_Helper(_DB_UpdateConnection).IsMasterCampaign(Classes.Settings.CurrentCampaignID);
+            bool isMaster = new DB_Helper(_DB_UpdateConnection).IsMasterCampaign(Classes.Settings.CurrentCampaignID);
             IEnumerable<object[]> rows = _DB_UpdateConnection.CallProcedure("get_main_form_table", Classes.Settings.CurrentCampaignID).Select(s => new object[]
             {
                 s[0], // УИД
@@ -415,21 +416,18 @@ namespace PK.Forms
                     rbWithdraw.Checked && status != "withdrawn" ||
                     rbAdm.Checked && status != "adm_budget" && status != "adm_paid" && status != "adm_both");
 
-                if (row.Visible && (tbRegNumber.Text != tbRegNumber.Tag.ToString() || tbLastName.Text != tbLastName.Tag.ToString()
-                    || tbFirstName.Text != tbFirstName.Tag.ToString() || tbMiddleName.Text != tbMiddleName.Tag.ToString() || dtpRegDate.Value != dtpRegDate.MinDate))
+                if (row.Visible)
                 {
-                    bool matches = true;
                     if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
-                        matches = false;
+                        row.Visible = false;
                     else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
-                        matches = false;
-                    row.Visible = matches;
+                        row.Visible = false;
                 }
 
                 if (row.Visible)

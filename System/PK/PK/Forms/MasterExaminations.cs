@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class MasterExaminations : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public MasterExaminations(Classes.DB_Connector connection)
+        public MasterExaminations(DB_Connector connection)
         {
             #region Components
             InitializeComponent();
@@ -83,7 +84,7 @@ namespace PK.Forms
 
         private void bSetDate_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                 foreach (DataGridViewRow row in dataGridView.Rows)
                     row.Cells[dataGridView_Date.Index].Value = dtpDate.Value.Date;
         }
@@ -110,7 +111,7 @@ namespace PK.Forms
                     });
             }
 
-            Classes.Utility.ShowChangesSavedMessage();
+            SharedClasses.Utility.ShowChangesSavedMessage();
         }
 
         private void dataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -142,7 +143,7 @@ namespace PK.Forms
 
         private void MasterExaminations_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !Classes.Utility.ShowFormCloseMessageBox();
+            e.Cancel = !SharedClasses.Utility.ShowFormCloseMessageBox();
         }
     }
 }

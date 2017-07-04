@@ -4,29 +4,30 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using PK;
 using System.Net;
+using SharedClasses.DB;
 
 namespace SitePost
 {
     public partial class MainForm : Form
     {
-        private readonly PK.Classes.DB_Connector _DB_Connection;
-        private readonly PK.Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private static readonly string SchemaPath = "Root.xsd";
         private static readonly XmlSchemaSet _SchemaSet = new XmlSchemaSet();
 
         private uint _CampaignID;
         private string _AuthData;
+        private Dictionary<uint, string> _SubjectsCodes;
 
         public MainForm()
         {
             InitializeComponent();
 
             //_DB_Connection = new PK.Classes.DB_Connector("server = localhost; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
-            _DB_Connection = new PK.Classes.DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
+            _DB_Connection = new DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
 
-            _DB_Helper = new PK.Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             Dictionary<uint, string> campaigns = new Dictionary<uint, string>();
             foreach (object[] campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "name" }))
                 if (!_DB_Helper.IsMasterCampaign((uint)campaign[0]))
@@ -41,6 +42,15 @@ namespace SitePost
             for (int i = 1; i <= 60; i++)
                 cbInterval.Items.Add(i);
             cbInterval.SelectedItem = 15;
+
+            _SubjectsCodes = new Dictionary<uint, string>
+            {
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, DB_Helper.SubjectMath), "Math"},
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, DB_Helper.SubjectPhis), "Phis"},
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, DB_Helper.SubjectRus), "Rus"},
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, DB_Helper.SubjectObsh), "Obsh"},
+                { _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, DB_Helper.SubjectForen), "Foren"}
+            };
         }
 
 
@@ -120,7 +130,8 @@ namespace SitePost
                 "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
-                new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false)
+                new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false),
+                new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
             });
 
             string connectionStr = "server=" + tbDirectToDBServer.Text + ";port=3306;database=" + tbDirectToDBBaseName.Text + ";user=" + tbDirectToDBUser.Text + ";password=" + tbDirectToDBPassword.Text + ";";
@@ -141,19 +152,25 @@ namespace SitePost
                 PackageData.Root.Add(new XElement("AuthData", _AuthData));
                 PackageData.Root.Add(new XElement("PackageData"));
 
+                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, appsData.Select(s=>(uint)s[0]), _CampaignID);
+                IEnumerable<DB_Queries.Document> documents = DB_Queries.GetDocuments(_DB_Connection, appsData.Select(s => (uint)s[0]), _CampaignID);
+                var passwords=  _DB_Connection.Select(DB_Table.ENTRANTS, "id","personal_password").Select(s=>new { EntrID=(uint)s[0],Password=s[1].ToString() });
+                var names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name").Select(s => new
+                {
+                    EntrID = (uint)s[0],
+                    LastName = s[1].ToString(),
+                    FirstName = s[2].ToString(),
+                    MiddleName = s[3] as string
+                });
+                
                 foreach (object[] application in appsData)
                 {
-                    string password = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "personal_password" }, new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)application[6])
-                    })[0][0].ToString();
-
                     XElement abitur = new XElement("Abitur",
                         new XElement("Uin", application[0]),
-                        new XElement("Surname", ""),
-                        new XElement("Name", ""),
-                        new XElement("Name2", ""),
-                        new XElement("Password", password),
+                        new XElement("Surname", names.Single(s=>s.EntrID==(uint) application[6]).LastName),
+                        new XElement("Name", names.Single(s => s.EntrID == (uint)application[6]).FirstName),
+                        new XElement("Name2", names.Single(s => s.EntrID == (uint)application[6]).MiddleName),
+                        new XElement("Password", passwords.Single(s => s.EntrID == (uint)application[6]).Password),
                         new XElement("MathBall", 0),
                         new XElement("CheckedByFISMath", 0),
                         new XElement("PhisBall", 0),
@@ -197,8 +214,8 @@ namespace SitePost
                     if ((bool)application[2])
                         abitur.SetElementValue("Chern", 1);
 
-                    SetMarks((uint)application[0], abitur);
-                    SetDocuments((uint)application[0], abitur);
+                    SetMarks((uint)application[0], abitur, marks);
+                    SetDocuments((uint)application[0], abitur,documents);
                     SetIA((uint)application[0], abitur);
                     foreach (XElement appl in GetEntrances((uint)application[0]))
                         abitur.Element("Applications").Add(appl);
@@ -347,21 +364,14 @@ namespace SitePost
             }
         }
 
-        private void SetMarks(uint appID, XElement abitur)
+        private void SetMarks(uint appID, XElement abitur, IEnumerable<DB_Queries.Mark> marks)
         {
-            List<Tuple<uint, string>> subjectsCodes = new List<Tuple<uint, string>> {
-                                new Tuple<uint, string>(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, PK.Classes.DB_Helper.SubjectMath), "Math"),
-                                new Tuple<uint, string>(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, PK.Classes.DB_Helper.SubjectPhis), "Phis"),
-                                new Tuple<uint, string>(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, PK.Classes.DB_Helper.SubjectRus), "Rus"),
-                                new Tuple<uint, string>(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, PK.Classes.DB_Helper.SubjectObsh), "Obsh"),
-                                new Tuple<uint, string>(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, PK.Classes.DB_Helper.SubjectForen), "Foren") };
-            List<PK.Classes.DB_Queries.Mark> marks = PK.Classes.DB_Queries.GetMarks(_DB_Connection, new uint[] { appID }, _CampaignID).ToList();
-            foreach (Tuple<uint, string> subject in subjectsCodes)
+            IEnumerable< DB_Queries.Mark > applResults= marks.Where(x => x.ApplID == appID );
+            foreach (var subject in _SubjectsCodes)
             {
-                List<PK.Classes.DB_Queries.Mark> results = marks.FindAll(x => x.SubjID == subject.Item1);
                 byte value = 0;
                 byte check = 0;
-                foreach (PK.Classes.DB_Queries.Mark mark in results)
+                foreach (DB_Queries.Mark mark in applResults.Where(x => x.SubjID == subject.Key))
                     if (mark.Value > value)
                     {
                         value = mark.Value;
@@ -372,65 +382,43 @@ namespace SitePost
                             check = 1;
                         else check = 0;
                     }
-                abitur.SetElementValue(subject.Item2 + "Ball", value);
-                abitur.SetElementValue("CheckedByFIS" + subject.Item2, check);
+                abitur.SetElementValue(subject.Value + "Ball", value);
+                abitur.SetElementValue("CheckedByFIS" + subject.Value, check);
             }
         }
 
-        private void SetDocuments(uint appID, XElement abitur)
+        private void SetDocuments(uint appID, XElement abitur, IEnumerable<DB_Queries.Document> documents)
         {
-            var docs = _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appID)
-                    }).Join(_DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type" }),
-                    appDocs => (uint)appDocs[0],
-                    ds => (uint)ds[0],
-                    (s1, s2) => new Tuple<uint, string>((uint)s2[0], s2[1].ToString())).ToList();
-
-            foreach (Tuple<uint, string> doc in docs)
+            foreach (DB_Queries.Document doc in documents.Where(s=>s.ApplID==appID))
             {
-                if (doc.Item2 == "identity")
-                {
-                    object[] passportData = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[] { "last_name", "first_name", "middle_name" },
-                        new List<Tuple<string, Relation, object>> {
-                                    new Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.Item1)
-                        })[0];
-                    abitur.SetElementValue("Surname", passportData[0].ToString());
-                    abitur.SetElementValue("Name", passportData[1].ToString());
-                    abitur.SetElementValue("Name2", passportData[2].ToString());
+                if (doc.Type == "identity")
                     abitur.Element("Documents").SetElementValue("PassportCopy", 1);
-                }
-                else if (doc.Item2 == "medical")
+                else if (doc.Type == "medical")
                 {
                     List<object[]> medData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" }, new List<Tuple<string, Relation, object>>
                             {
-                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.Item1)
+                                new Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID)
                             });
-                    if (medData.Count > 0 && medData[0][0].ToString() == PK.Classes.DB_Helper.MedCertificate)
+                    if (medData.Count > 0 && medData[0][0].ToString() == DB_Helper.MedCertificate)
                         abitur.Element("Documents").SetElementValue("MedRef", 1);
                 }
-                else if (doc.Item2 == "olympic" || doc.Item2 == "olympic_total" || doc.Item2 == "ukraine_olympic" || doc.Item2 == "international_olympic")
+                else if (doc.Type == "olympic" || doc.Type == "olympic_total" || doc.Type == "ukraine_olympic" || doc.Type == "international_olympic")
                     abitur.SetElementValue("Olymp", 1);
-                else if (doc.Item2 == "photos")
+                else if (doc.Type == "photos")
                     abitur.Element("Documents").SetElementValue("Photo", 1);
-                else if (doc.Item2 == "orphan")
+                else if (doc.Type == "orphan")
                     abitur.Element("Documents").SetElementValue("OrphanDocument", 1);
-                else if (doc.Item2 == "disability")
+                else if (doc.Type == "disability")
                     abitur.Element("Documents").SetElementValue("InvalidDocument", 1);
-                else if (doc.Item2 == "high_edu_diploma" || doc.Item2 == "school_certificate" || doc.Item2 == "middle_edu_diploma")
+                else if (doc.Type == "high_edu_diploma" || doc.Type == "school_certificate" || doc.Type == "middle_edu_diploma")
                 {
                     abitur.Element("Documents").SetElementValue("CertificateDiplomCopy", 1);
-                    object origDate = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "original_recieved_date" }, new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("id", Relation.EQUAL, doc.Item1)
-                            })[0][0];
-                    DateTime? date = origDate as DateTime?;
-                    if (date != null)
+                    if (doc.OrigDate.HasValue)
                         abitur.SetElementValue("ODO", 1);
                 }
-                else if (doc.Item2 == "academic_diploma")
+                else if (doc.Type == "academic_diploma")
                     abitur.Element("Documents").SetElementValue("HRRefCopy", 1);
-                else if (doc.Item2 == "allow_education")
+                else if (doc.Type == "allow_education")
                     abitur.Element("Documents").SetElementValue("AbsenceOfContraindicationsForTraining", 1);
             }
         }
@@ -464,35 +452,35 @@ namespace SitePost
             {
                 XElement appl = new XElement("Application");
 
-                if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, PK.Classes.DB_Helper.EduFormO))
+                if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO))
                     appl.Add(new XElement("FormOfEducation", 1));
-                else if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, PK.Classes.DB_Helper.EduFormOZ))
+                else if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ))
                     appl.Add(new XElement("FormOfEducation", 2));
-                else if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, PK.Classes.DB_Helper.EduFormZ))
+                else if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormZ))
                     appl.Add(new XElement("FormOfEducation", 3));
 
-                if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceB))
+                if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB))
                 {
                     appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 1));
                 }
-                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceT))
+                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
                 {
                     appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 2));
                 }
-                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceQ))
+                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ))
                 {
                     appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 3));
                 }
-                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, PK.Classes.DB_Helper.EduSourceP))
+                else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
                 {
                     appl.Add(new XElement("Faculty", entrance[5].ToString()));
                     appl.Add(new XElement("Direction", 0));

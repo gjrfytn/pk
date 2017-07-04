@@ -1,11 +1,12 @@
 ﻿using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class DictionaryBase : Form
     {
-        protected readonly Classes.DB_Connector _DB_Connection;
-        protected readonly Classes.DB_Helper _DB_Helper;
+        protected readonly DB_Connector _DB_Connection;
+        protected readonly DB_Helper _DB_Helper;
 
         private Classes.DictionaryUpdater _Updater;
 
@@ -14,10 +15,10 @@ namespace PK.Forms
             InitializeComponent();
         }
 
-        public DictionaryBase(Classes.DB_Connector connection) : this()
+        public DictionaryBase(DB_Connector connection) : this()
         {
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
         }
 
         protected virtual void UpdateMainTable() { }
@@ -33,10 +34,10 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (Classes.Utility.TryAccessFIS_Function((login, password) =>
+            if (SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
             {
                 if (_Updater == null)
-                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, login, password);
+                    _Updater = new Classes.DictionaryUpdater(_DB_Connection, "http://10.0.3.1:8080", login, password); //TODO address
 
                 UpdateDictionary(_Updater);
             }, new Classes.LoginSetting()))

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Faculties : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
         private bool _Updating;
         private string name;
 
-        public Faculties(Classes.DB_Connector connection)
+        public Faculties(DB_Connector connection)
         {
             InitializeComponent();
 
@@ -121,7 +122,7 @@ namespace PK.Forms
         {
             if (dgvFaculties.SelectedRows.Count == 0)
                 MessageBox.Show("Выберите факультет");
-            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранный факультет?", "Удаление факультета"))
+            else if (SharedClasses.Utility.ShowChoiceMessageBox("Удалить выбранный факультет?", "Удаление факультета"))
             {
                 try
                 {
@@ -139,7 +140,7 @@ namespace PK.Forms
                         });
                         if (appEntrances.Count > 0)
                             MessageBox.Show("На данный факультет подано заявление. Удаление невозможно.");
-                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Факультет включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
+                        else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Факультет включен в кампанию. Выполнить удаление?", "Связь с кампанией"))
                         {
                             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
                             {

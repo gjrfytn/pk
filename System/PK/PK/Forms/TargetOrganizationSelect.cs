@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -10,9 +11,9 @@ namespace PK.Forms
         public string OrganizationName;
 
         private readonly Dictionary<uint, string> _All_Items = new Dictionary<uint, string>();
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public TargetOrganizationSelect(Classes.DB_Connector connection, uint? orgID)
+        public TargetOrganizationSelect(DB_Connector connection, uint? orgID)
         {
             InitializeComponent();
 

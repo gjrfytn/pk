@@ -1,17 +1,20 @@
 ﻿using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using SharedClasses.DB;
+using SharedClasses.FIS;
 
 namespace PK.Classes
 {
     class DictionaryUpdater
     {
         private readonly DB_Connector _DB_Connection;
+        private readonly string _FIS_Address;
         private readonly string _FIS_Login;
         private readonly string _FIS_Password;
         private readonly DB_Helper _DB_Helper;
 
-        public DictionaryUpdater(DB_Connector dbConnection, string fisLogin, string fisPassword)
+        public DictionaryUpdater(DB_Connector dbConnection, string address, string fisLogin, string fisPassword)
         {
             #region Contracts
             if (dbConnection == null)
@@ -23,6 +26,7 @@ namespace PK.Classes
             #endregion
 
             _DB_Connection = dbConnection;
+            _FIS_Address = address;
             _FIS_Login = fisLogin;
             _FIS_Password = fisPassword;
             _DB_Helper = new DB_Helper(_DB_Connection);
@@ -30,7 +34,7 @@ namespace PK.Classes
 
         public void UpdateDictionaries()
         {
-            Dictionary<uint, string> fisDictionaries = FIS_Connector.GetDictionaries(_FIS_Login, _FIS_Password);
+            Dictionary<uint, string> fisDictionaries = FIS_Connector.GetDictionaries(_FIS_Address,_FIS_Login, _FIS_Password);
             Dictionary<uint, string> dbDictionaries = _DB_Connection.Select(DB_Table.DICTIONARIES).ToDictionary(d1 => (uint)d1[0], d2 => d2[1].ToString());
 
             string addedReport = "Добавлены справочники:";
@@ -40,13 +44,13 @@ namespace PK.Classes
             foreach (var d in fisDictionaries)
                 if (d.Key != 10 && d.Key != 19)
                 {
-                    var fisDictionaryItems = FIS_Connector.GetDictionaryItems(_FIS_Login, _FIS_Password, d.Key);
+                    var fisDictionaryItems = FIS_Connector.GetDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password, d.Key);
 
                     if (dbDictionaries.ContainsKey(d.Key))
                     {
                         if (d.Value == dbDictionaries[d.Key])
                             UpdateDictionaryItems((FIS_Dictionary)d.Key, d.Value, fisDictionaryItems);
-                        else if (Utility.ShowChoiceMessageWithConfirmation(
+                        else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                          "В ФИС изменилось наименование справочника с кодом " + d.Key +
                          ":\nC \"" + dbDictionaries[d.Key] + "\"\nна \"" + d.Value +
                          "\".\n\nОбновить наименование в БД?\nВ случае отказа изменения элементов этого справочника проверятся не будут.", //TODO Нужен мягкий знак "проверятся"?
@@ -92,7 +96,7 @@ namespace PK.Classes
 
         public void UpdateDirectionsDictionary()
         {
-            Dictionary<uint, string[]> fisDictionaryItems = FIS_Connector.GetDirectionsDictionaryItems(_FIS_Login, _FIS_Password);
+            Dictionary<uint, string[]> fisDictionaryItems = FIS_Connector.GetDirectionsDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password);
             Dictionary<uint, string[]> dbDictionaryItems = _DB_Helper.GetDirectionsDictionaryItems();
 
             string addedReport = "В справочник №" + 10 + " \"" + "Направления подготовки" + "\" добавлены элементы:";
@@ -103,7 +107,7 @@ namespace PK.Classes
                 if (dbDictionaryItems.ContainsKey(item.Key))
                 {
                     for (byte i = 0; i < item.Value.Length; ++i) //TODO Если несколько изменений
-                        if (item.Value[i] != dbDictionaryItems[item.Key][i] && Utility.ShowChoiceMessageWithConfirmation(
+                        if (item.Value[i] != dbDictionaryItems[item.Key][i] && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменилось значение " + (i + 2) + " столбца элемента с кодом "
                                      + item.Key + ":\nC \"" + dbDictionaryItems[item.Key][i] + "\"\nна \"" + item.Value[i] +
                                      "\".\n\nОбновить значение в БД?",
@@ -158,6 +162,7 @@ namespace PK.Classes
         public void UpdateOlympicsDictionary()
         {
             Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = FIS_Connector.GetOlympicsDictionaryItems(
+                _FIS_Address,
                 _FIS_Login,
                 _FIS_Password,
                 _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "физика"),
@@ -172,7 +177,7 @@ namespace PK.Classes
             foreach (var olymp in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(olymp.Key))
                 {
-                    if (olymp.Value.Year != dbDictionaryItems[olymp.Key].Year && Utility.ShowChoiceMessageWithConfirmation(
+                    if (olymp.Value.Year != dbDictionaryItems[olymp.Key].Year && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменился год олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
                                      + ":\nC \"" + dbDictionaryItems[olymp.Key].Year + "\"\nна \"" + olymp.Value.Year +
                                      "\".\n\nОбновить значение в БД?",
@@ -183,7 +188,7 @@ namespace PK.Classes
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    if (olymp.Value.Number != dbDictionaryItems[olymp.Key].Number && Utility.ShowChoiceMessageWithConfirmation(
+                    if (olymp.Value.Number != dbDictionaryItems[olymp.Key].Number && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменился номер олимпиады " + olymp.Key + " \"" + dbDictionaryItems[olymp.Key].Name + "\""
                                      + ":\nC \"" + dbDictionaryItems[olymp.Key].Number + "\"\nна \"" + olymp.Value.Number +
                                      "\".\n\nОбновить значение в БД?",
@@ -194,7 +199,7 @@ namespace PK.Classes
                             new Dictionary<string, object> { { "olympic_id", olymp.Key } }
                             );
 
-                    if (olymp.Value.Name != dbDictionaryItems[olymp.Key].Name && Utility.ShowChoiceMessageWithConfirmation(
+                    if (olymp.Value.Name != dbDictionaryItems[olymp.Key].Name && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                      "В ФИС изменилось имя олимпиады с кодом "
                                      + olymp.Key + ":\nC \"" + dbDictionaryItems[olymp.Key].Name + "\"\nна \"" + olymp.Value.Name +
                                      "\".\n\nОбновить значение в БД?",
@@ -208,7 +213,7 @@ namespace PK.Classes
                     foreach (var prof in olymp.Value.Profiles)
                         if (dbDictionaryItems[olymp.Key].Profiles.ContainsKey(prof.Key))
                         {
-                            if (prof.Value.LevelID != dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID && Utility.ShowChoiceMessageWithConfirmation(
+                            if (prof.Value.LevelID != dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                              "В ФИС изменился код уровня для профиля с кодом " + prof.Key.Item2 + " олимпиады " + olymp.Key
                                              + " \"" + dbDictionaryItems[olymp.Key].Name + "\"" + ":\nC \"" + dbDictionaryItems[olymp.Key].Profiles[prof.Key].LevelID + "\"\nна \"" + prof.Value.LevelID +
                                              "\".\n\nОбновить значение в БД?",
@@ -295,7 +300,7 @@ namespace PK.Classes
             foreach (var item in fisDictionaryItems)
                 if (dbDictionaryItems.ContainsKey(item.Key))
                 {
-                    if (item.Value != dbDictionaryItems[item.Key] && Utility.ShowChoiceMessageWithConfirmation(
+                    if (item.Value != dbDictionaryItems[item.Key] && SharedClasses.Utility.ShowChoiceMessageWithConfirmation(
                                  "Справочник №" + dictionary + " \"" + dictionaryName + "\":\nв ФИС изменилось наименование элемента с кодом "
                                  + item.Key + ":\nC \"" + dbDictionaryItems[item.Key] + "\"\nна \"" + item.Value +
                                  "\".\n\nОбновить наименование в БД?",

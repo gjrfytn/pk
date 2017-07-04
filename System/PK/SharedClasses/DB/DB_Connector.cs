@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-namespace PK.Classes
+namespace SharedClasses.DB
 {
-    class DB_Connector : System.IDisposable
+    public class DB_Connector : System.IDisposable
     {
         public readonly string User;
         public readonly string Password;

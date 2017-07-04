@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace PK
+namespace SharedClasses.FIS
 {
-    class FIS_Olympic_TEMP
+    public class FIS_Olympic_TEMP
     {
         public class FIS_Olympic_Profile
         {

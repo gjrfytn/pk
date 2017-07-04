@@ -1,7 +1,7 @@
 ﻿
-namespace PK
+namespace SharedClasses.DB
 {
-    enum FIS_Dictionary : uint
+    public enum FIS_Dictionary : uint
     {
         SUBJECTS = 1,
         EDU_LEVEL = 2,

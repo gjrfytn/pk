@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -35,9 +36,9 @@ namespace PK.Forms
             }
         }
 
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public EGE_Check(Classes.DB_Connector connection)
+        public EGE_Check(DB_Connector connection)
         {
             InitializeComponent();
 
@@ -75,7 +76,7 @@ namespace PK.Forms
                         lines.Add(reader.ReadLine().Split('%'));
                 }
 
-                Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+                DB_Helper dbHelper = new DB_Helper(_DB_Connection);
                 var importedResults = lines.Where(s => s[5] != "" && s[5] != "Сочинение").Select(s =>
                 {
                     if (s[5] != "Русский язык" && s[5].Contains(" язык"))

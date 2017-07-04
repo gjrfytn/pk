@@ -38,7 +38,10 @@
             this.nudDictionaryNumber = new System.Windows.Forms.NumericUpDown();
             this.bLoadDictionary = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.bDictionaryList = new System.Windows.Forms.Button();
+            this.groupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDictionaryNumber)).BeginInit();
+            this.groupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // bOpenAddressPage
@@ -71,7 +74,7 @@
             // 
             // bExport
             // 
-            this.bExport.Location = new System.Drawing.Point(314, 23);
+            this.bExport.Location = new System.Drawing.Point(328, 23);
             this.bExport.Name = "bExport";
             this.bExport.Size = new System.Drawing.Size(75, 23);
             this.bExport.TabIndex = 8;
@@ -81,7 +84,7 @@
             // 
             // bOpen
             // 
-            this.bOpen.Location = new System.Drawing.Point(12, 227);
+            this.bOpen.Location = new System.Drawing.Point(304, 227);
             this.bOpen.Name = "bOpen";
             this.bOpen.Size = new System.Drawing.Size(99, 23);
             this.bOpen.TabIndex = 9;
@@ -100,12 +103,12 @@
             this.textBox.Location = new System.Drawing.Point(12, 52);
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(375, 169);
+            this.textBox.Size = new System.Drawing.Size(391, 169);
             this.textBox.TabIndex = 7;
             // 
             // nudDictionaryNumber
             // 
-            this.nudDictionaryNumber.Location = new System.Drawing.Point(205, 230);
+            this.nudDictionaryNumber.Location = new System.Drawing.Point(345, 22);
             this.nudDictionaryNumber.Maximum = new decimal(new int[] {
             48,
             0,
@@ -127,7 +130,7 @@
             // 
             // bLoadDictionary
             // 
-            this.bLoadDictionary.Location = new System.Drawing.Point(251, 227);
+            this.bLoadDictionary.Location = new System.Drawing.Point(201, 19);
             this.bLoadDictionary.Name = "bLoadDictionary";
             this.bLoadDictionary.Size = new System.Drawing.Size(138, 23);
             this.bLoadDictionary.TabIndex = 11;
@@ -140,13 +143,34 @@
             this.saveFileDialog.DefaultExt = "xml";
             this.saveFileDialog.Filter = "XML-файлы|*.xml|Все файлы|*.*";
             // 
+            // bDictionaryList
+            // 
+            this.bDictionaryList.Location = new System.Drawing.Point(6, 19);
+            this.bDictionaryList.Name = "bDictionaryList";
+            this.bDictionaryList.Size = new System.Drawing.Size(189, 23);
+            this.bDictionaryList.TabIndex = 12;
+            this.bDictionaryList.Text = "Загрузить список справочников...";
+            this.bDictionaryList.UseVisualStyleBackColor = true;
+            this.bDictionaryList.Click += new System.EventHandler(this.bDictionaryList_Click);
+            // 
+            // groupBox
+            // 
+            this.groupBox.Controls.Add(this.nudDictionaryNumber);
+            this.groupBox.Controls.Add(this.bLoadDictionary);
+            this.groupBox.Controls.Add(this.bDictionaryList);
+            this.groupBox.Location = new System.Drawing.Point(12, 256);
+            this.groupBox.Name = "groupBox";
+            this.groupBox.Size = new System.Drawing.Size(391, 52);
+            this.groupBox.TabIndex = 13;
+            this.groupBox.TabStop = false;
+            this.groupBox.Text = "Справочники";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 256);
-            this.Controls.Add(this.bLoadDictionary);
-            this.Controls.Add(this.nudDictionaryNumber);
+            this.ClientSize = new System.Drawing.Size(415, 313);
+            this.Controls.Add(this.groupBox);
             this.Controls.Add(this.bOpen);
             this.Controls.Add(this.bExport);
             this.Controls.Add(this.textBox);
@@ -154,11 +178,13 @@
             this.Controls.Add(this.lAddress);
             this.Controls.Add(this.cbAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = global::FIS_Exporter.Properties.Resources.logo_export;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FIS Exporter";
             ((System.ComponentModel.ISupportInitialize)(this.nudDictionaryNumber)).EndInit();
+            this.groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,6 +202,8 @@
         private System.Windows.Forms.NumericUpDown nudDictionaryNumber;
         private System.Windows.Forms.Button bLoadDictionary;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.Button bDictionaryList;
+        private System.Windows.Forms.GroupBox groupBox;
     }
 }
 

@@ -6,14 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Statistics : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public Statistics(Classes.DB_Connector connection)
+        public Statistics(DB_Connector connection)
         {
             InitializeComponent();
 

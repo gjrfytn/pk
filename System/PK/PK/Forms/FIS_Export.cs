@@ -7,10 +7,10 @@ namespace PK.Forms
 {
     partial class FIS_Export : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly SharedClasses.DB.DB_Connector _DB_Connection;
         private static readonly System.Xml.Schema.XmlSchemaSet _SchemaSet = new System.Xml.Schema.XmlSchemaSet();
 
-        public FIS_Export(Classes.DB_Connector connection)
+        public FIS_Export(SharedClasses.DB.DB_Connector connection)
         {
             #region Components
             InitializeComponent();
@@ -50,12 +50,12 @@ namespace PK.Forms
 
             if (ValidateXML(package))
             {
-                Classes.Utility.TryAccessFIS_Function((login, password) =>
+                SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
                 {
-                    if (Classes.Utility.ShowUnrevertableActionMessageBox())
+                    if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                         MessageBox.Show(
                             "Идентификатор пакета: " +
-                            Classes.FIS_Connector.Export(cbAddress.Text, login, password, package),
+                            SharedClasses.FIS.FIS_Connector.Export(cbAddress.Text, login, password, package),
                             "Пакет отправлен",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information
@@ -137,7 +137,7 @@ namespace PK.Forms
                     MessageBox.Show(e.Message, "Ошибка в XML", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 });
 
-                if (foundError && !Classes.Utility.ShowChoiceMessageBox("Продолжить выгрузку данных?", "Выбор"))
+                if (foundError && !SharedClasses.Utility.ShowChoiceMessageBox("Продолжить выгрузку данных?", "Выбор"))
                     return false;
             }
             else

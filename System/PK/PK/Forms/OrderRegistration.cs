@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -23,10 +24,10 @@ namespace PK.Forms
             Tuple.Create(  "adm_both" ,APPL_STATUS.ADM_BOTH )
         };
 
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly string _Number;
 
-        public OrderRegistration(Classes.DB_Connector connection, string number)
+        public OrderRegistration(DB_Connector connection, string number)
         {
             _DB_Connection = connection;
 
