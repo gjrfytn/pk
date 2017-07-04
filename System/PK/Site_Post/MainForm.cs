@@ -167,6 +167,7 @@ namespace SitePost
                 {
                     XElement abitur = new XElement("Abitur",
                         new XElement("Uin", application[0]),
+                        new XElement("EntrantUin", application[6]),
                         new XElement("Surname", names.Single(s=>s.EntrID==(uint) application[6]).LastName),
                         new XElement("Name", names.Single(s => s.EntrID == (uint)application[6]).FirstName),
                         new XElement("Name2", names.Single(s => s.EntrID == (uint)application[6]).MiddleName),
@@ -199,7 +200,6 @@ namespace SitePost
                             new XElement("Photo", 0),
                             new XElement("OrphanDocument", 0),
                             new XElement("InvalidDocument", 0),
-                            //new XElement("PMPDocument", 0),
                             new XElement("AbsenceOfContraindicationsForTraining", 0)),
                         new XElement("Applications"));
 
@@ -283,6 +283,9 @@ namespace SitePost
                 }
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
+
+                if (cbSave.Checked)
+                    PackageData.Save("doc.xml");
                 if ((cbPost.Checked) && (rbDirectToDB.Checked))
                 {
                     connection.Close();
@@ -298,8 +301,6 @@ namespace SitePost
                     }
 
                 }
-                if (cbSave.Checked)
-                    PackageData.Save("doc.xml");
 
                 if ((cbPost.Checked) && (rbPostMethod.Checked))
                 {
