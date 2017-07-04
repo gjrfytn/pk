@@ -552,13 +552,20 @@ namespace PK.Forms
 
         private void cbPassportMatch_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbPassportMatch.Checked)
+            if (cbPassportMatch.Checked && !_Loading)
             {
-                //TODO
+                foreach (DataGridViewRow row in dgvExams.Rows)
+                {
+                    row.Cells[dgvExams_Series.Index].Value = tbIDDocSeries.Text;
+                    row.Cells[dgvExams_Number.Index].Value = tbIDDocNumber.Text;
+                }
+                dgvExams_Series.ReadOnly = true;
+                dgvExams_Number.ReadOnly = true;
             }
             else
             {
-
+                dgvExams_Series.ReadOnly = false;
+                dgvExams_Number.ReadOnly = false;
             }
         }
 
@@ -1329,8 +1336,8 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
-            LoadMarks();
             LoadDocuments();
+            LoadMarks();
             LoadDirections();
             Cursor.Current = Cursors.Default;
         }
@@ -2051,11 +2058,13 @@ namespace PK.Forms
 
         private void LoadMarks()
         {
-            foreach (object[] mark in _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, new string[] { "subject_id", "series", "number", "year", "value", "checked" },
+            bool passportMatch = true;
+            List<object[]> marks = _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, new string[] { "subject_id", "series", "number", "year", "value", "checked" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
-                }))
+                });
+            foreach (object[] mark in marks)
                 foreach (DataGridViewRow row in dgvExams.Rows)
                     if (_DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[dgvExams_Subject.Index].Value.ToString()) == (uint)mark[0])
                     {
@@ -2064,8 +2073,12 @@ namespace PK.Forms
                         row.Cells[dgvExams_Series.Index].Value = mark[1];
                         row.Cells[dgvExams_Number.Index].Value = mark[2];
                         row.Cells[dgvExams_Checked.Index].Value = (bool)mark[5];
-                        if ((bool)row.Cells[dgvExams_Checked.Index].Value) ;
+
+                        if (mark[1].ToString() != tbIDDocSeries.Text || mark[2].ToString() != tbIDDocNumber.Text)
+                            passportMatch = false;
                     }
+            if (passportMatch && marks.Count > 0)
+                cbPassportMatch.Checked = true;
 
             var exMarks = _DB_Connection.Select(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new string[] { "examination_id", "mark" }, new List<Tuple<string, Relation, object>>
             {
