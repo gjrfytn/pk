@@ -454,7 +454,7 @@ namespace PK.Forms
                                         egePassportDataOK = false;
                                 }
 
-                            if (egeFound || !egeFound && Classes.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ. Выполнить сохранение?","Отсутствует ЕГЭ"))
+                            if (egeFound || !cbExams.Checked && SharedClasses.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ и не выбран пункт \"Сдает экзамены\". Выполнить сохранение?", "Отсутствует ЕГЭ и \"Сдает экзамены\""))
                                 if (!egePassportDataOK)
                                 MessageBox.Show("Для результата ЕГЭ не указаны паспортные данные.");
                             else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
@@ -1349,7 +1349,6 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
-            LoadExaminationsMarks();
             LoadDocuments();
             LoadMarks();
             LoadDirections();
