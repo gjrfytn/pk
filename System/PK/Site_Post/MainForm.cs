@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Net;
 using SharedClasses.DB;
+using System.Threading;
 
 namespace SitePost
 {
@@ -19,12 +20,16 @@ namespace SitePost
         private uint _CampaignID;
         private string _AuthData;
         private Dictionary<uint, string> _SubjectsCodes;
+        private Thread threadPost;
+        public delegate void InvokeDelegate();
+        private int sumTime;
+        private int count;
 
         public MainForm()
         {
             InitializeComponent();
 
-            //_DB_Connection = new PK.Classes.DB_Connector("server = localhost; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
+            //_DB_Connection = new DB_Connector("server = localhost; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
             _DB_Connection = new DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
 
             _DB_Helper = new DB_Helper(_DB_Connection);
@@ -56,10 +61,15 @@ namespace SitePost
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            PostApplications();
+            threadPost = new Thread(PostApplications);
+            threadPost.Start();
+            //Cursor.Current = Cursors.WaitCursor;
+            //PostApplications();
             timer.Start();
-            Cursor.Current = Cursors.Default;
+            sumTime = 0;
+            timerSum.Enabled = true;
+            timerSum.Start();
+            //Cursor.Current = Cursors.Default;
         }
 
         private void btStart_Click(object sender, EventArgs e)
@@ -67,10 +77,12 @@ namespace SitePost
             if (timer.Enabled)
             {
                 timer.Stop();
+                timerSum.Stop();
                 cbCampaigns.Enabled = true;
                 cbAdress.Enabled = true;
                 cbInterval.Enabled = true;
                 cbUnits.Enabled = true;
+                threadPost.Abort();
                 btStart.Text = "Старт";
             }
             else if (cbCampaigns.SelectedIndex == -1)
@@ -92,10 +104,16 @@ namespace SitePost
                         timer.Interval = timer.Interval * 60000;
                     else if (cbUnits.SelectedItem.ToString() == "ч")
                         timer.Interval = timer.Interval * 3600000;
+                
 
-                    PostApplications();
+                    threadPost = new Thread(PostApplications);
+                    threadPost.Start();
+                    //PostApplications();
                     timer.Start();
-                }
+                    sumTime = 0;
+                    timerSum.Enabled = true;
+                    timerSum.Start();
+            }
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -143,6 +161,11 @@ namespace SitePost
                 {
                     connection.Open();
                     string Query = "SET foreign_key_checks = 0;" +
+                            "LOCK TABLES `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` WRITE, " + 
+                                        "`" + tbDirectToDBBaseName.Text + "`.`application_tmptable` WRITE, " +
+                                        "`" + tbDirectToDBBaseName.Text + "`.`profile_table` READ, " +
+                                        "`" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt READ, " +
+                                        "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft READ;" + 
                             "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable`;" +
                             "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`application_tmptable`;";
                     new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
@@ -162,7 +185,8 @@ namespace SitePost
                     FirstName = s[2].ToString(),
                     MiddleName = s[3] as string
                 });
-                
+
+                count = 0;
                 foreach (object[] application in appsData)
                 {
                     XElement abitur = new XElement("Abitur",
@@ -280,7 +304,13 @@ namespace SitePost
                     }
 
                     PackageData.Root.Element("PackageData").Add(abitur);
+                    count++;
+                    lCount.BeginInvoke(new InvokeDelegate(()=> { lCount.Text = count.ToString() + " абитуриентов"; }));
+                    
                 }
+                if ((cbPost.Checked) && (rbDirectToDB.Checked)) new MySql.Data.MySqlClient.MySqlCommand("UNLOCK TABLES;", connection).ExecuteNonQuery();
+                timerSum.Stop();
+                //timerSum.Enabled = false;
                 _SchemaSet.Add(null, SchemaPath);
                 PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
 
@@ -296,7 +326,12 @@ namespace SitePost
                     {
                         System.IO.Stream responseStream = HttpResponse.GetResponseStream();
                         string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
-                        tbResponse.Text = tbResponse.Text + responseStr + "\r\n";
+                        tbResponse.BeginInvoke(new InvokeDelegate(() =>
+                        {
+                            tbResponse.Text = tbResponse.Text + responseStr + "\r\n" +
+                            "Отправлено: " + count.ToString() + " абитуриента за " + (sumTime / 60).ToString() + " мин. " + (sumTime % 60).ToString() + " сек.; " +
+                            "Среднее время на одного абитуриента: " + System.Math.Round((float)sumTime / count, 2) + " сек.\r\n\r\n";
+                        }));
                         HttpResponse.Close();
                     }
 
@@ -363,6 +398,7 @@ namespace SitePost
                 }
 
             }
+            threadPost.Abort();
         }
 
         private void SetMarks(uint appID, XElement abitur, IEnumerable<DB_Queries.Mark> marks)
@@ -620,6 +656,23 @@ namespace SitePost
         private void rbDirectToDB_Click(object sender, EventArgs e)
         {
             tcMethod.SelectedIndex = tcMethod.TabPages.IndexOf(tpDirectToDBMethod);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timerSum_Tick(object sender, EventArgs e)
+        {
+            sumTime++;
+            lTime.Text = (sumTime/60).ToString()+" мин. "+(sumTime%60).ToString() + " сек.";
+            lAverageTime.Text= System.Math.Round(((float)sumTime / count),2).ToString() + " сек. на абитуриента";
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //threadPost.Abort();
         }
     }
 }
