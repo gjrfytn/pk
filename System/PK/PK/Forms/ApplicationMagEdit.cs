@@ -306,6 +306,7 @@ namespace PK.Forms
                 cbProgram_quote_o.SelectedIndex = -1;
             cbProgram_quote_o.Enabled = cbSpecialRights.Checked;
             label35.Enabled = cbSpecialRights.Checked;
+            btAddDir_quote_o.Enabled = cbSpecialRights.Checked;
             DirectionDocEnableDisable();
         }
 
@@ -364,6 +365,7 @@ namespace PK.Forms
                 cbProgram_target_o.SelectedIndex = -1;
             cbProgram_target_o.Enabled = cbTarget.Checked;
             label34.Enabled = cbTarget.Checked;
+            btAddDir_target_o.Enabled = cbTarget.Checked;
             DirectionDocEnableDisable();
         }
 
@@ -1418,7 +1420,7 @@ namespace PK.Forms
                 }).Select(s => new
                 {
                     Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                    Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                    Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
                 }).ToList();
             
             foreach (var entrancesData in records)
@@ -2122,7 +2124,7 @@ namespace PK.Forms
                     }).Select(s => new
                     {
                         Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                        Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
                     }).ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
@@ -2154,7 +2156,7 @@ namespace PK.Forms
                     }).Select(s => new
                     {
                         Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                        Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
                     }).Distinct().ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";
@@ -2193,7 +2195,7 @@ namespace PK.Forms
                     }).Select(s => new
                     {
                         Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                        Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
                     }).ToList();
                 combobox.ValueMember = "Value";
                 combobox.DisplayMember = "Display";

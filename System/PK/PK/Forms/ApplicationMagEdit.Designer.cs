@@ -698,6 +698,7 @@
             // 
             // btAddDir_target_o
             // 
+            this.btAddDir_target_o.Enabled = false;
             this.btAddDir_target_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btAddDir_target_o.Location = new System.Drawing.Point(210, 5);
             this.btAddDir_target_o.Margin = new System.Windows.Forms.Padding(4);
@@ -772,6 +773,7 @@
             // 
             // btAddDir_quote_o
             // 
+            this.btAddDir_quote_o.Enabled = false;
             this.btAddDir_quote_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btAddDir_quote_o.Location = new System.Drawing.Point(210, 5);
             this.btAddDir_quote_o.Margin = new System.Windows.Forms.Padding(4);

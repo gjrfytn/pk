@@ -102,7 +102,11 @@ namespace PK.Forms
                 {
                     //Стоит ли проверять имена вообще?
                     var foundResults = savedResults.Where(s =>
-                    s.LastName == res.LastName && s.FirstName == res.FirstName && s.MiddleName == res.MiddleName && s.Series == res.Series && s.Number == res.Number
+                    s.LastName.Equals(res.LastName, StringComparison.OrdinalIgnoreCase) &&
+                    s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                    s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                    s.Series==res.Series &&
+                    s.Number==res.Number
                     );
 
                     EGE_Result foundResult = foundResults.SingleOrDefault(s => s.SubjectID == res.Subject);

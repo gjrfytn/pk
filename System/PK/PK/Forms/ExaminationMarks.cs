@@ -105,7 +105,7 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dataGridView.Rows)
                 table.Add(new string[]
                 {
-                    row.Cells[dataGridView_UID.Index].Value.ToString(),
+                    row.Cells[dataGridView_ApplID.Index].Value.ToString(),
                     row.Cells[dataGridView_Name.Index].Value.ToString(),
                     ((short)row.Cells[dataGridView_Mark.Index].Value==-1)?"неявка": row.Cells[dataGridView_Mark.Index].Value.ToString(),
                 });

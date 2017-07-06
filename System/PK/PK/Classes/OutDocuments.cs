@@ -1037,9 +1037,9 @@ namespace PK.Classes
             List<string> paramaters = new List<string>
             {
                 order.Date.ToShortDateString(),
-                number,
-                order.ProtocolNumber.HasValue?order.ProtocolNumber.Value.ToString():"НЕТ",
-                order.ProtocolDate.HasValue?order.ProtocolDate.Value.ToShortDateString():"НЕТ"
+                order.ProtocolNumber.HasValue?number:"______",
+                order.ProtocolNumber.HasValue?order.ProtocolNumber.Value.ToString():"______",
+                order.ProtocolDate.HasValue?order.ProtocolDate.Value.ToShortDateString():"______"
             };
 
             if (order.Type == "hostel")
