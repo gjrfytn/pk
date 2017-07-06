@@ -14,9 +14,16 @@ namespace PK.Forms
         private readonly string _UserLogin;
         private readonly string _UserRole;
 
-        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string> { { "new", "Новое" }, { "adm_budget", "Зачислен на бюджет" }, { "adm_paid", "Зачислен на платное" },
-            { "adm_both", "Зачислен на бюджет и платное" }, { "withdrawn", "Забрал документы" } };
+        private readonly Dictionary<string, string> _Statuses = new Dictionary<string, string>
+        {
+            { "new", "Новое" },
+            { "adm_budget", "Зачислен на бюджет" },
+            { "adm_paid", "Зачислен на платное" },
+            { "adm_both", "Зачислен на бюджет и платное" },
+            { "withdrawn", "Забрал документы" }
+        };
         private uint _SelectedAppID;
+        bool _MasterCampaign;
 
         public Main(string userRole, string usersLogin)
         {
@@ -98,14 +105,13 @@ namespace PK.Forms
             {
                 StopTableAutoUpdating();
                 Form form;
-                if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                if (_MasterCampaign)
                     form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
                 else
                     form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
 
                 form.ShowDialog();
                 UpdateApplicationsTable();
-                FilterAppsTable();
                 timer.Start();
             }
         }
@@ -148,7 +154,7 @@ namespace PK.Forms
 
         private void menuStrip_Campaign_Exams_Click(object sender, EventArgs e)
         {
-            if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+            if (_MasterCampaign)
             {
                 MasterExaminations form = new MasterExaminations(_DB_Connection);
                 form.ShowDialog();
@@ -177,7 +183,6 @@ namespace PK.Forms
             Orders form = new Orders(_DB_Connection);
             form.ShowDialog();
             UpdateApplicationsTable();
-            FilterAppsTable();
             timer.Start();
         }
 
@@ -240,7 +245,7 @@ namespace PK.Forms
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            _SelectedAppID = (uint)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
+            _SelectedAppID = (uint)(int)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
 
             if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
@@ -248,11 +253,11 @@ namespace PK.Forms
             {
                 if (!(bool)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "master_appl" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)dgvApplications.CurrentRow.Cells[0].Value)
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, dgvApplications.CurrentRow.Cells[0].Value)
                 })[0][0])
                 {
                     StopTableAutoUpdating();
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)(int)dgvApplications.CurrentRow.Cells[0].Value);
                     form.ShowDialog();
                 }
                 else
@@ -262,7 +267,6 @@ namespace PK.Forms
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
-                FilterAppsTable();
                 timer.Start();
             }
         }
@@ -270,7 +274,7 @@ namespace PK.Forms
         private void dgvApplications_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvApplications.SelectedRows.Count > 0)
-                _SelectedAppID = (uint)dgvApplications.SelectedRows[0].Cells[dgvApplications_ID.Index].Value;
+                _SelectedAppID = (uint)(int)dgvApplications.SelectedRows[0].Cells[dgvApplications_ID.Index].Value;
         }
 
 
@@ -295,7 +299,7 @@ namespace PK.Forms
         private void tbField_TextChanged(object sender, EventArgs e)
         {
             StopTableAutoUpdating();
-            FilterAppsTable();
+            UpdateApplicationsTable();
             timer.Start();
         }
 
@@ -311,7 +315,7 @@ namespace PK.Forms
         private void rbFilter_CheckedChanged(object sender, EventArgs e)
         {
             StopTableAutoUpdating();
-            FilterAppsTable();
+            UpdateApplicationsTable();
             timer.Start();
         }
 
@@ -328,8 +332,7 @@ namespace PK.Forms
 
         private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            CompleteUpdateAppsTable((IEnumerable<object[]>)e.Result);
-            FilterAppsTable();
+            CompleteUpdateAppsTable((System.Data.DataTable)e.Result);
         }
 
         private void dgvApplications_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -339,35 +342,28 @@ namespace PK.Forms
                 e.Value = _Statuses[e.Value.ToString()];
                 e.FormattingApplied = true;
             }
-        }
-
-
-        private IEnumerable<object[]> GetAppsTableRows()
-        {
-            bool isMaster = new DB_Helper(_DB_UpdateConnection).IsMasterCampaign(Classes.Settings.CurrentCampaignID);
-            IEnumerable<object[]> rows = _DB_UpdateConnection.CallProcedure("get_main_form_table", Classes.Settings.CurrentCampaignID).Select(s => new object[]
+            else if(e.ColumnIndex == dgvApplications_Entrances.Index)
             {
-                s[0], // УИД
-                s[1], // Фамилия
-                s[2], // Имя
-                s[3], // Отчество
-                isMaster?s[4].ToString().Replace("*", ""):s[4].ToString(), // Направления
-                s[5], // ОДО
-                s[6], // Дата подачи
-                s[7], // Дата изменения
-                s[8], // Забрал документы
-                (s[9] as DateTime?)?.ToShortDateString(), // Приказ об отчислении
-                (s[10] as DateTime?)?.ToShortDateString(), // Приказ о зачислении
-                s[11], // Регистратор
-                s[12].ToString() // Статус
-            });
+                e.Value = _MasterCampaign ? e.Value.ToString().Replace("*", ""): e.Value.ToString();
+                e.FormattingApplied = true;
+            }
+        }
+        
 
-            if (_UserRole == "registrator")
-                return rows.Where(s => s[11].ToString() == _UserLogin && ((DateTime)s[6]).Date == DateTime.Now.Date);
-            else if (_UserRole == "inspector")
-                return rows.Where(s => ((DateTime)s[6]).Date == DateTime.Now.Date);
-            else
-                return rows;
+        private System.Data.DataTable GetAppsTableRows()
+        {
+            return _DB_UpdateConnection.CallProcedureDataTable(
+                "get_main_form_table",
+                new Dictionary<string, object>
+                {
+                    { "campaign_id", Classes.Settings.CurrentCampaignID },
+                    { "id", tbRegNumber.Text != tbRegNumber.Tag.ToString()?tbRegNumber.Text:"" },
+                    { "last_name", tbLastName.Text != tbLastName.Tag.ToString()?tbLastName.Text:"" },
+                    { "first_name", tbFirstName.Text != tbFirstName.Tag.ToString()?tbFirstName.Text:"" },
+                    { "middle_name", tbMiddleName.Text != tbMiddleName.Tag.ToString()?tbMiddleName.Text:"" },
+                    { "date", cbDateSearch.Checked?(DateTime?)dtpRegDate.Value:null },
+                    { "status", rbNew.Checked?"new":(rbWithdraw.Checked?"withdrawn":null) }
+                }                );
         }
 
         private void UpdateApplicationsTable()
@@ -375,9 +371,9 @@ namespace PK.Forms
             CompleteUpdateAppsTable(GetAppsTableRows());
         }
 
-        private void CompleteUpdateAppsTable(IEnumerable<object[]> rows)
+        private void CompleteUpdateAppsTable(System.Data.DataTable table)
         {
-            DataGridViewColumn sortColumn = dgvApplications.SortedColumn;
+            string sortColumnName = dgvApplications.SortedColumn.Name;
 
             System.ComponentModel.ListSortDirection sortMethod = System.ComponentModel.ListSortDirection.Ascending;
             if (dgvApplications.SortOrder == SortOrder.Ascending)
@@ -387,54 +383,17 @@ namespace PK.Forms
 
             int displayedRow = dgvApplications.FirstDisplayedScrollingRowIndex;
 
-            dgvApplications.Rows.Clear();
-            dgvApplications.Rows.AddRange(rows.Select(s =>
-                {
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(dgvApplications, s);
-                    return row;
-                }).ToArray());
+            dgvApplications.AutoGenerateColumns = false;
+            BindingSource bindingSource = new BindingSource();
+            bindingSource.DataSource = table;
+            dgvApplications.DataSource = bindingSource;
 
-            if (sortColumn != null)
-                dgvApplications.Sort(sortColumn, sortMethod);
+            if (sortColumnName != null)
+                dgvApplications.Sort(dgvApplications.Columns[sortColumnName], sortMethod);
             if (displayedRow >= 0 && dgvApplications.Rows.Count >= displayedRow)
                 dgvApplications.FirstDisplayedScrollingRowIndex = displayedRow;
-        }
 
-        private void FilterAppsTable()
-        {
-            //using (System.IO.StreamWriter writer = new System.IO.StreamWriter("lol.log", true))
-            //    writer.Write("\r\nfiltered");
-
-            ChangeColumnsVisible();
-            int visibleCount = 0;
-            foreach (DataGridViewRow row in dgvApplications.Rows)
-            {
-                string status = row.Cells[dgvApplications_Status.Index].Value.ToString();
-
-                row.Visible = !(rbNew.Checked && status != "new" ||
-                    rbWithdraw.Checked && status != "withdrawn" ||
-                    rbAdm.Checked && status != "adm_budget" && status != "adm_paid" && status != "adm_both");
-
-                if (row.Visible)
-                {
-                    if ((tbRegNumber.Text != "") && (tbRegNumber.Text != tbRegNumber.Tag.ToString()) && !row.Cells[dgvApplications_ID.Index].Value.ToString().ToLower().StartsWith(tbRegNumber.Text.ToLower()))
-                        row.Visible = false;
-                    else if ((tbLastName.Text != "") && (tbLastName.Text != tbLastName.Tag.ToString()) && !row.Cells[dgvApplications_LastName.Index].Value.ToString().ToLower().StartsWith(tbLastName.Text.ToLower()))
-                        row.Visible = false;
-                    else if ((tbFirstName.Text != "") && (tbFirstName.Text != tbFirstName.Tag.ToString()) && !row.Cells[dgvApplications_FirstName.Index].Value.ToString().ToLower().StartsWith(tbFirstName.Text.ToLower()))
-                        row.Visible = false;
-                    else if ((tbMiddleName.Text != "") && (tbMiddleName.Text != tbMiddleName.Tag.ToString()) && !row.Cells[dgvApplications_MiddleName.Index].Value.ToString().ToLower().StartsWith(tbMiddleName.Text.ToLower()))
-                        row.Visible = false;
-                    else if ((dtpRegDate.Value != dtpRegDate.MinDate) && ((row.Cells[dgvApplications_RegDate.Index].Value as DateTime?).Value.Date != dtpRegDate.Value.Date))
-                        row.Visible = false;
-                }
-
-                if (row.Visible)
-                    visibleCount++;
-            }
-
-            lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + visibleCount;
+            lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + dgvApplications.Rows.Count;
         }
 
         private void SetCurrentCampaign()
@@ -446,12 +405,11 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
                 })[0][0].ToString();
 
-                bool master = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
-                dgvApplications_Original.Visible = !master;
-                dgvApplications_Entrances.HeaderText = master?"Маг. программы":"Направления";
+                _MasterCampaign = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
+                dgvApplications_Original.Visible = !_MasterCampaign;
+                dgvApplications_Entrances.HeaderText = _MasterCampaign ? "Маг. программы":"Направления";
 
                 UpdateApplicationsTable();
-                FilterAppsTable();
                 if (_UserRole != "registrator")
                     timer.Start();
             }

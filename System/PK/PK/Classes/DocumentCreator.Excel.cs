@@ -22,7 +22,7 @@ namespace PK.Classes
                         if (column.Element("Placeholder") != null)
                             throw new System.Exception("Нельзя задавать плейсхолдеры для отдельных столбцов, если задан табличный плейсхолдер. Значение: " + column.Element("Placeholder").Value);
 
-                    rows = connection.CallProcedure(_PH_Table[excelTemplateElement.Element("Placeholder").Value], ids[0]);
+                    rows = connection.CallProcedure(_PH_Table[excelTemplateElement.Element("Placeholder").Value], new Dictionary<string, object> { { "id",ids[0] } });
                 }
                 else
                 {

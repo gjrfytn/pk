@@ -214,19 +214,27 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            foreach (Tuple<char, string> group in _Distribution)
-            {
-                string doc = Classes.Settings.TempPath + "ExamCardsSheet_" + group.Item1 + "_" + group.Item2 + new Random().Next();
-                Classes.DocumentCreator.Create(
+            string doc = Classes.Settings.TempPath + "examCardsSheet" + new Random().Next();
+            Classes.DocumentCreator.Create(
+                doc,
+                _Distribution.Select(s => new Classes.DocumentCreator.DocumentParameters(
                     Classes.Settings.DocumentsTemplatesPath + "ExamCardsSheet.xml",
-                    doc,
-                    new string[] { group.Item2, group.Item1.ToString(), _ExamName, _ExamDate },
+                    null,
+                    null,
+                    new string[] { s.Item2, s.Item1.ToString(), _ExamName, _ExamDate },
                     new IEnumerable<string[]>[]
                     {
-                        _EntrantsTable.Where(en=>char.ToUpper(en.Name[0])== group.Item1&&en.Auditory==group.Item2).Select(s=>new string[] {s.ApplIDs,s.Name,s.AudSeat.ToString() })
-                    });
-                System.Diagnostics.Process.Start(doc + ".docx");
-            }
+                        _EntrantsTable.Where(en=>char.ToUpper(en.Name[0])== s.Item1&&en.Auditory==s.Item2).Select(a=>
+                        {
+                            string[] parts=a.Name.Split(' ');
+                            parts[0]+=" ";
+                            parts[1]+="\n";
+                            return  new string[] {a.ApplIDs, string.Concat(parts), a.AudSeat.ToString() };
+                        })
+                    })),
+                false
+                );
+            System.Diagnostics.Process.Start(doc + ".docx");
 
             Cursor.Current = Cursors.Default;
         }
