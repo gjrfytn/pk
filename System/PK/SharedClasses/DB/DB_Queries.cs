@@ -189,7 +189,7 @@ namespace SharedClasses.DB
                 }).Select(s => (uint)s[0]);
         }
 
-        public static IEnumerable<Document> GetDocuments(DB_Connector connection, IEnumerable<uint> applications, uint campaignID)
+        public static IEnumerable<Document> GetDocuments(DB_Connector connection, IEnumerable<uint> applications)
         {
             return applications.Join(
                 connection.Select(DB_Table.APPLICATIONS_DOCUMENTS_VIEW),
@@ -205,12 +205,11 @@ namespace SharedClasses.DB
                     s2[6] as string,
                     s2[7] as DateTime?
                     ));
-
         }
 
         public static IEnumerable<Document> GetApplicationDocuments(DB_Connector connection, uint applicationID)
         {
-            return connection.CallProcedure("get_application_docs", applicationID).Select(s => new Document(
+            return connection.CallProcedure("get_application_docs", new Dictionary<string, object> { { "id", applicationID } }).Select(s => new Document(
                 applicationID,
                 (uint)s[0],
                 s[1].ToString(),

@@ -1925,6 +1925,31 @@ namespace PK.Forms
                     { "value", row.Cells[dgvExams_EGE.Index].Value },
                     { "checked", false },
                 }, transaction);
+
+            foreach (DataGridViewRow row in dgvExams.Rows)
+                if ((ushort)row.Cells[dgvExams_EGE.Index].Value > 0)
+                {
+                    uint egeDocID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
+                    {
+                        { "type", "ege" },
+                        { "series", row.Cells[dgvExams_Series.Index].Value },
+                        { "number", row.Cells[dgvExams_Number.Index].Value }
+                    }, transaction);
+                    _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
+                    {
+                        { "applications_id", applID },
+                        { "documents_id", egeDocID }
+                    }, transaction);
+                    _DB_Connection.Insert(DB_Table.DOCUMENTS_SUBJECTS_DATA, new Dictionary<string, object>
+                    {
+                        { "document_id", egeDocID },
+                        { "value", row.Cells[dgvExams_EGE.Index].Value },
+                        { "year", ushort.Parse(row.Cells[dgvExams_Year.Index].Value.ToString()) },
+                        { "checked", false },
+                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                        { "subject_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, row.Cells[dgvExams_Subject.Index].Value.ToString()) }
+                    }, transaction);
+                }
         }
 
         private void SaveCertificate(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)

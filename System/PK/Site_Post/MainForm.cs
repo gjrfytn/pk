@@ -153,7 +153,7 @@ namespace SitePost
                 PackageData.Root.Add(new XElement("PackageData"));
 
                 IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, appsData.Select(s=>(uint)s[0]), _CampaignID);
-                IEnumerable<DB_Queries.Document> documents = DB_Queries.GetDocuments(_DB_Connection, appsData.Select(s => (uint)s[0]), _CampaignID);
+                IEnumerable<DB_Queries.Document> documents = DB_Queries.GetDocuments(_DB_Connection, appsData.Select(s => (uint)s[0]));
                 var passwords=  _DB_Connection.Select(DB_Table.ENTRANTS, "id","personal_password").Select(s=>new { EntrID=(uint)s[0],Password=s[1].ToString() });
                 var names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name").Select(s => new
                 {

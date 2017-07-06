@@ -1007,17 +1007,17 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`application_ege_results` (
   `year` SMALLINT UNSIGNED NOT NULL COMMENT 'Год сдачи.',
   `value` SMALLINT UNSIGNED NOT NULL COMMENT 'Балл.',
   `checked` TINYINT(1) NOT NULL COMMENT 'Проверен по ФИС.',
-  PRIMARY KEY (`application_id`, `subject_dict_id`, `subject_id`),
-  INDEX `application_ege_results_has_subjects_idx` (`subject_dict_id` ASC, `subject_id` ASC),
   INDEX `application_ege_results_has_applications_idx` (`application_id` ASC),
+  INDEX `application_ege_results_has_subjects_idx` (`subject_dict_id` ASC, `subject_id` ASC),
+  INDEX `PRIMARY` (`application_id` ASC, `subject_dict_id` ASC, `subject_id` ASC),
   CONSTRAINT `application_ege_results_has_applications`
     FOREIGN KEY (`application_id`)
-    REFERENCES `local_pk_db`.`applications` (`id`)
+    REFERENCES `pk_db`.`applications` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `application_ege_results_has_subjects`
     FOREIGN KEY (`subject_dict_id` , `subject_id`)
-    REFERENCES `local_pk_db`.`dictionaries_items` (`dictionary_id` , `item_id`)
+    REFERENCES `pk_db`.`dictionaries_items` (`dictionary_id` , `item_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -1204,7 +1204,14 @@ DELIMITER ;
 
 DELIMITER $$
 USE `pk_db`$$
-CREATE PROCEDURE `get_main_form_table` (IN id INT UNSIGNED)
+CREATE PROCEDURE `get_main_form_table`(
+IN campaign_id INT UNSIGNED,
+IN id VARCHAR(10),
+IN last_name VARCHAR(250),
+IN first_name VARCHAR(250),
+IN middle_name VARCHAR(250),
+IN date DATE,
+IN status VARCHAR(10))
 BEGIN
 SELECT 
     app_data1.id,
@@ -1253,8 +1260,17 @@ FROM
             OR applications_documents_view.type = 'school_certificate'
             OR applications_documents_view.type = 'middle_edu_diploma'
             OR applications_documents_view.type = 'high_edu_diploma') AS edu_docs
-            ON applications.id = edu_docs.application_id WHERE applications.campaign_id = id) AS app_data2
-            ON app_data2.entrant_id = entrants_view.id) AS app_data3
+            ON applications.id = edu_docs.application_id WHERE
+            applications.campaign_id = campaign_id AND
+            CONVERT(applications.id,CHAR) LIKE CONCAT(id,'%') AND
+            (date IS NULL OR DATE(applications.registration_time) = date) AND
+            (status IS NULL AND (applications.status = "adm_budget" OR applications.status = "adm_paid" OR applications.status = "adm_both") OR applications.status = status)
+            ) AS app_data2
+            ON app_data2.entrant_id = entrants_view.id WHERE
+            entrants_view.last_name LIKE CONCAT(last_name,'%') AND
+            entrants_view.first_name LIKE CONCAT(first_name,'%') AND
+            entrants_view.middle_name LIKE CONCAT(middle_name,'%')
+            ) AS app_data3
             ON applications_short_entrances_view.application_id = app_data3.id) AS app_data1
         LEFT OUTER JOIN
     applications_orders_dates

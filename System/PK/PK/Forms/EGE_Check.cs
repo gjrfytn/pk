@@ -35,12 +35,14 @@ namespace PK.Forms
         }
 
         private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         public EGE_Check(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
+            _DB_Helper = new DB_Helper(_DB_Connection);
         }
 
         private void bExport_Click(object sender, EventArgs e)
@@ -49,12 +51,30 @@ namespace PK.Forms
             {
                 Cursor.Current = Cursors.WaitCursor;
 
+                var identities = DB_Queries.GetDocuments(
+                    _DB_Connection,
+                    _DB_Connection.Select(
+                        DB_Table.APPLICATIONS,
+                    new string[] { "id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
+                    ).Select(s => (uint)s[0])).Where(s => s.Type == "identity").Join(
+                    _DB_Connection.Select(
+                        DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                        new string[] { "document_id", "last_name", "first_name", "middle_name" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("type_id",Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,DB_Helper.PassportName))
+                        }),
+                    k1 => k1.ID,
+                    k2 => k2[0],
+                    (s1, s2) => Tuple.Create(s2[1].ToString(), s2[2].ToString(), s2[3] as string, s1.Series, s1.Number));
+
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName, false, System.Text.Encoding.GetEncoding(1251)))
                 {
-                    foreach (var appl in GetEgeResults().Where(s => !s.Checked).GroupBy(
-                        k => Tuple.Create(k.LastName, k.FirstName, k.MiddleName, k.Series, k.Number)
-                        ))
-                        writer.WriteLine(appl.Key.Item1 + "%" + appl.Key.Item2 + "%" + appl.Key.Item3 + "%" + appl.Key.Item4 + "%" + appl.Key.Item5);
+                    foreach (var appl in GetEgeResults().Select(s =>
+                    Tuple.Create(s.LastName, s.FirstName, s.MiddleName, s.Series, s.Number)
+                    ).Concat(identities).Distinct())
+                        writer.WriteLine(appl.Item1 + "%" + appl.Item2 + "%" + appl.Item3 + "%" + appl.Item4 + "%" + appl.Item5);
                 }
 
                 Cursor.Current = Cursors.Default;
@@ -74,7 +94,6 @@ namespace PK.Forms
                         lines.Add(reader.ReadLine().Split('%'));
                 }
 
-                DB_Helper dbHelper = new DB_Helper(_DB_Connection);
                 var importedResults = lines.Where(s => s[5] != "" && s[5] != "Сочинение").Select(s =>
                 {
                     if (s[5] != "Русский язык" && s[5].Contains(" язык"))
@@ -87,7 +106,7 @@ namespace PK.Forms
                         MiddleName = s[2],
                         Series = s[3],
                         Number = s[4],
-                        Subject = dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, s[5]),
+                        Subject = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, s[5]),
                         Value = ushort.Parse(s[6]),
                         Year = ushort.Parse(s[7])
                     };
