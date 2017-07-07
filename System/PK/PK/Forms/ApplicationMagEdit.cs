@@ -158,7 +158,7 @@ namespace PK.Forms
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
             else if (string.IsNullOrWhiteSpace(tbInstitution.Text))
                 MessageBox.Show("Обязательные поля в разделе \"Документ об образовании\" не заполнены.");
-            else if (!cbAppAdmission.Checked || (cbSpecialRights.Checked || cbTarget.Checked) && !cbDirectionDoc.Checked
+            else if (!cbAppAdmission.Checked || (cbSpecialRights.Checked || cbTarget.Checked || cbPriority.Checked) && !cbDirectionDoc.Checked
                     || !cbEduDoc.Checked)
                 MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
             else
@@ -258,17 +258,17 @@ namespace PK.Forms
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+            if (MessageBox.Show("Выполнить сохранение?", "Сохранение", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                _EditingDateTime = DateTime.Now;
-                UpdateApplication(transaction);
-                transaction.Commit();
+                Cursor.Current = Cursors.WaitCursor;
+                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                {
+                    _EditingDateTime = DateTime.Now;
+                    UpdateApplication(transaction);
+                    transaction.Commit();
+                }
+                Cursor.Current = Cursors.Default;
             }
-
-            Cursor.Current = Cursors.Default;
-            
             ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
             form.ShowDialog();
         }
@@ -827,6 +827,11 @@ namespace PK.Forms
                 (sender as TextBox).ForeColor = System.Drawing.Color.Black;
         }
 
+        private void cbPriority_CheckedChanged(object sender, EventArgs e)
+        {
+            DirectionDocEnableDisable();
+        }
+
 
         private uint SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
@@ -905,6 +910,7 @@ namespace PK.Forms
                 { "campaign_id", _CurrCampainID },                
                 { "first_high_edu", firstHightEdu},
                 { "special_conditions", cbSpecialConditions.Checked},
+                { "priority_right", cbPriority.Checked },
                 { "master_appl", true }
             }, transaction);
 
@@ -1190,7 +1196,7 @@ namespace PK.Forms
         private void LoadBasic()
         {
             Text += " № " + _ApplicationID;
-            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status" }, 
+            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status", "passing_examinations" }, 
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, _ApplicationID)
@@ -1214,6 +1220,7 @@ namespace PK.Forms
                 cbFirstTime.SelectedItem = "Впервые";
             else cbFirstTime.SelectedItem = "Повторно";            
             cbSpecialConditions.Checked = (bool)application[3];
+            cbPriority.Checked = (bool)application[6];
 
             object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "email", "home_phone", "mobile_phone" },
                 new List<Tuple<string, Relation, object>>
@@ -1538,7 +1545,8 @@ namespace PK.Forms
                 { "needs_hostel", cbHostelNeeded.Checked},
                 { "edit_time", _EditingDateTime},
                 { "first_high_edu", firstHightEdu},
-                { "special_conditions", cbSpecialConditions.Checked}
+                { "special_conditions", cbSpecialConditions.Checked},
+                { "priority_right", cbPriority.Checked },
             }, new Dictionary<string, object>
             {
                 { "id", _ApplicationID }
@@ -2064,7 +2072,7 @@ namespace PK.Forms
                     }                        
                 }
             foreach (object[] magExam in examsData)
-                if (int.Parse(magExam[3].ToString()) != -1)
+                if (int.Parse(magExam[3].ToString()) == -1)
                 {
                     bool found = false;
                     foreach (TabPage tab in tcPrograms.TabPages)
@@ -2313,9 +2321,9 @@ namespace PK.Forms
 
         private void DirectionDocEnableDisable()
         {
-            if ((cbSpecialRights.Checked || cbTarget.Checked) && !_Loading)
+            if ((cbSpecialRights.Checked || cbTarget.Checked || cbPriority.Checked) && !_Loading)
                 cbDirectionDoc.Enabled = true;
-            else if ((cbSpecialRights.Checked || cbTarget.Checked) && _Loading)
+            else if ((cbSpecialRights.Checked || cbTarget.Checked || cbPriority.Checked) && _Loading)
             {
                 cbDirectionDoc.Enabled = true;
                 cbDirectionDoc.Checked = true;

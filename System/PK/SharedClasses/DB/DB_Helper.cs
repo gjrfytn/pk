@@ -36,6 +36,9 @@ namespace SharedClasses.DB
 
         public const string MedCertificate = "Медицинская справка";
         public const string PassportName = "Паспорт гражданина РФ";
+        public const string ResidenceName = "Вид на жительство";
+
+        public const string NationalityRus = "Российская Федерация";
 
         public const string SubjectMath = "Математика";
         public const string SubjectRus = "Русский язык";
