@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_UID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_ApplID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Mark = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Clear = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -62,6 +62,34 @@
             this.dataGridView.TabIndex = 0;
             this.dataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView_CellValidating);
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
+            this.dataGridView.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView_SortCompare);
+            // 
+            // dataGridView_UID
+            // 
+            this.dataGridView_UID.DataPropertyName = "entrant_id";
+            this.dataGridView_UID.HeaderText = "ID";
+            this.dataGridView_UID.Name = "dataGridView_UID";
+            this.dataGridView_UID.Visible = false;
+            // 
+            // dataGridView_ApplID
+            // 
+            this.dataGridView_ApplID.FillWeight = 20F;
+            this.dataGridView_ApplID.HeaderText = "УИН";
+            this.dataGridView_ApplID.Name = "dataGridView_ApplID";
+            this.dataGridView_ApplID.ReadOnly = true;
+            // 
+            // dataGridView_Name
+            // 
+            this.dataGridView_Name.HeaderText = "ФИО";
+            this.dataGridView_Name.Name = "dataGridView_Name";
+            this.dataGridView_Name.ReadOnly = true;
+            // 
+            // dataGridView_Mark
+            // 
+            this.dataGridView_Mark.DataPropertyName = "mark";
+            this.dataGridView_Mark.FillWeight = 20F;
+            this.dataGridView_Mark.HeaderText = "Оценка";
+            this.dataGridView_Mark.Name = "dataGridView_Mark";
             // 
             // toolStrip
             // 
@@ -91,33 +119,6 @@
             this.toolStrip_Clear.Size = new System.Drawing.Size(122, 22);
             this.toolStrip_Clear.Text = "Очистить оценки";
             this.toolStrip_Clear.Click += new System.EventHandler(this.toolStrip_Clear_Click);
-            // 
-            // dataGridView_UID
-            // 
-            this.dataGridView_UID.DataPropertyName = "entrant_id";
-            this.dataGridView_UID.HeaderText = "ID";
-            this.dataGridView_UID.Name = "dataGridView_UID";
-            this.dataGridView_UID.Visible = false;
-            // 
-            // dataGridView_ApplID
-            // 
-            this.dataGridView_ApplID.FillWeight = 20F;
-            this.dataGridView_ApplID.HeaderText = "УИН";
-            this.dataGridView_ApplID.Name = "dataGridView_ApplID";
-            this.dataGridView_ApplID.ReadOnly = true;
-            // 
-            // dataGridView_Name
-            // 
-            this.dataGridView_Name.HeaderText = "ФИО";
-            this.dataGridView_Name.Name = "dataGridView_Name";
-            this.dataGridView_Name.ReadOnly = true;
-            // 
-            // dataGridView_Mark
-            // 
-            this.dataGridView_Mark.DataPropertyName = "mark";
-            this.dataGridView_Mark.FillWeight = 20F;
-            this.dataGridView_Mark.HeaderText = "Оценка";
-            this.dataGridView_Mark.Name = "dataGridView_Mark";
             // 
             // ExaminationMarks
             // 

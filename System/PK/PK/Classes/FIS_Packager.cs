@@ -709,11 +709,11 @@ namespace PK.Classes
                     case "academic_diploma":
                     case "middle_edu_diploma":
                         {
-                            uint year = (uint)connection.Select(
-                           DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                           new string[] { "year" },
-                           new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                           )[0][0];
+                            uint? year = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "year" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                )[0][0] as uint?;
 
                             if (doc.Type == "academic_diploma")
                                 eduDoc = new EduDocument(new TAcademicDiplomaDocument(

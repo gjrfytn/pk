@@ -153,6 +153,24 @@ namespace PK.Forms
                         { "examination_id", _ExaminationID}
                     });
         }
+        
+        private void dataGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            if (e.Column.Index == dataGridView_ApplID.Index)
+            {
+                int value1;
+                int value2;
+                if (int.TryParse(e.CellValue1.ToString(), out value1))
+                    if (int.TryParse(e.CellValue2.ToString(), out value2))
+                        e.SortResult = value1 - value2;
+                    else
+                        e.SortResult = -1;
+                else
+                    e.SortResult = 1;
+
+                e.Handled = true;
+            }
+        }
 
         private void ExaminationMarks_FormClosing(object sender, FormClosingEventArgs e)
         {

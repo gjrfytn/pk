@@ -341,6 +341,7 @@
             this.dataGridView_Added.FillWeight = 20F;
             this.dataGridView_Added.HeaderText = "В приказе";
             this.dataGridView_Added.Name = "dataGridView_Added";
+            this.dataGridView_Added.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // dataGridView_ID
             // 
