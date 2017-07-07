@@ -83,33 +83,28 @@ namespace PK.Forms
 
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "registration_time","entrant_id" },
+                new string[] { "id", "registration_time", "entrant_id" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true),
                     new Tuple<string, Relation, object>("status",Relation.EQUAL,"new")
                 }).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
                 (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
-                ).Select(s =>new { ApplID = (uint)s[0], EntrID = (uint)s[2] });
+                ).Select(s => new { ApplID = (uint)s[0], EntrID = (uint)s[2] });
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());
 
-            var alreadyPassedAppls = _DB_Connection.Select(
-                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                new string[] { "entrant_id", "examination_id" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
-                ).Join(
-                _DB_Connection.Select(
-                    DB_Table.EXAMINATIONS,
-                    new string[] { "id", "date" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("subject_id", Relation.EQUAL, subjectID) }
-                    ).Where(s => ((DateTime)s[1]).Year == ((DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_Date.Index].Value).Year),
-                k1 => k1[1],
-                k2 => k2[0],
-                (s1, s2) => (uint)s1[0]
-                );
+            IEnumerable<uint> excludedAppls = DB_Queries.GetMarks(
+                _DB_Connection,
+                applications.Select(s => s.ApplID),
+                Classes.Settings.CurrentCampaignID
+                ).Where(s =>
+                s.FromExamDate.HasValue &&
+                (s.SubjID == subjectID ||
+                s.Value < _DB_Helper.GetMinMark(s.SubjID)
+                )).Select(s => s.ApplID);
 
-            applications = applications.Where(s=>!alreadyPassedAppls.Contains(s.EntrID));
+            applications = applications.Where(s => !excludedAppls.Contains(s.ApplID));
 
             var applsDirections = _DB_Connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,

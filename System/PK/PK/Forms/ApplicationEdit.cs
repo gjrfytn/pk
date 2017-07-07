@@ -468,7 +468,7 @@ namespace PK.Forms
                                     if (string.IsNullOrWhiteSpace(row.Cells[dgvExams_Number.Index].Value as string))
                                         egePassportDataOK = false;
                                 }
-                            if (egeFound || !cbExams.Checked && SharedClasses.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ и не отмечен пункт \"Сдает экзамены\". Выполнить сохранение?", "Отсутствует ЕГЭ и \"Сдает экзамены\""))
+                            if (egeFound || cbExams.Checked || SharedClasses.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ и не отмечен пункт \"Сдает экзамены\". Выполнить сохранение?", "Отсутствует ЕГЭ и \"Сдает экзамены\""))
                                 if (!egePassportDataOK)
                                     MessageBox.Show("Для результата ЕГЭ не указаны паспортные данные.");
                             else if (string.IsNullOrWhiteSpace(mtbEMail.Text))

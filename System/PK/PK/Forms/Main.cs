@@ -253,17 +253,17 @@ namespace PK.Forms
             {
                 if (!(bool)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "master_appl" }, new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, dgvApplications.CurrentRow.Cells[0].Value)
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, _SelectedAppID)
                 })[0][0])
                 {
                     StopTableAutoUpdating();
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)(int)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                     form.ShowDialog();
                 }
                 else
                 {
                     StopTableAutoUpdating();
-                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, (uint)dgvApplications.CurrentRow.Cells[0].Value);
+                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                     form.ShowDialog();
                 }
                 UpdateApplicationsTable();
@@ -362,6 +362,7 @@ namespace PK.Forms
                     { "first_name", tbFirstName.Text != tbFirstName.Tag.ToString()?tbFirstName.Text:"" },
                     { "middle_name", tbMiddleName.Text != tbMiddleName.Tag.ToString()?tbMiddleName.Text:"" },
                     { "date",_UserRole!="administrator"?DateTime.Now.Date:(cbDateSearch.Checked?(DateTime?)dtpRegDate.Value:null) },
+                    { "login",_UserRole == "registrator"?_UserLogin:null },
                     { "status", rbNew.Checked?"new":(rbWithdraw.Checked?"withdrawn":null) }
                 }                );
         }
@@ -386,9 +387,6 @@ namespace PK.Forms
             dgvApplications.AutoGenerateColumns = false;
             BindingSource bindingSource = new BindingSource();
             bindingSource.DataSource = table;
-            if (_UserRole == "registrator")
-                bindingSource.Filter = "registrator_login = '" + _UserLogin+"'";
-
             dgvApplications.DataSource = bindingSource;
 
             dgvApplications.Sort(dgvApplications.Columns[sortColumnName], sortMethod);
