@@ -43,7 +43,12 @@
           <FixedTable>
             <AutoFit>Window</AutoFit>
             <ColumnsParameters>
-              <ColumnCount>4</ColumnCount>
+              <Columns>
+                <ColumnWidth>1500</ColumnWidth>
+                <ColumnWidth>1000</ColumnWidth>
+                <ColumnWidth>2000</ColumnWidth>
+                <ColumnWidth>500</ColumnWidth>
+              </Columns>
             </ColumnsParameters>
             <Borders>
               <Left>

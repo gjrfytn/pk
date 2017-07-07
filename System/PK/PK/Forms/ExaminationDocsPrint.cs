@@ -32,7 +32,7 @@ namespace PK.Forms
         private readonly string _ExamDate;
         private readonly List<Entrant> _EntrantsTable;
         private readonly Dictionary<string, ushort> _Audiences;
-        private readonly List<Tuple<char, string>> _Distribution;
+        private readonly List<Tuple<char, string>> _Distribution; //TODO Нужно? Можно использовать только _EntrantsTable?
 
         public ExaminationDocsPrint(DB_Connector connection, uint examinationID)
         {
@@ -147,7 +147,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string doc = Classes.Settings.TempPath + "AlphaCodes" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "alphaCodes" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Settings.DocumentsTemplatesPath + "AlphaCodes.xml",
                 doc,
@@ -163,7 +163,7 @@ namespace PK.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string doc = Classes.Settings.TempPath + "AlphaAuditories" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "alphaAuditories" + new Random().Next();
             Classes.DocumentCreator.Create(
                 Classes.Settings.DocumentsTemplatesPath + "AlphaAuditories.xml",
                 doc,
@@ -192,7 +192,7 @@ namespace PK.Forms
                 });
             }
 
-            string doc = Classes.Settings.TempPath + "AbitAudDistrib" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "abitAudDistrib" + new Random().Next();
             Classes.DocumentCreator.Create(
                Classes.Settings.DocumentsTemplatesPath + "AbitAudDistrib.xml",
                doc,
@@ -233,6 +233,43 @@ namespace PK.Forms
                         })
                     })),
                 false
+                );
+            System.Diagnostics.Process.Start(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void bAudLists_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            string doc = Classes.Settings.TempPath + "audLists" + new Random().Next();
+            Classes.DocumentCreator.Create(
+                doc,
+                _EntrantsTable.GroupBy(
+                    k => k.Auditory,
+                    (k, g) => new Classes.DocumentCreator.DocumentParameters(
+                Classes.Settings.DocumentsTemplatesPath + "AudLists.xml",
+                null,
+                null,
+                new string[] { k, _ExamName, _ExamDate },
+                new IEnumerable<string[]>[] { g.Select(s => new string[] { s.ApplIDs, s.Name }).OrderBy(s => s[1]) }
+                )));
+            System.Diagnostics.Process.Start(doc + ".docx");
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void bExamFill_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            string doc = Classes.Settings.TempPath + "examFill" + new Random().Next();
+            Classes.DocumentCreator.Create(
+                Classes.Settings.DocumentsTemplatesPath + "ExamFill.xml",
+                doc,
+                new string[] { _ExamName, _ExamDate },
+                new IEnumerable<string[]>[] { _EntrantsTable.GroupBy(k => char.ToUpper(k.Name[0]), (k, g) => new string[] { k.ToString(), g.Count().ToString() }).OrderBy(s => s[0]) }
                 );
             System.Diagnostics.Process.Start(doc + ".docx");
 
