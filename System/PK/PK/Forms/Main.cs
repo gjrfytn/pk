@@ -361,7 +361,7 @@ namespace PK.Forms
                     { "last_name", tbLastName.Text != tbLastName.Tag.ToString()?tbLastName.Text:"" },
                     { "first_name", tbFirstName.Text != tbFirstName.Tag.ToString()?tbFirstName.Text:"" },
                     { "middle_name", tbMiddleName.Text != tbMiddleName.Tag.ToString()?tbMiddleName.Text:"" },
-                    { "date", cbDateSearch.Checked?(DateTime?)dtpRegDate.Value:null },
+                    { "date",_UserRole!="administrator"?DateTime.Now.Date:(cbDateSearch.Checked?(DateTime?)dtpRegDate.Value:null) },
                     { "status", rbNew.Checked?"new":(rbWithdraw.Checked?"withdrawn":null) }
                 }                );
         }
@@ -386,11 +386,14 @@ namespace PK.Forms
             dgvApplications.AutoGenerateColumns = false;
             BindingSource bindingSource = new BindingSource();
             bindingSource.DataSource = table;
+            if (_UserRole == "registrator")
+                bindingSource.Filter = "registrator_login = '" + _UserLogin+"'";
+
             dgvApplications.DataSource = bindingSource;
 
-            if (sortColumnName != null)
-                dgvApplications.Sort(dgvApplications.Columns[sortColumnName], sortMethod);
-            if (displayedRow >= 0 && dgvApplications.Rows.Count >= displayedRow)
+            dgvApplications.Sort(dgvApplications.Columns[sortColumnName], sortMethod);
+
+            if (displayedRow != -1 && dgvApplications.Rows.Count > displayedRow)
                 dgvApplications.FirstDisplayedScrollingRowIndex = displayedRow;
 
             lbDispalyedCount.Text = lbDispalyedCount.Tag.ToString() + dgvApplications.Rows.Count;
