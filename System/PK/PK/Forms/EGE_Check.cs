@@ -124,38 +124,40 @@ namespace PK.Forms
                     s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
                     s.Series==res.Series &&
                     s.Number==res.Number
-                    );
+                    ).GroupBy(k=>k.ApplID);
 
-                    EGE_Result foundResult = foundResults.SingleOrDefault(s => s.SubjectID == res.Subject);
-                    if (foundResult != null)
+                    foreach (var applResult in foundResults)
                     {
-                        if (!foundResult.Checked || foundResult.Value < res.Value)
+                        EGE_Result foundResult = applResult.SingleOrDefault(s => s.SubjectID == res.Subject);
+                        if (foundResult != null)
                         {
-                            _DB_Connection.Update(
+                            if (!foundResult.Checked || foundResult.Value < res.Value)
+                            {
+                                _DB_Connection.Update(
+                                    DB_Table.APPLICATION_EGE_RESULTS,
+                                    new Dictionary<string, object>
+                                    {
+                                        { "year", res.Year },
+                                        { "value", res.Value },
+                                        { "checked", true }
+                                    },
+                                    new Dictionary<string, object>
+                                    {
+                                        { "application_id", applResult.Key},
+                                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                                        { "subject_id", res.Subject }
+                                    });
+
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            _DB_Connection.Insert(
                                 DB_Table.APPLICATION_EGE_RESULTS,
                                 new Dictionary<string, object>
                                 {
-                                    { "year", res.Year },
-                                    { "value", res.Value },
-                                    { "checked", true }
-                                },
-                                new Dictionary<string, object>
-                                {
-                                    { "application_id", foundResults.First().ApplID},
-                                    { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
-                                    { "subject_id", res.Subject }
-                                });
-
-                            count++;
-                        }
-                    }
-                    else
-                    {
-                        _DB_Connection.Insert(
-                            DB_Table.APPLICATION_EGE_RESULTS,
-                            new Dictionary<string, object>
-                            {
-                                    { "application_id", foundResults.First().ApplID},
+                                    { "application_id", applResult.Key},
                                     { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
                                     { "subject_id", res.Subject },
                                     { "series", res.Series },
@@ -163,9 +165,10 @@ namespace PK.Forms
                                     { "year", res.Year },
                                     { "value", res.Value },
                                     { "checked", true }
-                            });
+                                });
 
-                        count++;
+                            count++;
+                        }
                     }
                 }
 

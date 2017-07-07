@@ -718,18 +718,18 @@ namespace PK.Forms
         }
 
         private void btPrint_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-
-            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+        {            
+            if (MessageBox.Show("Выполнить сохранение?","Сохранение", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                _EditingDateTime = DateTime.Now;
-                UpdateApplication(transaction);
-                transaction.Commit();
+                Cursor.Current = Cursors.WaitCursor;
+                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                {
+                    _EditingDateTime = DateTime.Now;
+                    UpdateApplication(transaction);
+                    transaction.Commit();
+                }
+                Cursor.Current = Cursors.Default;
             }
-
-            Cursor.Current = Cursors.Default;
-
             ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
             form.ShowDialog();
         }
