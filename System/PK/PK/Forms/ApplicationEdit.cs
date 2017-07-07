@@ -404,6 +404,10 @@ namespace PK.Forms
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
             else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
                 MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
+            else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && cbNationality.SelectedItem.ToString() != DB_Helper.NationalityRus)
+                MessageBox.Show("Для паспорта РФ возможно только российское гражданство.");
+            else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.ResidenceName && cbNationality.SelectedItem.ToString() == DB_Helper.NationalityRus)
+                MessageBox.Show("Для вида на жительство невозможно выбрать российское гражданство.");
             else if ((rbDiploma.Checked || rbSpravka.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
                 && (string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || string.IsNullOrWhiteSpace(tbEduDocNumber.Text)))
                 MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
@@ -471,94 +475,94 @@ namespace PK.Forms
                             if (egeFound || cbExams.Checked || SharedClasses.Utility.ShowChoiceMessageBox("Не указаны результаты ЕГЭ и не отмечен пункт \"Сдает экзамены\". Выполнить сохранение?", "Отсутствует ЕГЭ и \"Сдает экзамены\""))
                                 if (!egePassportDataOK)
                                     MessageBox.Show("Для результата ЕГЭ не указаны паспортные данные.");
-                            else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
-                                MessageBox.Show("Поле \"Email\" не заполнено");
-                            else if (!cbAppAdmission.Checked
-                                || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
-                                || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
-                                || rbSpravka.Checked && !cbCertificateHRD.Checked)
-                                MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
-                            else
-                            {
-                                bool applicationMissed = false;
-                                foreach (TabPage page in tcDirections.TabPages)
-                                    foreach (Control control in page.Controls)
-                                    {
-                                        CheckBox checkBox = control as CheckBox;
-                                        if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
-                                        {
-                                            MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
-                                            applicationMissed = true;
-                                            break;
-                                        }
-                                    }
-                                if (!applicationMissed)
+                                else if (string.IsNullOrWhiteSpace(mtbEMail.Text))
+                                    MessageBox.Show("Поле \"Email\" не заполнено");
+                                else if (!cbAppAdmission.Checked
+                                    || (cbChernobyl.Checked || cbQuote.Checked || cbOlympiad.Checked || cbPriority.Checked || cbTarget.Checked || cbCompatriot.Checked) && !cbDirectionDoc.Checked
+                                    || (rbCertificate.Checked || rbDiploma.Checked) && !cbEduDoc.Checked
+                                    || rbSpravka.Checked && !cbCertificateHRD.Checked)
+                                    MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
+                                else
                                 {
-                                    bool dateOk = true;
-                                    if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
-                                        && !SharedClasses.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
-                                        dateOk = false;
-                                    if (dateOk)
+                                    bool applicationMissed = false;
+                                    foreach (TabPage page in tcDirections.TabPages)
+                                        foreach (Control control in page.Controls)
+                                        {
+                                            CheckBox checkBox = control as CheckBox;
+                                            if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
+                                            {
+                                                MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
+                                                applicationMissed = true;
+                                                break;
+                                            }
+                                        }
+                                    if (!applicationMissed)
                                     {
-                                        bool passportOK = true;
-                                        List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
+                                        bool dateOk = true;
+                                        if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
+                                            && !SharedClasses.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                                            dateOk = false;
+                                        if (dateOk)
+                                        {
+                                            bool passportOK = true;
+                                            List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
                             {
                                 new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
                                 new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
                                 new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
                             });
-                                        if (passportFound.Count > 0)
-                                        {
-                                            List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
+                                            if (passportFound.Count > 0)
+                                            {
+                                                List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" }, new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
                                 });
-                                            foreach (object[] app in oldApplications)
-                                                if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
-                                                {
-                                                    passportOK = false;
-                                                    if (app[0].ToString() != "withdrawn")
+                                                foreach (object[] app in oldApplications)
+                                                    if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
                                                     {
-                                                        MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
-                                                        break;
+                                                        passportOK = false;
+                                                        if (app[0].ToString() != "withdrawn")
+                                                        {
+                                                            MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                                            break;
+                                                        }
+                                                        else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                                            passportOK = true;
                                                     }
-                                                    else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
-                                                        passportOK = true;
-                                                }
-                                        }
-                                        if (passportOK)
-                                        {
-                                            Cursor.Current = Cursors.WaitCursor;
-
-                                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-                                            {
-                                                uint applID;
-                                                if (!_ApplicationID.HasValue)
-                                                    applID = SaveApplication(transaction);
-                                                else
-                                                {
-                                                    applID = _ApplicationID.Value;
-                                                    _EditingDateTime = DateTime.Now;
-                                                    UpdateApplication(transaction);
-                                                }
-
-                                                transaction.Commit();
-
-                                                if (!_ApplicationID.HasValue)
-                                                    ChangeAgreedChBs(true);
-
-                                                _ApplicationID = applID;
-                                                btPrint.Enabled = true;
-                                                btWithdraw.Enabled = true;
                                             }
+                                            if (passportOK)
+                                            {
+                                                Cursor.Current = Cursors.WaitCursor;
 
-                                            Cursor.Current = Cursors.Default;
+                                                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                                                {
+                                                    uint applID;
+                                                    if (!_ApplicationID.HasValue)
+                                                        applID = SaveApplication(transaction);
+                                                    else
+                                                    {
+                                                        applID = _ApplicationID.Value;
+                                                        _EditingDateTime = DateTime.Now;
+                                                        UpdateApplication(transaction);
+                                                    }
+
+                                                    transaction.Commit();
+
+                                                    if (!_ApplicationID.HasValue)
+                                                        ChangeAgreedChBs(true);
+
+                                                    _ApplicationID = applID;
+                                                    btPrint.Enabled = true;
+                                                    btWithdraw.Enabled = true;
+                                                }
+
+                                                Cursor.Current = Cursors.Default;
+                                            }
                                         }
                                     }
                                 }
-                            }
                         }
                     }
                 }
@@ -749,7 +753,10 @@ namespace PK.Forms
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
+                        {
                             cb.Enabled = true;
+                            FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormO, DB_Helper.EduSourceT);
+                        }
                         Button bt = c as Button;
                         if (bt != null)
                             bt.Enabled = true;
@@ -761,7 +768,10 @@ namespace PK.Forms
                     {
                         ComboBox cb = c as ComboBox;
                         if (cb != null)
+                        {
                             cb.Enabled = true;
+                            FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormOZ, DB_Helper.EduSourceT);
+                        }
                         Button bt = c as Button;
                         if (bt != null)
                             bt.Enabled = true;
@@ -777,7 +787,10 @@ namespace PK.Forms
                 {
                     ComboBox cb = c as ComboBox;
                     if (cb != null)
+                    {
                         cb.Enabled = false;
+                        FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormO, DB_Helper.EduSourceT);
+                    }
                     Button bt = c as Button;
                     if (bt != null)
                         bt.Enabled = false;
@@ -789,7 +802,10 @@ namespace PK.Forms
                 {
                     ComboBox cb = c as ComboBox;
                     if (cb != null)
+                    {
                         cb.Enabled = false;
+                        FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormOZ, DB_Helper.EduSourceT);
+                    }
                     Button bt = c as Button;
                     if (bt != null)
                         bt.Enabled = false;
@@ -804,7 +820,10 @@ namespace PK.Forms
                 {
                     ComboBox cb = c as ComboBox;
                     if (cb != null)
+                    {
                         cb.Enabled = true;
+                        FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormO, DB_Helper.EduSourceT);
+                    }
                     Button bt = c as Button;
                     if (bt != null)
                         bt.Enabled = true;
@@ -816,7 +835,10 @@ namespace PK.Forms
                 {
                     ComboBox cb = c as ComboBox;
                     if (cb != null)
+                    {
                         cb.Enabled = true;
+                        FillDirectionsProfilesCombobox(cb, false, DB_Helper.EduFormOZ, DB_Helper.EduSourceT);
+                    }
                     Button bt = c as Button;
                     if (bt != null)
                         bt.Enabled = true;
@@ -2631,7 +2653,6 @@ namespace PK.Forms
                 else if ((entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
                     && (entrancesData.Value.Item5 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
-                    cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
                         new List<Tuple<string, Relation, object>>
                     {
@@ -2641,6 +2662,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, entrancesData.Value.Item5),
                         new Tuple<string, Relation, object>("edu_source_id", Relation.EQUAL, entrancesData.Value.Item4),
                     })[0][0];
+                    cbTarget.Checked = true;
                     if (cbDirection71.SelectedIndex == -1)
                     {
                         cbDirection71.SelectedValue = entrancesData.Value;
@@ -2688,7 +2710,6 @@ namespace PK.Forms
                 else if ((entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
                     && (entrancesData.Value.Item5 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ)))
                 {
-                    cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
                         new List<Tuple<string, Relation, object>>
                     {
@@ -2698,6 +2719,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, entrancesData.Value.Item5),
                         new Tuple<string, Relation, object>("edu_source_id", Relation.EQUAL, entrancesData.Value.Item4),
                     })[0][0];
+                    cbTarget.Checked = true;
                     if (cbDirection91.SelectedIndex == -1)
                     {
                         cbDirection91.SelectedValue = entrancesData.Value;
@@ -3784,39 +3806,78 @@ namespace PK.Forms
             }
             else if (eduSource == DB_Helper.EduSourceT)
             {
-                string placesCountColumnName = "";
-                if ((eduForm == "Очная форма") && (eduSource == "Целевой прием"))
-                    placesCountColumnName = "places_o";
-                else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Целевой прием"))
-                    placesCountColumnName = "places_oz";
+                //string placesCountColumnName = "";
+                //if ((eduForm == "Очная форма") && (eduSource == "Целевой прием"))
+                //    placesCountColumnName = "places_o";
+                //else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Целевой прием"))
+                //    placesCountColumnName = "places_oz";
 
-                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
-                    new List<Tuple<string, Relation, object>>
-                        {
+                //var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                //    new List<Tuple<string, Relation, object>>
+                //        {
+                //            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                //            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
+                //        }).Join(
+                //    directionsData,
+                //    campDirs => campDirs[0],
+                //    dirsData => dirsData[0],
+                //    (s1, s2) => new
+                //    {
+                //        Id = (uint)s1[0],
+                //        Faculty = s1[1].ToString(),
+                //        Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
+                //        Name = s2[1].ToString(),
+                //        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                //        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                //        DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
+                //    }).Select(s => new
+                //    {
+                //        Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
+                //        Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
+                //    }).Distinct().ToList();
+                //combobox.ValueMember = "Value";
+                //combobox.DisplayMember = "Display";
+                //combobox.DataSource = selectedDirs;
+                //combobox.SelectedIndex = -1;
+                if (cbTarget.Checked && _TargetOrganizationID.HasValue)
+                {
+                    string placesCountColumnName = "";
+                    if ((eduForm == "Очная форма") && (eduSource == "Целевой прием"))
+                        placesCountColumnName = "places_o";
+                    else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Целевой прием"))
+                        placesCountColumnName = "places_oz";
+
+                    var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                        new List<Tuple<string, Relation, object>>
+                            {
                             new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                        }).Join(
-                    directionsData,
-                    campDirs => campDirs[0],
-                    dirsData => dirsData[0],
-                    (s1, s2) => new
-                    {
-                        Id = (uint)s1[0],
-                        Faculty = s1[1].ToString(),
-                        Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
-                        Name = s2[1].ToString(),
-                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
-                    }).Select(s => new
-                    {
-                        Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
-                        Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
-                    }).Distinct().ToList();
-                combobox.ValueMember = "Value";
-                combobox.DisplayMember = "Display";
-                combobox.DataSource = selectedDirs;
-                combobox.SelectedIndex = -1;
+                            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0),
+                            new Tuple<string, Relation, object>("target_organization_id", Relation.EQUAL, _TargetOrganizationID)
+                            }).Join(
+                        directionsData,
+                        campDirs => campDirs[0],
+                        dirsData => dirsData[0],
+                        (s1, s2) => new
+                        {
+                            Id = (uint)s1[0],
+                            Faculty = s1[1].ToString(),
+                            Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
+                            Name = s2[1].ToString(),
+                            EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                            EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                            DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
+                        }).Select(s => new
+                        {
+                            Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
+                            Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
+                        }).Distinct().ToList();
+                    combobox.ValueMember = "Value";
+                    combobox.DisplayMember = "Display";
+                    combobox.DataSource = selectedDirs;
+                    combobox.SelectedIndex = -1;
+                }
+                else
+                    combobox.DataSource = null;
             }
         }
 

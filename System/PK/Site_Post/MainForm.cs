@@ -144,7 +144,9 @@ namespace SitePost
 
         private void PostApplications()
         {
-            List<object[]> appsData = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "mcado", "chernobyl", "needs_hostel", "passing_examinations",
+            try
+            {
+                List<object[]> appsData = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "mcado", "chernobyl", "needs_hostel", "passing_examinations",
                 "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
@@ -152,254 +154,260 @@ namespace SitePost
                 new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
             });
 
-            string connectionStr = "server=" + tbDirectToDBServer.Text + ";port=3306;database=" + tbDirectToDBBaseName.Text + ";user=" + tbDirectToDBUser.Text + ";password=" + tbDirectToDBPassword.Text + ";";
-            MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connectionStr);
+                string connectionStr = "server=" + tbDirectToDBServer.Text + ";port=3306;database=" + tbDirectToDBBaseName.Text + ";user=" + tbDirectToDBUser.Text + ";password=" + tbDirectToDBPassword.Text + ";";
+                MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connectionStr);
 
-            if (appsData.Count > 0)
-            {
-                if ((cbPost.Checked) && (rbDirectToDB.Checked))
+                if (appsData.Count > 0)
                 {
-                    connection.Open();
-                    string Query = "SET foreign_key_checks = 0;" +
-                            "LOCK TABLES `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` WRITE, " + 
-                                        "`" + tbDirectToDBBaseName.Text + "`.`application_tmptable` WRITE, " +
-                                        "`" + tbDirectToDBBaseName.Text + "`.`profile_table` READ, " +
-                                        "`" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt READ, " +
-                                        "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft READ;" + 
-                            "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable`;" +
-                            "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`application_tmptable`;";
-                    new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
-                }
-
-                XDocument PackageData = new XDocument(new XElement("Root"));
-                PackageData.Root.Add(new XElement("AuthData", _AuthData));
-                PackageData.Root.Add(new XElement("PackageData"));
-
-                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, appsData.Select(s=>(uint)s[0]), _CampaignID);
-                IEnumerable<DB_Queries.Document> documents = DB_Queries.GetDocuments(_DB_Connection, appsData.Select(s => (uint)s[0]));
-                var passwords=  _DB_Connection.Select(DB_Table.ENTRANTS, "id","personal_password").Select(s=>new { EntrID=(uint)s[0],Password=s[1].ToString() });
-                var names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name").Select(s => new
-                {
-                    EntrID = (uint)s[0],
-                    LastName = s[1].ToString(),
-                    FirstName = s[2].ToString(),
-                    MiddleName = s[3] as string
-                });
-
-                count = 0;
-                foreach (object[] application in appsData)
-                {
-                    XElement abitur = new XElement("Abitur",
-                        new XElement("Uin", application[0]),
-                        new XElement("EntrantUin", application[6]),
-                        new XElement("Surname", names.Single(s=>s.EntrID==(uint) application[6]).LastName),
-                        new XElement("Name", names.Single(s => s.EntrID == (uint)application[6]).FirstName),
-                        new XElement("Name2", names.Single(s => s.EntrID == (uint)application[6]).MiddleName),
-                        new XElement("Password", passwords.Single(s => s.EntrID == (uint)application[6]).Password),
-                        new XElement("MathBall", 0),
-                        new XElement("CheckedByFISMath", 0),
-                        new XElement("PhisBall", 0),
-                        new XElement("CheckedByFISPhis", 0),
-                        new XElement("RusBall", 0),
-                        new XElement("CheckedByFISRus", 0),
-                        new XElement("ObshBall", 0),
-                        new XElement("CheckedByFISObsh", 0),
-                        new XElement("ForenBall", 0),
-                        new XElement("CheckedByFISForen", 0),
-                        new XElement("IABall", 0),
-                        new XElement("ODO", 0),
-                        new XElement("Olymp", 0),
-                        new XElement("Exam", 0),
-                        new XElement("Hostel", 0),
-                        new XElement("PP", 0),
-                        new XElement("MCADO", 0),
-                        new XElement("Chern", 0),
-                        new XElement("Documents",
-                            new XElement("ApplicationOfAdmission", 1),
-                            new XElement("PassportCopy", 0),
-                            new XElement("CertificateDiplomCopy", 0),
-                            new XElement("HRRefCopy", 0),
-                            new XElement("ReferralPK", 0),
-                            new XElement("MedRef", 0),
-                            new XElement("Photo", 0),
-                            new XElement("OrphanDocument", 0),
-                            new XElement("InvalidDocument", 0),
-                            new XElement("AbsenceOfContraindicationsForTraining", 0)),
-                        new XElement("Applications"));
-
-                    if ((bool)application[4])
-                        abitur.SetElementValue("Exam", 1);
-                    if ((bool)application[3])
-                        abitur.SetElementValue("Hostel", 1);
-                    if ((bool)application[5])
-                        abitur.SetElementValue("PP", 1);
-                    if ((bool)application[1])
-                        abitur.SetElementValue("MCADO", 1);
-                    if ((bool)application[2])
-                        abitur.SetElementValue("Chern", 1);
-
-                    SetMarks((uint)application[0], abitur, marks);
-                    SetDocuments((uint)application[0], abitur,documents);
-                    SetIA((uint)application[0], abitur);
-                    foreach (XElement appl in GetEntrances((uint)application[0]))
-                        abitur.Element("Applications").Add(appl);
-
                     if ((cbPost.Checked) && (rbDirectToDB.Checked))
                     {
-                        string Query = "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` " +
-                        "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, " + 
-                        "`math_ball`, `checked_by_FIS_math`, `phis_ball`, `checked_by_FIS_phis`, `rus_ball`, `checked_by_FIS_rus`, " +
-                        "`obsh_ball`, `checked_by_FIS_obsh`, `foren_ball`, `checked_by_FIS_foren`, `IA_ball`, " + 
-                        "`ODO`, `Olymp`, `Exam`, `hostel`, `PP`, `MCADO`, `Chern`, `appl_of_admission`, " + 
-                        "`passport_copy`, `a_d_copy`, `hr_ref_copy`, `referral_pk`, `med_ref`, `photo`, `password`, " +
-                        "`orphan_document`, `invalid_document`, `pmp_document`, `absence_of_contraindications`) VALUES " +
-                        "(0, " + abitur.Element("Uin").Value.ToString() + ", " + abitur.Element("EntrantUin").Value.ToString() + ", '" + abitur.Element("Surname").Value.ToString() + "', '" + 
-                        abitur.Element("Name").Value.ToString() + "' ,'" + abitur.Element("Name2").Value.ToString() + "' ," + 
-                        abitur.Element("MathBall").Value.ToString() + " ," + abitur.Element("CheckedByFISMath").Value.ToString() + " ," +
-                        abitur.Element("PhisBall").Value.ToString() + " ," + abitur.Element("CheckedByFISPhis").Value.ToString() + " ," +
-                        abitur.Element("RusBall").Value.ToString() + " ," + abitur.Element("CheckedByFISRus").Value.ToString() + " ," +
-                        abitur.Element("ObshBall").Value.ToString() + " ," + abitur.Element("CheckedByFISObsh").Value.ToString() + " ," +
-                        abitur.Element("ForenBall").Value.ToString() + " ," + abitur.Element("CheckedByFISForen").Value.ToString() + " ," +
-                        abitur.Element("IABall").Value.ToString() + " ," + abitur.Element("ODO").Value.ToString() + ", " +
-                        abitur.Element("Olymp").Value.ToString() + " ," + abitur.Element("Exam").Value.ToString() + ", " +
-                        abitur.Element("Hostel").Value.ToString() + " ," + abitur.Element("PP").Value.ToString() + ", " +
-                        abitur.Element("MCADO").Value.ToString() + ", " + abitur.Element("Chern").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("ApplicationOfAdmission").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("PassportCopy").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("CertificateDiplomCopy").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("HRRefCopy").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("ReferralPK").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("MedRef").Value.ToString() + " ," +
-                        abitur.Element("Documents").Element("Photo").Value.ToString() + ", '" + abitur.Element("Password").Value.ToString() + "', " +
-                        abitur.Element("Documents").Element("OrphanDocument").Value.ToString() + ", " +
-                        abitur.Element("Documents").Element("InvalidDocument").Value.ToString() + ", 0, " +
-                        abitur.Element("Documents").Element("AbsenceOfContraindicationsForTraining").Value.ToString() + ");";
-
-                        string direction, profile;
-                        int direction_id = 1000, profile_id = 1000;
-                        string query_tmp;
-
-                        foreach (XElement appl in abitur.Element("Applications").Elements())
-                        {
-                            direction = appl.Element("Direction").Value;
-                            profile = appl.Element("Profile").Value;
-                            if (direction != "0")
-                            {
-                                query_tmp = "SELECT dt.direction_id FROM `" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt, " +
-                                "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft WHERE (dt.id_by_FIS=" + direction + ") AND " +
-                                "(ft.short_caption='" + appl.Element("Faculty").Value + "') AND " + 
-                                "(dt.faculty_id=ft.faculty_id)";
-                                direction_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
-                            }
-                            if (profile != "") {
-                                query_tmp = "SELECT profile_id FROM `" + tbDirectToDBBaseName.Text + "`.`profile_table` WHERE short_caption='" + profile + "'";
-                                profile_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
-                            }
-                            Query = Query + "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`application_tmptable` " +
-                            "(`application_id`, `uin`, `direction_id`, `profile_id`, `_condition`, `appl_of_consent`, `form_of_education`) VALUES " +
-                            "(0, " + abitur.Element("Uin").Value + ", " + direction_id.ToString() + ", " + profile_id.ToString() + " ," +
-                            appl.Element("Condition").Value + " ," + appl.Element("ApplicationOfConsent").Value + " ," + appl.Element("FormOfEducation").Value + ");";
-                        }
+                        connection.Open();
+                        string Query = "SET foreign_key_checks = 0;" +
+                                "LOCK TABLES `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` WRITE, " +
+                                            "`" + tbDirectToDBBaseName.Text + "`.`application_tmptable` WRITE, " +
+                                            "`" + tbDirectToDBBaseName.Text + "`.`profile_table` READ, " +
+                                            "`" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt READ, " +
+                                            "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft READ;" +
+                                "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable`;" +
+                                "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`application_tmptable`;";
                         new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
                     }
 
-                    PackageData.Root.Element("PackageData").Add(abitur);
-                    count++;
-                    lCount.BeginInvoke(new InvokeDelegate(()=> { lCount.Text = count.ToString() + " абитуриентов"; }));
-                    
-                }
-                if ((cbPost.Checked) && (rbDirectToDB.Checked)) new MySql.Data.MySqlClient.MySqlCommand("UNLOCK TABLES;", connection).ExecuteNonQuery();
-                timerSum.Stop();
-                //timerSum.Enabled = false;
-                _SchemaSet.Add(null, SchemaPath);
-                PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
+                    XDocument PackageData = new XDocument(new XElement("Root"));
+                    PackageData.Root.Add(new XElement("AuthData", _AuthData));
+                    PackageData.Root.Add(new XElement("PackageData"));
 
-                if (cbSave.Checked)
-                    PackageData.Save("doc.xml");
-                if ((cbPost.Checked) && (rbDirectToDB.Checked))
-                {
-                    connection.Close();
-                    HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbDirectToDBAdressForScript.Text);
-                    HttpWebResponse HttpResponse;
-                    HttpResponse = (HttpWebResponse)HttpRequest.GetResponse();
-                    if (HttpResponse.StatusCode == HttpStatusCode.OK)
+                    IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, appsData.Select(s => (uint)s[0]), _CampaignID);
+                    IEnumerable<DB_Queries.Document> documents = DB_Queries.GetDocuments(_DB_Connection, appsData.Select(s => (uint)s[0]));
+                    var passwords = _DB_Connection.Select(DB_Table.ENTRANTS, "id", "personal_password").Select(s => new { EntrID = (uint)s[0], Password = s[1].ToString() });
+                    var names = _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name").Select(s => new
                     {
-                        System.IO.Stream responseStream = HttpResponse.GetResponseStream();
-                        string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
-                        tbResponse.BeginInvoke(new InvokeDelegate(() =>
+                        EntrID = (uint)s[0],
+                        LastName = s[1].ToString(),
+                        FirstName = s[2].ToString(),
+                        MiddleName = s[3] as string
+                    });
+
+                    count = 0;
+                    foreach (object[] application in appsData)
+                    {
+                        XElement abitur = new XElement("Abitur",
+                            new XElement("Uin", application[0]),
+                            new XElement("EntrantUin", application[6]),
+                            new XElement("Surname", names.Single(s => s.EntrID == (uint)application[6]).LastName),
+                            new XElement("Name", names.Single(s => s.EntrID == (uint)application[6]).FirstName),
+                            new XElement("Name2", names.Single(s => s.EntrID == (uint)application[6]).MiddleName),
+                            new XElement("Password", passwords.Single(s => s.EntrID == (uint)application[6]).Password),
+                            new XElement("MathBall", 0),
+                            new XElement("CheckedByFISMath", 0),
+                            new XElement("PhisBall", 0),
+                            new XElement("CheckedByFISPhis", 0),
+                            new XElement("RusBall", 0),
+                            new XElement("CheckedByFISRus", 0),
+                            new XElement("ObshBall", 0),
+                            new XElement("CheckedByFISObsh", 0),
+                            new XElement("ForenBall", 0),
+                            new XElement("CheckedByFISForen", 0),
+                            new XElement("IABall", 0),
+                            new XElement("ODO", 0),
+                            new XElement("Olymp", 0),
+                            new XElement("Exam", 0),
+                            new XElement("Hostel", 0),
+                            new XElement("PP", 0),
+                            new XElement("MCADO", 0),
+                            new XElement("Chern", 0),
+                            new XElement("Documents",
+                                new XElement("ApplicationOfAdmission", 1),
+                                new XElement("PassportCopy", 0),
+                                new XElement("CertificateDiplomCopy", 0),
+                                new XElement("HRRefCopy", 0),
+                                new XElement("ReferralPK", 0),
+                                new XElement("MedRef", 0),
+                                new XElement("Photo", 0),
+                                new XElement("OrphanDocument", 0),
+                                new XElement("InvalidDocument", 0),
+                                new XElement("AbsenceOfContraindicationsForTraining", 0)),
+                            new XElement("Applications"));
+
+                        if ((bool)application[4])
+                            abitur.SetElementValue("Exam", 1);
+                        if ((bool)application[3])
+                            abitur.SetElementValue("Hostel", 1);
+                        if ((bool)application[5])
+                            abitur.SetElementValue("PP", 1);
+                        if ((bool)application[1])
+                            abitur.SetElementValue("MCADO", 1);
+                        if ((bool)application[2])
+                            abitur.SetElementValue("Chern", 1);
+
+                        SetMarks((uint)application[0], abitur, marks);
+                        SetDocuments((uint)application[0], abitur, documents);
+                        SetIA((uint)application[0], abitur);
+                        foreach (XElement appl in GetEntrances((uint)application[0]))
+                            abitur.Element("Applications").Add(appl);
+
+                        if ((cbPost.Checked) && (rbDirectToDB.Checked))
                         {
-                            tbResponse.Text = tbResponse.Text + responseStr + "\r\n" +
-                            "Отправлено: " + count.ToString() + " абитуриента за " + (sumTime / 60).ToString() + " мин. " + (sumTime % 60).ToString() + " сек.; " +
-                            "Среднее время на одного абитуриента: " + System.Math.Round((float)sumTime / count, 2) + " сек.\r\n\r\n";
-                        }));
-                        HttpResponse.Close();
+                            string Query = "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` " +
+                            "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, " +
+                            "`math_ball`, `checked_by_FIS_math`, `phis_ball`, `checked_by_FIS_phis`, `rus_ball`, `checked_by_FIS_rus`, " +
+                            "`obsh_ball`, `checked_by_FIS_obsh`, `foren_ball`, `checked_by_FIS_foren`, `IA_ball`, " +
+                            "`ODO`, `Olymp`, `Exam`, `hostel`, `PP`, `MCADO`, `Chern`, `appl_of_admission`, " +
+                            "`passport_copy`, `a_d_copy`, `hr_ref_copy`, `referral_pk`, `med_ref`, `photo`, `password`, " +
+                            "`orphan_document`, `invalid_document`, `pmp_document`, `absence_of_contraindications`) VALUES " +
+                            "(0, " + abitur.Element("Uin").Value.ToString() + ", " + abitur.Element("EntrantUin").Value.ToString() + ", '" + abitur.Element("Surname").Value.ToString() + "', '" +
+                            abitur.Element("Name").Value.ToString() + "' ,'" + abitur.Element("Name2").Value.ToString() + "' ," +
+                            abitur.Element("MathBall").Value.ToString() + " ," + abitur.Element("CheckedByFISMath").Value.ToString() + " ," +
+                            abitur.Element("PhisBall").Value.ToString() + " ," + abitur.Element("CheckedByFISPhis").Value.ToString() + " ," +
+                            abitur.Element("RusBall").Value.ToString() + " ," + abitur.Element("CheckedByFISRus").Value.ToString() + " ," +
+                            abitur.Element("ObshBall").Value.ToString() + " ," + abitur.Element("CheckedByFISObsh").Value.ToString() + " ," +
+                            abitur.Element("ForenBall").Value.ToString() + " ," + abitur.Element("CheckedByFISForen").Value.ToString() + " ," +
+                            abitur.Element("IABall").Value.ToString() + " ," + abitur.Element("ODO").Value.ToString() + ", " +
+                            abitur.Element("Olymp").Value.ToString() + " ," + abitur.Element("Exam").Value.ToString() + ", " +
+                            abitur.Element("Hostel").Value.ToString() + " ," + abitur.Element("PP").Value.ToString() + ", " +
+                            abitur.Element("MCADO").Value.ToString() + ", " + abitur.Element("Chern").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("ApplicationOfAdmission").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("PassportCopy").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("CertificateDiplomCopy").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("HRRefCopy").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("ReferralPK").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("MedRef").Value.ToString() + " ," +
+                            abitur.Element("Documents").Element("Photo").Value.ToString() + ", '" + abitur.Element("Password").Value.ToString() + "', " +
+                            abitur.Element("Documents").Element("OrphanDocument").Value.ToString() + ", " +
+                            abitur.Element("Documents").Element("InvalidDocument").Value.ToString() + ", 0, " +
+                            abitur.Element("Documents").Element("AbsenceOfContraindicationsForTraining").Value.ToString() + ");";
+
+                            string direction, profile;
+                            int direction_id = 1000, profile_id = 1000;
+                            string query_tmp;
+
+                            foreach (XElement appl in abitur.Element("Applications").Elements())
+                            {
+                                direction = appl.Element("Direction").Value;
+                                profile = appl.Element("Profile").Value;
+                                if (direction != "0")
+                                {
+                                    query_tmp = "SELECT dt.direction_id FROM `" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt, " +
+                                    "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft WHERE (dt.id_by_FIS=" + direction + ") AND " +
+                                    "(ft.short_caption='" + appl.Element("Faculty").Value + "') AND " +
+                                    "(dt.faculty_id=ft.faculty_id)";
+                                    direction_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
+                                }
+                                if (profile != "")
+                                {
+                                    query_tmp = "SELECT profile_id FROM `" + tbDirectToDBBaseName.Text + "`.`profile_table` WHERE short_caption='" + profile + "'";
+                                    profile_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
+                                }
+                                Query = Query + "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`application_tmptable` " +
+                                "(`application_id`, `uin`, `direction_id`, `profile_id`, `_condition`, `appl_of_consent`, `form_of_education`) VALUES " +
+                                "(0, " + abitur.Element("Uin").Value + ", " + direction_id.ToString() + ", " + profile_id.ToString() + " ," +
+                                appl.Element("Condition").Value + " ," + appl.Element("ApplicationOfConsent").Value + " ," + appl.Element("FormOfEducation").Value + ");";
+                            }
+                            new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
+                        }
+
+                        PackageData.Root.Element("PackageData").Add(abitur);
+                        count++;
+                        lCount.BeginInvoke(new InvokeDelegate(() => { lCount.Text = count.ToString() + " абитуриентов"; }));
+
                     }
+                    if ((cbPost.Checked) && (rbDirectToDB.Checked)) new MySql.Data.MySqlClient.MySqlCommand("UNLOCK TABLES;", connection).ExecuteNonQuery();
+                    timerSum.Stop();
+                    //timerSum.Enabled = false;
+                    _SchemaSet.Add(null, SchemaPath);
+                    PackageData.Validate(_SchemaSet, (send, ee) => { throw ee.Exception; });
 
-                }
-
-                if ((cbPost.Checked) && (rbPostMethod.Checked))
-                {
-                    byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
-                    request.ContentType = "application/x-www-form-urlencoded";
-                    request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-                    request.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
-                    request.ContentLength = bytesData.Length;
-                    request.Method = "POST";
-                    System.IO.Stream requestStream = request.GetRequestStream();
-                    requestStream.Write(bytesData, 0, bytesData.Length);
-                    requestStream.Close();
-                    HttpWebResponse response;
-                    response = (HttpWebResponse)request.GetResponse();
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (cbSave.Checked)
+                        PackageData.Save("doc.xml");
+                    if ((cbPost.Checked) && (rbDirectToDB.Checked))
                     {
-                        System.IO.Stream responseStream = response.GetResponseStream();
-                        string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
-                        tbResponse.Text = responseStr;
-                    }
-                }
-                if ((cbPost.Checked) && (rbFTPMethod.Checked))
-                {
-                    // Get the object used to communicate with the server.
-                    FtpWebRequest FtpRequest = (FtpWebRequest)WebRequest.Create(tbServer.Text+ "/doc.xml");
-                    FtpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-
-                    // This example assumes the FTP site uses anonymous logon.
-                    FtpRequest.Credentials = new NetworkCredential(tbUser.Text, tbPassword.Text);
-
-                    // Copy the contents of the file to the request stream.
-                    System.IO.StreamReader sourceStream = new System.IO.StreamReader("doc.xml");
-                    byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-                    sourceStream.Close();
-                    FtpRequest.ContentLength = fileContents.Length;
-
-                    System.IO.Stream requestStream = FtpRequest.GetRequestStream();
-                    requestStream.Write(fileContents, 0, fileContents.Length);
-                    requestStream.Close();
-                                        
-                    FtpWebResponse FtpResponse = (FtpWebResponse)FtpRequest.GetResponse();
-                    tbResponse.Text = tbResponse.Text + DateTime.Now.ToString() + ": " + FtpResponse.StatusDescription + "\n";
-                    FtpResponse.Close();
-                    //FtpResponse.StatusCode=FtpStatusCode.ClosingData
-                    if (FtpResponse.StatusCode == FtpStatusCode.ClosingData)
-                    {
-                        HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbAdress.Text);
+                        connection.Close();
+                        HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbDirectToDBAdressForScript.Text);
                         HttpWebResponse HttpResponse;
                         HttpResponse = (HttpWebResponse)HttpRequest.GetResponse();
                         if (HttpResponse.StatusCode == HttpStatusCode.OK)
                         {
                             System.IO.Stream responseStream = HttpResponse.GetResponseStream();
                             string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
-                            tbResponse.Text = tbResponse.Text + responseStr + "\r\n";
+                            tbResponse.BeginInvoke(new InvokeDelegate(() =>
+                            {
+                                tbResponse.Text = tbResponse.Text + responseStr + "\r\n" +
+                                "Отправлено: " + count.ToString() + " абитуриента за " + (sumTime / 60).ToString() + " мин. " + (sumTime % 60).ToString() + " сек.; " +
+                                "Среднее время на одного абитуриента: " + System.Math.Round((float)sumTime / count, 2) + " сек.\r\n\r\n";
+                            }));
                             HttpResponse.Close();
                         }
+
+                    }
+
+                    if ((cbPost.Checked) && (rbPostMethod.Checked))
+                    {
+                        byte[] bytesData = System.Text.Encoding.UTF8.GetBytes("XMLData=" + PackageData.ToString());
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cbAdress.Text);
+                        request.ContentType = "application/x-www-form-urlencoded";
+                        request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                        request.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
+                        request.ContentLength = bytesData.Length;
+                        request.Method = "POST";
+                        System.IO.Stream requestStream = request.GetRequestStream();
+                        requestStream.Write(bytesData, 0, bytesData.Length);
+                        requestStream.Close();
+                        HttpWebResponse response;
+                        response = (HttpWebResponse)request.GetResponse();
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            System.IO.Stream responseStream = response.GetResponseStream();
+                            string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
+                            tbResponse.Text = responseStr;
+                        }
+                    }
+                    if ((cbPost.Checked) && (rbFTPMethod.Checked))
+                    {
+                        // Get the object used to communicate with the server.
+                        FtpWebRequest FtpRequest = (FtpWebRequest)WebRequest.Create(tbServer.Text + "/doc.xml");
+                        FtpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+
+                        // This example assumes the FTP site uses anonymous logon.
+                        FtpRequest.Credentials = new NetworkCredential(tbUser.Text, tbPassword.Text);
+
+                        // Copy the contents of the file to the request stream.
+                        System.IO.StreamReader sourceStream = new System.IO.StreamReader("doc.xml");
+                        byte[] fileContents = System.Text.Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
+                        sourceStream.Close();
+                        FtpRequest.ContentLength = fileContents.Length;
+
+                        System.IO.Stream requestStream = FtpRequest.GetRequestStream();
+                        requestStream.Write(fileContents, 0, fileContents.Length);
+                        requestStream.Close();
+
+                        FtpWebResponse FtpResponse = (FtpWebResponse)FtpRequest.GetResponse();
+                        tbResponse.Text = tbResponse.Text + DateTime.Now.ToString() + ": " + FtpResponse.StatusDescription + "\n";
+                        FtpResponse.Close();
+                        //FtpResponse.StatusCode=FtpStatusCode.ClosingData
+                        if (FtpResponse.StatusCode == FtpStatusCode.ClosingData)
+                        {
+                            HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbAdress.Text);
+                            HttpWebResponse HttpResponse;
+                            HttpResponse = (HttpWebResponse)HttpRequest.GetResponse();
+                            if (HttpResponse.StatusCode == HttpStatusCode.OK)
+                            {
+                                System.IO.Stream responseStream = HttpResponse.GetResponseStream();
+                                string responseStr = new System.IO.StreamReader(responseStream).ReadToEnd();
+                                tbResponse.Text = tbResponse.Text + responseStr + "\r\n";
+                                HttpResponse.Close();
+                            }
+                        }
+
                     }
 
                 }
-
+                threadPost.Abort();
             }
-            threadPost.Abort();
-        }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            }
 
         private void SetMarks(uint appID, XElement abitur, IEnumerable<DB_Queries.Mark> marks)
         {
