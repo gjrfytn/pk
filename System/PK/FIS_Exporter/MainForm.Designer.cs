@@ -38,7 +38,7 @@
             this.nudDictionaryNumber = new System.Windows.Forms.NumericUpDown();
             this.bLoadDictionary = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.bDictionaryList = new System.Windows.Forms.Button();
+            this.bDictionariesList = new System.Windows.Forms.Button();
             this.groupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDictionaryNumber)).BeginInit();
             this.groupBox.SuspendLayout();
@@ -143,21 +143,21 @@
             this.saveFileDialog.DefaultExt = "xml";
             this.saveFileDialog.Filter = "XML-файлы|*.xml|Все файлы|*.*";
             // 
-            // bDictionaryList
+            // bDictionariesList
             // 
-            this.bDictionaryList.Location = new System.Drawing.Point(6, 19);
-            this.bDictionaryList.Name = "bDictionaryList";
-            this.bDictionaryList.Size = new System.Drawing.Size(189, 23);
-            this.bDictionaryList.TabIndex = 12;
-            this.bDictionaryList.Text = "Загрузить список справочников...";
-            this.bDictionaryList.UseVisualStyleBackColor = true;
-            this.bDictionaryList.Click += new System.EventHandler(this.bDictionaryList_Click);
+            this.bDictionariesList.Location = new System.Drawing.Point(6, 19);
+            this.bDictionariesList.Name = "bDictionariesList";
+            this.bDictionariesList.Size = new System.Drawing.Size(189, 23);
+            this.bDictionariesList.TabIndex = 12;
+            this.bDictionariesList.Text = "Загрузить список справочников...";
+            this.bDictionariesList.UseVisualStyleBackColor = true;
+            this.bDictionariesList.Click += new System.EventHandler(this.bDictionariesList_Click);
             // 
             // groupBox
             // 
             this.groupBox.Controls.Add(this.nudDictionaryNumber);
             this.groupBox.Controls.Add(this.bLoadDictionary);
-            this.groupBox.Controls.Add(this.bDictionaryList);
+            this.groupBox.Controls.Add(this.bDictionariesList);
             this.groupBox.Location = new System.Drawing.Point(12, 256);
             this.groupBox.Name = "groupBox";
             this.groupBox.Size = new System.Drawing.Size(391, 52);
@@ -202,7 +202,7 @@
         private System.Windows.Forms.NumericUpDown nudDictionaryNumber;
         private System.Windows.Forms.Button bLoadDictionary;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
-        private System.Windows.Forms.Button bDictionaryList;
+        private System.Windows.Forms.Button bDictionariesList;
         private System.Windows.Forms.GroupBox groupBox;
     }
 }

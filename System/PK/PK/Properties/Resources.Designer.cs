@@ -93,6 +93,16 @@ namespace PK.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap from_xml {
+            get {
+                object obj = ResourceManager.GetObject("from_xml", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap glass {
             get {
                 object obj = ResourceManager.GetObject("glass", resourceCulture);

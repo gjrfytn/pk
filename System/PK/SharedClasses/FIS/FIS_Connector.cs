@@ -1,30 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Xml.Linq;
-using System.Linq;
 
 namespace SharedClasses.FIS
 {
     public static class FIS_Connector
     {
-        private const uint _DirectionsDictionaryID = 10;
-        private const uint _OlympicsDictionaryID = 19;
-
         public class FIS_Exception : System.Exception
         {
             public FIS_Exception(string message) : base(message) { }
         }
 
-        public static Dictionary<uint, string> GetDictionaries(string address, string login, string password)
-        {
-            #region Contracts
-            CheckLoginAndPassword(login, password);
-            #endregion
-
-            return GetDictionariesXML(address, login, password).Root.Elements().ToDictionary(k => uint.Parse(k.Element("Code").Value), v => v.Element("Name").Value);
-        }
-
-        public static XDocument GetDictionariesXML(string address, string login, string password)
+        public static XDocument GetDictionariesList(string address, string login, string password)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
@@ -34,80 +20,7 @@ namespace SharedClasses.FIS
             return GetResponse(address + "/import/importservice.svc/dictionary", byteArray);
         }
 
-        public static Dictionary<uint, string> GetDictionaryItems(string address, string login, string password, uint dictionaryID)
-        {
-            #region Contracts
-            CheckLoginAndPassword(login, password);
-            if (dictionaryID == _DirectionsDictionaryID || dictionaryID == _OlympicsDictionaryID)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", nameof(dictionaryID));
-            #endregion
-
-            XDocument doc = GetDictionaryXML(address, login, password, dictionaryID);
-
-            if (doc.Root.Element("DictionaryItems") != null)//TODO Из-за 24 справочника, в котором вопреки спецификации вообще нету элементов. Возможно из-за тестового клиента.
-                return doc.Root.Element("DictionaryItems").Elements()
-                    .ToDictionary(k => uint.Parse(k.Element("ID").Value), v => v.Element("Name")?.Value ?? "");//TODO [?.Value ?? ""] из-за 9 справочника, в котором вопреки спецификации нету элемента Name. Возможно из-за тестового клиента.
-
-            return new Dictionary<uint, string>();
-        }
-
-        public static Dictionary<uint, string[]> GetDirectionsDictionaryItems(string address, string login, string password)
-        {
-            #region Contracts
-            CheckLoginAndPassword(login, password);
-            #endregion
-
-            return GetDictionaryXML(address, login, password, _DirectionsDictionaryID).Root.Element("DictionaryItems").Elements().ToDictionary(
-                k => uint.Parse(k.Element("ID").Value),
-                v => new string[]
-                {
-                    v.Element("Name").Value,
-                    v.Element("NewCode").Value,//v.Element("Code").Value, TODO Не знаю, почему так.
-                    v.Element("QualificationCode").Value,
-                    "",//v.Element("Period").Value, TODO Почему-то его нет.
-                    v.Element("UGSCode").Value,
-                    v.Element("UGSName").Value
-                });
-        }
-
-        public static Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(string address, string login, string password, params uint[] profiles)
-        {
-            #region Contracts
-            CheckLoginAndPassword(login, password);
-            if (profiles == null)
-                throw new System.ArgumentNullException(nameof(profiles));
-            if (profiles.Length == 0)
-                throw new System.ArgumentException("Массив с профилями должен содержать хотя бы один элемент.", nameof(profiles));
-            #endregion
-
-            string[] strProfiles = System.Array.ConvertAll(profiles, s => s.ToString());
-
-            return GetDictionaryXML(address, login, password, _OlympicsDictionaryID).Root.Element("DictionaryItems").Elements()
-                .Where(
-                o => o.Element("Profiles").Elements().Any(p => strProfiles.Contains(p.Element("ProfileID").Value))
-                ).ToDictionary(
-                k1 => uint.Parse(k1.Element("OlympicID").Value),
-                v1 => new FIS_Olympic_TEMP
-                {
-                    Year = ushort.Parse(v1.Element("Year").Value),
-                    Number = v1.Element("OlympicNumber") != null ? (uint?)uint.Parse(v1.Element("OlympicNumber").Value) : null,
-                    Name = v1.Element("OlympicName").Value,
-                    Profiles = v1.Element("Profiles").Elements().ToDictionary(
-                        k2 => new System.Tuple<uint, uint>(
-                            39,
-                            uint.Parse(k2.Element("ProfileID").Value)
-                            ),
-                        v2 => new FIS_Olympic_TEMP.FIS_Olympic_Profile
-                        {
-                            Subjects = v2.Element("Subjects").Elements().Where(/*TODO в ФИС сидят идиоты 2*/e => e.Value != "0")
-                            .Select(s => new System.Tuple<uint, uint>(1, uint.Parse(s.Value))).ToArray(),
-                            LevelDictID = 3,
-                            LevelID = uint.Parse(v2.Element("LevelID").Value) != 0 ? uint.Parse(v2.Element("LevelID").Value) : 255 //TODO Временно, т.к. в ФИС сидят идиоты
-                        })
-                });
-        }
-
-        public static XDocument GetDictionaryXML(string address, string login, string password, uint dictionaryID)
+        public static XDocument GetDictionary(string address, string login, string password, uint dictionaryID)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);

@@ -10,7 +10,7 @@ namespace PK.Forms
             InitializeComponent();
         }
 
-        override protected void UpdateMainTable()
+        protected override void UpdateMainTable()
         {
             dgvDictionaries.Rows.Clear();
             foreach (object[] d in _DB_Connection.Select(DB_Table.DICTIONARIES))

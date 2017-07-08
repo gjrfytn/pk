@@ -1,4 +1,5 @@
-﻿using SharedClasses.DB;
+﻿using System.Xml.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -9,11 +10,16 @@ namespace PK.Forms
             InitializeComponent();
         }
 
-        override protected void UpdateMainTable()
+        protected override void UpdateMainTable()
         {
             dataGridView.Rows.Clear();
             foreach (object[] item in _DB_Connection.Select(DB_Table.DICTIONARY_10_ITEMS))
                 dataGridView.Rows.Add(item[0], item[1], item[2], item[3], item[4], item[5], item[6]);
+        }
+
+        protected override void LoadFromXML(XDocument doc)
+        {
+            
         }
 
         protected override void UpdateDictionary(Classes.DictionaryUpdater updater)

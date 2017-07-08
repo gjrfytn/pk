@@ -34,7 +34,7 @@ namespace PK.Classes
 
         public void UpdateDictionaries()
         {
-            Dictionary<uint, string> fisDictionaries = FIS_Connector.GetDictionaries(_FIS_Address,_FIS_Login, _FIS_Password);
+            Dictionary<uint, string> fisDictionaries = FIS_DictionaryCoverter.ConvertDictionariesList(FIS_Connector.GetDictionariesList(_FIS_Address,_FIS_Login, _FIS_Password));
             Dictionary<uint, string> dbDictionaries = _DB_Connection.Select(DB_Table.DICTIONARIES).ToDictionary(d1 => (uint)d1[0], d2 => d2[1].ToString());
 
             string addedReport = "Добавлены справочники:";
@@ -44,7 +44,7 @@ namespace PK.Classes
             foreach (var d in fisDictionaries)
                 if (d.Key != 10 && d.Key != 19)
                 {
-                    var fisDictionaryItems = FIS_Connector.GetDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password, d.Key);
+                    var fisDictionaryItems = FIS_DictionaryCoverter.ConvertDictionary(FIS_Connector.GetDictionary(_FIS_Address,_FIS_Login, _FIS_Password, d.Key));
 
                     if (dbDictionaries.ContainsKey(d.Key))
                     {
@@ -96,7 +96,7 @@ namespace PK.Classes
 
         public void UpdateDirectionsDictionary()
         {
-            Dictionary<uint, string[]> fisDictionaryItems = FIS_Connector.GetDirectionsDictionaryItems(_FIS_Address,_FIS_Login, _FIS_Password);
+            Dictionary<uint, string[]> fisDictionaryItems = FIS_DictionaryCoverter.ConvertDirectionsDictionary(FIS_Connector.GetDictionary(_FIS_Address,_FIS_Login, _FIS_Password,10)); //TODO 10
             Dictionary<uint, string[]> dbDictionaryItems = _DB_Helper.GetDirectionsDictionaryItems();
 
             string addedReport = "В справочник №" + 10 + " \"" + "Направления подготовки" + "\" добавлены элементы:";
@@ -161,13 +161,15 @@ namespace PK.Classes
 
         public void UpdateOlympicsDictionary()
         {
-            Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = FIS_Connector.GetOlympicsDictionaryItems(
+            Dictionary<uint, FIS_Olympic_TEMP> fisDictionaryItems = FIS_DictionaryCoverter.ConvertOlympicsDictionary(FIS_Connector.GetDictionary(
                 _FIS_Address,
                 _FIS_Login,
                 _FIS_Password,
+                19),
                 _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "физика"),
                 _DB_Helper.GetDictionaryItemID(FIS_Dictionary.OLYMPICS_PROFILES, "математика")
-                );
+                ); //TODO 19
+
             Dictionary<uint, FIS_Olympic_TEMP> dbDictionaryItems = _DB_Helper.GetOlympicsDictionaryItems();
 
             string addedReport = "В справочник №" + 19 + " \"" + "Олимпиады" + "\" добавлены элементы:";

@@ -88,7 +88,7 @@ namespace FIS_Exporter
                     textBox.Text = reader.ReadToEnd();
         }
 
-        private void bDictionaryList_Click(object sender, EventArgs e)
+        private void bDictionariesList_Click(object sender, EventArgs e)
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -96,7 +96,7 @@ namespace FIS_Exporter
 
                 SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
                 {
-                    FIS_Connector.GetDictionariesXML(
+                    FIS_Connector.GetDictionariesList(
                         cbAddress.Text,
                         login,
                         password
@@ -115,7 +115,7 @@ namespace FIS_Exporter
 
                 SharedClasses.Utility.TryAccessFIS_Function((login, password) =>
                 {
-                    FIS_Connector.GetDictionaryXML(
+                    FIS_Connector.GetDictionary(
                         cbAddress.Text,
                         login,
                         password,

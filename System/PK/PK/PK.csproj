@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\DBF_Reader.cs" />
+    <Compile Include="Classes\FIS_DictionaryCoverter.cs" />
     <Compile Include="Classes\LoginSetting.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="Classes\Settings.cs" />
@@ -550,6 +551,7 @@
     <None Include="Resources\check.png" />
     <None Include="Resources\kladr_db_creation.sql" />
     <None Include="Resources\glass.png" />
+    <None Include="Resources\from_xml.png" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

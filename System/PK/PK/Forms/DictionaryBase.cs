@@ -23,8 +23,10 @@ namespace PK.Forms
 
         protected virtual void UpdateMainTable() { }
 
+        protected virtual void LoadFromXML(System.Xml.Linq.XDocument doc) { }
+
         protected virtual void UpdateDictionary(Classes.DictionaryUpdater updater) { }
-        
+
         private void DictionaryBase_Load(object sender, System.EventArgs e)
         {
             UpdateMainTable();
@@ -44,6 +46,12 @@ namespace PK.Forms
                 UpdateMainTable();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void toolStrip_Load_Click(object sender, System.EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                LoadFromXML(System.Xml.Linq.XDocument.Load(openFileDialog.FileName));
         }
     }
 }
