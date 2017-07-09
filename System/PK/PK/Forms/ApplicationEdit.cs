@@ -406,8 +406,9 @@ namespace PK.Forms
                 MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
             else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && cbNationality.SelectedItem.ToString() != DB_Helper.NationalityRus)
                 MessageBox.Show("Для паспорта РФ возможно только российское гражданство.");
-            else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.ResidenceName && cbNationality.SelectedItem.ToString() == DB_Helper.NationalityRus)
-                MessageBox.Show("Для вида на жительство невозможно выбрать российское гражданство.");
+            else if ((cbIDDocType.SelectedItem.ToString() == DB_Helper.ResidenceName || cbIDDocType.SelectedItem.ToString() == DB_Helper.IntPassportName)
+                && cbNationality.SelectedItem.ToString() == DB_Helper.NationalityRus)
+                MessageBox.Show("Для вида на жительство или паспорта гражданина иностранного государства невозможно выбрать российское гражданство.");
             else if ((rbDiploma.Checked || rbSpravka.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
                 && (string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || string.IsNullOrWhiteSpace(tbEduDocNumber.Text)))
                 MessageBox.Show("Обязательные поля в разделе \"Из аттестата\" не заполнены.");
@@ -448,7 +449,8 @@ namespace PK.Forms
                     else
                     {
                         bool quoteOK = false;
-                        if (cbQuote.Checked)
+                        bool targetOK = false;
+                        if (cbQuote.Checked || cbTarget.Checked)
                         {
                             foreach (TabPage page in tcDirections.TabPages)
                                 if (page.Name.Split('_')[1] == "quote")
@@ -458,9 +460,18 @@ namespace PK.Forms
                                         if (combo != null && combo.SelectedIndex != -1)
                                             quoteOK = true;
                                     }
+                            else if (page.Name.Split('_')[1] == "target")
+                                    foreach (Control control in page.Controls)
+                                    {
+                                        ComboBox combo = control as ComboBox;
+                                        if (combo != null && combo.SelectedIndex != -1)
+                                            targetOK = true;
+                                    }
                         }
                         if (cbQuote.Checked && !quoteOK)
                             MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
+                        else if (cbTarget.Checked && !targetOK)
+                            MessageBox.Show("Выбрана целевая организация, но не указано направление на вкладках целевых направлений.");
                         else
                         {
                             bool egeFound = false;

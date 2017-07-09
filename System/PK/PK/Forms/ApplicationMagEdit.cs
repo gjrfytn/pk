@@ -156,6 +156,11 @@ namespace PK.Forms
                 || string.IsNullOrWhiteSpace(tbIDDocNumber.Text) || string.IsNullOrWhiteSpace(tbPlaceOfBirth.Text)
                 || string.IsNullOrWhiteSpace(cbRegion.Text) || string.IsNullOrWhiteSpace(tbPostcode.Text))
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
+            else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && cbNationality.SelectedItem.ToString() != DB_Helper.NationalityRus)
+                MessageBox.Show("Для паспорта РФ возможно только российское гражданство.");
+            else if ((cbIDDocType.SelectedItem.ToString() == DB_Helper.ResidenceName || cbIDDocType.SelectedItem.ToString() == DB_Helper.IntPassportName)
+                && cbNationality.SelectedItem.ToString() == DB_Helper.NationalityRus)
+                MessageBox.Show("Для вида на жительство или паспорта гражданина иностранного государства невозможно выбрать российское гражданство.");
             else if (string.IsNullOrWhiteSpace(tbInstitution.Text))
                 MessageBox.Show("Обязательные поля в разделе \"Документ об образовании\" не заполнены.");
             else if (!cbAppAdmission.Checked || (cbSpecialRights.Checked || cbTarget.Checked || cbPriority.Checked) && !cbDirectionDoc.Checked
@@ -174,20 +179,10 @@ namespace PK.Forms
                 if (!found)
                     MessageBox.Show("Не выбрано ни одно направление или профиль.");
                 {
-                    bool quoteOK = false;
-                    if (cbSpecialRights.Checked)
-                    {
-                        foreach (TabPage page in tcPrograms.TabPages)
-                            if (page.Name.Split('_')[1] == "quote")
-                                foreach (Control control in page.Controls)
-                                {
-                                    ComboBox combo = control as ComboBox;
-                                    if (combo != null && combo.SelectedIndex != -1)
-                                        quoteOK = true;
-                                }
-                    }
-                    if (cbSpecialRights.Checked && !quoteOK)
+                    if (cbSpecialRights.Checked && cbProgram_quote_o.SelectedIndex == -1)
                         MessageBox.Show("Выбрана особая квота, но не указано направление на вкладках особой квоты.");
+                    else if (cbTarget.Checked && cbProgram_target_o.SelectedIndex == -1)
+                        MessageBox.Show("Выбрана целевая организация, но не указано направление на вкладках целевых направлений.");
                     else if (mtbEMail.Text == "")
                         MessageBox.Show("Поле \"Email\" не заполнено");
                     else
@@ -247,6 +242,8 @@ namespace PK.Forms
                                 _ApplicationID = applID;
                                 btPrint.Enabled = true;
                                 btWithdraw.Enabled = true;
+                                dgvExamsResults.Rows.Clear();
+                                LoadExamsMarks();
                             }
 
                             Cursor.Current = Cursors.Default;
@@ -359,10 +356,13 @@ namespace PK.Forms
                 form.ShowDialog();
                 if (form.DialogResult != DialogResult.OK && (form.OrganizationID == null || form.OrganizationID == 0))
                     cbTarget.Checked = false;
-                else _TargetOrganizationID = form.OrganizationID;
+                else
+                    _TargetOrganizationID = form.OrganizationID;
             }
             else if (!cbTarget.Checked)
                 cbProgram_target_o.SelectedIndex = -1;
+
+            FillProgramsCombobox(cbProgram_target_o, DB_Helper.EduFormO, DB_Helper.EduSourceT);
             cbProgram_target_o.Enabled = cbTarget.Checked;
             label34.Enabled = cbTarget.Checked;
             btAddDir_target_o.Enabled = cbTarget.Checked;
@@ -1196,7 +1196,7 @@ namespace PK.Forms
         private void LoadBasic()
         {
             Text += " № " + _ApplicationID;
-            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status", "passing_examinations" }, 
+            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status", "priority_right" }, 
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, _ApplicationID)
@@ -1220,7 +1220,8 @@ namespace PK.Forms
                 cbFirstTime.SelectedItem = "Впервые";
             else cbFirstTime.SelectedItem = "Повторно";            
             cbSpecialConditions.Checked = (bool)application[3];
-            cbPriority.Checked = (bool)application[6];
+            if (application[6].ToString() != "")
+                cbPriority.Checked = (bool)application[6];
 
             object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "email", "home_phone", "mobile_phone" },
                 new List<Tuple<string, Relation, object>>
@@ -1478,7 +1479,6 @@ namespace PK.Forms
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
                     && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
-                    cbTarget.Checked = true;
                     _TargetOrganizationID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
                         new List<Tuple<string, Relation, object>>
                     {
@@ -1488,6 +1488,7 @@ namespace PK.Forms
                         new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, entrancesData.Value.Item4),
                         new Tuple<string, Relation, object>("edu_source_id", Relation.EQUAL, entrancesData.Value.Item3),
                     })[0][0];
+                    cbTarget.Checked = true;
                     cbProgram_target_o.SelectedValue = entrancesData.Value;
                     cbProgram_target_o.Visible = true;
                     cbProgram_target_o.Enabled = true;
@@ -2141,35 +2142,70 @@ namespace PK.Forms
             }
             else if (eduSource == DB_Helper.EduSourceT)
             {
-                string placesCountColumnName = "places_o";
+                //string placesCountColumnName = "places_o";
 
-                var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
-                    new List<Tuple<string, Relation, object>>
-                       {
+                //var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                //    new List<Tuple<string, Relation, object>>
+                //       {
+                //            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                //            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
+                //       }).Join(
+                //    profilesData,
+                //    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
+                //    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
+                //    (s1, s2) => new
+                //    {
+                //        Id = (uint)s1[0],
+                //        Faculty = s1[1].ToString(),
+                //        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                //        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                //        ProfileShortName = s2[0].ToString(),
+                //        ProfileName = s2[1].ToString().Split('|')[0],
+                //        Kafedra = s2[1].ToString().Split('|')[1]
+                //    }).Select(s => new
+                //    {
+                //        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                //        Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                //    }).Distinct().ToList();
+                //combobox.ValueMember = "Value";
+                //combobox.DisplayMember = "Display";
+                //combobox.DataSource = selectedDirs;
+                //combobox.SelectedIndex = -1;
+                if (cbTarget.Checked && _TargetOrganizationID.HasValue)
+                {
+                    string placesCountColumnName = "places_o";
+
+                    var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
+                        new List<Tuple<string, Relation, object>>
+                           {
                             new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                            new Tuple<string, Relation, object>("target_organization_id", Relation.EQUAL, _TargetOrganizationID),
                             new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                       }).Join(
-                    profilesData,
-                    campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
-                    profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
-                    (s1, s2) => new
-                    {
-                        Id = (uint)s1[0],
-                        Faculty = s1[1].ToString(),
-                        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                        ProfileShortName = s2[0].ToString(),
-                        ProfileName = s2[1].ToString().Split('|')[0],
-                        Kafedra = s2[1].ToString().Split('|')[1]
-                    }).Select(s => new
-                    {
-                        Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
-                        Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
-                    }).Distinct().ToList();
-                combobox.ValueMember = "Value";
-                combobox.DisplayMember = "Display";
-                combobox.DataSource = selectedDirs;
-                combobox.SelectedIndex = -1;
+                           }).Join(
+                        profilesData,
+                        campProfiles => new Tuple<uint, string>((uint)campProfiles[0], campProfiles[1].ToString()),
+                        profData => new Tuple<uint, string>((uint)profData[3], profData[2].ToString()),
+                        (s1, s2) => new
+                        {
+                            Id = (uint)s1[0],
+                            Faculty = s1[1].ToString(),
+                            EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
+                            EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
+                            ProfileShortName = s2[0].ToString(),
+                            ProfileName = s2[1].ToString().Split('|')[0],
+                            Kafedra = s2[1].ToString().Split('|')[1]
+                        }).Select(s => new
+                        {
+                            Value = new ProgramTuple(s.Id, s.Faculty, s.EduSource, s.EduForm, s.ProfileShortName, s.ProfileName),
+                            Display = s.ProfileShortName + " " + s.ProfileName + " (" + s.Kafedra + ", " + s.Faculty + ", " + _DB_Helper.GetDirectionNameAndCode(s.Id).Item2 + ")"
+                        }).Distinct().ToList();
+                    combobox.ValueMember = "Value";
+                    combobox.DisplayMember = "Display";
+                    combobox.DataSource = selectedDirs;
+                    combobox.SelectedIndex = -1;
+                }
+                else
+                    combobox.DataSource = null;
             }
             else
             {
