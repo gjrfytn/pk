@@ -1009,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`application_ege_results` (
   `checked` TINYINT(1) NOT NULL COMMENT 'Проверен по ФИС.',
   INDEX `application_ege_results_has_applications_idx` (`application_id` ASC),
   INDEX `application_ege_results_has_subjects_idx` (`subject_dict_id` ASC, `subject_id` ASC),
-  INDEX `PRIMARY` (`application_id` ASC, `subject_dict_id` ASC, `subject_id` ASC),
+  PRIMARY KEY (`application_id`, `subject_dict_id`, `subject_id`),
   CONSTRAINT `application_ege_results_has_applications`
     FOREIGN KEY (`application_id`)
     REFERENCES `pk_db`.`applications` (`id`)

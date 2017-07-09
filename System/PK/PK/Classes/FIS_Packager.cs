@@ -100,6 +100,9 @@ namespace PK.Classes
 
         private static AdmissionInfo PackAdmissionInfo(DB_Connector connection, uint campaignID)
         {
+            DB_Helper dbHelper = new DB_Helper(connection);
+            bool isMasterCampaign = dbHelper.IsMasterCampaign(campaignID);
+
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
             foreach (var admData in connection.Select(
@@ -119,7 +122,6 @@ namespace PK.Classes
                 EduSourcePlaces paidPlaces = GetPaidPlaces(connection, admData.CampID, admData.DirID);
                 EduSourcePlaces targetPlaces = GetTargetPlaces(connection, admData.CampID, admData.DirID);
 
-                DB_Helper dbHelper = new DB_Helper(connection);
                 uint levelID = SharedClasses.Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
 
                 admissionVolumes.Add(new AVItem(
@@ -164,19 +166,32 @@ namespace PK.Classes
                         TUID compGroupUID = ComposeCompGroupUID(admData.CampID, admData.DirID, eduForm, eduSource);
 
                         List<EntranceTestItem> entranceTests = new List<EntranceTestItem>();
-                        foreach (object[] etRow in connection.Select(
-                            DB_Table.ENTRANCE_TESTS,
-                            new string[] { "subject_id", "priority" },
-                            new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
-                            ))
-                            if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
-                                entranceTests.Add(new EntranceTestItem(
-                                    new TUID(compGroupUID.Value + etRow[0].ToString()),
-                                    1,
-                                    (ushort)etRow[1],
-                                    new TEntranceTestSubject((uint)etRow[0]),
-                                    dbHelper.GetMinMark((uint)etRow[0])
-                                    ));
+
+                        if (isMasterCampaign)
+                        {
+                            uint subjectID = dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Технология");
+                            entranceTests.Add(new EntranceTestItem(
+                                new TUID(compGroupUID.Value + subjectID.ToString()),
+                                1, //TODO
+                                1,
+                                new TEntranceTestSubject(subjectID),
+                                null //TODO
+                                ));
+                        }
+                        else
+                            foreach (object[] etRow in connection.Select(
+                                DB_Table.ENTRANCE_TESTS,
+                                new string[] { "subject_id", "priority" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
+                                ))
+                                if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
+                                    entranceTests.Add(new EntranceTestItem(
+                                        new TUID(compGroupUID.Value + etRow[0].ToString()),
+                                        1,
+                                        (ushort)etRow[1],
+                                        new TEntranceTestSubject((uint)etRow[0]),
+                                        dbHelper.GetMinMark((uint)etRow[0])
+                                        ));
 
                         competitiveGroups.Add(new CompetitiveGroup(
                             compGroupUID,
@@ -250,7 +265,7 @@ namespace PK.Classes
                 {
                     new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID),
                     new System.Tuple<string, Relation, object>("registration_time",Relation.GREATER_EQUAL,applicationsRange.Item1.Date),
-                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,applicationsRange.Item2.Date)
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,applicationsRange.Item2.Date.AddDays(1))
                 }).Join(
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
                 k1 => k1[1],
