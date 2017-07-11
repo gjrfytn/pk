@@ -486,6 +486,33 @@ namespace PK.Forms
                         transaction
                         );
 
+                    foreach (TabPage tab in tcPrograms.TabPages)
+                        foreach (Control c in tab.Controls)
+                        {
+                            ComboBox cb = c as ComboBox;
+                            if (cb != null && cb.SelectedIndex != -1)
+                            {
+                                 List<object[]> mark = _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "mark" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID),
+                                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
+                                        new Tuple<string, Relation, object>("faculty", Relation.EQUAL, ((ProgramTuple)cb.SelectedValue).Item2),
+                                        new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, ((ProgramTuple)cb.SelectedValue).Item1),
+                                        new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, ((ProgramTuple)cb.SelectedValue).Item5)
+                                    });
+                                if (mark.Count > 0 && (short)mark[0][0] < 0)
+                                    _DB_Connection.Delete(DB_Table.MASTERS_EXAMS_MARKS, new Dictionary<string, object>
+                                    {
+                                        { "entrant_id", _EntrantID },
+                                        { "campaign_id", _CurrCampainID },
+                                        { "faculty", ((ProgramTuple)cb.SelectedValue).Item2 },
+                                        { "direction_id", ((ProgramTuple)cb.SelectedValue).Item1 },
+                                        { "profile_short_name", ((ProgramTuple)cb.SelectedValue).Item5 }
+                                    }, transaction);
+                            }
+                        }
+
                     transaction.Commit();
                 }
 
@@ -882,6 +909,7 @@ namespace PK.Forms
                 {
                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])
                 })[0][0])})[0][0];
+            else
             {
                 char[] passwordChars = { 'a', 'b', 'c', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
                 int passwordLength = 6;
