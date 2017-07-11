@@ -33,6 +33,12 @@ namespace PK.Forms
 
             foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
                 dtp.Tag = _ID.HasValue;
+
+            if (_ID.HasValue)
+            {
+                dtpRegStartDate.Enabled = !DB_Queries.ExaminationHasMarks(_DB_Connection, _ID.Value);
+                dtpRegEndDate.Enabled = !DB_Queries.ExaminationHasMarks(_DB_Connection, _ID.Value);
+            }
             #endregion
 
             _DB_Helper = new DB_Helper(_DB_Connection);
