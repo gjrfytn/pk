@@ -238,5 +238,16 @@ namespace SharedClasses.DB
 
             return list.Count() != 0 ? list.Max() : (ushort)0;
         }
+
+        public static bool ExaminationHasMarks(DB_Connector connection, uint id)
+        {
+            return connection.Select(
+                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                new string[] { "entrant_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("examination_id",Relation.EQUAL, id)
+                }).Count != 0;
+        }
     }
 }

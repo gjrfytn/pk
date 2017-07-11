@@ -114,67 +114,98 @@ namespace PK.Forms
 
                 uint count = 0;
 
-                IEnumerable<EGE_Result> savedResults = GetEgeResults();
-                foreach (var res in importedResults)
-                {
-                    //Стоит ли проверять имена вообще?
-                    var foundResults = savedResults.Where(s =>
-                    s.LastName.Equals(res.LastName, StringComparison.OrdinalIgnoreCase) &&
-                    s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                    s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
-                    s.Series==res.Series &&
-                    s.Number==res.Number
-                    ).GroupBy(k=>k.ApplID);
-
-                    foreach (var applResult in foundResults)
+                List<EGE_Result> savedResults = GetEgeResults().ToList();
+                var identities = _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id").Join(
+                    _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "series", "number"),
+                    k1 => k1[1],
+                    k2 => k2[0],
+                    (s1, s2) => new
                     {
-                        EGE_Result foundResult = applResult.SingleOrDefault(s => s.SubjectID == res.Subject);
-                        if (foundResult != null)
+                        ApplID = (uint)s1[0],
+                        Series = s2[1] as string,
+                        Number = s2[2].ToString()
+                    });
+
+                try
+                {
+                    foreach (var res in importedResults)
+                    {
+                        //Стоит ли проверять имена вообще?
+                        IEnumerable<uint> applIDs = savedResults.Where(s =>
+                        s.LastName.Equals(res.LastName, StringComparison.OrdinalIgnoreCase) &&
+                        s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                        s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                        s.Series == res.Series &&
+                        s.Number == res.Number
+                        ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID));
+
+                        foreach (uint applID in applIDs)
                         {
-                            if (!foundResult.Checked || foundResult.Value < res.Value)
+                            EGE_Result foundResult = savedResults.SingleOrDefault(s => s.ApplID == applID && s.SubjectID == res.Subject);
+
+                            if (foundResult != null)
                             {
-                                _DB_Connection.Update(
+                                if (!foundResult.Checked || foundResult.Value < res.Value)
+                                {
+                                    _DB_Connection.Update(
+                                        DB_Table.APPLICATION_EGE_RESULTS,
+                                        new Dictionary<string, object>
+                                        {
+                                            { "series", res.Series },
+                                            { "number", res.Number },
+                                            { "year", res.Year },
+                                            { "value", res.Value },
+                                            { "checked", true }
+                                        },
+                                        new Dictionary<string, object>
+                                        {
+                                            { "application_id", applID},
+                                            { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                                            { "subject_id", res.Subject }
+                                        });
+
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                _DB_Connection.Insert(
                                     DB_Table.APPLICATION_EGE_RESULTS,
                                     new Dictionary<string, object>
                                     {
+                                        { "application_id", applID},
+                                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                                        { "subject_id", res.Subject },
+                                        { "series", res.Series },
+                                        { "number", res.Number },
                                         { "year", res.Year },
                                         { "value", res.Value },
                                         { "checked", true }
-                                    },
-                                    new Dictionary<string, object>
-                                    {
-                                        { "application_id", applResult.Key},
-                                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
-                                        { "subject_id", res.Subject }
                                     });
+
+                                savedResults.Add(new EGE_Result(
+                                    applID,
+                                    res.Series,
+                                    res.Number,
+                                    res.LastName,
+                                    res.FirstName,
+                                    res.MiddleName,
+                                    res.Subject,
+                                    res.Value,
+                                    true
+                                    ));
 
                                 count++;
                             }
                         }
-                        else
-                        {
-                            _DB_Connection.Insert(
-                                DB_Table.APPLICATION_EGE_RESULTS,
-                                new Dictionary<string, object>
-                                {
-                                    { "application_id", applResult.Key},
-                                    { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
-                                    { "subject_id", res.Subject },
-                                    { "series", res.Series },
-                                    { "number", res.Number },
-                                    { "year", res.Year },
-                                    { "value", res.Value },
-                                    { "checked", true }
-                                });
-
-                            count++;
-                        }
                     }
                 }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
 
-                Cursor.Current = Cursors.Default;
-
-                MessageBox.Show("Новых результатов: " + count, "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Новых результатов: " + count, "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 

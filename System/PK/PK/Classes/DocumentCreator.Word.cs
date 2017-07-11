@@ -317,7 +317,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                         table.SetColumnWidth(i, colWidths[i]);
                 }
 
-                byte count = 1;
+                uint count = 1;
                 foreach (object[] row in rows)
                 {
                     table.InsertRow();

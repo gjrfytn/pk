@@ -230,7 +230,7 @@ namespace PK.Forms
                             parts[0]+=" ";
                             parts[1]+="\n";
                             return  new string[] {a.ApplIDs, string.Concat(parts), a.AudSeat.ToString() };
-                        })
+                        }).OrderBy(a=>a[1])
                     })),
                 false
                 );

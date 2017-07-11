@@ -40,7 +40,7 @@ namespace PK.Forms
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (ExaminationHasMarks((uint)e.Row.Cells[dataGridView_ID.Index].Value))
+            if (DB_Queries.ExaminationHasMarks(_DB_Connection, (uint)e.Row.Cells[dataGridView_ID.Index].Value))
             {
                 MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
@@ -76,7 +76,7 @@ namespace PK.Forms
 
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
         {
-            if (ExaminationHasMarks(SelectedExamID))
+            if (DB_Queries.ExaminationHasMarks(_DB_Connection, SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
 
             Cursor.Current = Cursors.WaitCursor;
@@ -203,24 +203,13 @@ namespace PK.Forms
             }
             else
             {
-                bool hasMarks = ExaminationHasMarks(SelectedExamID);
-                toolStrip_Edit.Enabled = !hasMarks;
+                bool hasMarks = DB_Queries.ExaminationHasMarks(_DB_Connection, SelectedExamID);
+                toolStrip_Edit.Enabled = true;
                 toolStrip_Delete.Enabled = !hasMarks;
                 toolStrip_Distribute.Enabled = true;
                 toolStrip_Marks.Enabled = hasMarks;
                 toolStrip_Print.Enabled = hasMarks;
             }
-        }
-
-        private bool ExaminationHasMarks(uint id)
-        {
-            return _DB_Connection.Select(
-                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                     new string[] { "entrant_id" },
-                     new List<Tuple<string, Relation, object>>
-                     {
-                        new Tuple<string, Relation, object> ("examination_id",Relation.EQUAL, id)
-                     }).Count != 0;
         }
     }
 }

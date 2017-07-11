@@ -176,7 +176,7 @@ namespace PK.Classes
                     el => new Stream.Entrance(
                         el[0].ToString(),
                         (uint)el[1],
-                        el[4].ToString(),
+                        el[4] as string,
                         el[5] as DateTime?,
                         el[6] as DateTime?
                         ),
@@ -423,7 +423,7 @@ namespace PK.Classes
                     receiptTableParams[0].Add(new string[] { _Streams[Tuple.Create(stream.EduForm, stream.EduSource)].Item1 + " форма обучения" });
                     foreach (Stream.Entrance entrance in stream.Directions)
                     {
-                        if (stream.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                        if (entrance.Profile != null)
                             receiptTableParams[0].Add(new string[] { "     - " + entrance.Profile + " (" + entrance.Faculty + ") " +
                             DB_Queries.GetProfileName(connection,entrance.Faculty,entrance.DirectionID,entrance.Profile)});
                         else
