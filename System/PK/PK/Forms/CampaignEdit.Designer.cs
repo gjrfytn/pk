@@ -677,6 +677,7 @@
             // 
             // dgvTargetOrganizatons
             // 
+            this.dgvTargetOrganizatons.AllowUserToAddRows = false;
             this.dgvTargetOrganizatons.AllowUserToResizeRows = false;
             this.dgvTargetOrganizatons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTargetOrganizatons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -724,7 +725,7 @@
             this.dgvTargetOrganizatons_Select.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvTargetOrganizatons_Select.HeaderText = "";
             this.dgvTargetOrganizatons_Select.Name = "dgvTargetOrganizatons_Select";
-            this.dgvTargetOrganizatons_Select.Width = 21;
+            this.dgvTargetOrganizatons_Select.Width = 5;
             // 
             // dgvTargetOrganizatons_DirID
             // 
@@ -765,7 +766,7 @@
             this.dgvTargetOrganizatons_DirSelect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvTargetOrganizatons_DirSelect.HeaderText = "";
             this.dgvTargetOrganizatons_DirSelect.Name = "dgvTargetOrganizatons_DirSelect";
-            this.dgvTargetOrganizatons_DirSelect.Width = 21;
+            this.dgvTargetOrganizatons_DirSelect.Width = 5;
             // 
             // dgvTargetOrganizatons_OF
             // 
