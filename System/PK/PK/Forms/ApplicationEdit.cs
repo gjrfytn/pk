@@ -151,6 +151,7 @@ namespace PK.Forms
             tbMobilePhone.ForeColor = System.Drawing.Color.Gray;
             tbHomePhone.Text = tbHomePhone.Tag.ToString();
             tbHomePhone.ForeColor = System.Drawing.Color.Gray;
+            BlockExam();
 
             for (int i = DateTime.Now.Year; i >= 1950; i--)
                 cbGraduationYear.Items.Add(i);
@@ -3817,39 +3818,6 @@ namespace PK.Forms
             }
             else if (eduSource == DB_Helper.EduSourceT)
             {
-                //string placesCountColumnName = "";
-                //if ((eduForm == "Очная форма") && (eduSource == "Целевой прием"))
-                //    placesCountColumnName = "places_o";
-                //else if ((eduForm == "Очно-заочная (вечерняя)") && (eduSource == "Целевой прием"))
-                //    placesCountColumnName = "places_oz";
-
-                //var selectedDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_TARGET_ORGANIZATIONS_DATA, new string[] { "direction_id", "direction_faculty", placesCountColumnName },
-                //    new List<Tuple<string, Relation, object>>
-                //        {
-                //            new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                //            new Tuple<string, Relation, object>(placesCountColumnName, Relation.GREATER, 0)
-                //        }).Join(
-                //    directionsData,
-                //    campDirs => campDirs[0],
-                //    dirsData => dirsData[0],
-                //    (s1, s2) => new
-                //    {
-                //        Id = (uint)s1[0],
-                //        Faculty = s1[1].ToString(),
-                //        Level = eduLevelsCodes.First(x => x[0] == s2[2].ToString().Split('.')[1])[1],
-                //        Name = s2[1].ToString(),
-                //        EduSource = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, eduSource),
-                //        EduForm = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, eduForm),
-                //        DirShortName = _DB_Helper.GetDirectionShortName(s1[1].ToString(), (uint)s1[0])
-                //    }).Select(s => new
-                //    {
-                //        Value = new DirTuple(s.Id, s.Faculty, s.Name, s.EduSource, s.EduForm, "", ""),
-                //        Display = s.DirShortName + " (" + s.Faculty + ", " + s.Level + ") " + s.Name
-                //    }).Distinct().ToList();
-                //combobox.ValueMember = "Value";
-                //combobox.DisplayMember = "Display";
-                //combobox.DataSource = selectedDirs;
-                //combobox.SelectedIndex = -1;
                 if (cbTarget.Checked && _TargetOrganizationID.HasValue)
                 {
                     string placesCountColumnName = "";
@@ -4033,6 +4001,18 @@ namespace PK.Forms
                             new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
                             new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, (uint)institutionAchievements[0][0])
                         });
+        }
+
+        private void BlockExam()
+        {
+            IEnumerable<DB_Queries.Exam> exams = DB_Queries.GetCampaignExams(_DB_Connection, _CurrCampainID);
+            DateTime examRegEnd = DateTime.MinValue;
+            foreach (DB_Queries.Exam exam in exams)
+                if (exam.RegEndDate > examRegEnd)
+                    examRegEnd = exam.RegEndDate;
+
+            if (examRegEnd < DateTime.Now)
+                cbExams.Enabled = false;
         }
     }
 }
