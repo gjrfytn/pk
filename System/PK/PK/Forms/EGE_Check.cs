@@ -112,7 +112,9 @@ namespace PK.Forms
                     };
                 });
 
-                uint count = 0;
+                uint insertCount = 0;
+                uint updateCount = 0;
+                List<string[]> notFoundList = new List<string[]>();
 
                 List<EGE_Result> savedResults = GetEgeResults().ToList();
                 var identities = _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id").Join(
@@ -139,6 +141,9 @@ namespace PK.Forms
                         s.Number == res.Number
                         ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID));
 
+                        if (applIDs.Count() == 0)
+                            notFoundList.Add(new string[] { res.LastName, res.FirstName, res.MiddleName, res.Series, res.Number });
+
                         foreach (uint applID in applIDs)
                         {
                             EGE_Result foundResult = savedResults.SingleOrDefault(s => s.ApplID == applID && s.SubjectID == res.Subject);
@@ -164,7 +169,9 @@ namespace PK.Forms
                                             { "subject_id", res.Subject }
                                         });
 
-                                    count++;
+                                    savedResults.Remove(foundResult);
+
+                                    updateCount++;
                                 }
                             }
                             else
@@ -183,20 +190,20 @@ namespace PK.Forms
                                         { "checked", true }
                                     });
 
-                                savedResults.Add(new EGE_Result(
-                                    applID,
-                                    res.Series,
-                                    res.Number,
-                                    res.LastName,
-                                    res.FirstName,
-                                    res.MiddleName,
-                                    res.Subject,
-                                    res.Value,
-                                    true
-                                    ));
-
-                                count++;
+                                insertCount++;
                             }
+
+                            savedResults.Add(new EGE_Result(
+                                applID,
+                                res.Series,
+                                res.Number,
+                                res.LastName,
+                                res.FirstName,
+                                res.MiddleName,
+                                res.Subject,
+                                res.Value,
+                                true
+                                ));
                         }
                     }
                 }
@@ -204,7 +211,9 @@ namespace PK.Forms
                 {
                     Cursor.Current = Cursors.Default;
 
-                    MessageBox.Show("Новых результатов: " + count, "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Новых результатов: " + insertCount +
+                        "\nОбновлённых результатов: " + updateCount +
+                        (notFoundList.Count != 0 ? "\nНе найдено соответсвий для:\n" + string.Join("\n", notFoundList.Select(s => string.Join(" ", s))) : ""), "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }

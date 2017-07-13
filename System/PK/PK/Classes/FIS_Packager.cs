@@ -124,23 +124,40 @@ namespace PK.Classes
 
                 uint levelID = SharedClasses.Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
 
+                EduSourcePlaces budgetPlaces;
+                EduSourcePlaces quotaPlaces;
+                if (isMasterCampaign)
+                {
+                    budgetPlaces = new EduSourcePlaces(
+                        (ushort)(admData.BudgetPlaces.O + admData.QuotaPlaces.O),
+                        (ushort)(admData.BudgetPlaces.OZ + admData.QuotaPlaces.OZ),
+                        (ushort)(admData.BudgetPlaces.Z + admData.QuotaPlaces.Z)
+                        );
+                    quotaPlaces = new EduSourcePlaces(0, 0, 0);
+                }
+                else
+                {
+                    budgetPlaces = admData.BudgetPlaces;
+                    quotaPlaces = admData.QuotaPlaces;
+                }
+
                 admissionVolumes.Add(new AVItem(
                     new TUID(admData.CampID.ToString() + admData.DirID.ToString()),
                     new TUID(admData.CampID),
                     levelID,
                     admData.DirID,
-                    admData.BudgetPlaces.O != 0 ? (ushort?)admData.BudgetPlaces.O : null,
-                    admData.BudgetPlaces.OZ != 0 ? (ushort?)admData.BudgetPlaces.OZ : null,
-                    admData.BudgetPlaces.Z != 0 ? (ushort?)admData.BudgetPlaces.Z : null,
+                    budgetPlaces.O != 0 ? (ushort?)budgetPlaces.O : null,
+                    budgetPlaces.OZ != 0 ? (ushort?)budgetPlaces.OZ : null,
+                    budgetPlaces.Z != 0 ? (ushort?)budgetPlaces.Z : null,
                     paidPlaces.O != 0 ? (ushort?)paidPlaces.O : null,
                     paidPlaces.OZ != 0 ? (ushort?)paidPlaces.OZ : null,
                     paidPlaces.Z != 0 ? (ushort?)paidPlaces.Z : null,
                     targetPlaces.O != 0 ? (ushort?)targetPlaces.O : null,
                     targetPlaces.OZ != 0 ? (ushort?)targetPlaces.OZ : null,
                     targetPlaces.Z != 0 ? (ushort?)targetPlaces.Z : null,
-                    admData.QuotaPlaces.O != 0 ? (ushort?)admData.QuotaPlaces.O : null,
-                    admData.QuotaPlaces.OZ != 0 ? (ushort?)admData.QuotaPlaces.OZ : null,
-                    admData.QuotaPlaces.Z != 0 ? (ushort?)admData.QuotaPlaces.Z : null
+                    quotaPlaces.O != 0 ? (ushort?)quotaPlaces.O : null,
+                    quotaPlaces.OZ != 0 ? (ushort?)quotaPlaces.OZ : null,
+                    quotaPlaces.Z != 0 ? (ushort?)quotaPlaces.Z : null
                     ));
 
                 foreach (CompetitiveGroupItem.Variants v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
@@ -149,7 +166,7 @@ namespace PK.Classes
                     ushort places;
 
                     ChooseFormAndSourceAndPlaces(
-                        v, admData.BudgetPlaces, paidPlaces, admData.QuotaPlaces, targetPlaces,
+                        v, budgetPlaces, paidPlaces, quotaPlaces, targetPlaces,
                         out eduForm, out eduSource, out places
                         );
 
@@ -289,6 +306,7 @@ namespace PK.Classes
 
             IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
+            bool isMasterCampaign = new DB_Helper(connection).IsMasterCampaign(campaignID);
             foreach (var appl in applicationsBD)
             {
                 var finSourceEduForms = connection.Select(
@@ -331,7 +349,7 @@ namespace PK.Classes
 
                 IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
 
-                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs);
+                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs, isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null);
 
                 List<ApplicationCommonBenefit> benefits = PackApplicationBenefits(
                     connection,
@@ -682,7 +700,7 @@ namespace PK.Classes
             }
         }
 
-        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs)
+        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs, System.DateTime? isMasterApplDate)
         {
             IdentityDocument identDoc = null;
             EduDocument eduDoc = null;
@@ -769,7 +787,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     new TDocumentSeries(doc.Series),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    isMasterApplDate.HasValue ? new TDate(isMasterApplDate.Value) : (doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null),
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     null,

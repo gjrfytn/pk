@@ -44,8 +44,11 @@ namespace PK.Forms
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
-                    ),
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("status",Relation.NOT_EQUAL,"withdrawn")
+                    }),
                 k1 => k1[0],
                 k2 => k2[1],
                 (s1, s2) => new
@@ -153,7 +156,7 @@ namespace PK.Forms
                         { "examination_id", _ExaminationID}
                     });
         }
-        
+
         private void dataGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
         {
             if (e.Column.Index == dataGridView_ApplID.Index)

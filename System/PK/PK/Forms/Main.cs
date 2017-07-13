@@ -415,6 +415,7 @@ namespace PK.Forms
                 _MasterCampaign = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
                 dgvApplications_Original.Visible = !_MasterCampaign;
                 dgvApplications_Entrances.HeaderText = _MasterCampaign ? "Маг. программы":"Направления";
+                menuStrip_CheckEgeMarks.Enabled = !_MasterCampaign;
 
                 UpdateApplicationsTable();
                 if (_UserRole != "registrator")
