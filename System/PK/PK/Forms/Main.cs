@@ -237,6 +237,12 @@ namespace PK.Forms
             System.Diagnostics.Process.Start(Classes.OutDocuments.ProfilesPlaces(_DB_Connection));
         }
 
+        private void menuStrip_HR_Department_Click(object sender, EventArgs e)
+        {
+            HR_DepartmentPrint form = new HR_DepartmentPrint(_DB_Connection);
+            form.ShowDialog();
+        }
+
         private void menuStrip_CheckEgeMarks_Click(object sender, EventArgs e)
         {
             EGE_Check form = new EGE_Check(_DB_Connection);

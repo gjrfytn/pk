@@ -194,6 +194,12 @@
     <Compile Include="Forms\FIS_Export.Designer.cs">
       <DependentUpon>FIS_Export.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\HR_DepartmentPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HR_DepartmentPrint.Designer.cs">
+      <DependentUpon>HR_DepartmentPrint.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\InstitutionAchievementsEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -372,6 +378,9 @@
     <EmbeddedResource Include="Forms\FIS_Export.resx">
       <DependentUpon>FIS_Export.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HR_DepartmentPrint.resx">
+      <DependentUpon>HR_DepartmentPrint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -482,6 +491,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DocumentTemplates\Act.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DocumentTemplates\ExamFill.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -528,11 +541,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="DocumentTemplates\ExamSheet.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DocumentTemplates\PercRecordBack.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\PercRecordBackM.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\AdmReceipt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="DocumentTemplates\PercRecordFace.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
