@@ -234,17 +234,22 @@ namespace SitePost
                         if ((bool)application[3])
                             abitur.SetElementValue("Hostel", 1);
                         if ((bool)application[5])
+                        {
                             abitur.SetElementValue("PP", 1);
+                            abitur.Element("Documents").SetElementValue("ReferralPK", 1);
+                        }
                         if ((bool)application[1])
                             abitur.SetElementValue("MCADO", 1);
                         if ((bool)application[2])
+                        {
                             abitur.SetElementValue("Chern", 1);
+                            abitur.Element("Documents").SetElementValue("ReferralPK", 1);
+                        }
 
                         SetMarks((uint)application[0], abitur, marks);
                         SetDocuments((uint)application[0], abitur, documents);
                         SetIA((uint)application[0], abitur);
-                        foreach (XElement appl in GetEntrances((uint)application[0]))
-                            abitur.Element("Applications").Add(appl);
+                        SetEntrances((uint)application[0], abitur);
 
                         if ((cbPost.Checked) && (rbDirectToDB.Checked))
                         {
@@ -446,15 +451,26 @@ namespace SitePost
                             });
                     if (medData.Count > 0 && medData[0][0].ToString() == DB_Helper.MedCertificate)
                         abitur.Element("Documents").SetElementValue("MedRef", 1);
+                    else if (medData.Count > 0)
+                        abitur.Element("Documents").SetElementValue("ReferralPK", 1);
                 }
                 else if (doc.Type == "olympic" || doc.Type == "olympic_total" || doc.Type == "ukraine_olympic" || doc.Type == "international_olympic")
+                {
                     abitur.SetElementValue("Olymp", 1);
+                    abitur.Element("Documents").SetElementValue("ReferralPK", 1);
+                }
                 else if (doc.Type == "photos")
                     abitur.Element("Documents").SetElementValue("Photo", 1);
                 else if (doc.Type == "orphan")
+                {
                     abitur.Element("Documents").SetElementValue("OrphanDocument", 1);
+                    abitur.Element("Documents").SetElementValue("ReferralPK", 1);
+                }
                 else if (doc.Type == "disability")
+                {
                     abitur.Element("Documents").SetElementValue("InvalidDocument", 1);
+                    abitur.Element("Documents").SetElementValue("ReferralPK", 1);
+                }
                 else if (doc.Type == "high_edu_diploma" || doc.Type == "school_certificate" || doc.Type == "middle_edu_diploma")
                 {
                     abitur.Element("Documents").SetElementValue("CertificateDiplomCopy", 1);
@@ -468,7 +484,7 @@ namespace SitePost
             }
         }
 
-        private List<XElement> GetEntrances(uint appID)
+        private void SetEntrances(uint appID, XElement abitur)
         {
             List<object[]> entrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "edu_form_id", "direction_id", "profile_short_name",
                         "is_agreed_date", "edu_source_id", "faculty_short_name" }, new List<Tuple<string, Relation, object>>
@@ -517,6 +533,7 @@ namespace SitePost
                     appl.Add(new XElement("Direction", (uint)entrance[1]));
                     appl.Add(new XElement("Profile", ""));
                     appl.Add(new XElement("Condition", 2));
+                    abitur.Element("Documents").SetElementValue("ReferralPK", 1);
                 }
                 else if ((uint)entrance[4] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ))
                 {
@@ -545,7 +562,8 @@ namespace SitePost
 
                 appls.Add(appl);
             }
-            return appls;
+            foreach (XElement appl in appls)
+                abitur.Element("Applications").Add(appl);
         }
 
         private void SetIA(uint appID, XElement abitur)
