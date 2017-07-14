@@ -903,9 +903,14 @@ namespace PK.Classes
 
             List<string[]> data = connection.Select(
                 DB_Table.CAMPAIGNS_DIRECTIONS_DATA,
-                new string[] { "direction_faculty", "direction_id" },
+                new string[] { "direction_faculty", "direction_id", "places_budget_o", "places_budget_oz", "places_quota_o", "places_quota_oz" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
-                ).GroupJoin(
+                ).Select(s => new
+                {
+                    Faculty = s[0].ToString(),
+                    Direction = (uint)s[1],
+                    Places = (ushort)s[2] + (ushort)s[3] + (ushort)s[4] + (ushort)s[5]
+                }).GroupJoin(
                 connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES,
                     new string[] { "faculty_short_name", "direction_id" },
@@ -913,23 +918,24 @@ namespace PK.Classes
                     {
                         new Tuple<string, Relation, object>("edu_source_id",Relation.NOT_EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP))
                     }),
-                k1 => Tuple.Create(k1[0], k1[1]),
-                k2 => Tuple.Create(k2[0], k2[1]),
+                k1 => Tuple.Create(k1.Faculty, k1.Direction),
+                k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
                 (e, g) => new
                 {
-                    Faculty = e[0].ToString(),
-                    Direction = (uint)e[1],
-                    ApplCount = g.Count()
+                    e.Faculty,
+                    e.Direction,
+                    ApplCount = g.Count(),
+                    e.Places
                 }).Where(s => s.ApplCount != 0).Join(
                 connection.Select(DB_Table.DICTIONARY_10_ITEMS, "id", "name"),
                 k1 => k1.Direction,
                 k2 => k2[0],
-                (s1, s2) => new { s1.Faculty, s1.Direction, Name = s2[1].ToString(), s1.ApplCount }
+                (s1, s2) => new { s1.Faculty, s1.Direction, s1.Places, Name = s2[1].ToString(), s1.ApplCount }
                 ).Join(
                 connection.Select(DB_Table.DIRECTIONS, "faculty_short_name", "direction_id", "short_name"),
                 k1 => Tuple.Create(k1.Faculty, k1.Direction),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
-                (s1, s2) => new string[] { s2[2].ToString(), s1.Name, s1.ApplCount.ToString() }
+                (s1, s2) => new string[] { s2[2].ToString(), s1.Name, s1.ApplCount.ToString(), s1.Places.ToString() }
                 ).ToList();
 
             string doc = Settings.TempPath + "directionsPlaces" + new Random().Next();
@@ -954,18 +960,24 @@ namespace PK.Classes
 
             List<string[]> data = connection.Select(
                 DB_Table.CAMPAIGNS_PROFILES_DATA,
-                new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
+                new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name", "places_paid_o", "places_paid_oz", "places_paid_z" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Settings.CurrentCampaignID) }
-                ).GroupJoin(
+                ).Select(s => new
+                {
+                    Faculty = s[0].ToString(),
+                    Direction = (uint)s[1],
+                    Profile = s[2].ToString(),
+                    Places = (ushort)s[3] + (ushort)s[4] + (ushort)s[5]
+                }).GroupJoin(
                 connection.Select(
                     DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id", "profile_short_name"),
-                k1 => Tuple.Create(k1[0], k1[1], k1[2]),
-                k2 => Tuple.Create(k2[0], k2[1], k2[2]),
-                (e, g) => new { ShortName = e[2].ToString(), ApplCount = g.Count() }).Join(
+                k1 => Tuple.Create(k1.Faculty, k1.Direction, k1.Profile),
+                k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1], k2[2].ToString()),
+                (e, g) => new { ShortName = e.Profile, ApplCount = g.Count(), e.Places }).Join(
                 connection.Select(DB_Table.PROFILES, "short_name", "name"),
                 k1 => k1.ShortName,
                 k2 => k2[0],
-                (s1, s2) => new string[] { s1.ShortName, s2[1].ToString(), s1.ApplCount.ToString() }
+                (s1, s2) => new string[] { s1.ShortName, s2[1].ToString(), s1.ApplCount.ToString(), s1.Places.ToString() }
                 ).ToList();
 
             string doc = Settings.TempPath + "profilesPlaces" + new Random().Next();

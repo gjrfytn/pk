@@ -36,6 +36,11 @@
                 <CaptionFontID>UsualBold</CaptionFontID>
                 <DataFontID>Usual</DataFontID>
               </Column>
+              <Column>
+                <Caption>Места</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
             </Structure>
           </Table>
         </Element>
