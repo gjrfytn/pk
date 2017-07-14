@@ -9,7 +9,7 @@ namespace PK.Forms
     partial class OrderRegistration : Form
     {
         [Flags]
-        private enum APPL_STATUS : byte
+        private enum APPL_STATUS : byte //TODO lowercase
         {
             NEW = 0x0,
             ADM_BUDGET = 0x1,
@@ -17,11 +17,30 @@ namespace PK.Forms
             ADM_BOTH = ADM_BUDGET | ADM_PAID,
         }
 
+        [Flags]
+        private enum EducationLevel : byte
+        {
+            NONE = 0x0,
+            BACHELOR = 0x1,
+            MASTER = 0x2,
+            BOTH = BACHELOR | MASTER
+        }
+
         private readonly Tuple<string, APPL_STATUS>[] _Statuses =            {
             Tuple.Create( "new" ,APPL_STATUS.NEW ),
             Tuple.Create(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
             Tuple.Create(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
             Tuple.Create(  "adm_both" ,APPL_STATUS.ADM_BOTH )
+        };
+
+        private readonly Tuple<Tuple<uint, bool, EducationLevel>, Tuple<uint, uint>>[] _RecordBooksRanges =
+            {
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.BACHELOR), Tuple.Create((uint)170001, (uint)171500)),
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.MASTER), Tuple.Create((uint)174001, (uint)174999)),
+            Tuple.Create(Tuple.Create((uint)11,true,EducationLevel.BOTH), Tuple.Create((uint)173001, (uint)173899)),
+            Tuple.Create(Tuple.Create((uint)12,false,EducationLevel.BACHELOR), Tuple.Create((uint)172001, (uint)172499)),
+            Tuple.Create(Tuple.Create((uint)12,true,EducationLevel.BACHELOR), Tuple.Create((uint)173901, (uint)173999)),
+            Tuple.Create(Tuple.Create((uint)10,true,EducationLevel.BOTH), Tuple.Create((uint)175001, (uint)175999))
         };
 
         private readonly DB_Connector _DB_Connection;
@@ -50,15 +69,18 @@ namespace PK.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
+            EducationLevel eduLevel = new DB_Helper(_DB_Connection).IsMasterCampaign(Classes.Settings.CurrentCampaignID) ? EducationLevel.MASTER : EducationLevel.BACHELOR; //TODO
+
             object[] buf = _DB_Connection.Select(
                 DB_Table.ORDERS,
-                new string[] { "type", "edu_source_id", "faculty_short_name" },
+                new string[] { "type", "edu_form_id", "edu_source_id", "faculty_short_name" },
                 new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("number", Relation.EQUAL, _Number) }
                 )[0];
 
             string type = buf[0].ToString();
-            uint eduSource = (uint)buf[1];
-            string faculty = buf[2].ToString();
+            uint eduForm = (uint)buf[1];
+            bool paid = (uint)buf[2] == 15; //TODO
+            string faculty = buf[3].ToString();
 
             var applications = _DB_Connection.Select(
                     DB_Table.ORDERS_HAS_APPLICATIONS,
@@ -74,15 +96,28 @@ namespace PK.Forms
                 if (type == "admission")
                 {
                     foreach (var appl in applications)
+                    {
+                        _DB_Connection.Update(
+                            DB_Table.ORDERS_HAS_APPLICATIONS,
+                            new Dictionary<string, object> { { "record_book_number", GetFreeRecordBookNumber(eduForm, paid, eduLevel) } },
+                            new Dictionary<string, object>
+                            {
+                                { "orders_number", _Number },
+                                { "applications_id", appl.ID }
+                            },
+                            transaction
+                            );
+
                         _DB_Connection.Update(
                             DB_Table.APPLICATIONS,
                             new Dictionary<string, object>
                             {
-                                { "status",_Statuses.Single(s1=>s1.Item2== (_Statuses.Single(s2=>s2.Item1==appl.Status).Item2|(eduSource==15?APPL_STATUS.ADM_PAID:APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
+                                { "status",_Statuses.Single(s1=>s1.Item2== (_Statuses.Single(s2=>s2.Item1==appl.Status).Item2|(paid?APPL_STATUS.ADM_PAID:APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
                             },
                             new Dictionary<string, object> { { "id", appl.ID } },
                             transaction
                             );
+                    }
                 }
                 else if (type == "exception")
                 {
@@ -91,7 +126,7 @@ namespace PK.Forms
                             DB_Table.APPLICATIONS,
                             new Dictionary<string, object>
                             {
-                                { "status", _Statuses.Single(s1 => s1.Item2 == (_Statuses.Single(s2 => s2.Item1 == appl.Status).Item2 & ~(eduSource == 15 ? APPL_STATUS.ADM_PAID : APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
+                                { "status", _Statuses.Single(s1 => s1.Item2 == (_Statuses.Single(s2 => s2.Item1 == appl.Status).Item2 & ~(paid ? APPL_STATUS.ADM_PAID : APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
                             },
                             new Dictionary<string, object> { { "id", appl.ID } },
                             transaction
@@ -161,6 +196,30 @@ namespace PK.Forms
                 MessageBox.Show("Превышено максимальное значение номера.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
+        }
+
+        private uint GetFreeRecordBookNumber(uint eduForm, bool paid, EducationLevel eduLevel)
+        {
+            var range = _RecordBooksRanges.Single(s => s.Item1.Item1 == eduForm && s.Item1.Item2 == paid && (s.Item1.Item3 & eduLevel) != EducationLevel.NONE).Item2;
+            var numbers = _DB_Connection.Select(
+                                 DB_Table.ORDERS_HAS_APPLICATIONS,
+                                 new string[] { "record_book_number" },
+                                 new List<Tuple<string, Relation, object>>
+                                 {
+                                    new Tuple<string, Relation, object>("record_book_number",Relation.GREATER_EQUAL,range.Item1),
+                                    new Tuple<string, Relation, object>("record_book_number",Relation.LESS_EQUAL,range.Item2)
+                                 }).Select(s => (uint)s[0]);
+
+            if (numbers.Any())
+            {
+                uint lastNumber = numbers.Max();
+                if (lastNumber == range.Item2)
+                    throw new InvalidOperationException("Превышение границы диапазона номеров зачётных книжек.");
+
+                return lastNumber + 1;
+            }
+            else
+                return range.Item1;
         }
     }
 }
