@@ -139,7 +139,7 @@ namespace PK.Forms
                         s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
                         s.Series == res.Series &&
                         s.Number == res.Number
-                        ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID));
+                        ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID)).Distinct();
 
                         if (applIDs.Count() == 0)
                             notFoundList.Add(new string[] { res.LastName, res.FirstName, res.MiddleName, res.Series, res.Number });
@@ -171,6 +171,18 @@ namespace PK.Forms
 
                                     savedResults.Remove(foundResult);
 
+                                    savedResults.Add(new EGE_Result(
+                                        applID,
+                                        res.Series,
+                                        res.Number,
+                                        res.LastName,
+                                        res.FirstName,
+                                        res.MiddleName,
+                                        res.Subject,
+                                        res.Value,
+                                        true
+                                        ));
+
                                     updateCount++;
                                 }
                             }
@@ -190,20 +202,20 @@ namespace PK.Forms
                                         { "checked", true }
                                     });
 
+                                savedResults.Add(new EGE_Result(
+                                    applID,
+                                    res.Series,
+                                    res.Number,
+                                    res.LastName,
+                                    res.FirstName,
+                                    res.MiddleName,
+                                    res.Subject,
+                                    res.Value,
+                                    true
+                                    ));
+
                                 insertCount++;
                             }
-
-                            savedResults.Add(new EGE_Result(
-                                applID,
-                                res.Series,
-                                res.Number,
-                                res.LastName,
-                                res.FirstName,
-                                res.MiddleName,
-                                res.Subject,
-                                res.Value,
-                                true
-                                ));
                         }
                     }
                 }

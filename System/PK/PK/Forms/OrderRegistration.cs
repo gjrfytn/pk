@@ -9,7 +9,7 @@ namespace PK.Forms
     partial class OrderRegistration : Form
     {
         [Flags]
-        private enum APPL_STATUS : byte //TODO lowercase
+        private enum ApplicationStatus : byte
         {
             NEW = 0x0,
             ADM_BUDGET = 0x1,
@@ -26,11 +26,11 @@ namespace PK.Forms
             BOTH = BACHELOR | MASTER
         }
 
-        private readonly Tuple<string, APPL_STATUS>[] _Statuses =            {
-            Tuple.Create( "new" ,APPL_STATUS.NEW ),
-            Tuple.Create(  "adm_budget" ,APPL_STATUS.ADM_BUDGET ),
-            Tuple.Create(  "adm_paid" ,APPL_STATUS.ADM_PAID ),
-            Tuple.Create(  "adm_both" ,APPL_STATUS.ADM_BOTH )
+        private readonly Tuple<string, ApplicationStatus>[] _Statuses =            {
+            Tuple.Create( "new" ,ApplicationStatus.NEW ),
+            Tuple.Create(  "adm_budget" ,ApplicationStatus.ADM_BUDGET ),
+            Tuple.Create(  "adm_paid" ,ApplicationStatus.ADM_PAID ),
+            Tuple.Create(  "adm_both" ,ApplicationStatus.ADM_BOTH )
         };
 
         private readonly Tuple<Tuple<uint, bool, EducationLevel>, Tuple<uint, uint>>[] _RecordBooksRanges =
@@ -112,7 +112,7 @@ namespace PK.Forms
                             DB_Table.APPLICATIONS,
                             new Dictionary<string, object>
                             {
-                                { "status",_Statuses.Single(s1=>s1.Item2== (_Statuses.Single(s2=>s2.Item1==appl.Status).Item2|(paid?APPL_STATUS.ADM_PAID:APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
+                                { "status",_Statuses.Single(s1=>s1.Item2== (_Statuses.Single(s2=>s2.Item1==appl.Status).Item2|(paid?ApplicationStatus.ADM_PAID:ApplicationStatus.ADM_BUDGET))).Item1 }//TODO !!!
                             },
                             new Dictionary<string, object> { { "id", appl.ID } },
                             transaction
@@ -126,7 +126,7 @@ namespace PK.Forms
                             DB_Table.APPLICATIONS,
                             new Dictionary<string, object>
                             {
-                                { "status", _Statuses.Single(s1 => s1.Item2 == (_Statuses.Single(s2 => s2.Item1 == appl.Status).Item2 & ~(paid ? APPL_STATUS.ADM_PAID : APPL_STATUS.ADM_BUDGET))).Item1 }//TODO !!!
+                                { "status", _Statuses.Single(s1 => s1.Item2 == (_Statuses.Single(s2 => s2.Item1 == appl.Status).Item2 & ~(paid ? ApplicationStatus.ADM_PAID : ApplicationStatus.ADM_BUDGET))).Item1 }//TODO !!!
                             },
                             new Dictionary<string, object> { { "id", appl.ID } },
                             transaction

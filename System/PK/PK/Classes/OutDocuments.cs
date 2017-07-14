@@ -800,7 +800,13 @@ namespace PK.Classes
                 }).GroupBy(k => k.RegTime.Date);
 
             var applDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
-                    connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date"),
+                    connection.Select(DB_Table.DOCUMENTS, "id", "type", "series", "number", "original_recieved_date").Where(s =>
+                   s[1].ToString() == "identity" ||
+                   s[1].ToString() == "school_certificate" ||
+                   s[1].ToString() == "middle_edu_diploma" ||
+                   s[1].ToString() == "high_edu_diploma" ||
+                   s[1].ToString() == "academic_diploma"
+                    ),
                 k1 => k1[1],
                 k2 => k2[0],
                 (s1, s2) => new
@@ -830,24 +836,24 @@ namespace PK.Classes
 
                     var eduDoc = applDocs.Single(d =>
                     d.ApplID == appl.ApplID &&
-                    (d.DocType == "academic_diploma" ||
-                    d.DocType == "school_certificate" ||
+                    (d.DocType == "school_certificate" ||
                     d.DocType == "middle_edu_diploma" ||
-                    d.DocType == "high_edu_diploma")
-                    );
+                    d.DocType == "high_edu_diploma" ||
+                    d.DocType == "academic_diploma"
+                    ));
 
                     string eduDocName;
                     switch (eduDoc.DocType)
                     {
-                        case "academic_diploma":
-                            eduDocName = eduDoc.Original.HasValue ? "Справка" : "Копия справки";
-                            break;
                         case "school_certificate":
                             eduDocName = eduDoc.Original.HasValue ? "Аттестат" : "Копия аттестата";
                             break;
                         case "middle_edu_diploma":
                         case "high_edu_diploma":
                             eduDocName = eduDoc.Original.HasValue ? "Диплом" : "Копия диплома";
+                            break;
+                        case "academic_diploma":
+                            eduDocName = eduDoc.Original.HasValue ? "Справка" : "Копия справки";
                             break;
                         default:
                             throw new Exception("Unreacheble reached.");
