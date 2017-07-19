@@ -606,6 +606,7 @@
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 2;
+            this.tbIDDocNumber.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
             // tbIDDocSeries
             // 
@@ -615,6 +616,7 @@
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 1;
+            this.tbIDDocSeries.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
             // label6
             // 
@@ -2175,7 +2177,7 @@
             this.dgvExams.Name = "dgvExams";
             this.dgvExams.RowHeadersVisible = false;
             this.dgvExams.Size = new System.Drawing.Size(606, 136);
-            this.dgvExams.TabIndex = 4;
+            this.dgvExams.TabIndex = 1;
             this.dgvExams.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvExams_CellValidating);
             this.dgvExams.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvExams_CellValueChanged);
             this.dgvExams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_DataError);
@@ -2273,7 +2275,7 @@
             this.cbCourses.Location = new System.Drawing.Point(852, 14);
             this.cbCourses.Name = "cbCourses";
             this.cbCourses.Size = new System.Drawing.Size(296, 20);
-            this.cbCourses.TabIndex = 28;
+            this.cbCourses.TabIndex = 1;
             this.cbCourses.Text = "Посещал подготовительные курсы МАДИ";
             this.cbCourses.UseVisualStyleBackColor = true;
             // 
@@ -2330,7 +2332,7 @@
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
             this.mtbEMail.Size = new System.Drawing.Size(191, 22);
-            this.mtbEMail.TabIndex = 4;
+            this.mtbEMail.TabIndex = 5;
             // 
             // label31
             // 
@@ -2369,7 +2371,7 @@
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
-            this.cbSpecialConditions.TabIndex = 1;
+            this.cbSpecialConditions.TabIndex = 2;
             this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
             this.cbSpecialConditions.UseVisualStyleBackColor = true;
             // 
@@ -2379,7 +2381,7 @@
             this.tbMobilePhone.MaxLength = 20;
             this.tbMobilePhone.Name = "tbMobilePhone";
             this.tbMobilePhone.Size = new System.Drawing.Size(184, 22);
-            this.tbMobilePhone.TabIndex = 9;
+            this.tbMobilePhone.TabIndex = 3;
             this.tbMobilePhone.Tag = "(495)123-4567";
             this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbMobilePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
@@ -2392,7 +2394,7 @@
             this.tbHomePhone.MaxLength = 20;
             this.tbHomePhone.Name = "tbHomePhone";
             this.tbHomePhone.Size = new System.Drawing.Size(182, 22);
-            this.tbHomePhone.TabIndex = 27;
+            this.tbHomePhone.TabIndex = 4;
             this.tbHomePhone.Tag = "(495)123-4567";
             this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbHomePhone.Enter += new System.EventHandler(this.tbPhone_Enter);

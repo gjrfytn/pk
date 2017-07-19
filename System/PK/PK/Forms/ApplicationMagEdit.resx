@@ -121,7 +121,7 @@
   <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMgAAAEgCAYAAADxODzFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABBdEVYdENvbW1lbnQAQ1JFQVRPUjogZ2QtanBlZyB2MS4w
+        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAABBdEVYdENvbW1lbnQAQ1JFQVRPUjogZ2QtanBlZyB2MS4w
         ICh1c2luZyBJSkcgSlBFRyB2ODApLCBxdWFsaXR5ID0gOTAKfVTa3QAA/1hJREFUeF5c/XePWEmSIHjG
         JzjgFriZ6e6qSkmtGQwyKINaaxlUQTKogiKotchkaq0zK1VladlV1T1dLaZ3ZzCzuMHh7p+9A/YL+drP
         PC0rcX88POXP3dy0mYs3cOHez9qBM++0HcdeayevftHGr/+k7Tn5Thu7/HU7dPbTdvzSV23Piffj/pu2
@@ -7607,6 +7607,15 @@
         SUVORK5CYII=
 </value>
   </data>
+  <metadata name="dgvExamsResults_ProgramName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dgvExamsResults_Exam.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dgvExamsResults_IA.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="dgvExamsResults_ProgramName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
