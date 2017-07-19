@@ -1996,7 +1996,7 @@ namespace PK.Forms
                     }
                 }
             }
-            UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, false, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
+            _DB_Helper.UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
                 "edu_source_dict_id", "edu_source_id" }, transaction);
 
             if (cbAgreed_budget_o.Checked)
