@@ -668,16 +668,16 @@ namespace PK.Classes
 
                 DB_Helper dbHelper = new DB_Helper(connection);
                 documents.Add(new DocumentCreator.DocumentParameters(
-                    Settings.DocumentsTemplatesPath + "AdmAgreement.xml",
+                    Settings.DocumentsTemplatesPath + "AdmAgreementM.xml",
                     null,
                     null,
                     new string[]
                     {
                         (applData.LastName + " " + applData.FirstName + " " + applData.MiddleName).ToUpper(),
-                        dbHelper.GetDirectionNameAndCode(agreedDir.Item2).Item1+" ("+dirShortName+")",
+                        DB_Queries.GetProfileName(connection,agreedDir.Item1,agreedDir.Item2,agreedDir.Item3).Split('|')[0]+" ("+agreedDir.Item3+")",
                         dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.Item4),
                         applID.ToString()+"м",
-                        ((mark.Exam!=-1?mark.Exam:0)+mark.Bonus+redDiplomaMark).ToString(),
+                        mark.Exam!=-1?(mark.Exam+mark.Bonus+redDiplomaMark).ToString():"",
                         applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
                         agreedDir.Item5.ToShortDateString()
                     },
