@@ -187,33 +187,48 @@ namespace PK.Forms
                         MessageBox.Show("Поле \"Email\" не заполнено");
                     else
                     {
-                        Cursor.Current = Cursors.WaitCursor;
-
-                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
-                        {
-                            uint applID;
-                            if (!_ApplicationID.HasValue)
-                                applID = SaveApplication(transaction);
-                            else
+                        bool applicationMissed = false;
+                        foreach (TabPage page in tcPrograms.TabPages)
+                            foreach (Control control in page.Controls)
                             {
-                                applID = _ApplicationID.Value;
-                                _EditingDateTime = DateTime.Now;
-                                UpdateApplication(transaction);
+                                CheckBox checkBox = control as CheckBox;
+                                if (checkBox != null && checkBox.Checked && !cbAgreed.Checked)
+                                {
+                                    MessageBox.Show("Не отмечено поле \"Заявление о согласии на зачисление\" в разделе \"Забираемые документы\".");
+                                    applicationMissed = true;
+                                    break;
+                                }
+                            }
+                        if (!applicationMissed)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+
+                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            {
+                                uint applID;
+                                if (!_ApplicationID.HasValue)
+                                    applID = SaveApplication(transaction);
+                                else
+                                {
+                                    applID = _ApplicationID.Value;
+                                    _EditingDateTime = DateTime.Now;
+                                    UpdateApplication(transaction);
+                                }
+
+                                transaction.Commit();
+
+                                if (!_ApplicationID.HasValue)
+                                    ChangeAgreedChBs(true);
+
+                                _ApplicationID = applID;
+                                btPrint.Enabled = true;
+                                btWithdraw.Enabled = true;
+                                dgvExamsResults.Rows.Clear();
+                                LoadExamsMarks();
                             }
 
-                            transaction.Commit();
-
-                            if (!_ApplicationID.HasValue)
-                                ChangeAgreedChBs(true);
-
-                            _ApplicationID = applID;
-                            btPrint.Enabled = true;
-                            btWithdraw.Enabled = true;
-                            dgvExamsResults.Rows.Clear();
-                            LoadExamsMarks();
+                            Cursor.Current = Cursors.Default;
                         }
-
-                        Cursor.Current = Cursors.Default;
                     }
                 }
             }
