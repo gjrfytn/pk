@@ -25,7 +25,7 @@
   <Document>
     <Word>
       <Properties>
-        <A5/>
+        <Format>A5</Format>
         <Album/>
         <Margins>
           <Left>20</Left>

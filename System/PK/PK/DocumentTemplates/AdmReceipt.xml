@@ -5,22 +5,22 @@
   <Fonts>
     <Font ID="Usual">
       <Name>Arial</Name>
-      <Size>24</Size>
+      <Size>16</Size>
     </Font>
     <Font ID="UsualBold">
       <Name>Arial</Name>
-      <Size>24</Size>
+      <Size>16</Size>
       <Style>Bold</Style>
     </Font>
     <Font ID="Large">
       <Name>Arial</Name>
-      <Size>28</Size>
+      <Size>18</Size>
     </Font>
   </Fonts>
   <Document>
     <Word>
       <Properties>
-        <A5/>
+        <Format>A6</Format>
         <Album/>
         <Borders/>
         <Margins>
@@ -40,9 +40,6 @@
               </Part>
             </Parts>
           </Paragraph>
-        </Element>
-        <Element>
-          <Paragraph/>
         </Element>
         <Element>
           <Paragraph/>
@@ -107,9 +104,6 @@
           <Paragraph/>
         </Element>
         <Element>
-          <Paragraph/>
-        </Element>
-        <Element>
           <Paragraph>
             <FontID>Usual</FontID>
             <Parts>
@@ -126,9 +120,6 @@
               </Part>
             </Parts>
           </Paragraph>
-        </Element>
-        <Element>
-          <Paragraph/>
         </Element>
         <Element>
           <Paragraph/>
