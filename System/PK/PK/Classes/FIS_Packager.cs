@@ -390,7 +390,7 @@ namespace PK.Classes
                         null,
                         packedDocs.IdentityDocument.MiddleName,
                         packedDocs.IdentityDocument.GenderID,
-                        k.Item1
+                        !string.IsNullOrWhiteSpace(k.Item1) ? k.Item1 : null   
                         )).ToList();
 
                 if (otherIdentityDocs.Count == 0)
@@ -416,7 +416,7 @@ namespace PK.Classes
                     );
 
                 applications.Add(new Application(
-                    new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
+                    ComposeApplicationUID(campaignID, appl.ID),
                     campaignID.ToString() + "_" + appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
@@ -488,7 +488,7 @@ namespace PK.Classes
                         new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("orders_number", Relation.EQUAL, order.Number) }
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
                             new TUID(order.Number),
                             1,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource)
@@ -528,7 +528,7 @@ namespace PK.Classes
                         (s1, s2) => s2
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
                             new TUID(order.Number),
                             2,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource),
@@ -547,6 +547,11 @@ namespace PK.Classes
         private static TUID ComposeCompGroupUID(uint campID, uint dirID, /*uint level,*/ uint eduForm, uint eduSource)
         {
             return new TUID(campID.ToString() + dirID.ToString() + /*level.ToString() + */eduForm.ToString() + eduSource.ToString());
+        }
+
+        private static TUID ComposeApplicationUID(uint campaignID, uint applID)
+        {
+            return new TUID(campaignID.ToString() + "_" + applID.ToString());
         }
 
         private static EduSourcePlaces GetPaidPlaces(DB_Connector connection, uint campaignID, uint directionID)

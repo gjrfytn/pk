@@ -152,6 +152,7 @@
             this.Controls.Add(this.rbDate);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = global::PK.Properties.Resources.logo;
+            this.MaximizeBox = false;
             this.Name = "HR_DepartmentPrint";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Печатные формы отдела кадров";

@@ -35,11 +35,11 @@ namespace PK.Forms
 
         private readonly Tuple<Tuple<uint, bool, EducationLevel>, Tuple<uint, uint>>[] _RecordBooksRanges =
             {
-            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.BACHELOR), Tuple.Create((uint)170001, (uint)171500)),
-            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.MASTER), Tuple.Create((uint)174001, (uint)174999)),
-            Tuple.Create(Tuple.Create((uint)11,true,EducationLevel.BOTH), Tuple.Create((uint)173001, (uint)173899)),
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.BACHELOR), Tuple.Create((uint)170001, (uint)171999)),
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.MASTER), Tuple.Create((uint)177001, (uint)177999)),
+            Tuple.Create(Tuple.Create((uint)11,true,EducationLevel.BOTH), Tuple.Create((uint)173001, (uint)174999)),
             Tuple.Create(Tuple.Create((uint)12,false,EducationLevel.BACHELOR), Tuple.Create((uint)172001, (uint)172499)),
-            Tuple.Create(Tuple.Create((uint)12,true,EducationLevel.BACHELOR), Tuple.Create((uint)173901, (uint)173999)),
+            Tuple.Create(Tuple.Create((uint)12,true,EducationLevel.BACHELOR), Tuple.Create((uint)176001, (uint)176499)),
             Tuple.Create(Tuple.Create((uint)10,true,EducationLevel.BOTH), Tuple.Create((uint)175001, (uint)175999))
         };
 

@@ -1079,7 +1079,7 @@ namespace PK.Classes
                     order.Faculty,
                     dirNameCode.Item2,
                     dirNameCode.Item1,
-                    order.Master?"Магистерская программа: " :(order.Profile != null ? "Профиль: " : ""),
+                    order.Master?"Магистерская программа: " :(order.Profile != null ? (dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
                     order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(connection,order.Faculty,order.Direction.Value,order.Profile).Split('|')[0] : ""
                 });
             }
