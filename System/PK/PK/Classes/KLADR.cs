@@ -291,7 +291,8 @@ namespace PK.Classes
             string index = null;
             string regCode, distrCode, townCode;
             List<string> settlementsCodes;
-            MySqlCommand cmd;
+            MySqlCommand cmd = new MySqlCommand("", _Connection);
+            cmd.CommandTimeout = 60;
             if (GetCodes(region, district, town, settlement, out regCode, out distrCode, out townCode, out settlementsCodes))
             {
                 string streetCode = null;
@@ -310,15 +311,12 @@ namespace PK.Classes
                     if (house != "")
                         foreach (string code in settlementsCodes)
                         {
-                            cmd = new MySqlCommand(
-                             "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND name REGEXP '.*[[:<:]]" + house + "[[:>:]].*' AND " +
+                            cmd.CommandText = "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND name REGEXP '.*[[:<:]]" + house + "[[:>:]].*' AND " +
                              _RawRegionCode + " = '" + regCode + "' AND " +
                              _RawDistrictCode + " = '" + distrCode + "' AND " +
                              _RawTownCode + " = '" + townCode + "' AND " +
                              _RawSettlementCode + " = '" + code + "' AND " +
-                             _RawStreetCode + " = '" + streetCode + "';",
-                             _Connection
-                             );
+                             _RawStreetCode + " = '" + streetCode + "';";
 
                             index = SelectOneString(cmd); //TODO //Считаем, что запрос возвращает одну строку.
                             if (index != null)//TODO
@@ -327,15 +325,12 @@ namespace PK.Classes
 
                     foreach (string code in settlementsCodes)
                     {
-                        cmd = new MySqlCommand(
-                         "SELECT `index` FROM streets WHERE `index` IS NOT NULL AND " +
+                        cmd.CommandText = "SELECT `index` FROM streets WHERE `index` IS NOT NULL AND " +
                          _RawRegionCode + " = '" + regCode + "' AND " +
                          _RawDistrictCode + " = '" + distrCode + "' AND " +
                          _RawTownCode + " = '" + townCode + "' AND " +
                          _RawSettlementCode + " = '" + code + "' AND " +
-                         _RawStreetCode + " = '" + streetCode + "';",
-                         _Connection
-                         );
+                         _RawStreetCode + " = '" + streetCode + "';";
 
                         index = SelectOneString(cmd);
                         if (index != null)//TODO
@@ -347,15 +342,12 @@ namespace PK.Classes
             if (settlementsCodes.Count != 0)
                 foreach (string code in settlementsCodes)
                 {
-                    cmd = new MySqlCommand(
-                     "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
+                    cmd.CommandText = "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
                      _WhereSettlement + " AND " +
                      _RawRegionCode + " = '" + regCode + "' AND " +
                      _RawDistrictCode + " = '" + distrCode + "' AND " +
                      _RawTownCode + " = '" + townCode + "' AND " +
-                     _RawSettlementCode + " = '" + code + "';",
-                     _Connection
-                     );
+                     _RawSettlementCode + " = '" + code + "';";
 
                     index = SelectOneString(cmd);
                     if (index != null)//TODO
@@ -364,14 +356,11 @@ namespace PK.Classes
 
             if (townCode != null)
             {
-                cmd = new MySqlCommand(
-                    "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
+                cmd.CommandText = "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
                     _WhereTown + " AND " +
                     _RawRegionCode + " = '" + regCode + "' AND " +
                     _RawDistrictCode + " = '" + distrCode + "' AND " +
-                    _RawTownCode + " = '" + townCode + "';",
-                    _Connection
-                    );
+                    _RawTownCode + " = '" + townCode + "';";
 
                 index = SelectOneString(cmd);
                 if (index != null)//TODO
@@ -380,13 +369,10 @@ namespace PK.Classes
 
             if (distrCode != null)
             {
-                cmd = new MySqlCommand(
-                    "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
+                cmd.CommandText = "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
                     _WhereDistrict + " AND " +
                     _RawRegionCode + " = '" + regCode + "' AND " +
-                    _RawDistrictCode + " = '" + distrCode + "';",
-                    _Connection
-                    );
+                    _RawDistrictCode + " = '" + distrCode + "';";
 
                 index = SelectOneString(cmd);
                 if (index != null)//TODO
@@ -395,12 +381,9 @@ namespace PK.Classes
 
             if (regCode != null)
             {
-                cmd = new MySqlCommand(
-                    "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
+                cmd.CommandText = "SELECT `index` FROM subjects WHERE `index` IS NOT NULL AND " +
                     _WhereRegion + " AND " +
-                    _RawRegionCode + " = '" + regCode + "';",
-                    _Connection
-                    );
+                    _RawRegionCode + " = '" + regCode + "';";
 
                 index = SelectOneString(cmd);
             }
