@@ -79,7 +79,7 @@ namespace PK.Forms
                 dataGridView_Sum.Visible = true;
                 dataGridView_Exam.Visible = true;
                 dataGridView_IndAch.Visible = true;
-                dataGridView_Honors.Visible = true;
+                //dataGridView_Honors.Visible = true;
 
                 lFDP.Text = "Программа:";
             }
@@ -581,25 +581,33 @@ namespace PK.Forms
                             new Tuple<string, Relation, object>("mark",Relation.NOT_EQUAL,-1)
                         });
 
+                    //var table = candidates.Join(
+                    //    marks,
+                    //    k1 => k1.EntrID,
+                    //    k2 => k2[0],
+                    //    (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
+                    //    ).GroupJoin(
+                    //    _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, "application_id", "institution_achievement_id").Join(
+                    //        _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value"),
+                    //        k1 => k1[1],
+                    //        k2 => k2[0],
+                    //        (s1, s2) => new { ApplID = (uint)s1[0], Value = (ushort)s2[1] }
+                    //        ),
+                    //    k1 => k1.ApplID,
+                    //    k2 => k2.ApplID,
+                    //    (s1, s2) => new { s1.ApplID, s1.Name, s1.Mark, s1.Bonus, IndAch = s2.Any() ? s2.Max(s => s.Value) : 0 }
+                    //    );
+
                     var table = candidates.Join(
                         marks,
                         k1 => k1.EntrID,
                         k2 => k2[0],
                         (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
-                        ).GroupJoin(
-                        _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, "application_id", "institution_achievement_id").Join(
-                            _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value"),
-                            k1 => k1[1],
-                            k2 => k2[0],
-                            (s1, s2) => new { ApplID = (uint)s1[0], Value = (ushort)s2[1] }
-                            ),
-                        k1 => k1.ApplID,
-                        k2 => k2.ApplID,
-                        (s1, s2) => new { s1.ApplID, s1.Name, s1.Mark, s1.Bonus, IndAch = s2.Any() ? s2.Max(s => s.Value) : 0 }
                         );
 
                     foreach (var appl in table)
-                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.IndAch + appl.Bonus, appl.Mark, appl.IndAch, appl.Bonus);
+                        //dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.IndAch + appl.Bonus, appl.Mark, appl.IndAch, appl.Bonus);
+                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.Bonus, appl.Mark, appl.Bonus);
                 }
             }
             else
