@@ -117,7 +117,7 @@ namespace PK.Forms
                         });
                     bool spo = false;
                     foreach (object[] eduLevel in campaidnEduLevels)
-                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                        if (DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
                             spo = true;
                     if(spo)
                         form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
@@ -285,7 +285,7 @@ namespace PK.Forms
                         });
                     bool spo = false;
                     foreach (object[] eduLevel in campaidnEduLevels)
-                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                        if (DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
                             spo = true;
                     if(spo)
                         form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);

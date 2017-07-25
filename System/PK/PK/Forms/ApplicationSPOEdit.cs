@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class ApplicationSPOEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly Classes.KLADR _KLADR;
 
         private uint? _ApplicationID;
@@ -40,14 +41,14 @@ namespace PK.Forms
         private bool _StreetNeedsReload;
         private bool _HouseNeedsReload;
 
-        public ApplicationSPOEdit(Classes.DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
+        public ApplicationSPOEdit(DB_Connector connection, uint campaignID, string registratorsLogin, uint? applicationId)
         {
             _DB_Connection = connection;
             _RegistratorLogin = registratorsLogin;
 
             InitializeComponent();
 
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
             _KLADR = new Classes.KLADR(connection.User, connection.Password);
             _CurrCampainID = Classes.Settings.CurrentCampaignID;
             _ApplicationID = applicationId;
@@ -76,11 +77,11 @@ namespace PK.Forms
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && (string.IsNullOrWhiteSpace(tbLastName.Text)
+            if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && (string.IsNullOrWhiteSpace(tbLastName.Text)
                 || string.IsNullOrWhiteSpace(tbFirstName.Text) || string.IsNullOrWhiteSpace(tbIDDocSeries.Text) || string.IsNullOrWhiteSpace(tbIDDocNumber.Text)
                 || string.IsNullOrWhiteSpace(tbPlaceOfBirth.Text) || string.IsNullOrWhiteSpace(cbRegion.Text) || string.IsNullOrWhiteSpace(tbPostcode.Text)))
                 MessageBox.Show("Обязательные поля в разделе \"Из паспорта\" не заполнены.");
-            else if (cbIDDocType.SelectedItem.ToString() == Classes.DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
+            else if (cbIDDocType.SelectedItem.ToString() == DB_Helper.PassportName && !mtbSubdivisionCode.MaskFull)
                 MessageBox.Show("Код подразделения в разделе \"Из паспорта\" не заполнен.");
             else if ((rbDiploma.Checked || rbCertificate.Checked && (int)cbGraduationYear.SelectedItem < 2014)
                 && (string.IsNullOrWhiteSpace(tbEduDocSeries.Text) || string.IsNullOrWhiteSpace(tbEduDocNumber.Text)))
@@ -93,7 +94,7 @@ namespace PK.Forms
             {
                     bool dateOk = true;
                     if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
-                        && !Classes.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                        && !SharedClasses.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
                         dateOk = false;
                     if (dateOk)
                     {
@@ -124,7 +125,7 @@ namespace PK.Forms
                                         MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
                                         break;
                                     }
-                                    else if (Classes.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                    else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
                                         passportOK = true;
                                 }
                         }
@@ -504,7 +505,7 @@ namespace PK.Forms
             _DB_Connection.Insert(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new Dictionary<string, object>
             {
                 { "document_id", spravkaID },
-                { "name", Classes.DB_Helper.MedCertificate }
+                { "name", DB_Helper.MedCertificate }
             }, transaction);
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
             {
@@ -646,7 +647,7 @@ namespace PK.Forms
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     });
-                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                    if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == DB_Helper.MedCertificate)
                         cbMedCertificate.Checked = true;
                 }
             }
@@ -751,7 +752,7 @@ namespace PK.Forms
                             {
                                 new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                             });
-                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == Classes.DB_Helper.MedCertificate)
+                        if (spravkaData.Count > 0 && spravkaData[0][0].ToString() == DB_Helper.MedCertificate)
                         {
                             certificateFound = true;
                             if (!cbMedCertificate.Checked)

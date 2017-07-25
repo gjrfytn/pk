@@ -281,8 +281,8 @@ namespace PK.Forms
                 label7.Visible = true;
                 label8.Visible = true;
 
-                dgvPaidPlaces.Location = new Point(0, 860);
-                label9.Location = new Point(405, 844);
+                dgvPaidPlaces.Location = new System.Drawing.Point(0, 860);
+                label9.Location = new System.Drawing.Point(405, 844);
             }
             else
             {
@@ -297,8 +297,8 @@ namespace PK.Forms
                 label8.Visible = false;
                 label10.Visible = false;
 
-                dgvPaidPlaces.Location = new Point(0, 342);
-                label9.Location = new Point(466, 326);
+                dgvPaidPlaces.Location = new System.Drawing.Point(0, 342);
+                label9.Location = new System.Drawing.Point(466, 326);
             }
         }
 
@@ -593,27 +593,27 @@ namespace PK.Forms
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelB) } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelB) } }, transaction);
 
             if (cbEduLevelMag.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM) } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelM) } }, transaction);
 
             if (cbEduLevelSpec.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelS) } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelS) } }, transaction);
             if (cbEduLevelSPO.Checked)
                 _DB_Connection.Insert(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new Dictionary<string, object>
                 {
                     { "campaigns_id", _CampaignId},
                     { "dictionaries_items_dictionary_id", (uint)FIS_Dictionary.EDU_LEVEL},
-                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelSPO) } }, transaction);
+                    { "dictionaries_items_item_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelSPO) } }, transaction);
         }
 
         private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
@@ -757,16 +757,16 @@ namespace PK.Forms
 
                 switch (itemName)
                 {
-                    case Classes.DB_Helper.EduLevelB:
+                    case DB_Helper.EduLevelB:
                         cbEduLevelBacc.Checked = true;
                         break;
-                    case Classes.DB_Helper.EduLevelM:
+                    case DB_Helper.EduLevelM:
                         cbEduLevelMag.Checked = true;
                         break;
-                    case Classes.DB_Helper.EduLevelS:
+                    case DB_Helper.EduLevelS:
                         cbEduLevelSpec.Checked = true;
                         break;
-                    case Classes.DB_Helper.EduLevelSPO:
+                    case DB_Helper.EduLevelSPO:
                         cbEduLevelSPO.Checked = true;
                         break;
                 }
@@ -907,16 +907,16 @@ namespace PK.Forms
             List<uint> eduLevelsList = new List<uint>();
 
             if (cbEduLevelBacc.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelB));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelB));
 
             if (cbEduLevelMag.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelM));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelM));
 
             if (cbEduLevelSpec.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelS));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelS));
 
             if (cbEduLevelSPO.Checked)
-                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, Classes.DB_Helper.EduLevelSPO));
+                eduLevelsList.Add(_DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_LEVEL, DB_Helper.EduLevelSPO));
 
             List<object[]> oldList = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[]
             { "dictionaries_items_item_id", }, new List<Tuple<string, Relation, object>>
