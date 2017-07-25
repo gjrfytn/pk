@@ -85,6 +85,15 @@ namespace PK.Forms
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                string[] subjects = new string[]
+                {
+                    DB_Helper.SubjectMath,
+                    DB_Helper.SubjectRus,
+                    DB_Helper.SubjectPhis,
+                    DB_Helper.SubjectObsh,
+                    DB_Helper.SubjectForen
+                };
+
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<string[]> lines = new List<string[]>();
@@ -94,7 +103,7 @@ namespace PK.Forms
                         lines.Add(reader.ReadLine().Split('%'));
                 }
 
-                var importedResults = lines.Where(s => s[5] != "" && s[5] != "Сочинение").Select(s =>
+                var importedResults = lines.Where(s => subjects.Contains(s[5])).Select(s =>
                 {
                     if (s[5] != "Русский язык" && s[5].Contains(" язык"))
                         s[5] = "Иностранный язык";
