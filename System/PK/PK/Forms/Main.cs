@@ -108,7 +108,22 @@ namespace PK.Forms
                 if (_MasterCampaign)
                     form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
                 else
-                    form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                {
+                    List<object[]> campaidnEduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
+                        });
+                    bool spo = false;
+                    foreach (object[] eduLevel in campaidnEduLevels)
+                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                            spo = true;
+                    if(spo)
+                        form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                    else
+                        form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                }
 
                 form.ShowDialog();
                 UpdateApplicationsTable();
@@ -250,31 +265,37 @@ namespace PK.Forms
         }
 
         private void dgvApplications_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            _SelectedAppID = (uint)(int)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
-
-            if (Classes.Settings.CurrentCampaignID == 0)
+        {			
+			if (Classes.Settings.CurrentCampaignID == 0)
                 MessageBox.Show("Не выбрана текущая кампания. Перейдите в Главное меню -> Приемная кампания -> Приемные кампании.");
             else
             {
-                if (!(bool)_DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "master_appl" }, new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, _SelectedAppID)
-                })[0][0])
-                {
-                    StopTableAutoUpdating();
-                    ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
-                    form.ShowDialog();
-                }
+				_SelectedAppID = (uint)(int)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
+				StopTableAutoUpdating();
+				Form form;
+                if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                    form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                 else
                 {
-                    StopTableAutoUpdating();
-                    ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
-                    form.ShowDialog();
+                    List<object[]> campaidnEduLevels = _DB_Connection.Select(DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS, new string[] { "dictionaries_items_item_id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                            new Tuple<string, Relation, object>("dictionaries_items_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.EDU_LEVEL)
+                        });
+                    bool spo = false;
+                    foreach (object[] eduLevel in campaidnEduLevels)
+                        if (Classes.DB_Helper.EduLevelSPO == _DB_Helper.GetDictionaryItemName(FIS_Dictionary.EDU_LEVEL, (uint)eduLevel[0]))
+                            spo = true;
+                    if(spo)
+                        form = new ApplicationSPOEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
+                    else
+                        form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                 }
+                form.ShowDialog();
                 UpdateApplicationsTable();
                 timer.Start();
-            }
+			}
         }
 
         private void dgvApplications_CellClick(object sender, DataGridViewCellEventArgs e)

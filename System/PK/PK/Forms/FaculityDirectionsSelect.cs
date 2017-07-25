@@ -25,6 +25,8 @@ namespace PK.Forms
                     dgvDirections_.Rows.Add(v[0], false, v[1], v[2], "Магистратура");
                 else if (v[2].ToString().Substring(3, 2) == "05")
                     dgvDirections_.Rows.Add(v[0], false, v[1], v[2], "Специалитет");
+                else if (v[2].ToString().Substring(3, 2) == "02")
+                    dgvDirections_.Rows.Add(v[0], false, v[1], v[2], "СПО");
             }
 
             foreach (object[] v in _DB_Connection.Select(DB_Table.DIRECTIONS,

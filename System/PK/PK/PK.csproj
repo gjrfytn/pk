@@ -242,6 +242,11 @@
     <Compile Include="Forms\Orders.Designer.cs">
       <DependentUpon>Orders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ApplicationSPOEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApplicationSPOEdit.Designer.cs">
+      <DependentUpon>ApplicationSPOEdit.cs</DependentUpon>
     <Compile Include="Forms\Statistics.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -402,6 +407,8 @@
     <EmbeddedResource Include="Forms\Orders.resx">
       <DependentUpon>Orders.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ApplicationSPOEdit.resx">
+      <DependentUpon>ApplicationSPOEdit.cs</DependentUpon>
     <EmbeddedResource Include="Forms\Statistics.resx">
       <DependentUpon>Statistics.cs</DependentUpon>
     </EmbeddedResource>
