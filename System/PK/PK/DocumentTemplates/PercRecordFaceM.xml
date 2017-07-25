@@ -32,7 +32,7 @@
   <Document>
     <Word>
       <Properties>
-        <A5/>
+        <Format>A5</Format>
         <Album/>
         <Margins>
           <Left>35</Left>

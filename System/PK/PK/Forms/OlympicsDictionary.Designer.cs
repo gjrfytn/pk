@@ -42,14 +42,11 @@
             this.gbSubjects = new System.Windows.Forms.GroupBox();
             this.lbSubjects = new System.Windows.Forms.ListBox();
             this.panel = new System.Windows.Forms.Panel();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_Update = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOlympics)).BeginInit();
             this.gbProfiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProfiles)).BeginInit();
             this.gbSubjects.SuspendLayout();
             this.panel.SuspendLayout();
-            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvOlympics
@@ -201,25 +198,6 @@
             this.panel.Size = new System.Drawing.Size(210, 454);
             this.panel.TabIndex = 3;
             // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStrip_Update});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(884, 25);
-            this.toolStrip.TabIndex = 3;
-            this.toolStrip.Text = "toolStrip1";
-            // 
-            // toolStrip_Update
-            // 
-            this.toolStrip_Update.Image = global::PK.Properties.Resources.refresh;
-            this.toolStrip_Update.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStrip_Update.Name = "toolStrip_Update";
-            this.toolStrip_Update.Size = new System.Drawing.Size(81, 22);
-            this.toolStrip_Update.Text = "Обновить";
-            this.toolStrip_Update.Click += new System.EventHandler(this.toolStrip_Update_Click);
-            // 
             // OlympicsDictionary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,18 +205,16 @@
             this.ClientSize = new System.Drawing.Size(884, 479);
             this.Controls.Add(this.dgvOlympics);
             this.Controls.Add(this.panel);
-            this.Controls.Add(this.toolStrip);
             this.Icon = global::PK.Properties.Resources.logo;
             this.Name = "OlympicsDictionary";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Олимпиады (справочник №19 ФИС)";
+            this.Controls.SetChildIndex(this.panel, 0);
+            this.Controls.SetChildIndex(this.dgvOlympics, 0);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOlympics)).EndInit();
             this.gbProfiles.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProfiles)).EndInit();
             this.gbSubjects.ResumeLayout(false);
             this.panel.ResumeLayout(false);
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,8 +228,6 @@
         private System.Windows.Forms.GroupBox gbSubjects;
         private System.Windows.Forms.ListBox lbSubjects;
         private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.ToolStrip toolStrip;
-        private System.Windows.Forms.ToolStripButton toolStrip_Update;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_Dict_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvProfiles_Name;

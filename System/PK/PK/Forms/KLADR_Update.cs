@@ -46,7 +46,7 @@ namespace PK.Forms
                 return;
             }
 
-            if (!Classes.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
+            if (!SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Рекомендуется создать резервную копию БД КЛАДР. Продолжить?", "Внимание"))
                 return;
 
             foreach (Button b in System.Linq.Enumerable.OfType<Button>(Controls))
@@ -75,67 +75,9 @@ namespace PK.Forms
                 cmd.ExecuteNonQuery();
 
                 uint total = 0;
-                uint count = 0;
-                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbSubjects.Text))
-                {
-                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка субъектов..."));
-
-                    while (reader.ReadRow())
-                    {
-                        cmd.CommandText = "INSERT INTO subjects (name, socr, code, `index`) VALUES ('" +
-                            reader.Value("NAME").ToString().Trim() + "', '" +
-                            reader.Value("SOCR").ToString().Trim() + "', '" +
-                            reader.Value("CODE").ToString() + "', " +
-                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                        cmd.ExecuteNonQuery();
-
-                        count++;
-
-                        backgroundWorker.ReportProgress((int)count);
-                    }
-                }
-                total += count;
-
-                count = 0;
-                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbStreets.Text))
-                {
-                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка улиц..."));
-
-                    while (reader.ReadRow())
-                    {
-                        cmd.CommandText = "INSERT INTO streets (name, socr, code, `index`) VALUES ('" +
-                            reader.Value("NAME").ToString().Trim() + "', '" +
-                            reader.Value("SOCR").ToString().Trim() + "', '" +
-                            reader.Value("CODE").ToString() + "', " +
-                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                        cmd.ExecuteNonQuery();
-
-                        count++;
-
-                        backgroundWorker.ReportProgress((int)count);
-                    }
-                }
-                total += count;
-
-                count = 0;
-                using (Classes.DBF_Reader reader = new Classes.DBF_Reader(tbHouses.Text))
-                {
-                    backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, "Загрузка домов..."));
-
-                    while (reader.ReadRow())
-                    {
-                        cmd.CommandText = "INSERT INTO houses (name, code, `index`) VALUES ('" +
-                            reader.Value("NAME").ToString().Trim() + "', '" +
-                            reader.Value("CODE").ToString() + "', " +
-                            (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
-                        cmd.ExecuteNonQuery();
-
-                        count++;
-
-                        backgroundWorker.ReportProgress((int)count);
-                    }
-                }
-                total += count;
+                total += LoadFileToTable(cmd, tbSubjects.Text, "subjects", true, "Загрузка субъектов...");
+                total += LoadFileToTable(cmd, tbStreets.Text, "streets", true, "Загрузка улиц...");
+                total += LoadFileToTable(cmd, tbHouses.Text, "houses", false, "Загрузка домов...");
 
                 transaction.Commit();
 
@@ -178,6 +120,31 @@ namespace PK.Forms
                 MessageBox.Show("Невозможно закрыть форму во время обновления.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
+        }
+
+        private uint LoadFileToTable(MySqlCommand cmd, string dbfFile, string table, bool hasSocr, string message)
+        {
+            uint count = 0;
+            using (Classes.DBF_Reader reader = new Classes.DBF_Reader(dbfFile))
+            {
+                backgroundWorker.ReportProgress(0, new Tuple<int, string>((int)reader.RowCount, message));
+
+                while (reader.ReadRow())
+                {
+                    cmd.CommandText = "INSERT INTO " + table + " (name, " + (hasSocr ? "socr, " : "") + "code, `index`) VALUES ('" +
+                        reader.Value("NAME").ToString().Trim() + "', '" +
+                        (hasSocr ? reader.Value("SOCR").ToString().Trim() + "', '" : "") +
+                        reader.Value("CODE").ToString() + "', " +
+                        (reader.Value("INDEX").ToString() != "" ? ("'" + reader.Value("INDEX").ToString() + "'") : "NULL") + ");";
+                    cmd.ExecuteNonQuery();
+
+                    count++;
+
+                    backgroundWorker.ReportProgress((int)count);
+                }
+            }
+
+            return count;
         }
     }
 }

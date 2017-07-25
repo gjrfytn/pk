@@ -35,7 +35,7 @@ namespace PK.Classes
                 { "Window",AutoFit.Window}
             };
 
-            public static DocX CreateFromTemplate(DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
+            public static DocX CreateFromTemplate(SharedClasses.DB.DB_Connector connection, Dictionary<string, Font> fonts, XElement wordTemplateElement, uint id, string resultFile)
             {
                 return Create(fonts, wordTemplateElement, connection, id, null, null, resultFile);
             }
@@ -45,7 +45,7 @@ namespace PK.Classes
                 return Create(fonts, wordTemplateElement, null, null, singleParams, tableParams, resultFile);
             }
 
-            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, DB_Connector connection, uint? id, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
+            private static DocX Create(Dictionary<string, Font> fonts, XElement wordTemplateElement, SharedClasses.DB.DB_Connector connection, uint? id, string[] singleParams, IEnumerable<string[]>[] tableParams, string resultFile)
             {
                 DocX doc = DocX.Create(resultFile + ".docx");
 
@@ -65,7 +65,7 @@ namespace PK.Classes
                             doc,
                             element.Element("Table"),
                             fonts,
-                            connection != null ? connection.CallProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], id)
+                            connection != null ? connection.CallProcedure(_PH_Table[element.Element("Table").Element("Placeholder").Value], new Dictionary<string, object> { { "id", id } })
                                 .ConvertAll(row => System.Array.ConvertAll(row, c => c.ToString()))
                                 : tableParams[int.Parse(element.Element("Table").Element("Placeholder").Value)]
                             );
@@ -109,22 +109,37 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     );
             }
 
-            private static void ApplyProperties(DocX doc, XElement properties, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void ApplyProperties(DocX doc, XElement properties, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (properties.Element("Borders") != null)
                     AddBorders(doc);
 
-                if (properties.Element("A5") != null)
+                if (properties.Element("Format") != null)
                 {
+                    float width, height;
+                    switch (properties.Element("Format").Value)
+                    {
+                        case "A5":
+                            width = 419.5f;
+                            height = 595.2f;
+                            break;
+                        case "A6":
+                            width = 297.6f;
+                            height = 419.5f;
+                            break;
+                        default:
+                            throw new System.Exception("Unreachable reached.");
+                    }
+
                     if (doc.PageLayout.Orientation == Orientation.Portrait)
                     {
-                        doc.PageWidth = 419.5f;
-                        doc.PageHeight = 595.2f;
+                        doc.PageWidth = width;
+                        doc.PageHeight = height;
                     }
                     else
                     {
-                        doc.PageHeight = 419.5f;
-                        doc.PageWidth = 595.2f;
+                        doc.PageHeight = width;
+                        doc.PageWidth = height;
                     }
                 }
 
@@ -174,7 +189,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 }
             }
 
-            private static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void MakeParagraph(XElement parElem, Paragraph paragraph, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 if (parElem.Element("Alighment") != null)
                     paragraph.Alignment = _Alignments[parElem.Element("Alighment").Value];
@@ -317,7 +332,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                         table.SetColumnWidth(i, colWidths[i]);
                 }
 
-                byte count = 1;
+                uint count = 1;
                 foreach (object[] row in rows)
                 {
                     table.InsertRow();
@@ -366,7 +381,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 return table;
             }
 
-            private static void MakeFixedTable(Table table, XElement tableEl, Dictionary<string, Font> fonts, DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
+            private static void MakeFixedTable(Table table, XElement tableEl, Dictionary<string, Font> fonts, SharedClasses.DB.DB_Connector connection, uint? id, ref string placeholderGroup, string[] singleParams)
             {
                 MakeBorders(table, tableEl.Element("Borders"));
 

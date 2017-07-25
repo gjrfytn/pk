@@ -25,7 +25,7 @@
   <Document>
     <Word>
       <Properties>
-        <A5/>
+        <Format>A5</Format>
         <Album/>
         <Margins>
           <Left>20</Left>
@@ -124,7 +124,7 @@
                   </Merge>
                   <Merge>
                     <StartColumn>1</StartColumn>
-                    <EndColumn>2</EndColumn>
+                    <EndColumn>3</EndColumn>
                   </Merge>
                 </Merges>
                 <Cells>
@@ -156,6 +156,21 @@
                       </Paragraph>
                     </Paragraphs>
                   </Cell>
+                  <Cell Column="1">
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>22</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
                 </Cells>
               </Row>
               <Row>
@@ -167,7 +182,7 @@
                   </Merge>
                   <Merge>
                     <StartColumn>1</StartColumn>
-                    <EndColumn>2</EndColumn>
+                    <EndColumn>3</EndColumn>
                   </Merge>
                 </Merges>
                 <Cells>
@@ -208,13 +223,19 @@
                         <Size>5</Size>
                       </Bottom>
                     </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>Usual</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>23</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
                   </Cell>
                 </Cells>
               </Row>
@@ -790,7 +811,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>22</Placeholder>
+                              <Placeholder>24</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -804,7 +825,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>23</Placeholder>
+                              <Placeholder>25</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -818,7 +839,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>24</Placeholder>
+                              <Placeholder>26</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -832,7 +853,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>25</Placeholder>
+                              <Placeholder>27</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -883,7 +904,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>26</Placeholder>
+                              <Placeholder>28</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -897,7 +918,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>27</Placeholder>
+                              <Placeholder>29</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -911,7 +932,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>28</Placeholder>
+                              <Placeholder>30</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -925,7 +946,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>29</Placeholder>
+                              <Placeholder>31</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -977,7 +998,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>30</Placeholder>
+                              <Placeholder>32</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -991,7 +1012,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>31</Placeholder>
+                              <Placeholder>33</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1005,7 +1026,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>32</Placeholder>
+                              <Placeholder>34</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1019,7 +1040,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>33</Placeholder>
+                              <Placeholder>35</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1070,7 +1091,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>34</Placeholder>
+                              <Placeholder>36</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1084,7 +1105,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>35</Placeholder>
+                              <Placeholder>37</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1098,7 +1119,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>36</Placeholder>
+                              <Placeholder>38</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1112,7 +1133,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>37</Placeholder>
+                              <Placeholder>39</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1166,7 +1187,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>38</Placeholder>
+                              <Placeholder>40</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1185,7 +1206,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>39</Placeholder>
+                              <Placeholder>41</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1204,7 +1225,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>40</Placeholder>
+                              <Placeholder>42</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -1223,7 +1244,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>41</Placeholder>
+                              <Placeholder>43</Placeholder>
                             </Text>
                           </Part>
                         </Parts>

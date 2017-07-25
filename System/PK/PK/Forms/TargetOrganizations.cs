@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class TargetOrganizations : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public TargetOrganizations(Classes.DB_Connector connection)
+        public TargetOrganizations(DB_Connector connection)
         {
             InitializeComponent();
 
@@ -48,7 +49,7 @@ namespace PK.Forms
         {
             if (dgvTargetOrganizations.SelectedRows.Count == 0)
                 MessageBox.Show("Выберите строку");
-            else if (Classes.Utility.ShowChoiceMessageBox("Удалить выбранную организацию?", "Удаление организации"))
+            else if (SharedClasses.Utility.ShowChoiceMessageBox("Удалить выбранную организацию?", "Удаление организации"))
             {
                 try
                 {
@@ -66,7 +67,7 @@ namespace PK.Forms
                         });
                         if (appEntrances.Count > 0)
                             MessageBox.Show("С данной целевой организацией связано заявление. Удаление невозможно.");
-                        else if (Classes.Utility.ShowChoiceMessageWithConfirmation("Целевая организация включена в кампанию. Выполнить удаление?", "Связь с кампанией"))
+                        else if (SharedClasses.Utility.ShowChoiceMessageWithConfirmation("Целевая организация включена в кампанию. Выполнить удаление?", "Связь с кампанией"))
                         {
                             using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
                             {

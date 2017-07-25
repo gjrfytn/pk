@@ -2,16 +2,17 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class ExaminationEdit : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
         private readonly uint? _ID;
 
-        public ExaminationEdit(Classes.DB_Connector connection, uint? id)
+        public ExaminationEdit(DB_Connector connection, uint? id)
         {
             _DB_Connection = connection;
             _ID = id;
@@ -21,7 +22,7 @@ namespace PK.Forms
 
             dataGridView_Capacity.ValueType = typeof(ushort);
 
-            Tuple<uint, uint> curCampStartEnd = Classes.DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Settings.CurrentCampaignID);
+            Tuple<uint, uint> curCampStartEnd = DB_Queries.GetCampaignStartEnd(_DB_Connection, Classes.Settings.CurrentCampaignID);
 
             dtpDate.MinDate = new DateTime((int)curCampStartEnd.Item1, 1, 1);
             dtpDate.MaxDate = new DateTime((int)curCampStartEnd.Item2, 12, 31);
@@ -32,9 +33,15 @@ namespace PK.Forms
 
             foreach (DateTimePicker dtp in Controls.OfType<DateTimePicker>())
                 dtp.Tag = _ID.HasValue;
+
+            if (_ID.HasValue)
+            {
+                dtpRegStartDate.Enabled = !DB_Queries.ExaminationHasMarks(_DB_Connection, _ID.Value);
+                dtpRegEndDate.Enabled = !DB_Queries.ExaminationHasMarks(_DB_Connection, _ID.Value);
+            }
             #endregion
 
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
 
@@ -111,7 +118,7 @@ namespace PK.Forms
 
             Cursor.Current = Cursors.Default;
 
-            Classes.Utility.ShowChangesSavedMessage();
+            SharedClasses.Utility.ShowChangesSavedMessage();
             DialogResult = DialogResult.OK;
         }
 
@@ -175,7 +182,7 @@ namespace PK.Forms
                     }
                 }
 
-            if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !Classes.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))
+            if (Controls.OfType<DateTimePicker>().Any(s => !(bool)s.Tag) && !SharedClasses.Utility.ShowChoiceMessageBox("Одно из полей даты не менялось. Продолжить сохранение?", "Предупреждение"))
                 return false;
 
             return true;

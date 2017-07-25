@@ -29,6 +29,12 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStrip_New = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Delete = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Register = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
             this.dataGridView_Number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -37,12 +43,7 @@
             this.dataGridView_EduForm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Direction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridView_Profile = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStrip_New = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Edit = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Delete = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Register = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip_Print = new System.Windows.Forms.ToolStripButton();
+            this.dataGridView_Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +63,8 @@
             this.dataGridView_EduSource,
             this.dataGridView_EduForm,
             this.dataGridView_Direction,
-            this.dataGridView_Profile});
+            this.dataGridView_Profile,
+            this.dataGridView_Count});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 25);
             this.dataGridView.MultiSelect = false;
@@ -74,63 +76,6 @@
             this.dataGridView.TabIndex = 1;
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
-            // 
-            // dataGridView_Number
-            // 
-            this.dataGridView_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_Number.HeaderText = "Номер";
-            this.dataGridView_Number.Name = "dataGridView_Number";
-            this.dataGridView_Number.ReadOnly = true;
-            this.dataGridView_Number.Width = 80;
-            // 
-            // dataGridView_Type
-            // 
-            this.dataGridView_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_Type.HeaderText = "Тип";
-            this.dataGridView_Type.Name = "dataGridView_Type";
-            this.dataGridView_Type.ReadOnly = true;
-            // 
-            // dataGridView_Date
-            // 
-            this.dataGridView_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_Date.HeaderText = "Дата";
-            this.dataGridView_Date.Name = "dataGridView_Date";
-            this.dataGridView_Date.ReadOnly = true;
-            this.dataGridView_Date.Width = 60;
-            // 
-            // dataGridView_ProtNumber
-            // 
-            this.dataGridView_ProtNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_ProtNumber.HeaderText = "Номер протокола";
-            this.dataGridView_ProtNumber.Name = "dataGridView_ProtNumber";
-            this.dataGridView_ProtNumber.ReadOnly = true;
-            this.dataGridView_ProtNumber.Width = 65;
-            // 
-            // dataGridView_EduSource
-            // 
-            this.dataGridView_EduSource.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_EduSource.HeaderText = "Основание";
-            this.dataGridView_EduSource.Name = "dataGridView_EduSource";
-            this.dataGridView_EduSource.ReadOnly = true;
-            // 
-            // dataGridView_EduForm
-            // 
-            this.dataGridView_EduForm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridView_EduForm.HeaderText = "Форма обучения";
-            this.dataGridView_EduForm.Name = "dataGridView_EduForm";
-            this.dataGridView_EduForm.ReadOnly = true;
-            // 
-            // dataGridView_Direction
-            // 
-            this.dataGridView_Direction.HeaderText = "Направление";
-            this.dataGridView_Direction.Name = "dataGridView_Direction";
-            this.dataGridView_Direction.ReadOnly = true;
-            // 
-            // dataGridView_Profile
-            // 
-            this.dataGridView_Profile.HeaderText = "Профиль";
-            this.dataGridView_Profile.Name = "dataGridView_Profile";
-            this.dataGridView_Profile.ReadOnly = true;
             // 
             // toolStrip
             // 
@@ -191,6 +136,71 @@
             this.toolStrip_Print.Text = "Печать";
             this.toolStrip_Print.Click += new System.EventHandler(this.toolStrip_Print_Click);
             // 
+            // dataGridView_Number
+            // 
+            this.dataGridView_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_Number.HeaderText = "Номер";
+            this.dataGridView_Number.Name = "dataGridView_Number";
+            this.dataGridView_Number.ReadOnly = true;
+            this.dataGridView_Number.Width = 80;
+            // 
+            // dataGridView_Type
+            // 
+            this.dataGridView_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_Type.HeaderText = "Тип";
+            this.dataGridView_Type.Name = "dataGridView_Type";
+            this.dataGridView_Type.ReadOnly = true;
+            // 
+            // dataGridView_Date
+            // 
+            this.dataGridView_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_Date.HeaderText = "Дата";
+            this.dataGridView_Date.Name = "dataGridView_Date";
+            this.dataGridView_Date.ReadOnly = true;
+            this.dataGridView_Date.Width = 60;
+            // 
+            // dataGridView_ProtNumber
+            // 
+            this.dataGridView_ProtNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_ProtNumber.HeaderText = "Номер протокола";
+            this.dataGridView_ProtNumber.Name = "dataGridView_ProtNumber";
+            this.dataGridView_ProtNumber.ReadOnly = true;
+            this.dataGridView_ProtNumber.Width = 65;
+            // 
+            // dataGridView_EduSource
+            // 
+            this.dataGridView_EduSource.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_EduSource.HeaderText = "Основание";
+            this.dataGridView_EduSource.Name = "dataGridView_EduSource";
+            this.dataGridView_EduSource.ReadOnly = true;
+            // 
+            // dataGridView_EduForm
+            // 
+            this.dataGridView_EduForm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_EduForm.HeaderText = "Форма обучения";
+            this.dataGridView_EduForm.Name = "dataGridView_EduForm";
+            this.dataGridView_EduForm.ReadOnly = true;
+            // 
+            // dataGridView_Direction
+            // 
+            this.dataGridView_Direction.HeaderText = "Направление";
+            this.dataGridView_Direction.Name = "dataGridView_Direction";
+            this.dataGridView_Direction.ReadOnly = true;
+            // 
+            // dataGridView_Profile
+            // 
+            this.dataGridView_Profile.HeaderText = "Профиль";
+            this.dataGridView_Profile.Name = "dataGridView_Profile";
+            this.dataGridView_Profile.ReadOnly = true;
+            // 
+            // dataGridView_Count
+            // 
+            this.dataGridView_Count.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridView_Count.HeaderText = "Заявл.";
+            this.dataGridView_Count.Name = "dataGridView_Count";
+            this.dataGridView_Count.ReadOnly = true;
+            this.dataGridView_Count.Width = 45;
+            // 
             // Orders
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,5 +237,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_EduForm;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Direction;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Profile;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridView_Count;
     }
 }

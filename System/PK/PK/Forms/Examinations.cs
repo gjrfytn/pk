@@ -2,20 +2,21 @@
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Examinations : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
         private uint SelectedExamID
         {
             get { return (uint)dataGridView.SelectedRows[0].Cells[dataGridView_ID.Index].Value; }
         }
 
-        public Examinations(Classes.DB_Connector connection)
+        public Examinations(DB_Connector connection)
         {
             #region Components
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace PK.Forms
             #endregion
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             UpdateTable();
         }
@@ -39,12 +40,12 @@ namespace PK.Forms
 
         private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (ExaminationHasMarks((uint)e.Row.Cells[dataGridView_ID.Index].Value))
+            if (DB_Queries.ExaminationHasMarks(_DB_Connection, (uint)e.Row.Cells[dataGridView_ID.Index].Value))
             {
                 MessageBox.Show("Невозможно удалить экзамен с распределёнными абитуриентами. Сначала очистите список оценок.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
             }
-            else if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            else if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", e.Row.Cells[dataGridView_ID.Index].Value } });
             else
                 e.Cancel = true;
@@ -66,7 +67,7 @@ namespace PK.Forms
 
         private void toolStrip_Delete_Click(object sender, EventArgs e)
         {
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.EXAMINATIONS, new Dictionary<string, object> { { "id", SelectedExamID } });
                 UpdateTable();
@@ -75,40 +76,35 @@ namespace PK.Forms
 
         private void toolStrip_Distribute_Click(object sender, EventArgs e)
         {
-            if (ExaminationHasMarks(SelectedExamID))
+            if (DB_Queries.ExaminationHasMarks(_DB_Connection, SelectedExamID))
                 MessageBox.Show("В экзамен уже включены абитуриенты. При повторном распределении они не будут удалены.");
 
             Cursor.Current = Cursors.WaitCursor;
 
             var applications = _DB_Connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "registration_time" },
+                new string[] { "id", "registration_time", "entrant_id" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true)
-                }
-                ).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
-               (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
-                ).Select(s => (uint)s[0]);
+                    new Tuple<string, Relation, object>("passing_examinations",Relation.EQUAL, true),
+                    new Tuple<string, Relation, object>("status",Relation.EQUAL,"new")
+                }).Where(a => (DateTime)a[1] >= (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegStartDate.Index].Value &&
+                (DateTime)a[1] < (DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_RegEndDate.Index].Value + new TimeSpan(1, 0, 0, 0)
+                ).Select(s => new { ApplID = (uint)s[0], EntrID = (uint)s[2] });
 
             uint subjectID = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, dataGridView.SelectedRows[0].Cells[dataGridView_Subject.Index].Value.ToString());
 
-            var alreadyPassedAppls = _DB_Connection.Select(
-                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                new string[] { "entrant_id", "examination_id" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("mark", Relation.NOT_EQUAL, -1) }
-                ).Join(
-                _DB_Connection.Select(
-                    DB_Table.EXAMINATIONS,
-                    new string[] { "id", "date" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("subject_id", Relation.EQUAL, subjectID) }
-                    ).Where(s => ((DateTime)s[1]).Year == ((DateTime)dataGridView.SelectedRows[0].Cells[dataGridView_Date.Index].Value).Year),
-                k1 => k1[1],
-                k2 => k2[0],
-                (s1, s2) => (uint)s1[0]
-                );
+            IEnumerable<uint> excludedAppls = DB_Queries.GetMarks(
+                _DB_Connection,
+                applications.Select(s => s.ApplID),
+                Classes.Settings.CurrentCampaignID
+                ).Where(s =>
+                s.FromExamDate.HasValue &&
+                (s.SubjID == subjectID ||
+                s.Value < _DB_Helper.GetMinMark(s.SubjID)
+                )).Select(s => s.ApplID);
 
-            applications = applications.Except(alreadyPassedAppls);
+            applications = applications.Where(s => !excludedAppls.Contains(s.ApplID));
 
             var applsDirections = _DB_Connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
@@ -133,7 +129,7 @@ namespace PK.Forms
 
             applications = applications.Join(
                  applsSubjects,
-                 k1 => k1,
+                 k1 => k1.ApplID,
                  k2 => k2,
                  (s1, s2) => s1
                  );
@@ -147,8 +143,8 @@ namespace PK.Forms
             var entrantsIDs = _DB_Connection.Select(DB_Table.ENTRANTS, "id").Join(
                 applications,
                 en => en[0],
-                a => a,
-                (s1, s2) => s1[0]
+                a => a.EntrID,
+                (s1, s2) => s2.EntrID
               ).Distinct();//TODO Нужно?
 
             foreach (object entrID in entrantsIDs)
@@ -185,7 +181,7 @@ namespace PK.Forms
             dataGridView.Rows.Clear();
 
             Dictionary<uint, string> subjects = _DB_Helper.GetDictionaryItems(FIS_Dictionary.SUBJECTS);
-            foreach (Classes.DB_Queries.Exam exam in Classes.DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
+            foreach (DB_Queries.Exam exam in DB_Queries.GetCampaignExams(_DB_Connection, Classes.Settings.CurrentCampaignID))
                 dataGridView.Rows.Add(
                     exam.ID,
                     subjects[exam.SubjID],
@@ -207,24 +203,13 @@ namespace PK.Forms
             }
             else
             {
-                bool hasMarks = ExaminationHasMarks(SelectedExamID);
-                toolStrip_Edit.Enabled = !hasMarks;
+                bool hasMarks = DB_Queries.ExaminationHasMarks(_DB_Connection, SelectedExamID);
+                toolStrip_Edit.Enabled = true;
                 toolStrip_Delete.Enabled = !hasMarks;
                 toolStrip_Distribute.Enabled = true;
                 toolStrip_Marks.Enabled = hasMarks;
                 toolStrip_Print.Enabled = hasMarks;
             }
-        }
-
-        private bool ExaminationHasMarks(uint id)
-        {
-            return _DB_Connection.Select(
-                     DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
-                     new string[] { "entrant_id" },
-                     new List<Tuple<string, Relation, object>>
-                     {
-                        new Tuple<string, Relation, object> ("examination_id",Relation.EQUAL, id)
-                     }).Count != 0;
         }
     }
 }

@@ -52,27 +52,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PK\Classes\DB_Connector.cs">
-      <Link>DB_Connector.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\Classes\DB_Helper.cs">
-      <Link>DB_Helper.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\Classes\DB_Queries.cs">
-      <Link>DB_Queries.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\DB_TableEnum.cs">
-      <Link>DB_TableEnum.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\FIS_DictionaryEnum.cs">
-      <Link>FIS_DictionaryEnum.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\FIS_Olympic_TEMP.cs">
-      <Link>FIS_Olympic_TEMP.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\RelationEnum.cs">
-      <Link>RelationEnum.cs</Link>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +89,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedClasses\SharedClasses.csproj">
+      <Project>{1700dad0-594e-4512-87ce-0d6f149e6eef}</Project>
+      <Name>SharedClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

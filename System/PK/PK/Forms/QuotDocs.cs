@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class QuotDocs : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
         public Forms.ApplicationEdit.QDoc _Document;
 
-        public QuotDocs(Classes.DB_Connector connection, Forms.ApplicationEdit.QDoc loadedDocument)
+        public QuotDocs(DB_Connector connection, Forms.ApplicationEdit.QDoc loadedDocument)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+            DB_Helper dbHelper = new DB_Helper(_DB_Connection);
             
 
             cbCause.SelectedIndex = 0;

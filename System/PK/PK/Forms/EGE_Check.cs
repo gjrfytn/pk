@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -9,82 +10,39 @@ namespace PK.Forms
     {
         class EGE_Result
         {
-            public readonly uint DocID;
+            public readonly uint ApplID;
             public readonly string Series;
             public readonly string Number;
             public readonly string LastName;
             public readonly string FirstName;
             public readonly string MiddleName;
-            public readonly IEnumerable<uint> Subjects;
+            public readonly uint SubjectID;
+            public readonly ushort Value;
+            public readonly bool Checked;
 
-            public EGE_Result(uint docID, string series, string number, string lastName, string firstName, string middleName, IEnumerable<uint> subjects)
+            public EGE_Result(uint applID, string series, string number, string lastName, string firstName, string middleName, uint subjectID, ushort value, bool checked_)
             {
-                DocID = docID;
+                ApplID = applID;
                 Series = series;
                 Number = number;
                 LastName = lastName;
                 FirstName = firstName;
                 MiddleName = middleName;
-                Subjects = subjects;
+                SubjectID = subjectID;
+                Value = value;
+                Checked = checked_;
             }
         }
 
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly IEnumerable<EGE_Result> _ApplsEgeResults;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
-        public EGE_Check(Classes.DB_Connector connection)
+        public EGE_Check(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-
-            var applications = connection.Select(
-                    DB_Table.APPLICATIONS,
-                    new string[] { "id,entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
-                    ).Join(
-                    connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
-                    k1 => k1[1],
-                    k2 => k2[0],
-                    (s1, s2) => new { ApplID = (uint)s1[0], LastN = s2[1].ToString(), FirstN = s2[2].ToString(), MiddleN = s2[3].ToString(), }
-                    );
-
-            var egeDocs = connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS).Join(
-                connection.Select(
-                    DB_Table.DOCUMENTS,
-                    new string[] { "id", "series", "number" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("type", Relation.EQUAL, "ege") }
-                    ),
-                k1 => k1[1],
-                k2 => k2[0],
-                (s1, s2) => new { ApplID = (uint)s1[0], DocID = (uint)s2[0], Series = s2[1].ToString(), Number = s2[2].ToString() }
-                );
-
-            var marks = connection.Select(
-                DB_Table.APPLICATIONS_EGE_MARKS_VIEW,
-                new string[] { "applications_id", "subject_id" },
-                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("checked", Relation.EQUAL, false) }
-                ).Select(s => new { ApplID = (uint)s[0], Subject = (uint)s[1] });
-
-            _ApplsEgeResults = applications.Join(
-                egeDocs,
-                k1 => k1.ApplID,
-                k2 => k2.ApplID,
-                (s1, s2) => new { s1, s2.DocID, s2.Series, s2.Number }
-                ).GroupJoin(
-                marks,
-                k1 => k1.s1.ApplID,
-                k2 => k2.ApplID,
-                (s1, s2) => new EGE_Result
-                (
-                    s1.DocID,
-                    s1.Series,
-                    s1.Number,
-                    s1.s1.LastN,
-                    s1.s1.FirstN,
-                    s1.s1.MiddleN,
-                    s2.Select(s => s.Subject)
-                ));
+            _DB_Helper = new DB_Helper(_DB_Connection);
         }
 
         private void bExport_Click(object sender, EventArgs e)
@@ -93,10 +51,30 @@ namespace PK.Forms
             {
                 Cursor.Current = Cursors.WaitCursor;
 
+                var identities = DB_Queries.GetDocuments(
+                    _DB_Connection,
+                    _DB_Connection.Select(
+                        DB_Table.APPLICATIONS,
+                    new string[] { "id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
+                    ).Select(s => (uint)s[0])).Where(s => s.Type == "identity").Join(
+                    _DB_Connection.Select(
+                        DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                        new string[] { "document_id", "last_name", "first_name", "middle_name" },
+                        new List<Tuple<string, Relation, object>>
+                        {
+                            new Tuple<string, Relation, object>("type_id",Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,DB_Helper.PassportName))
+                        }),
+                    k1 => k1.ID,
+                    k2 => k2[0],
+                    (s1, s2) => Tuple.Create(s2[1].ToString(), s2[2].ToString(), s2[3] as string, s1.Series, s1.Number));
+
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName, false, System.Text.Encoding.GetEncoding(1251)))
                 {
-                    foreach (EGE_Result appl in _ApplsEgeResults)
-                        writer.WriteLine(appl.LastName + "%" + appl.FirstName + "%" + appl.MiddleName + "%" + appl.Series + "%" + appl.Number);
+                    foreach (var appl in GetEgeResults().Select(s =>
+                    Tuple.Create(s.LastName, s.FirstName, s.MiddleName, s.Series, s.Number)
+                    ).Concat(identities).Distinct())
+                        writer.WriteLine(appl.Item1 + "%" + appl.Item2 + "%" + appl.Item3 + "%" + appl.Item4 + "%" + appl.Item5);
                 }
 
                 Cursor.Current = Cursors.Default;
@@ -107,6 +85,15 @@ namespace PK.Forms
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                string[] subjects = new string[]
+                {
+                    DB_Helper.SubjectMath,
+                    DB_Helper.SubjectRus,
+                    DB_Helper.SubjectPhis,
+                    DB_Helper.SubjectObsh,
+                    DB_Helper.SubjectForen
+                };
+
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<string[]> lines = new List<string[]>();
@@ -116,49 +103,171 @@ namespace PK.Forms
                         lines.Add(reader.ReadLine().Split('%'));
                 }
 
-                foreach (EGE_Result appl in _ApplsEgeResults)
+                var importedResults = lines.Where(s => subjects.Contains(s[5])).Select(s =>
                 {
-                    Classes.DB_Helper dbHelper = new Classes.DB_Helper(_DB_Connection);
+                    if (s[5] != "Русский язык" && s[5].Contains(" язык"))
+                        s[5] = "Иностранный язык";
 
-                    var applResults = lines.Where(
-                        s => s[0] == appl.LastName && s[1] == appl.FirstName && s[2] == appl.MiddleName && s[3] == appl.Series && s[4] == appl.Number
-                        ).Where(s => s[5] != "" && s[5] != "Сочинение").Select(s =>
-                        {
-                            if (s[5] != "Русский язык" && s[5].Contains(" язык"))
-                                s[5] = "Иностранный язык";
-
-                            return new
-                            {
-                                Subject = dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, s[5]),
-                                Value = s[6],
-                                Year = s[7]
-                            };
-                        });
-
-                    var subjects = applResults.GroupBy(
-                        k => k.Subject,
-                        el => new { el.Value, el.Year },
-                        (k, g) => new { Subject = k, Results = g.OrderBy(s => s.Value) }
-                        );
-
-                    foreach (var subj in subjects)
+                    return new
                     {
-                        _DB_Connection.InsertOnDuplicateUpdate(
-                            DB_Table.DOCUMENTS_SUBJECTS_DATA,
-                            new Dictionary<string, object>
+                        LastName = s[0],
+                        FirstName = s[1],
+                        MiddleName = s[2],
+                        Series = s[3],
+                        Number = s[4],
+                        Subject = _DB_Helper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, s[5]),
+                        Value = ushort.Parse(s[6]),
+                        Year = ushort.Parse(s[7])
+                    };
+                });
+
+                uint insertCount = 0;
+                uint updateCount = 0;
+                List<string[]> notFoundList = new List<string[]>();
+
+                List<EGE_Result> savedResults = GetEgeResults().ToList();
+                var identities = _DB_Connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id").Join(
+                    _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "series", "number"),
+                    k1 => k1[1],
+                    k2 => k2[0],
+                    (s1, s2) => new
+                    {
+                        ApplID = (uint)s1[0],
+                        Series = s2[1] as string,
+                        Number = s2[2].ToString()
+                    });
+
+                try
+                {
+                    foreach (var res in importedResults)
+                    {
+                        //Стоит ли проверять имена вообще?
+                        IEnumerable<uint> applIDs = savedResults.Where(s =>
+                        s.LastName.Equals(res.LastName, StringComparison.OrdinalIgnoreCase) &&
+                        s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                        s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                        s.Series == res.Series &&
+                        s.Number == res.Number
+                        ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID)).Distinct();
+
+                        if (applIDs.Count() == 0)
+                            notFoundList.Add(new string[] { res.LastName, res.FirstName, res.MiddleName, res.Series, res.Number });
+
+                        foreach (uint applID in applIDs)
+                        {
+                            EGE_Result foundResult = savedResults.SingleOrDefault(s => s.ApplID == applID && s.SubjectID == res.Subject);
+
+                            if (foundResult != null)
                             {
-                                { "document_id", appl.DocID },
-                                { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
-                                { "subject_id", subj.Subject },
-                                { "value", subj.Results.Last().Value},
-                                { "year", subj.Results.Last().Year },
-                                { "checked",true }
-                            });
+                                if (!foundResult.Checked || foundResult.Value < res.Value)
+                                {
+                                    _DB_Connection.Update(
+                                        DB_Table.APPLICATION_EGE_RESULTS,
+                                        new Dictionary<string, object>
+                                        {
+                                            { "series", res.Series },
+                                            { "number", res.Number },
+                                            { "year", res.Year },
+                                            { "value", res.Value },
+                                            { "checked", true }
+                                        },
+                                        new Dictionary<string, object>
+                                        {
+                                            { "application_id", applID},
+                                            { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                                            { "subject_id", res.Subject }
+                                        });
+
+                                    savedResults.Remove(foundResult);
+
+                                    savedResults.Add(new EGE_Result(
+                                        applID,
+                                        res.Series,
+                                        res.Number,
+                                        res.LastName,
+                                        res.FirstName,
+                                        res.MiddleName,
+                                        res.Subject,
+                                        res.Value,
+                                        true
+                                        ));
+
+                                    updateCount++;
+                                }
+                            }
+                            else
+                            {
+                                _DB_Connection.Insert(
+                                    DB_Table.APPLICATION_EGE_RESULTS,
+                                    new Dictionary<string, object>
+                                    {
+                                        { "application_id", applID},
+                                        { "subject_dict_id", (uint)FIS_Dictionary.SUBJECTS },
+                                        { "subject_id", res.Subject },
+                                        { "series", res.Series },
+                                        { "number", res.Number },
+                                        { "year", res.Year },
+                                        { "value", res.Value },
+                                        { "checked", true }
+                                    });
+
+                                savedResults.Add(new EGE_Result(
+                                    applID,
+                                    res.Series,
+                                    res.Number,
+                                    res.LastName,
+                                    res.FirstName,
+                                    res.MiddleName,
+                                    res.Subject,
+                                    res.Value,
+                                    true
+                                    ));
+
+                                insertCount++;
+                            }
+                        }
                     }
                 }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
 
-                Cursor.Current = Cursors.Default;
+                    MessageBox.Show("Новых результатов: " + insertCount +
+                        "\nОбновлённых результатов: " + updateCount +
+                        (notFoundList.Count != 0 ? "\nНе найдено соответсвий для:\n" + string.Join("\n", notFoundList.Select(s => string.Join(" ", s))) : ""), "Результаты загружены", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
+        }
+
+        private IEnumerable<EGE_Result> GetEgeResults()
+        {
+            var applications = _DB_Connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "id,entrant_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) }
+                    ).Join(
+                    _DB_Connection.Select(DB_Table.ENTRANTS_VIEW, "id", "last_name", "first_name", "middle_name"),
+                    k1 => k1[1],
+                    k2 => k2[0],
+                    (s1, s2) => new { ApplID = (uint)s1[0], LastN = s2[1].ToString(), FirstN = s2[2].ToString(), MiddleN = s2[3].ToString(), }
+                    );
+
+            return applications.Join(
+                _DB_Connection.Select(DB_Table.APPLICATION_EGE_RESULTS, "application_id", "series", "number", "subject_id", "value", "checked"),
+                k1 => k1.ApplID,
+                k2 => k2[0],
+                (s1, s2) => new EGE_Result
+                (
+                    s1.ApplID,
+                    s2[1].ToString(),
+                    s2[2].ToString(),
+                    s1.LastN,
+                    s1.FirstN,
+                    s1.MiddleN,
+                    (uint)s2[3],
+                    (ushort)s2[4],
+                    (bool)s2[5]
+                ));
         }
     }
 }

@@ -3,41 +3,46 @@ using System.Net;
 using System.Xml.Linq;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.FIS
 {
-    static class FIS_Connector
+    public static class FIS_Connector
     {
+        private const uint _DirectionsDictionaryID = 10;
+        private const uint _OlympicsDictionaryID = 19;
+
         public class FIS_Exception : System.Exception
         {
             public FIS_Exception(string message) : base(message) { }
         }
 
-        public static Dictionary<uint, string> GetDictionaries(string login, string password)
+        public static Dictionary<uint, string> GetDictionaries(string address, string login, string password)
+        {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            #endregion
+
+            return GetDictionariesXML(address, login, password).Root.Elements().ToDictionary(k => uint.Parse(k.Element("Code").Value), v => v.Element("Name").Value);
+        }
+
+        public static XDocument GetDictionariesXML(string address, string login, string password)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
             #endregion
 
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, null).ToString());
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionary", byteArray);
-
-            return doc.Root.Elements().ToDictionary(k => uint.Parse(k.Element("Code").Value), v => v.Element("Name").Value);
+            return GetResponse(address + "/import/importservice.svc/dictionary", byteArray);
         }
 
-        public static Dictionary<uint, string> GetDictionaryItems(string login, string password, uint dictionaryID)
+        public static Dictionary<uint, string> GetDictionaryItems(string address, string login, string password, uint dictionaryID)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
+            if (dictionaryID == _DirectionsDictionaryID || dictionaryID == _OlympicsDictionaryID)
+                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", nameof(dictionaryID));
             #endregion
 
-            if (dictionaryID == 10 || dictionaryID == 19)
-                throw new System.ArgumentException("Нельзя получить данные справочника с ID " + dictionaryID + " при помощи этого метода.", nameof(dictionaryID));
-
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
-                new XElement("DictionaryCode", dictionaryID)
-                )).ToString());
-
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
+            XDocument doc = GetDictionaryXML(address, login, password, dictionaryID);
 
             if (doc.Root.Element("DictionaryItems") != null)//TODO Из-за 24 справочника, в котором вопреки спецификации вообще нету элементов. Возможно из-за тестового клиента.
                 return doc.Root.Element("DictionaryItems").Elements()
@@ -46,19 +51,13 @@ namespace PK.Classes
             return new Dictionary<uint, string>();
         }
 
-        public static Dictionary<uint, string[]> GetDirectionsDictionaryItems(string login, string password)
+        public static Dictionary<uint, string[]> GetDirectionsDictionaryItems(string address, string login, string password)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
             #endregion
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
-                new XElement("DictionaryCode", 10)
-                )).ToString());
-
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
-
-            return doc.Root.Element("DictionaryItems").Elements().ToDictionary(
+            return GetDictionaryXML(address, login, password, _DirectionsDictionaryID).Root.Element("DictionaryItems").Elements().ToDictionary(
                 k => uint.Parse(k.Element("ID").Value),
                 v => new string[]
                 {
@@ -68,11 +67,10 @@ namespace PK.Classes
                     "",//v.Element("Period").Value, TODO Почему-то его нет.
                     v.Element("UGSCode").Value,
                     v.Element("UGSName").Value
-                }
-                );
+                });
         }
 
-        public static Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(string login, string password, params uint[] profiles)
+        public static Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems(string address, string login, string password, params uint[] profiles)
         {
             #region Contracts
             CheckLoginAndPassword(login, password);
@@ -82,15 +80,9 @@ namespace PK.Classes
                 throw new System.ArgumentException("Массив с профилями должен содержать хотя бы один элемент.", nameof(profiles));
             #endregion
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
-                new XElement("DictionaryCode", 19)
-                )).ToString());
-
-            XDocument doc = GetResponse("http://priem.edu.ru:8000/import/importservice.svc/dictionarydetails", byteArray);
-
             string[] strProfiles = System.Array.ConvertAll(profiles, s => s.ToString());
 
-            return doc.Root.Element("DictionaryItems").Elements()
+            return GetDictionaryXML(address, login, password, _OlympicsDictionaryID).Root.Element("DictionaryItems").Elements()
                 .Where(
                 o => o.Element("Profiles").Elements().Any(p => strProfiles.Contains(p.Element("ProfileID").Value))
                 ).ToDictionary(
@@ -113,6 +105,19 @@ namespace PK.Classes
                             LevelID = uint.Parse(v2.Element("LevelID").Value) != 0 ? uint.Parse(v2.Element("LevelID").Value) : 255 //TODO Временно, т.к. в ФИС сидят идиоты
                         })
                 });
+        }
+
+        public static XDocument GetDictionaryXML(string address, string login, string password, uint dictionaryID)
+        {
+            #region Contracts
+            CheckLoginAndPassword(login, password);
+            #endregion
+
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(MakeRoot(login, password, new XElement("GetDictionaryContent",
+                new XElement("DictionaryCode", dictionaryID)
+                )).ToString());
+
+            return GetResponse(address + "/import/importservice.svc/dictionarydetails", byteArray);
         }
 
         public static string Export(string address, string login, string password, XElement packageData)

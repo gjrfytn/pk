@@ -60,6 +60,7 @@
             // 
             // bExport
             // 
+            this.bExport.Enabled = false;
             this.bExport.Location = new System.Drawing.Point(233, 134);
             this.bExport.Name = "bExport";
             this.bExport.Size = new System.Drawing.Size(75, 23);
@@ -105,6 +106,7 @@
             this.cbCampaignData.TabIndex = 5;
             this.cbCampaignData.Text = "Данные приёмной кампании";
             this.cbCampaignData.UseVisualStyleBackColor = true;
+            this.cbCampaignData.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
             // 
             // cbApplications
             // 
@@ -115,6 +117,7 @@
             this.cbApplications.TabIndex = 6;
             this.cbApplications.Text = "Заявления с";
             this.cbApplications.UseVisualStyleBackColor = true;
+            this.cbApplications.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
             // 
             // cbOrders
             // 
@@ -125,9 +128,11 @@
             this.cbOrders.TabIndex = 7;
             this.cbOrders.Text = "Приказы с";
             this.cbOrders.UseVisualStyleBackColor = true;
+            this.cbOrders.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
             // 
             // bSave
             // 
+            this.bSave.Enabled = false;
             this.bSave.Location = new System.Drawing.Point(108, 134);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(116, 23);
@@ -167,6 +172,7 @@
             // 
             // dtpAppStartDate
             // 
+            this.dtpAppStartDate.Enabled = false;
             this.dtpAppStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpAppStartDate.Location = new System.Drawing.Point(108, 85);
             this.dtpAppStartDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
@@ -195,6 +201,7 @@
             // 
             // dtpOrdStartDate
             // 
+            this.dtpOrdStartDate.Enabled = false;
             this.dtpOrdStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpOrdStartDate.Location = new System.Drawing.Point(108, 108);
             this.dtpOrdStartDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
@@ -205,6 +212,7 @@
             // 
             // dtpAppEndDate
             // 
+            this.dtpAppEndDate.Enabled = false;
             this.dtpAppEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpAppEndDate.Location = new System.Drawing.Point(209, 85);
             this.dtpAppEndDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
@@ -215,6 +223,7 @@
             // 
             // dtpOrdEndDate
             // 
+            this.dtpOrdEndDate.Enabled = false;
             this.dtpOrdEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpOrdEndDate.Location = new System.Drawing.Point(209, 108);
             this.dtpOrdEndDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);

@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\SharedResources\logo_export.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,29 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PK\Classes\FIS_Connector.cs">
-      <Link>FIS_Connector.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\Classes\FIS_ExportClasses.cs">
-      <Link>FIS_ExportClasses.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\Classes\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\FIS_Olympic_TEMP.cs">
-      <Link>FIS_Olympic_TEMP.cs</Link>
-    </Compile>
-    <Compile Include="..\PK\Forms\FIS_Authorization.cs">
-      <Link>FIS_Authorization.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\PK\Forms\FIS_Authorization.designer.cs">
-      <Link>FIS_Authorization.designer.cs</Link>
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\PK\Properties\Resources.Designer.cs">
-      <Link>Resources.Designer.cs</Link>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,10 +59,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="..\PK\Forms\FIS_Authorization.resx">
-      <Link>FIS_Authorization.resx</Link>
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -108,6 +84,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedClasses\SharedClasses.csproj">
+      <Project>{1700dad0-594e-4512-87ce-0d6f149e6eef}</Project>
+      <Name>SharedClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

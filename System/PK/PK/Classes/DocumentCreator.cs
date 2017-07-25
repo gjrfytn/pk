@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Collections.Generic;
+using SharedClasses.DB;
 
 namespace PK.Classes
 {
@@ -12,9 +13,9 @@ namespace PK.Classes
             public readonly DB_Connector Connection;
             public readonly uint? ID;
             public readonly string[] SingleParameters;
-            public readonly List<string[]>[] TableParameters;
+            public readonly IEnumerable<string[]>[] TableParameters;
 
-            public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, List<string[]>[] tableParameters)
+            public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, IEnumerable<string[]>[] tableParameters)
             {
                 #region Contracts
                 if (string.IsNullOrWhiteSpace(template))

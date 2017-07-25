@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-namespace PK.Classes
+namespace SharedClasses.DB
 {
-    class DB_Connector : System.IDisposable
+    public class DB_Connector : System.IDisposable
     {
         public readonly string User;
         public readonly string Password;
@@ -253,18 +253,36 @@ namespace PK.Classes
             cmd.ExecuteNonQuery();
         }
 
-        public List<object[]> CallProcedure(string name, object parameter)
+        public List<object[]> CallProcedure(string name, Dictionary<string, object> parameters)
         {
             #region Contracts
-            if (string.IsNullOrWhiteSpace(name))
-                throw new System.ArgumentException("Некорректное имя процедуры.", nameof(name));
+            CheckProcedureNameAndParameters(name, parameters);
             #endregion
 
             MySqlCommand cmd = new MySqlCommand(name, _Connection);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("id", parameter);
+
+            foreach (var parameter in parameters)
+                cmd.Parameters.AddWithValue(parameter.Key, parameter.Value);
 
             return ExecuteSelect(cmd);
+        }
+
+        public System.Data.DataTable CallProcedureDataTable(string name, Dictionary<string, object> parameters)
+        {
+            #region Contracts
+            CheckProcedureNameAndParameters(name, parameters);
+            #endregion
+
+            MySqlCommand cmd = new MySqlCommand(name, _Connection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+            foreach (var parameter in parameters)
+                cmd.Parameters.AddWithValue(parameter.Key, parameter.Value);
+
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+            dataTable.Load(cmd.ExecuteReader());
+            return dataTable;
         }
 
         public MySqlTransaction BeginTransaction()
@@ -288,6 +306,14 @@ namespace PK.Classes
                 }
                 return results;
             }
+        }
+
+        private static void CheckProcedureNameAndParameters(string name, Dictionary<string, object> parameters)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new System.ArgumentException("Некорректное имя процедуры.", nameof(name));
+            if (parameters.Count == 0)
+                throw new System.ArgumentException("Пустой список параметров.", nameof(parameters));
         }
     }
 }

@@ -341,6 +341,7 @@
             this.dataGridView_Added.FillWeight = 20F;
             this.dataGridView_Added.HeaderText = "В приказе";
             this.dataGridView_Added.Name = "dataGridView_Added";
+            this.dataGridView_Added.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // dataGridView_ID
             // 
@@ -437,7 +438,7 @@
             // dataGridView_IndAch
             // 
             this.dataGridView_IndAch.FillWeight = 20F;
-            this.dataGridView_IndAch.HeaderText = "Достижение";
+            this.dataGridView_IndAch.HeaderText = "Достижения";
             this.dataGridView_IndAch.Name = "dataGridView_IndAch";
             this.dataGridView_IndAch.ReadOnly = true;
             this.dataGridView_IndAch.Visible = false;

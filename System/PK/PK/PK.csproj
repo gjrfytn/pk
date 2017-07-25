@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+    <ApplicationIcon>..\SharedResources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocX, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
@@ -64,6 +64,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,13 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\DBF_Reader.cs" />
-    <Compile Include="Classes\DB_Queries.cs" />
-    <Compile Include="Classes\FIS_ExportClasses.cs" />
     <Compile Include="Classes\LoginSetting.cs" />
     <Compile Include="Classes\OutDocuments.cs" />
     <Compile Include="Classes\Settings.cs" />
-    <Compile Include="FIS_DictionaryEnum.cs" />
-    <Compile Include="FIS_Olympic_TEMP.cs" />
     <Compile Include="Forms\ApplicationDocsPrint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,9 +98,6 @@
     <Compile Include="Forms\Authorization.Designer.cs">
       <DependentUpon>Authorization.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\DB_Connector.cs" />
-    <Compile Include="Classes\DB_Helper.cs" />
-    <Compile Include="DB_TableEnum.cs" />
     <Compile Include="Classes\DictionaryUpdater.cs" />
     <Compile Include="Classes\DocumentCreator.cs" />
     <Compile Include="Classes\DocumentCreator.Excel.cs" />
@@ -120,6 +114,12 @@
     </Compile>
     <Compile Include="Forms\DateChoice.Designer.cs">
       <DependentUpon>DateChoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DictionaryBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DictionaryBase.Designer.cs">
+      <DependentUpon>DictionaryBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\EGE_Check.cs">
       <SubType>Form</SubType>
@@ -188,18 +188,17 @@
     <Compile Include="Forms\Faculties.Designer.cs">
       <DependentUpon>Faculties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\FIS_Connector.cs" />
-    <Compile Include="Forms\FIS_Authorization.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FIS_Authorization.Designer.cs">
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FIS_Export.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FIS_Export.Designer.cs">
       <DependentUpon>FIS_Export.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HR_DepartmentPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HR_DepartmentPrint.Designer.cs">
+      <DependentUpon>HR_DepartmentPrint.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\InstitutionAchievementsEdit.cs">
       <SubType>Form</SubType>
@@ -248,6 +247,11 @@
     </Compile>
     <Compile Include="Forms\ApplicationSPOEdit.Designer.cs">
       <DependentUpon>ApplicationSPOEdit.cs</DependentUpon>
+    <Compile Include="Forms\Statistics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics.Designer.cs">
+      <DependentUpon>Statistics.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TargetOrganizationSelect.cs">
       <SubType>Form</SubType>
@@ -306,7 +310,6 @@
     <Compile Include="Forms\QuotDocs.Designer.cs">
       <DependentUpon>QuotDocs.cs</DependentUpon>
     </Compile>
-    <Compile Include="RelationEnum.cs" />
     <Compile Include="Forms\SportDocs.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -325,7 +328,6 @@
     <Compile Include="Forms\Users.Designer.cs">
       <DependentUpon>Users.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Utility.cs" />
     <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Forms\ApplicationDocsPrint.resx">
       <DependentUpon>ApplicationDocsPrint.cs</DependentUpon>
@@ -341,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DateChoice.resx">
       <DependentUpon>DateChoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DictionaryBase.resx">
+      <DependentUpon>DictionaryBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dictionaries.resx">
       <DependentUpon>Dictionaries.cs</DependentUpon>
@@ -375,11 +380,11 @@
     <EmbeddedResource Include="Forms\Faculties.resx">
       <DependentUpon>Faculties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FIS_Authorization.resx">
-      <DependentUpon>FIS_Authorization.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FIS_Export.resx">
       <DependentUpon>FIS_Export.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HR_DepartmentPrint.resx">
+      <DependentUpon>HR_DepartmentPrint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\InstitutionAchievementsEdit.resx">
       <DependentUpon>InstitutionAchievementsEdit.cs</DependentUpon>
@@ -404,6 +409,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ApplicationSPOEdit.resx">
       <DependentUpon>ApplicationSPOEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Statistics.resx">
+      <DependentUpon>Statistics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TargetOrganizationSelect.resx">
       <DependentUpon>TargetOrganizationSelect.cs</DependentUpon>
@@ -467,10 +474,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Schemas\ForSite.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -495,7 +498,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DocumentTemplates\ProfilesPlaces.xml">
+    <Content Include="DocumentTemplates\Act.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\AdmAgreementM.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\ExamFill.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\AudLists.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\DirectionsPlaces.xml">
@@ -538,11 +551,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="DocumentTemplates\ExamSheet.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DocumentTemplates\PercRecordBack.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DocumentTemplates\PercRecordBackM.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DocumentTemplates\AdmReceipt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="DocumentTemplates\PercRecordFace.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -566,7 +587,6 @@
     <None Include="Resources\check.png" />
     <None Include="Resources\kladr_db_creation.sql" />
     <None Include="Resources\glass.png" />
-    <None Include="Resources\logo.ico" />
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -709,7 +729,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharedClasses\SharedClasses.csproj">
+      <Project>{1700dad0-594e-4512-87ce-0d6f149e6eef}</Project>
+      <Name>SharedClasses</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

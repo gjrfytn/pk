@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.DB
 {
-    static class DB_Queries
+    public static class DB_Queries
     {
         public class Mark
         {
@@ -44,6 +44,7 @@ namespace PK.Classes
 
         public class Document
         {
+            public readonly uint ApplID;
             public readonly uint ID;
             public readonly string Type;
             public readonly string Series;
@@ -52,8 +53,9 @@ namespace PK.Classes
             public readonly string Organization;
             public readonly DateTime? OrigDate;
 
-            public Document(uint id, string type, string series, string number, DateTime? date, string organization, DateTime? origDate)
+            public Document(uint applID, uint id, string type, string series, string number, DateTime? date, string organization, DateTime? origDate)
             {
+                ApplID = applID;
                 ID = id;
                 Type = type;
                 Series = series;
@@ -82,10 +84,10 @@ namespace PK.Classes
                 )[0];
 
             return applications.Join(
-                connection.Select(DB_Table.APPLICATIONS_EGE_MARKS_VIEW, "applications_id", "subject_id", "value", "checked"),
+                connection.Select(DB_Table.APPLICATION_EGE_RESULTS, "application_id", "subject_id", "value", "checked"),
                 k1 => k1,
                 k2 => k2[0],
-                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(uint)s2[2], Checked = (bool)s2[3], ExamDate = (DateTime?)null }
+                (s1, s2) => new { ApplID = s1, Subj = (uint)s2[1], Mark = (byte)(ushort)s2[2], Checked = (bool)s2[3], ExamDate = (DateTime?)null }
                 ).Concat(
                 applications.Join(
                 connection.Select(DB_Table.APPLICATIONS, "id", "entrant_id"),
@@ -187,9 +189,28 @@ namespace PK.Classes
                 }).Select(s => (uint)s[0]);
         }
 
+        public static IEnumerable<Document> GetDocuments(DB_Connector connection, IEnumerable<uint> applications)
+        {
+            return applications.Join(
+                connection.Select(DB_Table.APPLICATIONS_DOCUMENTS_VIEW),
+                k1 => k1,
+                k2 => k2[0],
+                (s1, s2) => new Document(
+                    s1,
+                    (uint)s2[1],
+                    s2[2].ToString(),
+                    s2[3] as string,
+                    s2[4] as string,
+                    s2[5] as DateTime?,
+                    s2[6] as string,
+                    s2[7] as DateTime?
+                    ));
+        }
+
         public static IEnumerable<Document> GetApplicationDocuments(DB_Connector connection, uint applicationID)
         {
-            return connection.CallProcedure("get_application_docs", applicationID).Select(s => new Document(
+            return connection.CallProcedure("get_application_docs", new Dictionary<string, object> { { "id", applicationID } }).Select(s => new Document(
+                applicationID,
                 (uint)s[0],
                 s[1].ToString(),
                 s[2] as string,
@@ -198,6 +219,35 @@ namespace PK.Classes
                 s[5] as string,
                 s[6] as DateTime?
                 ));
+        }
+
+        public static ushort GetApplicationIndAchMaxValue(DB_Connector connection, uint applicationID)
+        {
+            IEnumerable<ushort> list = connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value").Join(
+                connection.Select(
+                    DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                    new string[] { "institution_achievement_id" },
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("application_id",Relation.EQUAL, applicationID)
+                    }),
+                k1 => k1[0],
+                k2 => k2[0],
+                (s1, s2) => (ushort)s1[1]
+                );
+
+            return list.Count() != 0 ? list.Max() : (ushort)0;
+        }
+
+        public static bool ExaminationHasMarks(DB_Connector connection, uint id)
+        {
+            return connection.Select(
+                DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
+                new string[] { "entrant_id" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object> ("examination_id",Relation.EQUAL, id)
+                }).Count != 0;
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses.DB
 {
-    class DB_Helper
+    public class DB_Helper
     {
         #region DictItemsNames
         public const string EduFormO = "Очная форма";
@@ -18,7 +18,6 @@ namespace PK.Classes
         public const string EduSourceQ = "Квота приема лиц, имеющих особое право";
         public const string EduSourceT = "Целевой прием";
 
-        public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
         public const string MADIOlympDocName = "Диплом участника олимпиад";
         public const string OlympAchievementName = "Участие в олимпиадах и иных конкурсах";
         public const string SportAchievementOlympic = "Статус чемпиона и призера Олимпийских игр";
@@ -38,6 +37,10 @@ namespace PK.Classes
 
         public const string MedCertificate = "Медицинская справка";
         public const string PassportName = "Паспорт гражданина РФ";
+        public const string ResidenceName = "Вид на жительство";
+        public const string IntPassportName = "Паспорт гражданина иностранного государства";
+
+        public const string NationalityRus = "Российская Федерация";
 
         public const string SubjectMath = "Математика";
         public const string SubjectRus = "Русский язык";
@@ -47,7 +50,12 @@ namespace PK.Classes
 
         public const string BenefitOlympic = "Зачисление без вступительных испытаний";
 
-        public const string MagAchievementRedDiploma = "Иное";
+        public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
+        public const string RedMiddleDiploma = "Диплом о среднем профессиональном образовании с отличием";
+        public const string RedDiplomaAchievement = "Иное";
+
+        public const string NoEGE = "Не сдавал ЕГЭ";
+        public const string EGEAdditionalDoc = "Дополнительный документ ЕГЭ";
         #endregion
 
         private readonly DB_Connector _DB_Connection;
@@ -82,14 +90,14 @@ namespace PK.Classes
                 );
         }
 
-        public Dictionary<uint, FIS_Olympic_TEMP> GetOlympicsDictionaryItems()
+        public Dictionary<uint, FIS.FIS_Olympic_TEMP> GetOlympicsDictionaryItems()
         {
-            Dictionary<uint, FIS_Olympic_TEMP> dictionaryItems = new Dictionary<uint, FIS_Olympic_TEMP>();
+            Dictionary<uint, FIS.FIS_Olympic_TEMP> dictionaryItems = new Dictionary<uint, FIS.FIS_Olympic_TEMP>();
 
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS))
             {
-                Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile> profiles =
-                    new Dictionary<System.Tuple<uint, uint>, FIS_Olympic_TEMP.FIS_Olympic_Profile>();
+                Dictionary<System.Tuple<uint, uint>, FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile> profiles =
+                    new Dictionary<System.Tuple<uint, uint>, FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile>();
                 foreach (object[] prof in _DB_Connection.Select(
                     DB_Table.DICTIONARY_OLYMPIC_PROFILES,
                     new string[] { "*" },
@@ -97,7 +105,7 @@ namespace PK.Classes
                 {
                     profiles.Add(
                        new System.Tuple<uint, uint>((uint)prof[1], (uint)prof[2]),
-                        new FIS_Olympic_TEMP.FIS_Olympic_Profile
+                        new FIS.FIS_Olympic_TEMP.FIS_Olympic_Profile
                         {
                             Subjects = _DB_Connection.Select(
                                 DB_Table._DICTIONARY_OLYMPIC_PROFILES_HAS_DICTIONARIES_ITEMS,
@@ -113,7 +121,7 @@ namespace PK.Classes
                 }
                 dictionaryItems.Add(
                     (uint)olymp[0],
-                    new FIS_Olympic_TEMP
+                    new FIS.FIS_Olympic_TEMP
                     {
                         Year = (ushort)olymp[1],
                         Number = olymp[2] as uint?,
@@ -178,6 +186,23 @@ namespace PK.Classes
                 throw new System.ArgumentException("В справочнике не найдено направление с заданным ID.", nameof(id));
 
             return new System.Tuple<string, string>(list[0][0].ToString(), list[0][1].ToString());
+        }
+
+        public string GetDirectionShortName(string facultyShortName, uint directionID)
+        {
+            List<object[]> result = _DB_Connection.Select(
+                DB_Table.DIRECTIONS,
+                new string[] { "short_name" },
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, facultyShortName),
+                    new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, directionID)
+                });
+
+            if (!result.Any())
+                throw new System.ArgumentException("Направление не найдено.");
+
+            return result[0][0].ToString();
         }
 
         public void UpdateData(

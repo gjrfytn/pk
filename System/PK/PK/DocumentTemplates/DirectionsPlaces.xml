@@ -18,15 +18,26 @@
       <Structure>
         <Element>
           <Table>
+            <AutoFit>Contents</AutoFit>
             <Placeholder>0</Placeholder>
             <Structure>
               <Column>
-                <Caption>Направление</Caption>
+                <Caption>Сокращение</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Название</Caption>
                 <CaptionFontID>UsualBold</CaptionFontID>
                 <DataFontID>Usual</DataFontID>
               </Column>
               <Column>
                 <Caption>Заявления</Caption>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <DataFontID>Usual</DataFontID>
+              </Column>
+              <Column>
+                <Caption>Места</Caption>
                 <CaptionFontID>UsualBold</CaptionFontID>
                 <DataFontID>Usual</DataFontID>
               </Column>

@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class Campaigns : Form
     {
-        private readonly  Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly  DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
-        public Campaigns(Classes.DB_Connector connection)
+        public Campaigns(DB_Connector connection)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
             UpdateTableAndCombobox();
         }

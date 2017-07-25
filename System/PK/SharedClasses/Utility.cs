@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PK.Classes
+namespace SharedClasses
 {
-    static class Utility
+    public static class Utility
     {
-        public const string TempPath = ".\\temp\\";
-
         public static readonly Dictionary<string, uint> DirCodesEduLevels = new Dictionary<string, uint>
         {
             {"03", 2}, //Бакалавриат
@@ -180,11 +178,11 @@ namespace PK.Classes
             //p.Dispose();?
         }
 
-        public static bool TryAccessFIS_Function(System.Action<string, string> func, Forms.FIS_Authorization.ILoginSetting setting)
+        public static bool TryAccessFIS_Function(System.Action<string, string> func, FIS.FIS_Authorization.ILoginSetting setting)
         {
             try
             {
-                Forms.FIS_Authorization form = new Forms.FIS_Authorization(setting);
+                FIS.FIS_Authorization form = new FIS.FIS_Authorization(setting);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     func(form.tbLogin.Text, form.tbPassword.Text);
@@ -201,7 +199,7 @@ namespace PK.Classes
                 else
                     MessageBox.Show("Выполните подключение.", "Ошибка подключения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (FIS_Connector.FIS_Exception ex)
+            catch (FIS.FIS_Connector.FIS_Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка ФИС", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

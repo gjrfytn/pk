@@ -18,9 +18,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationMagEdit));
             this.gbEduDocument = new System.Windows.Forms.GroupBox();
-            this.cbTarget = new System.Windows.Forms.CheckBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.cbDiplomaType = new System.Windows.Forms.ComboBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btFillRand = new System.Windows.Forms.Button();
-            this.cbSpecialRights = new System.Windows.Forms.CheckBox();
             this.cbHostelNeeded = new System.Windows.Forms.CheckBox();
             this.tbSpecialty = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
@@ -32,6 +33,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.tbEduDocSeries = new System.Windows.Forms.TextBox();
+            this.cbTarget = new System.Windows.Forms.CheckBox();
+            this.cbSpecialRights = new System.Windows.Forms.CheckBox();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.cbRedDiploma = new System.Windows.Forms.CheckBox();
             this.cbSpecialConditions = new System.Windows.Forms.CheckBox();
@@ -74,6 +77,9 @@
             this.cbProgram_quote_o = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
             this.gbApplication = new System.Windows.Forms.GroupBox();
+            this.cbPriority = new System.Windows.Forms.CheckBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.dgvExamsResults = new System.Windows.Forms.DataGridView();
             this.dgvExamsResults_ProgramName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvExamsResults_Exam = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -136,10 +142,8 @@
             this.btWithdraw = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.label32 = new System.Windows.Forms.Label();
             this.gbEduDocument.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.gbAttributes.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.tcPrograms.SuspendLayout();
@@ -149,22 +153,21 @@
             this.tcPrograms_target_o.SuspendLayout();
             this.tcPrograms_quote_o.SuspendLayout();
             this.gbApplication.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).BeginInit();
             this.gbWithdrawDocs.SuspendLayout();
             this.gbPassport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbAddress.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // gbEduDocument
             // 
             this.gbEduDocument.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.gbEduDocument.Controls.Add(this.label36);
+            this.gbEduDocument.Controls.Add(this.cbDiplomaType);
             this.gbEduDocument.Controls.Add(this.pictureBox2);
-            this.gbEduDocument.Controls.Add(this.cbTarget);
             this.gbEduDocument.Controls.Add(this.btFillRand);
-            this.gbEduDocument.Controls.Add(this.cbSpecialRights);
             this.gbEduDocument.Controls.Add(this.cbHostelNeeded);
             this.gbEduDocument.Controls.Add(this.tbSpecialty);
             this.gbEduDocument.Controls.Add(this.label25);
@@ -183,17 +186,37 @@
             this.gbEduDocument.TabStop = false;
             this.gbEduDocument.Text = "Документ об образовании";
             // 
-            // cbTarget
+            // label36
             // 
-            this.cbTarget.AutoSize = true;
-            this.cbTarget.Location = new System.Drawing.Point(1064, 58);
-            this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
-            this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(128, 20);
-            this.cbTarget.TabIndex = 7;
-            this.cbTarget.Text = "Целевой прием";
-            this.cbTarget.UseVisualStyleBackColor = true;
-            this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(622, 56);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(96, 16);
+            this.label36.TabIndex = 17;
+            this.label36.Text = "Тип диплома:";
+            // 
+            // cbDiplomaType
+            // 
+            this.cbDiplomaType.FormattingEnabled = true;
+            this.cbDiplomaType.Items.AddRange(new object[] {
+            "Бакалавр",
+            "Дипломированный специалист",
+            "Специалист",
+            "Магистр"});
+            this.cbDiplomaType.Location = new System.Drawing.Point(724, 53);
+            this.cbDiplomaType.Name = "cbDiplomaType";
+            this.cbDiplomaType.Size = new System.Drawing.Size(233, 24);
+            this.cbDiplomaType.TabIndex = 5;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(11, 18);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(44, 61);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 15;
+            this.pictureBox2.TabStop = false;
             // 
             // btFillRand
             // 
@@ -206,26 +229,14 @@
             this.btFillRand.UseVisualStyleBackColor = false;
             this.btFillRand.Click += new System.EventHandler(this.btFillRand_Click);
             // 
-            // cbSpecialRights
-            // 
-            this.cbSpecialRights.AutoSize = true;
-            this.cbSpecialRights.Location = new System.Drawing.Point(914, 58);
-            this.cbSpecialRights.Margin = new System.Windows.Forms.Padding(4);
-            this.cbSpecialRights.Name = "cbSpecialRights";
-            this.cbSpecialRights.Size = new System.Drawing.Size(120, 20);
-            this.cbSpecialRights.TabIndex = 6;
-            this.cbSpecialRights.Text = "Особые права";
-            this.cbSpecialRights.UseVisualStyleBackColor = true;
-            this.cbSpecialRights.CheckedChanged += new System.EventHandler(this.cbSpecialRights_CheckedChanged);
-            // 
             // cbHostelNeeded
             // 
             this.cbHostelNeeded.AutoSize = true;
-            this.cbHostelNeeded.Location = new System.Drawing.Point(665, 58);
+            this.cbHostelNeeded.Location = new System.Drawing.Point(1006, 55);
             this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
             this.cbHostelNeeded.Name = "cbHostelNeeded";
             this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
-            this.cbHostelNeeded.TabIndex = 5;
+            this.cbHostelNeeded.TabIndex = 6;
             this.cbHostelNeeded.Text = "Нуждается в общежитии";
             this.cbHostelNeeded.UseVisualStyleBackColor = true;
             // 
@@ -320,6 +331,30 @@
             this.tbEduDocSeries.Size = new System.Drawing.Size(81, 22);
             this.tbEduDocSeries.TabIndex = 1;
             // 
+            // cbTarget
+            // 
+            this.cbTarget.AutoSize = true;
+            this.cbTarget.Location = new System.Drawing.Point(524, 42);
+            this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
+            this.cbTarget.Name = "cbTarget";
+            this.cbTarget.Size = new System.Drawing.Size(128, 20);
+            this.cbTarget.TabIndex = 3;
+            this.cbTarget.Text = "Целевой прием";
+            this.cbTarget.UseVisualStyleBackColor = true;
+            this.cbTarget.CheckedChanged += new System.EventHandler(this.cbTarget_CheckedChanged);
+            // 
+            // cbSpecialRights
+            // 
+            this.cbSpecialRights.AutoSize = true;
+            this.cbSpecialRights.Location = new System.Drawing.Point(365, 42);
+            this.cbSpecialRights.Margin = new System.Windows.Forms.Padding(4);
+            this.cbSpecialRights.Name = "cbSpecialRights";
+            this.cbSpecialRights.Size = new System.Drawing.Size(120, 20);
+            this.cbSpecialRights.TabIndex = 2;
+            this.cbSpecialRights.Text = "Особые права";
+            this.cbSpecialRights.UseVisualStyleBackColor = true;
+            this.cbSpecialRights.CheckedChanged += new System.EventHandler(this.cbSpecialRights_CheckedChanged);
+            // 
             // gbAttributes
             // 
             this.gbAttributes.Controls.Add(this.cbRedDiploma);
@@ -347,7 +382,7 @@
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
             this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
-            this.cbSpecialConditions.TabIndex = 3;
+            this.cbSpecialConditions.TabIndex = 4;
             this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
             this.cbSpecialConditions.UseVisualStyleBackColor = true;
             // 
@@ -362,7 +397,7 @@
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
             this.cbFirstTime.Size = new System.Drawing.Size(127, 24);
-            this.cbFirstTime.TabIndex = 5;
+            this.cbFirstTime.TabIndex = 6;
             // 
             // label26
             // 
@@ -385,7 +420,7 @@
             this.gbOther.Location = new System.Drawing.Point(472, 204);
             this.gbOther.Name = "gbOther";
             this.gbOther.Size = new System.Drawing.Size(868, 41);
-            this.gbOther.TabIndex = 6;
+            this.gbOther.TabIndex = 7;
             this.gbOther.TabStop = false;
             // 
             // mtbEMail
@@ -432,7 +467,7 @@
             this.tbMobilePhone.MaxLength = 20;
             this.tbMobilePhone.Name = "tbMobilePhone";
             this.tbMobilePhone.Size = new System.Drawing.Size(118, 22);
-            this.tbMobilePhone.TabIndex = 5;
+            this.tbMobilePhone.TabIndex = 0;
             this.tbMobilePhone.Tag = "(495)123-4567";
             this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbMobilePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
@@ -445,7 +480,7 @@
             this.tbHomePhone.MaxLength = 20;
             this.tbHomePhone.Name = "tbHomePhone";
             this.tbHomePhone.Size = new System.Drawing.Size(116, 22);
-            this.tbHomePhone.TabIndex = 8;
+            this.tbHomePhone.TabIndex = 1;
             this.tbHomePhone.Tag = "(495)123-4567";
             this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
             this.tbHomePhone.Enter += new System.EventHandler(this.tbPhone_Enter);
@@ -463,7 +498,7 @@
             this.tcPrograms.Name = "tcPrograms";
             this.tcPrograms.SelectedIndex = 0;
             this.tcPrograms.Size = new System.Drawing.Size(1334, 106);
-            this.tcPrograms.TabIndex = 4;
+            this.tcPrograms.TabIndex = 5;
             // 
             // tcPrograms_budget_o
             // 
@@ -688,6 +723,7 @@
             // 
             // btAddDir_target_o
             // 
+            this.btAddDir_target_o.Enabled = false;
             this.btAddDir_target_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btAddDir_target_o.Location = new System.Drawing.Point(210, 5);
             this.btAddDir_target_o.Margin = new System.Windows.Forms.Padding(4);
@@ -762,6 +798,7 @@
             // 
             // btAddDir_quote_o
             // 
+            this.btAddDir_quote_o.Enabled = false;
             this.btAddDir_quote_o.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btAddDir_quote_o.Location = new System.Drawing.Point(210, 5);
             this.btAddDir_quote_o.Margin = new System.Windows.Forms.Padding(4);
@@ -809,8 +846,11 @@
             // gbApplication
             // 
             this.gbApplication.BackColor = System.Drawing.Color.Ivory;
+            this.gbApplication.Controls.Add(this.cbPriority);
             this.gbApplication.Controls.Add(this.label32);
             this.gbApplication.Controls.Add(this.pictureBox3);
+            this.gbApplication.Controls.Add(this.cbTarget);
+            this.gbApplication.Controls.Add(this.cbSpecialRights);
             this.gbApplication.Controls.Add(this.dgvExamsResults);
             this.gbApplication.Controls.Add(this.gbAttributes);
             this.gbApplication.Controls.Add(this.gbOther);
@@ -825,6 +865,37 @@
             this.gbApplication.TabStop = false;
             this.gbApplication.Text = "Из заявления";
             // 
+            // cbPriority
+            // 
+            this.cbPriority.AutoSize = true;
+            this.cbPriority.Location = new System.Drawing.Point(365, 22);
+            this.cbPriority.Margin = new System.Windows.Forms.Padding(4);
+            this.cbPriority.Name = "cbPriority";
+            this.cbPriority.Size = new System.Drawing.Size(200, 20);
+            this.cbPriority.TabIndex = 1;
+            this.cbPriority.Text = "Преимущественное право";
+            this.cbPriority.UseVisualStyleBackColor = true;
+            this.cbPriority.CheckedChanged += new System.EventHandler(this.cbPriority_CheckedChanged);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(643, 18);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(78, 16);
+            this.label32.TabIndex = 31;
+            this.label32.Text = "Экзамены:";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(11, 17);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(52, 70);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 30;
+            this.pictureBox3.TabStop = false;
+            // 
             // dgvExamsResults
             // 
             this.dgvExamsResults.AllowUserToAddRows = false;
@@ -835,7 +906,7 @@
             this.dgvExamsResults_ProgramName,
             this.dgvExamsResults_Exam,
             this.dgvExamsResults_IA});
-            this.dgvExamsResults.Location = new System.Drawing.Point(681, 16);
+            this.dgvExamsResults.Location = new System.Drawing.Point(738, 16);
             this.dgvExamsResults.Name = "dgvExamsResults";
             this.dgvExamsResults.ReadOnly = true;
             this.dgvExamsResults.RowHeadersVisible = false;
@@ -895,7 +966,7 @@
             this.btPrint.Name = "btPrint";
             this.btPrint.Size = new System.Drawing.Size(197, 28);
             this.btPrint.TabIndex = 4;
-            this.btPrint.Text = "Распечатать документы";
+            this.btPrint.Text = "Сохранить и распечатать";
             this.btPrint.UseVisualStyleBackColor = true;
             this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
@@ -1365,6 +1436,7 @@
             this.tbIDDocNumber.Name = "tbIDDocNumber";
             this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
             this.tbIDDocNumber.TabIndex = 2;
+            this.tbIDDocNumber.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
             // tbIDDocSeries
             // 
@@ -1374,6 +1446,7 @@
             this.tbIDDocSeries.Name = "tbIDDocSeries";
             this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
             this.tbIDDocSeries.TabIndex = 1;
+            this.tbIDDocSeries.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
             // label6
             // 
@@ -1503,35 +1576,6 @@
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(11, 18);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(44, 61);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 15;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(11, 17);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(52, 70);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 30;
-            this.pictureBox3.TabStop = false;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(586, 18);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(78, 16);
-            this.label32.TabIndex = 31;
-            this.label32.Text = "Экзамены:";
-            // 
             // ApplicationMagEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1556,6 +1600,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplicationMagEdit_FormClosing);
             this.gbEduDocument.ResumeLayout(false);
             this.gbEduDocument.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.gbAttributes.ResumeLayout(false);
             this.gbAttributes.PerformLayout();
             this.gbOther.ResumeLayout(false);
@@ -1573,6 +1618,7 @@
             this.tcPrograms_quote_o.PerformLayout();
             this.gbApplication.ResumeLayout(false);
             this.gbApplication.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExamsResults)).EndInit();
             this.gbWithdrawDocs.ResumeLayout(false);
             this.gbWithdrawDocs.PerformLayout();
@@ -1581,8 +1627,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.gbAddress.ResumeLayout(false);
             this.gbAddress.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1710,5 +1754,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.CheckBox cbPriority;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.ComboBox cbDiplomaType;
     }
 }

@@ -59,5 +59,15 @@ namespace FIS_Exporter.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon logo_export {
+            get {
+                object obj = ResourceManager.GetObject("logo_export", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

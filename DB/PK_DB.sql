@@ -395,6 +395,8 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications` (
   `special_conditions` TINYINT(1) NOT NULL COMMENT 'ВИ с созданием специальных условий.',
   `master_appl` TINYINT(1) NOT NULL COMMENT 'Заявление на уровень магистра.',
   `withdraw_date` DATE NULL COMMENT 'Дата отзыва документов.',
+  `compatriot` TINYINT(1) NULL COMMENT 'Принадлежность к соотечественникам.',
+  `courses` TINYINT(1) NULL COMMENT 'Курсы.',
   PRIMARY KEY (`id`),
   INDEX `has_idx` (`entrant_id` ASC),
   INDEX `applications_registrered_idx` (`registrator_login` ASC),
@@ -637,33 +639,6 @@ radiation_work: RadiationWorkCategoryID - Тип документа, подтв�
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'Дополнительная информация для остальных документов.';
-
-
--- -----------------------------------------------------
--- Table `pk_db`.`documents_subjects_data`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pk_db`.`documents_subjects_data` (
-  `document_id` INT UNSIGNED NOT NULL COMMENT 'Идентфикатор документа.',
-  `subject_dict_id` INT UNSIGNED NOT NULL COMMENT '1',
-  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ИД дисциплины (справочник №1).',
-  `value` INT UNSIGNED NOT NULL COMMENT 'Балл.',
-  `year` SMALLINT UNSIGNED NOT NULL COMMENT 'Год сдачи.',
-  `checked` TINYINT(1) NOT NULL COMMENT 'Баллы ЕГЭ проверены в ФИС.',
-  PRIMARY KEY (`document_id`, `subject_dict_id`, `subject_id`),
-  INDEX `corresp_idx` (`subject_dict_id` ASC, `subject_id` ASC),
-  INDEX `has_idx` (`document_id` ASC),
-  CONSTRAINT `documents_subjects_data_has`
-    FOREIGN KEY (`document_id`)
-    REFERENCES `pk_db`.`documents` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `documents_subjects_data_corresp`
-    FOREIGN KEY (`subject_id` , `subject_dict_id`)
-    REFERENCES `pk_db`.`dictionaries_items` (`item_id` , `dictionary_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Дисциплины документов.';
 
 
 -- -----------------------------------------------------
@@ -1019,6 +994,36 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`masters_exams_marks` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `pk_db`.`application_ege_results`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`application_ege_results` (
+  `application_id` INT UNSIGNED NOT NULL COMMENT 'Заявление.',
+  `subject_dict_id` INT UNSIGNED NOT NULL COMMENT '1',
+  `subject_id` INT UNSIGNED NOT NULL COMMENT 'ID дисциплины (справочник №1).',
+  `series` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Серия документа, подтверждающего личность, по которому сдавался ЕГЭ.',
+  `number` VARCHAR(100) NOT NULL COMMENT 'Номер документа, подтверждающего личность, по которому сдавался ЕГЭ.',
+  `year` SMALLINT UNSIGNED NOT NULL COMMENT 'Год сдачи.',
+  `value` SMALLINT UNSIGNED NOT NULL COMMENT 'Балл.',
+  `checked` TINYINT(1) NOT NULL COMMENT 'Проверен по ФИС.',
+  INDEX `application_ege_results_has_applications_idx` (`application_id` ASC),
+  INDEX `application_ege_results_has_subjects_idx` (`subject_dict_id` ASC, `subject_id` ASC),
+  PRIMARY KEY (`application_id`, `subject_dict_id`, `subject_id`),
+  CONSTRAINT `application_ege_results_has_applications`
+    FOREIGN KEY (`application_id`)
+    REFERENCES `pk_db`.`applications` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `application_ege_results_has_subjects`
+    FOREIGN KEY (`subject_dict_id` , `subject_id`)
+    REFERENCES `pk_db`.`dictionaries_items` (`dictionary_id` , `item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COMMENT = 'Оценки ЕГЭ по заявлениям.';
+
 USE `kladr` ;
 
 -- -----------------------------------------------------
@@ -1065,9 +1070,19 @@ USE `pk_db` ;
 CREATE TABLE IF NOT EXISTS `pk_db`.`entrants_view` (`id` INT, `last_name` INT, `first_name` INT, `middle_name` INT, `series` INT, `number` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `pk_db`.`applications_ege_marks_view`
+-- Placeholder table for view `pk_db`.`applications_short_entrances_view`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pk_db`.`applications_ege_marks_view` (`applications_id` INT, `subject_id` INT, `value` INT, `checked` INT);
+CREATE TABLE IF NOT EXISTS `pk_db`.`applications_short_entrances_view` (`application_id` INT, `entrances` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `pk_db`.`applications_documents_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`applications_documents_view` (`application_id` INT, `id` INT, `type` INT, `series` INT, `number` INT, `date` INT, `organization` INT, `original_recieved_date` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `pk_db`.`applications_orders_dates`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`applications_orders_dates` (`application_id` INT, `adm_date` INT, `exc_date` INT);
 
 -- -----------------------------------------------------
 -- procedure get_campaign_edu_forms
@@ -1184,12 +1199,93 @@ END$$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure get_main_form_table
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `pk_db`$$
+CREATE PROCEDURE `get_main_form_table`(
+IN campaign_id INT UNSIGNED,
+IN id VARCHAR(10),
+IN last_name VARCHAR(250),
+IN first_name VARCHAR(250),
+IN middle_name VARCHAR(250),
+IN date DATE,
+IN status VARCHAR(10))
+BEGIN
+SELECT 
+    app_data1.id,
+    app_data1.last_name,
+    app_data1.first_name,
+    app_data1.middle_name,
+    app_data1.entrances,
+    app_data1.original,
+    app_data1.registration_time,
+    app_data1.edit_time,
+    app_data1.withdraw_date,
+    applications_orders_dates.adm_date,
+    applications_orders_dates.exc_date,
+    app_data1.registrator_login,
+    app_data1.status
+FROM
+    (SELECT 
+        app_data3.*, applications_short_entrances_view.entrances
+    FROM
+        applications_short_entrances_view
+    JOIN (SELECT 
+        app_data2.*,
+            entrants_view.last_name,
+            entrants_view.first_name,
+            entrants_view.middle_name
+    FROM
+        entrants_view
+    JOIN (SELECT 
+        applications.id,
+            applications.entrant_id,
+            applications.registration_time,
+            applications.edit_time,
+            applications.withdraw_date,
+            applications.registrator_login,
+            applications.status,
+            edu_docs.original
+    FROM
+        applications
+    JOIN (SELECT 
+        applications_documents_view.application_id,
+            IF(applications_documents_view.original_recieved_date IS NOT NULL, TRUE, FALSE) AS original
+    FROM
+        applications_documents_view
+    WHERE
+        applications_documents_view.type = 'academic_diploma'
+            OR applications_documents_view.type = 'school_certificate'
+            OR applications_documents_view.type = 'middle_edu_diploma'
+            OR applications_documents_view.type = 'high_edu_diploma') AS edu_docs
+            ON applications.id = edu_docs.application_id WHERE
+            applications.campaign_id = campaign_id AND
+            CONVERT(applications.id,CHAR) LIKE CONCAT(id,'%') AND
+            (date IS NULL OR DATE(applications.registration_time) = date) AND
+            (status IS NULL AND (applications.status = "adm_budget" OR applications.status = "adm_paid" OR applications.status = "adm_both") OR applications.status = status)
+            ) AS app_data2
+            ON app_data2.entrant_id = entrants_view.id WHERE
+            entrants_view.last_name LIKE CONCAT(last_name,'%') AND
+            entrants_view.first_name LIKE CONCAT(first_name,'%') AND
+            entrants_view.middle_name LIKE CONCAT(middle_name,'%')
+            ) AS app_data3
+            ON applications_short_entrances_view.application_id = app_data3.id) AS app_data1
+        LEFT OUTER JOIN
+    applications_orders_dates
+    ON app_data1.id = applications_orders_dates.application_id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- View `pk_db`.`entrants_view`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pk_db`.`entrants_view`;
 USE `pk_db`;
 CREATE  OR REPLACE VIEW `entrants_view` AS
-    SELECT 
+    SELECT DISTINCT
         entrants.id,
         appls_idents.last_name,
         appls_idents.first_name,
@@ -1229,17 +1325,71 @@ CREATE  OR REPLACE VIEW `entrants_view` AS
         JOIN identity_docs_additional_data ON documents.id = identity_docs_additional_data.document_id) AS docs_idents ON _applications_has_documents.documents_id = docs_idents.id) AS a_d_idents ON applications.id = a_d_idents.applications_id) AS appls_idents ON entrants.id = appls_idents.entrant_id;
 
 -- -----------------------------------------------------
--- View `pk_db`.`applications_ege_marks_view`
+-- View `pk_db`.`applications_short_entrances_view`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `pk_db`.`applications_ege_marks_view`;
+DROP TABLE IF EXISTS `pk_db`.`applications_short_entrances_view`;
 USE `pk_db`;
-CREATE  OR REPLACE VIEW `applications_ege_marks_view` AS
+CREATE  OR REPLACE VIEW `applications_short_entrances_view` AS
     SELECT 
-        applications_id, subject_id, value, checked
+        applications_entrances.application_id,
+        GROUP_CONCAT(IFNULL(CONCAT(applications_entrances.profile_short_name, '*'), directions.short_name) SEPARATOR ', ') AS entrances
+    FROM
+        applications_entrances
+            JOIN
+        directions ON applications_entrances.faculty_short_name = directions.faculty_short_name
+            AND applications_entrances.direction_id = directions.direction_id
+    GROUP BY applications_entrances.application_id;
+
+-- -----------------------------------------------------
+-- View `pk_db`.`applications_documents_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pk_db`.`applications_documents_view`;
+USE `pk_db`;
+CREATE  OR REPLACE VIEW `applications_documents_view` AS
+    SELECT 
+        _applications_has_documents.applications_id AS application_id,
+        documents.id,
+        type,
+        series,
+        number,
+        date,
+        organization,
+        original_recieved_date
     FROM
         _applications_has_documents
             JOIN
-        documents_subjects_data ON _applications_has_documents.documents_id = documents_subjects_data.document_id;
+        documents ON _applications_has_documents.documents_id = documents.id;
+
+-- -----------------------------------------------------
+-- View `pk_db`.`applications_orders_dates`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pk_db`.`applications_orders_dates`;
+USE `pk_db`;
+CREATE  OR REPLACE VIEW `applications_orders_dates` AS
+    SELECT 
+        adm_ord.applications_id AS application_id,
+        adm_ord.date AS adm_date,
+        exc_ord.date AS exc_date
+    FROM
+        (SELECT 
+            orders_has_applications.applications_id,
+                MAX(orders.date) AS date
+        FROM
+            orders_has_applications
+        JOIN orders ON orders_has_applications.orders_number = orders.number
+        WHERE
+            orders.`type` = 'admission'
+        GROUP BY orders_has_applications.applications_id) AS adm_ord
+            LEFT OUTER JOIN
+        (SELECT 
+            orders_has_applications.applications_id,
+                MAX(orders.date) AS date
+        FROM
+            orders_has_applications
+        JOIN orders ON orders_has_applications.orders_number = orders.number
+        WHERE
+            orders.`type` = 'exception'
+        GROUP BY orders_has_applications.applications_id) AS exc_ord ON adm_ord.applications_id = exc_ord.applications_id;
 CREATE USER 'initial' IDENTIFIED BY '1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'initial';
@@ -1260,7 +1410,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` T
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'registrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'registrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'registrator';
-GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'registrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'registrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'registrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'registrator';
@@ -1282,13 +1431,14 @@ GRANT SELECT ON TABLE `kladr`.`subjects` TO 'registrator';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'registrator';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'registrator';
 GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'registrator';
-GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'registrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'registrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'registrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'registrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'registrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'registrator';
 GRANT SELECT ON TABLE `pk_db`.`_campaigns_has_dictionaries_items` TO 'registrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_main_form_table` TO 'registrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_ege_results` TO 'registrator';
 CREATE USER 'inspector' IDENTIFIED BY 'ins1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'inspector';
@@ -1304,7 +1454,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` T
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'inspector';
-GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'inspector';
@@ -1326,13 +1475,14 @@ GRANT SELECT ON TABLE `kladr`.`subjects` TO 'inspector';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'inspector';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'inspector';
 GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'inspector';
-GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'inspector';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'inspector';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'inspector';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'inspector';
 GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'inspector';
 GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'inspector';
 GRANT SELECT ON TABLE `pk_db`.`_campaigns_has_dictionaries_items` TO 'inspector';
+GRANT EXECUTE ON procedure `pk_db`.`get_main_form_table` TO 'inspector';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_ege_results` TO 'inspector';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'inspector';
 GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'inspector';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'inspector';
@@ -1355,7 +1505,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`applications_entrances` T
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`identity_docs_additional_data` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`olympic_docs_additional_data` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`other_docs_additional_data` TO 'administrator';
-GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`documents_subjects_data` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_common_benefits` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`_applications_has_documents` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`individual_achievements` TO 'administrator';
@@ -1377,13 +1526,14 @@ GRANT SELECT ON TABLE `kladr`.`subjects` TO 'administrator';
 GRANT SELECT ON TABLE `kladr`.`streets` TO 'administrator';
 GRANT SELECT ON TABLE `kladr`.`houses` TO 'administrator';
 GRANT SELECT ON TABLE `pk_db`.`entrants_view` TO 'administrator';
-GRANT SELECT ON TABLE `pk_db`.`applications_ege_marks_view` TO 'administrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_directions` TO 'administrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_docs` TO 'administrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_application_profiles` TO 'administrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_camp_dirs_name_code` TO 'administrator';
 GRANT EXECUTE ON procedure `pk_db`.`get_campaign_edu_forms` TO 'administrator';
 GRANT SELECT ON TABLE `pk_db`.`_campaigns_has_dictionaries_items` TO 'administrator';
+GRANT EXECUTE ON procedure `pk_db`.`get_main_form_table` TO 'administrator';
+GRANT INSERT, SELECT, UPDATE ON TABLE `pk_db`.`application_ege_results` TO 'administrator';
 GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE `pk_db`.`orders` TO 'administrator';
 GRANT SELECT ON TABLE `pk_db`.`entrance_tests` TO 'administrator';
 GRANT SELECT, DELETE, UPDATE, INSERT ON TABLE `pk_db`.`examinations` TO 'administrator';

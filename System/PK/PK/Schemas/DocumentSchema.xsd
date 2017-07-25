@@ -324,11 +324,16 @@
                             </xs:annotation>
                             <xs:complexType/>
                           </xs:element>
-                          <xs:element name="A5" minOccurs="0">
+                          <xs:element name="Format" minOccurs="0">
                             <xs:annotation>
-                              <xs:documentation xml:lang="ru">Формат A5.</xs:documentation>
+                              <xs:documentation xml:lang="ru">Формат документа.</xs:documentation>
                             </xs:annotation>
-                            <xs:complexType/>
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:enumeration value="A5"/>
+                                <xs:enumeration value="A6"/>
+                              </xs:restriction>
+                            </xs:simpleType>
                           </xs:element>
                           <xs:element name="Borders" minOccurs="0">
                             <xs:annotation>

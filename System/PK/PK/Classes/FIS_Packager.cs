@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static PK.Classes.FIS_ExportClasses;
+using SharedClasses.DB;
+
+using static SharedClasses.FIS.FIS_ExportClasses;
 
 namespace PK.Classes
 {
@@ -39,7 +41,13 @@ namespace PK.Classes
             { "withdrawn", 6 },
         };
 
-        public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, bool applications, bool orders)
+        public static PackageData MakePackage(
+            DB_Connector connection,
+            uint campaignID,
+            bool campaignData,
+            System.Tuple<System.DateTime, System.DateTime> applicationsDateRange,
+            bool orders,
+            System.Tuple<System.DateTime, System.DateTime> ordersDateRange)
         {
             #region Contracts
             if (connection == null)
@@ -51,8 +59,8 @@ namespace PK.Classes
                 campaignData ? PackAdmissionInfo(connection, campaignID) : null,
                 campaignData ? PackInstitutionAchievements(connection, campaignID) : null,
                 campaignData ? PackTargetOrganizations(connection) : null,
-                applications ? PackApplications(connection, campaignID) : null,
-                orders ? PackOrders(connection, campaignID) : null
+                applicationsDateRange != null ? PackApplications(connection, campaignID, applicationsDateRange) : null,
+                orders ? PackOrders(connection, campaignID, ordersDateRange) : null
                 );
         }
 
@@ -98,6 +106,9 @@ namespace PK.Classes
 
         private static AdmissionInfo PackAdmissionInfo(DB_Connector connection, uint campaignID)
         {
+            DB_Helper dbHelper = new DB_Helper(connection);
+            bool isMasterCampaign = dbHelper.IsMasterCampaign(campaignID);
+
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
             foreach (var admData in connection.Select(
@@ -117,26 +128,42 @@ namespace PK.Classes
                 EduSourcePlaces paidPlaces = GetPaidPlaces(connection, admData.CampID, admData.DirID);
                 EduSourcePlaces targetPlaces = GetTargetPlaces(connection, admData.CampID, admData.DirID);
 
-                DB_Helper dbHelper = new DB_Helper(connection);
-                uint levelID = Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
+                uint levelID = SharedClasses.Utility.DirCodesEduLevels[dbHelper.GetDirectionNameAndCode(admData.DirID).Item2.Split('.')[1]];
+
+                EduSourcePlaces budgetPlaces;
+                EduSourcePlaces quotaPlaces;
+                if (isMasterCampaign)
+                {
+                    budgetPlaces = new EduSourcePlaces(
+                        (ushort)(admData.BudgetPlaces.O + admData.QuotaPlaces.O),
+                        (ushort)(admData.BudgetPlaces.OZ + admData.QuotaPlaces.OZ),
+                        (ushort)(admData.BudgetPlaces.Z + admData.QuotaPlaces.Z)
+                        );
+                    quotaPlaces = new EduSourcePlaces(0, 0, 0);
+                }
+                else
+                {
+                    budgetPlaces = admData.BudgetPlaces;
+                    quotaPlaces = admData.QuotaPlaces;
+                }
 
                 admissionVolumes.Add(new AVItem(
                     new TUID(admData.CampID.ToString() + admData.DirID.ToString()),
                     new TUID(admData.CampID),
                     levelID,
                     admData.DirID,
-                    admData.BudgetPlaces.O != 0 ? (ushort?)admData.BudgetPlaces.O : null,
-                    admData.BudgetPlaces.OZ != 0 ? (ushort?)admData.BudgetPlaces.OZ : null,
-                    admData.BudgetPlaces.Z != 0 ? (ushort?)admData.BudgetPlaces.Z : null,
+                    budgetPlaces.O != 0 ? (ushort?)budgetPlaces.O : null,
+                    budgetPlaces.OZ != 0 ? (ushort?)budgetPlaces.OZ : null,
+                    budgetPlaces.Z != 0 ? (ushort?)budgetPlaces.Z : null,
                     paidPlaces.O != 0 ? (ushort?)paidPlaces.O : null,
                     paidPlaces.OZ != 0 ? (ushort?)paidPlaces.OZ : null,
                     paidPlaces.Z != 0 ? (ushort?)paidPlaces.Z : null,
                     targetPlaces.O != 0 ? (ushort?)targetPlaces.O : null,
                     targetPlaces.OZ != 0 ? (ushort?)targetPlaces.OZ : null,
                     targetPlaces.Z != 0 ? (ushort?)targetPlaces.Z : null,
-                    admData.QuotaPlaces.O != 0 ? (ushort?)admData.QuotaPlaces.O : null,
-                    admData.QuotaPlaces.OZ != 0 ? (ushort?)admData.QuotaPlaces.OZ : null,
-                    admData.QuotaPlaces.Z != 0 ? (ushort?)admData.QuotaPlaces.Z : null
+                    quotaPlaces.O != 0 ? (ushort?)quotaPlaces.O : null,
+                    quotaPlaces.OZ != 0 ? (ushort?)quotaPlaces.OZ : null,
+                    quotaPlaces.Z != 0 ? (ushort?)quotaPlaces.Z : null
                     ));
 
                 foreach (CompetitiveGroupItem.Variants v in System.Enum.GetValues(typeof(CompetitiveGroupItem.Variants)))
@@ -145,7 +172,7 @@ namespace PK.Classes
                     ushort places;
 
                     ChooseFormAndSourceAndPlaces(
-                        v, admData.BudgetPlaces, paidPlaces, admData.QuotaPlaces, targetPlaces,
+                        v, budgetPlaces, paidPlaces, quotaPlaces, targetPlaces,
                         out eduForm, out eduSource, out places
                         );
 
@@ -162,19 +189,32 @@ namespace PK.Classes
                         TUID compGroupUID = ComposeCompGroupUID(admData.CampID, admData.DirID, eduForm, eduSource);
 
                         List<EntranceTestItem> entranceTests = new List<EntranceTestItem>();
-                        foreach (object[] etRow in connection.Select(
-                            DB_Table.ENTRANCE_TESTS,
-                            new string[] { "subject_id", "priority" },
-                            new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
-                            ))
-                            if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
-                                entranceTests.Add(new EntranceTestItem(
-                                    new TUID(compGroupUID.Value + etRow[0].ToString()),
-                                    1,
-                                    (ushort)etRow[1],
-                                    new TEntranceTestSubject((uint)etRow[0]),
-                                    dbHelper.GetMinMark((uint)etRow[0])
-                                    ));
+
+                        if (isMasterCampaign)
+                        {
+                            uint subjectID = dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Технология");
+                            entranceTests.Add(new EntranceTestItem(
+                                new TUID(compGroupUID.Value + subjectID.ToString()),
+                                1, //TODO
+                                1,
+                                new TEntranceTestSubject(subjectID),
+                                null //TODO
+                                ));
+                        }
+                        else
+                            foreach (object[] etRow in connection.Select(
+                                DB_Table.ENTRANCE_TESTS,
+                                new string[] { "subject_id", "priority" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("direction_id", Relation.EQUAL, admData.DirID) }
+                                ))
+                                if (!entranceTests.Any(s => s.EntranceTestSubject.SubjectID.Value == (uint)etRow[0]))
+                                    entranceTests.Add(new EntranceTestItem(
+                                        new TUID(compGroupUID.Value + etRow[0].ToString()),
+                                        1,
+                                        (ushort)etRow[1],
+                                        new TEntranceTestSubject((uint)etRow[0]),
+                                        dbHelper.GetMinMark((uint)etRow[0])
+                                        ));
 
                         competitiveGroups.Add(new CompetitiveGroup(
                             compGroupUID,
@@ -237,15 +277,19 @@ namespace PK.Classes
             return null;
         }
 
-        private static List<Application> PackApplications(DB_Connector connection, uint campaignID)
+        private static List<Application> PackApplications(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> dateRange)
         {
             List<Application> applications = new List<Application>();
 
             var applicationsBD = connection.Select(
                 DB_Table.APPLICATIONS,
                 new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions", "priority_right" },
-                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID) }
-                ).Join(
+                new List<System.Tuple<string, Relation, object>>
+                {
+                    new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID),
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.GREATER_EQUAL,dateRange.Item1.Date),
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,dateRange.Item2.Date.AddDays(1))
+                }).Join(
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
                 k1 => k1[1],
                 k2 => k2[0],
@@ -263,8 +307,12 @@ namespace PK.Classes
                     Email = s2[2].ToString()
                 });
 
+            if (applicationsBD.Count() == 0)
+                return null;
+
             IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
+            bool isMasterCampaign = new DB_Helper(connection).IsMasterCampaign(campaignID);
             foreach (var appl in applicationsBD)
             {
                 var finSourceEduForms = connection.Select(
@@ -307,7 +355,7 @@ namespace PK.Classes
 
                 IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
 
-                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs);
+                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs, isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null);
 
                 List<ApplicationCommonBenefit> benefits = PackApplicationBenefits(
                     connection,
@@ -323,10 +371,58 @@ namespace PK.Classes
                     marks.Where(s => s.ApplID == appl.ID)
                     );
 
-                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs);
+                List<CustomDocument> customDocs = packedDocs.CustomDocuments == null ? customDocs = new List<CustomDocument>() : customDocs = new List<CustomDocument>(packedDocs.CustomDocuments);
+
+                List<IndividualAchievement> achievements = PackApplicationAchievements(connection, campaignID, appl.ID, appl.PriorityRight, docs, customDocs);
+
+                if (customDocs.Count == 0)
+                    customDocs = null;
+
+                List<IdentityDocument> otherIdentityDocs = connection.Select(
+                    DB_Table.APPLICATION_EGE_RESULTS,
+                    new string[] { "series", "number" },
+                    new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) })
+                    .GroupBy(
+                    k => System.Tuple.Create(k[0] as string, k[1] as string),
+                    (k, g) => new IdentityDocument(
+                        new TUID(appl.ID.ToString() + "_" + k.Item1 + k.Item2),
+                        packedDocs.IdentityDocument.LastName,
+                        packedDocs.IdentityDocument.FirstName,
+                        k.Item2,
+                        packedDocs.IdentityDocument.DocumentDate,
+                        9, //TODO
+                        packedDocs.IdentityDocument.NationalityTypeID,
+                        packedDocs.IdentityDocument.BirthDate,
+                        null,
+                        packedDocs.IdentityDocument.MiddleName,
+                        packedDocs.IdentityDocument.GenderID,
+                        !string.IsNullOrWhiteSpace(k.Item1) ? k.Item1 : null
+                        )).ToList();
+
+                if (otherIdentityDocs.Count == 0)
+                    otherIdentityDocs = null;
+
+                packedDocs = new ApplicationDocuments(
+                    packedDocs.IdentityDocument,
+                    packedDocs.EgeDocuments,
+                    packedDocs.GiaDocuments,
+                    otherIdentityDocs,
+                    packedDocs.EduDocuments,
+                    packedDocs.MilitaryCardDocument,
+                    packedDocs.StudentDocument,
+                    packedDocs.OrphanDocuments,
+                    packedDocs.VeteranDocuments,
+                    packedDocs.SportDocuments,
+                    packedDocs.CompatriotDocuments,
+                    packedDocs.PauperDocuments,
+                    packedDocs.ParentsLostDocuments,
+                    packedDocs.StateEmployeeDocuments,
+                    packedDocs.RadiationWorkDocuments,
+                    customDocs
+                    );
 
                 applications.Add(new Application(
-                    new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
+                    ComposeApplicationUID(campaignID, appl.ID),
                     campaignID.ToString() + "_" + appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
@@ -349,13 +445,10 @@ namespace PK.Classes
                     ));
             }
 
-            if (applications.Count != 0)
-                return applications;
-
-            return null;
+            return applications;
         }
 
-        private static Orders PackOrders(DB_Connector connection, uint campaignID)
+        private static Orders PackOrders(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> dateRange)
         {
             List<OrderOfAdmission> admissionOrders = new List<OrderOfAdmission>();
             List<OrderOfException> exceptionOrders = new List<OrderOfException>();
@@ -368,7 +461,9 @@ namespace PK.Classes
                 {
                     new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
                     new System.Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
-                    new System.Tuple<string, Relation, object>("type",Relation.NOT_EQUAL,"hostel")
+                    new System.Tuple<string, Relation, object>("type",Relation.NOT_EQUAL,"hostel"),
+                    new System.Tuple<string, Relation, object>("date",Relation.GREATER_EQUAL,dateRange.Item1.Date),
+                    new System.Tuple<string, Relation, object>("date",Relation.LESS,dateRange.Item2.Date.AddDays(1))
                 }).Select(s => new
                 {
                     Number = s[0].ToString(),
@@ -385,7 +480,7 @@ namespace PK.Classes
                 if (order.Type == "admission")
                 {
                     admissionOrders.Add(new OrderOfAdmission(
-                        new TUID(order.Number),
+                        ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Зачисление " + order.Number,
                         order.Number,
@@ -401,7 +496,7 @@ namespace PK.Classes
                         new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("orders_number", Relation.EQUAL, order.Number) }
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
                             new TUID(order.Number),
                             1,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource)
@@ -410,7 +505,7 @@ namespace PK.Classes
                 else
                 {
                     exceptionOrders.Add(new OrderOfException(
-                        new TUID(order.Number),
+                        ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Отчисление " + order.Number,
                         order.Number,
@@ -441,8 +536,8 @@ namespace PK.Classes
                         (s1, s2) => s2
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
-                            new TUID(order.Number),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
+                            ComposeOrderUID(campaignID, order.Number),
                             2,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource),
                             null,
@@ -460,6 +555,16 @@ namespace PK.Classes
         private static TUID ComposeCompGroupUID(uint campID, uint dirID, /*uint level,*/ uint eduForm, uint eduSource)
         {
             return new TUID(campID.ToString() + dirID.ToString() + /*level.ToString() + */eduForm.ToString() + eduSource.ToString());
+        }
+
+        private static TUID ComposeApplicationUID(uint campaignID, uint applID)
+        {
+            return new TUID(campaignID.ToString() + "_" + applID.ToString());
+        }
+
+        private static TUID ComposeOrderUID(uint campaignID, string orderNumber)
+        {
+            return new TUID(orderNumber + " " + campaignID.ToString());
         }
 
         private static EduSourcePlaces GetPaidPlaces(DB_Connector connection, uint campaignID, uint directionID)
@@ -613,7 +718,7 @@ namespace PK.Classes
             }
         }
 
-        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs)
+        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs, System.DateTime? isMasterApplDate)
         {
             IdentityDocument identDoc = null;
             EduDocument eduDoc = null;
@@ -643,7 +748,7 @@ namespace PK.Classes
                                 doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                 idDoc[2].ToString(),
                                 (uint)idDoc[3],
-                                doc.Series,
+                                !string.IsNullOrWhiteSpace(doc.Series) ? doc.Series : null,
                                 idDoc[4] as string,
                                 doc.Organization,
                                 idDoc[8].ToString()
@@ -655,17 +760,17 @@ namespace PK.Classes
                     case "academic_diploma":
                     case "middle_edu_diploma":
                         {
-                            uint year = (uint)connection.Select(
-                           DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
-                           new string[] { "year" },
-                           new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
-                           )[0][0];
+                            uint? year = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "year" },
+                                new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc.ID) }
+                                )[0][0] as uint?;
 
                             if (doc.Type == "academic_diploma")
                                 eduDoc = new EduDocument(new TAcademicDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
+                                    new TDocumentSeries(doc.Series),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
@@ -676,7 +781,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
-                                    new TDocumentSeries(doc.Series),
+                                    !string.IsNullOrWhiteSpace(doc.Series) ? new TDocumentSeries(doc.Series) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     year
@@ -684,8 +789,8 @@ namespace PK.Classes
                             else if (doc.Type == "middle_edu_diploma")
                                 eduDoc = new EduDocument(new TMiddleEduDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
+                                    new TDocumentSeries(doc.Series),
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
@@ -698,9 +803,9 @@ namespace PK.Classes
                             else
                                 eduDoc = new EduDocument(new THighEduDiplomaDocument(
                                     new TUID(doc.ID),
-                                    new TDocumentSeries(doc.Series),
                                     new TDocumentNumber(doc.Number),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    new TDocumentSeries(doc.Series),
+                                    isMasterApplDate.HasValue ? new TDate(isMasterApplDate.Value) : (doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null),
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     null,
@@ -878,7 +983,7 @@ namespace PK.Classes
                                 new TAllowEducationDocument(
                                     new TUID(allowDoc.ID),
                                     new TDocumentNumber(doc.Number),
-                                    new TDate(doc.Date.Value),
+                                    doc.Date.HasValue ? new TDate(doc.Date.Value) : new TDate(System.DateTime.Now), //TODO Now
                                     doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
                                     doc.Organization
                                 )));
@@ -1008,7 +1113,7 @@ namespace PK.Classes
             return testsResults;
         }
 
-        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight, IEnumerable<DB_Queries.Document> docs)
+        private static List<IndividualAchievement> PackApplicationAchievements(DB_Connector connection, uint campaignID, uint applID, bool? priorityRight, IEnumerable<DB_Queries.Document> docs, ICollection<CustomDocument> customDocs)
         {
             List<IndividualAchievement> achievements = new List<IndividualAchievement>();
 
@@ -1027,14 +1132,29 @@ namespace PK.Classes
                     ).ToDictionary(k => (uint)k[0], e => (ushort)e[1]);
 
                 foreach (var ach in achievementsBD)
-                    if (docs.Single(s => s.ID == ach.DocID).Type != "high_edu_diploma")
+                {
+                    DB_Queries.Document doc = docs.Single(s => s.ID == ach.DocID);
+                    if (doc.Type != "high_edu_diploma")
+                    {
+                        TUID docUID = new TUID(doc.ID.ToString() + "C");
+                        customDocs.Add(new CustomDocument(new TCustomDocument(
+                            docUID,
+                            doc.Type,
+                            new TDate(System.DateTime.Now),//TODO Год выдачи
+                            doc.Organization,
+                            doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                            !string.IsNullOrEmpty(doc.Series) ? new TDocumentSeries(doc.Series) : null, //TODO
+                            doc.Number != null ? new TDocumentNumber(doc.Number) : null
+                            )));
                         achievements.Add(new IndividualAchievement(
-                            new TUID(ach.ID),
+                            new TUID(campaignID.ToString() + "_" + ach.ID.ToString()),
                             new TUID(ach.InstAchID),
-                            new TUID(ach.DocID),
+                            docUID,
                             instAch[ach.InstAchID],
                             priorityRight.HasValue ? priorityRight : null
                             ));
+                    }
+                }
             }
 
             return achievements;

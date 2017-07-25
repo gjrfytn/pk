@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
     partial class ExaminationMarks : Form
     {
-        private readonly Classes.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
         private readonly uint _ExaminationID;
         private readonly uint _SubjectID;
         private readonly DateTime _Date;
 
-        public ExaminationMarks(Classes.DB_Connector connection, uint examinationID)
+        public ExaminationMarks(DB_Connector connection, uint examinationID)
         {
             #region Components
             InitializeComponent();
@@ -33,7 +34,7 @@ namespace PK.Forms
 
             _SubjectID = (uint)exam[1];
             _Date = (DateTime)exam[2];
-            Text = new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
+            Text = new DB_Helper(_DB_Connection).GetDictionaryItemName((FIS_Dictionary)exam[0], _SubjectID) + " " + _Date.ToShortDateString();
 
             var marks = _DB_Connection.Select(
                 DB_Table.ENTRANTS_EXAMINATIONS_MARKS,
@@ -43,8 +44,11 @@ namespace PK.Forms
                 _DB_Connection.Select(
                     DB_Table.APPLICATIONS,
                     new string[] { "id", "entrant_id" },
-                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID), }
-                    ),
+                    new List<Tuple<string, Relation, object>>
+                    {
+                        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                        new Tuple<string, Relation, object>("status",Relation.NOT_EQUAL,"withdrawn")
+                    }),
                 k1 => k1[0],
                 k2 => k2[1],
                 (s1, s2) => new
@@ -93,10 +97,10 @@ namespace PK.Forms
 
             string[] singleParams = new string[]
             {
-                new Classes.DB_Helper(_DB_Connection).GetMinMark(_SubjectID).ToString(),
+                new DB_Helper(_DB_Connection).GetMinMark(_SubjectID).ToString(),
                 _Date.Year.ToString(),
                 _Date.ToShortDateString(),
-                new Classes.DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
+                new DB_Helper(_DB_Connection).GetDictionaryItemName(FIS_Dictionary.SUBJECTS,_SubjectID),
                 subjConsts[_SubjectID]
             };
 
@@ -104,12 +108,12 @@ namespace PK.Forms
             foreach (DataGridViewRow row in dataGridView.Rows)
                 table.Add(new string[]
                 {
-                    row.Cells[dataGridView_UID.Index].Value.ToString(),
+                    row.Cells[dataGridView_ApplID.Index].Value.ToString(),
                     row.Cells[dataGridView_Name.Index].Value.ToString(),
                     ((short)row.Cells[dataGridView_Mark.Index].Value==-1)?"неявка": row.Cells[dataGridView_Mark.Index].Value.ToString(),
                 });
 
-            string doc = Classes.Utility.TempPath + "AlphaMarks" + new Random().Next();
+            string doc = Classes.Settings.TempPath + "AlphaMarks" + new Random().Next();
             Classes.DocumentCreator.Create(Classes.Settings.DocumentsTemplatesPath + "AlphaMarks.xml", doc, singleParams, new IEnumerable<string[]>[] { table.OrderBy(s => s[1]) });
             System.Diagnostics.Process.Start(doc + ".docx");
 
@@ -121,7 +125,7 @@ namespace PK.Forms
             if (!TryApplyCellChanges())
                 return;
 
-            if (Classes.Utility.ShowUnrevertableActionMessageBox())
+            if (SharedClasses.Utility.ShowUnrevertableActionMessageBox())
             {
                 _DB_Connection.Delete(DB_Table.ENTRANTS_EXAMINATIONS_MARKS, new Dictionary<string, object> { { "examination_id", _ExaminationID } });
                 dataGridView.Rows.Clear();
@@ -151,6 +155,24 @@ namespace PK.Forms
                         { dataGridView_UID.DataPropertyName,dataGridView[dataGridView_UID.Index,e.RowIndex].Value },
                         { "examination_id", _ExaminationID}
                     });
+        }
+
+        private void dataGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            if (e.Column.Index == dataGridView_ApplID.Index)
+            {
+                int value1;
+                int value2;
+                if (int.TryParse(e.CellValue1.ToString(), out value1))
+                    if (int.TryParse(e.CellValue2.ToString(), out value2))
+                        e.SortResult = value1 - value2;
+                    else
+                        e.SortResult = -1;
+                else
+                    e.SortResult = 1;
+
+                e.Handled = true;
+            }
         }
 
         private void ExaminationMarks_FormClosing(object sender, FormClosingEventArgs e)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SharedClasses.DB;
 
 namespace PK.Forms
 {
@@ -11,21 +12,24 @@ namespace PK.Forms
         public string OlympOrg;
         public DateTime OlympDate;
 
-        private readonly Classes.DB_Connector _DB_Connection;
-        private readonly Classes.DB_Helper _DB_Helper;
+        private readonly DB_Connector _DB_Connection;
+        private readonly DB_Helper _DB_Helper;
 
-        public MADIOlymps(Classes.DB_Connector connection, Forms.ApplicationEdit.MODoc olympData)
+        public MADIOlymps(DB_Connector connection, Forms.ApplicationEdit.MODoc olympData)
         {
             InitializeComponent();
 
             _DB_Connection = connection;
-            _DB_Helper = new Classes.DB_Helper(_DB_Connection);
+            _DB_Helper = new DB_Helper(_DB_Connection);
 
+            List<string> olympsNames = new List<string>();
             foreach (object[] olymp in _DB_Connection.Select(DB_Table.DICTIONARY_19_ITEMS, new string[] { "olympic_name" }, new System.Collections.Generic.List<Tuple<string, Relation, object>>
             {
                 new Tuple<string, Relation, object>("year", Relation.GREATER_EQUAL, DateTime.Now.Year -1)
             }))
-                cbOlympName.Items.Add(olymp[0].ToString());
+                olympsNames.Add(olymp[0].ToString());
+            foreach(string name in olympsNames.Distinct())
+                cbOlympName.Items.Add(name);
 
             if (olympData.olympName != null && olympData.olympName != "")
             {

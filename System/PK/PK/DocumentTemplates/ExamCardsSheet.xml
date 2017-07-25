@@ -21,6 +21,10 @@
       <Size>10</Size>
       <Style>Bold</Style>
     </Font>
+    <Font ID="Small">
+      <Name>Arial</Name>
+      <Size>11</Size>
+    </Font>
   </Fonts>
   <Document>
     <Word>
@@ -138,6 +142,70 @@
               </Column>
             </Structure>
           </Table>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph>
+            <Alighment>Both</Alighment>
+            <FontID>Small</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Экзаменовалось ______ чел.               Начало экзамена       ______</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph>
+            <Alighment>Both</Alighment>
+            <FontID>Small</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Не явилось          ______ чел.               Окончание экзамена ______</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph>
+            <Alighment>Both</Alighment>
+            <FontID>Small</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Преподаватель                                       ____________  /__________/</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph>
+            <Alighment>Both</Alighment>
+            <FontID>Small</FontID>
+            <Parts>
+              <Part>
+                <Text>
+                  <String>Сотрудник приёмной комиссии             ____________  /__________/</String>
+                </Text>
+              </Part>
+            </Parts>
+          </Paragraph>
         </Element>
       </Structure>
     </Word>
