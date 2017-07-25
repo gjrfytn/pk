@@ -53,7 +53,7 @@ namespace PK.Forms
             #region Components
             InitializeComponent();
 
-            tbNumber.Text = (_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Max(s => s[0] as ushort? != null ? (ushort)s[0] : 0) + 1).ToString();
+            tbNumber.Text = (_DB_Connection.Select(DB_Table.ORDERS, "protocol_number").Max(s => s[0] as ushort? != null ? (ushort)s[0] : 1)).ToString();
             #endregion
 
             _Number = number;
