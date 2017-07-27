@@ -587,9 +587,9 @@ namespace PK.Classes
                             applData.Quota?"Да":"Нет",
                             redDiplomaMark.ToString(),
                             applData.Hostel?"Да":"Нет",
-                            mark.Bonus.ToString(),
+                            (redDiplomaMark!=0?(mark.Bonus-redDiplomaMark):mark.Bonus).ToString(),
                             mark.Exam!=-1?mark.Exam.ToString():"",
-                            mark.Exam!=-1?(redDiplomaMark +mark.Bonus+(mark.Exam!=-1?mark.Exam:0)).ToString():""
+                            mark.Exam!=-1?(/*redDiplomaMark +*/mark.Bonus+mark.Exam).ToString():""
                         };
 
                         documents.Add(new DocumentCreator.DocumentParameters(
@@ -677,7 +677,7 @@ namespace PK.Classes
                         DB_Queries.GetProfileName(connection,agreedDir.Item1,agreedDir.Item2,agreedDir.Item3).Split('|')[0]+" ("+agreedDir.Item3+")",
                         dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.Item4),
                         applID.ToString()+"м",
-                        mark.Exam!=-1?(mark.Exam+mark.Bonus+redDiplomaMark).ToString():"",
+                        mark.Exam!=-1?(mark.Exam+mark.Bonus/*+redDiplomaMark*/).ToString():"",
                         applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
                         agreedDir.Item5.ToShortDateString()
                     },
@@ -1015,6 +1015,14 @@ namespace PK.Classes
 
             DB_Helper dbHelper = new DB_Helper(connection);
 
+            Dictionary<uint, string> sources = new Dictionary<uint, string>
+            {
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB), ""},
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP), " по договорам об образовании на обучение по образовательным программам высшего образования"},
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT), "" },
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ), " следующих абитуриентов, имеющих право на поступление по особой квоте" }
+            };
+
             var order = connection.Select(
                     DB_Table.ORDERS,
                     new string[] { "type", "date", "protocol_number", "protocol_date", "edu_form_id", "edu_source_id", "faculty_short_name", "direction_id", "profile_short_name", "campaign_id" },
@@ -1075,11 +1083,11 @@ namespace PK.Classes
                 paramaters.AddRange(new string[]
                 {
                     forms[order.EduForm] + " обучения" +
-                    (order.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
+                    sources[order.EduSource] ,
                     order.Faculty,
                     dirNameCode.Item2,
                     dirNameCode.Item1,
-                    order.Master?"Магистерская программа: " :(order.Profile != null ? "Профиль: " : ""),
+                    order.Master?"Магистерская программа: " :(order.Profile != null ? (dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
                     order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(connection,order.Faculty,order.Direction.Value,order.Profile).Split('|')[0] : ""
                 });
             }
@@ -1155,33 +1163,42 @@ namespace PK.Classes
                                 new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
                             }).Select(s => new { EntrID = (uint)s[0], Exam = (short)s[1], Bonus = (ushort)s[2] });
 
-                        var redDiplomaID_Bonus = connection.Select(
-                            DB_Table.INSTITUTION_ACHIEVEMENTS,
-                            new string[] { "id", "value" },
-                            new List<Tuple<string, Relation, object>>
-                            {
-                                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
-                                new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
-                            }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
+                        //var redDiplomaID_Bonus = connection.Select(
+                        //    DB_Table.INSTITUTION_ACHIEVEMENTS,
+                        //    new string[] { "id", "value" },
+                        //    new List<Tuple<string, Relation, object>>
+                        //    {
+                        //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
+                        //        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
+                        //    }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
 
-                        var redDimplomaAppls = applications.Join(
-                            connection.Select(
-                                DB_Table.INDIVIDUAL_ACHIEVEMENTS,
-                                new string[] { "application_id", },
-                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, redDiplomaID_Bonus.ID) }),
-                            k1 => k1.ApplID,
-                            k2 => k2[0],
-                            (s1, s2) => new { s1.ApplID }
-                            );
+                        //var redDimplomaAppls = applications.Join(
+                        //    connection.Select(
+                        //        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                        //        new string[] { "application_id", },
+                        //        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, redDiplomaID_Bonus.ID) }),
+                        //    k1 => k1.ApplID,
+                        //    k2 => k2[0],
+                        //    (s1, s2) => new { s1.ApplID }
+                        //    );
+
+                        //table = applications.Select(
+                        //    s => new { s.EntrID, s.Name, RedDiplomaBonus = redDimplomaAppls.Any(a => a.ApplID == s.ApplID) ? redDiplomaID_Bonus.Bonus : 0 }
+                        //    ).Join(
+                        //    marks,
+                        //    k1 => k1.EntrID,
+                        //    k2 => k2.EntrID,
+                        //    (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus + s1.RedDiplomaBonus))
+                        //    );
 
                         table = applications.Select(
-                            s => new { s.EntrID, s.Name, RedDiplomaBonus = redDimplomaAppls.Any(a => a.ApplID == s.ApplID) ? redDiplomaID_Bonus.Bonus : 0 }
-                            ).Join(
-                            marks,
-                            k1 => k1.EntrID,
-                            k2 => k2.EntrID,
-                            (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus + s1.RedDiplomaBonus))
-                            );
+                                s => new { s.EntrID, s.Name }
+                                ).Join(
+                                marks,
+                                k1 => k1.EntrID,
+                                k2 => k2.EntrID,
+                                (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus))
+                                );
                     }
                     else
                     {

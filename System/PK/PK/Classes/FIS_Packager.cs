@@ -41,7 +41,13 @@ namespace PK.Classes
             { "withdrawn", 6 },
         };
 
-        public static PackageData MakePackage(DB_Connector connection, uint campaignID, bool campaignData, System.Tuple<System.DateTime, System.DateTime> applicationsRange, bool orders)
+        public static PackageData MakePackage(
+            DB_Connector connection,
+            uint campaignID,
+            bool campaignData,
+            System.Tuple<System.DateTime, System.DateTime> applicationsDateRange,
+            bool orders,
+            System.Tuple<System.DateTime, System.DateTime> ordersDateRange)
         {
             #region Contracts
             if (connection == null)
@@ -53,8 +59,8 @@ namespace PK.Classes
                 campaignData ? PackAdmissionInfo(connection, campaignID) : null,
                 campaignData ? PackInstitutionAchievements(connection, campaignID) : null,
                 campaignData ? PackTargetOrganizations(connection) : null,
-                applicationsRange != null ? PackApplications(connection, campaignID, applicationsRange) : null,
-                orders ? PackOrders(connection, campaignID) : null
+                applicationsDateRange != null ? PackApplications(connection, campaignID, applicationsDateRange) : null,
+                orders ? PackOrders(connection, campaignID, ordersDateRange) : null
                 );
         }
 
@@ -271,7 +277,7 @@ namespace PK.Classes
             return null;
         }
 
-        private static List<Application> PackApplications(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> applicationsRange)
+        private static List<Application> PackApplications(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> dateRange)
         {
             List<Application> applications = new List<Application>();
 
@@ -281,8 +287,8 @@ namespace PK.Classes
                 new List<System.Tuple<string, Relation, object>>
                 {
                     new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID),
-                    new System.Tuple<string, Relation, object>("registration_time",Relation.GREATER_EQUAL,applicationsRange.Item1.Date),
-                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,applicationsRange.Item2.Date.AddDays(1))
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.GREATER_EQUAL,dateRange.Item1.Date),
+                    new System.Tuple<string, Relation, object>("registration_time",Relation.LESS,dateRange.Item2.Date.AddDays(1))
                 }).Join(
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
                 k1 => k1[1],
@@ -390,7 +396,7 @@ namespace PK.Classes
                         null,
                         packedDocs.IdentityDocument.MiddleName,
                         packedDocs.IdentityDocument.GenderID,
-                        k.Item1
+                        !string.IsNullOrWhiteSpace(k.Item1) ? k.Item1 : null
                         )).ToList();
 
                 if (otherIdentityDocs.Count == 0)
@@ -416,7 +422,7 @@ namespace PK.Classes
                     );
 
                 applications.Add(new Application(
-                    new TUID(campaignID.ToString() + "_" + appl.ID.ToString()),
+                    ComposeApplicationUID(campaignID, appl.ID),
                     campaignID.ToString() + "_" + appl.ID.ToString(),
                     new Entrant(
                         new TUID(appl.Entr_ID),
@@ -442,7 +448,7 @@ namespace PK.Classes
             return applications;
         }
 
-        private static Orders PackOrders(DB_Connector connection, uint campaignID)
+        private static Orders PackOrders(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> dateRange)
         {
             List<OrderOfAdmission> admissionOrders = new List<OrderOfAdmission>();
             List<OrderOfException> exceptionOrders = new List<OrderOfException>();
@@ -455,7 +461,9 @@ namespace PK.Classes
                 {
                     new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,campaignID),
                     new System.Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
-                    new System.Tuple<string, Relation, object>("type",Relation.NOT_EQUAL,"hostel")
+                    new System.Tuple<string, Relation, object>("type",Relation.NOT_EQUAL,"hostel"),
+                    new System.Tuple<string, Relation, object>("date",Relation.GREATER_EQUAL,dateRange.Item1.Date),
+                    new System.Tuple<string, Relation, object>("date",Relation.LESS,dateRange.Item2.Date.AddDays(1))
                 }).Select(s => new
                 {
                     Number = s[0].ToString(),
@@ -472,7 +480,7 @@ namespace PK.Classes
                 if (order.Type == "admission")
                 {
                     admissionOrders.Add(new OrderOfAdmission(
-                        new TUID(order.Number),
+                        ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Зачисление " + order.Number,
                         order.Number,
@@ -488,7 +496,7 @@ namespace PK.Classes
                         new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("orders_number", Relation.EQUAL, order.Number) }
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
                             new TUID(order.Number),
                             1,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource)
@@ -497,7 +505,7 @@ namespace PK.Classes
                 else
                 {
                     exceptionOrders.Add(new OrderOfException(
-                        new TUID(order.Number),
+                        ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Отчисление " + order.Number,
                         order.Number,
@@ -528,8 +536,8 @@ namespace PK.Classes
                         (s1, s2) => s2
                         ))
                         applications.Add(new ApplicationOrd(
-                            new TUID(appl[0].ToString()),
-                            new TUID(order.Number),
+                            ComposeApplicationUID(campaignID, (uint)appl[0]),
+                            ComposeOrderUID(campaignID, order.Number),
                             2,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource),
                             null,
@@ -547,6 +555,16 @@ namespace PK.Classes
         private static TUID ComposeCompGroupUID(uint campID, uint dirID, /*uint level,*/ uint eduForm, uint eduSource)
         {
             return new TUID(campID.ToString() + dirID.ToString() + /*level.ToString() + */eduForm.ToString() + eduSource.ToString());
+        }
+
+        private static TUID ComposeApplicationUID(uint campaignID, uint applID)
+        {
+            return new TUID(campaignID.ToString() + "_" + applID.ToString());
+        }
+
+        private static TUID ComposeOrderUID(uint campaignID, string orderNumber)
+        {
+            return new TUID(orderNumber + " " + campaignID.ToString());
         }
 
         private static EduSourcePlaces GetPaidPlaces(DB_Connector connection, uint campaignID, uint directionID)
@@ -1129,7 +1147,7 @@ namespace PK.Classes
                             doc.Number != null ? new TDocumentNumber(doc.Number) : null
                             )));
                         achievements.Add(new IndividualAchievement(
-                            new TUID(ach.ID),
+                            new TUID(campaignID.ToString() + "_" + ach.ID.ToString()),
                             new TUID(ach.InstAchID),
                             docUID,
                             instAch[ach.InstAchID],

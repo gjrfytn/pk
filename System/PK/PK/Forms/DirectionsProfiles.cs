@@ -137,21 +137,28 @@ namespace PK.Forms
                 tbKafedra.Enabled = false;
                 label5.Enabled = false;
                 tbName.MaxLength = 300;
-            }                
+            }
             else if (rbMag.Checked)
             {
                 FillDirCombobox("04");
                 tbKafedra.Enabled = true;
                 label5.Enabled = true;
                 tbName.MaxLength = 150;
-            }                
+            }
             else if (rbSpec.Checked)
             {
                 FillDirCombobox("05");
                 tbKafedra.Enabled = false;
                 label5.Enabled = false;
                 tbName.MaxLength = 300;
-            } 
+            }
+            else if (rbSPO.Checked)
+            {
+                FillDirCombobox("02");
+                tbKafedra.Enabled = false;
+                label5.Enabled = false;
+                tbName.MaxLength = 300;
+            }
         }
 
         private void dgvDirections_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -198,6 +205,10 @@ namespace PK.Forms
                     else if (dirData.Item2.Substring(3, 2) == "04")
                     {
                         dgvDirections.Rows.Add(v[0], "Н", dirData.Item1, "", dirData.Item2, "Магистратура");
+                    }
+                    else if (dirData.Item2.Substring(3, 2) == "02")
+                    {
+                        dgvDirections.Rows.Add(v[0], "Н", dirData.Item1, "", dirData.Item2, "Среднее профессиональное");
                     }
                     if (dgvDirections.Rows.Count != 0)
                         for (int i = 0; i < dgvDirections.Rows[dgvDirections.Rows.Count - 1].Cells.Count; i++)

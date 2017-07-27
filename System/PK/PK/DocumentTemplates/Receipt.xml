@@ -40,7 +40,7 @@
   <Document>
     <Word>
       <Properties>
-        <A5/>
+        <Format>A5</Format>
         <Margins>
           <Left>30</Left>
           <Top>30</Top>

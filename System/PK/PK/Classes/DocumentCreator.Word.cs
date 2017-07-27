@@ -114,17 +114,32 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 if (properties.Element("Borders") != null)
                     AddBorders(doc);
 
-                if (properties.Element("A5") != null)
+                if (properties.Element("Format") != null)
                 {
+                    float width, height;
+                    switch (properties.Element("Format").Value)
+                    {
+                        case "A5":
+                            width = 419.5f;
+                            height = 595.2f;
+                            break;
+                        case "A6":
+                            width = 297.6f;
+                            height = 419.5f;
+                            break;
+                        default:
+                            throw new System.Exception("Unreachable reached.");
+                    }
+
                     if (doc.PageLayout.Orientation == Orientation.Portrait)
                     {
-                        doc.PageWidth = 419.5f;
-                        doc.PageHeight = 595.2f;
+                        doc.PageWidth = width;
+                        doc.PageHeight = height;
                     }
                     else
                     {
-                        doc.PageHeight = 419.5f;
-                        doc.PageWidth = 595.2f;
+                        doc.PageHeight = width;
+                        doc.PageWidth = height;
                     }
                 }
 

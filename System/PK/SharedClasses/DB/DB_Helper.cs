@@ -12,6 +12,7 @@ namespace SharedClasses.DB
         public const string EduLevelB = "Бакалавриат";
         public const string EduLevelM = "Магистратура";
         public const string EduLevelS = "Специалитет";
+        public const string EduLevelSPO = "СПО";
         public const string EduSourceB = "Бюджетные места";
         public const string EduSourceP = "С оплатой обучения";
         public const string EduSourceQ = "Квота приема лиц, имеющих особое право";

@@ -47,6 +47,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tbKafedra = new System.Windows.Forms.TextBox();
+            this.rbSPO = new System.Windows.Forms.RadioButton();
             this.dgvDirections_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,6 +56,7 @@
             this.dgvDirections_EduLevel = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_FacultyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvDirections_Kafedra = new System.Windows.Forms.DataGridViewTextBoxColumn();
+
             ((System.ComponentModel.ISupportInitialize)(this.dgvDirections)).BeginInit();
             this.gbType.SuspendLayout();
             this.SuspendLayout();
@@ -104,7 +106,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Enabled = false;
-            this.label1.Location = new System.Drawing.Point(604, 367);
+            this.label1.Location = new System.Drawing.Point(648, 365);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 2;
@@ -114,21 +116,22 @@
             // 
             this.cbDirections.Enabled = false;
             this.cbDirections.FormattingEnabled = true;
-            this.cbDirections.Location = new System.Drawing.Point(484, 389);
+            this.cbDirections.Location = new System.Drawing.Point(522, 387);
             this.cbDirections.Name = "cbDirections";
-            this.cbDirections.Size = new System.Drawing.Size(336, 21);
+            this.cbDirections.Size = new System.Drawing.Size(312, 21);
             this.cbDirections.TabIndex = 3;
             this.cbDirections.SelectedIndexChanged += new System.EventHandler(this.cbDirections_SelectedIndexChanged);
             // 
             // gbType
             // 
+            this.gbType.Controls.Add(this.rbSPO);
             this.gbType.Controls.Add(this.rbMag);
             this.gbType.Controls.Add(this.rbSpec);
             this.gbType.Controls.Add(this.rbBacc);
             this.gbType.Enabled = false;
             this.gbType.Location = new System.Drawing.Point(161, 367);
             this.gbType.Name = "gbType";
-            this.gbType.Size = new System.Drawing.Size(299, 43);
+            this.gbType.Size = new System.Drawing.Size(355, 43);
             this.gbType.TabIndex = 5;
             this.gbType.TabStop = false;
             this.gbType.Text = "Программа обучения";
@@ -267,6 +270,18 @@
             this.tbKafedra.Size = new System.Drawing.Size(100, 20);
             this.tbKafedra.TabIndex = 15;
             // 
+            // rbSPO
+            // 
+            this.rbSPO.AutoSize = true;
+            this.rbSPO.Location = new System.Drawing.Point(304, 20);
+            this.rbSPO.Name = "rbSPO";
+            this.rbSPO.Size = new System.Drawing.Size(48, 17);
+            this.rbSPO.TabIndex = 3;
+            this.rbSPO.TabStop = true;
+            this.rbSPO.Text = "СПО";
+            this.rbSPO.UseVisualStyleBackColor = true;
+            this.rbSPO.CheckedChanged += new System.EventHandler(this.rb_CheckedChanged);
+			//
             // dgvDirections_ID
             // 
             this.dgvDirections_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -401,5 +416,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_EduLevel;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_FacultyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvDirections_Kafedra;
+        private System.Windows.Forms.RadioButton rbSPO;
     }
 }

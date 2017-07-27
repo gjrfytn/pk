@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using SharedClasses.DB;
 
@@ -12,9 +8,9 @@ namespace PK.Forms
 {
     public partial class HR_DepartmentPrint : Form
     {
-        private readonly SharedClasses.DB.DB_Connector _DB_Connection;
+        private readonly DB_Connector _DB_Connection;
 
-        public HR_DepartmentPrint(SharedClasses.DB.DB_Connector connection)
+        public HR_DepartmentPrint(DB_Connector connection)
         {
             InitializeComponent();
 
@@ -176,7 +172,7 @@ namespace PK.Forms
                             order.Faculty,
                             dirNameCode.Item2,
                             dirNameCode.Item1,
-                            order.Master?"Магистерская программа: " :(order.Profile != null ? "Профиль: " : ""),
+                            order.Master?"Магистерская программа: " :(order.Profile != null ?(dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
                             order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(_DB_Connection,order.Faculty,order.Direction,order.Profile).Split('|')[0] : ""
                         },
                         new IEnumerable<string[]>[] { table.Select(s=>new

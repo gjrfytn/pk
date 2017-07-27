@@ -96,6 +96,11 @@ namespace PK.Forms
                 dtpAppStartDate.Enabled = cbApplications.Checked;
                 dtpAppEndDate.Enabled = cbApplications.Checked;
             }
+            else if (sender == cbOrders)
+            {
+                dtpOrdStartDate.Enabled = cbOrders.Checked;
+                dtpOrdEndDate.Enabled = cbOrders.Checked;
+            }
         }
 
         private bool CheckCheckBoxes()
@@ -116,7 +121,8 @@ namespace PK.Forms
                 Classes.Settings.CurrentCampaignID,
                 cbCampaignData.Checked,
                 cbApplications.Checked ? Tuple.Create(dtpAppStartDate.Value, dtpAppEndDate.Value) : null,
-                cbOrders.Checked
+                cbOrders.Checked,
+                cbOrders.Checked ? Tuple.Create(dtpOrdStartDate.Value, dtpOrdEndDate.Value) : null
                 ).ConvertToXElement();
         }
 
