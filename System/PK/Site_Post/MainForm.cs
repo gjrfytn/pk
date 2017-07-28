@@ -24,6 +24,7 @@ namespace SitePost
         public delegate void InvokeDelegate();
         private int sumTime;
         private int count;
+        private string server, user, pswd, dbname, script;
 
         public MainForm()
         {
@@ -104,8 +105,12 @@ namespace SitePost
                         timer.Interval = timer.Interval * 60000;
                     else if (cbUnits.SelectedItem.ToString() == "ч")
                         timer.Interval = timer.Interval * 3600000;
-                
 
+                server = tbDirectToDBServer.Text;
+                user = tbDirectToDBUser.Text;
+                pswd = tbDirectToDBPassword.Text;
+                dbname = tbDirectToDBBaseName.Text;
+                script = tbDirectToDBAdressForScript.Text;
                     threadPost = new Thread(PostApplications);
                     threadPost.Start();
                     //PostApplications();
@@ -147,14 +152,14 @@ namespace SitePost
             try
             {
                 List<object[]> appsData = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "mcado", "chernobyl", "needs_hostel", "passing_examinations",
-                "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
-            {
-                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
-                new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false),
-                new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
-            });
+                    "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
+                    new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false),
+                    new Tuple<string, Relation, object>("status", Relation.NOT_EQUAL, "withdrawn")
+                });
 
-                string connectionStr = "server=" + tbDirectToDBServer.Text + ";port=3306;database=" + tbDirectToDBBaseName.Text + ";user=" + tbDirectToDBUser.Text + ";password=" + tbDirectToDBPassword.Text + ";";
+                string connectionStr = "server=" + server + ";port=3306;database=" + dbname + ";user=" + user + ";password=" + pswd + ";";
                 MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connectionStr);
 
                 if (appsData.Count > 0)
@@ -163,13 +168,13 @@ namespace SitePost
                     {
                         connection.Open();
                         string Query = "SET foreign_key_checks = 0;" +
-                                "LOCK TABLES `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` WRITE, " +
-                                            "`" + tbDirectToDBBaseName.Text + "`.`application_tmptable` WRITE, " +
-                                            "`" + tbDirectToDBBaseName.Text + "`.`profile_table` READ, " +
-                                            "`" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt READ, " +
-                                            "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft READ;" +
-                                "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable`;" +
-                                "TRUNCATE TABLE `" + tbDirectToDBBaseName.Text + "`.`application_tmptable`;";
+                                "LOCK TABLES `" + dbname + "`.`abitur_tmptable` WRITE, " +
+                                            "`" + dbname + "`.`application_tmptable` WRITE, " +
+                                            "`" + dbname + "`.`profile_table` READ, " +
+                                            "`" + dbname + "`.`direction_table` AS dt READ, " +
+                                            "`" + dbname + "`.`faculty_table` AS ft READ;" +
+                                "TRUNCATE TABLE `" + dbname + "`.`abitur_tmptable`;" +
+                                "TRUNCATE TABLE `" + dbname + "`.`application_tmptable`;";
                         new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
                     }
 
@@ -191,6 +196,7 @@ namespace SitePost
                     count = 0;
                     foreach (object[] application in appsData)
                     {
+                        if ((threadPost.ThreadState== ThreadState.Aborted) || (threadPost.ThreadState== ThreadState.Stopped)) break;
                         XElement abitur = new XElement("Abitur",
                             new XElement("Uin", application[0]),
                             new XElement("EntrantUin", application[6]),
@@ -253,7 +259,7 @@ namespace SitePost
 
                         if ((cbPost.Checked) && (rbDirectToDB.Checked))
                         {
-                            string Query = "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`abitur_tmptable` " +
+                            string Query = "INSERT INTO `" + dbname + "`.`abitur_tmptable` " +
                             "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, " +
                             "`math_ball`, `checked_by_FIS_math`, `phis_ball`, `checked_by_FIS_phis`, `rus_ball`, `checked_by_FIS_rus`, " +
                             "`obsh_ball`, `checked_by_FIS_obsh`, `foren_ball`, `checked_by_FIS_foren`, `IA_ball`, " +
@@ -292,18 +298,18 @@ namespace SitePost
                                 profile = appl.Element("Profile").Value;
                                 if (direction != "0")
                                 {
-                                    query_tmp = "SELECT dt.direction_id FROM `" + tbDirectToDBBaseName.Text + "`.`direction_table` AS dt, " +
-                                    "`" + tbDirectToDBBaseName.Text + "`.`faculty_table` AS ft WHERE (dt.id_by_FIS=" + direction + ") AND " +
+                                    query_tmp = "SELECT dt.direction_id FROM `" + dbname + "`.`direction_table` AS dt, " +
+                                    "`" + dbname + "`.`faculty_table` AS ft WHERE (dt.id_by_FIS=" + direction + ") AND " +
                                     "(ft.short_caption='" + appl.Element("Faculty").Value + "') AND " +
                                     "(dt.faculty_id=ft.faculty_id)";
                                     direction_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
                                 }
                                 if (profile != "")
                                 {
-                                    query_tmp = "SELECT profile_id FROM `" + tbDirectToDBBaseName.Text + "`.`profile_table` WHERE short_caption='" + profile + "'";
+                                    query_tmp = "SELECT profile_id FROM `" + dbname + "`.`profile_table` WHERE short_caption='" + profile + "'";
                                     profile_id = Convert.ToInt16(new MySql.Data.MySqlClient.MySqlCommand(query_tmp, connection).ExecuteScalar().ToString());
                                 }
-                                Query = Query + "INSERT INTO `" + tbDirectToDBBaseName.Text + "`.`application_tmptable` " +
+                                Query = Query + "INSERT INTO `" + dbname + "`.`application_tmptable` " +
                                 "(`application_id`, `uin`, `direction_id`, `profile_id`, `_condition`, `appl_of_consent`, `form_of_education`) VALUES " +
                                 "(0, " + abitur.Element("Uin").Value + ", " + direction_id.ToString() + ", " + profile_id.ToString() + " ," +
                                 appl.Element("Condition").Value + " ," + appl.Element("ApplicationOfConsent").Value + " ," + appl.Element("FormOfEducation").Value + ");";
@@ -327,7 +333,7 @@ namespace SitePost
                     if ((cbPost.Checked) && (rbDirectToDB.Checked))
                     {
                         connection.Close();
-                        HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(tbDirectToDBAdressForScript.Text);
+                        HttpWebRequest HttpRequest = (HttpWebRequest)WebRequest.Create(script);
                         HttpWebResponse HttpResponse;
                         HttpResponse = (HttpWebResponse)HttpRequest.GetResponse();
                         if (HttpResponse.StatusCode == HttpStatusCode.OK)
@@ -406,13 +412,12 @@ namespace SitePost
                     }
 
                 }
-                threadPost.Abort();
             }
             catch (Exception e)
-            {
+            {                
                 MessageBox.Show(e.Message);
             }
-            }
+        }
 
         private void SetMarks(uint appID, XElement abitur, IEnumerable<DB_Queries.Mark> marks)
         {
@@ -698,7 +703,7 @@ namespace SitePost
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //threadPost.Abort();
+            threadPost.Abort();
         }
     }
 }
