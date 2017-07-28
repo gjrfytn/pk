@@ -14,20 +14,20 @@ namespace PK.Forms
             public readonly string Series;
             public readonly string Number;
             public readonly string LastName;
-            public readonly string FirstName;
-            public readonly string MiddleName;
+            //public readonly string FirstName;
+            //public readonly string MiddleName;
             public readonly uint SubjectID;
             public readonly ushort Value;
             public readonly bool Checked;
 
-            public EGE_Result(uint applID, string series, string number, string lastName, string firstName, string middleName, uint subjectID, ushort value, bool checked_)
+            public EGE_Result(uint applID, string series, string number, string lastName/*, string firstName, string middleName*/, uint subjectID, ushort value, bool checked_)
             {
                 ApplID = applID;
                 Series = series;
                 Number = number;
                 LastName = lastName;
-                FirstName = firstName;
-                MiddleName = middleName;
+                //FirstName = firstName;
+                //MiddleName = middleName;
                 SubjectID = subjectID;
                 Value = value;
                 Checked = checked_;
@@ -60,21 +60,22 @@ namespace PK.Forms
                     ).Select(s => (uint)s[0])).Where(s => s.Type == "identity").Join(
                     _DB_Connection.Select(
                         DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
-                        new string[] { "document_id", "last_name", "first_name", "middle_name" },
+                        new string[] { "document_id", "last_name"/*, "first_name", "middle_name"*/ },
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("type_id",Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.IDENTITY_DOC_TYPE,DB_Helper.PassportName))
                         }),
                     k1 => k1.ID,
                     k2 => k2[0],
-                    (s1, s2) => Tuple.Create(s2[1].ToString(), s2[2].ToString(), s2[3] as string, s1.Series, s1.Number));
+                    (s1, s2) => Tuple.Create(s2[1].ToString(),/* s2[2].ToString(), s2[3] as string,*/ s1.Series, s1.Number));
 
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(saveFileDialog.FileName, false, System.Text.Encoding.GetEncoding(1251)))
                 {
                     foreach (var appl in GetEgeResults().Select(s =>
-                    Tuple.Create(s.LastName, s.FirstName, s.MiddleName, s.Series, s.Number)
+                    Tuple.Create(s.LastName/*, s.FirstName, s.MiddleName*/, s.Series, s.Number)
                     ).Concat(identities).Distinct())
-                        writer.WriteLine(appl.Item1 + "%" + appl.Item2 + "%" + appl.Item3 + "%" + appl.Item4 + "%" + appl.Item5);
+                        //writer.WriteLine(appl.Item1 + "%" + appl.Item2 + "%" + appl.Item3 + "%" + appl.Item4 + "%" + appl.Item5);
+                        writer.WriteLine(appl.Item1 + "%%%" + appl.Item2 + "%" + appl.Item3);
                 }
 
                 Cursor.Current = Cursors.Default;
@@ -144,8 +145,8 @@ namespace PK.Forms
                         //Стоит ли проверять имена вообще?
                         IEnumerable<uint> applIDs = savedResults.Where(s =>
                         s.LastName.Equals(res.LastName, StringComparison.OrdinalIgnoreCase) &&
-                        s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                        s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
+                        //s.FirstName.Equals(res.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                        //s.MiddleName.Equals(res.MiddleName, StringComparison.OrdinalIgnoreCase) &&
                         s.Series == res.Series &&
                         s.Number == res.Number
                         ).GroupBy(k => k.ApplID, (k, g) => k).Concat(identities.Where(s => s.Series == res.Series && s.Number == res.Number).Select(s => s.ApplID)).Distinct();
@@ -185,8 +186,8 @@ namespace PK.Forms
                                         res.Series,
                                         res.Number,
                                         res.LastName,
-                                        res.FirstName,
-                                        res.MiddleName,
+                                        //res.FirstName,
+                                        //res.MiddleName,
                                         res.Subject,
                                         res.Value,
                                         true
@@ -216,8 +217,8 @@ namespace PK.Forms
                                     res.Series,
                                     res.Number,
                                     res.LastName,
-                                    res.FirstName,
-                                    res.MiddleName,
+                                    //res.FirstName,
+                                    //res.MiddleName,
                                     res.Subject,
                                     res.Value,
                                     true
@@ -262,8 +263,8 @@ namespace PK.Forms
                     s2[1].ToString(),
                     s2[2].ToString(),
                     s1.LastN,
-                    s1.FirstN,
-                    s1.MiddleN,
+                    //s1.FirstN,
+                    //s1.MiddleN,
                     (uint)s2[3],
                     (ushort)s2[4],
                     (bool)s2[5]
