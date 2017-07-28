@@ -233,13 +233,11 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <String>Математика</String>
+                              <String>Результаты вступительного испытания</String>
                             </Text>
                           </Part>
                         </Parts>
                       </Paragraph>
-                      <Paragraph/>
-                      <Paragraph/>
                     </Paragraphs>
                   </Cell>
                   <Cell Column="1">
@@ -335,100 +333,36 @@
               </Row>
               <!--3-->
               <Row>
+                <Merges>
+                  <Merge>
+                    <StartColumn>0</StartColumn>
+                    <EndColumn>3</EndColumn>
+                  </Merge>
+                </Merges>
                 <Cells>
                   <Cell Column="0">
                     <Borders>
                       <Left>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Left>
                       <Top>
                         <Size>5</Size>
                       </Top>
                       <Right>
+                        <Size>5</Size>
                         <Style>Dashed</Style>
                       </Right>
                       <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Физика</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
+                      <Paragraph/>
                       <Paragraph/>
                       <Paragraph/>
                     </Paragraphs>
                   </Cell>
                   <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>LargeBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>2</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="4">
                     <Borders>
                       <Left>
                         <Size>5</Size>
@@ -465,7 +399,7 @@
                           <Part>
                             <FontID>LargeBold</FontID>
                             <Text>
-                              <Placeholder>3</Placeholder>
+                              <Placeholder>2</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -476,33 +410,31 @@
               </Row>
               <!--4-->
               <Row>
+                <Merges>
+                  <Merge>
+                    <StartColumn>0</StartColumn>
+                    <EndColumn>3</EndColumn>
+                  </Merge>
+                </Merges>
                 <Cells>
                   <Cell Column="0">
                     <Borders>
                       <Left>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Left>
                       <Top>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Top>
                       <Right>
+                        <Size>5</Size>
                         <Style>Dashed</Style>
                       </Right>
                       <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Русский язык</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
+                      <Paragraph/>
                       <Paragraph/>
                       <Paragraph/>
                     </Paragraphs>
@@ -510,54 +442,79 @@
                   <Cell Column="1">
                     <Borders>
                       <Left>
+                        <Size>5</Size>
                         <Style>Dashed</Style>
                       </Left>
                       <Top>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
                       <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
+                        <Style>None</Style>
                       </Bottom>
                     </Borders>
                     <Paragraphs>
                       <Paragraph>
-                        <FontID>LargeBold</FontID>
+                        <FontID>16Bold</FontID>
+                        <Alighment>Center</Alighment>
+                        <Parts>
+                          <Part>
+                            <Text>
+                              <Placeholder>3</Placeholder>
+                            </Text>
+                          </Part>
+                        </Parts>
+                      </Paragraph>
+                    </Paragraphs>
+                  </Cell>
+                </Cells>
+              </Row>
+              <!--5-->
+              <Row>
+                <Merges>
+                  <Merge>
+                    <StartColumn>0</StartColumn>
+                    <EndColumn>3</EndColumn>
+                  </Merge>
+                </Merges>
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                      <Right>
+                        <Size>5</Size>
+                        <Style>Dashed</Style>
+                      </Right>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph/>
+                      <Paragraph/>
+                      <Paragraph/>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
+                    <Borders>
+                      <Left>
+                        <Size>5</Size>
+                        <Style>Dashed</Style>
+                      </Left>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                      <Bottom>
+                        <Style>None</Style>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph>
+                        <FontID>16Bold</FontID>
                         <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
@@ -569,7 +526,40 @@
                       </Paragraph>
                     </Paragraphs>
                   </Cell>
-                  <Cell Column="4">
+                </Cells>
+              </Row>
+              <!--6-->
+              <Row>
+                <Merges>
+                  <Merge>
+                    <StartColumn>0</StartColumn>
+                    <EndColumn>3</EndColumn>
+                  </Merge>
+                </Merges>
+                <Cells>
+                  <Cell Column="0">
+                    <Borders>
+                      <Left>
+                        <Style>None</Style>
+                      </Left>
+                      <Top>
+                        <Style>None</Style>
+                      </Top>
+                      <Right>
+                        <Size>5</Size>
+                        <Style>Dashed</Style>
+                      </Right>
+                      <Bottom>
+                        <Size>5</Size>
+                      </Bottom>
+                    </Borders>
+                    <Paragraphs>
+                      <Paragraph/>
+                      <Paragraph/>
+                      <Paragraph/>
+                    </Paragraphs>
+                  </Cell>
+                  <Cell Column="1">
                     <Borders>
                       <Left>
                         <Size>5</Size>
@@ -590,253 +580,6 @@
                           <Part>
                             <Text>
                               <Placeholder>5</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <!--5-->
-              <Row>
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Left>
-                        <Size>5</Size>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Обществознание</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph/>
-                      <Paragraph/>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>LargeBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>6</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="4">
-                    <Borders>
-                      <Left>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Style>None</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>None</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>16Bold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>7</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                </Cells>
-              </Row>
-              <!--6-->
-              <Row>
-                <Cells>
-                  <Cell Column="0">
-                    <Borders>
-                      <Left>
-                        <Size>5</Size>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>Usual</FontID>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <String>Иностранный язык</String>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                      <Paragraph/>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="1">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="2">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                  </Cell>
-                  <Cell Column="3">
-                    <Borders>
-                      <Left>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Size>5</Size>
-                      </Top>
-                      <Right>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Right>
-                      <Bottom>
-                        <Size>5</Size>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>LargeBold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>8</Placeholder>
-                            </Text>
-                          </Part>
-                        </Parts>
-                      </Paragraph>
-                    </Paragraphs>
-                  </Cell>
-                  <Cell Column="4">
-                    <Borders>
-                      <Left>
-                        <Size>5</Size>
-                        <Style>Dashed</Style>
-                      </Left>
-                      <Top>
-                        <Style>None</Style>
-                      </Top>
-                      <Bottom>
-                        <Style>None</Style>
-                      </Bottom>
-                    </Borders>
-                    <Paragraphs>
-                      <Paragraph>
-                        <FontID>16Bold</FontID>
-                        <Alighment>Center</Alighment>
-                        <Parts>
-                          <Part>
-                            <Text>
-                              <Placeholder>9</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
@@ -878,7 +621,7 @@
                         <Parts>
                           <Part>
                             <Text>
-                              <Placeholder>10</Placeholder>
+                              <Placeholder>6</Placeholder>
                             </Text>
                           </Part>
                         </Parts>
