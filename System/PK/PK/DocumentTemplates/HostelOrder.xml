@@ -202,6 +202,11 @@
                 <Caption>Фамилия Имя Отчество</Caption>
                 <DataFontID>Usual</DataFontID>
               </Column>
+              <Column>
+                <CaptionFontID>UsualBold</CaptionFontID>
+                <Caption>Конкурсный балл</Caption>
+                <DataFontID>Usual</DataFontID>
+              </Column>
             </Structure>
           </Table>
         </Element>

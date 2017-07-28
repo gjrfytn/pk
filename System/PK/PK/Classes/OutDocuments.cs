@@ -724,21 +724,6 @@ namespace PK.Classes
                     new List<string[]>[] { table.ToList() }
                     ));
             }
-
-            private static void GetAgreedDirData(DB_Connector connection, uint applID, out Tuple<string, uint, string, uint, DateTime> agreedDir, out string dirShortName)
-            {
-                agreedDir = connection.Select(
-                    DB_Table.APPLICATIONS_ENTRANCES,
-                    new string[] { "faculty_short_name", "direction_id", "profile_short_name", "edu_form_id", "is_agreed_date" },
-                    new List<Tuple<string, Relation, object>>
-                    {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
-                        new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
-                        new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
-                    }).Select(s => Tuple.Create(s[0].ToString(), (uint)s[1], s[2] as string, (uint)s[3], (DateTime)s[4])).Single();
-
-                dirShortName = new DB_Helper(connection).GetDirectionShortName(agreedDir.Item1, agreedDir.Item2);
-            }
         }
 
         public static string RegistrationJournal(DB_Connector connection)
@@ -1019,8 +1004,8 @@ namespace PK.Classes
             {
                 { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB), ""},
                 { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP), " по договорам об образовании на обучение по образовательным программам высшего образования"},
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT), "" },
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ), " следующих абитуриентов, имеющих право на поступление по особой квоте" }
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT), " на места по квоте целевого приёма следующих абитуриентов" },
+                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ), " на места в пределах особой квоты следующих абитуриентов" }
             };
 
             var order = connection.Select(
@@ -1109,43 +1094,58 @@ namespace PK.Classes
                 {
                     if (order.Master)
                     {
+                        var marks = connection.Select(
+                                DB_Table.MASTERS_EXAMS_MARKS,
+                                new string[] { "entrant_id", "faculty", "direction_id", "profile_short_name", "mark", "bonus" },
+                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID) }
+                                ).Select(s => new { EntrID = (uint)s[0], Faculty = s[1].ToString(), Direction = (uint)s[2], Profile = s[3].ToString(), Sum = (short)s[4] + (ushort)s[5] });
+
                         List<Tuple<string, ushort>> result = new List<Tuple<string, ushort>>();
 
                         foreach (var appl in applications)
                         {
-                            var orders = connection.Select(
-                                DB_Table.ORDERS_HAS_APPLICATIONS,
-                                new string[] { "orders_number" },
-                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, appl.ApplID) }
-                                ).Join(
-                                connection.Select(
-                                    DB_Table.ORDERS,
-                                    new string[] { "number", "type", "date", "direction_id", "profile_short_name" },
-                                    new List<Tuple<string, Relation, object>>
-                                    {
-                                        new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
-                                        new Tuple<string, Relation, object>("type", Relation.NOT_EQUAL, "hostel"),
-                                        new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM,DB_Helper.EduFormO)),
-                                        new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, order.Faculty)
-                                    }),
-                                k1 => k1[0],
-                                k2 => k2[0],
-                                (s1, s2) => new { Type = s2[1].ToString(), Date = (DateTime)s2[2], Direction = (uint)s2[3], Profile = s2[4].ToString() }
-                                ).GroupBy(
-                                k => Tuple.Create(k.Direction, k.Profile),
-                                (k, g) => new
-                                {
+                            Tuple<string, uint, string, uint, DateTime> agreedDir;
+                            string dirShortName;
+                            GetAgreedDirData(connection, appl.ApplID, out agreedDir, out dirShortName);
 
-                                });
+                            result.Add(new Tuple<string, ushort>(
+                                appl.Name,
+                                (ushort)marks.Single(s => s.EntrID == appl.EntrID && s.Faculty == agreedDir.Item1 && s.Direction == agreedDir.Item2 && s.Profile == agreedDir.Item3).Sum)
+                                );
                         }
 
                         table = result;
-
-                        throw new NotImplementedException();
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        var marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Settings.CurrentCampaignID).GroupBy(
+                            k => Tuple.Create(k.ApplID, k.SubjID),
+                            (k, g) => new { Appl = k.Item1, Subj = k.Item2, Mark = g.Any(s => s.Checked) ? g.Where(s => s.Checked).Max(s => s.Value) : g.Max(s => s.Value) }
+                            );
+
+                        List<Tuple<string, ushort>> result = new List<Tuple<string, ushort>>();
+
+                        foreach (var appl in applications)
+                        {
+                            Tuple<string, uint, string, uint, DateTime> agreedDir;
+                            string dirShortName;
+                            GetAgreedDirData(connection, appl.ApplID, out agreedDir, out dirShortName);
+
+                            ushort sum = 0;
+
+                            sum += DB_Queries.GetApplicationIndAchMaxValue(connection, appl.ApplID);
+
+                            foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
+                            {
+                                var mark = marks.SingleOrDefault(s => s.Appl == appl.ApplID && s.Subj == subj);
+                                if (mark != null)
+                                    sum += mark.Mark;
+                            }
+
+                            result.Add(new Tuple<string, ushort>(appl.Name, sum));
+                        }
+
+                        table = result;
                     }
                 }
                 else
@@ -1244,6 +1244,21 @@ namespace PK.Classes
                 return list.Max();
 
             return null;
+        }
+
+        private static void GetAgreedDirData(DB_Connector connection, uint applID, out Tuple<string, uint, string, uint, DateTime> agreedDir, out string dirShortName)
+        {
+            agreedDir = connection.Select(
+                DB_Table.APPLICATIONS_ENTRANCES,
+                new string[] { "faculty_short_name", "direction_id", "profile_short_name", "edu_form_id", "is_agreed_date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
+                        new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
+                        new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
+                }).Select(s => Tuple.Create(s[0].ToString(), (uint)s[1], s[2] as string, (uint)s[3], (DateTime)s[4])).Single();
+
+            dirShortName = new DB_Helper(connection).GetDirectionShortName(agreedDir.Item1, agreedDir.Item2);
         }
     }
 }
