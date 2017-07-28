@@ -178,7 +178,7 @@ COMMENT = 'Факультеты.';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`dictionary_10_items` (
   `id` INT UNSIGNED NOT NULL COMMENT 'ИД направления.',
-  `name` VARCHAR(75) NOT NULL COMMENT 'Наименование направления.',
+  `name` VARCHAR(100) NOT NULL COMMENT 'Наименование направления.',
   `code` VARCHAR(14) NOT NULL COMMENT 'Код направления.',
   `qualification_code` VARCHAR(14) NULL COMMENT 'Код квалификации.',
   `period` VARCHAR(23) NULL COMMENT 'Период обучения.',
@@ -949,7 +949,7 @@ COMMENT = 'Пароли ролей (пользователей).';
 CREATE TABLE IF NOT EXISTS `pk_db`.`orders_has_applications` (
   `orders_number` VARCHAR(50) NOT NULL COMMENT 'Приказ.',
   `applications_id` INT UNSIGNED NOT NULL COMMENT 'Заявленеие.',
-  `record_book_number` CHAR(6) NULL COMMENT 'Номер зачётной книжки (для приказов о зачислении).',
+  `record_book_number` INT UNSIGNED NULL COMMENT 'Номер зачётной книжки (для приказов о зачислении).',
   PRIMARY KEY (`orders_number`, `applications_id`),
   INDEX `fk_orders_has_applications_applications1_idx` (`applications_id` ASC),
   INDEX `fk_orders_has_applications_orders1_idx` (`orders_number` ASC),
@@ -1083,6 +1083,11 @@ CREATE TABLE IF NOT EXISTS `pk_db`.`applications_documents_view` (`application_i
 -- Placeholder table for view `pk_db`.`applications_orders_dates`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pk_db`.`applications_orders_dates` (`application_id` INT, `adm_date` INT, `exc_date` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `pk_db`.`appl_and_marks_view`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pk_db`.`appl_and_marks_view` (`application_id` INT, `entrant_id` INT, `lettersexam` INT, `rus` INT, `math` INT, `phis` INT, `obsh` INT, `foren` INT);
 
 -- -----------------------------------------------------
 -- procedure get_campaign_edu_forms
@@ -1390,6 +1395,43 @@ CREATE  OR REPLACE VIEW `applications_orders_dates` AS
         WHERE
             orders.`type` = 'exception'
         GROUP BY orders_has_applications.applications_id) AS exc_ord ON adm_ord.applications_id = exc_ord.applications_id;
+
+-- -----------------------------------------------------
+-- View `pk_db`.`appl_and_marks_view`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pk_db`.`appl_and_marks_view`;
+USE `pk_db`;
+CREATE  OR REPLACE VIEW `appl_and_marks_view` AS
+    SELECT 
+    xyz.application_id,
+    xyz.entrant_id,
+    xyz.lettersexam,
+        IF((LOCATE('Р', xyz.lettersexam) > 0),
+            GET_MAX_MARK(xyz.application_id, 1, 0),
+            0) AS rus,
+        IF((LOCATE('М', xyz.lettersexam) > 0),
+            GET_MAX_MARK(xyz.application_id, 2, 0),
+            0) AS math,
+        IF((LOCATE('Ф', xyz.lettersexam) > 0),
+            GET_MAX_MARK(xyz.application_id, 10, 0),
+            0) AS phis,
+        IF((LOCATE('О', xyz.lettersexam) > 0),
+            GET_MAX_MARK(xyz.application_id, 9, 0),
+            0) AS obsh,
+        IF((LOCATE('И', xyz.lettersexam) > 0),
+            GET_MAX_MARK(xyz.application_id, 6, 0),
+            0) AS foren
+    FROM
+        (SELECT DISTINCT
+            appl_en.application_id,
+                appl.entrant_id,
+                GET_LETTERSEXAM(1, appl_en.direction_id, appl_en.faculty_short_name) AS lettersexam
+        FROM
+            (applications_entrances AS appl_en
+        JOIN applications AS appl ON ((appl.id = appl_en.application_id)))
+        WHERE
+            ((appl.campaign_id = 1)
+                AND (appl.status <> 'withdrawn'))) AS xyz;
 CREATE USER 'initial' IDENTIFIED BY '1234';
 
 GRANT SELECT ON TABLE `pk_db`.`users` TO 'initial';
@@ -1578,3 +1620,236 @@ INSERT INTO `pk_db`.`constants` (`min_math_mark`, `min_russian_mark`, `min_physi
 
 COMMIT;
 
+-- begin attached script 'unchecked_ege'
+SELECT appls.id, appls.last_name, appls.first_name, appls.middle_name, appls.series, appls.number, entrants.mobile_phone
+FROM entrants
+JOIN(
+SELECT appls.id, entrants_view.id AS entrant_id, entrants_view.last_name, entrants_view.first_name, entrants_view.middle_name, entrants_view.series, entrants_view.number
+FROM entrants_view
+JOIN
+(
+SELECT applications.id, applications.entrant_id
+FROM applications
+JOIN 
+(
+SELECT application_ege_results.application_id
+FROM application_ege_results
+WHERE application_ege_results.checked = FALSE && application_ege_results.value > 0
+GROUP BY application_ege_results.application_id
+) AS appls ON applications.id = appls.application_id
+WHERE applications.`status` = 'new') AS appls ON entrants_view.id = appls.entrant_id) AS appls ON entrants.id = appls.entrant_id
+WHERE appl_has_edu_source(appls.id, 16) = TRUE;
+-- end attached script 'unchecked_ege'
+-- begin attached script 'red_diploma_masters'
+SELECT 
+    appls.id,
+    entrants_view.last_name,
+    entrants_view.first_name,
+    entrants_view.middle_name
+FROM
+    (SELECT 
+        applications.id, applications.entrant_id
+    FROM
+        applications
+    JOIN individual_achievements ON applications.id = individual_achievements.application_id
+    WHERE
+        applications.master_appl = TRUE) AS appls
+        JOIN
+    entrants_view ON appls.entrant_id = entrants_view.id;
+-- end attached script 'red_diploma_masters'
+-- begin attached script 'record_books_numbers'
+SELECT 
+ appls.id,
+ entrants_view.last_name,
+ entrants_view.first_name,
+ entrants_view.middle_name,
+ appls.record_book_number
+FROM
+ (
+SELECT *
+FROM applications
+JOIN
+ orders_has_applications ON applications.id = orders_has_applications.applications_id
+) AS appls
+JOIN
+ entrants_view ON appls.entrant_id = entrants_view.id;
+-- end attached script 'record_books_numbers'
+-- begin attached script 'master_agreed'
+SELECT
+appls.id,
+entrants_view.last_name,
+entrants_view.first_name,
+entrants_view.middle_name,
+appls.faculty_short_name,
+appls.code,
+appls.name,
+appls.profile_short_name,
+appls.is_agreed_date
+FROM entrants_view
+JOIN
+(SELECT
+appls.*,
+dictionary_10_items.code,
+dictionary_10_items.name
+FROM
+dictionary_10_items
+JOIN
+(SELECT
+applications.id,
+applications.entrant_id,
+applications_entrances.faculty_short_name,
+applications_entrances.direction_id,
+applications_entrances.profile_short_name,
+applications_entrances.is_agreed_date
+FROM applications
+JOIN applications_entrances
+ON applications.id = applications_entrances.application_id
+WHERE applications.master_appl = TRUE AND applications_entrances.edu_source_id <> 15
+) AS appls ON appls.direction_id = dictionary_10_items.id
+) AS appls ON appls.entrant_id = entrants_view.id
+;
+-- end attached script 'master_agreed'
+-- begin attached script 'hostel'
+SELECT 
+    appls.id,
+    entrants_view.last_name,
+    entrants_view.first_name,
+    entrants_view.middle_name,
+    appls.benefit_kind_id,
+    appls.priority,
+    appls.faculty_short_name
+FROM
+    (SELECT 
+        appls.id,
+            appls.entrant_id,
+            application_common_benefits.benefit_kind_id,
+            appls.priority,
+            appls.faculty_short_name
+    FROM
+        (SELECT 
+        applications.id,
+            applications.entrant_id,
+            IFNULL(applications.priority_right,0) AS priority,
+            applications_entrances.faculty_short_name
+    FROM
+        applications
+    JOIN applications_entrances ON applications.id = applications_entrances.application_id
+    WHERE
+        applications.needs_hostel = TRUE
+            AND applications.master_appl = TRUE
+            AND applications.status != 'withdrawn'
+            AND applications_entrances.edu_source_id != 15) AS appls
+    LEFT JOIN application_common_benefits ON appls.id = application_common_benefits.application_id) AS appls
+        JOIN
+    entrants_view ON appls.entrant_id = entrants_view.id;
+-- end attached script 'hostel'
+-- begin attached script 'high_mark_appls'
+SELECT appls.id, appls.last_name, appls.first_name, appls.middle_name, appls.sum, entrants.mobile_phone
+FROM entrants
+JOIN(
+SELECT appls.id, appls.sum, entrants_view.id AS entrant_id, entrants_view.last_name, entrants_view.first_name, entrants_view.middle_name
+FROM entrants_view
+JOIN
+(
+SELECT applications.id, appls.sum, applications.entrant_id
+FROM applications
+JOIN 
+(
+SELECT application_ege_results.application_id, SUM(application_ege_results.value) AS SUM
+FROM application_ege_results
+WHERE application_ege_results.subject_id = 1 OR application_ege_results.subject_id = 2 OR application_ege_results.subject_id = 10
+GROUP BY application_ege_results.application_id
+HAVING COUNT(*) = 3 AND SUM>200
+ORDER BY SUM DESC) AS appls ON applications.id = appls.application_id
+WHERE applications.`status` = 'new') AS appls ON entrants_view.id = appls.entrant_id) AS appls ON entrants.id = appls.entrant_id
+WHERE is_budget_appl(appls.id) = TRUE;
+-- end attached script 'high_mark_appls'
+-- begin attached script 'foreigns'
+SELECT 
+    foreignersCountries.*, IFNULL(applications.compatriot, 0)
+FROM
+    applications
+        JOIN
+    (SELECT 
+        foreigners.application_id,
+            foreigners.last_name,
+            foreigners.first_name,
+            foreigners.middle_name,
+            dictionaries_items.name
+    FROM
+        dictionaries_items
+    JOIN (SELECT 
+        applications_documents_view.application_id,
+            passportsData.last_name,
+            passportsData.first_name,
+            passportsData.middle_name,
+            passportsData.nationality_id
+    FROM
+        applications_documents_view
+    JOIN (SELECT 
+        *
+    FROM
+        identity_docs_additional_data
+    WHERE
+        identity_docs_additional_data.nationality_id <> 1) AS passportsData ON applications_documents_view.id = passportsData.document_id) AS foreigners ON foreigners.nationality_id = dictionaries_items.item_id
+    WHERE
+        dictionaries_items.dictionary_id = 21) AS foreignersCountries ON applications.id = foreignersCountries.application_id;
+-- end attached script 'foreigns'
+-- begin attached script 'exam_entrants'
+SELECT 
+    applications.id,
+    entrants_view.last_name,
+    entrants_view.first_name,
+    entrants_view.middle_name
+FROM
+    applications
+        JOIN
+    entrants_view ON applications.entrant_id = entrants_view.id
+WHERE
+    applications.passing_examinations = TRUE;
+-- end attached script 'exam_entrants'
+-- begin attached script 'drop_all'
+USE pk_db;
+/*Удаляем все представления*/
+DROP VIEW applications_documents_view, applications_ege_marks_view, applications_orders_dates, applications_short_entrances_view, appl_and_marks_view, entrants_view;
+/*Удаляем все процедуры*/
+DROP PROCEDURE change_old_passport;
+DROP PROCEDURE get_application_directions;
+DROP PROCEDURE get_application_docs;
+DROP PROCEDURE get_application_profiles;
+DROP PROCEDURE get_campaign_edu_forms;
+DROP PROCEDURE get_camp_dirs_name_code;
+DROP PROCEDURE get_main_form_table;
+DROP PROCEDURE get_main_form_table_old;
+DROP PROCEDURE get_passport_and_recbook;
+DROP PROCEDURE get_school_info;
+/*Удаляем все функции*/
+DROP FUNCTION get_exams_by_app_id;
+DROP FUNCTION get_last_order;
+DROP FUNCTION get_lettersexam;
+DROP FUNCTION get_max_mark;
+DROP FUNCTION has_edu_doc_original;
+DROP FUNCTION is_budget_appl;
+
+-- end attached script 'drop_all'
+-- begin attached script 'directions_originals'
+SELECT counts.direction_faculty, dictionary_10_items.code, dictionary_10_items.name, counts.places, counts.count, counts.originals
+FROM dictionary_10_items
+JOIN
+(
+SELECT campaigns_directions_data.direction_faculty, campaigns_directions_data.direction_id, campaigns_directions_data.places_budget_o AS places, COUNT(*) AS COUNT, COUNT(appls.original_recieved_date) AS originals
+FROM campaigns_directions_data
+JOIN 
+(
+SELECT applications_entrances.application_id, applications_entrances.faculty_short_name, applications_entrances.direction_id, docs.original_recieved_date
+FROM applications_entrances
+JOIN 
+(
+SELECT _applications_has_documents.applications_id, documents.original_recieved_date
+FROM _applications_has_documents
+JOIN documents ON _applications_has_documents.documents_id = documents.id
+WHERE documents.`type` = 'school_certificate' OR documents.`type` = 'high_edu_diploma' OR documents.`type` = 'academic_diploma' OR documents.`type` = 'middle_edu_diploma') AS docs ON applications_entrances.application_id = docs.applications_id
+WHERE applications_entrances.edu_form_id = 11 AND applications_entrances.edu_source_id != 15) AS appls ON campaigns_directions_data.direction_faculty = appls.faculty_short_name AND campaigns_directions_data.direction_id = appls.direction_id
+WHERE campaigns_directions_data.campaign_id = 1
+GROUP BY campaigns_directions_data.direction_faculty, campaigns_directions_data.direction_id) AS counts ON dictionary_10_items.id = counts.direction_id;
+-- end attached script 'directions_originals'

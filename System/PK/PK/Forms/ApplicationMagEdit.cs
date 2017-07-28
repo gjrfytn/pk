@@ -1264,6 +1264,11 @@ namespace PK.Forms
                     control.Enabled = false;
                 btClose.Enabled = true;
             }
+            else if (application[5].ToString() == "adm_budget" || application[5].ToString() == "adm_paid" || application[5].ToString() == "adm_both")
+            {
+                btWithdraw.Enabled = false;
+                btPrint.Enabled = true;
+            }
             else
             {
                 btWithdraw.Enabled = true;
