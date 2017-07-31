@@ -12,6 +12,15 @@
       <xs:enumeration value="2"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="Abit_Status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="new"/>
+      <xs:enumeration value="adm_budget"/>
+      <xs:enumeration value="adm_paid"/>
+      <xs:enumeration value="adm_both"/>
+      <xs:enumeration value="withdrawn"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="Root">
     <xs:complexType>
       <xs:sequence>
@@ -59,6 +68,11 @@
                         <xs:documentation xml:lang="ru">Пароль.</xs:documentation>
                       </xs:annotation>
                     </xs:element>
+                    <xs:element name="Status" type="Abit_Status">
+                      <xs:annotation>
+                        <xs:documentation xml:lang="ru">Статус абитуриента.</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>                    
                     <xs:element name="MathBall" type="EGE_Mark">
                       <xs:annotation>
                         <xs:documentation xml:lang="ru">Балл по математике.</xs:documentation>

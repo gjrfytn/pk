@@ -152,7 +152,7 @@ namespace SitePost
             try
             {
                 List<object[]> appsData = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "id", "mcado", "chernobyl", "needs_hostel", "passing_examinations",
-                    "priority_right", "entrant_id" }, new List<Tuple<string, Relation, object>>
+                    "priority_right", "entrant_id", "status" }, new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CampaignID),
                     new Tuple<string, Relation, object>("master_appl", Relation.EQUAL, false),
@@ -204,6 +204,7 @@ namespace SitePost
                             new XElement("Name", names.Single(s => s.EntrID == (uint)application[6]).FirstName),
                             new XElement("Name2", names.Single(s => s.EntrID == (uint)application[6]).MiddleName),
                             new XElement("Password", passwords.Single(s => s.EntrID == (uint)application[6]).Password),
+                            new XElement("Status", application[7]),
                             new XElement("MathBall", 0),
                             new XElement("CheckedByFISMath", 0),
                             new XElement("PhisBall", 0),
@@ -260,14 +261,14 @@ namespace SitePost
                         if ((cbPost.Checked) && (rbDirectToDB.Checked))
                         {
                             string Query = "INSERT INTO `" + dbname + "`.`abitur_tmptable` " +
-                            "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, " +
+                            "(`abitur_id`, `uin`, `entrant_uin`, `surname`, `_name`, `name2`, `status`, " +
                             "`math_ball`, `checked_by_FIS_math`, `phis_ball`, `checked_by_FIS_phis`, `rus_ball`, `checked_by_FIS_rus`, " +
                             "`obsh_ball`, `checked_by_FIS_obsh`, `foren_ball`, `checked_by_FIS_foren`, `IA_ball`, " +
                             "`ODO`, `Olymp`, `Exam`, `hostel`, `PP`, `MCADO`, `Chern`, `appl_of_admission`, " +
                             "`passport_copy`, `a_d_copy`, `hr_ref_copy`, `referral_pk`, `med_ref`, `photo`, `password`, " +
                             "`orphan_document`, `invalid_document`, `pmp_document`, `absence_of_contraindications`) VALUES " +
                             "(0, " + abitur.Element("Uin").Value.ToString() + ", " + abitur.Element("EntrantUin").Value.ToString() + ", '" + abitur.Element("Surname").Value.ToString() + "', '" +
-                            abitur.Element("Name").Value.ToString() + "' ,'" + abitur.Element("Name2").Value.ToString() + "' ," +
+                            abitur.Element("Name").Value.ToString() + "' ,'" + abitur.Element("Name2").Value.ToString() + "' ,'" + abitur.Element("Status").Value.ToString() + "' ," +
                             abitur.Element("MathBall").Value.ToString() + " ," + abitur.Element("CheckedByFISMath").Value.ToString() + " ," +
                             abitur.Element("PhisBall").Value.ToString() + " ," + abitur.Element("CheckedByFISPhis").Value.ToString() + " ," +
                             abitur.Element("RusBall").Value.ToString() + " ," + abitur.Element("CheckedByFISRus").Value.ToString() + " ," +
