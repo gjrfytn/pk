@@ -92,71 +92,84 @@ namespace PK.Forms
                 MessageBox.Show("В разделе \"Забираемые документы\" не отмечены обязательные поля.");
             else
             {
-                    bool dateOk = true;
-                    if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
-                        && !SharedClasses.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
-                        dateOk = false;
-                    if (dateOk)
-                    {
-                        bool passportOK = true;
-                        List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" },
-                            new List<Tuple<string, Relation, object>>
-                            {
+                bool dateOk = true;
+                if ((dtpDateOfBirth.Tag.ToString() == "false" || dtpIDDocDate.Tag.ToString() == "false")
+                    && !SharedClasses.Utility.ShowChoiceMessageBox("Значения некоторых полей дат не были изменены. Продолжить?", "Даты не изменены"))
+                    dateOk = false;
+                if (dateOk)
+                {
+                    bool passportOK = true;
+                    List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" },
+                        new List<Tuple<string, Relation, object>>
+                        {
                                 new Tuple<string, Relation, object>("type", Relation.EQUAL, "identity"),
                                 new Tuple<string, Relation, object>("series", Relation.EQUAL, tbIDDocSeries.Text),
                                 new Tuple<string, Relation, object>("number", Relation.EQUAL, tbIDDocNumber.Text)
-                            });
-                        if (passportFound.Count > 0)
-                        {
-                            List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" },
-                                new List<Tuple<string, Relation, object>>
-                                {
+                        });
+                    if (passportFound.Count > 0)
+                    {
+                        List<object[]> oldApplications = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "status", "campaign_id", "id" },
+                            new List<Tuple<string, Relation, object>>
+                            {
                                     new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)_DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "applications_id" },
                                     new List<Tuple<string, Relation, object>>
                                 {
                                     new Tuple<string, Relation, object>("documents_id", Relation.EQUAL, (uint)passportFound[0][0])})[0][0])
-                                });
-                            foreach (object[] app in oldApplications)
-                                if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
-                                {
-                                    passportOK = false;
-                                    if (app[0].ToString() != "withdrawn")
-                                    {
-                                        MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
-                                        break;
-                                    }
-                                    else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
-                                        passportOK = true;
-                                }
-                        }
-                        if (passportOK)
-                        {
-                            Cursor.Current = Cursors.WaitCursor;
-
-                            using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                            });
+                        foreach (object[] app in oldApplications)
+                            if ((uint)app[1] == _CurrCampainID && (uint)app[2] != _ApplicationID)
                             {
-                                if (_ApplicationID == null)
+                                passportOK = false;
+                                if (app[0].ToString() != "withdrawn")
                                 {
-                                    SaveApplication(transaction);
-                                    btPrint.Enabled = true;
-                                    btWithdraw.Enabled = true;
+                                    MessageBox.Show("В данной кампании уже существует действующее заявление на этот паспорт.");
+                                    break;
                                 }
-                                else
-                                {
-                                    _EditingDateTime = DateTime.Now;
-                                    UpdateApplication(transaction);
-                                }
-                                transaction.Commit();
+                                else if (SharedClasses.Utility.ShowChoiceMessageBox("В данной кампании уже существует заявление на этот паспорт, по которому забрали документы. Создать новое заявление на этот паспорт?", "Паспорт уже существует"))
+                                    passportOK = true;
                             }
-                            Cursor.Current = Cursors.Default;
-                        }
                     }
+                    if (passportOK)
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                        {
+                            uint applID;
+                            if (!_ApplicationID.HasValue)
+                                applID = SaveApplication(transaction);
+                            else
+                            {
+                                applID = _ApplicationID.Value;
+                                _EditingDateTime = DateTime.Now;
+                                UpdateApplication(transaction);
+                            }
+                            transaction.Commit();
+                            _ApplicationID = applID;
+                            btPrint.Enabled = true;
+                            btWithdraw.Enabled = true;
+                        }
+                        Cursor.Current = Cursors.Default;
+                    }
+                }
             }
         }
 
         private void btPrint_Click(object sender, EventArgs e)
         {
-
+            if (MessageBox.Show("Выполнить сохранение?", "Сохранение", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                using (MySql.Data.MySqlClient.MySqlTransaction transaction = _DB_Connection.BeginTransaction())
+                {
+                    _EditingDateTime = DateTime.Now;
+                    UpdateApplication(transaction);
+                    transaction.Commit();
+                }
+                Cursor.Current = Cursors.Default;
+            }
+            ApplicationDocsPrint form = new ApplicationDocsPrint(_DB_Connection, _ApplicationID.Value);
+            form.ShowDialog();
         }
 
         private void btClose_Click(object sender, EventArgs e)
@@ -321,13 +334,14 @@ namespace PK.Forms
         }
 
 
-        private void SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private uint SaveApplication(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            SaveBasic(transaction);
-            SaveDiploma(transaction);
+            uint applID = SaveBasic(transaction);
+            SaveDiploma(applID, transaction);
             if (cbMedCertificate.Checked)
-                SaveCertificate(transaction);
-            SaveDirections(transaction);
+                SaveCertificate(applID, transaction);
+            SaveDirections(applID, transaction);
+            return applID;
         }
 
         private void LoadApplication()
@@ -335,7 +349,6 @@ namespace PK.Forms
             Cursor.Current = Cursors.WaitCursor;
             LoadBasic();
             LoadDocuments();
-            LoadDirections();
             Cursor.Current = Cursors.Default;
         }
 
@@ -347,7 +360,7 @@ namespace PK.Forms
         }
 
 
-        private void SaveBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private uint SaveBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             List<object[]> passportFound = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id" }, new List<Tuple<string, Relation, object>>
             {
@@ -380,7 +393,7 @@ namespace PK.Forms
                 }, transaction);
             }
 
-            _ApplicationID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object>
+            uint applID = _DB_Connection.Insert(DB_Table.APPLICATIONS, new Dictionary<string, object>
             {
                 { "entrant_id", _EntrantID.Value},
                 { "registration_time", DateTime.Now},
@@ -406,7 +419,7 @@ namespace PK.Forms
 
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
             {
-                { "applications_id", _ApplicationID},
+                { "applications_id", applID},
                 { "documents_id", idDocUid }
             }, transaction);
 
@@ -442,13 +455,14 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", otherDocID }
                 }, transaction);
             }
+            return applID;
         }
 
-        private void SaveDiploma(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveDiploma(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             string eduDocType = _InstitutionTypes.First(s => s[0] == cbInstitutionType.SelectedItem.ToString())[1];
             uint eduDocID = 0;
@@ -470,7 +484,7 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", eduDocID }
                 }, transaction);
             }
@@ -490,13 +504,13 @@ namespace PK.Forms
                 }, transaction);
                 _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
                 {
-                    { "applications_id", _ApplicationID },
+                    { "applications_id", applID },
                     { "documents_id", eduDocID }
                 }, transaction);
             }
         }
 
-        private void SaveCertificate(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveCertificate(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
             uint spravkaID = _DB_Connection.Insert(DB_Table.DOCUMENTS, new Dictionary<string, object>
             {
@@ -509,14 +523,25 @@ namespace PK.Forms
             }, transaction);
             _DB_Connection.Insert(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new Dictionary<string, object>
             {
-                { "applications_id", _ApplicationID },
+                { "applications_id", applID },
                 { "documents_id", spravkaID }
             }, transaction);
         }
 
-        private void SaveDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
+        private void SaveDirections(uint applID, MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-            //TODO
+            _DB_Connection.Insert(DB_Table.APPLICATIONS_ENTRANCES,
+                new Dictionary<string, object>
+                {
+                    { "application_id", applID },
+                    { "faculty_short_name", dgvDirection.Rows[0].Cells[1].Value },
+                    { "direction_id", dgvDirection.Rows[0].Cells[0].Value },
+                    { "edu_form_dict_id", FIS_Dictionary.EDU_FORM },
+                    { "edu_form_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, SharedClasses.DB.DB_Helper.EduFormO ) },
+                    { "edu_source_dict_id", FIS_Dictionary.EDU_SOURCE },
+                    { "edu_source_id", _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, SharedClasses.DB.DB_Helper.EduSourceP) },
+                    { "profile_short_name", dgvDirection.Rows[0].Cells[2].Value }
+                }, transaction);         
         }
 
 
@@ -653,11 +678,6 @@ namespace PK.Forms
             }
         }
 
-        private void LoadDirections()
-        {
-            //TODO
-        }
-
 
         private void UpdateBasic(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
@@ -768,7 +788,7 @@ namespace PK.Forms
                 }
                 if (cbMedCertificate.Checked && !certificateFound)
                 {
-                    SaveCertificate(transaction);
+                    SaveCertificate(_ApplicationID.Value, transaction);
                 }
 
                 if (cbPhotos.Checked && !photosFound)
@@ -785,7 +805,28 @@ namespace PK.Forms
 
         private void UpdateDirections(MySql.Data.MySqlClient.MySqlTransaction transaction)
         {
-
+            List<object[]> oldD = new List<object[]>();
+            List<object[]> newD = new List<object[]>();
+            string[] fieldsList = new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
+                "edu_source_dict_id", "edu_source_id", "profile_short_name" };
+            foreach (object[] record in _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, fieldsList, new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object> ("application_id", Relation.EQUAL, _ApplicationID)
+            }))
+                oldD.Add(record);
+            newD.Add(new object[]
+            {
+                _ApplicationID,
+                dgvDirection.Rows[0].Cells[1].Value,
+                dgvDirection.Rows[0].Cells[0].Value,
+                FIS_Dictionary.EDU_FORM,
+                _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, SharedClasses.DB.DB_Helper.EduFormO),
+                FIS_Dictionary.EDU_SOURCE,
+                _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, SharedClasses.DB.DB_Helper.EduSourceP),
+                dgvDirection.Rows[0].Cells[2].Value
+            });
+            _DB_Helper.UpdateData(DB_Table.APPLICATIONS_ENTRANCES, oldD, newD, fieldsList, new string[] { "application_id", "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id",
+                "edu_source_dict_id", "edu_source_id" }, transaction);
         }
 
 
@@ -798,14 +839,14 @@ namespace PK.Forms
 
         private void LoadSPOProgram()
         {
-            List<object[]> spoDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_DIRECTIONS_DATA, new string[] { "direction_faculty", "direction_id" },
+            List<object[]> spoDirs = _DB_Connection.Select(DB_Table.CAMPAIGNS_PROFILES_DATA, new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, _CurrCampainID),
-                    new Tuple<string, Relation, object>("places_budget_o", Relation.GREATER_EQUAL, 0)
+                    new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, _CurrCampainID),
+                    new Tuple<string, Relation, object>("places_paid_o", Relation.GREATER_EQUAL, 0)
                 });
             foreach (object[] dir in spoDirs)
-                dgvDirection.Rows.Add((uint)dir[1], dir[0].ToString(), _DB_Helper.GetDirectionNameAndCode((uint)dir[1]).Item1, "Специалист", "Очная платная");//TODO Проверить
+                dgvDirection.Rows.Add((uint)dir[1], dir[0].ToString(), dir[2].ToString(), "Специалист", "Очная платная");
         }
     }
 }
