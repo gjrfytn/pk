@@ -483,11 +483,11 @@ namespace PK.Classes
                         ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Зачисление " + order.Number,
-                        order.Number,
-                       new TDate(order.Date),
-                       null,
-                       order.EduForm,
-                       order.EduSource
+                        order.Number + " " + campaignID.ToString(),
+                        new TDate(order.Date),
+                        null,
+                        order.EduForm,
+                        order.EduSource
                         ));
 
                     foreach (object[] appl in connection.Select(
@@ -497,7 +497,7 @@ namespace PK.Classes
                         ))
                         applications.Add(new ApplicationOrd(
                             ComposeApplicationUID(campaignID, (uint)appl[0]),
-                            new TUID(order.Number),
+                            ComposeOrderUID(campaignID, order.Number),
                             1,
                             ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource)
                             ));
@@ -508,11 +508,11 @@ namespace PK.Classes
                         ComposeOrderUID(campaignID, order.Number),
                         new TUID(campaignID),
                         "Отчисление " + order.Number,
-                        order.Number,
-                       new TDate(order.Date),
-                       null,
-                       order.EduForm,
-                       order.EduSource
+                        order.Number + " " + campaignID.ToString(),
+                        new TDate(order.Date),
+                        null,
+                        order.EduForm,
+                        order.EduSource
                         ));
 
                     foreach (object[] appl in connection.Select(

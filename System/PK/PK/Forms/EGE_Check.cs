@@ -92,7 +92,10 @@ namespace PK.Forms
                     DB_Helper.SubjectRus,
                     DB_Helper.SubjectPhis,
                     DB_Helper.SubjectObsh,
-                    DB_Helper.SubjectForen
+                    DB_Helper.SubjectForen,
+                    "Английский язык",
+                    "Немецкий язык",
+                    "Французский язык"
                 };
 
                 Cursor.Current = Cursors.WaitCursor;

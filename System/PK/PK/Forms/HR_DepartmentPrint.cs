@@ -122,6 +122,19 @@ namespace PK.Forms
                     (s1, s2) => new { s1.ApplID, s1.EntrID, s1.RecordBook, LastName = s2[1].ToString(), FirstName = s2[2].ToString(), MiddleName = s2[3] as string }
                     );
 
+                List<Tuple<string, Relation, object>> whereExpr = new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("type",Relation.EQUAL,"exception"),
+                    new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
+                    new Tuple<string, Relation, object>("edu_form_id",Relation.EQUAL,order.EduForm),
+                    new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,order.EduSource),
+                    new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,order.Faculty),
+                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction)
+                };
+
+                if (order.Profile != null)
+                    whereExpr.Add(new Tuple<string, Relation, object>("profile_short_name", Relation.EQUAL, order.Profile));
+
                 applications = applications.Where(s =>
                 {
                     IEnumerable<DateTime> admDates = _DB_Connection.Select(
@@ -130,16 +143,8 @@ namespace PK.Forms
                         new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, s.ApplID) }
                         ).Join(
                         _DB_Connection.Select(DB_Table.ORDERS, new string[] { "number", "date" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("type",Relation.EQUAL,"exception"),
-                            new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null),
-                            new Tuple<string, Relation, object>("edu_form_id",Relation.EQUAL,order.EduForm),
-                            new Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL,order.EduSource),
-                            new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,order.Faculty),
-                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction),
-                            order.Profile!=null?new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile):null
-                        }),
+                        whereExpr
+                        ),
                         k1 => k1[0],
                         k2 => k2[0],
                         (s1, s2) => (DateTime)s2[1]
