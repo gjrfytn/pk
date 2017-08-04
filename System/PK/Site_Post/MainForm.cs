@@ -477,7 +477,7 @@ namespace SitePost
                     abitur.Element("Documents").SetElementValue("InvalidDocument", 1);
                     abitur.Element("Documents").SetElementValue("ReferralPK", 1);
                 }
-                else if (doc.Type == "high_edu_diploma" || doc.Type == "school_certificate" || doc.Type == "middle_edu_diploma")
+                else if (doc.Type == "high_edu_diploma" || doc.Type == "school_certificate" || doc.Type == "middle_edu_diploma" || doc.Type == "academic_diploma")
                 {
                     abitur.Element("Documents").SetElementValue("CertificateDiplomCopy", 1);
                     if (doc.OrigDate.HasValue)
