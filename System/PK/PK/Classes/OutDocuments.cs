@@ -609,15 +609,13 @@ namespace PK.Classes
                 ApplicationData applData,
                 IEnumerable<Tuple<uint, byte>> marks)
             {
-                Tuple<string, uint, string, uint, DateTime> agreedDir;
-                string dirShortName;
-                GetAgreedDirData(connection, applID, out agreedDir, out dirShortName);
+                EntranceData agreedDir = GetAgreedDirData(connection, applID);
 
                 ushort sum = 0;
 
                 sum += DB_Queries.GetApplicationIndAchMaxValue(connection, applID);
 
-                foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
+                foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Faculty, agreedDir.Direction))
                 {
                     var mark = marks.SingleOrDefault(s => s.Item1 == subj);
                     if (mark != null)
@@ -632,12 +630,13 @@ namespace PK.Classes
                     new string[]
                     {
                         (applData.LastName + " " + applData.FirstName + " " + applData.MiddleName).ToUpper(),
-                        dbHelper.GetDirectionNameAndCode(agreedDir.Item2).Item1+" ("+dirShortName+")",
-                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.Item4),
+                        dbHelper.GetDirectionNameAndCode(agreedDir.Direction).Item1+" ("+agreedDir.DirShortName+")",
+                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.EduForm),
                         applID.ToString(),
                         sum.ToString(),
                         applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
-                        agreedDir.Item5.ToShortDateString()
+                        agreedDir.AgreedDate.Value.ToShortDateString(),
+                        agreedDir.AgreementCount.ToString()
                     },
                     null
                     ));
@@ -650,9 +649,7 @@ namespace PK.Classes
                ApplicationData applData,
                byte redDiplomaMark)
             {
-                Tuple<string, uint, string, uint, DateTime> agreedDir;
-                string dirShortName;
-                GetAgreedDirData(connection, applID, out agreedDir, out dirShortName);
+                EntranceData agreedDir = GetAgreedDirData(connection, applID);
 
                 var mark = connection.Select(
                     DB_Table.MASTERS_EXAMS_MARKS,
@@ -661,9 +658,9 @@ namespace PK.Classes
                     {
                         new Tuple<string, Relation, object>("entrant_id",Relation.EQUAL,applData.EntrantID),
                         new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
-                        new Tuple<string, Relation, object>("faculty",Relation.EQUAL,agreedDir.Item1),
-                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir.Item2),
-                        new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,agreedDir.Item3)
+                        new Tuple<string, Relation, object>("faculty",Relation.EQUAL,agreedDir.Faculty),
+                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,agreedDir.Direction),
+                        new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,agreedDir.Profile)
                     }).Select(s => new { Exam = (short)s[0], Bonus = (ushort)s[1] }).Single();
 
                 DB_Helper dbHelper = new DB_Helper(connection);
@@ -674,12 +671,12 @@ namespace PK.Classes
                     new string[]
                     {
                         (applData.LastName + " " + applData.FirstName + " " + applData.MiddleName).ToUpper(),
-                        DB_Queries.GetProfileName(connection,agreedDir.Item1,agreedDir.Item2,agreedDir.Item3).Split('|')[0]+" ("+agreedDir.Item3+")",
-                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.Item4),
+                        DB_Queries.GetProfileName(connection,agreedDir.Faculty,agreedDir.Direction,agreedDir.Profile).Split('|')[0]+" ("+agreedDir.Profile+")",
+                        dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM,agreedDir.EduForm),
                         applID.ToString()+"м",
                         mark.Exam!=-1?(mark.Exam+mark.Bonus/*+redDiplomaMark*/).ToString():"",
                         applData.LastName.ToUpper()+" "+applData.FirstName[0]+"."+(applData.MiddleName.Length!=0?applData.MiddleName[0]+".":""),
-                        agreedDir.Item5.ToShortDateString()
+                        agreedDir.AgreedDate.Value.ToShortDateString()
                     },
                     null
                     ));
@@ -724,6 +721,17 @@ namespace PK.Classes
                     new List<string[]>[] { table.ToList() }
                     ));
             }
+        }
+
+        class EntranceData
+        {
+            public string Faculty;
+            public uint Direction;
+            public string Profile;
+            public uint EduForm;
+            public DateTime? AgreedDate;
+            public byte AgreementCount;
+            public string DirShortName;
         }
 
         public static string RegistrationJournal(DB_Connector connection)
@@ -991,21 +999,73 @@ namespace PK.Classes
                 throw new ArgumentException("Некорректный номер приказа.", nameof(number));
             #endregion
 
-            Dictionary<uint, string> forms = new Dictionary<uint, string>
-            {
-                { 11, "очной формы"},
-                { 12, "очно-заочной (вечерней) формы"},
-                { 10, "заочной формы" }
-            };
-
             DB_Helper dbHelper = new DB_Helper(connection);
 
-            Dictionary<uint, string> sources = new Dictionary<uint, string>
+            Dictionary<Tuple<uint, uint>, string> formsSources = new Dictionary<Tuple<uint, uint>, string>
             {
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB), ""},
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP), " по договорам об образовании на обучение по образовательным программам высшего образования"},
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT), " на места по квоте целевого приёма следующих абитуриентов" },
-                { dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ), " на места в пределах особой квоты следующих абитуриентов" }
+                {
+                    new Tuple<uint,uint>(
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO),
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB)
+                    ),
+                    "очной бюджетной формы обучения"
+                },
+                {
+                    new Tuple<uint,uint>(
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO),
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT)
+                    ),
+                    "очной бюджетной формы обучения на места по квоте целевого приёма следующих абитуриентов"
+                },
+                {
+                    new Tuple<uint,uint>(
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO),
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ)
+                    ),
+                    "очной бюджетной формы обучения на места в пределах особой квоты следующих абитуриентов"
+                },
+                {
+                    new Tuple<uint,uint>(
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO),
+                    dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP)
+                    ),
+                    "очной формы обучения по договорам об образовании на обучение по образовательным программам высшего образования"
+                },
+                {
+                    new Tuple<uint,uint>(
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ),
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceB)
+                        ),
+                    "очно-заочной (вечерней) бюджетной формы обучения"
+                },
+                {
+                    new Tuple<uint,uint>(
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ),
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT)
+                        ),
+                    "очно-заочной (вечерней) бюджетной формы обучения на места по квоте целевого приёма следующих абитуриентов"
+                },
+                {
+                    new Tuple<uint,uint>(
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ),
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceQ)
+                        ),
+                    "очно-заочной (вечерней) бюджетной формы обучения на места в пределах особой квоты следующих абитуриентов"
+                },
+                {
+                    new Tuple<uint,uint>(
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ),
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP)
+                        ),
+                    "очно-заочной (вечерней) формы обучения по договорам об образовании на обучение по образовательным программам высшего образования"
+                },
+                {
+                    new Tuple<uint,uint>(
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormZ),
+                        dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP)
+                        ),
+                    "заочной формы обучения по договорам об образовании на обучение по образовательным программам высшего образования"
+                },
             };
 
             var order = connection.Select(
@@ -1067,8 +1127,7 @@ namespace PK.Classes
                 Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction.Value);
                 paramaters.AddRange(new string[]
                 {
-                    forms[order.EduForm] + " обучения" +
-                    sources[order.EduSource] ,
+                    formsSources[Tuple.Create(order.EduForm,order.EduSource)],
                     order.Faculty,
                     dirNameCode.Item2,
                     dirNameCode.Item1,
@@ -1104,13 +1163,11 @@ namespace PK.Classes
 
                         foreach (var appl in applications)
                         {
-                            Tuple<string, uint, string, uint, DateTime> agreedDir;
-                            string dirShortName;
-                            GetAgreedDirData(connection, appl.ApplID, out agreedDir, out dirShortName);
+                            EntranceData agreedDir = GetAgreedDirData(connection, appl.ApplID);
 
                             result.Add(new Tuple<string, ushort>(
                                 appl.Name,
-                                (ushort)marks.Single(s => s.EntrID == appl.EntrID && s.Faculty == agreedDir.Item1 && s.Direction == agreedDir.Item2 && s.Profile == agreedDir.Item3).Sum)
+                                (ushort)marks.Single(s => s.EntrID == appl.EntrID && s.Faculty == agreedDir.Faculty && s.Direction == agreedDir.Direction && s.Profile == agreedDir.Profile).Sum)
                                 );
                         }
 
@@ -1127,15 +1184,13 @@ namespace PK.Classes
 
                         foreach (var appl in applications)
                         {
-                            Tuple<string, uint, string, uint, DateTime> agreedDir;
-                            string dirShortName;
-                            GetAgreedDirData(connection, appl.ApplID, out agreedDir, out dirShortName);
+                            EntranceData agreedDir = GetAgreedDirData(connection, appl.ApplID);
 
                             ushort sum = 0;
 
                             sum += DB_Queries.GetApplicationIndAchMaxValue(connection, appl.ApplID);
 
-                            foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Item1, agreedDir.Item2))
+                            foreach (uint subj in DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, agreedDir.Faculty, agreedDir.Direction))
                             {
                                 var mark = marks.SingleOrDefault(s => s.Appl == appl.ApplID && s.Subj == subj);
                                 if (mark != null)
@@ -1217,7 +1272,7 @@ namespace PK.Classes
                                 (k, g) => new { g.First().ApplID, Mark = g.Max(s => s.Value) }
                                 ).GroupBy(
                                 k => k.ApplID,
-                                (k, g) => new { g.First().ApplID, Sum = g.Sum(s => s.Mark) }
+                                (k, g) => new { ApplID = k, Sum = g.Sum(s => s.Mark) + DB_Queries.GetApplicationIndAchMaxValue(connection, k) }
                                 ),
                             k1 => k1.ApplID,
                             k2 => k2.ApplID,
@@ -1225,6 +1280,7 @@ namespace PK.Classes
                             );
                     }
                 }
+
                 string filename = order.Type == "admission" ? "AdmOrder" : "HostelOrder";
                 doc = Settings.TempPath + filename + new Random().Next();
                 DocumentCreator.Create(
@@ -1246,19 +1302,37 @@ namespace PK.Classes
             return null;
         }
 
-        private static void GetAgreedDirData(DB_Connector connection, uint applID, out Tuple<string, uint, string, uint, DateTime> agreedDir, out string dirShortName)
+        private static EntranceData GetAgreedDirData(DB_Connector connection, uint applID)
         {
-            agreedDir = connection.Select(
+            object[] agreedDir = connection.Select(
                 DB_Table.APPLICATIONS_ENTRANCES,
                 new string[] { "faculty_short_name", "direction_id", "profile_short_name", "edu_form_id", "is_agreed_date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
-                        new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
-                        new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
-                }).Select(s => Tuple.Create(s[0].ToString(), (uint)s[1], s[2] as string, (uint)s[3], (DateTime)s[4])).Single();
+                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
+                    new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null),
+                    new Tuple<string, Relation, object>("is_disagreed_date", Relation.EQUAL,null),
+                }).Single();
 
-            dirShortName = new DB_Helper(connection).GetDirectionShortName(agreedDir.Item1, agreedDir.Item2);
+            int count = connection.Select(
+                DB_Table.APPLICATIONS_ENTRANCES,
+                new string[] { "is_agreed_date" },
+                new List<Tuple<string, Relation, object>>
+                {
+                    new Tuple<string, Relation, object>("application_id", Relation.EQUAL,applID),
+                    new Tuple<string, Relation, object>("is_agreed_date", Relation.NOT_EQUAL,null)
+                }).Count;
+
+            return new EntranceData
+            {
+                Faculty = agreedDir[0].ToString(),
+                Direction = (uint)agreedDir[1],
+                Profile = agreedDir[2] as string,
+                EduForm = (uint)agreedDir[3],
+                AgreedDate = (DateTime)agreedDir[4],
+                AgreementCount = (byte)count,
+                DirShortName = new DB_Helper(connection).GetDirectionShortName(agreedDir[0].ToString(), (uint)agreedDir[1])
+            };
         }
     }
 }

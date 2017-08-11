@@ -56,7 +56,12 @@
             <Parts>
               <Part>
                 <Text>
-                  <String>ЗАЯВЛЕНИЕ О СОГЛАСИИ НА ЗАЧИСЛЕНИЕ</String>
+                  <String>ЗАЯВЛЕНИЕ О СОГЛАСИИ НА ЗАЧИСЛЕНИЕ №</String>
+                </Text>
+              </Part>
+              <Part>
+                <Text>
+                  <Placeholder>7</Placeholder>
                 </Text>
               </Part>
             </Parts>
