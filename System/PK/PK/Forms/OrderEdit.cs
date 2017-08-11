@@ -282,6 +282,8 @@ namespace PK.Forms
             else
                 FillTable(GetHostelCandidates());
 
+            dataGridView.Select();
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -458,7 +460,18 @@ namespace PK.Forms
 
         private IEnumerable<uint> GetHostelCandidates()
         {
-            return GetCampApplsWithStatuses("adm_budget", "adm_both").Where(appl =>
+            IEnumerable<uint> applications = GetCampApplsWithStatuses("adm_budget", "adm_both").Join(
+                _DB_Connection.Select(
+                    DB_Table.APPLICATIONS,
+                    new string[] { "id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("needs_hostel", Relation.EQUAL, true) }
+                    ),
+                k1 => k1,
+                k2 => k2[0],
+                (s1, s2) => s1
+                );
+
+            return applications.Where(appl =>
             {
                 var orders = GetAdmExcOrders(appl, cbFDP.SelectedValue.ToString());
                 var admOrders = orders.Where(s => s.Item1 == "admission");

@@ -28,6 +28,12 @@ namespace PK.Forms
 
             _DB_Connection = connection;
 
+            #region Components
+            dataGridView_Date.ValueType = typeof(DateTime);
+
+            toolStrip_RegFilter.SelectedIndex = 0;
+            #endregion
+
             UpdateTable();
         }
 
@@ -96,6 +102,11 @@ namespace PK.Forms
             ToggleButtons();
         }
 
+        private void toolStrip_RegFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateTable();
+        }
+
         private void UpdateTable()
         {
             DataGridViewColumn sortedColumn = dataGridView.SortedColumn;
@@ -111,13 +122,22 @@ namespace PK.Forms
             dataGridView.Rows.Clear();
 
             DB_Helper dbHelper = new DB_Helper(_DB_Connection);
+
+            List<Tuple<string, Relation, object>> filter = new List<Tuple<string, Relation, object>>
+            {
+                new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
+            };
+
+            if (toolStrip_RegFilter.SelectedItem.ToString() == "Зарегистрированные")
+                filter.Add(new Tuple<string, Relation, object>("protocol_number", Relation.NOT_EQUAL, null));
+            else if (toolStrip_RegFilter.SelectedItem.ToString() == "Незарегистрированные")
+                filter.Add(new Tuple<string, Relation, object>("protocol_number", Relation.EQUAL, null));
+
             foreach (var row in _DB_Connection.Select(
                 DB_Table.ORDERS,
                 new string[] { "number", "type", "date", "protocol_number", "edu_source_id", "edu_form_id", "faculty_short_name", "direction_id", "profile_short_name" },
-                new List<Tuple<string, Relation, object>>
-                {
-                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID)
-                }).GroupJoin(
+                filter
+                ).GroupJoin(
                 _DB_Connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, "orders_number"),
                 k1 => k1[0],
                 k2 => k2[0],
@@ -126,11 +146,11 @@ namespace PK.Forms
                 dataGridView.Rows.Add(
                     row.e[0],
                     _OrderTypes[row.e[1].ToString()],
-                    ((DateTime)row.e[2]).ToShortDateString(),
+                    (DateTime)row.e[2],
                     row.e[3] as ushort?,
                     dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, (uint)row.e[4]),
                     dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, (uint)row.e[5]),
-                    row.e[7] is uint ? row.e[6].ToString() + " " + dbHelper.GetDirectionNameAndCode((uint)row.e[7]).Item1 : null,
+                    row.e[6].ToString() + (row.e[7] is uint ? " " + dbHelper.GetDirectionNameAndCode((uint)row.e[7]).Item1 : null),
                     row.e[8] is string ? DB_Queries.GetProfileName(_DB_Connection, row.e[6].ToString(), (uint)row.e[7], row.e[8].ToString()) : null,
                     row.Count
                     );

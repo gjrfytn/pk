@@ -149,6 +149,7 @@ namespace PK.Forms
                           new List<Tuple<string, Relation, object>>
                           {
                             new Tuple<string, Relation, object>("type",Relation.EQUAL,"hostel"),
+                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Classes.Settings.CurrentCampaignID),
                             new Tuple<string, Relation, object>("faculty_short_name",Relation.EQUAL,faculty),
                             new Tuple<string, Relation, object>("protocol_number",Relation.NOT_EQUAL,null)
                           }).Join(
