@@ -310,9 +310,26 @@ namespace PK.Classes
             if (applicationsBD.Count() == 0)
                 return null;
 
+            DB_Helper dbHelper = new DB_Helper(connection);
+
+            var paidAdmDates = connection.Select(DB_Table.ORDERS_HAS_APPLICATIONS, "orders_number", "applications_id").Join(
+                connection.Select(
+                    DB_Table.ORDERS,
+                    new string[] { "number", "edu_form_id", "direction_id", "date" },
+                    new List<System.Tuple<string, Relation, object>>
+                    {
+                        new System.Tuple<string, Relation, object>("campaign_id",Relation.EQUAL, Settings.CurrentCampaignID),
+                        new System.Tuple<string, Relation, object>("type",Relation.EQUAL, "admission"),
+                        new System.Tuple<string, Relation, object>("edu_source_id",Relation.EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP))
+                    }),
+                k1 => k1[0],
+                k2 => k2[0],
+                (s1, s2) => new { ApplID = (uint)s1[1], EduForm = (uint)s2[1], Direction = (uint)s2[2], Date = (System.DateTime)s2[3] }
+                );
+
             IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
-            bool isMasterCampaign = new DB_Helper(connection).IsMasterCampaign(campaignID);
+            bool isMasterCampaign = dbHelper.IsMasterCampaign(campaignID);
             foreach (var appl in applicationsBD)
             {
                 var finSourceEduForms = connection.Select(
@@ -320,11 +337,13 @@ namespace PK.Classes
                     new string[] { "direction_id", "edu_form_id", "edu_source_id", "target_organization_id", "is_agreed_date", "is_disagreed_date" },
                     new List<System.Tuple<string, Relation, object>> { new System.Tuple<string, Relation, object>("application_id", Relation.EQUAL, appl.ID) }
                     ).GroupBy(
-                    k => System.Tuple.Create((uint)k[0], k[1], (uint)k[2]),
+                    k => System.Tuple.Create((uint)k[0], (uint)k[1], (uint)k[2]),
                     e => new
                     {
                         TargetOrg = e[3] as uint?,
-                        AgreedDate = e[4] as System.DateTime?,
+                        AgreedDate = (uint)e[2] == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ?
+                        paidAdmDates.SingleOrDefault(s => s.ApplID == appl.ID && s.EduForm == (uint)e[1] && s.Direction == (uint)e[0])?.Date : //TODO !!!
+                        e[4] as System.DateTime?,
                         DisagreedDate = e[5] as System.DateTime?
                     },
                     (k, g) =>
@@ -343,7 +362,7 @@ namespace PK.Classes
                                 ComposeCompGroupUID(
                                     campaignID,
                                     k.Item1,
-                                    (uint)k.Item2,
+                                    k.Item2,
                                     k.Item3
                                     ),
                                 buf.TargetOrg != null ? new TUID(buf.TargetOrg) : null,
@@ -355,7 +374,14 @@ namespace PK.Classes
 
                 IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
 
-                ApplicationDocuments packedDocs = PackApplicationDocuments(connection, docs, isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null);
+                ApplicationDocuments packedDocs = PackApplicationDocuments(
+                    connection,
+                    docs,
+                    isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null,
+                    finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null && s.FSEF.IsDisagreedDate == null) ?
+                    (System.DateTime?)System.DateTime.Parse(finSourceEduForms.First(s => s.FSEF.IsAgreedDate != null && s.FSEF.IsDisagreedDate == null).FSEF.IsAgreedDate.Value) :
+                    null
+                    );
 
                 List<ApplicationCommonBenefit> benefits = PackApplicationBenefits(
                     connection,
@@ -487,7 +513,9 @@ namespace PK.Classes
                         new TDate(order.Date),
                         null,
                         order.EduForm,
-                        order.EduSource
+                        order.EduSource,
+                        null,
+                        (uint)(System.DateTime.Today < new System.DateTime(System.DateTime.Today.Year, 8, 4) ? 1 : 2)
                         ));
 
                     foreach (object[] appl in connection.Select(
@@ -499,7 +527,8 @@ namespace PK.Classes
                             ComposeApplicationUID(campaignID, (uint)appl[0]),
                             ComposeOrderUID(campaignID, order.Number),
                             1,
-                            ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource)
+                            ComposeCompGroupUID(campaignID, order.Direction, order.EduForm, order.EduSource),
+                            order.EduSource != 15 ? (uint?)1 : null //TODO
                             ));
                 }
                 else
@@ -718,7 +747,7 @@ namespace PK.Classes
             }
         }
 
-        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs, System.DateTime? isMasterApplDate)
+        private static ApplicationDocuments PackApplicationDocuments(DB_Connector connection, IEnumerable<DB_Queries.Document> docs, System.DateTime? isMasterApplDate, System.DateTime? paidOrdDateDate)
         {
             IdentityDocument identDoc = null;
             EduDocument eduDoc = null;
@@ -771,7 +800,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     new TDocumentSeries(doc.Series),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : (paidOrdDateDate.HasValue ? new TDate(paidOrdDateDate.Value) : null),
                                     null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization
@@ -780,7 +809,7 @@ namespace PK.Classes
                                 eduDoc = new EduDocument(new TSchoolCertificateDocument(
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : (paidOrdDateDate.HasValue ? new TDate(paidOrdDateDate.Value) : null),
                                     !string.IsNullOrWhiteSpace(doc.Series) ? new TDocumentSeries(doc.Series) : null,
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
@@ -791,7 +820,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     new TDocumentSeries(doc.Series),
-                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null,
+                                    doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : (paidOrdDateDate.HasValue ? new TDate(paidOrdDateDate.Value) : null),
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     null,
@@ -805,7 +834,7 @@ namespace PK.Classes
                                     new TUID(doc.ID),
                                     new TDocumentNumber(doc.Number),
                                     new TDocumentSeries(doc.Series),
-                                    isMasterApplDate.HasValue ? new TDate(isMasterApplDate.Value) : (doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : null),
+                                    isMasterApplDate.HasValue ? new TDate(isMasterApplDate.Value) : (doc.OrigDate.HasValue ? new TDate(doc.OrigDate.Value) : (paidOrdDateDate.HasValue ? new TDate(paidOrdDateDate.Value) : null)),
                                     doc.Date.HasValue ? new TDate(doc.Date.Value) : null,
                                     doc.Organization,
                                     null,
