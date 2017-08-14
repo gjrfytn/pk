@@ -273,7 +273,7 @@ namespace PK.Forms
 				_SelectedAppID = (uint)(int)dgvApplications.CurrentRow.Cells[dgvApplications_ID.Index].Value;
 				StopTableAutoUpdating();
 				Form form;
-                if (_DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                if (_DB_Helper.GetCampaignType(Classes.Settings.CurrentCampaignID)==DB_Helper.CampaignType.MASTER)
                     form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, _SelectedAppID);
                 else
                 {
@@ -433,7 +433,7 @@ namespace PK.Forms
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, Classes.Settings.CurrentCampaignID)
                 })[0][0].ToString();
 
-                _MasterCampaign = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
+                _MasterCampaign = _DB_Helper.GetCampaignType(Classes.Settings.CurrentCampaignID)==DB_Helper.CampaignType.MASTER;
                 dgvApplications_Original.Visible = !_MasterCampaign;
                 dgvApplications_Entrances.HeaderText = _MasterCampaign ? "Маг. программы":"Направления";
                 menuStrip_CheckEgeMarks.Enabled = !_MasterCampaign;

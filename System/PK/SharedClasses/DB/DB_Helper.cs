@@ -5,6 +5,8 @@ namespace SharedClasses.DB
 {
     public class DB_Helper
     {
+        public enum CampaignType : byte { BACHELOR_SPECIALIST, MASTER, SPO }
+
         #region DictItemsNames
         public const string EduFormO = "Очная форма";
         public const string EduFormOZ = "Очно-заочная (вечерняя)";
@@ -270,17 +272,25 @@ namespace SharedClasses.DB
             }
         }
 
-        public bool IsMasterCampaign(uint id)
+        public CampaignType GetCampaignType(uint id)
         {
-            return _DB_Connection.Select(
-                  DB_Table._CAMPAIGNS_HAS_DICTIONARIES_ITEMS,
-                  new string[] { "dictionaries_items_item_id" },
+            switch ((uint)_DB_Connection.Select(
+                  DB_Table.CAMPAIGNS,
+                  new string[] { "type_id" },
                   new List<System.Tuple<string, Relation, object>>
                   {
-                      new System.Tuple<string, Relation, object> ("campaigns_id",Relation.EQUAL,id),
-                      new System.Tuple<string, Relation, object> ("dictionaries_items_dictionary_id",Relation.EQUAL,FIS_Dictionary.EDU_LEVEL),
-                      new System.Tuple<string, Relation, object> ("dictionaries_items_item_id",Relation.EQUAL,4)//TODO
-                  }).Any();
+                      new System.Tuple<string, Relation, object> ("id",Relation.EQUAL,id)
+                  }).Single()[0])
+            {
+                case 1:
+                    return CampaignType.BACHELOR_SPECIALIST;
+                case 2:
+                    return CampaignType.MASTER;
+                case 3:
+                    return CampaignType.SPO;
+                default:
+                    throw new System.Exception("Reached unreachable.");
+            }
         }
 
         //TODO Contracts

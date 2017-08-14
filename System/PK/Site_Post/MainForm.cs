@@ -36,7 +36,7 @@ namespace SitePost
             _DB_Helper = new DB_Helper(_DB_Connection);
             Dictionary<uint, string> campaigns = new Dictionary<uint, string>();
             foreach (object[] campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "name" }))
-                if (!_DB_Helper.IsMasterCampaign((uint)campaign[0]))
+                if (_DB_Helper.GetCampaignType((uint)campaign[0]) == DB_Helper.CampaignType.BACHELOR_SPECIALIST)
                     campaigns.Add((uint)campaign[0],campaign[1].ToString());
 
             cbCampaigns.DataSource = campaigns.ToList();

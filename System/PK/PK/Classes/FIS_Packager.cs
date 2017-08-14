@@ -107,7 +107,7 @@ namespace PK.Classes
         private static AdmissionInfo PackAdmissionInfo(DB_Connector connection, uint campaignID)
         {
             DB_Helper dbHelper = new DB_Helper(connection);
-            bool isMasterCampaign = dbHelper.IsMasterCampaign(campaignID);
+            bool isMasterCampaign = dbHelper.GetCampaignType(campaignID)==DB_Helper.CampaignType.MASTER;
 
             List<AVItem> admissionVolumes = new List<AVItem>();
             List<CompetitiveGroup> competitiveGroups = new List<CompetitiveGroup>();
@@ -329,7 +329,7 @@ namespace PK.Classes
 
             IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applicationsBD.Select(s => s.ID), campaignID);
 
-            bool isMasterCampaign = dbHelper.IsMasterCampaign(campaignID);
+            bool isMasterCampaign = dbHelper.GetCampaignType(campaignID)==DB_Helper.CampaignType.MASTER;
             foreach (var appl in applicationsBD)
             {
                 var finSourceEduForms = connection.Select(

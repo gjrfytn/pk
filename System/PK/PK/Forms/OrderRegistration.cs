@@ -69,7 +69,7 @@ namespace PK.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
-            EducationLevel eduLevel = new DB_Helper(_DB_Connection).IsMasterCampaign(Classes.Settings.CurrentCampaignID) ? EducationLevel.MASTER : EducationLevel.BACHELOR; //TODO
+            EducationLevel eduLevel = new DB_Helper(_DB_Connection).GetCampaignType(Classes.Settings.CurrentCampaignID)==DB_Helper.CampaignType.MASTER ? EducationLevel.MASTER : EducationLevel.BACHELOR; //TODO
 
             object[] buf = _DB_Connection.Select(
                 DB_Table.ORDERS,

@@ -1085,7 +1085,7 @@ namespace PK.Classes
                         Faculty = s[6].ToString(),
                         Direction = s[7] as uint?,
                         Profile = s[8] as string,
-                        Master = dbHelper.IsMasterCampaign((uint)s[9])
+                        Level = dbHelper.GetCampaignType((uint)s[9])
                     }).Single();
 
             var applications = connection.Select(
@@ -1131,7 +1131,7 @@ namespace PK.Classes
                     order.Faculty,
                     dirNameCode.Item2,
                     dirNameCode.Item1,
-                    order.Master?"Магистерская программа: " :(order.Profile != null ? (dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
+                    order.Level==DB_Helper.CampaignType.MASTER?"Магистерская программа: " :(order.Profile != null ? (dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
                     order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(connection,order.Faculty,order.Direction.Value,order.Profile).Split('|')[0] : ""
                 });
             }
@@ -1151,7 +1151,7 @@ namespace PK.Classes
                 IEnumerable<Tuple<string, ushort>> table;
                 if (order.Type == "hostel")
                 {
-                    if (order.Master)
+                    if (order.Level == DB_Helper.CampaignType.MASTER)
                     {
                         var marks = connection.Select(
                                 DB_Table.MASTERS_EXAMS_MARKS,
@@ -1205,79 +1205,89 @@ namespace PK.Classes
                 }
                 else
                 {
-                    if (order.Master)
+                    switch (order.Level)
                     {
-                        var marks = connection.Select(
-                            DB_Table.MASTERS_EXAMS_MARKS,
-                            new string[] { "entrant_id", "mark", "bonus" },
-                            new List<Tuple<string, Relation, object>>
+                        case DB_Helper.CampaignType.BACHELOR_SPECIALIST:
                             {
-                                new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
-                                new Tuple<string, Relation, object>("faculty",Relation.EQUAL,order.Faculty),
-                                new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction.Value),
-                                new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
-                            }).Select(s => new { EntrID = (uint)s[0], Exam = (short)s[1], Bonus = (ushort)s[2] });
+                                IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, order.Faculty, order.Direction.Value);
 
-                        //var redDiplomaID_Bonus = connection.Select(
-                        //    DB_Table.INSTITUTION_ACHIEVEMENTS,
-                        //    new string[] { "id", "value" },
-                        //    new List<Tuple<string, Relation, object>>
-                        //    {
-                        //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
-                        //        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
-                        //    }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
+                                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Settings.CurrentCampaignID);
 
-                        //var redDimplomaAppls = applications.Join(
-                        //    connection.Select(
-                        //        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
-                        //        new string[] { "application_id", },
-                        //        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, redDiplomaID_Bonus.ID) }),
-                        //    k1 => k1.ApplID,
-                        //    k2 => k2[0],
-                        //    (s1, s2) => new { s1.ApplID }
-                        //    );
+                                table = applications.Join(
+                                    marks.Join(
+                                        dir_subjects,
+                                        k1 => k1.SubjID,
+                                        k2 => k2,
+                                        (s1, s2) => s1
+                                        ).GroupBy(
+                                        k => Tuple.Create(k.ApplID, k.SubjID),
+                                        (k, g) => new { g.First().ApplID, Mark = g.Max(s => s.Value) }
+                                        ).GroupBy(
+                                        k => k.ApplID,
+                                        (k, g) => new { ApplID = k, Sum = g.Sum(s => s.Mark) + DB_Queries.GetApplicationIndAchMaxValue(connection, k) }
+                                        ),
+                                    k1 => k1.ApplID,
+                                    k2 => k2.ApplID,
+                                    (s1, s2) => Tuple.Create(s1.Name, (ushort)s2.Sum)
+                                    );
+                            }
+                            break;
+                        case DB_Helper.CampaignType.MASTER:
+                            {
+                                var marks = connection.Select(
+                                    DB_Table.MASTERS_EXAMS_MARKS,
+                                    new string[] { "entrant_id", "mark", "bonus" },
+                                    new List<Tuple<string, Relation, object>>
+                                    {
+                                        new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL,Settings.CurrentCampaignID),
+                                        new Tuple<string, Relation, object>("faculty",Relation.EQUAL,order.Faculty),
+                                        new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,order.Direction.Value),
+                                        new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,order.Profile)
+                                    }).Select(s => new { EntrID = (uint)s[0], Exam = (short)s[1], Bonus = (ushort)s[2] });
 
-                        //table = applications.Select(
-                        //    s => new { s.EntrID, s.Name, RedDiplomaBonus = redDimplomaAppls.Any(a => a.ApplID == s.ApplID) ? redDiplomaID_Bonus.Bonus : 0 }
-                        //    ).Join(
-                        //    marks,
-                        //    k1 => k1.EntrID,
-                        //    k2 => k2.EntrID,
-                        //    (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus + s1.RedDiplomaBonus))
-                        //    );
+                                //var redDiplomaID_Bonus = connection.Select(
+                                //    DB_Table.INSTITUTION_ACHIEVEMENTS,
+                                //    new string[] { "id", "value" },
+                                //    new List<Tuple<string, Relation, object>>
+                                //    {
+                                //        new Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, Settings.CurrentCampaignID),
+                                //        new Tuple<string, Relation, object>("category_id", Relation.EQUAL, 13)//TODO
+                                //    }).Select(s => new { ID = (uint)s[0], Bonus = (ushort)s[1] }).Single();
 
-                        table = applications.Select(
-                                s => new { s.EntrID, s.Name }
-                                ).Join(
-                                marks,
-                                k1 => k1.EntrID,
-                                k2 => k2.EntrID,
-                                (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus))
-                                );
-                    }
-                    else
-                    {
-                        IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(connection, Settings.CurrentCampaignID, order.Faculty, order.Direction.Value);
+                                //var redDimplomaAppls = applications.Join(
+                                //    connection.Select(
+                                //        DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                                //        new string[] { "application_id", },
+                                //        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("institution_achievement_id", Relation.EQUAL, redDiplomaID_Bonus.ID) }),
+                                //    k1 => k1.ApplID,
+                                //    k2 => k2[0],
+                                //    (s1, s2) => new { s1.ApplID }
+                                //    );
 
-                        IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(connection, applications.Select(s => s.ApplID), Settings.CurrentCampaignID);
+                                //table = applications.Select(
+                                //    s => new { s.EntrID, s.Name, RedDiplomaBonus = redDimplomaAppls.Any(a => a.ApplID == s.ApplID) ? redDiplomaID_Bonus.Bonus : 0 }
+                                //    ).Join(
+                                //    marks,
+                                //    k1 => k1.EntrID,
+                                //    k2 => k2.EntrID,
+                                //    (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus + s1.RedDiplomaBonus))
+                                //    );
 
-                        table = applications.Join(
-                            marks.Join(
-                                dir_subjects,
-                                k1 => k1.SubjID,
-                                k2 => k2,
-                                (s1, s2) => s1
-                                ).GroupBy(
-                                k => Tuple.Create(k.ApplID, k.SubjID),
-                                (k, g) => new { g.First().ApplID, Mark = g.Max(s => s.Value) }
-                                ).GroupBy(
-                                k => k.ApplID,
-                                (k, g) => new { ApplID = k, Sum = g.Sum(s => s.Mark) + DB_Queries.GetApplicationIndAchMaxValue(connection, k) }
-                                ),
-                            k1 => k1.ApplID,
-                            k2 => k2.ApplID,
-                            (s1, s2) => Tuple.Create(s1.Name, (ushort)s2.Sum)
-                            );
+                                table = applications.Select(
+                                        s => new { s.EntrID, s.Name }
+                                        ).Join(
+                                        marks,
+                                        k1 => k1.EntrID,
+                                        k2 => k2.EntrID,
+                                        (s1, s2) => Tuple.Create(s1.Name, (ushort)(s2.Exam + s2.Bonus))
+                                        );
+                            }
+                            break;
+                        case DB_Helper.CampaignType.SPO:
+                            table = applications.Select(s => Tuple.Create(s.Name, (ushort)0));
+                            break;
+                        default:
+                            throw new Exception("Reached unreachable.");
                     }
                 }
 

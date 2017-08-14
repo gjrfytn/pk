@@ -26,7 +26,7 @@ namespace PK.Forms
         private readonly DB_Connector _DB_Connection;
         private readonly DB_Helper _DB_Helper;
         private readonly string _EditNumber;
-        private readonly bool _IsMaster;
+        private readonly DB_Helper.CampaignType _CampaignType;
 
         public OrderEdit(DB_Connector connection, string number)
         {
@@ -62,9 +62,10 @@ namespace PK.Forms
 
             cbFDP.ValueMember = "Value";
 
-            _IsMaster = _DB_Helper.IsMasterCampaign(Classes.Settings.CurrentCampaignID);
 
-            if (_IsMaster)
+            _CampaignType = _DB_Helper.GetCampaignType(Classes.Settings.CurrentCampaignID);
+
+            if (_CampaignType != DB_Helper.CampaignType.BACHELOR_SPECIALIST)
             {
                 dataGridView_Status.Visible = false;
                 dataGridView_MFR.Visible = false;
@@ -76,12 +77,15 @@ namespace PK.Forms
                 dataGridView_Social.Visible = false;
                 dataGridView_Foreign.Visible = false;
 
-                dataGridView_Sum.Visible = true;
-                dataGridView_Exam.Visible = true;
-                dataGridView_IndAch.Visible = true;
-                //dataGridView_Honors.Visible = true;
+                if (_CampaignType == DB_Helper.CampaignType.MASTER)
+                {
+                    dataGridView_Sum.Visible = true;
+                    dataGridView_Exam.Visible = true;
+                    dataGridView_IndAch.Visible = true;
+                    //dataGridView_Honors.Visible = true;
 
-                lFDP.Text = "Программа:";
+                    lFDP.Text = "Программа:";
+                }
             }
 
             if (_EditNumber != null)
@@ -168,7 +172,7 @@ namespace PK.Forms
                 rbPaid.Enabled = true;
                 gbEduForm.Enabled = true;
 
-                if (_IsMaster)
+                if (_CampaignType == DB_Helper.CampaignType.MASTER)
                     lFDP.Text = "Программа:";
                 else
                     lFDP.Text = "Направление:";
@@ -200,7 +204,7 @@ namespace PK.Forms
         {
             rb_CheckedChanged(sender, e);
 
-            if (!_IsMaster)
+            if (_CampaignType != DB_Helper.CampaignType.MASTER)
                 lFDP.Text = rbPaid.Checked ? "Профиль" : "Направление";
             cbShowAdmitted.Enabled = rbPaid.Checked && cbType.SelectedValue.ToString() == "admission";
         }
@@ -224,7 +228,7 @@ namespace PK.Forms
                     (s1, s2) => new { Value = s2[0], Display = s2[1] }
                     ).ToList();
             }
-            else if (_IsMaster)
+            else if (_CampaignType == DB_Helper.CampaignType.MASTER)
             {
                 if (rbPaid.Checked)
                     FillFDP_DataSourceWithPaidProfiles();
@@ -573,107 +577,117 @@ namespace PK.Forms
                 (s1, s2) => new { ApplID = (uint)s1[0], EntrID = (uint)s1[1], Name = s2[1].ToString() + " " + s2[2].ToString() + " " + s2[3].ToString() }
                 );
 
-            if (_IsMaster)
+            switch (_CampaignType)
             {
-                if (cbType.SelectedValue.ToString() == "hostel")
-                    foreach (var appl in candidates)
-                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name);
-                else
-                {
-                    CB_Value buf = (CB_Value)cbFDP.SelectedValue;
-
-                    var marks = _DB_Connection.Select(
-                        DB_Table.MASTERS_EXAMS_MARKS,
-                        new string[] { "entrant_id", "mark", "bonus" },
-                        new List<Tuple<string, Relation, object>>
-                        {
-                            new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL, Classes.Settings.CurrentCampaignID),
-                            new Tuple<string, Relation, object>("faculty",Relation.EQUAL,buf.Item1),
-                            new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,buf.Item2),
-                            new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,buf.Item3),
-                            new Tuple<string, Relation, object>("mark",Relation.NOT_EQUAL,-1)
-                        });
-
-                    //var table = candidates.Join(
-                    //    marks,
-                    //    k1 => k1.EntrID,
-                    //    k2 => k2[0],
-                    //    (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
-                    //    ).GroupJoin(
-                    //    _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, "application_id", "institution_achievement_id").Join(
-                    //        _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value"),
-                    //        k1 => k1[1],
-                    //        k2 => k2[0],
-                    //        (s1, s2) => new { ApplID = (uint)s1[0], Value = (ushort)s2[1] }
-                    //        ),
-                    //    k1 => k1.ApplID,
-                    //    k2 => k2.ApplID,
-                    //    (s1, s2) => new { s1.ApplID, s1.Name, s1.Mark, s1.Bonus, IndAch = s2.Any() ? s2.Max(s => s.Value) : 0 }
-                    //    );
-
-                    var table = candidates.Join(
-                        marks,
-                        k1 => k1.EntrID,
-                        k2 => k2[0],
-                        (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
-                        );
-
-                    foreach (var appl in table)
-                        //dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.IndAch + appl.Bonus, appl.Mark, appl.IndAch, appl.Bonus);
-                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.Bonus, appl.Mark, appl.Bonus);
-                }
-            }
-            else
-            {
-                IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
-
-                var table = candidates.Join(
-                    marks,
-                    k1 => k1.ApplID,
-                    k2 => k2.ApplID,
-                    (s1, s2) => new { s1.ApplID, s1.Name, s2.SubjID, s2.Value, s2.Checked }
-                    ).GroupBy(
-                    k1 => k1.ApplID,
-                    (k1, g1) =>
-                    new
+                case DB_Helper.CampaignType.BACHELOR_SPECIALIST:
                     {
-                        ApplID = k1,
-                        g1.First().Name,
-                        Subjects = g1.GroupBy(
-                            k2 => k2.SubjID,
-                            (k2, g2) =>
+                        IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, candidates.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
+
+                        var table = candidates.Join(
+                            marks,
+                            k1 => k1.ApplID,
+                            k2 => k2.ApplID,
+                            (s1, s2) => new { s1.ApplID, s1.Name, s2.SubjID, s2.Value, s2.Checked }
+                            ).GroupBy(
+                            k1 => k1.ApplID,
+                            (k1, g1) =>
                             new
                             {
-                                Subj = k2,
-                                Mark = g2.Any(s => s.Checked) ? g2.Where(s => s.Checked).Max(s => s.Value) : g2.Max(s => s.Value),
-                                Checked = g2.Any(s => s.Checked)
-                            })
-                    });
+                                ApplID = k1,
+                                g1.First().Name,
+                                Subjects = g1.GroupBy(
+                                    k2 => k2.SubjID,
+                                    (k2, g2) =>
+                                    new
+                                    {
+                                        Subj = k2,
+                                        Mark = g2.Any(s => s.Checked) ? g2.Where(s => s.Checked).Max(s => s.Value) : g2.Max(s => s.Value),
+                                        Checked = g2.Any(s => s.Checked)
+                                    })
+                            });
 
 
-                if (cbType.SelectedValue.ToString() == "hostel")
-                    foreach (var appl in table)
-                        AddBachelorRow(appl.ApplID, appl.Name, null, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
-                else
-                {
-                    IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(
-                        _DB_Connection,
-                        Classes.Settings.CurrentCampaignID,
-                        ((CB_Value)cbFDP.SelectedValue).Item1,
-                        ((CB_Value)cbFDP.SelectedValue).Item2
-                        );
-
-                    foreach (var appl in table)
-                    {
-                        var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
-                        if (appl_dir_subj.Count() == dir_subjects.Count())
+                        if (cbType.SelectedValue.ToString() == "hostel")
+                            foreach (var appl in table)
+                                AddBachelorRow(appl.ApplID, appl.Name, null, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
+                        else
                         {
-                            string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < _DB_Helper.GetMinMark(s.Subj)) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
+                            IEnumerable<uint> dir_subjects = DB_Queries.GetDirectionEntranceTests(
+                                _DB_Connection,
+                                Classes.Settings.CurrentCampaignID,
+                                ((CB_Value)cbFDP.SelectedValue).Item1,
+                                ((CB_Value)cbFDP.SelectedValue).Item2
+                                );
 
-                            AddBachelorRow(appl.ApplID, appl.Name, status, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
+                            foreach (var appl in table)
+                            {
+                                var appl_dir_subj = appl.Subjects.Join(dir_subjects, k1 => k1.Subj, k2 => k2, (s1, s2) => s1);
+                                if (appl_dir_subj.Count() == dir_subjects.Count())
+                                {
+                                    string status = appl_dir_subj.All(s => s.Checked) ? (appl_dir_subj.Any(s => s.Mark < _DB_Helper.GetMinMark(s.Subj)) ? "Ниже мин." : "OK") : "Непров. ЕГЭ";
+
+                                    AddBachelorRow(appl.ApplID, appl.Name, status, appl.Subjects.Select(s => Tuple.Create(s.Subj, s.Mark)));
+                                }
+                            }
                         }
                     }
-                }
+                    break;
+                case DB_Helper.CampaignType.MASTER:
+                    {
+                        if (cbType.SelectedValue.ToString() == "hostel")
+                            foreach (var appl in candidates)
+                                dataGridView.Rows.Add(false, appl.ApplID, appl.Name);
+                        else
+                        {
+                            CB_Value buf = (CB_Value)cbFDP.SelectedValue;
+
+                            var marks = _DB_Connection.Select(
+                                DB_Table.MASTERS_EXAMS_MARKS,
+                                new string[] { "entrant_id", "mark", "bonus" },
+                                new List<Tuple<string, Relation, object>>
+                                {
+                                    new Tuple<string, Relation, object>("campaign_id",Relation.EQUAL, Classes.Settings.CurrentCampaignID),
+                                    new Tuple<string, Relation, object>("faculty",Relation.EQUAL,buf.Item1),
+                                    new Tuple<string, Relation, object>("direction_id",Relation.EQUAL,buf.Item2),
+                                    new Tuple<string, Relation, object>("profile_short_name",Relation.EQUAL,buf.Item3),
+                                    new Tuple<string, Relation, object>("mark",Relation.NOT_EQUAL,-1)
+                                });
+
+                            //var table = candidates.Join(
+                            //    marks,
+                            //    k1 => k1.EntrID,
+                            //    k2 => k2[0],
+                            //    (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
+                            //    ).GroupJoin(
+                            //    _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, "application_id", "institution_achievement_id").Join(
+                            //        _DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, "id", "value"),
+                            //        k1 => k1[1],
+                            //        k2 => k2[0],
+                            //        (s1, s2) => new { ApplID = (uint)s1[0], Value = (ushort)s2[1] }
+                            //        ),
+                            //    k1 => k1.ApplID,
+                            //    k2 => k2.ApplID,
+                            //    (s1, s2) => new { s1.ApplID, s1.Name, s1.Mark, s1.Bonus, IndAch = s2.Any() ? s2.Max(s => s.Value) : 0 }
+                            //    );
+
+                            var table = candidates.Join(
+                                marks,
+                                k1 => k1.EntrID,
+                                k2 => k2[0],
+                                (s1, s2) => new { s1.ApplID, s1.Name, Mark = (short)s2[1], Bonus = (ushort)s2[2] }
+                                );
+
+                            foreach (var appl in table)
+                                //dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.IndAch + appl.Bonus, appl.Mark, appl.IndAch, appl.Bonus);
+                                dataGridView.Rows.Add(false, appl.ApplID, appl.Name, null, null, null, null, null, null, null, null, null, appl.Mark + appl.Bonus, appl.Mark, appl.Bonus);
+                        }
+                    }
+                    break;
+                case DB_Helper.CampaignType.SPO:
+                    foreach (var appl in candidates)
+                        dataGridView.Rows.Add(false, appl.ApplID, appl.Name);
+
+                    break;
             }
 
             dataGridView.Sort(dataGridView_Name, System.ComponentModel.ListSortDirection.Ascending);

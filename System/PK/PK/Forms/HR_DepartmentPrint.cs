@@ -17,7 +17,7 @@ namespace PK.Forms
             _DB_Connection = connection;
 
             #region Components
-            if (new DB_Helper(_DB_Connection).IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+            if (new DB_Helper(_DB_Connection).GetCampaignType(Classes.Settings.CurrentCampaignID) == DB_Helper.CampaignType.MASTER)
             {
                 cbActs.Enabled = false;
                 cbReceipts.Enabled = false;
@@ -79,7 +79,7 @@ namespace PK.Forms
                     Faculty = s2[7].ToString(),
                     Direction = (uint)s2[8],
                     Profile = s2[9] as string,
-                    Master = dbHelper.IsMasterCampaign((uint)s2[10])
+                    Master = dbHelper.GetCampaignType((uint)s2[10]) == DB_Helper.CampaignType.MASTER
                 });
 
             if (orders.Count() == 0)
@@ -156,7 +156,7 @@ namespace PK.Forms
                 if (applications.Count() == 0)
                     continue;
 
-                if (dbHelper.IsMasterCampaign(Classes.Settings.CurrentCampaignID))
+                if (dbHelper.GetCampaignType(Classes.Settings.CurrentCampaignID)==DB_Helper.CampaignType.MASTER)
                 {
                     var table = applications.Join(
                         _DB_Connection.Select(
