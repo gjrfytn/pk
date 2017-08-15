@@ -1284,8 +1284,17 @@ namespace PK.Classes
                             }
                             break;
                         case DB_Helper.CampaignType.SPO:
-                            table = applications.Select(s => Tuple.Create(s.Name, (ushort)0));
-                            break;
+                            {
+                                string spoFilename = "SPOAdmOrder";
+                                doc = Settings.TempPath + spoFilename + new Random().Next();
+                                DocumentCreator.Create(
+                                    Settings.DocumentsTemplatesPath + spoFilename + ".xml",
+                                    doc,
+                                    paramaters.ToArray(),
+                                    new IEnumerable<string[]>[] { applications.OrderBy(s => s.Name).Select(s => new string[] { s.Name }) }
+                                    );
+                            }
+                            return doc + ".docx";
                         default:
                             throw new Exception("Reached unreachable.");
                     }
