@@ -40,6 +40,7 @@
             this.menuStrip_RegJournal = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_DirsPlaces = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_ProfilesPlaces = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_HR_Department = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Administration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Users = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_FIS_Export = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,7 +78,7 @@
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.lbDispalyedCount = new System.Windows.Forms.Label();
-            this.menuStrip_HR_Department = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip_OnlineAppl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
@@ -85,15 +86,16 @@
             // 
             // toolStrip
             // 
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMain_CreateApplication,
             this.toolStrip_Label1,
             this.toolStrip_CurrCampaign});
-            this.toolStrip.Location = new System.Drawing.Point(0, 25);
+            this.toolStrip.Location = new System.Drawing.Point(0, 35);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip.Size = new System.Drawing.Size(1512, 25);
+            this.toolStrip.Size = new System.Drawing.Size(1512, 32);
             this.toolStrip.TabIndex = 0;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -102,25 +104,26 @@
             this.toolStripMain_CreateApplication.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMain_CreateApplication.Image")));
             this.toolStripMain_CreateApplication.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripMain_CreateApplication.Name = "toolStripMain_CreateApplication";
-            this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(129, 22);
+            this.toolStripMain_CreateApplication.Size = new System.Drawing.Size(193, 29);
             this.toolStripMain_CreateApplication.Text = "Создать заявление";
             this.toolStripMain_CreateApplication.Click += new System.EventHandler(this.CreateApplication_Click);
             // 
             // toolStrip_Label1
             // 
             this.toolStrip_Label1.Name = "toolStrip_Label1";
-            this.toolStrip_Label1.Size = new System.Drawing.Size(173, 22);
+            this.toolStrip_Label1.Size = new System.Drawing.Size(255, 29);
             this.toolStrip_Label1.Text = "Текущая приемная кампания:";
             // 
             // toolStrip_CurrCampaign
             // 
             this.toolStrip_CurrCampaign.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.toolStrip_CurrCampaign.Name = "toolStrip_CurrCampaign";
-            this.toolStrip_CurrCampaign.Size = new System.Drawing.Size(153, 22);
+            this.toolStrip_CurrCampaign.Size = new System.Drawing.Size(234, 29);
             this.toolStrip_CurrCampaign.Text = "Выберите кампанию...";
             // 
             // menuStrip
             // 
+            this.menuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_Campaign,
             this.menuStrip_Entrants,
@@ -131,7 +134,7 @@
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
-            this.menuStrip.Size = new System.Drawing.Size(1512, 25);
+            this.menuStrip.Size = new System.Drawing.Size(1512, 35);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -143,13 +146,13 @@
             this.menuStrip_Campaign_Orders,
             this.menuStrip_Campaign_Statistics});
             this.menuStrip_Campaign.Name = "menuStrip_Campaign";
-            this.menuStrip_Campaign.Size = new System.Drawing.Size(133, 19);
+            this.menuStrip_Campaign.Size = new System.Drawing.Size(192, 29);
             this.menuStrip_Campaign.Text = "Приемная кампания";
             // 
             // menuStrip_Campaign_Campaigns
             // 
             this.menuStrip_Campaign_Campaigns.Name = "menuStrip_Campaign_Campaigns";
-            this.menuStrip_Campaign_Campaigns.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Campaigns.Size = new System.Drawing.Size(269, 30);
             this.menuStrip_Campaign_Campaigns.Tag = "administrator";
             this.menuStrip_Campaign_Campaigns.Text = "Приемные кампании";
             this.menuStrip_Campaign_Campaigns.Click += new System.EventHandler(this.menuStrip_Campaign_Campaigns_Click);
@@ -157,7 +160,7 @@
             // menuStrip_Campaign_Exams
             // 
             this.menuStrip_Campaign_Exams.Name = "menuStrip_Campaign_Exams";
-            this.menuStrip_Campaign_Exams.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Exams.Size = new System.Drawing.Size(269, 30);
             this.menuStrip_Campaign_Exams.Tag = "inspector";
             this.menuStrip_Campaign_Exams.Text = "Экзамены";
             this.menuStrip_Campaign_Exams.Click += new System.EventHandler(this.menuStrip_Campaign_Exams_Click);
@@ -165,7 +168,7 @@
             // menuStrip_Campaign_Orders
             // 
             this.menuStrip_Campaign_Orders.Name = "menuStrip_Campaign_Orders";
-            this.menuStrip_Campaign_Orders.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Orders.Size = new System.Drawing.Size(269, 30);
             this.menuStrip_Campaign_Orders.Tag = "inspector";
             this.menuStrip_Campaign_Orders.Text = "Приказы";
             this.menuStrip_Campaign_Orders.Click += new System.EventHandler(this.menuStrip_Campaign_Orders_Click);
@@ -173,7 +176,7 @@
             // menuStrip_Campaign_Statistics
             // 
             this.menuStrip_Campaign_Statistics.Name = "menuStrip_Campaign_Statistics";
-            this.menuStrip_Campaign_Statistics.Size = new System.Drawing.Size(192, 22);
+            this.menuStrip_Campaign_Statistics.Size = new System.Drawing.Size(269, 30);
             this.menuStrip_Campaign_Statistics.Tag = "inspector";
             this.menuStrip_Campaign_Statistics.Text = "Статистика";
             this.menuStrip_Campaign_Statistics.Click += new System.EventHandler(this.menuStrip_Campaign_Statistics_Click);
@@ -182,15 +185,16 @@
             // 
             this.menuStrip_Entrants.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStrip_CreateApplication,
-            this.menuStrip_CheckEgeMarks});
+            this.menuStrip_CheckEgeMarks,
+            this.menuStrip_OnlineAppl});
             this.menuStrip_Entrants.Name = "menuStrip_Entrants";
-            this.menuStrip_Entrants.Size = new System.Drawing.Size(93, 19);
+            this.menuStrip_Entrants.Size = new System.Drawing.Size(132, 29);
             this.menuStrip_Entrants.Text = "Абитуриенты";
             // 
             // menuStrip_CreateApplication
             // 
             this.menuStrip_CreateApplication.Name = "menuStrip_CreateApplication";
-            this.menuStrip_CreateApplication.Size = new System.Drawing.Size(176, 22);
+            this.menuStrip_CreateApplication.Size = new System.Drawing.Size(252, 30);
             this.menuStrip_CreateApplication.Tag = "registrator";
             this.menuStrip_CreateApplication.Text = "Создать заявление";
             this.menuStrip_CreateApplication.Click += new System.EventHandler(this.CreateApplication_Click);
@@ -198,7 +202,7 @@
             // menuStrip_CheckEgeMarks
             // 
             this.menuStrip_CheckEgeMarks.Name = "menuStrip_CheckEgeMarks";
-            this.menuStrip_CheckEgeMarks.Size = new System.Drawing.Size(176, 22);
+            this.menuStrip_CheckEgeMarks.Size = new System.Drawing.Size(252, 30);
             this.menuStrip_CheckEgeMarks.Tag = "inspector";
             this.menuStrip_CheckEgeMarks.Text = "Проверка ЕГЭ";
             this.menuStrip_CheckEgeMarks.Click += new System.EventHandler(this.menuStrip_CheckEgeMarks_Click);
@@ -212,13 +216,13 @@
             this.menuStrip_TargetOrganizations,
             this.menuStrip_InstitutionAchievements});
             this.menuStrip_Univesity.Name = "menuStrip_Univesity";
-            this.menuStrip_Univesity.Size = new System.Drawing.Size(88, 19);
+            this.menuStrip_Univesity.Size = new System.Drawing.Size(125, 29);
             this.menuStrip_Univesity.Text = "Университет";
             // 
             // menuStrip_Constants
             // 
             this.menuStrip_Constants.Name = "menuStrip_Constants";
-            this.menuStrip_Constants.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Constants.Size = new System.Drawing.Size(506, 30);
             this.menuStrip_Constants.Tag = "administrator";
             this.menuStrip_Constants.Text = "Основная информация";
             this.menuStrip_Constants.Click += new System.EventHandler(this.menuStrip_Constants_Click);
@@ -226,7 +230,7 @@
             // menuStrip_Directions
             // 
             this.menuStrip_Directions.Name = "menuStrip_Directions";
-            this.menuStrip_Directions.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Directions.Size = new System.Drawing.Size(506, 30);
             this.menuStrip_Directions.Tag = "administrator";
             this.menuStrip_Directions.Text = "Профили подготовки и магистерские программы";
             this.menuStrip_Directions.Click += new System.EventHandler(this.menuStrip_Directions_Click);
@@ -234,7 +238,7 @@
             // menuStrip_Faculties
             // 
             this.menuStrip_Faculties.Name = "menuStrip_Faculties";
-            this.menuStrip_Faculties.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_Faculties.Size = new System.Drawing.Size(506, 30);
             this.menuStrip_Faculties.Tag = "administrator";
             this.menuStrip_Faculties.Text = "Факультеты";
             this.menuStrip_Faculties.Click += new System.EventHandler(this.menuStrip_Faculties_Click);
@@ -242,7 +246,7 @@
             // menuStrip_TargetOrganizations
             // 
             this.menuStrip_TargetOrganizations.Name = "menuStrip_TargetOrganizations";
-            this.menuStrip_TargetOrganizations.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_TargetOrganizations.Size = new System.Drawing.Size(506, 30);
             this.menuStrip_TargetOrganizations.Tag = "administrator";
             this.menuStrip_TargetOrganizations.Text = "Целевые организации";
             this.menuStrip_TargetOrganizations.Click += new System.EventHandler(this.menuStrip_TargetOrganizations_Click);
@@ -250,7 +254,7 @@
             // menuStrip_InstitutionAchievements
             // 
             this.menuStrip_InstitutionAchievements.Name = "menuStrip_InstitutionAchievements";
-            this.menuStrip_InstitutionAchievements.Size = new System.Drawing.Size(351, 22);
+            this.menuStrip_InstitutionAchievements.Size = new System.Drawing.Size(506, 30);
             this.menuStrip_InstitutionAchievements.Tag = "administrator";
             this.menuStrip_InstitutionAchievements.Text = "Индивидуальные достижения";
             this.menuStrip_InstitutionAchievements.Click += new System.EventHandler(this.menuStrip_InstitutionAchievements_Click);
@@ -263,13 +267,13 @@
             this.menuStrip_ProfilesPlaces,
             this.menuStrip_HR_Department});
             this.menuStrip_OutDocuments.Name = "menuStrip_OutDocuments";
-            this.menuStrip_OutDocuments.Size = new System.Drawing.Size(118, 19);
+            this.menuStrip_OutDocuments.Size = new System.Drawing.Size(169, 29);
             this.menuStrip_OutDocuments.Text = "Печатные формы";
             // 
             // menuStrip_RegJournal
             // 
             this.menuStrip_RegJournal.Name = "menuStrip_RegJournal";
-            this.menuStrip_RegJournal.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_RegJournal.Size = new System.Drawing.Size(331, 30);
             this.menuStrip_RegJournal.Tag = "inspector";
             this.menuStrip_RegJournal.Text = "Журнал регистрации";
             this.menuStrip_RegJournal.Click += new System.EventHandler(this.toolStrip_RegJournal_Click);
@@ -277,7 +281,7 @@
             // menuStrip_DirsPlaces
             // 
             this.menuStrip_DirsPlaces.Name = "menuStrip_DirsPlaces";
-            this.menuStrip_DirsPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_DirsPlaces.Size = new System.Drawing.Size(331, 30);
             this.menuStrip_DirsPlaces.Tag = "inspector";
             this.menuStrip_DirsPlaces.Text = "Заявления по направлениям";
             this.menuStrip_DirsPlaces.Click += new System.EventHandler(this.menuStrip_DirsPlaces_Click);
@@ -285,10 +289,17 @@
             // menuStrip_ProfilesPlaces
             // 
             this.menuStrip_ProfilesPlaces.Name = "menuStrip_ProfilesPlaces";
-            this.menuStrip_ProfilesPlaces.Size = new System.Drawing.Size(233, 22);
+            this.menuStrip_ProfilesPlaces.Size = new System.Drawing.Size(331, 30);
             this.menuStrip_ProfilesPlaces.Tag = "inspector";
             this.menuStrip_ProfilesPlaces.Text = "Заявления по профилям";
             this.menuStrip_ProfilesPlaces.Click += new System.EventHandler(this.menuStrip_ProfilesPlaces_Click);
+            // 
+            // menuStrip_HR_Department
+            // 
+            this.menuStrip_HR_Department.Name = "menuStrip_HR_Department";
+            this.menuStrip_HR_Department.Size = new System.Drawing.Size(331, 30);
+            this.menuStrip_HR_Department.Text = "Отдел кадров";
+            this.menuStrip_HR_Department.Click += new System.EventHandler(this.menuStrip_HR_Department_Click);
             // 
             // menuStrip_Administration
             // 
@@ -297,13 +308,13 @@
             this.menuStrip_FIS_Export,
             this.menuStrip_KLADR_Update});
             this.menuStrip_Administration.Name = "menuStrip_Administration";
-            this.menuStrip_Administration.Size = new System.Drawing.Size(134, 19);
+            this.menuStrip_Administration.Size = new System.Drawing.Size(195, 29);
             this.menuStrip_Administration.Text = "Администрирование";
             // 
             // menuStrip_Users
             // 
             this.menuStrip_Users.Name = "menuStrip_Users";
-            this.menuStrip_Users.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_Users.Size = new System.Drawing.Size(259, 30);
             this.menuStrip_Users.Tag = "administrator";
             this.menuStrip_Users.Text = "Пользователи";
             this.menuStrip_Users.Click += new System.EventHandler(this.toolStrip_Users_Click);
@@ -311,7 +322,7 @@
             // menuStrip_FIS_Export
             // 
             this.menuStrip_FIS_Export.Name = "menuStrip_FIS_Export";
-            this.menuStrip_FIS_Export.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_FIS_Export.Size = new System.Drawing.Size(259, 30);
             this.menuStrip_FIS_Export.Tag = "administrator";
             this.menuStrip_FIS_Export.Text = "Экспорт в ФИС";
             this.menuStrip_FIS_Export.Click += new System.EventHandler(this.toolStrip_FIS_Export_Click);
@@ -319,7 +330,7 @@
             // menuStrip_KLADR_Update
             // 
             this.menuStrip_KLADR_Update.Name = "menuStrip_KLADR_Update";
-            this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(184, 22);
+            this.menuStrip_KLADR_Update.Size = new System.Drawing.Size(259, 30);
             this.menuStrip_KLADR_Update.Tag = "administrator";
             this.menuStrip_KLADR_Update.Text = "Обновление КЛАДР";
             this.menuStrip_KLADR_Update.Click += new System.EventHandler(this.menuStrip_KLADR_Update_Click);
@@ -331,13 +342,13 @@
             this.menuStrip_DirDictionary,
             this.menuStrip_OlympDictionary});
             this.menuStrip_Help.Name = "menuStrip_Help";
-            this.menuStrip_Help.Size = new System.Drawing.Size(65, 19);
+            this.menuStrip_Help.Size = new System.Drawing.Size(93, 29);
             this.menuStrip_Help.Text = "Справка";
             // 
             // menuStrip_Dictionaries
             // 
             this.menuStrip_Dictionaries.Name = "menuStrip_Dictionaries";
-            this.menuStrip_Dictionaries.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_Dictionaries.Size = new System.Drawing.Size(351, 30);
             this.menuStrip_Dictionaries.Tag = "inspector";
             this.menuStrip_Dictionaries.Text = "Справочники ФИС";
             this.menuStrip_Dictionaries.Click += new System.EventHandler(this.menuStrip_Dictionaries_Click);
@@ -345,7 +356,7 @@
             // menuStrip_DirDictionary
             // 
             this.menuStrip_DirDictionary.Name = "menuStrip_DirDictionary";
-            this.menuStrip_DirDictionary.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_DirDictionary.Size = new System.Drawing.Size(351, 30);
             this.menuStrip_DirDictionary.Tag = "inspector";
             this.menuStrip_DirDictionary.Text = "Справочник направлений ФИС";
             this.menuStrip_DirDictionary.Click += new System.EventHandler(this.menuStrip_DirDictionary_Click);
@@ -353,7 +364,7 @@
             // menuStrip_OlympDictionary
             // 
             this.menuStrip_OlympDictionary.Name = "menuStrip_OlympDictionary";
-            this.menuStrip_OlympDictionary.Size = new System.Drawing.Size(247, 22);
+            this.menuStrip_OlympDictionary.Size = new System.Drawing.Size(351, 30);
             this.menuStrip_OlympDictionary.Tag = "inspector";
             this.menuStrip_OlympDictionary.Text = "Справочник олимпиад ФИС";
             this.menuStrip_OlympDictionary.Click += new System.EventHandler(this.menuStrip_OlympDictionary_Click);
@@ -390,7 +401,7 @@
             this.dgvApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvApplications.Size = new System.Drawing.Size(1512, 623);
             this.dgvApplications.TabIndex = 2;
-            this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellClick);
+            this.dgvApplications.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             this.dgvApplications.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvApplications_CellDoubleClick);
             this.dgvApplications.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvApplications_CellFormatting);
             // 
@@ -498,7 +509,7 @@
             this.dgvApplications_RegistratorLogin.HeaderText = "Регистратор";
             this.dgvApplications_RegistratorLogin.Name = "dgvApplications_RegistratorLogin";
             this.dgvApplications_RegistratorLogin.ReadOnly = true;
-            this.dgvApplications_RegistratorLogin.Width = 131;
+            this.dgvApplications_RegistratorLogin.Width = 196;
             // 
             // dgvApplications_Status
             // 
@@ -507,7 +518,7 @@
             this.dgvApplications_Status.HeaderText = "Статус";
             this.dgvApplications_Status.Name = "dgvApplications_Status";
             this.dgvApplications_Status.ReadOnly = true;
-            this.dgvApplications_Status.Width = 87;
+            this.dgvApplications_Status.Width = 126;
             // 
             // label1
             // 
@@ -515,7 +526,7 @@
             this.label1.Location = new System.Drawing.Point(4, 55);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 20);
+            this.label1.Size = new System.Drawing.Size(89, 29);
             this.label1.TabIndex = 6;
             this.label1.Text = "Поиск:";
             // 
@@ -526,7 +537,7 @@
             this.tbLastName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbLastName.MaxLength = 250;
             this.tbLastName.Name = "tbLastName";
-            this.tbLastName.Size = new System.Drawing.Size(155, 26);
+            this.tbLastName.Size = new System.Drawing.Size(155, 35);
             this.tbLastName.TabIndex = 7;
             this.tbLastName.Tag = "Фамилия";
             this.tbLastName.Text = "Фамилия";
@@ -541,7 +552,7 @@
             this.tbFirstName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbFirstName.MaxLength = 250;
             this.tbFirstName.Name = "tbFirstName";
-            this.tbFirstName.Size = new System.Drawing.Size(155, 26);
+            this.tbFirstName.Size = new System.Drawing.Size(155, 35);
             this.tbFirstName.TabIndex = 8;
             this.tbFirstName.Tag = "Имя";
             this.tbFirstName.Text = "Имя";
@@ -556,7 +567,7 @@
             this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbMiddleName.MaxLength = 250;
             this.tbMiddleName.Name = "tbMiddleName";
-            this.tbMiddleName.Size = new System.Drawing.Size(155, 26);
+            this.tbMiddleName.Size = new System.Drawing.Size(155, 35);
             this.tbMiddleName.TabIndex = 9;
             this.tbMiddleName.Tag = "Отчество";
             this.tbMiddleName.Text = "Отчество";
@@ -571,7 +582,7 @@
             this.dtpRegDate.Location = new System.Drawing.Point(855, 52);
             this.dtpRegDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dtpRegDate.Name = "dtpRegDate";
-            this.dtpRegDate.Size = new System.Drawing.Size(118, 26);
+            this.dtpRegDate.Size = new System.Drawing.Size(118, 35);
             this.dtpRegDate.TabIndex = 10;
             this.dtpRegDate.ValueChanged += new System.EventHandler(this.tbField_TextChanged);
             // 
@@ -582,7 +593,7 @@
             this.tbRegNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbRegNumber.MaxLength = 11;
             this.tbRegNumber.Name = "tbRegNumber";
-            this.tbRegNumber.Size = new System.Drawing.Size(107, 26);
+            this.tbRegNumber.Size = new System.Drawing.Size(107, 35);
             this.tbRegNumber.TabIndex = 11;
             this.tbRegNumber.Tag = "№ заявления";
             this.tbRegNumber.Text = "№ заявления";
@@ -597,7 +608,7 @@
             this.label2.Location = new System.Drawing.Point(695, 55);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(152, 20);
+            this.label2.Size = new System.Drawing.Size(229, 29);
             this.label2.TabIndex = 12;
             this.label2.Text = "Дата регистрации:";
             // 
@@ -607,7 +618,7 @@
             this.cbDateSearch.Location = new System.Drawing.Point(677, 58);
             this.cbDateSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbDateSearch.Name = "cbDateSearch";
-            this.cbDateSearch.Size = new System.Drawing.Size(15, 14);
+            this.cbDateSearch.Size = new System.Drawing.Size(22, 21);
             this.cbDateSearch.TabIndex = 13;
             this.cbDateSearch.UseVisualStyleBackColor = true;
             this.cbDateSearch.CheckedChanged += new System.EventHandler(this.cbDateSearch_CheckedChanged);
@@ -616,11 +627,12 @@
             // 
             this.rbNew.AutoSize = true;
             this.rbNew.BackColor = System.Drawing.Color.Transparent;
+            this.rbNew.Checked = true;
             this.rbNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.rbNew.Location = new System.Drawing.Point(612, 26);
             this.rbNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.rbNew.Name = "rbNew";
-            this.rbNew.Size = new System.Drawing.Size(69, 20);
+            this.rbNew.Size = new System.Drawing.Size(96, 29);
             this.rbNew.TabIndex = 14;
             this.rbNew.TabStop = true;
             this.rbNew.Text = "Новые";
@@ -635,9 +647,8 @@
             this.rbWithdraw.Location = new System.Drawing.Point(681, 26);
             this.rbWithdraw.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.rbWithdraw.Name = "rbWithdraw";
-            this.rbWithdraw.Size = new System.Drawing.Size(175, 20);
+            this.rbWithdraw.Size = new System.Drawing.Size(252, 29);
             this.rbWithdraw.TabIndex = 15;
-            this.rbWithdraw.TabStop = true;
             this.rbWithdraw.Text = "Забравшие документы";
             this.rbWithdraw.UseVisualStyleBackColor = false;
             this.rbWithdraw.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
@@ -650,9 +661,8 @@
             this.rbAdm.Location = new System.Drawing.Point(855, 26);
             this.rbAdm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.rbAdm.Name = "rbAdm";
-            this.rbAdm.Size = new System.Drawing.Size(115, 20);
+            this.rbAdm.Size = new System.Drawing.Size(162, 29);
             this.rbAdm.TabIndex = 16;
-            this.rbAdm.TabStop = true;
             this.rbAdm.Text = "Зачисленные";
             this.rbAdm.UseVisualStyleBackColor = false;
             this.rbAdm.CheckedChanged += new System.EventHandler(this.rbFilter_CheckedChanged);
@@ -663,7 +673,7 @@
             this.lFilter.BackColor = System.Drawing.Color.Transparent;
             this.lFilter.Location = new System.Drawing.Point(538, 26);
             this.lFilter.Name = "lFilter";
-            this.lFilter.Size = new System.Drawing.Size(74, 20);
+            this.lFilter.Size = new System.Drawing.Size(108, 29);
             this.lFilter.TabIndex = 17;
             this.lFilter.Text = "Фильтр:";
             // 
@@ -685,21 +695,21 @@
             this.lbDispalyedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbDispalyedCount.Location = new System.Drawing.Point(1279, 54);
             this.lbDispalyedCount.Name = "lbDispalyedCount";
-            this.lbDispalyedCount.Size = new System.Drawing.Size(197, 20);
+            this.lbDispalyedCount.Size = new System.Drawing.Size(305, 29);
             this.lbDispalyedCount.TabIndex = 18;
             this.lbDispalyedCount.Tag = "Отображено заявлений: ";
             this.lbDispalyedCount.Text = "Отображено заявлений: ";
             // 
-            // menuStrip_HR_Department
+            // menuStrip_OnlineAppl
             // 
-            this.menuStrip_HR_Department.Name = "menuStrip_HR_Department";
-            this.menuStrip_HR_Department.Size = new System.Drawing.Size(233, 22);
-            this.menuStrip_HR_Department.Text = "Отдел кадров";
-            this.menuStrip_HR_Department.Click += new System.EventHandler(this.menuStrip_HR_Department_Click);
+            this.menuStrip_OnlineAppl.Name = "menuStrip_OnlineAppl";
+            this.menuStrip_OnlineAppl.Size = new System.Drawing.Size(252, 30);
+            this.menuStrip_OnlineAppl.Text = "Online заявления";
+            this.menuStrip_OnlineAppl.Click += new System.EventHandler(this.menuStrip_OnlineAppl_Click);
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1512, 709);
             this.Controls.Add(this.lbDispalyedCount);
@@ -798,6 +808,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_RegistratorLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvApplications_Status;
         private System.Windows.Forms.ToolStripMenuItem menuStrip_HR_Department;
+        private System.Windows.Forms.ToolStripMenuItem menuStrip_OnlineAppl;
     }
 }
 
