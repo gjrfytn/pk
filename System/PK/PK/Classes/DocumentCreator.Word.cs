@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
-using Novacode;
+//using Novacode;
+using Xceed.Words.NET;
 
 namespace PK.Classes
 {
@@ -119,9 +120,14 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     float width, height;
                     switch (properties.Element("Format").Value)
                     {
+                        case "A4":
+                            width = 595.2f;
+                            height = 839.0f;
+                            break;
                         case "A5":
                             width = 419.5f;
-                            height = 595.2f;
+                            //height = 595.2f;
+                            height = 620.2f;
                             break;
                         case "A6":
                             width = 297.6f;
@@ -169,23 +175,23 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 if (properties.Element("Headers") != null)
                 {
                     doc.AddHeaders();
-                    doc.Headers.first.RemoveParagraphAt(0);
-                    MakeParagraph(properties.Element("Headers"), doc.Headers.first.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
-                    doc.Headers.odd.RemoveParagraphAt(0);
-                    MakeParagraph(properties.Element("Headers"), doc.Headers.odd.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
-                    doc.Headers.even.RemoveParagraphAt(0);
-                    MakeParagraph(properties.Element("Headers"), doc.Headers.even.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    doc.Headers.First.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.First.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    doc.Headers.Odd.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.Odd.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
+                    doc.Headers.Even.RemoveParagraphAt(0);
+                    MakeParagraph(properties.Element("Headers"), doc.Headers.Even.InsertParagraph(), fonts, connection, id, ref placeholderGroup, singleParams);
                 }
 
                 if (properties.Element("PageNumeration") != null)
                 {
                     doc.AddFooters();
-                    doc.Footers.first.PageNumbers = true;
-                    doc.Footers.odd.PageNumbers = true;
-                    doc.Footers.even.PageNumbers = true;
-                    doc.Footers.first.Paragraphs[0].Alignment = Alignment.right;
-                    doc.Footers.odd.Paragraphs[0].Alignment = Alignment.right;
-                    doc.Footers.even.Paragraphs[0].Alignment = Alignment.right;
+                    doc.Footers.First.PageNumbers = true;
+                    doc.Footers.Odd.PageNumbers = true;
+                    doc.Footers.Even.PageNumbers = true;
+                    doc.Footers.First.Paragraphs[0].Alignment = Alignment.right;
+                    doc.Footers.Odd.Paragraphs[0].Alignment = Alignment.right;
+                    doc.Footers.Even.Paragraphs[0].Alignment = Alignment.right;
                 }
             }
 
@@ -260,7 +266,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 if (fontID != null)
                 {
                     if (fonts[fontID].Name != null)
-                        paragraph.Font(new System.Drawing.FontFamily(fonts[fontID].Name));
+                        paragraph.Font((new System.Drawing.FontFamily(fonts[fontID].Name)).Name);
 
                     if (fonts[fontID].Size.HasValue)
                         paragraph.FontSize(fonts[fontID].Size.Value);

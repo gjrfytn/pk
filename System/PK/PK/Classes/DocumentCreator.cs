@@ -2,6 +2,7 @@
 using System.Xml.Schema;
 using System.Collections.Generic;
 using SharedClasses.DB;
+using System.Linq;
 
 namespace PK.Classes
 {
@@ -81,10 +82,10 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-                Novacode.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
+                Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
 
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
             else
@@ -109,10 +110,10 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-                Novacode.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
+                Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
 
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
             else
@@ -128,23 +129,70 @@ namespace PK.Classes
                 throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
             #endregion
 
-            Novacode.DocX doc = null;
+            void AddItemToTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
+            {
+                // Insert a copy of the rowPattern at the last index in the table.
+                var newItem = table.InsertRow(rowPattern, table.RowCount - 1);
+
+                // Replace the default values of the newly inserted row.
+                newItem.ReplaceText("%faculty%", direction[0]);
+                newItem.ReplaceText("%directionAndCode%", direction[1]);
+                newItem.ReplaceText("%mag_program%", direction[4]);
+                newItem.ReplaceText("%chair%", direction[5]);
+                newItem.ReplaceText("%edu_form%", direction[2] + ", " + direction[3]);
+            }
+
+            Xceed.Words.NET.DocX doc = null;
             foreach (var document in documents)
             {
-                XDocument template = XDocument.Load(document.Template, LoadOptions.PreserveWhitespace);
-
-                Validate(template);
-
-                if (template.Root.Element("Document").Element("Word") != null)
+                if (document.Template.IndexOf("ApplicationTemplate")>=0)
                 {
-                    Novacode.DocX buf;
-                    if (document.Connection != null)
-                        buf = Word.CreateFromTemplate(document.Connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.ID.Value, resultFile);
-                    else
-                        buf = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.SingleParameters, document.TableParameters, resultFile);
+                    Xceed.Words.NET.DocX buf = Xceed.Words.NET.DocX.Load(document.Template);
+                    buf.ReplaceText("<FIO>", document.SingleParameters[0]);
+                    buf.ReplaceText("<gender>", document.SingleParameters[1]);
+                    buf.ReplaceText("<birth_date>", document.SingleParameters[2]);
+                    buf.ReplaceText("<nationality>", document.SingleParameters[3]);
+                    buf.ReplaceText("<identity_type>", document.SingleParameters[4]);
+                    buf.ReplaceText("<identity_series>", document.SingleParameters[5]);
+                    buf.ReplaceText("<identity_number>", document.SingleParameters[6]);
+                    buf.ReplaceText("<identity_date>", document.SingleParameters[7]);
+                    buf.ReplaceText("<identity_organization>", document.SingleParameters[8]);
+                    buf.ReplaceText("<identity_subdivision_code>", document.SingleParameters[9]);
+                    buf.ReplaceText("<identity_birth_place>", document.SingleParameters[10]);
+                    buf.ReplaceText("<identity_reg>", document.SingleParameters[11]);
+                    buf.ReplaceText("<cell_phone>", document.SingleParameters[12]);
+                    buf.ReplaceText("<home_phone>", document.SingleParameters[13]);
+                    buf.ReplaceText("<email>", document.SingleParameters[14]);
+                    buf.ReplaceText("<edu_organization>", document.SingleParameters[15]);
+                    buf.ReplaceText("<edu_series>", document.SingleParameters[16]);
+                    buf.ReplaceText("<edu_number>", document.SingleParameters[17]);
+                    buf.ReplaceText("<edu_date>", document.SingleParameters[18]);
+                    buf.ReplaceText("<edu_speciality>", document.SingleParameters[19]);
+                    buf.ReplaceText("<need_hostel>", document.SingleParameters[20]=="True"? "нуждаюсь" : "не нуждаюсь");
+                    buf.ReplaceText("<red_diplom_ball>", document.SingleParameters[21]!="0"?document.SingleParameters[21]:"");
+                    buf.ReplaceText("<hight_edu_first>", document.SingleParameters[22] == "True" ? "впервые" : "повторно");
+                    buf.ReplaceText("<special_conditions>", document.SingleParameters[23] == "True" ? "имею" : "не имею");
+                    buf.ReplaceText("<FIO_SHORT>", document.SingleParameters[24]);
+
+                    var applEntranceTableParams = buf.Tables.FirstOrDefault(t => t.TableCaption == "Directions");
+                    if (applEntranceTableParams.RowCount > 1)
+                    {
+                        // Get the row pattern of the second row.
+                        var rowPattern = applEntranceTableParams.Rows[1];
+
+                        foreach (var direction in document.TableParameters[0])
+                        {
+                            AddItemToTable(applEntranceTableParams, rowPattern, direction);
+                        }
+                        // Remove the pattern row.
+                        rowPattern.Remove();
+                    }
 
                     if (doc == null)
-                        doc = buf;
+                    {
+                        doc = Xceed.Words.NET.DocX.Create(resultFile + ".docx");
+                        doc.InsertDocument(buf);
+                    }
                     else
                     {
                         doc.InsertSectionPageBreak();
@@ -152,10 +200,32 @@ namespace PK.Classes
                     }
                 }
                 else
-                    throw new System.ArgumentException("Эта перегрузка принимат только тип шаблонов \"Word\".", nameof(documents));
+                {
+                    XDocument template = XDocument.Load(document.Template, LoadOptions.PreserveWhitespace);
 
+                    Validate(template);
+
+                    if (template.Root.Element("Document").Element("Word") != null)
+                    {
+                        Xceed.Words.NET.DocX buf;
+                        if (document.Connection != null)
+                            buf = Word.CreateFromTemplate(document.Connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.ID.Value, resultFile);
+                        else
+                            buf = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.SingleParameters, document.TableParameters, resultFile);
+
+                        if (doc == null)
+                            doc = buf;
+                        else
+                        {
+                            doc.InsertSectionPageBreak();
+                            doc.InsertDocument(buf);
+                        }
+                    }
+                    else
+                        throw new System.ArgumentException("Эта перегрузка принимат только тип шаблонов \"Word\".", nameof(documents));
+                }
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
         }

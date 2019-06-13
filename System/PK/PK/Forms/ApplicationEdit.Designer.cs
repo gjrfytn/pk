@@ -280,7 +280,7 @@
             this.mtbSubdivisionCode.Location = new System.Drawing.Point(1222, 52);
             this.mtbSubdivisionCode.Mask = "999-999";
             this.mtbSubdivisionCode.Name = "mtbSubdivisionCode";
-            this.mtbSubdivisionCode.Size = new System.Drawing.Size(60, 22);
+            this.mtbSubdivisionCode.Size = new System.Drawing.Size(60, 30);
             this.mtbSubdivisionCode.TabIndex = 5;
             // 
             // pictureBox1
@@ -326,7 +326,7 @@
             this.cbStreet.FormattingEnabled = true;
             this.cbStreet.Location = new System.Drawing.Point(714, 18);
             this.cbStreet.Name = "cbStreet";
-            this.cbStreet.Size = new System.Drawing.Size(165, 24);
+            this.cbStreet.Size = new System.Drawing.Size(165, 33);
             this.cbStreet.TabIndex = 3;
             this.cbStreet.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbStreet.Enter += new System.EventHandler(this.cbStreet_Enter);
@@ -338,7 +338,7 @@
             this.cbTown.FormattingEnabled = true;
             this.cbTown.Location = new System.Drawing.Point(489, 18);
             this.cbTown.Name = "cbTown";
-            this.cbTown.Size = new System.Drawing.Size(163, 24);
+            this.cbTown.Size = new System.Drawing.Size(163, 33);
             this.cbTown.TabIndex = 2;
             this.cbTown.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbTown.Enter += new System.EventHandler(this.cbTown_Enter);
@@ -350,7 +350,7 @@
             this.cbDistrict.FormattingEnabled = true;
             this.cbDistrict.Location = new System.Drawing.Point(276, 18);
             this.cbDistrict.Name = "cbDistrict";
-            this.cbDistrict.Size = new System.Drawing.Size(154, 24);
+            this.cbDistrict.Size = new System.Drawing.Size(154, 33);
             this.cbDistrict.TabIndex = 1;
             this.cbDistrict.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbDistrict.Enter += new System.EventHandler(this.cbDistrict_Enter);
@@ -362,7 +362,7 @@
             this.cbRegion.FormattingEnabled = true;
             this.cbRegion.Location = new System.Drawing.Point(62, 18);
             this.cbRegion.Name = "cbRegion";
-            this.cbRegion.Size = new System.Drawing.Size(150, 24);
+            this.cbRegion.Size = new System.Drawing.Size(150, 33);
             this.cbRegion.TabIndex = 0;
             this.cbRegion.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             // 
@@ -373,7 +373,7 @@
             this.cbHouse.FormattingEnabled = true;
             this.cbHouse.Location = new System.Drawing.Point(924, 18);
             this.cbHouse.Name = "cbHouse";
-            this.cbHouse.Size = new System.Drawing.Size(108, 24);
+            this.cbHouse.Size = new System.Drawing.Size(108, 33);
             this.cbHouse.TabIndex = 4;
             this.cbHouse.TextChanged += new System.EventHandler(this.cbAddress_TextChanged);
             this.cbHouse.Enter += new System.EventHandler(this.cbHouse_Enter);
@@ -395,7 +395,7 @@
             this.tbPostcode.Margin = new System.Windows.Forms.Padding(4);
             this.tbPostcode.MaxLength = 6;
             this.tbPostcode.Name = "tbPostcode";
-            this.tbPostcode.Size = new System.Drawing.Size(59, 22);
+            this.tbPostcode.Size = new System.Drawing.Size(59, 30);
             this.tbPostcode.TabIndex = 7;
             // 
             // label20
@@ -404,7 +404,7 @@
             this.label20.Location = new System.Drawing.Point(1184, 23);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(59, 16);
+            this.label20.Size = new System.Drawing.Size(86, 25);
             this.label20.TabIndex = 12;
             this.label20.Text = "Индекс:";
             // 
@@ -414,7 +414,7 @@
             this.tbAppartment.Margin = new System.Windows.Forms.Padding(4);
             this.tbAppartment.MaxLength = 6;
             this.tbAppartment.Name = "tbAppartment";
-            this.tbAppartment.Size = new System.Drawing.Size(36, 22);
+            this.tbAppartment.Size = new System.Drawing.Size(36, 30);
             this.tbAppartment.TabIndex = 5;
             this.tbAppartment.Leave += new System.EventHandler(this.tbKLADR_Leave);
             // 
@@ -424,7 +424,7 @@
             this.label19.Location = new System.Drawing.Point(1049, 23);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(74, 16);
+            this.label19.Size = new System.Drawing.Size(105, 25);
             this.label19.TabIndex = 10;
             this.label19.Text = "Квартира:";
             // 
@@ -434,7 +434,7 @@
             this.label18.Location = new System.Drawing.Point(886, 23);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(37, 16);
+            this.label18.Size = new System.Drawing.Size(63, 25);
             this.label18.TabIndex = 8;
             this.label18.Text = "Дом:";
             // 
@@ -444,7 +444,7 @@
             this.label17.Location = new System.Drawing.Point(659, 23);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(52, 16);
+            this.label17.Size = new System.Drawing.Size(75, 25);
             this.label17.TabIndex = 6;
             this.label17.Text = "Улица:";
             // 
@@ -454,7 +454,7 @@
             this.label16.Location = new System.Drawing.Point(437, 23);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(50, 16);
+            this.label16.Size = new System.Drawing.Size(75, 25);
             this.label16.TabIndex = 4;
             this.label16.Text = "Город:";
             // 
@@ -464,7 +464,7 @@
             this.label15.Location = new System.Drawing.Point(224, 23);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(52, 16);
+            this.label15.Size = new System.Drawing.Size(73, 25);
             this.label15.TabIndex = 2;
             this.label15.Text = "Район:";
             // 
@@ -474,7 +474,7 @@
             this.label14.Location = new System.Drawing.Point(5, 23);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(58, 16);
+            this.label14.Size = new System.Drawing.Size(82, 25);
             this.label14.TabIndex = 0;
             this.label14.Text = "Регион:";
             // 
@@ -484,7 +484,7 @@
             this.tbPlaceOfBirth.Margin = new System.Windows.Forms.Padding(4);
             this.tbPlaceOfBirth.MaxLength = 250;
             this.tbPlaceOfBirth.Name = "tbPlaceOfBirth";
-            this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 22);
+            this.tbPlaceOfBirth.Size = new System.Drawing.Size(222, 30);
             this.tbPlaceOfBirth.TabIndex = 11;
             // 
             // label13
@@ -493,7 +493,7 @@
             this.label13.Location = new System.Drawing.Point(500, 112);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(228, 16);
+            this.label13.Size = new System.Drawing.Size(334, 25);
             this.label13.TabIndex = 24;
             this.label13.Text = "Место рождения (как в паспорте):";
             // 
@@ -504,7 +504,7 @@
             this.cbNationality.Location = new System.Drawing.Point(1076, 108);
             this.cbNationality.Margin = new System.Windows.Forms.Padding(4);
             this.cbNationality.Name = "cbNationality";
-            this.cbNationality.Size = new System.Drawing.Size(250, 24);
+            this.cbNationality.Size = new System.Drawing.Size(250, 33);
             this.cbNationality.TabIndex = 12;
             // 
             // label12
@@ -513,7 +513,7 @@
             this.label12.Location = new System.Drawing.Point(972, 111);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(97, 16);
+            this.label12.Size = new System.Drawing.Size(144, 25);
             this.label12.TabIndex = 22;
             this.label12.Text = "Гражданство:";
             // 
@@ -524,7 +524,7 @@
             this.dtpDateOfBirth.Margin = new System.Windows.Forms.Padding(4);
             this.dtpDateOfBirth.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpDateOfBirth.Name = "dtpDateOfBirth";
-            this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 22);
+            this.dtpDateOfBirth.Size = new System.Drawing.Size(101, 30);
             this.dtpDateOfBirth.TabIndex = 10;
             this.dtpDateOfBirth.Tag = "false";
             this.dtpDateOfBirth.ValueChanged += new System.EventHandler(this.dtp_ValueChanged);
@@ -535,7 +535,7 @@
             this.label11.Location = new System.Drawing.Point(271, 111);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(110, 16);
+            this.label11.Size = new System.Drawing.Size(167, 25);
             this.label11.TabIndex = 20;
             this.label11.Text = "Дата рождения:";
             // 
@@ -546,7 +546,7 @@
             this.cbSex.Location = new System.Drawing.Point(155, 107);
             this.cbSex.Margin = new System.Windows.Forms.Padding(4);
             this.cbSex.Name = "cbSex";
-            this.cbSex.Size = new System.Drawing.Size(101, 24);
+            this.cbSex.Size = new System.Drawing.Size(101, 33);
             this.cbSex.TabIndex = 9;
             // 
             // label10
@@ -555,7 +555,7 @@
             this.label10.Location = new System.Drawing.Point(110, 111);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(37, 16);
+            this.label10.Size = new System.Drawing.Size(55, 25);
             this.label10.TabIndex = 18;
             this.label10.Text = "Пол:";
             // 
@@ -565,7 +565,7 @@
             this.tbIssuedBy.Margin = new System.Windows.Forms.Padding(4);
             this.tbIssuedBy.MaxLength = 500;
             this.tbIssuedBy.Name = "tbIssuedBy";
-            this.tbIssuedBy.Size = new System.Drawing.Size(445, 22);
+            this.tbIssuedBy.Size = new System.Drawing.Size(445, 30);
             this.tbIssuedBy.TabIndex = 3;
             // 
             // label9
@@ -574,7 +574,7 @@
             this.label9.Location = new System.Drawing.Point(109, 55);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(80, 16);
+            this.label9.Size = new System.Drawing.Size(120, 25);
             this.label9.TabIndex = 16;
             this.label9.Text = "Кем выдан:";
             // 
@@ -584,7 +584,7 @@
             this.label8.Location = new System.Drawing.Point(1059, 55);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(141, 16);
+            this.label8.Size = new System.Drawing.Size(203, 25);
             this.label8.TabIndex = 14;
             this.label8.Text = "Код подразделения:";
             // 
@@ -594,7 +594,7 @@
             this.label7.Location = new System.Drawing.Point(719, 55);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 16);
+            this.label7.Size = new System.Drawing.Size(140, 25);
             this.label7.TabIndex = 13;
             this.label7.Text = "Дата выдачи:";
             // 
@@ -604,7 +604,7 @@
             this.tbIDDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbIDDocNumber.MaxLength = 100;
             this.tbIDDocNumber.Name = "tbIDDocNumber";
-            this.tbIDDocNumber.Size = new System.Drawing.Size(104, 22);
+            this.tbIDDocNumber.Size = new System.Drawing.Size(104, 30);
             this.tbIDDocNumber.TabIndex = 2;
             this.tbIDDocNumber.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
@@ -614,7 +614,7 @@
             this.tbIDDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbIDDocSeries.MaxLength = 20;
             this.tbIDDocSeries.Name = "tbIDDocSeries";
-            this.tbIDDocSeries.Size = new System.Drawing.Size(64, 22);
+            this.tbIDDocSeries.Size = new System.Drawing.Size(64, 30);
             this.tbIDDocSeries.TabIndex = 1;
             this.tbIDDocSeries.Leave += new System.EventHandler(this.tbIDDoc_Leave);
             // 
@@ -624,7 +624,7 @@
             this.label6.Location = new System.Drawing.Point(1146, 23);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(54, 16);
+            this.label6.Size = new System.Drawing.Size(81, 25);
             this.label6.TabIndex = 10;
             this.label6.Text = "Номер:";
             // 
@@ -634,7 +634,7 @@
             this.label5.Location = new System.Drawing.Point(922, 25);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 16);
+            this.label5.Size = new System.Drawing.Size(75, 25);
             this.label5.TabIndex = 9;
             this.label5.Text = "Серия:";
             // 
@@ -645,7 +645,7 @@
             this.dtpIDDocDate.Margin = new System.Windows.Forms.Padding(4);
             this.dtpIDDocDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.dtpIDDocDate.Name = "dtpIDDocDate";
-            this.dtpIDDocDate.Size = new System.Drawing.Size(108, 22);
+            this.dtpIDDocDate.Size = new System.Drawing.Size(108, 30);
             this.dtpIDDocDate.TabIndex = 4;
             this.dtpIDDocDate.Tag = "false";
             this.dtpIDDocDate.Value = new System.DateTime(2017, 2, 28, 11, 49, 40, 0);
@@ -657,7 +657,7 @@
             this.tbMiddleName.Margin = new System.Windows.Forms.Padding(4);
             this.tbMiddleName.MaxLength = 250;
             this.tbMiddleName.Name = "tbMiddleName";
-            this.tbMiddleName.Size = new System.Drawing.Size(310, 22);
+            this.tbMiddleName.Size = new System.Drawing.Size(310, 30);
             this.tbMiddleName.TabIndex = 8;
             this.tbMiddleName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
@@ -667,7 +667,7 @@
             this.label4.Location = new System.Drawing.Point(931, 84);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(74, 16);
+            this.label4.Size = new System.Drawing.Size(110, 25);
             this.label4.TabIndex = 6;
             this.label4.Text = "Отчество:";
             // 
@@ -677,7 +677,7 @@
             this.tbLastName.Margin = new System.Windows.Forms.Padding(4);
             this.tbLastName.MaxLength = 250;
             this.tbLastName.Name = "tbLastName";
-            this.tbLastName.Size = new System.Drawing.Size(308, 22);
+            this.tbLastName.Size = new System.Drawing.Size(308, 30);
             this.tbLastName.TabIndex = 6;
             this.tbLastName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
@@ -687,7 +687,7 @@
             this.label3.Location = new System.Drawing.Point(109, 84);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 16);
+            this.label3.Size = new System.Drawing.Size(109, 25);
             this.label3.TabIndex = 4;
             this.label3.Text = "Фамилия:";
             // 
@@ -697,7 +697,7 @@
             this.tbFirstName.Margin = new System.Windows.Forms.Padding(4);
             this.tbFirstName.MaxLength = 250;
             this.tbFirstName.Name = "tbFirstName";
-            this.tbFirstName.Size = new System.Drawing.Size(310, 22);
+            this.tbFirstName.Size = new System.Drawing.Size(310, 30);
             this.tbFirstName.TabIndex = 7;
             this.tbFirstName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCyrillic_KeyPress);
             // 
@@ -707,7 +707,7 @@
             this.label2.Location = new System.Drawing.Point(549, 84);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 16);
+            this.label2.Size = new System.Drawing.Size(60, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Имя:";
             // 
@@ -718,7 +718,7 @@
             this.cbIDDocType.Location = new System.Drawing.Point(234, 20);
             this.cbIDDocType.Margin = new System.Windows.Forms.Padding(4);
             this.cbIDDocType.Name = "cbIDDocType";
-            this.cbIDDocType.Size = new System.Drawing.Size(613, 24);
+            this.cbIDDocType.Size = new System.Drawing.Size(613, 33);
             this.cbIDDocType.TabIndex = 0;
             this.cbIDDocType.SelectedIndexChanged += new System.EventHandler(this.cbIDDocType_SelectedIndexChanged);
             // 
@@ -728,7 +728,7 @@
             this.label1.Location = new System.Drawing.Point(109, 23);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 16);
+            this.label1.Size = new System.Drawing.Size(160, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Тип документа:";
             // 
@@ -775,7 +775,7 @@
             this.tbInstitutionLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionLocation.MaxLength = 242;
             this.tbInstitutionLocation.Name = "tbInstitutionLocation";
-            this.tbInstitutionLocation.Size = new System.Drawing.Size(183, 22);
+            this.tbInstitutionLocation.Size = new System.Drawing.Size(183, 30);
             this.tbInstitutionLocation.TabIndex = 3;
             // 
             // cbGraduationYear
@@ -785,7 +785,7 @@
             this.cbGraduationYear.Location = new System.Drawing.Point(1257, 17);
             this.cbGraduationYear.Margin = new System.Windows.Forms.Padding(4);
             this.cbGraduationYear.Name = "cbGraduationYear";
-            this.cbGraduationYear.Size = new System.Drawing.Size(80, 24);
+            this.cbGraduationYear.Size = new System.Drawing.Size(80, 33);
             this.cbGraduationYear.TabIndex = 4;
             // 
             // label27
@@ -794,7 +794,7 @@
             this.label27.Location = new System.Drawing.Point(704, 19);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(234, 16);
+            this.label27.Size = new System.Drawing.Size(329, 25);
             this.label27.TabIndex = 14;
             this.label27.Text = "Где окончили учебное заведение:";
             // 
@@ -804,7 +804,7 @@
             this.label26.Location = new System.Drawing.Point(1142, 22);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(107, 16);
+            this.label26.Size = new System.Drawing.Size(155, 25);
             this.label26.TabIndex = 12;
             this.label26.Text = "Год окончания:";
             // 
@@ -814,7 +814,7 @@
             this.tbInstitutionNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbInstitutionNumber.MaxLength = 242;
             this.tbInstitutionNumber.Name = "tbInstitutionNumber";
-            this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 22);
+            this.tbInstitutionNumber.Size = new System.Drawing.Size(142, 30);
             this.tbInstitutionNumber.TabIndex = 6;
             // 
             // label25
@@ -823,7 +823,7 @@
             this.label25.Location = new System.Drawing.Point(852, 51);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(193, 16);
+            this.label25.Size = new System.Drawing.Size(272, 25);
             this.label25.TabIndex = 10;
             this.label25.Text = "Номер учебного заведения:";
             // 
@@ -834,7 +834,7 @@
             this.cbInstitutionType.Location = new System.Drawing.Point(633, 46);
             this.cbInstitutionType.Margin = new System.Windows.Forms.Padding(4);
             this.cbInstitutionType.Name = "cbInstitutionType";
-            this.cbInstitutionType.Size = new System.Drawing.Size(195, 24);
+            this.cbInstitutionType.Size = new System.Drawing.Size(195, 33);
             this.cbInstitutionType.TabIndex = 5;
             // 
             // label24
@@ -843,7 +843,7 @@
             this.label24.Location = new System.Drawing.Point(362, 50);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(263, 16);
+            this.label24.Size = new System.Drawing.Size(366, 25);
             this.label24.TabIndex = 8;
             this.label24.Text = "Вид оконченного учебного заведения:";
             // 
@@ -853,7 +853,7 @@
             this.cbOriginal.Location = new System.Drawing.Point(1213, 50);
             this.cbOriginal.Margin = new System.Windows.Forms.Padding(4);
             this.cbOriginal.Name = "cbOriginal";
-            this.cbOriginal.Size = new System.Drawing.Size(91, 20);
+            this.cbOriginal.Size = new System.Drawing.Size(127, 29);
             this.cbOriginal.TabIndex = 7;
             this.cbOriginal.Text = "Оригинал";
             this.cbOriginal.UseVisualStyleBackColor = true;
@@ -865,7 +865,7 @@
             this.tbEduDocNumber.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocNumber.MaxLength = 100;
             this.tbEduDocNumber.Name = "tbEduDocNumber";
-            this.tbEduDocNumber.Size = new System.Drawing.Size(118, 22);
+            this.tbEduDocNumber.Size = new System.Drawing.Size(118, 30);
             this.tbEduDocNumber.TabIndex = 2;
             // 
             // label23
@@ -874,7 +874,7 @@
             this.label23.Location = new System.Drawing.Point(515, 20);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(54, 16);
+            this.label23.Size = new System.Drawing.Size(81, 25);
             this.label23.TabIndex = 5;
             this.label23.Text = "Номер:";
             // 
@@ -884,7 +884,7 @@
             this.tbEduDocSeries.Margin = new System.Windows.Forms.Padding(4);
             this.tbEduDocSeries.MaxLength = 20;
             this.tbEduDocSeries.Name = "tbEduDocSeries";
-            this.tbEduDocSeries.Size = new System.Drawing.Size(80, 22);
+            this.tbEduDocSeries.Size = new System.Drawing.Size(80, 30);
             this.tbEduDocSeries.TabIndex = 1;
             // 
             // label22
@@ -893,7 +893,7 @@
             this.label22.Location = new System.Drawing.Point(362, 20);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(51, 16);
+            this.label22.Size = new System.Drawing.Size(75, 25);
             this.label22.TabIndex = 3;
             this.label22.Text = "Серия:";
             // 
@@ -917,7 +917,7 @@
             this.rbSpravka.Location = new System.Drawing.Point(189, 24);
             this.rbSpravka.Margin = new System.Windows.Forms.Padding(4);
             this.rbSpravka.Name = "rbSpravka";
-            this.rbSpravka.Size = new System.Drawing.Size(82, 20);
+            this.rbSpravka.Size = new System.Drawing.Size(112, 29);
             this.rbSpravka.TabIndex = 2;
             this.rbSpravka.Text = "Справка";
             this.rbSpravka.UseVisualStyleBackColor = true;
@@ -929,7 +929,7 @@
             this.rbDiploma.Location = new System.Drawing.Point(105, 24);
             this.rbDiploma.Margin = new System.Windows.Forms.Padding(4);
             this.rbDiploma.Name = "rbDiploma";
-            this.rbDiploma.Size = new System.Drawing.Size(76, 20);
+            this.rbDiploma.Size = new System.Drawing.Size(116, 29);
             this.rbDiploma.TabIndex = 1;
             this.rbDiploma.Text = "Диплом";
             this.rbDiploma.UseVisualStyleBackColor = true;
@@ -942,7 +942,7 @@
             this.rbCertificate.Location = new System.Drawing.Point(11, 23);
             this.rbCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.rbCertificate.Name = "rbCertificate";
-            this.rbCertificate.Size = new System.Drawing.Size(86, 20);
+            this.rbCertificate.Size = new System.Drawing.Size(129, 29);
             this.rbCertificate.TabIndex = 0;
             this.rbCertificate.TabStop = true;
             this.rbCertificate.Text = "Аттестат";
@@ -959,7 +959,7 @@
             this.cbForeignLanguage.Location = new System.Drawing.Point(539, 240);
             this.cbForeignLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.cbForeignLanguage.Name = "cbForeignLanguage";
-            this.cbForeignLanguage.Size = new System.Drawing.Size(149, 24);
+            this.cbForeignLanguage.Size = new System.Drawing.Size(149, 33);
             this.cbForeignLanguage.TabIndex = 4;
             // 
             // label28
@@ -968,7 +968,7 @@
             this.label28.Location = new System.Drawing.Point(397, 243);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(134, 16);
+            this.label28.Size = new System.Drawing.Size(195, 25);
             this.label28.TabIndex = 16;
             this.label28.Text = "Иностранный язык:";
             // 
@@ -982,7 +982,7 @@
             this.cbFirstTime.Location = new System.Drawing.Point(234, 240);
             this.cbFirstTime.Margin = new System.Windows.Forms.Padding(4);
             this.cbFirstTime.Name = "cbFirstTime";
-            this.cbFirstTime.Size = new System.Drawing.Size(117, 24);
+            this.cbFirstTime.Size = new System.Drawing.Size(117, 33);
             this.cbFirstTime.TabIndex = 3;
             // 
             // label21
@@ -991,7 +991,7 @@
             this.label21.Location = new System.Drawing.Point(16, 243);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(210, 16);
+            this.label21.Size = new System.Drawing.Size(293, 25);
             this.label21.TabIndex = 1;
             this.label21.Text = "Высшее образование получаю";
             // 
@@ -1090,7 +1090,7 @@
             this.cbCompatriot.AutoSize = true;
             this.cbCompatriot.Location = new System.Drawing.Point(1171, 14);
             this.cbCompatriot.Name = "cbCompatriot";
-            this.cbCompatriot.Size = new System.Drawing.Size(144, 20);
+            this.cbCompatriot.Size = new System.Drawing.Size(204, 29);
             this.cbCompatriot.TabIndex = 9;
             this.cbCompatriot.Text = "Соотечественник";
             this.cbCompatriot.UseVisualStyleBackColor = true;
@@ -1102,7 +1102,7 @@
             this.label44.BackColor = System.Drawing.Color.Ivory;
             this.label44.Location = new System.Drawing.Point(545, -2);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(73, 16);
+            this.label44.Size = new System.Drawing.Size(101, 25);
             this.label44.TabIndex = 8;
             this.label44.Text = "Признаки";
             // 
@@ -1112,7 +1112,7 @@
             this.cbPriority.Location = new System.Drawing.Point(960, 14);
             this.cbPriority.Margin = new System.Windows.Forms.Padding(4);
             this.cbPriority.Name = "cbPriority";
-            this.cbPriority.Size = new System.Drawing.Size(200, 20);
+            this.cbPriority.Size = new System.Drawing.Size(284, 29);
             this.cbPriority.TabIndex = 7;
             this.cbPriority.Text = "Преимущественное право";
             this.cbPriority.UseVisualStyleBackColor = true;
@@ -1124,7 +1124,7 @@
             this.cbTarget.Location = new System.Drawing.Point(824, 14);
             this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
             this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(128, 20);
+            this.cbTarget.Size = new System.Drawing.Size(184, 29);
             this.cbTarget.TabIndex = 6;
             this.cbTarget.Text = "Целевой прием";
             this.cbTarget.UseVisualStyleBackColor = true;
@@ -1137,7 +1137,7 @@
             this.cbOlympiad.Location = new System.Drawing.Point(708, 13);
             this.cbOlympiad.Margin = new System.Windows.Forms.Padding(4);
             this.cbOlympiad.Name = "cbOlympiad";
-            this.cbOlympiad.Size = new System.Drawing.Size(102, 20);
+            this.cbOlympiad.Size = new System.Drawing.Size(147, 29);
             this.cbOlympiad.TabIndex = 5;
             this.cbOlympiad.Text = "Олимпиада";
             this.cbOlympiad.UseVisualStyleBackColor = true;
@@ -1149,7 +1149,7 @@
             this.cbExams.Location = new System.Drawing.Point(565, 14);
             this.cbExams.Margin = new System.Windows.Forms.Padding(4);
             this.cbExams.Name = "cbExams";
-            this.cbExams.Size = new System.Drawing.Size(135, 20);
+            this.cbExams.Size = new System.Drawing.Size(196, 29);
             this.cbExams.TabIndex = 4;
             this.cbExams.Text = "Сдает экзамены";
             this.cbExams.UseVisualStyleBackColor = true;
@@ -1160,7 +1160,7 @@
             this.cbQuote.Location = new System.Drawing.Point(441, 14);
             this.cbQuote.Margin = new System.Windows.Forms.Padding(4);
             this.cbQuote.Name = "cbQuote";
-            this.cbQuote.Size = new System.Drawing.Size(116, 20);
+            this.cbQuote.Size = new System.Drawing.Size(164, 29);
             this.cbQuote.TabIndex = 3;
             this.cbQuote.Text = "Особая квота";
             this.cbQuote.UseVisualStyleBackColor = true;
@@ -1172,7 +1172,7 @@
             this.cbChernobyl.Location = new System.Drawing.Point(272, 14);
             this.cbChernobyl.Margin = new System.Windows.Forms.Padding(4);
             this.cbChernobyl.Name = "cbChernobyl";
-            this.cbChernobyl.Size = new System.Drawing.Size(164, 20);
+            this.cbChernobyl.Size = new System.Drawing.Size(231, 29);
             this.cbChernobyl.TabIndex = 2;
             this.cbChernobyl.Text = "Чернобыльская зона";
             this.cbChernobyl.UseVisualStyleBackColor = true;
@@ -1184,7 +1184,7 @@
             this.cbMCADO.Location = new System.Drawing.Point(196, 14);
             this.cbMCADO.Margin = new System.Windows.Forms.Padding(4);
             this.cbMCADO.Name = "cbMCADO";
-            this.cbMCADO.Size = new System.Drawing.Size(75, 20);
+            this.cbMCADO.Size = new System.Drawing.Size(113, 29);
             this.cbMCADO.TabIndex = 1;
             this.cbMCADO.Text = "МЦАДО";
             this.cbMCADO.UseVisualStyleBackColor = true;
@@ -1195,7 +1195,7 @@
             this.cbHostelNeeded.Location = new System.Drawing.Point(5, 13);
             this.cbHostelNeeded.Margin = new System.Windows.Forms.Padding(4);
             this.cbHostelNeeded.Name = "cbHostelNeeded";
-            this.cbHostelNeeded.Size = new System.Drawing.Size(186, 20);
+            this.cbHostelNeeded.Size = new System.Drawing.Size(275, 29);
             this.cbHostelNeeded.TabIndex = 0;
             this.cbHostelNeeded.Text = "Нуждается в общежитии";
             this.cbHostelNeeded.UseVisualStyleBackColor = true;
@@ -1232,11 +1232,11 @@
             this.tpDir_budget_o.Controls.Add(this.cbDirection12);
             this.tpDir_budget_o.Controls.Add(this.cbDirection11);
             this.tpDir_budget_o.Controls.Add(this.label32);
-            this.tpDir_budget_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_budget_o.Location = new System.Drawing.Point(4, 34);
             this.tpDir_budget_o.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_budget_o.Name = "tpDir_budget_o";
             this.tpDir_budget_o.Padding = new System.Windows.Forms.Padding(4);
-            this.tpDir_budget_o.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_budget_o.Size = new System.Drawing.Size(587, 146);
             this.tpDir_budget_o.TabIndex = 0;
             this.tpDir_budget_o.Text = "Очная бюджетная";
             // 
@@ -1246,7 +1246,7 @@
             this.cbAgreed13.Enabled = false;
             this.cbAgreed13.Location = new System.Drawing.Point(9, 124);
             this.cbAgreed13.Name = "cbAgreed13";
-            this.cbAgreed13.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed13.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed13.TabIndex = 19;
             this.cbAgreed13.UseVisualStyleBackColor = true;
             this.cbAgreed13.Visible = false;
@@ -1258,7 +1258,7 @@
             this.cbAgreed12.Enabled = false;
             this.cbAgreed12.Location = new System.Drawing.Point(9, 88);
             this.cbAgreed12.Name = "cbAgreed12";
-            this.cbAgreed12.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed12.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed12.TabIndex = 18;
             this.cbAgreed12.UseVisualStyleBackColor = true;
             this.cbAgreed12.Visible = false;
@@ -1270,7 +1270,7 @@
             this.cbAgreed11.Enabled = false;
             this.cbAgreed11.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed11.Name = "cbAgreed11";
-            this.cbAgreed11.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed11.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed11.TabIndex = 17;
             this.cbAgreed11.UseVisualStyleBackColor = true;
             this.cbAgreed11.Visible = false;
@@ -1339,7 +1339,7 @@
             this.cbDirection13.Location = new System.Drawing.Point(31, 119);
             this.cbDirection13.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection13.Name = "cbDirection13";
-            this.cbDirection13.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection13.Size = new System.Drawing.Size(492, 30);
             this.cbDirection13.TabIndex = 5;
             this.cbDirection13.Visible = false;
             this.cbDirection13.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1353,7 +1353,7 @@
             this.cbDirection12.Location = new System.Drawing.Point(31, 83);
             this.cbDirection12.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection12.Name = "cbDirection12";
-            this.cbDirection12.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection12.Size = new System.Drawing.Size(492, 30);
             this.cbDirection12.TabIndex = 3;
             this.cbDirection12.Visible = false;
             this.cbDirection12.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1367,7 +1367,7 @@
             this.cbDirection11.Location = new System.Drawing.Point(31, 42);
             this.cbDirection11.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection11.Name = "cbDirection11";
-            this.cbDirection11.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection11.Size = new System.Drawing.Size(492, 30);
             this.cbDirection11.TabIndex = 1;
             this.cbDirection11.Visible = false;
             this.cbDirection11.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1378,7 +1378,7 @@
             this.label32.Location = new System.Drawing.Point(8, 10);
             this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(180, 16);
+            this.label32.Size = new System.Drawing.Size(251, 25);
             this.label32.TabIndex = 16;
             this.label32.Text = "Направление подготовки:";
             // 
@@ -1388,11 +1388,11 @@
             this.tpDir_paid_o.Controls.Add(this.btAddDir2);
             this.tpDir_paid_o.Controls.Add(this.cbDirection21);
             this.tpDir_paid_o.Controls.Add(this.label36);
-            this.tpDir_paid_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_o.Location = new System.Drawing.Point(4, 34);
             this.tpDir_paid_o.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_paid_o.Name = "tpDir_paid_o";
             this.tpDir_paid_o.Padding = new System.Windows.Forms.Padding(4);
-            this.tpDir_paid_o.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_paid_o.Size = new System.Drawing.Size(587, 146);
             this.tpDir_paid_o.TabIndex = 1;
             this.tpDir_paid_o.Text = "Очная платная";
             this.tpDir_paid_o.UseVisualStyleBackColor = true;
@@ -1432,7 +1432,7 @@
             this.cbDirection21.Location = new System.Drawing.Point(31, 42);
             this.cbDirection21.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection21.Name = "cbDirection21";
-            this.cbDirection21.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection21.Size = new System.Drawing.Size(492, 30);
             this.cbDirection21.TabIndex = 9;
             this.cbDirection21.Visible = false;
             this.cbDirection21.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1443,7 +1443,7 @@
             this.label36.Location = new System.Drawing.Point(8, 10);
             this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(150, 16);
+            this.label36.Size = new System.Drawing.Size(218, 25);
             this.label36.TabIndex = 8;
             this.label36.Text = "Профиль подготовки:";
             // 
@@ -1457,10 +1457,10 @@
             this.tpDir_budget_oz.Controls.Add(this.cbDirection32);
             this.tpDir_budget_oz.Controls.Add(this.cbDirection31);
             this.tpDir_budget_oz.Controls.Add(this.label37);
-            this.tpDir_budget_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_budget_oz.Location = new System.Drawing.Point(4, 34);
             this.tpDir_budget_oz.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_budget_oz.Name = "tpDir_budget_oz";
-            this.tpDir_budget_oz.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_budget_oz.Size = new System.Drawing.Size(587, 146);
             this.tpDir_budget_oz.TabIndex = 2;
             this.tpDir_budget_oz.Text = "Очно-заочная бюджетная";
             this.tpDir_budget_oz.UseVisualStyleBackColor = true;
@@ -1471,7 +1471,7 @@
             this.cbAgreed32.Enabled = false;
             this.cbAgreed32.Location = new System.Drawing.Point(9, 88);
             this.cbAgreed32.Name = "cbAgreed32";
-            this.cbAgreed32.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed32.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed32.TabIndex = 19;
             this.cbAgreed32.UseVisualStyleBackColor = true;
             this.cbAgreed32.Visible = false;
@@ -1483,7 +1483,7 @@
             this.cbAgreed31.Enabled = false;
             this.cbAgreed31.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed31.Name = "cbAgreed31";
-            this.cbAgreed31.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed31.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed31.TabIndex = 18;
             this.cbAgreed31.UseVisualStyleBackColor = true;
             this.cbAgreed31.Visible = false;
@@ -1538,7 +1538,7 @@
             this.cbDirection32.Location = new System.Drawing.Point(31, 83);
             this.cbDirection32.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection32.Name = "cbDirection32";
-            this.cbDirection32.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection32.Size = new System.Drawing.Size(492, 30);
             this.cbDirection32.TabIndex = 10;
             this.cbDirection32.Visible = false;
             this.cbDirection32.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1552,7 +1552,7 @@
             this.cbDirection31.Location = new System.Drawing.Point(31, 42);
             this.cbDirection31.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection31.Name = "cbDirection31";
-            this.cbDirection31.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection31.Size = new System.Drawing.Size(492, 30);
             this.cbDirection31.TabIndex = 9;
             this.cbDirection31.Visible = false;
             this.cbDirection31.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1563,7 +1563,7 @@
             this.label37.Location = new System.Drawing.Point(8, 10);
             this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(180, 16);
+            this.label37.Size = new System.Drawing.Size(251, 25);
             this.label37.TabIndex = 8;
             this.label37.Text = "Направление подготовки:";
             // 
@@ -1573,10 +1573,10 @@
             this.tpDir_paid_oz.Controls.Add(this.btAddDir4);
             this.tpDir_paid_oz.Controls.Add(this.cbDirection41);
             this.tpDir_paid_oz.Controls.Add(this.label38);
-            this.tpDir_paid_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_oz.Location = new System.Drawing.Point(4, 34);
             this.tpDir_paid_oz.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_paid_oz.Name = "tpDir_paid_oz";
-            this.tpDir_paid_oz.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_paid_oz.Size = new System.Drawing.Size(587, 146);
             this.tpDir_paid_oz.TabIndex = 3;
             this.tpDir_paid_oz.Text = "Очно-заочная платная";
             this.tpDir_paid_oz.UseVisualStyleBackColor = true;
@@ -1616,7 +1616,7 @@
             this.cbDirection41.Location = new System.Drawing.Point(31, 42);
             this.cbDirection41.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection41.Name = "cbDirection41";
-            this.cbDirection41.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection41.Size = new System.Drawing.Size(492, 30);
             this.cbDirection41.TabIndex = 9;
             this.cbDirection41.Visible = false;
             this.cbDirection41.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1627,7 +1627,7 @@
             this.label38.Location = new System.Drawing.Point(8, 10);
             this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(150, 16);
+            this.label38.Size = new System.Drawing.Size(218, 25);
             this.label38.TabIndex = 8;
             this.label38.Text = "Профиль подготовки:";
             // 
@@ -1637,10 +1637,10 @@
             this.tpDir_paid_z.Controls.Add(this.btAddDir5);
             this.tpDir_paid_z.Controls.Add(this.cbDirection51);
             this.tpDir_paid_z.Controls.Add(this.label39);
-            this.tpDir_paid_z.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_paid_z.Location = new System.Drawing.Point(4, 34);
             this.tpDir_paid_z.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_paid_z.Name = "tpDir_paid_z";
-            this.tpDir_paid_z.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_paid_z.Size = new System.Drawing.Size(587, 146);
             this.tpDir_paid_z.TabIndex = 4;
             this.tpDir_paid_z.Text = "Заочная платная";
             this.tpDir_paid_z.UseVisualStyleBackColor = true;
@@ -1680,7 +1680,7 @@
             this.cbDirection51.Location = new System.Drawing.Point(31, 42);
             this.cbDirection51.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection51.Name = "cbDirection51";
-            this.cbDirection51.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection51.Size = new System.Drawing.Size(492, 30);
             this.cbDirection51.TabIndex = 9;
             this.cbDirection51.Visible = false;
             this.cbDirection51.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1691,7 +1691,7 @@
             this.label39.Location = new System.Drawing.Point(8, 10);
             this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(150, 16);
+            this.label39.Size = new System.Drawing.Size(218, 25);
             this.label39.TabIndex = 8;
             this.label39.Text = "Профиль подготовки:";
             // 
@@ -1703,10 +1703,10 @@
             this.tpDir_quote_o.Controls.Add(this.cbDirection61);
             this.tpDir_quote_o.Controls.Add(this.label40);
             this.tpDir_quote_o.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tpDir_quote_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_quote_o.Location = new System.Drawing.Point(4, 34);
             this.tpDir_quote_o.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_quote_o.Name = "tpDir_quote_o";
-            this.tpDir_quote_o.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_quote_o.Size = new System.Drawing.Size(587, 146);
             this.tpDir_quote_o.TabIndex = 5;
             this.tpDir_quote_o.Text = "Очная бюджетная по особой квоте";
             this.tpDir_quote_o.UseVisualStyleBackColor = true;
@@ -1717,7 +1717,7 @@
             this.cbAgreed61.Enabled = false;
             this.cbAgreed61.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed61.Name = "cbAgreed61";
-            this.cbAgreed61.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed61.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed61.TabIndex = 18;
             this.cbAgreed61.UseVisualStyleBackColor = true;
             this.cbAgreed61.Visible = false;
@@ -1759,7 +1759,7 @@
             this.cbDirection61.Location = new System.Drawing.Point(31, 42);
             this.cbDirection61.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection61.Name = "cbDirection61";
-            this.cbDirection61.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection61.Size = new System.Drawing.Size(492, 30);
             this.cbDirection61.TabIndex = 9;
             this.cbDirection61.Visible = false;
             this.cbDirection61.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1771,7 +1771,7 @@
             this.label40.Location = new System.Drawing.Point(8, 10);
             this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(150, 16);
+            this.label40.Size = new System.Drawing.Size(218, 25);
             this.label40.TabIndex = 8;
             this.label40.Text = "Профиль подготовки:";
             // 
@@ -1789,10 +1789,10 @@
             this.tpDir_target_o.Controls.Add(this.cbDirection71);
             this.tpDir_target_o.Controls.Add(this.label41);
             this.tpDir_target_o.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tpDir_target_o.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_target_o.Location = new System.Drawing.Point(4, 34);
             this.tpDir_target_o.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_target_o.Name = "tpDir_target_o";
-            this.tpDir_target_o.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_target_o.Size = new System.Drawing.Size(587, 146);
             this.tpDir_target_o.TabIndex = 6;
             this.tpDir_target_o.Text = "Очная бюджетная форма целевой прием";
             this.tpDir_target_o.UseVisualStyleBackColor = true;
@@ -1803,7 +1803,7 @@
             this.cbAgreed73.Enabled = false;
             this.cbAgreed73.Location = new System.Drawing.Point(9, 124);
             this.cbAgreed73.Name = "cbAgreed73";
-            this.cbAgreed73.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed73.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed73.TabIndex = 20;
             this.cbAgreed73.UseVisualStyleBackColor = true;
             this.cbAgreed73.Visible = false;
@@ -1815,7 +1815,7 @@
             this.cbAgreed72.Enabled = false;
             this.cbAgreed72.Location = new System.Drawing.Point(9, 88);
             this.cbAgreed72.Name = "cbAgreed72";
-            this.cbAgreed72.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed72.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed72.TabIndex = 19;
             this.cbAgreed72.UseVisualStyleBackColor = true;
             this.cbAgreed72.Visible = false;
@@ -1827,7 +1827,7 @@
             this.cbAgreed71.Enabled = false;
             this.cbAgreed71.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed71.Name = "cbAgreed71";
-            this.cbAgreed71.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed71.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed71.TabIndex = 18;
             this.cbAgreed71.UseVisualStyleBackColor = true;
             this.cbAgreed71.Visible = false;
@@ -1897,7 +1897,7 @@
             this.cbDirection73.Location = new System.Drawing.Point(31, 119);
             this.cbDirection73.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection73.Name = "cbDirection73";
-            this.cbDirection73.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection73.Size = new System.Drawing.Size(492, 30);
             this.cbDirection73.TabIndex = 11;
             this.cbDirection73.Visible = false;
             this.cbDirection73.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1911,7 +1911,7 @@
             this.cbDirection72.Location = new System.Drawing.Point(31, 83);
             this.cbDirection72.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection72.Name = "cbDirection72";
-            this.cbDirection72.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection72.Size = new System.Drawing.Size(492, 30);
             this.cbDirection72.TabIndex = 10;
             this.cbDirection72.Visible = false;
             this.cbDirection72.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1925,7 +1925,7 @@
             this.cbDirection71.Location = new System.Drawing.Point(31, 42);
             this.cbDirection71.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection71.Name = "cbDirection71";
-            this.cbDirection71.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection71.Size = new System.Drawing.Size(492, 30);
             this.cbDirection71.TabIndex = 9;
             this.cbDirection71.Visible = false;
             this.cbDirection71.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -1937,7 +1937,7 @@
             this.label41.Location = new System.Drawing.Point(8, 10);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(180, 16);
+            this.label41.Size = new System.Drawing.Size(251, 25);
             this.label41.TabIndex = 8;
             this.label41.Text = "Направление подготовки:";
             // 
@@ -1949,10 +1949,10 @@
             this.tpDir_quote_oz.Controls.Add(this.cbDirection81);
             this.tpDir_quote_oz.Controls.Add(this.label42);
             this.tpDir_quote_oz.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tpDir_quote_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_quote_oz.Location = new System.Drawing.Point(4, 34);
             this.tpDir_quote_oz.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_quote_oz.Name = "tpDir_quote_oz";
-            this.tpDir_quote_oz.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_quote_oz.Size = new System.Drawing.Size(587, 146);
             this.tpDir_quote_oz.TabIndex = 7;
             this.tpDir_quote_oz.Text = "Очно-заочная бюджетная по особой квоте";
             this.tpDir_quote_oz.UseVisualStyleBackColor = true;
@@ -1963,7 +1963,7 @@
             this.cbAgreed81.Enabled = false;
             this.cbAgreed81.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed81.Name = "cbAgreed81";
-            this.cbAgreed81.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed81.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed81.TabIndex = 18;
             this.cbAgreed81.UseVisualStyleBackColor = true;
             this.cbAgreed81.Visible = false;
@@ -2005,7 +2005,7 @@
             this.cbDirection81.Location = new System.Drawing.Point(31, 42);
             this.cbDirection81.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection81.Name = "cbDirection81";
-            this.cbDirection81.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection81.Size = new System.Drawing.Size(492, 30);
             this.cbDirection81.TabIndex = 9;
             this.cbDirection81.Visible = false;
             this.cbDirection81.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -2017,7 +2017,7 @@
             this.label42.Location = new System.Drawing.Point(8, 10);
             this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(180, 16);
+            this.label42.Size = new System.Drawing.Size(251, 25);
             this.label42.TabIndex = 8;
             this.label42.Text = "Направление подготовки:";
             // 
@@ -2032,10 +2032,10 @@
             this.tpDir_target_oz.Controls.Add(this.cbDirection91);
             this.tpDir_target_oz.Controls.Add(this.label43);
             this.tpDir_target_oz.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tpDir_target_oz.Location = new System.Drawing.Point(4, 25);
+            this.tpDir_target_oz.Location = new System.Drawing.Point(4, 34);
             this.tpDir_target_oz.Margin = new System.Windows.Forms.Padding(4);
             this.tpDir_target_oz.Name = "tpDir_target_oz";
-            this.tpDir_target_oz.Size = new System.Drawing.Size(587, 155);
+            this.tpDir_target_oz.Size = new System.Drawing.Size(587, 146);
             this.tpDir_target_oz.TabIndex = 8;
             this.tpDir_target_oz.Text = "Очно-заочная бюджетная целевой прием";
             this.tpDir_target_oz.UseVisualStyleBackColor = true;
@@ -2046,7 +2046,7 @@
             this.cbAgreed92.Enabled = false;
             this.cbAgreed92.Location = new System.Drawing.Point(9, 88);
             this.cbAgreed92.Name = "cbAgreed92";
-            this.cbAgreed92.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed92.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed92.TabIndex = 19;
             this.cbAgreed92.UseVisualStyleBackColor = true;
             this.cbAgreed92.Visible = false;
@@ -2058,7 +2058,7 @@
             this.cbAgreed91.Enabled = false;
             this.cbAgreed91.Location = new System.Drawing.Point(9, 47);
             this.cbAgreed91.Name = "cbAgreed91";
-            this.cbAgreed91.Size = new System.Drawing.Size(15, 14);
+            this.cbAgreed91.Size = new System.Drawing.Size(22, 21);
             this.cbAgreed91.TabIndex = 18;
             this.cbAgreed91.UseVisualStyleBackColor = true;
             this.cbAgreed91.Visible = false;
@@ -2114,7 +2114,7 @@
             this.cbDirection92.Location = new System.Drawing.Point(31, 83);
             this.cbDirection92.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection92.Name = "cbDirection92";
-            this.cbDirection92.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection92.Size = new System.Drawing.Size(492, 30);
             this.cbDirection92.TabIndex = 10;
             this.cbDirection92.Visible = false;
             this.cbDirection92.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -2128,7 +2128,7 @@
             this.cbDirection91.Location = new System.Drawing.Point(31, 42);
             this.cbDirection91.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirection91.Name = "cbDirection91";
-            this.cbDirection91.Size = new System.Drawing.Size(492, 23);
+            this.cbDirection91.Size = new System.Drawing.Size(492, 30);
             this.cbDirection91.TabIndex = 9;
             this.cbDirection91.Visible = false;
             this.cbDirection91.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
@@ -2140,7 +2140,7 @@
             this.label43.Location = new System.Drawing.Point(8, 10);
             this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(180, 16);
+            this.label43.Size = new System.Drawing.Size(251, 25);
             this.label43.TabIndex = 8;
             this.label43.Text = "Направление подготовки:";
             // 
@@ -2195,7 +2195,7 @@
             this.dgvExams_Year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dgvExams_Year.HeaderText = "Год";
             this.dgvExams_Year.Name = "dgvExams_Year";
-            this.dgvExams_Year.Width = 37;
+            this.dgvExams_Year.Width = 53;
             // 
             // dgvExams_Exam
             // 
@@ -2217,7 +2217,7 @@
             this.dgvExams_Min.HeaderText = "Мин.";
             this.dgvExams_Min.Name = "dgvExams_Min";
             this.dgvExams_Min.ReadOnly = true;
-            this.dgvExams_Min.Width = 63;
+            this.dgvExams_Min.Width = 91;
             // 
             // dgvExams_Checked
             // 
@@ -2244,7 +2244,7 @@
             this.cbPassportMatch.Location = new System.Drawing.Point(16, 31);
             this.cbPassportMatch.Margin = new System.Windows.Forms.Padding(4);
             this.cbPassportMatch.Name = "cbPassportMatch";
-            this.cbPassportMatch.Size = new System.Drawing.Size(242, 20);
+            this.cbPassportMatch.Size = new System.Drawing.Size(354, 29);
             this.cbPassportMatch.TabIndex = 0;
             this.cbPassportMatch.Text = "Совпадает с текущим паспортом";
             this.cbPassportMatch.UseVisualStyleBackColor = true;
@@ -2274,7 +2274,7 @@
             this.cbCourses.AutoSize = true;
             this.cbCourses.Location = new System.Drawing.Point(852, 14);
             this.cbCourses.Name = "cbCourses";
-            this.cbCourses.Size = new System.Drawing.Size(296, 20);
+            this.cbCourses.Size = new System.Drawing.Size(430, 29);
             this.cbCourses.TabIndex = 1;
             this.cbCourses.Text = "Посещал подготовительные курсы МАДИ";
             this.cbCourses.UseVisualStyleBackColor = true;
@@ -2297,7 +2297,7 @@
             this.cbMedal.Location = new System.Drawing.Point(4, 22);
             this.cbMedal.Margin = new System.Windows.Forms.Padding(4);
             this.cbMedal.Name = "cbMedal";
-            this.cbMedal.Size = new System.Drawing.Size(353, 20);
+            this.cbMedal.Size = new System.Drawing.Size(530, 29);
             this.cbMedal.TabIndex = 0;
             this.cbMedal.Text = "Аттестат/Диплом с отличием или золотая медаль";
             this.cbMedal.UseVisualStyleBackColor = true;
@@ -2308,7 +2308,7 @@
             this.cbSport.Location = new System.Drawing.Point(365, 22);
             this.cbSport.Margin = new System.Windows.Forms.Padding(4);
             this.cbSport.Name = "cbSport";
-            this.cbSport.Size = new System.Drawing.Size(189, 20);
+            this.cbSport.Size = new System.Drawing.Size(275, 29);
             this.cbSport.TabIndex = 1;
             this.cbSport.Text = "Спортивные достижения";
             this.cbSport.UseVisualStyleBackColor = true;
@@ -2320,7 +2320,7 @@
             this.cbMADIOlympiad.Location = new System.Drawing.Point(562, 22);
             this.cbMADIOlympiad.Margin = new System.Windows.Forms.Padding(4);
             this.cbMADIOlympiad.Name = "cbMADIOlympiad";
-            this.cbMADIOlympiad.Size = new System.Drawing.Size(249, 20);
+            this.cbMADIOlympiad.Size = new System.Drawing.Size(366, 29);
             this.cbMADIOlympiad.TabIndex = 2;
             this.cbMADIOlympiad.Text = "Олимпиады и конференции МАДИ";
             this.cbMADIOlympiad.UseVisualStyleBackColor = true;
@@ -2331,7 +2331,7 @@
             this.mtbEMail.Location = new System.Drawing.Point(1018, 62);
             this.mtbEMail.Margin = new System.Windows.Forms.Padding(4);
             this.mtbEMail.Name = "mtbEMail";
-            this.mtbEMail.Size = new System.Drawing.Size(191, 22);
+            this.mtbEMail.Size = new System.Drawing.Size(191, 30);
             this.mtbEMail.TabIndex = 5;
             // 
             // label31
@@ -2340,7 +2340,7 @@
             this.label31.Location = new System.Drawing.Point(957, 62);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(49, 16);
+            this.label31.Size = new System.Drawing.Size(73, 25);
             this.label31.TabIndex = 26;
             this.label31.Text = "E-mail:";
             // 
@@ -2350,7 +2350,7 @@
             this.label30.Location = new System.Drawing.Point(491, 67);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(139, 16);
+            this.label30.Size = new System.Drawing.Size(214, 25);
             this.label30.TabIndex = 24;
             this.label30.Text = "Домашний телефон:";
             // 
@@ -2360,7 +2360,7 @@
             this.label29.Location = new System.Drawing.Point(34, 67);
             this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(147, 16);
+            this.label29.Size = new System.Drawing.Size(217, 25);
             this.label29.TabIndex = 22;
             this.label29.Text = "Мобильный телефон:";
             // 
@@ -2370,7 +2370,7 @@
             this.cbSpecialConditions.Location = new System.Drawing.Point(852, 38);
             this.cbSpecialConditions.Margin = new System.Windows.Forms.Padding(4);
             this.cbSpecialConditions.Name = "cbSpecialConditions";
-            this.cbSpecialConditions.Size = new System.Drawing.Size(459, 20);
+            this.cbSpecialConditions.Size = new System.Drawing.Size(650, 29);
             this.cbSpecialConditions.TabIndex = 2;
             this.cbSpecialConditions.Text = "Специальные условия при проведении вступительных испытаний";
             this.cbSpecialConditions.UseVisualStyleBackColor = true;
@@ -2380,7 +2380,7 @@
             this.tbMobilePhone.Location = new System.Drawing.Point(195, 64);
             this.tbMobilePhone.MaxLength = 20;
             this.tbMobilePhone.Name = "tbMobilePhone";
-            this.tbMobilePhone.Size = new System.Drawing.Size(184, 22);
+            this.tbMobilePhone.Size = new System.Drawing.Size(184, 30);
             this.tbMobilePhone.TabIndex = 3;
             this.tbMobilePhone.Tag = "(495)123-4567";
             this.tbMobilePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
@@ -2393,7 +2393,7 @@
             this.tbHomePhone.Location = new System.Drawing.Point(648, 64);
             this.tbHomePhone.MaxLength = 20;
             this.tbHomePhone.Name = "tbHomePhone";
-            this.tbHomePhone.Size = new System.Drawing.Size(182, 22);
+            this.tbHomePhone.Size = new System.Drawing.Size(182, 30);
             this.tbHomePhone.TabIndex = 4;
             this.tbHomePhone.Tag = "(495)123-4567";
             this.tbHomePhone.TextChanged += new System.EventHandler(this.tbPhone_TextChanged);
@@ -2438,7 +2438,7 @@
             this.cbAgreed.Location = new System.Drawing.Point(238, 21);
             this.cbAgreed.Margin = new System.Windows.Forms.Padding(4);
             this.cbAgreed.Name = "cbAgreed";
-            this.cbAgreed.Size = new System.Drawing.Size(274, 20);
+            this.cbAgreed.Size = new System.Drawing.Size(382, 29);
             this.cbAgreed.TabIndex = 1;
             this.cbAgreed.Text = "Заявление о согласии на зачисление";
             this.cbAgreed.UseVisualStyleBackColor = true;
@@ -2449,7 +2449,7 @@
             this.cbPhotos.Location = new System.Drawing.Point(717, 48);
             this.cbPhotos.Margin = new System.Windows.Forms.Padding(4);
             this.cbPhotos.Name = "cbPhotos";
-            this.cbPhotos.Size = new System.Drawing.Size(143, 20);
+            this.cbPhotos.Size = new System.Drawing.Size(214, 29);
             this.cbPhotos.TabIndex = 8;
             this.cbPhotos.Text = "4 фотографии 3х4";
             this.cbPhotos.UseVisualStyleBackColor = true;
@@ -2461,7 +2461,7 @@
             this.cbMedCertificate.Location = new System.Drawing.Point(717, 21);
             this.cbMedCertificate.Margin = new System.Windows.Forms.Padding(4);
             this.cbMedCertificate.Name = "cbMedCertificate";
-            this.cbMedCertificate.Size = new System.Drawing.Size(172, 20);
+            this.cbMedCertificate.Size = new System.Drawing.Size(240, 29);
             this.cbMedCertificate.TabIndex = 3;
             this.cbMedCertificate.Text = "Медицинская справка";
             this.cbMedCertificate.UseVisualStyleBackColor = true;
@@ -2473,7 +2473,7 @@
             this.cbDirectionDoc.Location = new System.Drawing.Point(548, 21);
             this.cbDirectionDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbDirectionDoc.Name = "cbDirectionDoc";
-            this.cbDirectionDoc.Size = new System.Drawing.Size(138, 20);
+            this.cbDirectionDoc.Size = new System.Drawing.Size(190, 29);
             this.cbDirectionDoc.TabIndex = 2;
             this.cbDirectionDoc.Text = "Направление ПК";
             this.cbDirectionDoc.UseVisualStyleBackColor = true;
@@ -2485,7 +2485,7 @@
             this.cbCertificateHRD.Location = new System.Drawing.Point(459, 48);
             this.cbCertificateHRD.Margin = new System.Windows.Forms.Padding(4);
             this.cbCertificateHRD.Name = "cbCertificateHRD";
-            this.cbCertificateHRD.Size = new System.Drawing.Size(183, 20);
+            this.cbCertificateHRD.Size = new System.Drawing.Size(255, 29);
             this.cbCertificateHRD.TabIndex = 7;
             this.cbCertificateHRD.Text = "Справка отдела кадров";
             this.cbCertificateHRD.UseVisualStyleBackColor = true;
@@ -2497,7 +2497,7 @@
             this.cbEduDoc.Location = new System.Drawing.Point(238, 48);
             this.cbEduDoc.Margin = new System.Windows.Forms.Padding(4);
             this.cbEduDoc.Name = "cbEduDoc";
-            this.cbEduDoc.Size = new System.Drawing.Size(136, 20);
+            this.cbEduDoc.Size = new System.Drawing.Size(198, 29);
             this.cbEduDoc.TabIndex = 5;
             this.cbEduDoc.Text = "Копия аттестата";
             this.cbEduDoc.UseVisualStyleBackColor = true;
@@ -2508,7 +2508,7 @@
             this.cbPassportCopy.Location = new System.Drawing.Point(7, 48);
             this.cbPassportCopy.Margin = new System.Windows.Forms.Padding(4);
             this.cbPassportCopy.Name = "cbPassportCopy";
-            this.cbPassportCopy.Size = new System.Drawing.Size(131, 20);
+            this.cbPassportCopy.Size = new System.Drawing.Size(185, 29);
             this.cbPassportCopy.TabIndex = 4;
             this.cbPassportCopy.Text = "Копия паспорта";
             this.cbPassportCopy.UseVisualStyleBackColor = true;
@@ -2519,7 +2519,7 @@
             this.cbAppAdmission.Location = new System.Drawing.Point(8, 23);
             this.cbAppAdmission.Margin = new System.Windows.Forms.Padding(4);
             this.cbAppAdmission.Name = "cbAppAdmission";
-            this.cbAppAdmission.Size = new System.Drawing.Size(207, 20);
+            this.cbAppAdmission.Size = new System.Drawing.Size(289, 29);
             this.cbAppAdmission.TabIndex = 0;
             this.cbAppAdmission.Text = "Заявление на поступление";
             this.cbAppAdmission.UseVisualStyleBackColor = true;
@@ -2554,7 +2554,7 @@
             // 
             // ApplicationEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1350, 692);
             this.Controls.Add(this.panel1);
@@ -2632,7 +2632,6 @@
         private System.Windows.Forms.DateTimePicker dtpIDDocDate;
         private System.Windows.Forms.TextBox tbMiddleName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox tbLastName;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbFirstName;
         private System.Windows.Forms.Label label2;
@@ -2809,5 +2808,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgvExams_Checked;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Series;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvExams_Number;
+        public System.Windows.Forms.TextBox tbLastName;
     }
 }

@@ -25,7 +25,7 @@ namespace PK.Forms
             cbOrphanhoodDocType.DataSource = dbHelper.GetDictionaryItems(FIS_Dictionary.ORPHAN_DOC_TYPE).Values.ToArray();
             cbOrphanhoodDocType.SelectedIndex = 0;            
 
-            cbDisabilityGroup.DataSource =dbHelper.GetDictionaryItems(FIS_Dictionary.DISABILITY_GROUP).Values.ToArray();
+            cbDisabilityGroup.DataSource = dbHelper.GetDictionaryItems(FIS_Dictionary.DISABILITY_GROUP).Values.ToArray();
             cbDisabilityGroup.SelectedIndex = 0;
 
             _Document = loadedDocument;
