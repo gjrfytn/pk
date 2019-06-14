@@ -129,7 +129,7 @@ namespace PK.Classes
                 throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
             #endregion
 
-            void AddItemToTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
+            void AddItemToMagDirectionTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
             {
                 // Insert a copy of the rowPattern at the last index in the table.
                 var newItem = table.InsertRow(rowPattern, table.RowCount - 1);
@@ -140,6 +140,18 @@ namespace PK.Classes
                 newItem.ReplaceText("%mag_program%", direction[4]);
                 newItem.ReplaceText("%chair%", direction[5]);
                 newItem.ReplaceText("%edu_form%", direction[2] + ", " + direction[3]);
+            }
+            void AddItemToBachDirectionTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
+            {
+                // Insert a copy of the rowPattern at the last index in the table.
+                var newItem = table.InsertRow(rowPattern, table.RowCount - 1);
+
+                // Replace the default values of the newly inserted row.
+                newItem.ReplaceText("%fack%", direction[0]);
+                newItem.ReplaceText("%dir_prof%", direction[1]);
+                newItem.ReplaceText("%level%", direction[2]);
+                newItem.ReplaceText("%dir_prof_short_name%", direction[3]);
+                newItem.ReplaceText("%edu_form%", direction[4]);
             }
 
             Xceed.Words.NET.DocX doc = null;
@@ -182,7 +194,103 @@ namespace PK.Classes
 
                         foreach (var direction in document.TableParameters[0])
                         {
-                            AddItemToTable(applEntranceTableParams, rowPattern, direction);
+                            AddItemToMagDirectionTable(applEntranceTableParams, rowPattern, direction);
+                        }
+                        // Remove the pattern row.
+                        rowPattern.Remove();
+                    }
+
+                    if (doc == null)
+                    {
+                        doc = Xceed.Words.NET.DocX.Create(resultFile + ".docx");
+                        doc.InsertDocument(buf);
+                    }
+                    else
+                    {
+                        doc.InsertSectionPageBreak();
+                        doc.InsertDocument(buf);
+                    }
+                }
+                else if (document.Template.IndexOf("ApplicationBachTemplate") >= 0)
+                {
+                    void InsertExam(Xceed.Words.NET.DocX local_buf, string subject, string year, string ball, string sn)
+                    {
+                        local_buf.ReplaceText("<" + subject + "_year>", year);
+                        local_buf.ReplaceText("<" + subject + "_ball>", ball);
+                        local_buf.ReplaceText("<" + subject + "_sn>", sn);
+                    }
+
+                    Xceed.Words.NET.DocX buf = Xceed.Words.NET.DocX.Load(document.Template);
+                    buf.ReplaceText("<FIO>", document.SingleParameters[0]);
+                    buf.ReplaceText("<gender>", document.SingleParameters[1]);
+                    buf.ReplaceText("<birth_date>", document.SingleParameters[2]);
+                    buf.ReplaceText("<nationality>", document.SingleParameters[3]);
+                    buf.ReplaceText("<identity_type>", document.SingleParameters[4]);
+                    buf.ReplaceText("<identity_series>", document.SingleParameters[5]);
+                    buf.ReplaceText("<identity_number>", document.SingleParameters[6]);
+                    buf.ReplaceText("<identity_date>", document.SingleParameters[7]);
+                    buf.ReplaceText("<identity_organization>", document.SingleParameters[8]);
+                    buf.ReplaceText("<identity_subdivision_code>", document.SingleParameters[9]);
+                    buf.ReplaceText("<identity_birth_place>", document.SingleParameters[10]);
+                    buf.ReplaceText("<identity_reg>", document.SingleParameters[11]);
+                    buf.ReplaceText("<cell_phone>", document.SingleParameters[12]);
+                    buf.ReplaceText("<home_phone>", document.SingleParameters[13]);
+                    buf.ReplaceText("<email>", document.SingleParameters[14]);
+                    buf.ReplaceText("<edu_organization>", document.SingleParameters[15]);
+                    buf.ReplaceText("<edu_series>", document.SingleParameters[16]);
+                    buf.ReplaceText("<edu_number>", document.SingleParameters[17]);
+                    buf.ReplaceText("<foreign_language>", document.SingleParameters[22]);
+                    buf.ReplaceText("<is_quota>", document.SingleParameters[23] == "True" ? "да" : "нет");
+                    if (document.SingleParameters[23] == "True")
+                    {
+                        string quota_type = "";
+                        if (document.SingleParameters[24] == "True") quota_type += "особая квота, ";
+                        if (document.SingleParameters[25] == "True") quota_type += "целевая квота, ";
+                        if (document.SingleParameters[26] == "True") quota_type += "без экзаменов, ";
+                        buf.ReplaceText("<quota_type>", "(" + quota_type.Substring(0, quota_type.Length - 2) + ")"); 
+                    }
+                    else
+                    {
+                        buf.ReplaceText("<quota_type>", "");
+                    }
+                    buf.ReplaceText("<need_hostel>", document.SingleParameters[18] == "True" ? "нуждаюсь" : "не нуждаюсь");
+                    if (document.TableParameters[1].Count() == 0)
+                    {
+                        InsertExam(buf, "m", "", "", "");
+                        InsertExam(buf, "r", "", "", "");
+                        InsertExam(buf, "p", "", "", "");
+                        InsertExam(buf, "o", "", "", "");
+                        InsertExam(buf, "fl", "", "", "");
+                    }
+                    foreach (var exam in document.TableParameters[1])                    
+                        InsertExam(buf, exam[0], exam[1], exam[2], exam[3]);
+
+                    buf.ReplaceText("<is_sport>", document.SingleParameters[27] == "True" ? "ИМЕЮ" : "НЕ ИМЕЮ");
+                    buf.ReplaceText("<is_gm>", document.SingleParameters[28] == "True" ? "ИМЕЮ" : "НЕ ИМЕЮ");
+                    buf.ReplaceText("<is_olymp_conf>", document.SingleParameters[29] == "True" ? "ИМЕЮ" : "НЕ ИМЕЮ");
+                    buf.ReplaceText("<sport>", document.SingleParameters[30]);
+                    buf.ReplaceText("<gm>", document.SingleParameters[31]);
+                    buf.ReplaceText("<olymp_conf>", document.SingleParameters[32]);
+                    buf.ReplaceText("<hight_edu_first>", document.SingleParameters[19] == "True" ? "впервые" : "повторно");
+                    buf.ReplaceText("<special_conditions>", document.SingleParameters[20] == "True" ? "имею" : "не имею");
+                    buf.ReplaceText("<FIO_SHORT>", document.SingleParameters[21]);
+                    buf.ReplaceText("<is_gmX>", document.SingleParameters[28] == "True" ? "" : "X");
+                    buf.ReplaceText("<is_MCADO>", document.SingleParameters[33] == "True" ? "" : "X");
+                    buf.ReplaceText("<is_cher>", document.SingleParameters[34] == "True" ? "" : "X");
+                    buf.ReplaceText("<is_exam>", document.SingleParameters[35] == "True" ? "" : "X");
+                    buf.ReplaceText("<is_hostel>", document.SingleParameters[18] == "True" ? "" : "X");
+                    buf.ReplaceText("<is_pk>", document.SingleParameters[37] == "True" ? "X" : "");
+                    buf.ReplaceText("<ia_ball>", document.SingleParameters[36]);
+
+                    var applEntranceTableParams = buf.Tables.FirstOrDefault(t => t.TableCaption == "Directions");
+                    if (applEntranceTableParams.RowCount > 1)
+                    {
+                        // Get the row pattern of the second row.
+                        var rowPattern = applEntranceTableParams.Rows[1];
+
+                        foreach (var direction in document.TableParameters[0])
+                        {
+                            AddItemToBachDirectionTable(applEntranceTableParams, rowPattern, direction);
                         }
                         // Remove the pattern row.
                         rowPattern.Remove();

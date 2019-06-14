@@ -44,8 +44,8 @@
             this.cbMoveJournal.AutoSize = true;
             this.cbMoveJournal.Checked = true;
             this.cbMoveJournal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbMoveJournal.Location = new System.Drawing.Point(16, 35);
-            this.cbMoveJournal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbMoveJournal.Location = new System.Drawing.Point(16, 146);
+            this.cbMoveJournal.Margin = new System.Windows.Forms.Padding(4);
             this.cbMoveJournal.Name = "cbMoveJournal";
             this.cbMoveJournal.Size = new System.Drawing.Size(230, 21);
             this.cbMoveJournal.TabIndex = 0;
@@ -57,8 +57,8 @@
             this.cbInventory.AutoSize = true;
             this.cbInventory.Checked = true;
             this.cbInventory.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbInventory.Location = new System.Drawing.Point(16, 63);
-            this.cbInventory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbInventory.Location = new System.Drawing.Point(16, 62);
+            this.cbInventory.Margin = new System.Windows.Forms.Padding(4);
             this.cbInventory.Name = "cbInventory";
             this.cbInventory.Size = new System.Drawing.Size(71, 21);
             this.cbInventory.TabIndex = 1;
@@ -70,8 +70,8 @@
             this.cbPercRecordFace.AutoSize = true;
             this.cbPercRecordFace.Checked = true;
             this.cbPercRecordFace.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPercRecordFace.Location = new System.Drawing.Point(16, 91);
-            this.cbPercRecordFace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbPercRecordFace.Location = new System.Drawing.Point(16, 90);
+            this.cbPercRecordFace.Margin = new System.Windows.Forms.Padding(4);
             this.cbPercRecordFace.Name = "cbPercRecordFace";
             this.cbPercRecordFace.Size = new System.Drawing.Size(181, 21);
             this.cbPercRecordFace.TabIndex = 2;
@@ -83,8 +83,8 @@
             this.cbPercRecordBack.AutoSize = true;
             this.cbPercRecordBack.Checked = true;
             this.cbPercRecordBack.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPercRecordBack.Location = new System.Drawing.Point(16, 120);
-            this.cbPercRecordBack.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbPercRecordBack.Location = new System.Drawing.Point(16, 118);
+            this.cbPercRecordBack.Margin = new System.Windows.Forms.Padding(4);
             this.cbPercRecordBack.Name = "cbPercRecordBack";
             this.cbPercRecordBack.Size = new System.Drawing.Size(198, 21);
             this.cbPercRecordBack.TabIndex = 3;
@@ -96,8 +96,8 @@
             this.cbReceipt.AutoSize = true;
             this.cbReceipt.Checked = true;
             this.cbReceipt.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbReceipt.Location = new System.Drawing.Point(16, 148);
-            this.cbReceipt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbReceipt.Location = new System.Drawing.Point(16, 34);
+            this.cbReceipt.Margin = new System.Windows.Forms.Padding(4);
             this.cbReceipt.Name = "cbReceipt";
             this.cbReceipt.Size = new System.Drawing.Size(92, 21);
             this.cbReceipt.TabIndex = 4;
@@ -107,7 +107,7 @@
             // bOpen
             // 
             this.bOpen.Location = new System.Drawing.Point(204, 203);
-            this.bOpen.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bOpen.Margin = new System.Windows.Forms.Padding(4);
             this.bOpen.Name = "bOpen";
             this.bOpen.Size = new System.Drawing.Size(81, 28);
             this.bOpen.TabIndex = 7;
@@ -118,7 +118,7 @@
             // bPrint
             // 
             this.bPrint.Location = new System.Drawing.Point(16, 203);
-            this.bPrint.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bPrint.Margin = new System.Windows.Forms.Padding(4);
             this.bPrint.Name = "bPrint";
             this.bPrint.Size = new System.Drawing.Size(105, 28);
             this.bPrint.TabIndex = 6;
@@ -130,8 +130,8 @@
             // 
             this.cbAdmAgreement.AutoSize = true;
             this.cbAdmAgreement.Enabled = false;
-            this.cbAdmAgreement.Location = new System.Drawing.Point(16, 175);
-            this.cbAdmAgreement.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbAdmAgreement.Location = new System.Drawing.Point(16, 174);
+            this.cbAdmAgreement.Margin = new System.Windows.Forms.Padding(4);
             this.cbAdmAgreement.Name = "cbAdmAgreement";
             this.cbAdmAgreement.Size = new System.Drawing.Size(279, 21);
             this.cbAdmAgreement.TabIndex = 5;
@@ -167,7 +167,7 @@
             this.Controls.Add(this.cbMoveJournal);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = global::PK.Properties.Resources.logo;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ApplicationDocsPrint";
