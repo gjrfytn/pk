@@ -17,11 +17,8 @@ namespace PK.Forms
             _DB_Connection = connection;
 
             #region Components
-            if (new DB_Helper(_DB_Connection).GetCampaignType(Classes.Settings.CurrentCampaignID) == DB_Helper.CampaignType.MASTER)
-            {
-                cbActs.Enabled = false;
-                cbReceipts.Enabled = false;
-            }
+            if (new DB_Helper(_DB_Connection).GetCampaignType(Classes.Settings.CurrentCampaignID) == DB_Helper.CampaignType.SPO)
+                cbExamSheets.Enabled = false;
             #endregion
         }
 
@@ -34,7 +31,7 @@ namespace PK.Forms
 
         private void bPrint_Click(object sender, EventArgs e)
         {
-            if (!cbActs.Checked && !cbReceipts.Checked && !cbExamSheets.Checked)
+            if (!cbActs.Checked && !cbReceipts.Checked && !cbExamSheets.Checked && !cbStatements.Checked)
             {
                 MessageBox.Show("Не отмечена информация к печати.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -104,6 +101,7 @@ namespace PK.Forms
             List<Classes.DocumentCreator.DocumentParameters> actsDocs = new List<Classes.DocumentCreator.DocumentParameters>();
             List<Classes.DocumentCreator.DocumentParameters> receiptsDocs = new List<Classes.DocumentCreator.DocumentParameters>();
             List<Classes.DocumentCreator.DocumentParameters> sheetsDocs = new List<Classes.DocumentCreator.DocumentParameters>();
+			List<Classes.DocumentCreator.DocumentParameters> statementsDocs = new List<Classes.DocumentCreator.DocumentParameters>();
             foreach (var order in orders)
             {
                 var applications = _DB_Connection.Select(
@@ -156,7 +154,7 @@ namespace PK.Forms
                 if (applications.Count() == 0)
                     continue;
 
-                if (dbHelper.GetCampaignType(Classes.Settings.CurrentCampaignID)==DB_Helper.CampaignType.MASTER)
+                if (dbHelper.GetCampaignType(Classes.Settings.CurrentCampaignID) == DB_Helper.CampaignType.MASTER)
                 {
                     var table = applications.Join(
                         _DB_Connection.Select(
@@ -174,48 +172,49 @@ namespace PK.Forms
                         (s1, s2) => new { s1.ApplID, s1.LastName, s1.FirstName, s1.MiddleName, s1.RecordBook, Mark = (short)s2[1] + (ushort)s2[2] }
                         );
 
-                    //Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction);
-                    //string dirSocr = dbHelper.GetDirectionShortName(order.Faculty, order.Direction);
-                    //if (cbActs.Checked)
-                    //    actsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
-                    //        Classes.Settings.DocumentsTemplatesPath + "Act.xml",
-                    //        null,
-                    //        null,
-                    //        new string[]
-                    //        {
-                    //        DateTime.Now.ToShortDateString(),
-                    //        order.Date.Year.ToString(),
-                    //        forms[order.EduForm] + " обучения" +
-                    //        (order.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
-                    //        order.Faculty,
-                    //        dirNameCode.Item2,
-                    //        dirNameCode.Item1,
-                    //        order.Master?"Магистерская программа: " :(order.Profile != null ?(dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
-                    //        order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(_DB_Connection,order.Faculty,order.Direction,order.Profile).Split('|')[0] : ""
-                    //        },
-                    //        new IEnumerable<string[]>[] { table.Select(s=>new
-                    //    {
-                    //        Name = s.LastName + " " + s.FirstName + " " + s.MiddleName,
-                    //        s.RecordBook
-                    //    }).OrderBy(s => s.Name).Select(s => new string[] { s.Name, s.RecordBook }) }));
+                    Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction);
+                    string dirSocr = dbHelper.GetDirectionShortName(order.Faculty, order.Direction);
+                    if (cbActs.Checked)
+                        actsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
+                            Classes.Settings.DocumentsTemplatesPath + "Act.xml",
+                            null,
+                            null,
+                            new string[]
+                            {
+                            DateTime.Now.ToShortDateString(),
+                            order.Date.Year.ToString(),
+                            forms[order.EduForm] + " обучения" +
+                            (order.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
+                            order.Faculty,
+                            dirNameCode.Item2,
+                            dirNameCode.Item1,
+                            order.Master?"Магистерская программа: " :(order.Profile != null ?(dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
+                            order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(_DB_Connection,order.Faculty,order.Direction,order.Profile).Split('|')[0] : ""
+                            },
+                            new IEnumerable<string[]>[] { table.Select(s=>new
+                        {
+                            Name = s.LastName + " " + s.FirstName + " " + s.MiddleName,
+                            s.RecordBook
+                        }).OrderBy(s => s.Name).Select(s => new string[] { s.Name, s.RecordBook }) }));
 
                     foreach (var appl in table)
                     {
-                        //if (cbReceipts.Checked)
-                        //    receiptsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
-                        //        Classes.Settings.DocumentsTemplatesPath + "AdmReceipt.xml",
-                        //        null,
-                        //        null,
-                        //        new string[]
-                        //        {
-                        //        order.Number,
-                        //        order.Date.ToShortDateString(),
-                        //        (appl.LastName+" "+appl.FirstName[0]+"."+(appl.MiddleName.Length!=0?appl.MiddleName[0].ToString()+".":"")).ToUpper(),
-                        //        order.Faculty,
-                        //        order.Profile != null ?order.Profile:dirSocr
-                        //        },
-                        //        null
-                        //        ));
+                        if (cbReceipts.Checked)
+                            receiptsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
+                                Classes.Settings.DocumentsTemplatesPath + "AdmReceipt.xml",
+                                null,
+                                null,
+                                new string[]
+                                {
+                                order.Number,
+                                order.Date.ToShortDateString(),
+                                (appl.LastName+" "+appl.FirstName[0]+"."+(appl.MiddleName.Length!=0?appl.MiddleName[0].ToString()+".":"")).ToUpper(),
+                                order.Faculty,
+                                "Магистерская программа ",
+                                order.Profile != null ?order.Profile:dirSocr
+                                },
+                                null
+                                ));
 
                         if (cbExamSheets.Checked)
                             sheetsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
@@ -236,7 +235,7 @@ namespace PK.Forms
                                 ));
                     }
                 }
-                else
+                else if (dbHelper.GetCampaignType(Classes.Settings.CurrentCampaignID) == DB_Helper.CampaignType.BACHELOR_SPECIALIST)
                 {
                     IEnumerable<DB_Queries.Mark> marks = DB_Queries.GetMarks(_DB_Connection, applications.Select(s => s.ApplID), Classes.Settings.CurrentCampaignID);
                     var table = applications.Join(
@@ -290,6 +289,7 @@ namespace PK.Forms
                                     order.Date.ToShortDateString(),
                                     (appl.LastName+" "+appl.FirstName[0]+"."+(appl.MiddleName.Length!=0?appl.MiddleName[0].ToString()+".":"")).ToUpper(),
                                     order.Faculty,
+                                    "Направление/профиль ",
                                     order.Profile != null ?order.Profile:dirSocr
                                 },
                                 null
@@ -317,6 +317,51 @@ namespace PK.Forms
                                 null
                                 ));
                     }
+                }
+                else
+                {
+                    Tuple<string, string> dirNameCode = dbHelper.GetDirectionNameAndCode(order.Direction);
+                    string dirSocr = dbHelper.GetDirectionShortName(order.Faculty, order.Direction);
+                    if (cbActs.Checked)
+                        actsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
+                            Classes.Settings.DocumentsTemplatesPath + "Act.xml",
+                            null,
+                            null,
+                            new string[]
+                            {
+                                DateTime.Now.ToShortDateString(),
+                                order.Date.Year.ToString(),
+                                forms[order.EduForm] + " обучения" +
+                                (order.EduSource == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ? " по договорам с оплатой стоимости обучения" : ""),
+                                order.Faculty,
+                                dirNameCode.Item2,
+                                dirNameCode.Item1,
+                                order.Master?"Магистерская программа: " :(order.Profile != null ?(dirNameCode.Item2.Split('.')[1]=="05"?"Специализация": "Профиль")+": " : ""),
+                                order.Profile != null ? order.Profile + " - " + DB_Queries.GetProfileName(_DB_Connection,order.Faculty,order.Direction,order.Profile).Split('|')[0] : ""
+                            },
+                            new IEnumerable<string[]>[] { applications.Select(s=>new
+                            {
+                                Name = s.LastName + " " + s.FirstName + " " + s.MiddleName,
+                                s.RecordBook
+                            }).OrderBy(s => s.Name).Select(s => new string[] { s.Name, s.RecordBook }) }));
+
+                    foreach (var appl in applications)
+                        if (cbReceipts.Checked)
+                            receiptsDocs.Add(new Classes.DocumentCreator.DocumentParameters(
+                                Classes.Settings.DocumentsTemplatesPath + "AdmReceipt.xml",
+                                null,
+                                null,
+                                new string[]
+                                {
+                                    order.Number,
+                                    order.Date.ToShortDateString(),
+                                    (appl.LastName+" "+appl.FirstName[0]+"."+(appl.MiddleName.Length!=0?appl.MiddleName[0].ToString()+".":"")).ToUpper(),
+                                    order.Faculty,
+                                    "Направление/профиль ",
+                                    order.Profile != null ?order.Profile:dirSocr
+                                },
+                                null
+                                ));
                 }
             }
 

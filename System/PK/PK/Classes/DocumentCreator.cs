@@ -14,8 +14,13 @@ namespace PK.Classes
             public readonly uint? ID;
             public readonly string[] SingleParameters;
             public readonly IEnumerable<string[]>[] TableParameters;
+			private string v;
+			private object p1;
+			private object p2;
+			private List<string> parameters;
+			private object p3;
 
-            public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, IEnumerable<string[]>[] tableParameters)
+			public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, IEnumerable<string[]>[] tableParameters)
             {
                 #region Contracts
                 if (string.IsNullOrWhiteSpace(template))
@@ -41,7 +46,16 @@ namespace PK.Classes
                 SingleParameters = singleParameters;
                 TableParameters = tableParameters;
             }
-        }
+
+			public DocumentParameters(string v, object p1, object p2, List<string> parameters, object p3)
+			{
+				this.v = v;
+				this.p1 = p1;
+				this.p2 = p2;
+				this.parameters = parameters;
+				this.p3 = p3;
+			}
+		}
 
         struct Font
         {
@@ -81,10 +95,10 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-                Novacode.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
+				Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
 
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
             else
@@ -109,10 +123,10 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-                Novacode.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
+				Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
 
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
             else
@@ -126,9 +140,9 @@ namespace PK.Classes
                 throw new System.ArgumentException("Некорректное имя выходного файла.", nameof(resultFile));
             if (System.Linq.Enumerable.Count(documents) == 0)
                 throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
-            #endregion
+			#endregion
 
-            Novacode.DocX doc = null;
+			Xceed.Words.NET.DocX doc = null;
             foreach (var document in documents)
             {
                 XDocument template = XDocument.Load(document.Template, LoadOptions.PreserveWhitespace);
@@ -137,7 +151,7 @@ namespace PK.Classes
 
                 if (template.Root.Element("Document").Element("Word") != null)
                 {
-                    Novacode.DocX buf;
+					Xceed.Words.NET.DocX buf;
                     if (document.Connection != null)
                         buf = Word.CreateFromTemplate(document.Connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.ID.Value, resultFile);
                     else
@@ -155,7 +169,7 @@ namespace PK.Classes
                     throw new System.ArgumentException("Эта перегрузка принимат только тип шаблонов \"Word\".", nameof(documents));
 
                 if (readOnly)
-                    doc.AddProtection(Novacode.EditRestrictions.readOnly);
+                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
                 doc.Save();
             }
         }

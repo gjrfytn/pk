@@ -283,7 +283,7 @@ namespace PK.Classes
 
             var applicationsBD = connection.Select(
                 DB_Table.APPLICATIONS,
-                new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions", "priority_right" },
+                new string[] { "id", "entrant_id", "registration_time", "needs_hostel", "status", "comment", "special_conditions", "priority_right", "withdraw_date"},
                 new List<System.Tuple<string, Relation, object>>
                 {
                     new System.Tuple<string, Relation, object>("campaign_id", Relation.EQUAL, campaignID),
@@ -293,8 +293,8 @@ namespace PK.Classes
                 connection.Select(DB_Table.ENTRANTS, "id", "custom_information", "email"),
                 k1 => k1[1],
                 k2 => k2[0],
-                (s1, s2) => new
-                {
+				(s1, s2) => new
+				{
                     ID = (uint)s1[0],
                     Entr_ID = (uint)s1[1],
                     RegTime = (System.DateTime)s1[2],
@@ -304,8 +304,11 @@ namespace PK.Classes
                     SpecialCond = (bool)s1[6],
                     PriorityRight = s1[7] as bool?,
                     Info = s2[1] as string,
-                    Email = s2[2].ToString()
-                });
+                    Email = s2[2].ToString(),
+					ReturnDate = s1[8] as System.DateTime?
+
+
+				});
 
             if (applicationsBD.Count() == 0)
                 return null;
@@ -342,7 +345,7 @@ namespace PK.Classes
                     {
                         TargetOrg = e[3] as uint?,
                         AgreedDate = (uint)e[2] == dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceP) ?
-                        paidAdmDates.SingleOrDefault(s => s.ApplID == appl.ID && s.EduForm == (uint)e[1] && s.Direction == (uint)e[0])?.Date : //TODO !!!
+                        paidAdmDates.LastOrDefault(s => s.ApplID == appl.ID && s.EduForm == (uint)e[1] && s.Direction == (uint)e[0])?.Date : //TODO !!!
                         e[4] as System.DateTime?,
                         DisagreedDate = e[5] as System.DateTime?
                     },
@@ -371,14 +374,19 @@ namespace PK.Classes
                                 )
                         };
                     });
+				uint returnType = 0;
+				if (appl.Status == _StatusesMap["withdrawn"])
+				{
+					returnType = dbHelper.GetDictionaryItemID(FIS_Dictionary.RETURN_TYPE, "Передача лично или через доверенное лицо");
+				}
 
-                IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
+				IEnumerable<DB_Queries.Document> docs = DB_Queries.GetApplicationDocuments(connection, appl.ID);
 
                 ApplicationDocuments packedDocs = PackApplicationDocuments(
                     connection,
                     docs,
-                    isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null,
-                    finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null && s.FSEF.IsDisagreedDate == null) ?
+                    isMasterCampaign && finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null) ? (System.DateTime?)appl.RegTime : null,					
+					finSourceEduForms.Any(s => s.FSEF.IsAgreedDate != null && s.FSEF.IsDisagreedDate == null) ?
                     (System.DateTime?)System.DateTime.Parse(finSourceEduForms.First(s => s.FSEF.IsAgreedDate != null && s.FSEF.IsDisagreedDate == null).FSEF.IsAgreedDate.Value) :
                     null
                     );
@@ -446,7 +454,7 @@ namespace PK.Classes
                     packedDocs.RadiationWorkDocuments,
                     customDocs
                     );
-
+				
                 applications.Add(new Application(
                     ComposeApplicationUID(campaignID, appl.ID),
                     campaignID.ToString() + "_" + appl.ID.ToString(),
@@ -465,13 +473,15 @@ namespace PK.Classes
                     finSourceEduForms.Select(s => s.FSEF).ToList(),
                     packedDocs,
                     appl.Comment,
-                    benefits.Count != 0 ? benefits : null,
+					returnType,
+					appl.ReturnDate,					
+					benefits.Count != 0 ? benefits : null,
                     testsResults.Count != 0 ? testsResults : null,
                     achievements.Count != 0 ? achievements : null
                     ));
-            }
+		}
 
-            return applications;
+			return applications;
         }
 
         private static Orders PackOrders(DB_Connector connection, uint campaignID, System.Tuple<System.DateTime, System.DateTime> dateRange)
@@ -1095,7 +1105,7 @@ namespace PK.Classes
                     if ((uint)row[4] == 4)
                         foreach (System.Tuple<TUID, bool> entrance in (uint)row[4] == 4 ? compGroupsWithQuotaFlag.Where(s => s.Item2) : compGroupsWithQuotaFlag) //TODO
                             benefits.Add(new ApplicationCommonBenefit(
-                                new TUID(row[0].ToString()),
+                                new TUID(row[0].ToString() + "_" + entrance.Item1.Value),
                                 entrance.Item1,
                                 (uint)row[1],
                                 reasonDoc,

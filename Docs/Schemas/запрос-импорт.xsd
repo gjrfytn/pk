@@ -865,7 +865,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeriesEmpty" minOccurs="0">
@@ -883,7 +883,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -942,6 +942,11 @@
 					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="THighEduDiplomaDocument">
@@ -953,7 +958,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -971,7 +976,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1017,6 +1022,11 @@
 					<xs:documentation>Средний балл</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TPostGraduateDiplomaDocument">
@@ -1028,7 +1038,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -1046,7 +1056,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1090,6 +1100,11 @@
 			<xs:element name="GPA" type="xs:float" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Средний балл</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:all>
@@ -1103,7 +1118,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -1121,7 +1136,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1167,6 +1182,11 @@
 					<xs:documentation>Средний балл</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TMiddleEduDiplomaDocument">
@@ -1178,7 +1198,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -1196,7 +1216,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1247,6 +1267,11 @@
 					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TBasicDiplomaDocument">
@@ -1258,7 +1283,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -1276,7 +1301,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1327,6 +1352,11 @@
 					<xs:documentation>Осуществляет подготовку к военной или иной государственной службе (преимущественное право)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TIncomplHighEduDiplomaDocument">
@@ -1338,7 +1368,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" type="TDocumentSeries" minOccurs="0">
@@ -1356,7 +1386,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1386,6 +1416,11 @@
 					<xs:documentation>Поле зарезервировано (значение не обрабатывается)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TAcademicDiplomaDocument">
@@ -1397,7 +1432,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="RegistrationNumber" type="TDocumentNumber" minOccurs="0">
@@ -1420,7 +1455,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1445,6 +1480,11 @@
 					<xs:documentation>Поле зарезервировано (значение не обрабатывается)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="TEduCustomDocument">
@@ -1456,7 +1496,7 @@
 			</xs:element>
 			<xs:element name="OriginalReceivedDate" type="TDate" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>Дата предоставления оригиналов документов/заверенных копий</xs:documentation>
+					<xs:documentation>Дата предоставления оригиналов/заверенных копий</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="DocumentSeries" minOccurs="0">
@@ -1481,7 +1521,7 @@
 					<xs:documentation>Дата выдачи документа</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="DocumentOrganization" minOccurs="0">
+			<xs:element name="DocumentOrganization">
 				<xs:annotation>
 					<xs:documentation>Организация, выдавшая документ</xs:documentation>
 				</xs:annotation>
@@ -1500,6 +1540,11 @@
 						<xs:maxLength value="500"/>
 					</xs:restriction>
 				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IsNostrificated" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Нострифицирован (признан на территории РФ). Признак для иностранных граждан</xs:documentation>
+				</xs:annotation>
 			</xs:element>
 		</xs:all>
 	</xs:complexType>
@@ -1788,6 +1833,11 @@
 															<xs:documentation>Места приёма по квоте лиц, имеющих особые права, заочное обучение</xs:documentation>
 														</xs:annotation>
 													</xs:element>
+													<xs:element name="IsPlan" type="xs:boolean">
+														<xs:annotation>
+															<xs:documentation>Плановые (true) или фактические (false) значения КЦП</xs:documentation>
+														</xs:annotation>
+													</xs:element>
 												</xs:all>
 											</xs:complexType>
 										</xs:element>
@@ -1859,6 +1909,11 @@
 													<xs:element name="NumberQuotaZ" type="xs:unsignedInt" minOccurs="0">
 														<xs:annotation>
 															<xs:documentation>Места приёма по квоте лиц, имеющих особые права, заочное обучение</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="IsPlan" type="xs:boolean">
+														<xs:annotation>
+															<xs:documentation>Плановые (true) или фактические (false) значения КЦП</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 												</xs:all>
@@ -1936,26 +1991,6 @@
 																					<xs:documentation>Идентификатор в ИС ОО</xs:documentation>
 																				</xs:annotation>
 																			</xs:element>
-																			<xs:element name="Name">
-																				<xs:annotation>
-																					<xs:documentation>Наименование ОП</xs:documentation>
-																				</xs:annotation>
-																				<xs:simpleType>
-																					<xs:restriction base="xs:string">
-																						<xs:maxLength value="200"/>
-																					</xs:restriction>
-																				</xs:simpleType>
-																			</xs:element>
-																			<xs:element name="Code" minOccurs="0">
-																				<xs:annotation>
-																					<xs:documentation>Код ОП</xs:documentation>
-																				</xs:annotation>
-																				<xs:simpleType>
-																					<xs:restriction base="xs:string">
-																						<xs:maxLength value="10"/>
-																					</xs:restriction>
-																				</xs:simpleType>
-																			</xs:element>
 																		</xs:all>
 																	</xs:complexType>
 																</xs:element>
@@ -1970,6 +2005,11 @@
 													<xs:element name="IsAdditional" type="xs:boolean" minOccurs="0">
 														<xs:annotation>
 															<xs:documentation>Конкурс для дополнительного набора</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="LevelBudget" type="xs:unsignedInt" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>ИД уровня бюджета (справочник № 35) (является необязательным для конкурсов с источником финансирования - С оплатой обучения или типом ПК - Прием инстранцев по направлениям Минобрнауки)</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 													<xs:element name="CompetitiveGroupItem" minOccurs="0">
@@ -2554,6 +2594,49 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="InstitutionPrograms" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Образовательные программы</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="InstitutionProgram" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Образовательная программа</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="UID" type="TUID">
+											<xs:annotation>
+												<xs:documentation>Идентификатор в ИС ОО</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Name">
+											<xs:annotation>
+												<xs:documentation>Наименование образовательной программы</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="200"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="Code" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Код образовательной программы</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="Applications" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>Заявления абитуриентов</xs:documentation>
@@ -2727,6 +2810,16 @@
 												</xs:restriction>
 											</xs:simpleType>
 										</xs:element>
+										<xs:element name="ReturnDocumentsTypeId" type="xs:unsignedInt" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Способ возврата документов (справочник № 49). Необходимо передать для отозванного заявления</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="ReturnDocumentsDate" type="TDateTime" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Дата возврата документов. Необходимо передать для отозванного заявления </xs:documentation>
+											</xs:annotation>
+										</xs:element>
 										<xs:element name="FinSourceAndEduForms">
 											<xs:annotation>
 												<xs:documentation>Условия приема</xs:documentation>
@@ -2818,7 +2911,7 @@
 																					<xs:documentation>Диплом 4 этапа всеукраинской ученической олимпиады </xs:documentation>
 																				</xs:annotation>
 																			</xs:element>
-																			<xs:element name="InternationalOlympiсDocument" type="TInternationalOlympic">
+																			<xs:element name="InternationalOlympicDocument" type="TInternationalOlympic">
 																				<xs:annotation>
 																					<xs:documentation>Диплом участия в международной олимпиаде </xs:documentation>
 																				</xs:annotation>
@@ -2893,7 +2986,7 @@
 																			</xs:element>
 																			<xs:element name="CustomDocument" type="TCustomDocument">
 																				<xs:annotation>
-																					<xs:documentation>Иной документ</xs:documentation>
+																					<xs:documentation>Иной документ (не может быть передан для ПК бакалавриат/специалитет)</xs:documentation>
 																				</xs:annotation>
 																			</xs:element>
 																		</xs:choice>
@@ -3679,7 +3772,7 @@
 																					<xs:documentation>Диплом 4 этапа всеукраинской ученической олимпиады </xs:documentation>
 																				</xs:annotation>
 																			</xs:element>
-																			<xs:element name="InternationalOlympiсDocument" type="TInternationalOlympic">
+																			<xs:element name="InternationalOlympicDocument" type="TInternationalOlympic">
 																				<xs:annotation>
 																					<xs:documentation>Диплом участия в международной олимпиаде </xs:documentation>
 																				</xs:annotation>
@@ -3687,6 +3780,11 @@
 																			<xs:element name="InstitutionDocument" type="TInstitutionDocument">
 																				<xs:annotation>
 																					<xs:documentation>Испытание ОО</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="CustomDocument" type="TCustomDocument">
+																				<xs:annotation>
+																					<xs:documentation>Иной документ (не может быть передан для ПК бакалавриат/специалитет)</xs:documentation>
 																				</xs:annotation>
 																			</xs:element>
 																			<xs:element name="EgeDocumentID" type="TUID">
@@ -3758,7 +3856,7 @@
 																		<xs:documentation>Идентификатор достижения, указанный в приемной кампании</xs:documentation>
 																	</xs:annotation>
 																</xs:element>
-																<xs:element name="IAMark" type="xs:unsignedInt" minOccurs="0">
+																<xs:element name="IAMark" type="xs:decimal" minOccurs="0">
 																	<xs:annotation>
 																		<xs:documentation>Балл за достижение</xs:documentation>
 																	</xs:annotation>
@@ -3981,7 +4079,7 @@
 													</xs:element>
 													<xs:element name="OrderIdLevelBudget" type="xs:unsignedInt" minOccurs="0">
 														<xs:annotation>
-															<xs:documentation>ИД уровня бюджета (справочник № 35)</xs:documentation>
+															<xs:documentation>ИД уровня бюджета, который необходимо передавать в случае, если уровень бюджета не был указан в конкурсе (справочник № 35)</xs:documentation>
 														</xs:annotation>
 													</xs:element>
 													<xs:element name="BenefitKindID" type="xs:unsignedInt" minOccurs="0">

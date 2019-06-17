@@ -171,6 +171,7 @@
         private System.Windows.Forms.CheckBox cbActs;
         private System.Windows.Forms.CheckBox cbReceipts;
         private System.Windows.Forms.CheckBox cbExamSheets;
+		private System.Windows.Forms.CheckBox cbStatements;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button bPrint;
     }

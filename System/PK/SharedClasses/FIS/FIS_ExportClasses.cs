@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace SharedClasses.FIS
 {
@@ -51,8 +52,14 @@ namespace SharedClasses.FIS
         public class TDateTime
         {
             public readonly string Value;
+			private DateTime? returnDate;
 
-            public TDateTime(System.DateTime datetime)
+			public TDateTime(DateTime? returnDate)
+			{
+				this.returnDate = returnDate;
+			}
+
+			public TDateTime(System.DateTime datetime)
             {
                 Value = datetime.ToString("yyyy-MM-ddTHH:mm:ss");
             }
@@ -1353,8 +1360,12 @@ namespace SharedClasses.FIS
             public readonly uint? NumberQuotaO; //Места приёма по квоте лиц, имеющих особые права, очное обучение
             public readonly uint? NumberQuotaOZ; //Места приёма по квоте лиц, имеющих особые права, очно-заочное (вечернее) обучение
             public readonly uint? NumberQuotaZ; //Места приёма по квоте лиц, имеющих особые права, заочное обучение
+			public readonly bool IsPlan = true;
 
-            public AVItem(TUID uid, TUID campaignUID, uint educationLevelID, uint directionID, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberPaidO = null, uint? numberPaidOZ = null, uint? numberPaidZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null)
+            public AVItem(TUID uid, TUID campaignUID, uint educationLevelID, uint directionID, uint? numberBudgetO = null, 
+				uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberPaidO = null, uint? numberPaidOZ = null, 
+				uint? numberPaidZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, 
+				uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null, bool IsPlan = true)
             {
                 UID = uid;
                 CampaignUID = campaignUID;
@@ -1372,28 +1383,31 @@ namespace SharedClasses.FIS
                 NumberQuotaO = numberQuotaO;
                 NumberQuotaOZ = numberQuotaOZ;
                 NumberQuotaZ = numberQuotaZ;
-            }
+				IsPlan = true;
+
+			}
 
             public XElement ConvertToXElement()
             {
-                return new XElement("Item",
-                    new XElement("UID", UID.Value),
-                    new XElement("CampaignUID", CampaignUID.Value),
-                    new XElement("EducationLevelID", EducationLevelID),
-                    new XElement("DirectionID", DirectionID),
-                    ToElementOrNull("NumberBudgetO", NumberBudgetO),
-                    ToElementOrNull("NumberBudgetOZ", NumberBudgetOZ),
-                    ToElementOrNull("NumberBudgetZ", NumberBudgetZ),
-                    ToElementOrNull("NumberPaidO", NumberPaidO),
-                    ToElementOrNull("NumberPaidOZ", NumberPaidOZ),
-                    ToElementOrNull("NumberPaidZ", NumberPaidZ),
-                    ToElementOrNull("NumberTargetO", NumberTargetO),
-                    ToElementOrNull("NumberTargetOZ", NumberTargetOZ),
-                    ToElementOrNull("NumberTargetZ", NumberTargetZ),
-                    ToElementOrNull("NumberQuotaO", NumberQuotaO),
-                    ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
-                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
-                    );
+				return new XElement("Item",
+					new XElement("UID", UID.Value),
+					new XElement("CampaignUID", CampaignUID.Value),
+					new XElement("EducationLevelID", EducationLevelID),
+					new XElement("DirectionID", DirectionID),
+					ToElementOrNull("NumberBudgetO", NumberBudgetO),
+					ToElementOrNull("NumberBudgetOZ", NumberBudgetOZ),
+					ToElementOrNull("NumberBudgetZ", NumberBudgetZ),
+					ToElementOrNull("NumberPaidO", NumberPaidO),
+					ToElementOrNull("NumberPaidOZ", NumberPaidOZ),
+					ToElementOrNull("NumberPaidZ", NumberPaidZ),
+					ToElementOrNull("NumberTargetO", NumberTargetO),
+					ToElementOrNull("NumberTargetOZ", NumberTargetOZ),
+					ToElementOrNull("NumberTargetZ", NumberTargetZ),
+					ToElementOrNull("NumberQuotaO", NumberQuotaO),
+					ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
+					ToElementOrNull("NumberQuotaZ", NumberQuotaZ),
+					new XElement("IsPlan", IsPlan)
+					);
             }
         }
 
@@ -1410,8 +1424,12 @@ namespace SharedClasses.FIS
             public readonly uint? NumberQuotaO; //Места приёма по квоте лиц, имеющих особые права, очное обучение
             public readonly uint? NumberQuotaOZ; //Места приёма по квоте лиц, имеющих особые права, очно-заочное (вечернее) обучение
             public readonly uint? NumberQuotaZ; //Места приёма по квоте лиц, имеющих особые права, заочное обучение
+			public readonly bool IsPlan = true;
 
-            public DAVItem(TUID admissionVolumeUID, uint levelBudget, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null)
+            public DAVItem(TUID admissionVolumeUID, uint levelBudget, uint? numberBudgetO = null, 
+				uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberTargetO = null,
+				uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, 
+				uint? numberQuotaOZ = null, uint? numberQuotaZ = null, bool IsPlan = true)
             {
                 AdmissionVolumeUID = admissionVolumeUID;
                 LevelBudget = levelBudget;
@@ -1424,7 +1442,9 @@ namespace SharedClasses.FIS
                 NumberQuotaO = numberQuotaO;
                 NumberQuotaOZ = numberQuotaOZ;
                 NumberQuotaZ = numberQuotaZ;
-            }
+				IsPlan = true;
+
+			}
 
             public XElement ConvertToXElement()
             {
@@ -1439,8 +1459,10 @@ namespace SharedClasses.FIS
                     ToElementOrNull("NumberTargetZ", NumberTargetZ),
                     ToElementOrNull("NumberQuotaO", NumberQuotaO),
                     ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
-                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
-                    );
+                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ),
+					new XElement("IsPlan", IsPlan)
+
+					);
             }
         }
 
@@ -1459,8 +1481,12 @@ namespace SharedClasses.FIS
             public readonly List<TargetOrganization> TargetOrganizations; //Сведения о целевом наборе
             public readonly List<CommonBenefitItem> CommonBenefit; //Сведения об общей льготе (без в.и.) (олимпиада школьников)
             public readonly List<EntranceTestItem> EntranceTestItems; //Вступительные испытания конкурса
+			public readonly uint LevelBudget = 1;
 
-            public CompetitiveGroup(TUID uid, TUID campaignUID, string name, uint educationLevelID, uint educationSourceID, uint educationFormID, uint directionID, List<EduProgram> eduPrograms = null, bool? isAdditional = null, CompetitiveGroupItem competitiveGroupItem = null, List<TargetOrganization> targetOrganizations = null, List<CommonBenefitItem> commonBenefit = null, List<EntranceTestItem> entranceTestItems = null)
+            public CompetitiveGroup(TUID uid, TUID campaignUID, string name, uint educationLevelID, uint educationSourceID, uint educationFormID,
+				uint directionID, List<EduProgram> eduPrograms = null, bool? isAdditional = null, CompetitiveGroupItem competitiveGroupItem = null,
+				List<TargetOrganization> targetOrganizations = null, List<CommonBenefitItem> commonBenefit = null, List<EntranceTestItem> entranceTestItems = null,
+				uint LevelBudget = 1)
             {
                 UID = uid;
                 CampaignUID = campaignUID;
@@ -1475,6 +1501,7 @@ namespace SharedClasses.FIS
                 TargetOrganizations = targetOrganizations;
                 CommonBenefit = commonBenefit;
                 EntranceTestItems = entranceTestItems;
+				LevelBudget = 1;
             }
 
             public XElement ConvertToXElement()
@@ -1492,7 +1519,8 @@ namespace SharedClasses.FIS
                     CompetitiveGroupItem != null ? CompetitiveGroupItem.ConvertToXElement() : null,
                     TargetOrganizations != null ? new XElement("TargetOrganizations", TargetOrganizations.Select(o => o.ConvertToXElement())) : null,
                     CommonBenefit != null ? new XElement("CommonBenefit", CommonBenefit.Select(i => i.ConvertToXElement())) : null,
-                    EntranceTestItems != null ? new XElement("EntranceTestItems", EntranceTestItems.Select(i => i.ConvertToXElement())) : null
+                    EntranceTestItems != null ? new XElement("EntranceTestItems", EntranceTestItems.Select(i => i.ConvertToXElement())) : null,
+					new XElement("LevelBudget",LevelBudget)
                     );
             }
         }
@@ -1912,13 +1940,20 @@ namespace SharedClasses.FIS
             public readonly bool NeedHostel; //Признак необходимости общежития
             public readonly uint StatusID; //Статус заявления (справочник №4)
             public readonly string StatusComment; //Комментарий к статусу заявления //us //4000
-            public readonly List<FinSourceEduForm> FinSourceEduForms; //Условия приема //s
+			public readonly uint ReturnDocumentsTypeID; //Способ возврата заявления (справочник 49)
+			public readonly DateTime? ReturnDate; //Дата возврата документов
+			public readonly List<FinSourceEduForm> FinSourceEduForms; //Условия приема //s
             public readonly List<ApplicationCommonBenefit> ApplicationCommonBenefits; //Льготы, предоставленные абитуриенту
             public readonly ApplicationDocuments ApplicationDocuments; //Документы, приложенные к заявлению //s
             public readonly List<EntranceTestResult> EntranceTestResults; //Результаты вступительных испытаний
             public readonly List<IndividualAchievement> IndividualAchievements; //Индивидуальные достижения
+			public readonly string Status;
 
-            public Application(TUID uid, string applicationNumber, Entrant entrant, TDateTime registrationDate, bool needHostel, uint statusID, List<FinSourceEduForm> finSourceEduForms, ApplicationDocuments applicationDocuments, string statusComment = null, List<ApplicationCommonBenefit> applicationCommonBenefits = null, List<EntranceTestResult> entranceTestResults = null, List<IndividualAchievement> individualAchievements = null)
+
+			public Application(TUID uid, string applicationNumber, Entrant entrant, TDateTime registrationDate, bool needHostel, uint statusID,
+				List<FinSourceEduForm> finSourceEduForms, ApplicationDocuments applicationDocuments, string statusComment = null, uint returnType = 0, DateTime? returnDate = null,
+				List<ApplicationCommonBenefit> applicationCommonBenefits = null, List<EntranceTestResult> entranceTestResults = null, 
+				List<IndividualAchievement> individualAchievements = null )
             {
                 UID = uid;
                 ApplicationNumber = applicationNumber;
@@ -1927,11 +1962,15 @@ namespace SharedClasses.FIS
                 NeedHostel = needHostel;
                 StatusID = statusID;
                 StatusComment = statusComment;
-                FinSourceEduForms = finSourceEduForms;
+				ReturnDocumentsTypeID = returnType;
+				ReturnDate = returnDate;
+				FinSourceEduForms = finSourceEduForms;
                 ApplicationCommonBenefits = applicationCommonBenefits;
                 ApplicationDocuments = applicationDocuments;
                 EntranceTestResults = entranceTestResults;
                 IndividualAchievements = individualAchievements;
+				
+				
             }
 
             public XElement ConvertToXElement()
@@ -1944,11 +1983,15 @@ namespace SharedClasses.FIS
                     new XElement("NeedHostel", NeedHostel),
                     new XElement("StatusID", StatusID),
                     StatusComment != null ? new XElement("StatusComment", StatusComment) : null,
-                    new XElement("FinSourceAndEduForms", FinSourceEduForms.Select(f => f.ConvertToXElement())),
+					ReturnDocumentsTypeID != 0 ? new XElement("ReturnDocumentsTypeId", ReturnDocumentsTypeID) : null,
+					ReturnDocumentsTypeID != 0 ? new XElement("ReturnDocumentsDate", ReturnDate) : null,
+					new XElement("FinSourceAndEduForms", FinSourceEduForms.Select(f => f.ConvertToXElement())),
                     ApplicationCommonBenefits != null ? new XElement("ApplicationCommonBenefits", ApplicationCommonBenefits.Select(b => b.ConvertToXElement())) : null,
                     ApplicationDocuments.ConvertToXElement(),
                     EntranceTestResults != null ? new XElement("EntranceTestResults", EntranceTestResults.Select(r => r.ConvertToXElement())) : null,
                     IndividualAchievements != null ? new XElement("IndividualAchievements", IndividualAchievements.Select(a => a.ConvertToXElement())) : null
+					
+
                     );
             }
         }
@@ -2052,6 +2095,8 @@ namespace SharedClasses.FIS
                 return new XElement("IsFromKrym", new XElement("DocumentUID", DocumentUID.Value));
             }
         }
+		
+					
 
         public class FinSourceEduForm : IXElemementConvertable
         {

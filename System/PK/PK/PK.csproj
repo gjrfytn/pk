@@ -53,10 +53,6 @@
     <ApplicationIcon>..\SharedResources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocX, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocX.1.0.0.22\lib\net40\DocX.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.9.8\Assemblies\v4.5\MySql.Data.dll</HintPath>
@@ -74,6 +70,10 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Words.NET, Version=1.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.1.3.0\lib\net40\Xceed.Words.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\DBF_Reader.cs" />
@@ -272,11 +272,13 @@
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ApplicationEdit.cs">
+    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.cs">
       <SubType>Form</SubType>
+      <Link>Forms\ApplicationEdit.cs</Link>
     </Compile>
-    <Compile Include="Forms\ApplicationEdit.Designer.cs">
+    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.Designer.cs">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
+      <Link>Forms\ApplicationEdit.Designer.cs</Link>
     </Compile>
     <Compile Include="Forms\CampaignEdit.cs">
       <SubType>Form</SubType>
@@ -424,8 +426,9 @@
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ApplicationEdit.resx">
+    <EmbeddedResource Include="..\..\..\..\..\..\Music\ApplicationEdit.resx">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
+      <Link>Forms\ApplicationEdit.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CampaignEdit.resx">
       <DependentUpon>CampaignEdit.cs</DependentUpon>
@@ -586,6 +589,7 @@
     </Content>
     <Content Include="DocumentTemplates\RegistrationJournal.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\cross.png" />
     <None Include="Resources\five.png" />
@@ -597,6 +601,9 @@
     <None Include="Resources\check.png" />
     <None Include="Resources\kladr_db_creation.sql" />
     <None Include="Resources\glass.png" />
+    <Content Include="DocumentTemplates\Statement.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

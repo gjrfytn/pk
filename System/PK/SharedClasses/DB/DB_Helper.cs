@@ -55,6 +55,7 @@ namespace SharedClasses.DB
         public const string MedalAchievement = "Аттестат о среднем (полном) общем образовании, золотая медаль";
         public const string RedMiddleDiploma = "Диплом о среднем профессиональном образовании с отличием";
         public const string RedDiplomaAchievement = "Иное";
+		
 
         public const string NoEGE = "Не сдавал ЕГЭ";
         public const string EGEAdditionalDoc = "Дополнительный документ ЕГЭ";

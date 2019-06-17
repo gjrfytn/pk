@@ -20,6 +20,7 @@ namespace SharedClasses.DB
         CAMPAIGN_TYPE = 38,
         OLYMPICS_PROFILES = 39,
         ORPHAN_DOC_TYPE = 42,
-        SPORT_DIPLOMA_TYPE = 43
-    }
+        SPORT_DIPLOMA_TYPE = 43,
+		RETURN_TYPE = 49
+	}
 }
