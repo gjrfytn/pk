@@ -311,7 +311,7 @@ namespace PK.Classes
                     if (house != "")
                         foreach (string code in settlementsCodes)
                         {
-                            cmd.CommandText = "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND name REGEXP '.*[[:<:]]" + house + "[[:>:]].*' AND " +
+                            cmd.CommandText = "SELECT `index` FROM houses WHERE `index` IS NOT NULL AND (name LIKE '%," + house + ",%' OR name LIKE '" + house + ",%' OR name LIKE '%," + house + "' OR NAME = '" + house + "') AND " +
                              _RawRegionCode + " = '" + regCode + "' AND " +
                              _RawDistrictCode + " = '" + distrCode + "' AND " +
                              _RawTownCode + " = '" + townCode + "' AND " +

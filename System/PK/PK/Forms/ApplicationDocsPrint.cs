@@ -37,7 +37,8 @@ namespace PK.Forms
                 cbPercRecordFace.Checked,
                 cbReceipt.Checked,
                 cbPercRecordBack.Checked,
-                cbAdmAgreement.Checked
+                cbAdmAgreement.Checked,
+                cbApplication.Checked
                 ));
             Cursor.Current = Cursors.Default;
 
@@ -55,7 +56,8 @@ namespace PK.Forms
                 cbPercRecordFace.Checked,
                 cbReceipt.Checked,
                 cbPercRecordBack.Checked,
-                cbAdmAgreement.Checked
+                cbAdmAgreement.Checked,
+                cbApplication.Checked
                 ));
             Cursor.Current = Cursors.Default;
 

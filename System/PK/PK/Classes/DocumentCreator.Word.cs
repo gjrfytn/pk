@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
+<<<<<<< HEAD
+=======
+//using Novacode;
+>>>>>>> origin/master
 using Xceed.Words.NET;
 
 namespace PK.Classes
@@ -119,9 +123,14 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                     float width, height;
                     switch (properties.Element("Format").Value)
                     {
+                        case "A4":
+                            width = 595.2f;
+                            height = 839.0f;
+                            break;
                         case "A5":
                             width = 419.5f;
-                            height = 595.2f;
+                            //height = 595.2f;
+                            height = 620.2f;
                             break;
                         case "A6":
                             width = 297.6f;
@@ -260,7 +269,11 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 if (fontID != null)
                 {
                     if (fonts[fontID].Name != null)
+<<<<<<< HEAD
                         paragraph.Font(new System.Drawing.FontFamily(fonts[fontID].Name).Name);
+=======
+                        paragraph.Font((new System.Drawing.FontFamily(fonts[fontID].Name)).Name);
+>>>>>>> origin/master
 
                     if (fonts[fontID].Size.HasValue)
                         paragraph.FontSize(fonts[fontID].Size.Value);

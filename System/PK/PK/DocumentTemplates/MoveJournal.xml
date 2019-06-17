@@ -127,7 +127,7 @@
             </Borders>
             <Rows>
               <Row>
-                <Height>50</Height>
+                <Height>40</Height>
                 <Merges>
                   <Merge>
                     <StartColumn>0</StartColumn>
@@ -183,7 +183,7 @@
                 </Cells>
               </Row>
               <Row>
-                <Height>42</Height>
+                <Height>25</Height>
                 <Merges>
                   <Merge>
                     <StartColumn>0</StartColumn>
@@ -255,7 +255,7 @@
                 </Cells>
               </Row>
               <Row>
-                <Height>37</Height>
+                <Height>25</Height>
                 <Cells>
                   <Cell Column="0">
                     <VerticalAlignment>Center</VerticalAlignment>
@@ -361,7 +361,7 @@
                 </Cells>
               </Row>
               <Row>
-                <Height>37</Height>
+                <Height>35</Height>
                 <Cells>
                   <Cell Column="1">
                     <VerticalAlignment>Center</VerticalAlignment>

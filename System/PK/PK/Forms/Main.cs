@@ -487,5 +487,11 @@ namespace PK.Forms
             backgroundWorker.CancelAsync();
             timer.Stop();
         }
+
+        private void menuStrip_OnlineAppl_Click(object sender, EventArgs e)
+        {
+            OnlineApplSearch form = new OnlineApplSearch(_UserRole, _UserLogin);
+            form.ShowDialog();
+        }
     }
 }

@@ -80,7 +80,11 @@ namespace PK.Classes
                 { new Tuple<uint,uint>(12,16),Tuple.Create("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
             };
 
+<<<<<<< HEAD
             public static string Documents(DB_Connector connection, uint applID, bool moveJournal, bool inventory, bool percRecordFace, bool receipt, bool percRecordBack, bool admAgreement, bool statement)
+=======
+            public static string Documents(DB_Connector connection, uint applID, bool moveJournal, bool inventory, bool percRecordFace, bool receipt, bool percRecordBack, bool admAgreement, bool application)
+>>>>>>> origin/master
             {
                 #region Contracts
                 if (connection == null)
@@ -149,26 +153,6 @@ namespace PK.Classes
                 applData.Password = entrantData[2].ToString();
 
                 List<DocumentCreator.DocumentParameters> documents = new List<DocumentCreator.DocumentParameters>();
-
-                if (moveJournal)
-                {
-                    documents.Add(new DocumentCreator.DocumentParameters(
-                        Settings.DocumentsTemplatesPath + "MoveJournal.xml",
-                        null,
-                        null,
-                        new string[]
-                        {
-                            applData.LastName.ToUpper(),
-                            applData.FirstName,
-                            applData.MiddleName,
-                            applID.ToString()+(master?"м":""),
-                            System.Windows.Forms.SystemInformation.ComputerName,
-                            applData.RegistratorName,
-                            applData.RegistrationTime.ToString()
-                        },
-                        null
-                        ));
-                }
 
                 List<string[]>[] inventoryTableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
 
@@ -254,6 +238,21 @@ namespace PK.Classes
                 if (docs.Any(s => s.Type == "orphan" || s.Type == "disability"))
                     applData.Quota = true;
 
+                if (receipt)
+                {
+                    AddReceipt(documents, connection, inventoryTableParams[1], entrances, applID, applData, master);
+
+                    object[] buf = connection.Select(
+                        DB_Table.APPLICATIONS,
+                        new string[] { "passing_examinations", "registration_time" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                        )[0];
+
+                    bool? passingExams = buf[0] as bool?;
+                    if (passingExams.HasValue && passingExams.Value)
+                        AddExamShedule(documents, connection, applID, (DateTime)buf[1]);
+                }
+
                 if (inventory)
                     documents.Add(new DocumentCreator.DocumentParameters(
                         Settings.DocumentsTemplatesPath + "Inventory.xml",
@@ -277,6 +276,7 @@ namespace PK.Classes
                     else
                         AddBachPercRecordFace(documents, inventoryTableParams[0], applID, applData);
 
+<<<<<<< HEAD
                 if (receipt)
                 {
                     AddReceipt(documents, connection, inventoryTableParams[1], entrances, applID, applData, master);
@@ -309,6 +309,9 @@ namespace PK.Classes
 						));
 
 				if (master)
+=======
+                if (master)
+>>>>>>> origin/master
                 {
                     byte redDiplomaMark = (byte)connection.Select(
                         DB_Table.INDIVIDUAL_ACHIEVEMENTS,
@@ -340,6 +343,9 @@ namespace PK.Classes
                         AddMastPercRecordBack(documents, connection, applData, entrances, eduDocSeries, eduDocNumber, eduDocYear, eduDocLevel, redDiplomaMark);
                     }
 
+                    if (application)                    
+                        AddMastApplication(documents, connection, applID, redDiplomaMark);                    
+
                     if (admAgreement)
                         AddMastAdmAgreement(documents, connection, applID, applData, redDiplomaMark);
 					
@@ -354,12 +360,35 @@ namespace PK.Classes
                     if (percRecordBack)
                         AddBachPercRecordBack(documents, connection, applID, applData, entrances, marks);
 
+                    if (application)
+                        AddBachApplication(documents, connection, applID);
+
                     if (admAgreement)
                         AddBachAdmAgreement(documents, connection, applID, applData, marks);
 
 					if (statement)
 						AddBachStatement(documents, connection, applID, applData, marks);
 				}
+
+                if (moveJournal)
+                {
+                    documents.Add(new DocumentCreator.DocumentParameters(
+                        Settings.DocumentsTemplatesPath + "MoveJournal.xml",
+                        null,
+                        null,
+                        new string[]
+                        {
+                            applData.LastName.ToUpper(),
+                            applData.FirstName,
+                            applData.MiddleName,
+                            applID.ToString()+(master?"м":""),
+                            System.Windows.Forms.SystemInformation.ComputerName,
+                            applData.RegistratorName,
+                            applData.RegistrationTime.ToString()
+                        },
+                        null
+                        ));
+                }
 
                 string doc = Settings.TempPath + "abitDocs" + new Random().Next();
                 DocumentCreator.Create(doc, documents, true);
@@ -446,6 +475,395 @@ namespace PK.Classes
                             ));
                     }
             }
+
+            private static void AddMastApplication(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                uint applID, byte redDiplomaMark)
+            {
+                DB_Helper dbHelper = new DB_Helper(connection);
+
+                object[] applData = connection.Select(
+                                       DB_Table.APPLICATIONS,
+                                       new string[] { "entrant_id", "needs_hostel", "first_high_edu", "special_conditions" },
+                                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                                       )[0];
+                object[] entrantData = connection.Select(
+                                       DB_Table.ENTRANTS,
+                                       new string[] { "email", "home_phone", "mobile_phone" },
+                                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData[0]) }
+                                       )[0];
+                List<object[]> ahdData = connection.Select(
+                                        DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                                        new string[] { "documents_id" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applID) }
+                                        );
+                Dictionary<string, object[]> appl_documents = new Dictionary<string, object[]>();
+                object[] identity_data = null;
+
+                foreach (var doc in ahdData)
+                {
+                    object[] docum = connection.Select(
+                                        DB_Table.DOCUMENTS,
+                                        new string[] { "type", "series", "number", "date", "organization", "id" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, doc[0]) }
+                                        )[0];
+                    if (docum[0].ToString() == "identity")
+                    {
+                        identity_data = connection.Select(
+                                        DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                                        new string[] { "last_name", "first_name", "middle_name", "gender_dict_id", "gender_id", "subdivision_code", "type_dict_id", "type_id", "nationality_dict_id", "nationality_id", "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_flat", "reg_index" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc[0]) }
+                                        )[0];
+
+                    }
+                    appl_documents[docum[0].ToString()] = docum;
+                }
+
+                string edu_doc_type = "";
+                foreach (string t in new string[] { "high_edu_diploma", "institution", "academic_diploma", "post_graduate_diploma" })                
+                    if (appl_documents.ContainsKey(t))
+                    {
+                        edu_doc_type = t;
+                        break;
+                    }
+
+                string edu_series = appl_documents[edu_doc_type][1].ToString();
+                string edu_number = appl_documents[edu_doc_type][2].ToString();
+                string edu_date = appl_documents[edu_doc_type][3].ToString();
+                string vuz = appl_documents[edu_doc_type][4].ToString();
+
+                uint edu_doc_id = (uint)appl_documents[edu_doc_type][5];
+                string speciality = connection.Select(
+                                DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                                new string[] { "text_data" },
+                                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("document_id", Relation.EQUAL, edu_doc_id) }
+                                )[0][0].ToString();
+
+                string[] parameters = {
+                    identity_data[0].ToString().ToUpper() + " " + identity_data[1].ToString().ToUpper() + " " + (identity_data[2].ToString().Length != 0 ? identity_data[2].ToString().ToUpper() : ""),
+                    dbHelper.GetDictionaryItems(FIS_Dictionary.GENDER)[(uint)identity_data[4]],
+                    identity_data[10].ToString().Split(' ')[0],
+                    dbHelper.GetDictionaryItems(FIS_Dictionary.COUNTRY)[(uint)identity_data[9]],
+                    dbHelper.GetDictionaryItems(FIS_Dictionary.IDENTITY_DOC_TYPE)[(uint)identity_data[7]],
+                    appl_documents["identity"][1].ToString(),
+                    appl_documents["identity"][2].ToString(),
+                    appl_documents["identity"][3].ToString().Split(' ')[0],
+                    appl_documents["identity"][4].ToString(),
+                    identity_data[5].ToString(),
+                    identity_data[11].ToString(),
+                    identity_data[18].ToString() + ", " + (identity_data[12].ToString().Length!=0?identity_data[12].ToString() + ", ":"") +
+                    (identity_data[13].ToString().Length!=0?identity_data[13].ToString() + ", ":"") +
+                    (identity_data[14].ToString().Length!=0?identity_data[14].ToString() + ", ":"") +
+                    (identity_data[15].ToString().Length!=0?identity_data[15].ToString() + ", ":"") +
+                    (identity_data[16].ToString().Length!=0?identity_data[16].ToString() + ", ":"") +
+                    (identity_data[17].ToString().Length!=0?identity_data[17].ToString() + ", ":""),
+                    entrantData[2].ToString(),
+                    entrantData[1].ToString(),
+                    entrantData[0].ToString(),
+                    vuz, edu_series, edu_number, edu_date.Split(' ')[0], speciality,
+                    applData[1].ToString(),
+                    redDiplomaMark.ToString(),
+                    applData[2].ToString(),
+                    applData[3].ToString(),
+                    identity_data[0].ToString().ToUpper() + " " + identity_data[1].ToString().ToUpper()[0] + ". " + (identity_data[2].ToString().Length != 0 ? identity_data[2].ToString().ToUpper()[0] + "." : "")
+                };
+
+                List<string[]>[] applEntranceTableParams = new List<string[]>[] { new List<string[]>() };
+
+                List<object[]> applEntrancesData = connection.Select(
+                                       DB_Table.APPLICATIONS_ENTRANCES,
+                                       new string[] { "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id", "edu_source_dict_id", "edu_source_id", "profile_short_name" },
+                                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                                       );
+                
+                foreach (var entrance in applEntrancesData)
+                {
+                    Tuple<string, string> DirectionNameAndCode = dbHelper.GetDirectionNameAndCode((uint)entrance[1]);
+                    string[] mag_program_chair = connection.Select(
+                                           DB_Table.PROFILES,
+                                           new string[] { "name" },
+                                           new List<Tuple<string, Relation, object>> {
+                                               new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, entrance[0].ToString()),
+                                               new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, entrance[1].ToString()),
+                                               new Tuple<string, Relation, object>("short_name", Relation.EQUAL, entrance[6].ToString())
+                                           }
+                                           )[0][0].ToString().Split('|');
+
+                    string[] row = {
+                           entrance[0].ToString(),
+                           DirectionNameAndCode.Item2 + " " + DirectionNameAndCode.Item1,
+                           dbHelper.GetDictionaryItems(FIS_Dictionary.EDU_FORM)[(uint)entrance[3]],
+                           dbHelper.GetDictionaryItems(FIS_Dictionary.EDU_SOURCE)[(uint)entrance[5]],
+                           mag_program_chair[0], mag_program_chair[1]
+                    }; 
+                    applEntranceTableParams[0].Add(row);
+                }
+
+                documents.Insert(0, new DocumentCreator.DocumentParameters(
+                    Settings.DocumentsTemplatesPath + "ApplicationTemplate.docx",
+                    null,
+                    null,
+                    parameters,
+                    applEntranceTableParams
+                    ));
+            }
+
+            private static void AddBachApplication(
+                List<DocumentCreator.DocumentParameters> documents,
+                DB_Connector connection,
+                uint applID)
+            {
+                DB_Helper dbHelper = new DB_Helper(connection);
+                bool is_quota = false;
+                bool is_target = false;
+                bool is_olympic = false;
+                bool is_sport = false;
+                bool is_gm = false;
+                bool is_olympic_conf = false;
+                uint IA_sport = 0;
+                uint IA_gm = 0;
+                uint IA_olympic_conf = 0;
+
+                Dictionary<string, object[]> appl_documents = new Dictionary<string, object[]>();
+                object[] identity_data = null;
+                List<string[]>[] applEntranceAndEGETableParams = new List<string[]>[] { new List<string[]>(), new List<string[]>() };
+
+
+                object[] applData = connection.Select(
+                                       DB_Table.APPLICATIONS,
+                                       new string[] { "entrant_id", "needs_hostel", "first_high_edu", "special_conditions", "language", "mcado", "chernobyl", "passing_examinations", "priority_right" },
+                                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
+                                       )[0];
+                object[] entrantData = connection.Select(
+                                       DB_Table.ENTRANTS,
+                                       new string[] { "email", "home_phone", "mobile_phone" },
+                                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applData[0]) }
+                                       )[0];
+                List<object[]> ahdData = connection.Select(
+                                        DB_Table._APPLICATIONS_HAS_DOCUMENTS,
+                                        new string[] { "documents_id" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, applID) }
+                                        );
+                List<object[]> applEntrancesData = connection.Select(
+                       DB_Table.APPLICATIONS_ENTRANCES,
+                       new string[] { "faculty_short_name", "direction_id", "edu_form_dict_id", "edu_form_id", "edu_source_dict_id", "edu_source_id", "profile_short_name" },
+                       new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                       );
+                List<object[]> applEgeData = connection.Select(
+                        DB_Table.APPLICATION_EGE_RESULTS,
+                        new string[] { "subject_id", "series", "number", "year", "value" },
+                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                        );
+
+                foreach (var entrance in applEntrancesData)
+                {
+                    if ((uint)entrance[5] == 16) { is_target = true; break; }
+                }
+
+                string ConvertObjectToString(object obj)
+                {
+                    return obj.ToString() ?? string.Empty;
+                }
+
+                List<string[]> EGE = new List<string[]>() { 
+                    new string[] {"m", "", "", ""},
+                    new string[] {"r", "", "", ""},
+                    new string[] {"p", "", "", ""},
+                    new string[] {"o", "", "", ""},
+                    new string[] {"fl", "", "", ""}
+                };
+
+                foreach (var subject in applEgeData)
+                {
+                    if ((uint)(subject[0]) == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Математика"))
+                        EGE[0] = new string[] { "m", subject[3].ToString(), subject[4].ToString(), subject[1].ToString() + " " + subject[2].ToString() };
+                    else if ((uint)(subject[0]) == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Русский язык"))
+                        EGE[1] = new string[] { "r", subject[3].ToString(), subject[4].ToString(), subject[1].ToString() + " " + subject[2].ToString() };
+                    else if ((uint)(subject[0]) == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Физика"))
+                        EGE[2] = new string[] { "p", subject[3].ToString(), subject[4].ToString(), subject[1].ToString() + " " + subject[2].ToString() };
+                    else if ((uint)(subject[0]) == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Обществознание"))
+                        EGE[3] = new string[] { "o", subject[3].ToString(), subject[4].ToString(), subject[1].ToString() + " " + subject[2].ToString() };
+                    else if ((uint)(subject[0]) == dbHelper.GetDictionaryItemID(FIS_Dictionary.SUBJECTS, "Иностранный язык"))
+                        EGE[4] = new string[] { "fl", subject[3].ToString(), subject[4].ToString(), subject[1].ToString() + " " + subject[2].ToString() };
+                }
+                applEntranceAndEGETableParams[1] = EGE;
+
+                foreach (var doc in ahdData)
+                {
+                    object[] docum = connection.Select(
+                                        DB_Table.DOCUMENTS,
+                                        new string[] { "type", "series", "number", "date", "organization", "id" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, doc[0]) }
+                                        )[0];
+                    if (docum[0].ToString() == "identity")
+                    {
+                        identity_data = connection.Select(
+                                        DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA,
+                                        new string[] { "last_name", "first_name", "middle_name", "gender_dict_id", "gender_id", "subdivision_code", "type_dict_id", "type_id", "nationality_dict_id", "nationality_id", "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house", "reg_flat", "reg_index" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("document_id", Relation.EQUAL, doc[0]) }
+                                        )[0];
+
+                    }
+                    if (docum[0].ToString() == "orphan" || docum[0].ToString() == "disability") is_quota = true;
+                    if (docum[0].ToString() == "olympic") is_olympic = true;
+
+                    appl_documents[docum[0].ToString()] = docum;
+                }
+
+                List<object[]> IA_ids = connection.Select(
+                    DB_Table.INDIVIDUAL_ACHIEVEMENTS,
+                    new string[] { "institution_achievement_id" },
+                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("application_id", Relation.EQUAL, applID) }
+                    );
+                foreach (var IA_id in IA_ids)
+                {
+                    object[] IAData = connection.Select(
+                                        DB_Table.INSTITUTION_ACHIEVEMENTS,
+                                        new string[] { "value", "category_id" },
+                                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)(IA_id[0])) }
+                                        )[0];
+                    if ((uint)IAData[1] >= 1 && (uint)IAData[1] <= 8)
+                    {
+                        is_sport = true;
+                        IA_sport = System.Convert.ToUInt16(IAData[0]);
+                    }
+                    else if ((uint)IAData[1] == 9 || (uint)IAData[1] == 15 || (uint)IAData[1] == 16 || (uint)IAData[1] == 17)
+                    {
+                        is_gm = true;
+                        IA_gm = System.Convert.ToUInt16(IAData[0]);
+                    }
+                    else if ((uint)IAData[1] == 11)
+                    {
+                        is_olympic_conf = true;
+                        IA_olympic_conf = System.Convert.ToUInt16(IAData[0]);
+                    }
+                }
+
+                string edu_doc_type = "";
+                foreach (string t in new string[] { "middle_edu_diploma", "school_certificate", "high_edu_diploma", "institution", "academic_diploma", "post_graduate_diploma" })                
+                    if (appl_documents.ContainsKey(t))
+                    {
+                        edu_doc_type = t;
+                        break;
+                    }
+
+                string edu_series = appl_documents[edu_doc_type][1].ToString();
+                string edu_number = appl_documents[edu_doc_type][2].ToString();
+                string edu_date = appl_documents[edu_doc_type][3].ToString();
+                string school = String.Join(" ", appl_documents[edu_doc_type][4].ToString().Split('|'));
+                uint edu_doc_id = (uint)appl_documents[edu_doc_type][5];
+
+                string[] parameters = {
+                    /*0 FIO*/ identity_data[0].ToString().ToUpper() + " " + identity_data[1].ToString().ToUpper() + " " + (identity_data[2].ToString().Length != 0 ? identity_data[2].ToString().ToUpper() : ""),
+                    /*1 Gender*/ dbHelper.GetDictionaryItems(FIS_Dictionary.GENDER)[(uint)identity_data[4]],
+                    /*2 birth_date*/ identity_data[10].ToString().Split(' ')[0],
+                    /*3 nationality*/ dbHelper.GetDictionaryItems(FIS_Dictionary.COUNTRY)[(uint)identity_data[9]],
+                    /*4 identity_doc_type*/ dbHelper.GetDictionaryItems(FIS_Dictionary.IDENTITY_DOC_TYPE)[(uint)identity_data[7]],
+                    /*5 identity_series*/ appl_documents["identity"][1].ToString(),
+                    /*6 identity_number*/ appl_documents["identity"][2].ToString(),
+                    /*7 identity_date*/ appl_documents["identity"][3].ToString().Split(' ')[0],
+                    /*8 identity_org*/ appl_documents["identity"][4].ToString(),
+                    /*9 identity_subdivision_code*/ identity_data[5].ToString(),
+                    /*10 birth_place*/ identity_data[11].ToString(),
+                    /*11 registration*/ identity_data[18].ToString() + ", " + (identity_data[12].ToString().Length!=0?identity_data[12].ToString() + ", ":"") +
+                    (identity_data[13].ToString().Length!=0?identity_data[13].ToString() + ", ":"") +
+                    (identity_data[14].ToString().Length!=0?identity_data[14].ToString() + ", ":"") +
+                    (identity_data[15].ToString().Length!=0?identity_data[15].ToString() + ", ":"") +
+                    (identity_data[16].ToString().Length!=0?identity_data[16].ToString() + ", ":"") +
+                    (identity_data[17].ToString().Length!=0?identity_data[17].ToString() + ", ":""),
+                    /*12 mobile_phone*/ entrantData[2].ToString(),
+                    /*13 cell_phone*/ entrantData[1].ToString(),
+                    /*14 email*/ entrantData[0].ToString(),
+                    /*15 school*/ school, /*16*/ edu_series, /*17*/ edu_number,
+                    /*18 need_hostel*/ applData[1].ToString(),
+                    /*19 first_high_edu*/ applData[2].ToString(),
+                    /*20 special_conditions*/ applData[3].ToString(),
+                    /*21 FIO_short*/ identity_data[0].ToString().ToUpper() + " " + identity_data[1].ToString().ToUpper()[0] + ". " + (identity_data[2].ToString().Length != 0 ? identity_data[2].ToString().ToUpper()[0] + "." : ""),
+                    /*22 language*/ applData[4].ToString(),
+                    /*23 is_quota*/ (is_quota || is_target || is_olympic).ToString(),
+                    /*24*/ is_quota.ToString(), /*25*/ is_target.ToString(), /*26*/ is_olympic.ToString(),
+                    /*27*/ is_sport.ToString(), /*28*/ is_gm.ToString(), /*29*/ is_olympic_conf.ToString(),
+                    /*30*/ IA_sport.ToString(), /*31*/ IA_gm.ToString(), /*32*/ IA_olympic_conf.ToString(),
+                    /*33 mcado*/ applData[5].ToString(),
+                    /*34 chernobyl*/ applData[6].ToString(),
+                    /*35 passing_examinations*/ applData[7].ToString(),
+                    /*36 ia_ball*/ Math.Max(IA_sport, Math.Max(IA_gm, IA_olympic_conf)).ToString(),
+                    /*37 is_pk*/ ((System.Convert.ToBoolean(applData[6])) || (System.Convert.ToBoolean(applData[8])) || is_quota || is_olympic || is_target).ToString()
+                };
+
+                foreach (var entrance in applEntrancesData)
+                {
+                    Tuple<string, string> DirectionNameAndCode = dbHelper.GetDirectionNameAndCode((uint)entrance[1]);
+                    uint intlevel = System.Convert.ToUInt32(DirectionNameAndCode.Item2.Split('.')[1]);
+                    // 3 -бакалавриат 5 - специалитет
+                    string profile_caption = "";                    
+                    string direction_short_caption = "";
+                    if ((uint)entrance[5] == 15)
+                    {
+                        
+                        profile_caption = connection.Select(
+                                               DB_Table.PROFILES,
+                                               new string[] { "name" },
+                                               new List<Tuple<string, Relation, object>> {
+                                               new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, entrance[0].ToString()),
+                                               new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, entrance[1].ToString()),
+                                               new Tuple<string, Relation, object>("short_name", Relation.EQUAL, entrance[6].ToString())
+                                               }
+                                               )[0][0].ToString();
+                    }
+                    else
+                    {
+                        direction_short_caption = dbHelper.GetDirectionShortName(entrance[0].ToString(), (uint)entrance[1]);
+                    }
+
+                    string forma = "";
+                    switch ((uint)entrance[3])
+                    {
+                        case 10:
+                            forma = "Заочная ";
+                            break;
+                        case 11:
+                            forma = "Очная ";
+                            break;
+                        case 12:
+                            forma = "Очно-заочная ";
+                            break;
+                    }
+                    switch ((uint)entrance[5])
+                    {
+                        case 14:
+                            forma += "бюджетная";
+                            break;
+                        case 15:
+                            forma += "платная";
+                            break;
+                        case 16:
+                            forma += "бюджетная, целевая";
+                            break;
+                        case 20:
+                            forma += "бюджетная, квота";
+                            break;
+                    }
+                    string[] row = {
+                           entrance[0].ToString(),
+                           ((uint)entrance[5] == 15?profile_caption:DirectionNameAndCode.Item1),
+                           (intlevel == 3?"Бак":"Спец"),
+                           ((uint)entrance[5] == 15?entrance[6].ToString():direction_short_caption),
+                           forma
+                    };
+                    applEntranceAndEGETableParams[0].Add(row);
+                }
+
+                documents.Insert(0, new DocumentCreator.DocumentParameters(
+                    Settings.DocumentsTemplatesPath + "ApplicationBachTemplate.docx",
+                    null,
+                    null,
+                    parameters,
+                    applEntranceAndEGETableParams
+                    ));
+            }
+
 
             private static void AddReceipt(
                 List<DocumentCreator.DocumentParameters> documents,

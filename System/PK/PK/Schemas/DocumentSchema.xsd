@@ -330,6 +330,7 @@
                             </xs:annotation>
                             <xs:simpleType>
                               <xs:restriction base="xs:string">
+                                <xs:enumeration value="A4"/>
                                 <xs:enumeration value="A5"/>
                                 <xs:enumeration value="A6"/>
                               </xs:restriction>
