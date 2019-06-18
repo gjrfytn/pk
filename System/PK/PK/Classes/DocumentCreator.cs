@@ -15,13 +15,8 @@ namespace PK.Classes
             public readonly uint? ID;
             public readonly string[] SingleParameters;
             public readonly IEnumerable<string[]>[] TableParameters;
-			private string v;
-			private object p1;
-			private object p2;
-			private List<string> parameters;
-			private object p3;
 
-			public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, IEnumerable<string[]>[] tableParameters)
+            public DocumentParameters(string template, DB_Connector connection, uint? id, string[] singleParameters, IEnumerable<string[]>[] tableParameters)
             {
                 #region Contracts
                 if (string.IsNullOrWhiteSpace(template))
@@ -47,16 +42,7 @@ namespace PK.Classes
                 SingleParameters = singleParameters;
                 TableParameters = tableParameters;
             }
-
-			public DocumentParameters(string v, object p1, object p2, List<string> parameters, object p3)
-			{
-				this.v = v;
-				this.p1 = p1;
-				this.p2 = p2;
-				this.parameters = parameters;
-				this.p3 = p3;
-			}
-		}
+        }
 
         struct Font
         {
@@ -96,11 +82,7 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-<<<<<<< HEAD
-				Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
-=======
                 Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), id, resultFile);
->>>>>>> origin/master
 
                 if (readOnly)
                     doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
@@ -128,11 +110,7 @@ namespace PK.Classes
 
             if (template.Root.Element("Document").Element("Word") != null)
             {
-<<<<<<< HEAD
-				Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
-=======
                 Xceed.Words.NET.DocX doc = Word.CreateFromTemplate(GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), singleParams, tableParams, resultFile);
->>>>>>> origin/master
 
                 if (readOnly)
                     doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
@@ -149,12 +127,8 @@ namespace PK.Classes
                 throw new System.ArgumentException("Некорректное имя выходного файла.", nameof(resultFile));
             if (System.Linq.Enumerable.Count(documents) == 0)
                 throw new System.ArgumentException("Коллекция с документами должна содержать хотя бы один элемент.", nameof(documents));
-			#endregion
+            #endregion
 
-<<<<<<< HEAD
-			Xceed.Words.NET.DocX doc = null;
-            foreach (var document in documents)
-=======
             void AddItemToMagDirectionTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
             {
                 // Insert a copy of the rowPattern at the last index in the table.
@@ -168,7 +142,6 @@ namespace PK.Classes
                 newItem.ReplaceText("%edu_form%", direction[2] + ", " + direction[3]);
             }
             void AddItemToBachDirectionTable(Xceed.Words.NET.Table table, Xceed.Words.NET.Row rowPattern, string[] direction)
->>>>>>> origin/master
             {
                 // Insert a copy of the rowPattern at the last index in the table.
                 var newItem = table.InsertRow(rowPattern, table.RowCount - 1);
@@ -240,11 +213,6 @@ namespace PK.Classes
                 }
                 else if (document.Template.IndexOf("ApplicationBachTemplate") >= 0)
                 {
-<<<<<<< HEAD
-					Xceed.Words.NET.DocX buf;
-                    if (document.Connection != null)
-                        buf = Word.CreateFromTemplate(document.Connection, GetFonts(template.Root.Element("Fonts")), template.Root.Element("Document").Element("Word"), document.ID.Value, resultFile);
-=======
                     void InsertExam(Xceed.Words.NET.DocX local_buf, string subject, string year, string ball, string sn)
                     {
                         local_buf.ReplaceText("<" + subject + "_year>", year);
@@ -281,7 +249,6 @@ namespace PK.Classes
                         if (document.SingleParameters[26] == "True") quota_type += "без экзаменов, ";
                         buf.ReplaceText("<quota_type>", "(" + quota_type.Substring(0, quota_type.Length - 2) + ")"); 
                     }
->>>>>>> origin/master
                     else
                     {
                         buf.ReplaceText("<quota_type>", "");
@@ -333,11 +300,13 @@ namespace PK.Classes
                     {
                         doc = Xceed.Words.NET.DocX.Create(resultFile + ".docx");
                         doc.InsertDocument(buf);
+                      //  doc.InsertSectionPageBreak();
                     }
                     else
                     {
                         doc.InsertSectionPageBreak();
                         doc.InsertDocument(buf);
+                        //doc.InsertSectionPageBreak();
                     }
                 }
                 else
@@ -360,6 +329,7 @@ namespace PK.Classes
                         {
                             doc.InsertSectionPageBreak();
                             doc.InsertDocument(buf);
+                            
                         }
                     }
                     else

@@ -36,9 +36,8 @@ namespace SitePost
             _DB_Helper = new DB_Helper(_DB_Connection);
             Dictionary<uint, string> campaigns = new Dictionary<uint, string>();
             foreach (object[] campaign in _DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "id", "name" }))
-				if (_DB_Helper.GetCampaignType((uint)campaign[0]) == DB_Helper.CampaignType.BACHELOR_SPECIALIST)					
-				//if (!_DB_Helper.GetCampaignType   .IsMasterCampaign((uint)campaign[0]))
-					campaigns.Add((uint)campaign[0],campaign[1].ToString());
+                if (_DB_Helper.GetCampaignType((uint)campaign[0]) == DB_Helper.CampaignType.BACHELOR_SPECIALIST)
+                    campaigns.Add((uint)campaign[0],campaign[1].ToString());
 
             cbCampaigns.DataSource = campaigns.ToList();
             cbCampaigns.ValueMember = "Key";
@@ -167,19 +166,19 @@ namespace SitePost
                 {
                     if ((cbPost.Checked) && (rbDirectToDB.Checked))
                     {
-						connection.Open();
-						string Query = "SET foreign_key_checks = 0;" +
-								"LOCK TABLES `" + dbname + "`.`abitur_tmptable` WRITE, " +
-											"`" + dbname + "`.`application_tmptable` WRITE, " +
-											"`" + dbname + "`.`profile_table` READ, " +
-											"`" + dbname + "`.`direction_table` AS dt READ, " +
-											"`" + dbname + "`.`faculty_table` AS ft READ;" +
-								"TRUNCATE TABLE `" + dbname + "`.`abitur_tmptable`;" +
-								"TRUNCATE TABLE `" + dbname + "`.`application_tmptable`;";
-						new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
-					}
+                        connection.Open();
+                        string Query = "SET foreign_key_checks = 0;" +
+                                "LOCK TABLES `" + dbname + "`.`abitur_tmptable` WRITE, " +
+                                            "`" + dbname + "`.`application_tmptable` WRITE, " +
+                                            "`" + dbname + "`.`profile_table` READ, " +
+                                            "`" + dbname + "`.`direction_table` AS dt READ, " +
+                                            "`" + dbname + "`.`faculty_table` AS ft READ;" +
+                                "TRUNCATE TABLE `" + dbname + "`.`abitur_tmptable`;" +
+                                "TRUNCATE TABLE `" + dbname + "`.`application_tmptable`;";
+                        new MySql.Data.MySqlClient.MySqlCommand(Query, connection).ExecuteNonQuery();
+                    }
 
-					XDocument PackageData = new XDocument(new XElement("Root"));
+                    XDocument PackageData = new XDocument(new XElement("Root"));
                     PackageData.Root.Add(new XElement("AuthData", _AuthData));
                     PackageData.Root.Add(new XElement("PackageData"));
 
@@ -257,7 +256,7 @@ namespace SitePost
                         SetMarks((uint)application[0], abitur, marks);
                         SetDocuments((uint)application[0], abitur, documents);
                         SetIA((uint)application[0], abitur);
-                        SetEntrances((uint)application[0], abitur, documents);
+                        SetEntrances((uint)application[0], abitur);
 
                         if ((cbPost.Checked) && (rbDirectToDB.Checked))
                         {
@@ -296,9 +295,7 @@ namespace SitePost
 
                             foreach (XElement appl in abitur.Element("Applications").Elements())
                             {
-								direction_id = 1000;
-								profile_id = 1000;
-								direction = appl.Element("Direction").Value;
+                                direction = appl.Element("Direction").Value;
                                 profile = appl.Element("Profile").Value;
                                 if (direction != "0")
                                 {
@@ -493,31 +490,21 @@ namespace SitePost
             }
         }
 
-        private void SetEntrances(uint appID, XElement abitur, IEnumerable<DB_Queries.Document> documents)
+        private void SetEntrances(uint appID, XElement abitur)
         {
             List<object[]> entrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "edu_form_id", "direction_id", "profile_short_name",
-                        "is_agreed_date", "edu_source_id", "faculty_short_name", "is_disagreed_date"}, new List<Tuple<string, Relation, object>>
+                        "is_agreed_date", "edu_source_id", "faculty_short_name" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("application_id", Relation.EQUAL, appID)
                         });
             int agreedCount = 0;
             uint lastAgreedDir = 0;
-			string faculty_short_name = "";
-			DateTime lastAgreedDate = DateTime.MinValue;
+            DateTime lastAgreedDate = DateTime.MinValue;
+
             foreach (object[] entrance in entrances)
             {
-				DateTime? agree_date_tmp = entrance[3] as DateTime?;
-				DateTime? disagree_date_tmp = entrance[6] as DateTime?;
-				if (agree_date_tmp != null) agreedCount++;
-				if (agree_date_tmp != null && disagree_date_tmp == null)
-				{
-					lastAgreedDir = (uint)entrance[1];
-					faculty_short_name = (string)entrance[5];
-				}
-
-				/*
-				DateTime? date = entrance[3] as DateTime?;
-				if (date != null)
+                DateTime? date = entrance[3] as DateTime?;
+                if (date != null)
                 {
                     agreedCount++;
                     if ((DateTime)entrance[3] > lastAgreedDate)
@@ -526,13 +513,12 @@ namespace SitePost
                         lastAgreedDir = (uint)entrance[1];
                     }
                 }
-				*/
-
-			}
-			List<XElement> appls = new List<XElement>();
+            }
+            List<XElement> appls = new List<XElement>();
             foreach (object[] entrance in entrances)
             {
                 XElement appl = new XElement("Application");
+
                 if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO))
                     appl.Add(new XElement("FormOfEducation", 1));
                 else if ((uint)entrance[0] == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormOZ))
@@ -569,25 +555,16 @@ namespace SitePost
                     appl.Add(new XElement("Profile", entrance[2].ToString()));
                     appl.Add(new XElement("Condition", 4));
                 }
+
+                appl.Add(new XElement("ApplicationOfConsent", 0));
+
                 DateTime? date = entrance[3] as DateTime?;
                 if (date != null)
-                {
                     if (agreedCount == 1)
-                    {
-                        appl.Add(new XElement("ApplicationOfConsent", 1));
-                        abitur.SetElementValue("ODO", 1);
-                    }
-                    else if (agreedCount == 2)
-                        if (lastAgreedDir == (uint)entrance[1] && faculty_short_name == (string)entrance[5])
-                        {
-                            appl.Add(new XElement("ApplicationOfConsent", 2));
-                            abitur.SetElementValue("ODO", 1);
-                        }
-                        else
-                            appl.Add(new XElement("ApplicationOfConsent", 0));
-                }
-                else
-                    appl.Add(new XElement("ApplicationOfConsent", 0));
+                        appl.SetElementValue("ApplicationOfConsent", 1);
+                    else if (lastAgreedDir == (uint)entrance[1])
+                        appl.SetElementValue("ApplicationOfConsent", 2);
+                    else appl.SetElementValue("ApplicationOfConsent", 1);
 
                 appls.Add(appl);
             }

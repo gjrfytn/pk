@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
-<<<<<<< HEAD
-=======
 //using Novacode;
->>>>>>> origin/master
 using Xceed.Words.NET;
 
 namespace PK.Classes
@@ -269,11 +266,7 @@ xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
                 if (fontID != null)
                 {
                     if (fonts[fontID].Name != null)
-<<<<<<< HEAD
-                        paragraph.Font(new System.Drawing.FontFamily(fonts[fontID].Name).Name);
-=======
                         paragraph.Font((new System.Drawing.FontFamily(fonts[fontID].Name)).Name);
->>>>>>> origin/master
 
                     if (fonts[fontID].Size.HasValue)
                         paragraph.FontSize(fonts[fontID].Size.Value);

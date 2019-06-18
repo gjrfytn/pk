@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,10 +73,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="Xceed.Words.NET, Version=1.3.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\DocX.1.3.0\lib\net40\Xceed.Words.NET.dll</HintPath>
-<<<<<<< HEAD
-      <Private>True</Private>
-=======
->>>>>>> origin/master
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -281,13 +278,11 @@
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.cs">
+    <Compile Include="Forms\ApplicationEdit.cs">
       <SubType>Form</SubType>
-      <Link>Forms\ApplicationEdit.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.Designer.cs">
+    <Compile Include="Forms\ApplicationEdit.Designer.cs">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
-      <Link>Forms\ApplicationEdit.Designer.cs</Link>
     </Compile>
     <Compile Include="Forms\CampaignEdit.cs">
       <SubType>Form</SubType>
@@ -438,9 +433,8 @@
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\..\..\..\Music\ApplicationEdit.resx">
+    <EmbeddedResource Include="Forms\ApplicationEdit.resx">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
-      <Link>Forms\ApplicationEdit.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CampaignEdit.resx">
       <DependentUpon>CampaignEdit.cs</DependentUpon>
@@ -477,6 +471,8 @@
       <DependentUpon>Users.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="DocumentTemplates\ApplicationBachTemplate.docx" />
+    <None Include="DocumentTemplates\ApplicationTemplate.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -614,9 +610,6 @@
     <None Include="Resources\check.png" />
     <None Include="Resources\kladr_db_creation.sql" />
     <None Include="Resources\glass.png" />
-    <Content Include="DocumentTemplates\Statement.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="tempDictionaries\dicn1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

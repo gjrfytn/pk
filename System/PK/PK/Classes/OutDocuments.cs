@@ -41,12 +41,7 @@ namespace PK.Classes
                 }
             }
 
-			internal static string Documents(DB_Connector _DB_Connection, uint _ID, bool checked1, bool checked2, bool checked3, bool checked4, bool checked5, bool checked6, bool checked7, bool checked8)
-			{
-				throw new NotImplementedException();
-			}
-
-			class ApplicationData
+            class ApplicationData
             {
                 public uint EntrantID;
                 public bool Hostel;
@@ -80,11 +75,7 @@ namespace PK.Classes
                 { new Tuple<uint,uint>(12,16),Tuple.Create("Целевой прием, очно-заочная (вечерняя)","ОЗЦП") }
             };
 
-<<<<<<< HEAD
-            public static string Documents(DB_Connector connection, uint applID, bool moveJournal, bool inventory, bool percRecordFace, bool receipt, bool percRecordBack, bool admAgreement, bool statement)
-=======
             public static string Documents(DB_Connector connection, uint applID, bool moveJournal, bool inventory, bool percRecordFace, bool receipt, bool percRecordBack, bool admAgreement, bool application)
->>>>>>> origin/master
             {
                 #region Contracts
                 if (connection == null)
@@ -276,42 +267,7 @@ namespace PK.Classes
                     else
                         AddBachPercRecordFace(documents, inventoryTableParams[0], applID, applData);
 
-<<<<<<< HEAD
-                if (receipt)
-                {
-                    AddReceipt(documents, connection, inventoryTableParams[1], entrances, applID, applData, master);
-
-                    object[] buf = connection.Select(
-                        DB_Table.APPLICATIONS,
-                        new string[] { "passing_examinations", "registration_time" },
-                        new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, applID) }
-                        )[0];
-
-                    bool? passingExams = buf[0] as bool?;
-                    if (passingExams.HasValue && passingExams.Value)
-                        AddExamShedule(documents, connection, applID, (DateTime)buf[1]);
-                }
-				if (statement)
-					documents.Add(new DocumentCreator.DocumentParameters(
-						Settings.DocumentsTemplatesPath + "Statement.xml",
-						null,
-						null,
-						new string[]
-						{
-							applID.ToString()+(master?"м":""),
-							applData.LastName.ToUpper(),
-							(applData.FirstName+" "+applData.MiddleName).ToUpper(),
-							applData.RegistratorName,
-							System.Windows.Forms.SystemInformation.ComputerName,
-							applData.RegistrationTime.ToString()
-						},
-						inventoryTableParams
-						));
-
-				if (master)
-=======
                 if (master)
->>>>>>> origin/master
                 {
                     byte redDiplomaMark = (byte)connection.Select(
                         DB_Table.INDIVIDUAL_ACHIEVEMENTS,
@@ -348,7 +304,6 @@ namespace PK.Classes
 
                     if (admAgreement)
                         AddMastAdmAgreement(documents, connection, applID, applData, redDiplomaMark);
-					
                 }
                 else
                 {
@@ -365,10 +320,7 @@ namespace PK.Classes
 
                     if (admAgreement)
                         AddBachAdmAgreement(documents, connection, applID, applData, marks);
-
-					if (statement)
-						AddBachStatement(documents, connection, applID, applData, marks);
-				}
+                }
 
                 if (moveJournal)
                 {
@@ -394,24 +346,6 @@ namespace PK.Classes
                 DocumentCreator.Create(doc, documents, true);
                 return doc + ".docx";
             }
-
-			private static void AddBachStatement(List<DocumentCreator.DocumentParameters> documents, DB_Connector connection, uint applID, ApplicationData applData, IEnumerable<Tuple<uint, byte>> marks)
-			{
-				
-				List<string> parameters = new List<string>
-				{
-					 applData.LastName.ToUpper(),
-					applData.FirstName[0].ToString(),
-					applData.MiddleName.Length!=0?applData.MiddleName[0].ToString():"",
-					applID.ToString(),
-					applData. LastName,
-					applData.FirstName,
-					applData. MiddleName,
-					applData.RegistrationTime.Year.ToString()
-				};
-
-
-			}
 
             private static void AddBachPercRecordFace(List<DocumentCreator.DocumentParameters> documents, List<string[]> streamsTableParams, uint applID, ApplicationData applData)
             {
@@ -443,7 +377,7 @@ namespace PK.Classes
                     ));
             }
 
-			private static void AddMastPercRecordFace(List<DocumentCreator.DocumentParameters> documents, DB_Connector connection, IEnumerable<Stream> entrances, uint applID, ApplicationData applData)
+            private static void AddMastPercRecordFace(List<DocumentCreator.DocumentParameters> documents, DB_Connector connection, IEnumerable<Stream> entrances, uint applID, ApplicationData applData)
             {
                 DB_Helper dbHelper = new DB_Helper(connection);
                 foreach (Stream stream in entrances)
@@ -661,10 +595,10 @@ namespace PK.Classes
                     if ((uint)entrance[5] == 16) { is_target = true; break; }
                 }
 
-                string ConvertObjectToString(object obj)
-                {
-                    return obj.ToString() ?? string.Empty;
-                }
+                //string ConvertObjectToString(object obj)
+                //{
+                //    return obj.ToString() ?? string.Empty;
+               // }
 
                 List<string[]> EGE = new List<string[]>() { 
                     new string[] {"m", "", "", ""},
@@ -1376,9 +1310,8 @@ namespace PK.Classes
                     new string[] { "faculty_short_name", "direction_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("edu_source_id",Relation.NOT_EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP)),
-						new Tuple<string, Relation, object>("application_id",Relation.GREATER_EQUAL, (uint)7388)
-					}),
+                        new Tuple<string, Relation, object>("edu_source_id",Relation.NOT_EQUAL, dbHelper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE,DB_Helper.EduSourceP))
+                    }),
                 k1 => Tuple.Create(k1.Faculty, k1.Direction),
                 k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1]),
                 (e, g) => new
@@ -1419,34 +1352,22 @@ namespace PK.Classes
 
             DB_Helper dbHelper = new DB_Helper(connection);
 
-			List<string[]> data = connection.Select(
-				DB_Table.CAMPAIGNS_PROFILES_DATA,
-				new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name", "places_paid_o", "places_paid_oz", "places_paid_z" },
-				new List<Tuple<string, Relation, object>>{new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Settings.CurrentCampaignID),
-				}
-				).Select(s => new
-				{
-					Faculty = s[0].ToString(),
-					Direction = (uint)s[1],
-					Profile = s[2].ToString(),
-					Places = (ushort)s[3] + (ushort)s[4] + (ushort)s[5]
-				}).GroupJoin(
-				connection.Select(					
-					DB_Table.APPLICATIONS_ENTRANCES,
-					new string[] { "faculty_short_name", "direction_id", "profile_short_name" },
-					new List<Tuple<string, Relation, object>>
-					{
-						new Tuple<string, Relation, object>("application_id",Relation.GREATER_EQUAL, (uint)7388)
-					}),
-
-				k1 => Tuple.Create(k1.Faculty, k1.Direction, k1.Profile),
-				k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1], k2[2].ToString()),
-				(e, g) => new
-				{
-					ShortName = e.Profile,
-					ApplCount =g.Count(),
-					e.Places
-				}).Join(
+            List<string[]> data = connection.Select(
+                DB_Table.CAMPAIGNS_PROFILES_DATA,
+                new string[] { "profiles_direction_faculty", "profiles_direction_id", "profiles_short_name", "places_paid_o", "places_paid_oz", "places_paid_z" },
+                new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("campaigns_id", Relation.EQUAL, Settings.CurrentCampaignID) }
+                ).Select(s => new
+                {
+                    Faculty = s[0].ToString(),
+                    Direction = (uint)s[1],
+                    Profile = s[2].ToString(),
+                    Places = (ushort)s[3] + (ushort)s[4] + (ushort)s[5]
+                }).GroupJoin(
+                connection.Select(
+                    DB_Table.APPLICATIONS_ENTRANCES, "faculty_short_name", "direction_id", "profile_short_name"),
+                k1 => Tuple.Create(k1.Faculty, k1.Direction, k1.Profile),
+                k2 => Tuple.Create(k2[0].ToString(), (uint)k2[1], k2[2].ToString()),
+                (e, g) => new { ShortName = e.Profile, ApplCount = g.Count(), e.Places }).Join(
                 connection.Select(DB_Table.PROFILES, "short_name", "name"),
                 k1 => k1.ShortName,
                 k2 => k2[0],
