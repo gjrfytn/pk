@@ -35,12 +35,12 @@ namespace PK.Forms
 
         private readonly Tuple<Tuple<uint, bool, EducationLevel>, Tuple<uint, uint>>[] _RecordBooksRanges =
             {
-            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.BACHELOR), Tuple.Create((uint)180001, (uint)181999)),
-            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.MASTER), Tuple.Create((uint)184001, (uint)184999)),
-            Tuple.Create(Tuple.Create((uint)11,true,EducationLevel.BOTH), Tuple.Create((uint)183001, (uint)183899)),
-            Tuple.Create(Tuple.Create((uint)12,false,EducationLevel.BACHELOR), Tuple.Create((uint)182001, (uint)182399)),
-            Tuple.Create(Tuple.Create((uint)12,true,EducationLevel.BACHELOR), Tuple.Create((uint)183901, (uint)183999)),
-            Tuple.Create(Tuple.Create((uint)10,true,EducationLevel.BOTH), Tuple.Create((uint)185001, (uint)185999))
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.BACHELOR), Tuple.Create((uint)190001, (uint)191999)),
+            Tuple.Create(Tuple.Create((uint)11,false,EducationLevel.MASTER), Tuple.Create((uint)194001, (uint)194999)),
+            Tuple.Create(Tuple.Create((uint)11,true,EducationLevel.BOTH), Tuple.Create((uint)193001, (uint)193899)),
+            Tuple.Create(Tuple.Create((uint)12,false,EducationLevel.BACHELOR), Tuple.Create((uint)192001, (uint)192399)),
+            Tuple.Create(Tuple.Create((uint)12,true,EducationLevel.BACHELOR), Tuple.Create((uint)193901, (uint)193999)),
+            Tuple.Create(Tuple.Create((uint)10,true,EducationLevel.BOTH), Tuple.Create((uint)195001, (uint)195999))
         };
 
         private readonly DB_Connector _DB_Connection;

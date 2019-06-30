@@ -155,8 +155,16 @@ namespace PK.Classes
             }
 
             Xceed.Words.NET.DocX doc = null;
+            string previous_template_name = null;
+            string current_template_name = null;
+
+            List<string> prev_templates_name_after_no_page_break = new List<string> { "PercRecordFace", "PercRecordFaceM", };
+            List<string> curr_templates_name_after_no_page_break = new List<string> { "PercRecordBack", "PercRecordBackM", };
             foreach (var document in documents)
             {
+                string[] len_path_template = document.Template.Split('\\');
+                current_template_name = len_path_template[len_path_template.Count() - 1].Split('.')[0];
+
                 if (document.Template.IndexOf("ApplicationTemplate")>=0)
                 {
                     Xceed.Words.NET.DocX buf = Xceed.Words.NET.DocX.Load(document.Template);
@@ -327,18 +335,20 @@ namespace PK.Classes
                             doc = buf;
                         else
                         {
-                            doc.InsertSectionPageBreak();
-                            doc.InsertDocument(buf);
-                            
+                            if (!prev_templates_name_after_no_page_break.Contains(previous_template_name) & !curr_templates_name_after_no_page_break.Contains(current_template_name))
+                                doc.InsertSectionPageBreak();
+                            doc.InsertDocument(buf);                            
                         }
                     }
                     else
                         throw new System.ArgumentException("Эта перегрузка принимат только тип шаблонов \"Word\".", nameof(documents));
                 }
-                if (readOnly)
-                    doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
-                doc.Save();
+                len_path_template = document.Template.Split('\\');
+                previous_template_name = len_path_template[len_path_template.Count() - 1].Split('.')[0];
             }
+            if (readOnly)
+                doc.AddProtection(Xceed.Words.NET.EditRestrictions.readOnly);
+            doc.Save();
         }
 
         public static void Create(DB_Connector connection, string templateFile, string resultFile, uint[] ids = null)

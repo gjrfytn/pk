@@ -165,7 +165,7 @@ namespace PK.Forms
                 (DateTime.Now.Year - 2).ToString(),
                 (DateTime.Now.Year - 3).ToString(),
                 (DateTime.Now.Year - 4).ToString(),
-                (DateTime.Now.Year - 5).ToString(),
+               // (DateTime.Now.Year - 5).ToString(),
             };
 
             object[] minMarks = _DB_Connection.Select(DB_Table.CONSTANTS, new string[] { "min_math_mark", "min_russian_mark", "min_physics_mark", "min_social_mark", "min_foreign_mark" })[0];
@@ -848,7 +848,7 @@ namespace PK.Forms
                     cb.Visible = true;
                 }
             }
-            else if ((tabNumber == 1) || (tabNumber == 3) || (tabNumber == 7) || (tabNumber == 9))
+            else if ((tabNumber == 1) || (tabNumber == 3) || (tabNumber == 6) || (tabNumber == 7) || (tabNumber == 9))
             {
                 combo = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "2", false)[0] as ComboBox;
                 if (combo.SelectedIndex == -1)
@@ -861,7 +861,7 @@ namespace PK.Forms
                     CheckBox cb = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbAgreed" + tabNumber.ToString() + "2", false)[0] as CheckBox;
                     cb.Visible = true;
                 }
-                else if ((tabNumber == 1) || (tabNumber == 7))
+                else if ((tabNumber == 1) || (tabNumber == 6) || (tabNumber == 7))
                 {
                     combo = tcDirections.TabPages[tabNumber - 1].Controls.Find("cbDirection" + tabNumber.ToString() + "3", false)[0] as ComboBox;
                     if (combo.SelectedIndex == -1)
@@ -2706,6 +2706,24 @@ namespace PK.Forms
                         btRemoveDir61.Visible = true;
                         btRemoveDir61.Enabled = true;
                         cbAgreed61.Visible = true;
+                    }
+                    else if (cbDirection62.SelectedIndex == -1)
+                    {
+                        cbDirection62.SelectedValue = entrancesData.Value;
+                        cbDirection62.Visible = true;
+                        cbDirection62.Enabled = true;
+                        btRemoveDir62.Visible = true;
+                        btRemoveDir62.Enabled = true;
+                        cbAgreed62.Visible = true;
+                    }
+                    else if (cbDirection63.SelectedIndex == -1)
+                    {
+                        cbDirection63.SelectedValue = entrancesData.Value;
+                        cbDirection63.Visible = true;
+                        cbDirection63.Enabled = true;
+                        btRemoveDir63.Visible = true;
+                        btRemoveDir63.Enabled = true;
+                        cbAgreed63.Visible = true;
                     }
                 }
 

@@ -355,9 +355,9 @@ namespace PK.Classes
                     applData.FirstName[0].ToString(),
                     applData.MiddleName.Length!=0?applData.MiddleName[0].ToString():"",
                     applID.ToString(),
-                    applData. LastName,
-                    applData.FirstName,
-                    applData. MiddleName,
+                    applData.LastName.ToUpper(),
+                    applData.FirstName.ToUpper(),
+                    applData.MiddleName.ToUpper(),
                     applData.RegistrationTime.Year.ToString()
                 };
 
@@ -394,9 +394,9 @@ namespace PK.Classes
                             DB_Queries.GetProfileName(connection, entrance.Faculty, entrance.DirectionID, entrance.Profile),
                             dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_FORM, stream.EduForm),
                             dbHelper.GetDictionaryItemName(FIS_Dictionary.EDU_SOURCE, stream.EduSource),
-                            applData. LastName,
-                            applData.FirstName,
-                            applData. MiddleName,
+                            applData.LastName.ToUpper(),
+                            applData.FirstName.ToUpper(),
+                            applData.MiddleName.ToUpper(),
                             applData.RegistrationTime.Year.ToString()
                         };
 

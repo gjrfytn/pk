@@ -91,7 +91,7 @@
             this.cbCampaigns.FormattingEnabled = true;
             this.cbCampaigns.Location = new System.Drawing.Point(142, 21);
             this.cbCampaigns.Name = "cbCampaigns";
-            this.cbCampaigns.Size = new System.Drawing.Size(122, 21);
+            this.cbCampaigns.Size = new System.Drawing.Size(485, 21);
             this.cbCampaigns.TabIndex = 1;
             // 
             // label1
@@ -172,12 +172,12 @@
             // 
             // tbResponse
             // 
-            this.tbResponse.Location = new System.Drawing.Point(12, 241);
+            this.tbResponse.Location = new System.Drawing.Point(12, 286);
             this.tbResponse.Multiline = true;
             this.tbResponse.Name = "tbResponse";
             this.tbResponse.ReadOnly = true;
             this.tbResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbResponse.Size = new System.Drawing.Size(615, 184);
+            this.tbResponse.Size = new System.Drawing.Size(615, 139);
             this.tbResponse.TabIndex = 9;
             // 
             // notifyIcon
@@ -216,7 +216,7 @@
             this.methodGroupBox.Controls.Add(this.rbFTPMethod);
             this.methodGroupBox.Controls.Add(this.rbPostMethod);
             this.methodGroupBox.Enabled = false;
-            this.methodGroupBox.Location = new System.Drawing.Point(284, 21);
+            this.methodGroupBox.Location = new System.Drawing.Point(284, 57);
             this.methodGroupBox.Name = "methodGroupBox";
             this.methodGroupBox.Size = new System.Drawing.Size(343, 214);
             this.methodGroupBox.TabIndex = 12;

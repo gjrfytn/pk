@@ -413,6 +413,10 @@ namespace SitePost
                     }
 
                 }
+                else
+                {
+                    timer.Stop();
+                }
             }
             catch (Exception e)
             {                
@@ -704,7 +708,7 @@ namespace SitePost
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            threadPost.Abort();
+            if (threadPost != null) threadPost.Abort();
         }
     }
 }

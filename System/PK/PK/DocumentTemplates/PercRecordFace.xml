@@ -20,13 +20,17 @@
       <Name>Arial</Name>
       <Size>22</Size>
     </Font>
+    <Font ID="Year">
+      <Name>Arial</Name>
+      <Size>20</Size>
+    </Font>
     <Font ID="Large">
       <Name>Arial</Name>
-      <Size>32</Size>
+      <Size>40</Size>
     </Font>
     <Font ID="LargeBold">
       <Name>Arial</Name>
-      <Size>32</Size>
+      <Size>40</Size>
       <Style>Bold</Style>
     </Font>
   </Fonts>
@@ -35,8 +39,8 @@
       <Properties>
         <Format>A4</Format>
         <Margins>
-          <Left>35</Left>
-          <Top>35</Top>
+          <Left>20</Left>
+          <Top>20</Top>
         </Margins>
       </Properties>
       <Structure>
@@ -207,8 +211,9 @@
                           </Part>
                         </Parts>
                       </Paragraph>
+                      <Paragraph/>
                       <Paragraph>
-                        <FontID>Large</FontID>
+                        <FontID>Year</FontID>
                         <Alighment>Center</Alighment>
                         <Parts>
                           <Part>
@@ -224,6 +229,36 @@
               </Row>
             </Rows>
           </FixedTable>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
+        </Element>
+        <Element>
+          <Paragraph/>
         </Element>
       </Structure>
     </Word>

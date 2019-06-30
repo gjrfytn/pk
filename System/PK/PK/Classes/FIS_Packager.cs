@@ -306,6 +306,7 @@ namespace PK.Classes
                     Info = s2[1] as string,
                     Email = s2[2].ToString(),
 					ReturnDate = s1[8] as System.DateTime?
+
 				});
 
             if (applicationsBD.Count() == 0)
@@ -471,9 +472,9 @@ namespace PK.Classes
                     finSourceEduForms.Select(s => s.FSEF).ToList(),
                     packedDocs,
                     appl.Comment,
-					//returnType,
-					//appl.ReturnDate,					
-					benefits.Count != 0 ? benefits : null,
+                    returnType,
+                    appl.ReturnDate,
+                    benefits.Count != 0 ? benefits : null,
                     testsResults.Count != 0 ? testsResults : null,
                     achievements.Count != 0 ? achievements : null
                     ));

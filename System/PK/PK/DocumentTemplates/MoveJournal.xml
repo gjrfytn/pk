@@ -26,6 +26,12 @@
     <Word>
       <Properties>
         <Format>A4</Format>
+        <Margins>
+          <Left>20</Left>
+          <Top>20</Top>
+          <Right>20</Right>
+          <Bottom>20</Bottom>
+        </Margins>        
       </Properties>
       <Structure>
         <Element>
