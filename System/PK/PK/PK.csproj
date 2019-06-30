@@ -277,13 +277,11 @@
     <Compile Include="Forms\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.cs">
+    <Compile Include="Forms\ApplicationEdit.cs">
       <SubType>Form</SubType>
-      <Link>Forms\ApplicationEdit.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\..\..\Music\ApplicationEdit.Designer.cs">
+    <Compile Include="Forms\ApplicationEdit.Designer.cs">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
-      <Link>Forms\ApplicationEdit.Designer.cs</Link>
     </Compile>
     <Compile Include="Forms\CampaignEdit.cs">
       <SubType>Form</SubType>
@@ -434,9 +432,8 @@
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\..\..\..\Music\ApplicationEdit.resx">
+    <EmbeddedResource Include="Forms\ApplicationEdit.resx">
       <DependentUpon>ApplicationEdit.cs</DependentUpon>
-      <Link>Forms\ApplicationEdit.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CampaignEdit.resx">
       <DependentUpon>CampaignEdit.cs</DependentUpon>
