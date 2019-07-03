@@ -536,6 +536,7 @@
     </Content>
     <Content Include="DocumentTemplates\AdmAgreement.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="DocumentTemplates\AlphaAuditories.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

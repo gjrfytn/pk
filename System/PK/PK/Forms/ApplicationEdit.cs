@@ -74,7 +74,7 @@ namespace PK.Forms
         private uint? _TargetOrganizationID;
         private bool _Agreed;
         private QDoc _QuoteDoc;
-        private string[] _DirsMed = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02" };
+        private string[] _DirsMed = { "13.03.02", "23.03.01", "23.03.02", "23.03.03", "23.05.01", "23.05.02", "13.03.03" };
         private List<string[]> _InstitutionTypes = new List<string[]>()
         {
             new string[] {"Средняя школа", "school_certificate"},

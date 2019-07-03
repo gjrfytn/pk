@@ -28,8 +28,7 @@ namespace SitePost
 
         public MainForm()
         {
-            InitializeComponent();
-
+            InitializeComponent();            
             //_DB_Connection = new DB_Connector("server = localhost; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
             _DB_Connection = new DB_Connector("server = serv-priem; port = 3306; database = pk_db;"/*Properties.Settings.Default.pk_db_CS*/, "administrator", "adm1234");
 

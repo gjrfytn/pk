@@ -77,7 +77,7 @@ namespace PK.Forms
                     new string[] { "password" },
                     new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("role", Relation.EQUAL, _UserRole) }
                     )[0][0].ToString());
-            _madi_priem_DB_Connection = new DB_Connector(Properties.Settings.Default.online_application_CS, "root", "s0hnut");
+            _madi_priem_DB_Connection = new DB_Connector(Properties.Settings.Default.online_application_CS, "madi_priem", "4vBLTttM");
             InitializeComponent();
         }
 
@@ -94,7 +94,7 @@ namespace PK.Forms
 
         private static DataTable GetData(string sqlCommand)
         {
-            MySqlConnection _Connection = new MySqlConnection(Properties.Settings.Default.online_application_CS + " user = root; password = s0hnut;");
+            MySqlConnection _Connection = new MySqlConnection(Properties.Settings.Default.online_application_CS + " user = madi_priem; password = 4vBLTttM;");
             _Connection.Open();
 
             MySqlCommand cmd = new MySqlCommand(sqlCommand, _Connection);
@@ -196,7 +196,7 @@ namespace PK.Forms
             {
                 tvOnlineSelectedApplication.BeginUpdate();
                 tvOnlineSelectedApplication.Nodes.Clear();
-                MySqlConnection _Connection = new MySqlConnection(Properties.Settings.Default.online_application_CS + " user = root; password = s0hnut;");
+                MySqlConnection _Connection = new MySqlConnection(Properties.Settings.Default.online_application_CS + " user = madi_priem; password = 4vBLTttM;");
                 _Connection.Open();
 
                 cmd = new MySqlCommand("SELECT * FROM applications_entrances WHERE application_id=" + selectedApplicationId.ToString(), _Connection);
@@ -253,16 +253,7 @@ namespace PK.Forms
                     {
 
                         TreeNode identity_doc_node = tvOnlineSelectedApplication.Nodes.Add("identity_doc", "Документ, удостоверяющий личность");
-                        cmd = new MySqlCommand(@"SELECT 
-idad.`*`, 
-di_doc_type.`name` AS doc_type,
-di_gender.`name` AS gender, 
-di_nationality.`name` AS nationality
-FROM identity_docs_additional_data AS idad
-JOIN dictionaries_items AS di_doc_type ON di_doc_type.dictionary_id=idad.type_dict_id AND di_doc_type.item_id=idad.type_id
-JOIN dictionaries_items AS di_gender ON di_gender.dictionary_id=idad.gender_dict_id AND di_gender.item_id=idad.gender_id
-JOIN dictionaries_items AS di_nationality ON di_nationality.dictionary_id=idad.nationality_dict_id AND di_nationality.item_id=idad.nationality_id 
-WHERE idad.document_id=" + document.id.ToString(), _Connection);
+                        cmd = new MySqlCommand(@"SELECT idad.*, di_doc_type.`name` AS doc_type, di_gender.`name` AS gender, di_nationality.`name` AS nationality FROM identity_docs_additional_data AS idad JOIN dictionaries_items AS di_doc_type ON di_doc_type.dictionary_id=idad.type_dict_id AND di_doc_type.item_id=idad.type_id JOIN dictionaries_items AS di_gender ON di_gender.dictionary_id=idad.gender_dict_id AND di_gender.item_id=idad.gender_id JOIN dictionaries_items AS di_nationality ON di_nationality.dictionary_id=idad.nationality_dict_id AND di_nationality.item_id=idad.nationality_id WHERE idad.document_id=" + document.id.ToString(), _Connection);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -334,7 +325,7 @@ WHERE idad.document_id=" + document.id.ToString(), _Connection);
 
             if (where_conditions != "")
             {
-                bindingSource.DataSource = GetData("SELECT * FROM application_id_entrants_view WHERE " + where_conditions);
+                bindingSource.DataSource = GetData("SELECT * FROM application_id_entrants_view WHERE campaign_id=" + Classes.Settings.CurrentCampaignID.ToString() + " AND " + where_conditions);
                 dgvOnlineApplications.DataSource = bindingSource;
                 if (bindingSource.Count > 0)
                 {
@@ -357,14 +348,26 @@ WHERE idad.document_id=" + document.id.ToString(), _Connection);
 
         private void btnCopyOnlineApplication_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
-            form._Loading = true;
-            form.LoadApplication(true, _madi_priem_DB_Connection, selectedApplicationId);
-            form._Loading = false;
-            Cursor.Current = Cursors.Default;
+            //Cursor.Current = Cursors.WaitCursor;
+            int type_id = Convert.ToInt32(_DB_Connection.Select(DB_Table.CAMPAIGNS, new string[] { "type_id" }, new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object> ("id", Relation.EQUAL, Classes.Settings.CurrentCampaignID) })[0][0]);
 
-            form.ShowDialog();
+            if (type_id == 1)
+            {
+                ApplicationEdit form = new ApplicationEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                form._Loading = true;
+                form.LoadApplication(true, _madi_priem_DB_Connection, selectedApplicationId);
+                form._Loading = false;                
+                form.ShowDialog();
+            }
+            else if (type_id == 2)
+            {
+                ApplicationMagEdit form = new ApplicationMagEdit(_DB_Connection, Classes.Settings.CurrentCampaignID, _UserLogin, null);
+                form._Loading = true;
+                form.LoadApplication(true, _madi_priem_DB_Connection, selectedApplicationId);
+                form._Loading = false;
+                form.ShowDialog();
+            }
+            //Cursor.Current = Cursors.Default;
         }
 
     }

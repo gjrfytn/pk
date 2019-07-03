@@ -19,7 +19,7 @@ namespace PK.Forms
         private uint _CurrCampainID;
         private string _RegistratorLogin;
         private DateTime _EditingDateTime;
-        private bool _Loading;
+        public bool _Loading;
         private uint? _TargetOrganizationID;
         private bool _Agreed;
         private ApplicationEdit.QDoc _QuoteDoc;
@@ -126,7 +126,7 @@ namespace PK.Forms
             if (_ApplicationID != null)
             {
                 _Loading = true;
-                LoadApplication(true);
+                LoadApplication(true, _DB_Connection);
                 _Loading = false;
                 btPrint.Enabled = true;
             }
@@ -224,7 +224,7 @@ namespace PK.Forms
                                 btPrint.Enabled = true;
                                 btWithdraw.Enabled = true;
                                 dgvExamsResults.Rows.Clear();
-                                LoadExamsMarks();
+                                LoadExamsMarks(_DB_Connection);
                             }
 
                             Cursor.Current = Cursors.Default;
@@ -871,7 +871,7 @@ namespace PK.Forms
                         {
                             _ApplicationID = (uint)app[2];
                             _Loading = true;
-                            LoadApplication(false);
+                            LoadApplication(false, _DB_Connection);
                             _Loading = false;
                             _ApplicationID = null;
                             cbDirectionDoc.Checked = false;
@@ -900,14 +900,14 @@ namespace PK.Forms
             return applID;
         }
 
-        private void LoadApplication(bool fullLoad)
+        public void LoadApplication(bool fullLoad, DB_Connector _DB_Connection_local, uint ApplId = 0)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadBasic(fullLoad);
-            LoadDocuments(fullLoad);
-            LoadExamsMarks();
+            LoadBasic(fullLoad, _DB_Connection_local, ApplId);
+            LoadDocuments(fullLoad, _DB_Connection_local, ApplId);
+            LoadExamsMarks(_DB_Connection_local, ApplId);
             if (fullLoad)
-                LoadDirections();
+                LoadDirections(_DB_Connection_local, ApplId);
             Cursor.Current = Cursors.Default;
         }
 
@@ -1249,13 +1249,17 @@ namespace PK.Forms
         }
 
 
-        private void LoadBasic(bool fullLoad)
+        private void LoadBasic(bool fullLoad, DB_Connector _DB_Connection_local, uint ApplId = 0)
         {
+            uint? ApplicationID_local;
+            if (ApplId != 0) ApplicationID_local = ApplId;
+            else ApplicationID_local = _ApplicationID;
+
             Text += " № " + _ApplicationID;
-            object[] application = _DB_Connection.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status", "priority_right" }, 
+            object[] application = _DB_Connection_local.Select(DB_Table.APPLICATIONS, new string[] { "needs_hostel", "language", "first_high_edu", "special_conditions", "entrant_id", "status", "priority_right" }, 
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("id", Relation.EQUAL, _ApplicationID)
+                    new Tuple<string, Relation, object>("id", Relation.EQUAL, ApplicationID_local)
                 })[0];
 
             if (application[5].ToString() == "withdrawn" && fullLoad)
@@ -1284,7 +1288,7 @@ namespace PK.Forms
             if (application[6].ToString() != "")
                 cbPriority.Checked = (bool)application[6];
 
-            object[] entrant = _DB_Connection.Select(DB_Table.ENTRANTS, new string[] { "email", "home_phone", "mobile_phone" },
+            object[] entrant = _DB_Connection_local.Select(DB_Table.ENTRANTS, new string[] { "email", "home_phone", "mobile_phone" },
                 new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, application[4])
@@ -1294,17 +1298,21 @@ namespace PK.Forms
             tbMobilePhone.Text = entrant[2].ToString();
         }
 
-        private void LoadDocuments(bool fullLoad)
+        private void LoadDocuments(bool fullLoad, DB_Connector _DB_Connection_local, uint ApplId = 0)
         {
+            uint? ApplicationID_local;
+            if (ApplId != 0) ApplicationID_local = ApplId;
+            else ApplicationID_local = _ApplicationID;
+
             if (fullLoad)
                 cbAppAdmission.Checked = true;
             List<object[]> appDocuments = new List<object[]>();
-            foreach (var documentID in _DB_Connection.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
+            foreach (var documentID in _DB_Connection_local.Select(DB_Table._APPLICATIONS_HAS_DOCUMENTS, new string[] { "documents_id" }, new List<Tuple<string, Relation, object>>
             {
-                new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, _ApplicationID)
+                new Tuple<string, Relation, object>("applications_id", Relation.EQUAL, ApplicationID_local)
             }))
 
-                appDocuments.Add(_DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "series", "number", "date", "organization", "original_recieved_date" },
+                appDocuments.Add(_DB_Connection_local.Select(DB_Table.DOCUMENTS, new string[] { "id", "type", "series", "number", "date", "organization", "original_recieved_date" },
                     new List<Tuple<string, Relation, object>>
                 {
                     new Tuple<string, Relation, object>("id", Relation.EQUAL, documentID[0])
@@ -1321,7 +1329,7 @@ namespace PK.Forms
                     if (fullLoad)
                         cbPassportCopy.Checked = true;
 
-                    object[] passport = _DB_Connection.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id",
+                    object[] passport = _DB_Connection_local.Select(DB_Table.IDENTITY_DOCS_ADDITIONAL_DATA, new string[]{ "subdivision_code", "type_id",
                         "nationality_id", "birth_date", "birth_place", "reg_region", "reg_district", "reg_town", "reg_street", "reg_house",
                         "reg_index", "reg_flat", "last_name", "first_name", "middle_name", "gender_id"},
                         new List<Tuple<string, Relation, object>>
@@ -1354,18 +1362,18 @@ namespace PK.Forms
                     if (fullLoad)
                         cbEduDoc.Checked = true;
 
-                    tbSpecialty.Text = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
+                    tbSpecialty.Text = _DB_Connection_local.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "text_data" },
                         new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, document[0])
                     })[0][0].ToString();
 
-                    foreach (object[] achievement in _DB_Connection.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id" },
+                    foreach (object[] achievement in _DB_Connection_local.Select(DB_Table.INDIVIDUAL_ACHIEVEMENTS, new string[] { "institution_achievement_id" },
                         new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
                     }))
-                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
+                        if (_DB_Helper.GetDictionaryItemName(FIS_Dictionary.IND_ACH_CATEGORIES, (uint)_DB_Connection_local.Select(DB_Table.INSTITUTION_ACHIEVEMENTS, new string[] { "category_id" }, new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("id", Relation.EQUAL, (uint)achievement[0])
                         })[0][0]) == DB_Helper.RedDiplomaAchievement)
@@ -1378,7 +1386,7 @@ namespace PK.Forms
                     _QuoteDoc.orphanhoodDocDate = (DateTime)document[4];
                     _QuoteDoc.orphanhoodDocOrg = document[5].ToString();
 
-                    object[] orphanDoc = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "dictionaries_item_id" },
+                    object[] orphanDoc = _DB_Connection_local.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name", "dictionaries_item_id" },
                         new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0]),
@@ -1394,21 +1402,21 @@ namespace PK.Forms
                     cbSpecialRights.Checked = true;
                     _QuoteDoc.medDocSerie = document[2].ToString();
                     _QuoteDoc.medDocNumber = document[3].ToString();
-                    _QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
+                    _QuoteDoc.disabilityGroup = _DB_Helper.GetDictionaryItemName(FIS_Dictionary.DISABILITY_GROUP, (uint)_DB_Connection_local.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA,
                         new string[] { "dictionaries_item_id" },
                         new List<Tuple<string, Relation, object>>
                         {
                             new Tuple<string, Relation, object>("document_id", Relation.EQUAL,(uint)document[0]),
                             new Tuple<string, Relation, object>("dictionaries_dictionary_id", Relation.EQUAL, (uint)FIS_Dictionary.DISABILITY_GROUP)
                         })[0][0]);
-                    object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" },
+                    object[] allowDocument = _DB_Connection_local.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" },
                         new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("id", Relation.EQUAL,
-                    (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" },
+                    (uint)(_DB_Connection_local.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, ApplicationID_local),
                         new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Справка об установлении инвалидности"))
                     }))[0][0])})[0];
                     _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
@@ -1416,7 +1424,7 @@ namespace PK.Forms
                 }
                 else if (document[1].ToString() == "medical")
                 {
-                    List<object[]> spravkaData = _DB_Connection.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" },
+                    List<object[]> spravkaData = _DB_Connection_local.Select(DB_Table.OTHER_DOCS_ADDITIONAL_DATA, new string[] { "name" },
                         new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("document_id", Relation.EQUAL, (uint)document[0])
@@ -1433,14 +1441,14 @@ namespace PK.Forms
                         cbSpecialRights.Checked = true;
                         _QuoteDoc.medDocSerie = document[2].ToString();
                         _QuoteDoc.medDocNumber = document[3].ToString();
-                        object[] allowDocument = _DB_Connection.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" },
+                        object[] allowDocument = _DB_Connection_local.Select(DB_Table.DOCUMENTS, new string[] { "number", "date" },
                             new List<Tuple<string, Relation, object>>
                     {
                         new Tuple<string, Relation, object>("id", Relation.EQUAL,
-                    (uint)(_DB_Connection.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" },
+                    (uint)(_DB_Connection_local.Select(DB_Table.APPLICATION_COMMON_BENEFITS, new string[] { "allow_education_document_id" },
                     new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, ApplicationID_local),
                         new Tuple<string, Relation, object>("document_type_id", Relation.EQUAL, _DB_Helper.GetDictionaryItemID(FIS_Dictionary.DOCUMENT_TYPE,"Заключение психолого-медико-педагогической комиссии"))
                     }))[0][0])})[0];
                         _QuoteDoc.conclusionNumber = allowDocument[0].ToString();
@@ -1452,12 +1460,17 @@ namespace PK.Forms
             }
         }
 
-        private void LoadExamsMarks()
+        private void LoadExamsMarks(DB_Connector _DB_Connection_local, uint ApplId = 0)
         {
-            foreach (object[] mark in _DB_Connection.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "profile_short_name", "mark", "bonus", "date" },
+            uint? EntrantID_local;
+            if (ApplId != 0) EntrantID_local = (uint)Convert.ToInt32(_DB_Connection_local.Select(DB_Table.APPLICATIONS, new string[] { "entrant_id" },
+                                                                                    new List<Tuple<string, Relation, object>> { new Tuple<string, Relation, object>("id", Relation.EQUAL, ApplId) })[0][0]);
+            else EntrantID_local = _EntrantID;
+
+            foreach (object[] mark in _DB_Connection_local.Select(DB_Table.MASTERS_EXAMS_MARKS, new string[] { "profile_short_name", "mark", "bonus", "date" },
                 new List<Tuple<string, Relation, object>>
                 {
-                    new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, _EntrantID)
+                    new Tuple<string, Relation, object>("entrant_id", Relation.EQUAL, EntrantID_local)
                 }))
                 if (dgvExamsResults.Rows.Count <= 2)
                 {
@@ -1470,14 +1483,18 @@ namespace PK.Forms
                 dgvExamsResults.Rows.Add();
         }
 
-        private void LoadDirections()
-        {          
-            var profilesData = _DB_Connection.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
-            var appEntrances = _DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date",
+        private void LoadDirections(DB_Connector _DB_Connection_local, uint ApplId = 0)
+        {
+            uint? ApplicationID_local;
+            if (ApplId != 0) ApplicationID_local = ApplId;
+            else ApplicationID_local = _ApplicationID;
+
+            var profilesData = _DB_Connection_local.Select(DB_Table.PROFILES, new string[] { "short_name", "name", "faculty_short_name", "direction_id" });
+            var appEntrances = _DB_Connection_local.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "direction_id", "faculty_short_name", "is_agreed_date",
             "profile_short_name", "edu_form_id", "edu_source_id", "target_organization_id", "is_disagreed_date"},
             new List<Tuple<string, Relation, object>>
             {
-                new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID)
+                new Tuple<string, Relation, object>("application_id", Relation.EQUAL, ApplicationID_local)
             });
             var records = appEntrances.Join(
                 profilesData,
@@ -1546,10 +1563,10 @@ namespace PK.Forms
                 else if ((entrancesData.Value.Item3 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_SOURCE, DB_Helper.EduSourceT))
                     && (entrancesData.Value.Item4 == _DB_Helper.GetDictionaryItemID(FIS_Dictionary.EDU_FORM, DB_Helper.EduFormO)))
                 {
-                    _TargetOrganizationID = (uint)_DB_Connection.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
+                    _TargetOrganizationID = (uint)_DB_Connection_local.Select(DB_Table.APPLICATIONS_ENTRANCES, new string[] { "target_organization_id" },
                         new List<Tuple<string, Relation, object>>
                     {
-                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, _ApplicationID),
+                        new Tuple<string, Relation, object>("application_id", Relation.EQUAL, ApplicationID_local),
                         new Tuple<string, Relation, object>("faculty_short_name", Relation.EQUAL, entrancesData.Value.Item2),
                         new Tuple<string, Relation, object>("direction_id", Relation.EQUAL, entrancesData.Value.Item1),
                         new Tuple<string, Relation, object>("edu_form_id", Relation.EQUAL, entrancesData.Value.Item4),

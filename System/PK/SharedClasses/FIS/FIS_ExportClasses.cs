@@ -1355,8 +1355,9 @@ namespace SharedClasses.FIS
             public readonly uint? NumberQuotaO; //Места приёма по квоте лиц, имеющих особые права, очное обучение
             public readonly uint? NumberQuotaOZ; //Места приёма по квоте лиц, имеющих особые права, очно-заочное (вечернее) обучение
             public readonly uint? NumberQuotaZ; //Места приёма по квоте лиц, имеющих особые права, заочное обучение
+            public readonly bool IsPlan = true;
 
-            public AVItem(TUID uid, TUID campaignUID, uint educationLevelID, uint directionID, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberPaidO = null, uint? numberPaidOZ = null, uint? numberPaidZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null)
+            public AVItem(TUID uid, TUID campaignUID, uint educationLevelID, uint directionID, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberPaidO = null, uint? numberPaidOZ = null, uint? numberPaidZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null, bool IsPlan = true)
             {
                 UID = uid;
                 CampaignUID = campaignUID;
@@ -1374,6 +1375,7 @@ namespace SharedClasses.FIS
                 NumberQuotaO = numberQuotaO;
                 NumberQuotaOZ = numberQuotaOZ;
                 NumberQuotaZ = numberQuotaZ;
+                IsPlan = true;
             }
 
             public XElement ConvertToXElement()
@@ -1394,7 +1396,8 @@ namespace SharedClasses.FIS
                     ToElementOrNull("NumberTargetZ", NumberTargetZ),
                     ToElementOrNull("NumberQuotaO", NumberQuotaO),
                     ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
-                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
+                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ),
+                    new XElement("IsPlan", IsPlan)
                     );
             }
         }
@@ -1412,8 +1415,9 @@ namespace SharedClasses.FIS
             public readonly uint? NumberQuotaO; //Места приёма по квоте лиц, имеющих особые права, очное обучение
             public readonly uint? NumberQuotaOZ; //Места приёма по квоте лиц, имеющих особые права, очно-заочное (вечернее) обучение
             public readonly uint? NumberQuotaZ; //Места приёма по квоте лиц, имеющих особые права, заочное обучение
+            public readonly bool IsPlan = true;
 
-            public DAVItem(TUID admissionVolumeUID, uint levelBudget, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null)
+            public DAVItem(TUID admissionVolumeUID, uint levelBudget, uint? numberBudgetO = null, uint? numberBudgetOZ = null, uint? numberBudgetZ = null, uint? numberTargetO = null, uint? numberTargetOZ = null, uint? numberTargetZ = null, uint? numberQuotaO = null, uint? numberQuotaOZ = null, uint? numberQuotaZ = null, bool IsPlan = true)
             {
                 AdmissionVolumeUID = admissionVolumeUID;
                 LevelBudget = levelBudget;
@@ -1426,6 +1430,7 @@ namespace SharedClasses.FIS
                 NumberQuotaO = numberQuotaO;
                 NumberQuotaOZ = numberQuotaOZ;
                 NumberQuotaZ = numberQuotaZ;
+                IsPlan = true;
             }
 
             public XElement ConvertToXElement()
@@ -1441,7 +1446,8 @@ namespace SharedClasses.FIS
                     ToElementOrNull("NumberTargetZ", NumberTargetZ),
                     ToElementOrNull("NumberQuotaO", NumberQuotaO),
                     ToElementOrNull("NumberQuotaOZ", NumberQuotaOZ),
-                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ)
+                    ToElementOrNull("NumberQuotaZ", NumberQuotaZ),
+                    new XElement("IsPlan", IsPlan)
                     );
             }
         }
